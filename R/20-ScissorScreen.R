@@ -6,29 +6,21 @@ DoScissor = function(
   sc_data,
   phenotype,
   label_type,
-  plot_color = NULL,
   scissor_alpha = 0.05,
   scissor_cutoff = 0.2,
-  scissor_family =  c("gaussian", "binomial", "cox"),
+  scissor_family = c("gaussian", "binomial", "cox"),
   reliability_test = FALSE,
   path2save_scissor_inputs = "Scissor_inputs.RData",
   nfold = 10
 ) {
   library(dplyr)
 
-    TimeStamp=function()  format(sys.time(),"%Y/%m/%d %H:%M:%S")
+  TimeStamp = function() format(sys.time(), "%Y/%m/%d %H:%M:%S")
 
-  if (
-    is.null(plot_color) || length(plot_color) != 3 
-  ) {
-    cli::cli_alert_info("No/wrong color setting, now set to default.")
-    plot_color <- stats::setNames(
-      c("#CECECE", "#386c9b", "#ff3333"),
-      c("Neutral", "Negative", "Positive")
+  if (length(scissor_family) != 1) {
+    cli::cli_alert_danger(
+      "Please choose one scissor family, use argument `scissor_family`."
     )
-  }
-  if(length(scissor_family)!=1){
-    cli::cli_alert_danger("Please choose one scissor family, use argument `scissor_family`.")
   }
   if (!dir.exists(data_output_dir)) {
     dir.create(data_output_dir, recursive = TRUE)
@@ -89,22 +81,12 @@ DoScissor = function(
   } else {
     reliability_result <- NULL
   }
-  # draw a umap plot
-  umap_plot <- Seurat::DimPlot(
-    sc_data,
-    reduction = 'umap',
-    group.by = 'scissor',
-    cols = plot_color,
-    pt.size = 0.6,
-    label = TRUE
-  )
+  
   return(list(
     scRNA_data = sc_data,
-    umap_plot = umap_plot,
     reliability_result = reliability_result
   ))
 }
-
 
 
 #' @description
@@ -132,7 +114,7 @@ Scissor.v5.optimized <- function(
   cl <- parallel::makeCluster(min(workers, parallel::detectCores() - 1))
   doParallel::registerDoParallel(cl)
 
-  TimeStamp=function() format(sys.time(),"%Y/%m/%d %H:%M:%S")
+  TimeStamp = function() format(sys.time(), "%Y/%m/%d %H:%M:%S")
 
   cli::cli_alert_info(
     c("[{TimeStamp()}]", crayon::bold(" Scissor start..."))

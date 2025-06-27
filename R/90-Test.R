@@ -3,12 +3,15 @@
 SaveEnv = function(
   var_list = NULL,
   path = ".",
-  name = ".RData",
+  name = ".RData.qs",
   preset = c("fast", "high", "balanced"),
   nthreads = min(4, parallel::detectCores())
 ) {
-  if (length(preset) > 1 || !tolower(preset) %in% c("fast", "high", "balanced"))
+  if (
+    length(preset) > 1 || !tolower(preset) %in% c("fast", "high", "balanced")
+  ) {
     preset = "fast"
+  }
   if (is.null(var_list)) {
     all_vars = ls(envir = .GlobalEnv)
     var_list = lapply(all_vars, function(x) get(x, envir = .GlobalEnv))
@@ -30,7 +33,7 @@ SaveEnv = function(
   cli::cli_alert_success(glue::glue("Working directory: {getwd()}"))
 }
 
-LoadEnv = function(path_2_file = "./.RData") {
+LoadEnv = function(path_2_file = "./.RData.qs") {
   var_list = qs::qread(file = path_2_file)
   list2env(var_list, envir = .GlobalEnv)
   cli::cli_alert_success(sprintf(
@@ -110,21 +113,25 @@ MemoryClean <- function(
         '
           )
           linux_malloc_trim()
-          if (verbose)
+          if (verbose) {
             message(
               "🔧 The Linux system-level memory release (malloc_trim) has been called."
             )
+          }
         },
-        error = function(e)
-          if (verbose)
+        error = function(e) {
+          if (verbose) {
             warning(
               "⚠️ System-level release failed (please install libc6-dev: sudo apt-get install libc6-dev)."
             )
+          }
+        }
       )
-    } else if (verbose)
+    } else if (verbose) {
       warning(
         "⚠️ The `Rcpp` package needs to be installed to enable system-level release."
       )
+    }
   }
   # Constructing a list of preserved objects
   protected_objects <- unique(c(keep, if (keep_self) "MemoryClean"))
@@ -133,21 +140,23 @@ MemoryClean <- function(
     to_remove <- setdiff(ls(envir = .GlobalEnv), protected_objects)
     if (length(to_remove) > 0) {
       rm(list = to_remove, envir = .GlobalEnv)
-      if (verbose)
+      if (verbose) {
         message(sprintf(
           "✅ deleted %d objects, preserved %d objects",
           length(to_remove),
           length(protected_objects)
         ))
+      }
     }
   }
   # Clean up the graphics device
   if (graphics_off) {
     grDevices::graphics.off()
-    if (verbose)
+    if (verbose) {
       message(
         "🎨 All graphics devices have been closed."
       )
+    }
   }
   # Multiple Calls to Accelerate Release
   invisible(gc())

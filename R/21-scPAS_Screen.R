@@ -1,3 +1,88 @@
-library(scPAS)
-library(Matrix)
-library(Seurat)
+# ---- 2. Do scPAS ----
+
+#' @title Perform scPAS Screening Analysis
+#' @description
+#' This function performs scPAS screening analysis by integrating bulk and single-cell RNA-seq data.
+#' It includes data filtering steps and wraps the core scPAS::scPAS function.
+#'
+#' @param matched_bulk Bulk RNA-seq data (genes x samples)
+#' @param sc_data Single-cell RNA-seq data (Seurat object and preprocessed)
+#' @param phenotype Phenotype data frame with sample annotations
+#' @param label_type Column name in phenotype containing sample labels
+#' @param assay Assay to use from sc_data (default: 'RNA')
+#' @param imputation Logical, whether to perform imputation (default: FALSE)
+#' @param nfeature Number of features to select (default: 3000, indicating that the top 3000 highly variable genes are selected for model training
+#' @param alpha Significance threshold (default: 0.01)
+#' @param gene_RNAcount_filter Minimum gene expression threshold (default: 20)
+#' @param bulk_0_filter_thresh Maximum proportion of zeros allowed in bulk data (default: 0.25)
+#' @param network_class Network class to use (default: 'SC', indicating gene-gene similarity networks derived from single-cell data.)
+#' @param family Model family for analysis (options: "cox", "gaussian", "binomial")
+#'
+#' @return Results from scPAS analysis
+#' @export
+DoscPAS = function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type,
+  assay = 'RNA',
+  imputation = F,
+  nfeature = 3000,
+  alpha = 0.01,
+  gene_RNAcount_filter = 20,
+  bulk_0_filter_thresh = 0.25,
+  network_class = 'SC',
+  family = c("cox", "gaussian", "binomial")
+) {
+  library(dplyr)
+
+  # robust
+  if (!all(rownames(phenotype) == colnames(bulk_dataset))) {
+    stop(
+      "Please check the rownames of phenotype and colnames of bulk_dataset, they should be the same"
+    )
+  }
+
+  TimeStamp = function() format(Sys.time(), '%Y/%m/%d %H:%M:%S')
+
+  cli::cli_alert_info(c(
+    "[{TimeStamp()}]",
+    crayon::green("Start scPAS screening.")
+  ))
+
+  # *sc filter
+  keep_genes <- rownames(sc_dataset)[
+    Matrix::rowSums(sc_dataset@assays$RNA@counts > 1) >= gene_RNA_count_filter
+  ]
+  sc_dataset <- subset(sc_dataset, features = keep_genes)
+  # *bulk filter zero data
+  bulk_dataset <- bulk_dataset %>%
+    Matrix::as.matrix() %>%
+    .[
+      apply(., 1, function(x) sum(x == 0) < bulk_0_filter_thresh * ncol(.)),
+    ]
+
+  scPAS_result <- scPAS::scPAS(
+    bulk_dataset = bulk_dataset,
+    sc_dataset = sc_dataset0,
+    assay = 'RNA',
+    tag = label_type,
+    phenotype = phenotype,
+    imputation = imputation,
+    nfeature = nfeature,
+    alpha = alpha,
+    network_class = network_class,
+    family = family
+  )
+
+  cli::cli_alert_success(c(
+    "[{TimeStamp()}]",
+    crayon::green("Done scPAS screening.")
+  ))
+
+  return(scPAS_result)
+}
+
+# The input provided above is survival data; therefore, scPAS needs to fit a Cox regression model (family = ‘cox’).
+
+# The scPAS provides both quantitative (scPAS_NRS) and qualitative (scPAS) prediction results:
