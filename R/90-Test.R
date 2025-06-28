@@ -174,3 +174,6 @@ MemoryClean <- function(
     ))
   }
 }
+
+
+setwd("~/Project/SigBridgeR/")

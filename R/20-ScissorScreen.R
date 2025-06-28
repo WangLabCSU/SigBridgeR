@@ -81,7 +81,7 @@ DoScissor = function(
   } else {
     reliability_result <- NULL
   }
-  
+
   return(list(
     scRNA_data = sc_data,
     reliability_result = reliability_result
@@ -105,11 +105,7 @@ Scissor.v5.optimized <- function(
   Load_file = NULL,
   workers = 32
 ) {
-  library(Seurat)
-  library(Matrix)
-  library(preprocessCore)
   library(dplyr)
-  library(qlcMatrix) # for sparse matrix correlation computation
 
   cl <- parallel::makeCluster(min(workers, parallel::detectCores() - 1))
   doParallel::registerDoParallel(cl)
@@ -285,7 +281,7 @@ Scissor.v5.optimized <- function(
         "[{TimeStamp()}]",
         crayon::bold(" Loading data from `{Load_file}`...")
       ))
-      previous_work = qs::qread(Load_file)
+      previous_work = readRDS(Load_file)
       X = previous_work$X
       Y = previous_work$Y
       network = previous_work$network

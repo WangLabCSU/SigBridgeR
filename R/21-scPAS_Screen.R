@@ -75,6 +75,16 @@ DoscPAS = function(
     family = family
   )
 
+  # *rename level
+  scPAS_result@meta.data = scPAS_result@meta.data %>%
+    dplyr::mutate(
+      `scPAS` = dplyr::case_when(
+        scPAS == "scPAS+" ~ "Positive",
+        scPAS == "scPAS-" ~ "Negative",
+        scPAS == "0" ~ "Neutral" 
+      )
+    )
+
   cli::cli_alert_success(c(
     "[{TimeStamp()}]",
     crayon::green("Done scPAS screening.")
@@ -82,5 +92,3 @@ DoscPAS = function(
 
   return(scPAS_result)
 }
-
-

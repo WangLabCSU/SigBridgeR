@@ -2,9 +2,9 @@
 
 FetchUMAP = function(
   SeuratObject,
+  group_by = NULL,
   plot_name = NULL,
   plot_show = FALSE,
-  group_by = NULL,
   point_size = 0.6,
   plot_color = NULL,
   label_size = 10,
@@ -28,6 +28,67 @@ FetchUMAP = function(
   return(umap_plot)
 }
 
+
+#
+FetchUAMP.All = function(
+  SeuratObject,
+  group_by = c("celltype", NULL),
+  feature = NULL,
+  plot_name = NULL,
+  plot_show = FALSE,
+  point_size = 0.6,
+  plot_color = NULL,
+  label_size = 10,
+  order = c(2, 1),
+  feature_max_cutoff = 2,
+  feature_min_cutoff = -2
+) {
+  umap_list = list()
+
+  if (!is.null(group_by)) {
+    umap_list = lapply(X = group_by, FUN = function(group_name) {
+      umap_plot = Seurat::DimPlot(
+        object = SeuratObject,
+        reduction = "umap",
+        label = TRUE,
+        group.by = group_name,
+        cols = plot_color,
+        pt.size = point_size,
+        order = order,
+        label.size = label_size
+      ) +
+        ggplot2::ggtitle(glue::glue("{plot_name} UMAP"))
+    })
+  }
+
+  if (!is.null(feature)) {
+    feature_plots = lapply(feature, function(feat) {
+      Seurat::FeaturePlot(
+        object = SeuratObject,
+        raster = FALSE,
+        features = feat,
+        max.cutoff = feature_max_cutoff,
+        min.cutoff = feature_min_cutoff
+      ) +
+        ggplot2::ggtitle(glue::glue("{feat} Expression"))
+    })
+    umap_list <- c(umap_list, feature_plots)
+  }
+
+  plot_count = length(umap_list)
+  if (plot_show & plot_count > 0) {
+    grid_size <- ifelse(plot_count < 4, plot_count, ceiling(sqrt(n)))
+    combined_plot <- patchwork::wrap_plots(
+      umap_list,
+      ncol = grid_size,
+      nrow = grid_size
+    )
+    print(combined_plot)
+  } else if (plot_count == 0) {
+    stop("No plots have been generated")
+  }
+  return(umap_list)
+}
 
 # ---- The proportion of cell types in different samples/sources ----
 
@@ -128,4 +189,120 @@ CalculateCellTypeFraction = function(
     return_list$plot <- gg
   }
   return(return_list)
+}
+
+# ---- Scissor(+/-/N)-sample/source stacked graph(in tumor) ----
+
+SampleScreenFractionStackPlot = function(
+  screened_seurat,
+  sample_colname = "Source",
+  screen_type = c("scissor", "scPAS"),
+  return_stats = FALSE,
+  return_plot = TRUE,
+  show_null = FALSE,
+  plot_color = NULL,
+  show_plot = TRUE
+) {
+  require(dplyr, quietly = TRUE)
+
+  if (!inherits(screened_seurat, "Seurat")) {
+    stop("Input must be a Seurat object")
+  }
+
+  if (length(screen_type) != 1) {
+    stop(glue::glue(
+      "Please refer one screen algorithm type",
+      "Available screen types: ",
+      c('scissor', 'scPAS')[
+        c('scissor', 'scPAS') %in% colnames(screened_seurat@meta.data)
+      ],
+      .sep = "\n"
+    ))
+  }
+
+  if (!return_plot & !return_stats) {
+    stop(
+      "This function is doing nothing now, please set `return_stats` or `return_plot` to `TRUE`"
+    )
+  }
+
+  plot_color <- plot_color %||%
+    stats::setNames(c("N", "Pos", "Neg"), c("#CECECE", "#ff3333", "#386c9b"))
+
+  stats_df <- screened_seurat@meta.data %>%
+    dplyr::count(!!sym(sample_colname), screen_type) %>%
+    tidyr::complete(
+      !!sym(sample_colname),
+      screen_type = c("Neutral", "Positive", "Negative"),
+      fill = list(n = 0)
+    ) %>%
+    dplyr::group_by(!!sym(sample_colname)) |>
+    dplyr::mutate(
+      Total = sum(n),
+      Status = factor(
+        screen_type,
+        levels = c("Positive", "Negative", "Neutral"),
+        labels = c("Pos", "Neg", "N")
+      )
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      Fraction = ifelse(Total == 0, 0, n / Total),
+      .keep = "unused"
+    ) |>
+    dplyr::select(-screen_type) |>
+    tidyr::pivot_wider(
+      names_from = Status,
+      values_from = Fraction,
+      values_fill = 0
+    ) |>
+    tidyr::pivot_longer(
+      cols = c(Pos, Neg, N),
+      names_to = glue::glue("{screen_type} status"),
+      values_to = "Fraction"
+    )
+
+  # filter null records
+  if (!show_null) {
+    stats_df <- stats_df |> dplyr::filter(Fraction > 0)
+  }
+  if (show_plot || return_plot) {
+    gg <- ggplot2::ggplot(
+      stats_df,
+      ggplot2::aes(
+        x = !!sym(sample_colname),
+        y = `Fraction`,
+        fill = `Scissor status`
+      )
+    ) +
+      ggplot2::geom_col(position = "stack", width = 0.85) +
+      ggplot2::scale_y_continuous(
+        labels = scales::percent_format(accuracy = 1),
+        expand = c(0, 0),
+        breaks = seq(0, 1, 0.1)
+      ) +
+      ggplot2::scale_fill_manual(
+        values = plot_color
+      ) +
+      ggplot2::theme_classic(base_size = 14) +
+      ggplot2::labs(x = NULL, y = "Scissor status fraction") +
+      ggplot2::theme(
+        axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1),
+        axis.text = ggplot2::element_text(color = "black"),
+        legend.position = "right",
+        axis.line = ggplot2::element_line(linewidth = 0.8)
+      )
+    if (show_plot) {
+      print(gg)
+    }
+  }
+
+  result <- list()
+  if (return_stats) {
+    result$stats <- as.data.frame(stats_df)
+  }
+  if (return_plot) {
+    result$plot <- gg
+  }
+  if (length(result) > 0) return(result)
 }

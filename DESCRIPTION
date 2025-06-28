@@ -18,11 +18,13 @@ Imports:
     grid,
     IDConverter,
     Matrix,
+    patchwork,
     randomcoloR,
     Scissor,
     scPAS,
     SeuratObject,
-    tibble
+    tibble,
+    tidyr
 Depends: 
     dplyr,
     ggplot2,

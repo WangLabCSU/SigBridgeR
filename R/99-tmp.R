@@ -121,27 +121,26 @@ scPAS_result <- scPAS::scPAS(
 
 # The scPAS provides both quantitative (scPAS_NRS) and qualitative (scPAS) prediction results:
 library(ggplot2)
-UMAP_scPAS <- DimPlot(
-  sc_dataset,
-  reduction = 'umap',
-  group.by = 'scPAS',
-  raster = FALSE,
-  cols = c("0" = 'grey', "scPAS+" = 'indianred1', "scPAS-" = 'royalblue'),
-  pt.size = 0.001,
-  order = c("scPAS-", "scPAS+")
-) +
-  ggtitle(label = NULL) +
-  labs(col = "scPAS")
+# UMAP_scPAS <- DimPlot(
+#   sc_dataset,
+#   reduction = 'umap',
+#   group.by = 'scPAS',
+#   raster = FALSE,
+#   cols = c("0" = 'grey', "scPAS+" = 'indianred1', "scPAS-" = 'royalblue'),
+#   pt.size = 0.001,
+#   order = c("scPAS-", "scPAS+")
+# ) +
+#   ggtitle(label = NULL) +
+#   labs(col = "scPAS")
 
 UMAP_RS <- FeaturePlot(
-  object = sc_dataset,
+  object = scPAS_result,
   raster = FALSE,
   features = 'scPAS_NRS',
   max.cutoff = 2,
   min.cutoff = -2
 ) +
-  scale_colour_gradientn(colours = rev(brewer.pal(n = 10, name = "RdBu"))) +
-  ggtitle(label = NULL) +
-  labs(col = "Risk score")
+  ggplot2::ggtitle(label = NULL) +
+  ggplot2::labs(col = "Risk score")
 
 UMAP_celltype | UMAP_RS | UMAP_scPAS
