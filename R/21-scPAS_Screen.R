@@ -83,6 +83,4 @@ DoscPAS = function(
   return(scPAS_result)
 }
 
-# The input provided above is survival data; therefore, scPAS needs to fit a Cox regression model (family = ‘cox’).
 
-# The scPAS provides both quantitative (scPAS_NRS) and qualitative (scPAS) prediction results:
