@@ -81,13 +81,13 @@ DoscPAS = function(
       `scPAS` = dplyr::case_when(
         scPAS == "scPAS+" ~ "Positive",
         scPAS == "scPAS-" ~ "Negative",
-        scPAS == "0" ~ "Neutral" 
+        scPAS == "0" ~ "Neutral"
       )
     )
 
   cli::cli_alert_success(c(
     "[{TimeStamp()}]",
-    crayon::green("Done scPAS screening.")
+    crayon::green("scPAS screening done.")
   ))
 
   return(scPAS_result)

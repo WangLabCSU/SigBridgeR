@@ -39,9 +39,11 @@ FetchUAMP.All = function(
   point_size = 0.6,
   plot_color = NULL,
   label_size = 10,
+  umap_label = TRUE,
   order = c(2, 1),
   feature_max_cutoff = 2,
-  feature_min_cutoff = -2
+  feature_min_cutoff = -2,
+  feature_plot_raster = FALSE
 ) {
   umap_list = list()
 
@@ -50,7 +52,7 @@ FetchUAMP.All = function(
       umap_plot = Seurat::DimPlot(
         object = SeuratObject,
         reduction = "umap",
-        label = TRUE,
+        label = umap_label,
         group.by = group_name,
         cols = plot_color,
         pt.size = point_size,
@@ -66,6 +68,9 @@ FetchUAMP.All = function(
       Seurat::FeaturePlot(
         object = SeuratObject,
         raster = FALSE,
+        label = umap_label,
+        order = order,
+        label.size = label_size,
         features = feat,
         max.cutoff = feature_max_cutoff,
         min.cutoff = feature_min_cutoff

@@ -1,45 +1,43 @@
 # ---- 4. One_cell_type_fraction-tumor_in_Scissor(+)_fraction scatter plot ----
 
 CellTypeMSScatterBoxplot = function(
-  scissored,
+  screened_seurat,
   raw_data,
   cell_type_select = "T cell",
   ms_select = NULL,
-  scissor_select = "Pos",
+  screen_select = "Pos",
   plot_show = TRUE,
   plot_color = NULL,
   return_stats = FALSE,
   return_plot = TRUE
 ) {
-  if (!inherits(scissored, "Seurat") || !inherits(raw_data, "Seurat")) {
-    stop("Both inputs  `scissored` and `raw_data` must be Seurat objects")
+  if (!inherits(screened_seurat, "Seurat") || !inherits(raw_data, "Seurat")) {
+    stop("Both inputs  `screened_seurat` and `raw_data` must be Seurat objects")
   }
 
-  # factor-scissor_select transfer
+  # factor-screen_select transfer
   scissor_type <- dplyr::case_when(
-    tolower(scissor_select) %in% c("pos", "positive", "p") ~ "Positive",
-    tolower(scissor_select) %in% c("neg", "negative") ~ "Negative",
+    tolower(screen_select) %in% c("pos", "positive", "p", "+") ~ "Positive",
+    tolower(screen_select) %in% c("neg", "negative", "-") ~ "Negative",
     TRUE ~ "Neutral"
   )
 
   meta_raw <- raw_data@meta.data
-  meta_scissor <- scissored@meta.data
+  meta_screened <- screened_seurat@meta.data
 
   x_data <- meta_raw %>%
     dplyr::group_by(Source) %>%
     dplyr::summarise(
       Tumor_count = sum(cnv_status == "tumor"),
-      Immune_count = sum(
-        Tissue
-      ),
+      Immune_count = sum(Tissue),
       Celltype_count = sum(Tissue == cell_type_select),
       .groups = "drop"
     ) %>%
     dplyr::left_join(
-      meta_scissor %>%
+      meta_screened %>%
         dplyr::group_by(Source) %>%
         dplyr::summarise(
-          Scissored_tumor = sum(
+          screened_seurat_tumor = sum(
             scissor == scissor_type # these cells are tumor cells
           ),
         ),
@@ -47,7 +45,7 @@ CellTypeMSScatterBoxplot = function(
     ) %>%
     dplyr::filter(dplyr::if_all(dplyr::everything(), ~ !is.na(.) & . != 0)) %>%
     dplyr::mutate(
-      Tumor_fraction = Scissored_tumor / Tumor_count,
+      Tumor_fraction = screened_seurat_tumor / Tumor_count,
       Immune_fraction = Celltype_count / Immune_count,
       Tumor_fraction = ifelse(is.na(Tumor_fraction), 0, Tumor_fraction)
     )
@@ -97,7 +95,7 @@ CellTypeMSScatterBoxplot = function(
       ggplot2::scale_y_continuous(labels = scales::percent) +
       cowplot::theme_cowplot(12) +
       ggplot2::labs(
-        x = "Scissored tumor cell fraction",
+        x = "Screened tumor cell fraction",
         y = glue::glue("{cell_type_select} fraction")
       )
 
@@ -171,9 +169,9 @@ CellTypeMSScatterBoxplot = function(
 }
 
 DoAllCelltypeMS <- function(
-  scissored,
+  screened_seurat,
   raw_data,
-  scissor_select = "p",
+  screen_select = "p",
   ms_select,
   plot_show = FALSE,
   plot_color = NULL,
@@ -205,10 +203,10 @@ DoAllCelltypeMS <- function(
       res = tryCatch(
         {
           record <- CellTypeMSScatterBoxplot(
-            scissored = scissored,
+            screened_seurat = screened_seurat,
             raw_data = raw_data,
             cell_type_select = celltype,
-            scissor_select = scissor_select,
+            screen_select = screen_select,
             plot_show = plot_show,
             plot_color = plot_color,
             return_stats = return_stats,
