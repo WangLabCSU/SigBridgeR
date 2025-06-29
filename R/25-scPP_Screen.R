@@ -38,7 +38,7 @@ DoscPP = function(
   } else if (ncol(phenotype) == 3 || tolower(label_type) == "survival") {
     gene_list = ScPP::marker_Survival(
       matched_bulk,
-      phenotype[2],
+      phenotype,
     )
   } else {
     stop("Unknown phenotype type, please check the `label_type`")
