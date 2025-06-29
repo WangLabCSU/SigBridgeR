@@ -56,7 +56,7 @@ DoscPP = function(
       )
     )
 
-  sc_data = sc_data %>% AddMetaData(sc_meta$ScPP)
+  sc_data = sc_data %>% Seurat::AddMetaData(sc_meta$ScPP)
 
   cli::cli_alert_success(c(
     "[{TimeStamp()}]",
