@@ -18,7 +18,7 @@
 #' @param network_class Network class to use (default: 'SC', indicating gene-gene similarity networks derived from single-cell data.)
 #' @param family Model family for analysis (options: "cox", "gaussian", "binomial")
 #'
-#' @return Results from scPAS analysis
+#' @return A Seurat object from scPAS analysis
 #' @export
 DoscPAS = function(
   matched_bulk,
@@ -29,6 +29,7 @@ DoscPAS = function(
   imputation = F,
   nfeature = 3000,
   alpha = 0.01,
+  extra_filter = FALSE,
   gene_RNAcount_filter = 20,
   bulk_0_filter_thresh = 0.25,
   network_class = 'SC',
@@ -50,21 +51,25 @@ DoscPAS = function(
     crayon::green("Start scPAS screening.")
   ))
 
-  # *sc filter
-  keep_genes <- rownames(sc_dataset)[
-    Matrix::rowSums(sc_dataset@assays$RNA@counts > 1) >= gene_RNA_count_filter
-  ]
-  sc_dataset <- subset(sc_dataset, features = keep_genes)
-  # *bulk filter zero data
-  bulk_dataset <- bulk_dataset %>%
-    Matrix::as.matrix() %>%
-    .[
-      apply(., 1, function(x) sum(x == 0) < bulk_0_filter_thresh * ncol(.)),
+  if (extra_filter) {
+    # *sc filter
+    keep_genes <- rownames(sc_data)[
+      Matrix::rowSums(sc_data@assays$RNA@counts > 1) >= gene_RNA_count_filter
     ]
+    sc_data <- subset(sc_data, features = keep_genes)
+    # *bulk filter zero data
+    matched_bulk <- matched_bulk %>%
+      Matrix::as.matrix() %>%
+      .[
+        apply(., 1, function(x) sum(x == 0) < bulk_0_filter_thresh * ncol(.)),
+      ]
+  } else {
+    matched_bulk = as.matrix(matched_bulk)
+  }
 
   scPAS_result <- scPAS::scPAS(
-    bulk_dataset = bulk_dataset,
-    sc_dataset = sc_dataset0,
+    bulk_dataset = matched_bulk,
+    sc_dataset = sc_data,
     assay = 'RNA',
     tag = label_type,
     phenotype = phenotype,

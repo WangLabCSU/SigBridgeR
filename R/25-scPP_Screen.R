@@ -1,4 +1,25 @@
-#
+#' @title Perform scPP screening
+#' @description
+#' This function performs scPP screening on single-cell data using matched bulk data and phenotype information.
+#' It supports binary, continuous, and survival phenotype types.
+#'
+#' @param matched_bulk A matrix of matched bulk expression data (genes x samples)
+#' @param sc_data A Seurat object containing single-cell expression data
+#' @param phenotype A data.frame with phenotype information (samples x features)
+#' @param label_type Type of phenotype label: "Binary", "Continuous", or "Survival"
+#'
+#' @return A Seurat object with scPP prediction results added as metadata
+#'
+#' @details The function first identifies marker genes from bulk data based on phenotype type,
+#' then applies scPP screening to single-cell data using these markers. Results are categorized
+#' as "Positive", "Negative", or "Neutral" and added to the Seurat object metadata.
+#'
+#' @examples
+#' \dontrun{
+#' sc_data <- DoscPP(bulk_data, sc_data, phenotype, "Binary")
+#' }
+#'
+#' @export
 DoscPP = function(
   matched_bulk,
   sc_data,
