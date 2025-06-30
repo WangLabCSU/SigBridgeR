@@ -111,11 +111,14 @@ BulkPreProcess = function(data = NULL) {
 
 #' @description
 #' Preprocess mutational signature data
-#' @param thresh Search for 6 types of mutational signatures. For each column, if the number of non-zero values is greater than `thresh`, it will be retained.
+#' @param col_thresh For each column, if the proportion of non-zero values is greater than `col_thresh`, it will be retained.
+#' @param accuracy_thresh A threshold for filtering rows. The value of `accuracy_thresh` ranges from 0 to 1.
 #' @param ms_search_pattern The matching pattern used to search for mutational signature columns.
+#' @export
 MSPreProcess = function(
   ms_signature,
-  thresh = 0.05,
+  col_thresh = 0.05,
+  accuracy_thresh = 0,
   ms_search_pattern = "SBS|DBS|CN|CNV|SV|ID|INDEL"
 ) {
   library(dplyr)
@@ -137,14 +140,14 @@ MSPreProcess = function(
         },
         ifelse(
           # Retain cols where the proportion of non-zero data in the ms exceeds the threshold.
-          mean(col != 0) >= thresh, # equal to: sum(col != 0)/length(col) >= thresh
+          mean(col != 0) >= col_thresh, # equal to: sum(col != 0)/length(col) >= col_thresh
           {
             cli::cli_alert_info("{crayon::green(col_name)} kept")
             return(TRUE)
           },
           {
             cli::cli_alert_info(
-              "{crayon::red(col_name)} not kept, because the valid data in the column < {crayon::bold(thresh)}"
+              "{crayon::red(col_name)} not kept, because the valid data in the column < {crayon::bold(col_thresh)}"
             )
             return(FALSE)
           }
@@ -155,13 +158,20 @@ MSPreProcess = function(
     }
   })
 
-  processed_ms_signature <- ms_signature[, keep_colnames, drop = FALSE]
+  accuracy_column = grepv("[aA][cC]{2}.*", colnames(ms_signature))
+
+  processed_ms_signature <- ms_signature[
+    # Filter rows based on accuracy threshold
+    processed_ms_signature[[accuracy_column]] >= accuracy_thresh,
+    keep_colnames,
+    drop = FALSE
+  ]
 
   # final check for data availability
   if (sum(grepl(ms_search_pattern, colnames(processed_ms_signature))) == 0) {
     cli::cli_alert_warning(crayon::yellow(glue::glue(
       "{crayon::bold('All data columns were filtered out, possible reasons:')}",
-      "1. Threshold too high (current: {crayon::black(thresh)})",
+      "1. Threshold too high (current: {crayon::black(col_thresh)})",
       "2. No matching data columns existed (search pattern: {crayon::black(ms_search_pattern)})",
       "3. All values were zero",
       .sep = "\n"
