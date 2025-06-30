@@ -8,3 +8,5 @@
 .quarto
 R/9.*
 9.*
+tmp
+test_result/*

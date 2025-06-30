@@ -10,20 +10,22 @@ DoScissor = function(
   scissor_cutoff = 0.2,
   scissor_family = c("gaussian", "binomial", "cox"),
   reliability_test = FALSE,
-  path2save_scissor_inputs = "Scissor_inputs.RData",
+  dir2save_scissor_inputs = NULL,
   nfold = 10
 ) {
   library(dplyr)
 
-  TimeStamp = function() format(sys.time(), "%Y/%m/%d %H:%M:%S")
+  TimeStamp = function() format(Sys.time(), "%Y/%m/%d %H:%M:%S")
 
   if (length(scissor_family) != 1) {
     cli::cli_alert_danger(
       "Please choose one scissor family, use argument `scissor_family`."
     )
   }
-  if (!dir.exists(data_output_dir)) {
-    dir.create(data_output_dir, recursive = TRUE)
+  if (
+    !dir.exists(dir2save_scissor_inputs) & !is.null(dir2save_scissor_inputs)
+  ) {
+    dir.create(dir2save_scissor_inputs, recursive = TRUE)
   }
 
   # MAKE SURE ONLY TUMOR
@@ -38,7 +40,7 @@ DoScissor = function(
     alpha = scissor_alpha,
     cutoff = scissor_cutoff,
     family = scissor_family,
-    Save_file = path2save_scissor_inputs,
+    Save_file = file.path(dir2save_scissor_inputs, "Scissor_inputs.RData"),
     Load_file = path2load_scissor_cache
   )
 
@@ -101,16 +103,17 @@ Scissor.v5.optimized <- function(
   alpha = NULL,
   cutoff = 0.2,
   family = c("gaussian", "binomial", "cox"),
-  Save_file = "Scissor_inputs.RData.qs",
+  Save_file = "Scissor_inputs.RData",
   Load_file = NULL,
   workers = 32
 ) {
   library(dplyr)
+  library(Matrix)
 
   cl <- parallel::makeCluster(min(workers, parallel::detectCores() - 1))
   doParallel::registerDoParallel(cl)
 
-  TimeStamp = function() format(sys.time(), "%Y/%m/%d %H:%M:%S")
+  TimeStamp = function() format(Sys.time(), "%Y/%m/%d %H:%M:%S")
 
   cli::cli_alert_info(
     c("[{TimeStamp()}]", crayon::bold(" Scissor start..."))
@@ -263,16 +266,7 @@ Scissor.v5.optimized <- function(
         }
       )
 
-      save(
-        x = list(
-          X = X,
-          Y = Y,
-          network = network,
-          Expression_bulk = Expression_bulk,
-          Expression_cell = Expression_cell
-        ),
-        file = Save_file
-      )
+      save(X, Y, network, Expression_bulk, Expression_cell, file = Save_file)
       cli::cli_alert_success("Statistics data saved to `{Save_file}`.")
     },
     {
@@ -281,13 +275,7 @@ Scissor.v5.optimized <- function(
         "[{TimeStamp()}]",
         crayon::bold(" Loading data from `{Load_file}`...")
       ))
-      previous_work = readRDS(Load_file)
-      X = previous_work$X
-      Y = previous_work$Y
-      network = previous_work$network
-      Expression_bulk = previous_work$Expression_bulk
-      Expression_cell = previous_work$Expression_cell
-      rm(previous_work)
+      load(Load_file)
     }
   )
 

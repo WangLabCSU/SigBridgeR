@@ -241,14 +241,14 @@ MatchSample = function(
 
 # ------------------- other function ----------------------
 
-# IdentifyDataColumn <- function(data, thresh = 0.5) {
-#   pattern_based <- sapply(data, function(x) {
-#     if (is.character(x)) {
-#       numeric_pat <- grepl("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$", x)
-#       mean(numeric_pat, na.rm = TRUE) > 0.5
-#     } else {
-#       TRUE
-#     }
-#   })
-#   return(pattern_based)
-# }
+IdentifyDataColumn <- function(data, thresh = 0.5) {
+  pattern_based <- sapply(data, function(x) {
+    if (is.character(x)) {
+      numeric_pat <- grepl("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$", x)
+      mean(numeric_pat, na.rm = TRUE) > 0.5
+    } else {
+      TRUE
+    }
+  })
+  return(pattern_based)
+}
