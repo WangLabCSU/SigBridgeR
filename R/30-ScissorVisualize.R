@@ -26,16 +26,23 @@ CellTypeMSScatterBoxplot = function(
   meta_screened <- screened_seurat@meta.data
 
   x_data <- meta_raw %>%
-    dplyr::group_by(Source) %>%
+    dplyr::group_by(Sample) %>%
     dplyr::summarise(
       Tumor_count = sum(cnv_status == "tumor"),
-      Immune_count = sum(Tissue),
-      Celltype_count = sum(Tissue == cell_type_select),
+      Immune_count = sum(
+        !Celltype %in%
+          c(
+            "Endothelial",
+            "Epithelial",
+            "Fibroblast"
+          )
+      ),
+      Celltype_count = sum(Celltype == cell_type_select),
       .groups = "drop"
     ) %>%
     dplyr::left_join(
       meta_screened %>%
-        dplyr::group_by(Source) %>%
+        dplyr::group_by(Sample) %>%
         dplyr::summarise(
           screened_seurat_tumor = sum(
             scissor == scissor_type # these cells are tumor cells

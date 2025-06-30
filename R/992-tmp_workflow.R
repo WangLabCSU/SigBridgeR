@@ -43,6 +43,8 @@ scissor_result = DoScissor(
 )
 scissor_result = DoScissor(
   path2load_scissor_cache = "test_result/Scissor_inputs.RData",
+  sc_data = GSE150290,
+  label_type = match_result$ms_select,
   scissor_family = "binomial",
   reliability_test = FALSE,
   nfold = 5

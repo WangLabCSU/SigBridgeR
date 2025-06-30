@@ -2,9 +2,9 @@
 
 DoScissor = function(
   path2load_scissor_cache = NULL,
-  matched_bulk,
+  matched_bulk = NULL,
   sc_data,
-  phenotype,
+  phenotype = NULL,
   label_type,
   scissor_alpha = 0.05,
   scissor_cutoff = 0.2,
@@ -280,6 +280,11 @@ Scissor.v5.optimized <- function(
   )
 
   gc(verbose = FALSE)
+
+  cli::cli_alert_info(c(
+    "[{TimeStamp()}]",
+    crayon::bold(" Screening...")
+  ))
 
   alpha <- alpha %||%
     c(0.005, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
