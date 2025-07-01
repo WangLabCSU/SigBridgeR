@@ -24,7 +24,7 @@ DoscPAS = function(
   matched_bulk,
   sc_data,
   phenotype,
-  label_type,
+  ms_type,
   assay = 'RNA',
   imputation = F,
   nfeature = 3000,
@@ -33,7 +33,8 @@ DoscPAS = function(
   gene_RNAcount_filter = 20,
   bulk_0_filter_thresh = 0.25,
   network_class = 'SC',
-  family = c("cox", "gaussian", "binomial")
+  family = c("cox", "gaussian", "binomial"),
+  ...
 ) {
   library(dplyr)
 
@@ -71,13 +72,14 @@ DoscPAS = function(
     bulk_dataset = matched_bulk,
     sc_dataset = sc_data,
     assay = 'RNA',
-    tag = label_type,
+    tag = ms_type,
     phenotype = phenotype,
     imputation = imputation,
     nfeature = nfeature,
     alpha = alpha,
     network_class = network_class,
-    family = family
+    family = family,
+    ...
   )
 
   # *rename level
@@ -88,6 +90,10 @@ DoscPAS = function(
         scPAS == "scPAS-" ~ "Negative",
         scPAS == "0" ~ "Neutral"
       )
+    ) %>%
+    cbind(
+      metadata = data.frame(ms_type = ms_type),
+      row.names = colnames(.)
     )
 
   cli::cli_alert_success(c(

@@ -5,13 +5,14 @@ DoScissor = function(
   matched_bulk = NULL,
   sc_data,
   phenotype = NULL,
-  label_type,
+  ms_type,
   scissor_alpha = 0.05,
   scissor_cutoff = 0.2,
   scissor_family = c("gaussian", "binomial", "cox"),
   reliability_test = FALSE,
   dir2save_scissor_inputs = NULL,
-  nfold = 10
+  nfold = 10,
+  ...
 ) {
   library(dplyr)
 
@@ -34,20 +35,21 @@ DoScissor = function(
     sc_dataset = sc_data,
     phenotype = phenotype,
     tag = c(
-      glue::glue("{label_type}_Negative"),
-      glue::glue("{label_type}_Positve")
+      glue::glue("{ms_type}_Negative"),
+      glue::glue("{ms_type}_Positve")
     ),
     alpha = scissor_alpha,
     cutoff = scissor_cutoff,
     family = scissor_family,
     Save_file = file.path(dir2save_scissor_inputs, "Scissor_inputs.RData"),
-    Load_file = path2load_scissor_cache
+    Load_file = path2load_scissor_cache,
+    ...
   )
 
   # meta.data to add
   sc_meta <- data.frame(
     scissor = rep("Neutral", ncol(sc_data)),
-    scissored_ms_type = label_type,
+    ms_type = ms_type,
     row.names = colnames(sc_data)
   )
   sc_meta$scissor[rownames(sc_meta) %in% infos1$Scissor_pos] <- "Positive"

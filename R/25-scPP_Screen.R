@@ -6,7 +6,7 @@
 #' @param matched_bulk A matrix of matched bulk expression data (genes x samples)
 #' @param sc_data A Seurat object containing single-cell expression data
 #' @param phenotype A data.frame with phenotype information (samples x features)
-#' @param label_type Type of phenotype label: "Binary", "Continuous", or "Survival"
+#' @param phnotype_type Type of phenotype label: "Binary", "Continuous", or "Survival"
 #'
 #' @return A Seurat object with scPP prediction results added as metadata
 #'
@@ -24,7 +24,9 @@ DoscPP = function(
   matched_bulk,
   sc_data,
   phenotype,
-  label_type = c("Binary", "Continuous", "Survival")
+  phnotype_type = c("Binary", "Continuous", "Survival"),
+  ms_type,
+  ...
 ) {
   library(dplyr)
 
@@ -43,30 +45,30 @@ DoscPP = function(
   ))
 
   # decide which type of phenotype data is used
-  if (length(table(phenotype[2])) == 2 || tolower(label_type) = "binary") {
+  if (length(table(phenotype[2])) == 2 || tolower(phnotype_type) = "binary") {
     gene_list = ScPP::marker_Binary(
       matched_bulk,
       phenotype,
       ref_group = "Normal"
     )
   } else if (
-    length(table(phenotype[2])) > 3 || tolower(label_type) == "continuous"
+    length(table(phenotype[2])) > 3 || tolower(phnotype_type) == "continuous"
   ) {
     gene_list = ScPP::marker_Continuous(
       matched_bulk,
       phenotype[2],
     )
-  } else if (ncol(phenotype) == 3 || tolower(label_type) == "survival") {
+  } else if (ncol(phenotype) == 3 || tolower(phnotype_type) == "survival") {
     gene_list = ScPP::marker_Survival(
       matched_bulk,
       phenotype,
     )
   } else {
-    stop("Unknown phenotype type, please check the `label_type`")
+    stop("Unknown phenotype type, please check the `phnotype_type`")
   }
 
   # *Start screen
-  scPP_result <- ScPP::ScPP(sc_data, gene_list)
+  scPP_result <- ScPP::ScPP(sc_data, gene_list, ...)
 
   sc_meta = scPP_result$metadata %>%
     dplyr::mutate(
@@ -75,6 +77,10 @@ DoscPP = function(
         ScPP == "Phenotype-" ~ "Negative",
         ScPP == "Background" ~ "Neutral"
       )
+    ) %>%
+    cbind(
+      metadata = data.frame(ms_type = ms_type),
+      row.names = colnames(.) # !needs to test here
     )
 
   sc_data = sc_data %>% Seurat::AddMetaData(sc_meta$ScPP)
