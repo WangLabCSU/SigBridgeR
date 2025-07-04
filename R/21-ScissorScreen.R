@@ -2,10 +2,10 @@
 
 DoScissor = function(
   path2load_scissor_cache = NULL,
-  matched_bulk = NULL,
+  matched_bulk ,
   sc_data,
-  phenotype = NULL,
-  ms_type,
+  phenotype,
+  label_type,
   scissor_alpha = 0.05,
   scissor_cutoff = 0.2,
   scissor_family = c("gaussian", "binomial", "cox"),
@@ -107,7 +107,8 @@ Scissor.v5.optimized <- function(
   family = c("gaussian", "binomial", "cox"),
   Save_file = "Scissor_inputs.RData",
   Load_file = NULL,
-  workers = 32
+  workers = 32,
+  ...
 ) {
   library(dplyr)
   library(Matrix)

@@ -24,8 +24,8 @@ DoscPP = function(
   matched_bulk,
   sc_data,
   phenotype,
-  phnotype_type = c("Binary", "Continuous", "Survival"),
-  ms_type,
+  label_type,
+  phenotype_class = c("Binary", "Continuous", "Survival"),
   ...
 ) {
   library(dplyr)
@@ -45,26 +45,26 @@ DoscPP = function(
   ))
 
   # decide which type of phenotype data is used
-  if (length(table(phenotype[2])) == 2 || tolower(phnotype_type) = "binary") {
+  if (length(table(phenotype[2])) == 2 || tolower(phenotype_class) = "binary") {
     gene_list = ScPP::marker_Binary(
       matched_bulk,
       phenotype,
       ref_group = "Normal"
     )
   } else if (
-    length(table(phenotype[2])) > 3 || tolower(phnotype_type) == "continuous"
+    length(table(phenotype[2])) > 3 || tolower(phenotype_class) == "continuous"
   ) {
     gene_list = ScPP::marker_Continuous(
       matched_bulk,
       phenotype[2],
     )
-  } else if (ncol(phenotype) == 3 || tolower(phnotype_type) == "survival") {
+  } else if (ncol(phenotype) == 3 || tolower(phenotype_class) == "survival") {
     gene_list = ScPP::marker_Survival(
       matched_bulk,
       phenotype,
     )
   } else {
-    stop("Unknown phenotype type, please check the `phnotype_type`")
+    stop("Unknown phenotype type, please check the `phenotype_class`")
   }
 
   # *Start screen
@@ -73,9 +73,9 @@ DoscPP = function(
   sc_meta = scPP_result$metadata %>%
     dplyr::mutate(
       `ScPP` = dplyr::case_when(
-        ScPP == "Phenotype+" ~ "Positive",
-        ScPP == "Phenotype-" ~ "Negative",
-        ScPP == "Background" ~ "Neutral"
+        ScPP == "Phenotype+" ~ glue::glue("{label_type} Positive"),
+        ScPP == "Phenotype-" ~ glue::glue("{label_type} Negative"),
+        ScPP == "Background" ~ glue::glue("{label_type} Neutral")
       )
     ) %>%
     cbind(
@@ -90,5 +90,5 @@ DoscPP = function(
     crayon::green("scPP screening done.")
   ))
 
-  return(sc_data)
+  return(list(scRNA_data = sc_data))
 }

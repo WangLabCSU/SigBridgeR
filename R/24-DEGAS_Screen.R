@@ -18,5 +18,5 @@ DoDEGAS = function(matched_bulk, sc_data, phenotype, label_type) {
     crayon::green("Start scPAS screening.")
   ))
 
-  return()
+  return(list(scRNA_data = 1))
 }

@@ -33,7 +33,7 @@ DoscPAS = function(
   gene_RNAcount_filter = 20,
   bulk_0_filter_thresh = 0.25,
   network_class = 'SC',
-  family = c("cox", "gaussian", "binomial"),
+  scPAS_family = c("cox", "gaussian", "binomial"),
   ...
 ) {
   library(dplyr)
@@ -78,7 +78,7 @@ DoscPAS = function(
     nfeature = nfeature,
     alpha = alpha,
     network_class = network_class,
-    family = family,
+    family = scPAS_family,
     ...
   )
 
@@ -101,5 +101,5 @@ DoscPAS = function(
     crayon::green("scPAS screening done.")
   ))
 
-  return(scPAS_result)
+  return(list(scRNA_data = scPAS_result))
 }
