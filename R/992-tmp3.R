@@ -1,3 +1,5 @@
+# *GBM Example
+
 library(DEGAS)
 library(Rtsne)
 library(ggplot2)
@@ -7,16 +9,27 @@ use_condaenv("venv_3.12", required = TRUE)
 py_config()
 
 
-## Warning: package 'ggplot2' was built under R version 3.5.2
-scDat = read.csv('~/R/Project/R_code/DEGAS_data/scDat.csv', row.names = 1)
-patDat = read.csv('~/Data/DEGAS/patDat.csv', row.names = 1)
-patLab = read.csv('~/Data/DEGAS/patLab.csv')
+# *count inversed
+scDat = utils::read.csv(
+  '~/R/Project/R_code/DEGAS_data/GBM/scDat.csv',
+  row.names = 1
+)
+# *bulk inversed
+patDat = utils::read.csv(
+  '~/R/Project/R_code/DEGAS_data/GBM/patDat.csv',
+  row.names = 1
+)
+# ?phnotype
+patLab = utils::read.csv(
+  '~/R/Project/R_code/DEGAS_data/GBM/patLab.csv',
+  row.names = 1
+)
 
-path.data = ''
-path.result = ''
-initDEGAS()
-set_seed_term(2)
-tmpDir = 'tmp/'
+path.data = '~/R/Project/R_code/DEGAS_data/test_result'
+path.result = '~/R/Project/R_code/DEGAS_data/test_result'
+DEGAS::initDEGAS()
+DEGAS::set_seed_term(2)
+tmpDir = '~/R/Project/R_code/DEGAS_data/test_result/tmp/'
 
 ccModel1 = runCCMTLBag(
   scDat,
@@ -29,3 +42,23 @@ ccModel1 = runCCMTLBag(
   3,
   5
 )
+
+## 3-layer DenseNet BlankClass DEGAS model
+
+## 0
+
+## 3-layer DenseNet BlankClass DEGAS model
+
+## 0
+
+## 3-layer DenseNet BlankClass DEGAS model
+
+## 0
+
+## 3-layer DenseNet BlankClass DEGAS model
+
+## 0
+
+## 3-layer DenseNet BlankClass DEGAS model
+
+## 0

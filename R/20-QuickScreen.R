@@ -4,15 +4,15 @@
 #'
 #'
 #' @param matched_bulk
-#' @param sc_data
+#' @param sc_data A Seurat object to be screened.
 #' @param phenotype
-#' @param label_type
-#' @param family
-#' @param phenotype_class
-#' @param screen_method
-#' @param ...
+#' @param label_type A character string indicating the name of phenotype, .
+#' @param family This argument is used in the screen_method `Scissor` and `scPAS`, support `gaussian`, `binomial`, `cox`
+#' @param phenotype_class This argument is only used in the screen_method `DEGAS`, support `Binary`, `Continuous`, `Survival`
+#' @param screen_method support `Scissor`, `scPP`, `scPAS`, `DEGAS`, `scAB`
+#' @param ... Other arguments to be passed to the chose screen method.
 #'
-#' @return
+#' @return A list containing the screened seurat object, in name `scRNA_data`
 #' @export
 #'
 #'
@@ -69,6 +69,10 @@ Screen <- function(
         },
       "scpp" ~
         {
+          phenotype_class = glue::glue(
+            toupper(substr(phenotype_class, 1, 1)),
+            tolower(substr(phenotype_class, 2, nchar(phenotype_class)))
+          )
           if (
             length(phenotype_class) != 1 &&
               !phenotype_class %in% c("Binary", "Continuous", "Survival")
