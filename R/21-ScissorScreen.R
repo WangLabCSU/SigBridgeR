@@ -2,7 +2,7 @@
 
 DoScissor = function(
   path2load_scissor_cache = NULL,
-  matched_bulk ,
+  matched_bulk,
   sc_data,
   phenotype,
   label_type,
@@ -35,8 +35,8 @@ DoScissor = function(
     sc_dataset = sc_data,
     phenotype = phenotype,
     tag = c(
-      glue::glue("{ms_type}_Negative"),
-      glue::glue("{ms_type}_Positve")
+      glue::glue("{label_type}_Negative"),
+      glue::glue("{label_type}_Positve")
     ),
     alpha = scissor_alpha,
     cutoff = scissor_cutoff,
@@ -49,7 +49,7 @@ DoScissor = function(
   # meta.data to add
   sc_meta <- data.frame(
     scissor = rep("Neutral", ncol(sc_data)),
-    ms_type = ms_type,
+    label_type = label_type,
     row.names = colnames(sc_data)
   )
   sc_meta$scissor[rownames(sc_meta) %in% infos1$Scissor_pos] <- "Positive"

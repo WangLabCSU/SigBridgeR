@@ -24,7 +24,7 @@ DoscPAS = function(
   matched_bulk,
   sc_data,
   phenotype,
-  ms_type,
+  label_type,
   assay = 'RNA',
   imputation = F,
   nfeature = 3000,
@@ -72,7 +72,7 @@ DoscPAS = function(
     bulk_dataset = matched_bulk,
     sc_dataset = sc_data,
     assay = 'RNA',
-    tag = ms_type,
+    tag = label_type,
     phenotype = phenotype,
     imputation = imputation,
     nfeature = nfeature,
@@ -92,7 +92,7 @@ DoscPAS = function(
       )
     ) %>%
     cbind(
-      metadata = data.frame(ms_type = ms_type),
+      metadata = data.frame(label_type = label_type),
       row.names = colnames(.)
     )
 

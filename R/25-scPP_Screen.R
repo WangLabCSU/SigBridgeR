@@ -73,17 +73,17 @@ DoscPP = function(
   sc_meta = scPP_result$metadata %>%
     dplyr::mutate(
       `ScPP` = dplyr::case_when(
-        ScPP == "Phenotype+" ~ glue::glue("{label_type} Positive"),
-        ScPP == "Phenotype-" ~ glue::glue("{label_type} Negative"),
-        ScPP == "Background" ~ glue::glue("{label_type} Neutral")
+        ScPP == "Phenotype+" ~ glue::glue("Positive"),
+        ScPP == "Phenotype-" ~ glue::glue("Negative"),
+        ScPP == "Background" ~ glue::glue("Neutral")
       )
     ) %>%
     cbind(
-      metadata = data.frame(ms_type = ms_type),
-      row.names = colnames(.) # !needs to test here
+      label_type = label_type,
+      row.names = rownames(.) # !needs to test here
     )
 
-  sc_data = sc_data %>% Seurat::AddMetaData(sc_meta$ScPP)
+  sc_data = sc_data %>% Seurat::AddMetaData(sc_meta$ScPP, sc_meta$label_type)
 
   cli::cli_alert_success(c(
     "[{TimeStamp()}]",
