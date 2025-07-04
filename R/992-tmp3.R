@@ -3,11 +3,6 @@
 library(DEGAS)
 library(Rtsne)
 library(ggplot2)
-library(reticulate)
-
-use_condaenv("venv_3.12", required = TRUE)
-py_config()
-
 
 # *count inversed
 scDat = utils::read.csv(
