@@ -1,10 +1,24 @@
-#
+#' @title scAB Screening
+#' @description
+#'
+#'
+#' @param matched_bulk
+#' @param sc_data
+#' @param phenotype
+#' @param label_type
+#' @param phenotype_class
+#' @param tred
+#' @return
+#' @export
 DoscAB <- function(
   matched_bulk,
   sc_data,
   phenotype,
   label_type,
   phenotype_class = c("binary", "survival"),
+  alpha = 0.005,
+  alpha_2 = 5e-05,
+  maxiter = 2000,
   tred = 2
 ) {
   library(dplyr)
@@ -45,9 +59,9 @@ DoscAB <- function(
   scAB_result <- scAB::scAB(
     Object = scAB_obj,
     K = k,
-    alpha = 0.005,
-    alpha_2 = 5e-05,
-    maxiter = 2000
+    alpha = alpha,
+    alpha_2 = alpha_2,
+    maxiter = maxiter
   )
 
   cli::cli_alert_info(c(
