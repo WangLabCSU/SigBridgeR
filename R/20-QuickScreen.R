@@ -8,8 +8,8 @@
 #' @param phenotype
 #' @param label_type A character string indicating the name of phenotype, .
 #' @param family This argument is used in the screen_method `Scissor` and `scPAS`, support `gaussian`, `binomial`, `cox`
-#' @param phenotype_class This argument is only used in the screen_method `DEGAS`, support `Binary`, `Continuous`, `Survival`
-#' @param screen_method support `Scissor`, `scPP`, `scPAS`, `DEGAS`, `scAB`
+#' @param phenotype_class This argument is only used in the screen_method `scAB` and `scPP`, supports `binary`, `survival` for `scAB` and supports `binary`, `continuous`, `survival` for `scPP`
+#' @param screen_method support `Scissor`, `scPP`, `scPAS`, `scAB`
 #' @param ... Other arguments to be passed to the chose screen method.
 #'
 #' @return A list containing the screened seurat object, in name `scRNA_data`
@@ -22,8 +22,8 @@ Screen <- function(
   phenotype,
   label_type,
   family = c("gaussian", "binomial", "cox"),
-  phenotype_class = c("Binary", "Continuous", "Survival"),
-  screen_method = c("Scissor", "scPP", "scPAS", "DEGAS", "scAB"),
+  phenotype_class = c("binary", "survival", "continuous"),
+  screen_method = c("Scissor", "scPP", "scPAS", "scAB"),
   ...
 ) {
   library(dplyr)
@@ -89,8 +89,11 @@ Screen <- function(
             phenotype_class = phenotype_class # "Binary", "Continuous", "Survival"
           )
         },
-      "degas" ~ DoDEGAS(sc_data, matched_bulk, phenotype, label_type, family),
-      "scab" ~ DoscAB(sc_data, matched_bulk, phenotype, label_type, family),
+      "scab" ~
+        {
+          phenotype_class = tolower(phenotype_class)
+          DoscAB(sc_data, matched_bulk, phenotype, label_type, phenotype_class)
+        },
       TRUE ~ stop("Screen method not found.")
     )
 

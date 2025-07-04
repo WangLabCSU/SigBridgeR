@@ -22,8 +22,10 @@ Imports:
     patchwork,
     purrr,
     randomcoloR,
+    scAB,
     Scissor,
     scPAS,
+    ScPP,
     SeuratObject,
     tibble,
     tidyr
