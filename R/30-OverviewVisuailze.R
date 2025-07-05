@@ -1,36 +1,7 @@
 # ---- Tumor UMAP Visualization ----
 
-FetchUMAP = function(
-  SeuratObject,
-  group_by = NULL,
-  plot_name = NULL,
-  plot_show = FALSE,
-  point_size = 0.6,
-  plot_color = NULL,
-  label_size = 10,
-  order = c(2, 1)
-) {
-  umap_plot = Seurat::DimPlot(
-    object = SeuratObject,
-    reduction = "umap",
-    label = TRUE,
-    group.by = group_by,
-    cols = plot_color,
-    pt.size = point_size,
-    order = order,
-    label.size = label_size
-  ) +
-    ggplot2::ggtitle(glue::glue("{plot_name} UMAP"))
-
-  if (plot_show) {
-    print(umap_plot)
-  }
-  return(umap_plot)
-}
-
-
 #
-FetchUAMP.All = function(
+FetchUAMP = function(
   SeuratObject,
   group_by = c("celltype", NULL),
   feature = NULL,
@@ -43,55 +14,76 @@ FetchUAMP.All = function(
   order = c(2, 1),
   feature_max_cutoff = 2,
   feature_min_cutoff = -2,
-  feature_plot_raster = FALSE
+  feature_plot_raster = FALSE,
+  ...
 ) {
-  umap_list = list()
+  extra_params <- list(...)
+
+  dimplot_args <- names(formals(Seurat::DimPlot))
+  featureplot_args <- names(formals(Seurat::FeaturePlot))
+
+  dimplot_dot <- extra_params[names(extra_params) %in% dimplot_args]
+  featureplot_dot <- extra_params[names(extra_params) %in% featureplot_args]
+
+  umap_list <- list()
 
   if (!is.null(group_by)) {
-    umap_list = lapply(X = group_by, FUN = function(group_name) {
-      umap_plot = Seurat::DimPlot(
-        object = SeuratObject,
-        reduction = "umap",
-        label = umap_label,
-        group.by = group_name,
-        cols = plot_color,
-        pt.size = point_size,
-        order = order,
-        label.size = label_size
-      ) +
+    umap_list <- lapply(X = group_by, FUN = function(group_name) {
+      dim_args <- c(
+        list(
+          object = SeuratObject,
+          reduction = "umap",
+          label = umap_label,
+          group.by = group_name,
+          cols = plot_color,
+          pt.size = point_size,
+          order = order,
+          label.size = label_size
+        ),
+        dimplot_dot
+      )
+
+      umap_plot <- do.call(Seurat::DimPlot, dim_args) +
         ggplot2::ggtitle(glue::glue("{plot_name} UMAP"))
+      return(umap_plot)
     })
   }
 
   if (!is.null(feature)) {
-    feature_plots = lapply(feature, function(feat) {
-      Seurat::FeaturePlot(
-        object = SeuratObject,
-        raster = FALSE,
-        label = umap_label,
-        order = order,
-        label.size = label_size,
-        features = feat,
-        max.cutoff = feature_max_cutoff,
-        min.cutoff = feature_min_cutoff
-      ) +
+    feature_plots <- lapply(feature, function(feat) {
+      feat_args <- c(
+        list(
+          object = SeuratObject,
+          features = feat,
+          raster = feature_plot_raster,
+          label = umap_label,
+          order = order,
+          label.size = label_size,
+          max.cutoff = feature_max_cutoff,
+          min.cutoff = feature_min_cutoff
+        ),
+        featureplot_dot
+      )
+
+      do.call(Seurat::FeaturePlot, feat_args) +
         ggplot2::ggtitle(glue::glue("{feat} Expression"))
     })
     umap_list <- c(umap_list, feature_plots)
   }
 
-  plot_count = length(umap_list)
-  if (plot_show && plot_count > 0) {
-    grid_size <- ifelse(plot_count < 4, plot_count, ceiling(sqrt(n)))
+  plot_count <- length(umap_list)
+  if (plot_count == 0) {
+    stop("No plots have been generated")
+  }
+
+  if (plot_show) {
+    grid_size <- ifelse(plot_count < 4, plot_count, ceiling(sqrt(plot_count)))
     combined_plot <- patchwork::wrap_plots(
       umap_list,
       ncol = grid_size,
-      nrow = grid_size
+      nrow = ceiling(plot_count / grid_size)
     )
-    umap_list = c(umap_list, combined_plot)
     print(combined_plot)
-  } else if (plot_count == 0) {
-    stop("No plots have been generated")
   }
   return(umap_list)
 }
@@ -120,7 +112,7 @@ CalculateCellTypeFraction = function(
     na.omit()
 
   # default: select all
-  if (any(tolower(select_cell_type) %in% c("all", ""))) {
+  if (any(tolower(select_cell_type) %in% c("all", "", NULL))) {
     select_cell_type <- cell_types
   }
   # check if celltype inputed is wrong
@@ -202,7 +194,7 @@ CalculateCellTypeFraction = function(
 SampleScreenFractionStackPlot = function(
   screened_seurat,
   sample_colname = "Source",
-  screen_type = c("scissor", "scPAS"),
+  screen_type = c("scissor", "scPAS", "scPP", "scAB"),
   return_stats = FALSE,
   return_plot = TRUE,
   show_null = FALSE,
@@ -212,15 +204,16 @@ SampleScreenFractionStackPlot = function(
   require(dplyr, quietly = TRUE)
 
   if (!inherits(screened_seurat, "Seurat")) {
-    stop("Input must be a Seurat object")
+    stop("`screened_seurat` must be a Seurat object")
   }
 
   if (length(screen_type) != 1) {
     stop(glue::glue(
       "Please refer one screen algorithm type",
       "Available screen types: ",
-      c('scissor', 'scPAS')[
-        c('scissor', 'scPAS') %in% colnames(screened_seurat@meta.data)
+      c('scissor', 'scPAS', 'scPP', 'scAB')[
+        c('scissor', 'scPAS', 'scPP', 'scAB') %in%
+          colnames(screened_seurat@meta.data)
       ],
       .sep = "\n"
     ))

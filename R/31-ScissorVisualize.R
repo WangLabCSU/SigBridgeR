@@ -272,15 +272,8 @@ DoAllCelltypeMS.Heatmap = function(
   heatmap_width = 12,
   heatmap_height = 8
 ) {
-  RequireNamespace <- function(pkg) {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      stop(glue::glue("Package {crayon::red(pkg)} required but not installed"))
-    }
-  }
-  RequireNamespace("ComplexHeatmap")
-  RequireNamespace("data.table")
-  RequireNamespace("circlize")
   library(dplyr)
+
   if (is.null(color_spectrum)) {
     color_spectrum = circlize::colorRamp2(
       c(0, 0.5, 1),
@@ -289,8 +282,8 @@ DoAllCelltypeMS.Heatmap = function(
   }
   if (!all(param_type %in% c("P_value_lm", "P_value_wilcox", "R_squared"))) {
     stop(glue::glue(
-      "{crayon::red('param_type')} set wrong.",
-      "valid 'param_type': P_value_lm, P_value_wilcox, R_squared",
+      "{crayon::red('`param_type`')} set wrong.",
+      "valid `param_type`: P_value_lm, P_value_wilcox, R_squared",
       .sep = "\n"
     ))
   }
@@ -302,9 +295,9 @@ DoAllCelltypeMS.Heatmap = function(
       if ("Cell_type" %in% colnames(x)) {
         as.character(x[, "Cell_type"])
       } else {
-        cli::cli_alert_warning(
+        cli::cli_alert_warning(crayon::yellow(
           "Column 'Cell_type' missing in sample: {crayon::yellow(names(x)[1])} "
-        )
+        ))
         character(0)
       }
     }

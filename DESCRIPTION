@@ -16,6 +16,7 @@ Imports:
     cli,
     ComplexHeatmap,
     future,
+    ggrepel,
     grid,
     IDConverter,
     Matrix,
