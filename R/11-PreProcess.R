@@ -118,7 +118,7 @@ BulkPreProcess = function(data = NULL) {
 #' @param accuracy_thresh A threshold for filtering rows. The value of `accuracy_thresh` ranges from 0 to 1.
 #' @param ms_search_pattern The matching pattern used to search for mutational signature columns.
 #' @export
-MSPreProcess = function(
+MSPreProcess <- function(
   ms_signature,
   filter_tumor_type = "all",
   col_thresh = 0.05,
@@ -127,43 +127,34 @@ MSPreProcess = function(
 ) {
   library(dplyr)
 
-  keep_colnames <- purrr::map_lgl(names(ms_signature), function(col_name) {
+  keep_colnames <- lapply(X = names(ms_signature), FUN = function(col_name) {
     col <- ms_signature[[col_name]]
 
     if (is.character(col)) {
       cli::cli_alert_info("{crayon::green(col_name)} kept")
-      return(TRUE) # keep annotational columns
+      return(col_name) # keep annotational columns
     } else if (is.numeric(col)) {
       ifelse(
-        !grepl(ms_search_pattern, col_name),
+        # Retain cols where the proportion of non-zero data in the ms exceeds the threshold.
+        mean(col != 0) >= col_thresh, # equal to: sum(col != 0)/length(col) >= col_thresh
+        {
+          cli::cli_alert_info("{crayon::green(col_name)} kept")
+          return(col_name)
+        },
         {
           cli::cli_alert_info(
-            "{crayon::red(col_name)} not kept, because it represents non-mutational signature profile"
+            "{crayon::red(col_name)} not kept, because the valid data in the column < {crayon::bold(col_thresh)}"
           )
-          return(FALSE) # remove other unrelated data columns
-        },
-        ifelse(
-          # Retain cols where the proportion of non-zero data in the ms exceeds the threshold.
-          mean(col != 0) >= col_thresh, # equal to: sum(col != 0)/length(col) >= col_thresh
-          {
-            cli::cli_alert_info("{crayon::green(col_name)} kept")
-            return(TRUE)
-          },
-          {
-            cli::cli_alert_info(
-              "{crayon::red(col_name)} not kept, because the valid data in the column < {crayon::bold(col_thresh)}"
-            )
-            return(FALSE)
-          }
-        )
+          return(NULL)
+        }
       )
     } else {
-      FALSE
+      return(NULL)
     }
   })
 
-  accuracy_column = grep("[aA][cC]{2}.*", colnames(ms_signature), value = TRUE)
-  tumor_type_col = grep(
+  accuracy_column <- grep("[aA][cC]{2}.*", colnames(ms_signature), value = TRUE)
+  tumor_type_col <- grep(
     "[tT]umor|[Cc]ancer",
     colnames(ms_signature),
     value = TRUE
@@ -174,7 +165,7 @@ MSPreProcess = function(
       .data[[accuracy_column]] >= accuracy_thresh,
       tolower(.data[[tumor_type_col]]) %in% tolower(filter_tumor_type)
     ) %>%
-    dplyr::select(tidyr::all_of(keep_colnames))
+    dplyr::select(unlist(keep_colnames))
 
   # final check for data availability
   if (sum(grepl(ms_search_pattern, colnames(processed_ms_signature))) == 0) {
