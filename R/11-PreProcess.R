@@ -111,12 +111,16 @@ BulkPreProcess = function(data = NULL) {
 
 #' @description
 #' Preprocess mutational signature data
+#'
+#' @param ms_signature mutational signature data
+#' @param filter_tumor_type The tumor type to be left. If `filter_tumor_type` is "all", all tumor types will be retained.
 #' @param col_thresh For each column, if the proportion of non-zero values is greater than `col_thresh`, it will be retained.
 #' @param accuracy_thresh A threshold for filtering rows. The value of `accuracy_thresh` ranges from 0 to 1.
 #' @param ms_search_pattern The matching pattern used to search for mutational signature columns.
 #' @export
 MSPreProcess = function(
   ms_signature,
+  filter_tumor_type = "all",
   col_thresh = 0.05,
   accuracy_thresh = 0,
   ms_search_pattern = "SBS|DBS|CN|CNV|SV|ID|INDEL"
@@ -158,14 +162,19 @@ MSPreProcess = function(
     }
   })
 
-  accuracy_column = grepv("[aA][cC]{2}.*", colnames(ms_signature))
+  accuracy_column = grep("[aA][cC]{2}.*", colnames(ms_signature), value = TRUE)
+  tumor_type_col = grep(
+    "[tT]umor|[Cc]ancer",
+    colnames(ms_signature),
+    value = TRUE
+  )
 
-  processed_ms_signature <- ms_signature[
-    # Filter rows based on accuracy threshold
-    processed_ms_signature[[accuracy_column]] >= accuracy_thresh,
-    keep_colnames,
-    drop = FALSE
-  ]
+  processed_ms_signature <- ms_signature %>%
+    dplyr::filter(
+      .data[[accuracy_column]] >= accuracy_thresh,
+      tolower(.data[[tumor_type_col]]) %in% tolower(filter_tumor_type)
+    ) %>%
+    dplyr::select(tidyr::all_of(keep_colnames))
 
   # final check for data availability
   if (sum(grepl(ms_search_pattern, colnames(processed_ms_signature))) == 0) {

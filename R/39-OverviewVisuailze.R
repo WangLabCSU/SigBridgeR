@@ -81,13 +81,14 @@ FetchUAMP.All = function(
   }
 
   plot_count = length(umap_list)
-  if (plot_show & plot_count > 0) {
+  if (plot_show && plot_count > 0) {
     grid_size <- ifelse(plot_count < 4, plot_count, ceiling(sqrt(n)))
     combined_plot <- patchwork::wrap_plots(
       umap_list,
       ncol = grid_size,
       nrow = grid_size
     )
+    umap_list = c(umap_list, combined_plot)
     print(combined_plot)
   } else if (plot_count == 0) {
     stop("No plots have been generated")

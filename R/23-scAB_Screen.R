@@ -8,6 +8,11 @@
 #' @param label_type
 #' @param phenotype_class
 #' @param tred
+#' @param alpha
+#' @param alpha_2
+#' @param maxiter
+#' @param tred
+#'
 #' @return
 #' @export
 DoscAB <- function(

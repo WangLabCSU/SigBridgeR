@@ -1,14 +1,19 @@
 library(dplyr)
+setwd("~/R/Project/R_code/SigBridgeR")
+source("./R/11-PreProcess.R")
+source("./R/90-Test.R")
 
 tcga_exp_count <- readRDS(
-  "~/Data/TCGA-LUAD.exp.count.rds"
+  "~/R/Project/R_code/sideWORK/Scissored-GC-ecDNA/data/input/TCGA-LUAD.exp.count.rds"
 ) %>%
   magrittr::set_colnames(substr(colnames(.), 1, 15)) %>%
   BulkPreProcess()
 
-tcga_ms_sbs = read.csv(
-  "~/Data/MutationalSignature/TCGA_WES_sigProfiler_SBS_signatures_in_samples.csv"
-) %>%
+tcga_ms_indel = read.csv(
+  "~/R/Project/R_code/WORK/data/input_data/TCGA_WES_sigProfiler_ID_signatures_in_samples.csv"
+)
+
+%>%
   MSPreProcess(
     thresh = 0.05
   )
