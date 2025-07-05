@@ -31,69 +31,75 @@ Screen <- function(
     stop("Only one screen method is allowed.")
   }
 
-  screened_seurat = tolower(screen_method) %>%
-    dplyr::case_when(
-      "scissor" ~
-        {
-          family = tolower(family)
-          if (
-            length(family) != 1 && !family %in% c("gaussian", "binomial", "cox")
-          ) {
-            stop("`family` must be one of gaussian, binomial, cox")
-          }
+  screened_result = tolower(screen_method) %>%
+    switch(
+      "scissor" = {
+        family = tolower(family)
+        if (
+          length(family) != 1 && !family %in% c("gaussian", "binomial", "cox")
+        ) {
+          stop("`family` must be one of gaussian, binomial, cox")
+        }
 
-          DoScissor(
-            sc_data = sc_data,
-            matched_bulk = matched_bulk,
-            phenotype = phenotype,
-            label_type = label_type,
-            scissor_family = family # "gaussian", "binomial", "cox"
-          )
-        },
-      "scpas" ~
-        {
-          family = tolower(family)
-          if (
-            length(family) != 1 && !family %in% c("gaussian", "binomial", "cox")
-          ) {
-            stop("`family` must be one of gaussian, binomial, cox")
-          }
+        DoScissor(
+          sc_data = sc_data,
+          matched_bulk = matched_bulk,
+          phenotype = phenotype,
+          label_type = label_type,
+          scissor_family = family, # "gaussian", "binomial", "cox"
+          ...
+        )
+      },
+      "scpas" = {
+        family = tolower(family)
+        if (
+          length(family) != 1 && !family %in% c("gaussian", "binomial", "cox")
+        ) {
+          stop("`family` must be one of gaussian, binomial, cox")
+        }
 
-          DoscPAS(
-            sc_data = sc_data,
-            matched_bulk = matched_bulk,
-            phenotype = phenotype,
-            label_type = label_type,
-            scPAS_family = family # "gaussian", "binomial", "cox"
+        DoscPAS(
+          sc_data = sc_data,
+          matched_bulk = matched_bulk,
+          phenotype = phenotype,
+          label_type = label_type,
+          scPAS_family = family, # "gaussian", "binomial", "cox"
+          ...
+        )
+      },
+      "scpp" = {
+        phenotype_class = glue::glue(
+          toupper(substr(phenotype_class, 1, 1)),
+          tolower(substr(phenotype_class, 2, nchar(phenotype_class)))
+        )
+        if (
+          length(phenotype_class) != 1 &&
+            !phenotype_class %in% c("Binary", "Continuous", "Survival")
+        ) {
+          stop(
+            "`phenotype_class` must be one of Binary, Continuous, Survival"
           )
-        },
-      "scpp" ~
-        {
-          phenotype_class = glue::glue(
-            toupper(substr(phenotype_class, 1, 1)),
-            tolower(substr(phenotype_class, 2, nchar(phenotype_class)))
-          )
-          if (
-            length(phenotype_class) != 1 &&
-              !phenotype_class %in% c("Binary", "Continuous", "Survival")
-          ) {
-            stop(
-              "`phenotype_class` must be one of Binary, Continuous, Survival"
-            )
-          }
-          DoscPP(
-            sc_data = sc_data,
-            matched_bulk = matched_bulk,
-            phenotype = phenotype,
-            label_type = label_type,
-            phenotype_class = phenotype_class # "Binary", "Continuous", "Survival"
-          )
-        },
-      "scab" ~
-        {
-          phenotype_class = tolower(phenotype_class)
-          DoscAB(sc_data, matched_bulk, phenotype, label_type, phenotype_class)
-        },
+        }
+        DoscPP(
+          sc_data = sc_data,
+          matched_bulk = matched_bulk,
+          phenotype = phenotype,
+          label_type = label_type,
+          phenotype_class = phenotype_class, # "Binary", "Continuous", "Survival"
+          ...
+        )
+      },
+      "scab" = {
+        phenotype_class = tolower(phenotype_class)
+        DoscAB(
+          sc_data = sc_data,
+          matched_bulk = matched_bulk,
+          phenotype = phenotype,
+          label_type = label_type,
+          phenotype_class = phenotype_class, # "Binary", "Survival"
+          ...
+        )
+      },
       TRUE ~ stop("Screen method not found.")
     )
 

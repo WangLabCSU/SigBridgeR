@@ -79,20 +79,9 @@ SCPreProcess = function(
     return(obj)
   }
 
-  # tumor_cells <- colnames(sc_seurat)[
-  #   tolower(sc_seurat@meta.data$cnv_status) == cnv_status
-  # ]
-  # scRNA_tumor_dataset <- sc_seurat[, tumor_cells]
+  result = process_sc_object(sc_seurat)
 
-  scRNA_tumor_dataset = sc_seurat %>%
-    subset(subset = tolower(.@meta.data$cnv_status) == cnv_status)
-
-  result_list <- list(
-    sc_seurat = process_sc_object(sc_seurat),
-    sc_tumor_seurat = process_sc_object(scRNA_tumor_dataset)
-  )
-
-  return(result_list)
+  return(result)
 }
 
 
@@ -232,7 +221,7 @@ MatchSample = function(
     stop("No common sample found in data")
   }
 
-  return(list(
+  match_result = list(
     phenotype = processed_ms_signature %>%
       dplyr::filter(.[[sample_colname]] %in% cm_samples) %>%
       dplyr::arrange(factor(.[[sample_colname]], levels = cm_samples)) %>%
@@ -241,7 +230,9 @@ MatchSample = function(
       },
     matched_TCGA_exp_count = TCGA_exp_count[, cm_samples, drop = FALSE],
     ms_select = names(ms_signature)[[col_id]]
-  ))
+  )
+
+  return(match_result)
 }
 
 # ------------------- other function ----------------------

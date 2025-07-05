@@ -6,7 +6,7 @@
 .httr-oauth
 .DS_Store
 .quarto
-R/9.*
-9.*
+R/9*
+9*.R
 tmp
-test_result/*
+*.RData
