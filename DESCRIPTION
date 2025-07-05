@@ -20,7 +20,6 @@ Imports:
     IDConverter,
     Matrix,
     patchwork,
-    purrr,
     randomcoloR,
     scAB,
     Scissor,

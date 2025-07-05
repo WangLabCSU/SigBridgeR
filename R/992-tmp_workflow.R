@@ -11,9 +11,7 @@ tcga_exp_count <- readRDS(
 
 tcga_ms_indel = read.csv(
   "~/R/Project/R_code/WORK/data/input_data/TCGA_WES_sigProfiler_ID_signatures_in_samples.csv"
-)
-
-tmp = tcga_ms_indel %>%
+) %>%
   MSPreProcess(
     col_thresh = 0.05
   )

@@ -152,13 +152,18 @@ MSPreProcess <- function(
       return(NULL)
     }
   })
-
+  # *filter accracy
   accuracy_column <- grep("[aA][cC]{2}.*", colnames(ms_signature), value = TRUE)
+  # *filter cancer type
   tumor_type_col <- grep(
     "[tT]umor|[Cc]ancer",
     colnames(ms_signature),
     value = TRUE
   )
+
+  if (tolower(filter_tumor_type) %in% c("all", "all tumor", "all types")) {
+    filter_tumor_type = unique(ms_signature[[tumor_type_col]])
+  }
 
   processed_ms_signature <- ms_signature %>%
     dplyr::filter(
