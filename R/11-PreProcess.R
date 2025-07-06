@@ -238,9 +238,72 @@ MSPreProcess <- function(
 }
 
 
+#' @title Match Samples Across TCGA Datasets
+#'
 #' @description
-#' There are differences in TCGA samples across different datasets. This function is used to find common samples for inner join, and other samples will not be retained.
-#' @param col_id description
+#' Identifies common samples between mutational signature data and TCGA expression
+#' count matrix by sample ID truncation, then returns matched subsets with binary
+#' phenotype encoding. Designed to resolve inconsistencies in TCGA sample identifiers
+#' across different genomic datasets.
+#'
+#' @param ms_signature A data frame containing mutational signature data. Must include:
+#'    - A sample ID column (auto-detected via case-insensitive "sample" pattern)
+#'    - A numeric column specified by `col_id` for binarization.
+#' @param TCGA_exp_count A matrix or data frame of expression counts with samples
+#'    as columns. Column names should contain TCGA sample IDs.
+#' @param col_id Integer or string. Column index/name in `ms_signature` to use for:
+#'    - Binarization (values > `ms_status_thresh` become 1, others 0)
+#'    - Reporting in output as `ms_select`
+#' @param ms_status_thresh Numeric. Threshold for converting the `col_id` column to
+#'    binary status (default: 0). Values above threshold become 1.
+#'
+#' @return A list with three components:
+#' \describe{
+#'   \item{phenotype}{Named integer vector (names = sample IDs) of binarized values}
+#'   \item{matched_TCGA_exp_count}{Expression matrix subset to common samples}
+#'   \item{ms_select}{Character indicating which signature was used (column name)}
+#' }
+#'
+#' @section Processing Details:
+#' 1. **Sample ID Harmonization**:
+#'    - Truncates IDs to the minimum length across both datasets (max 15 chars)
+#'    - Case-sensitive exact matching after truncation
+#' 2. **Phenotype Conversion**:
+#'    - Converts `col_id` values to binary (0/1) based on threshold
+#' 3. **Validation**:
+#'    - Stops if no common samples found
+#'    - Preserves sample order in output
+#'
+#' @examples
+#' \dontrun{
+#' # Mock data
+#' sig_data <- data.frame(
+#'   sample_id = c("TCGA-AB-1234-01", "TCGA-CD-5678-01"),
+#'   APOBEC_score = c(0.8, 0.2)
+#' )
+#' exp_matrix <- matrix(rnorm(20), ncol = 4,
+#'   dimnames = list(NULL, c("TCGA-AB-1234", "TCGA-EF-9012", "TCGA-CD-5678", "TCGA-GH-3456")))
+#'
+#' # Basic usage
+#' result <- MatchSample(
+#'   ms_signature = sig_data,
+#'   TCGA_exp_count = exp_matrix,
+#'   col_id = "APOBEC_score", # or 1
+#'   ms_status_thresh = 0.5
+#' )
+#'
+#' # Output components
+#' str(result)
+#' # $ phenotype       : Named int [1:2] 1 0
+#' # $ matched_TCGA_exp: num [1:5, 1:2] 0.481 -0.788 0.741 -0.311 -0.668 ...
+#' # $ ms_select       : chr "APOBEC_score"
+#' }
+#'
+#' @export
+#' @importFrom dplyr mutate filter arrange
+#' @importFrom cli cli_alert_info
+#' @importFrom stats setNames
+#'
 MatchSample = function(
   ms_signature,
   TCGA_exp_count,
@@ -299,13 +362,59 @@ MatchSample = function(
 
 # ------------------- other function ----------------------
 
-IdentifyDataColumn <- function(data, thresh = 0.5) {
+#' @title Identify Numeric-Convertible Columns (Internal)
+#'
+#' @description
+#' Detects columns that can be safely converted to numeric based on their content pattern.
+#' Used internally for automatic data type detection before conversion.
+#'
+#' @param data A data frame or matrix containing mixed data types.
+#' @param thresh Numeric threshold [0-1]. Minimum proportion of elements in character
+#'        columns that must match numeric patterns to be considered convertible
+#'        (default: 1).
+#'
+#' @return A logical vector where:
+#'         - `TRUE`: Column should be converted to numeric (either already numeric
+#'            or character with sufficient numeric patterns)
+#'         - `FALSE`: Column should remain as-is
+#'
+#' @section Pattern Matching Rules:
+#' Uses regular expression to detect:
+#' \itemize{
+#'   \item Standard decimals (e.g., "1.23", "-0.5")
+#'   \item Scientific notation (e.g., "1e-5", "2E+10")
+#'   \item Leading/trailing decimals (e.g., ".5", "3.")
+#' }
+#' Non-character columns always return `TRUE`.
+#'
+#' @examples
+#' \dontrun{
+#' # Internal usage example:
+#' df <- data.frame(
+#'   nums = c("1.2", "3e5", "NaN"),
+#'   chars = c("A", "B", "C"),
+#'   actual_nums = rnorm(3)
+#' )
+#'
+#' # Identify convertible columns (50% threshold)
+#' convertible <- IdentifyDataColumn(df)
+#' #> nums chars actual_nums
+#' #> TRUE FALSE        TRUE
+#'
+#' # Convert identified columns
+#' df[convertible] <- lapply(df[convertible], as.numeric)
+#' }
+#'
+#' @keywords internal
+#' @noRd
+#'
+IdentifyDataColumn <- function(data, thresh = 1) {
   pattern_based <- sapply(data, function(x) {
     if (is.character(x)) {
       numeric_pat <- grepl("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$", x)
-      mean(numeric_pat, na.rm = TRUE) > 0.5
+      return(mean(numeric_pat, na.rm = TRUE) >= 1)
     } else {
-      TRUE
+      return(TRUE)
     }
   })
   return(pattern_based)

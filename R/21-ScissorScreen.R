@@ -5,7 +5,7 @@ DoScissor = function(
   matched_bulk,
   sc_data,
   phenotype,
-  label_type,
+  label_type = NULL,
   scissor_alpha = 0.05,
   scissor_cutoff = 0.2,
   scissor_family = c("gaussian", "binomial", "cox"),
@@ -27,6 +27,9 @@ DoScissor = function(
     !dir.exists(dir2save_scissor_inputs) & !is.null(dir2save_scissor_inputs)
   ) {
     dir.create(dir2save_scissor_inputs, recursive = TRUE)
+  }
+  if (is.null(label_type)) {
+    label_type = "scissor"
   }
 
   # MAKE SURE ONLY TUMOR

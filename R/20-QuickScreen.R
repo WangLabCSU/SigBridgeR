@@ -1,45 +1,112 @@
-#' @title A Quick Function to Screen Seurat Object
+#' @title Single-Cell Data Screening
+#'
 #' @description
-#' This function will integrate the matched bulk expression data, phnotype data and the seurat object to filter out cells that are highly correlated with the phenotype, many algorithms are available.
+#' Integrates matched bulk expression data and phenotype information to identify
+#' phenotype-associated cell populations in single-cell RNA-seq data using one of
+#' four computational methods. Ensures consistency between bulk and phenotype data
+#' before analysis.
 #'
+#' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression
+#'        data (genes x samples). Column names must match names/IDs in `phenotype`.
+#' @param sc_data A Seurat object containing scRNA-seq data to be screened.
+#' @param phenotype Phenotype data, either:
+#'        - Named vector (names match `matched_bulk` columns), or
+#'        - Data frame with row names matching `matched_bulk` columns
+#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time")
+#' @param phenotype_class Type of phenotypic outcome (must be consistent with input data):
+#'        - `"binary"`: Binary traits (e.g., case/control)
+#'        - `"continuous"`: Continuous measurements (only for `Scissor`, `scPAS`, `scPP`)
+#'        - `"survival"`: Survival objects
+#' @param screen_method Screening algorithm to use, there are four options:
+#'        - `"Scissor"`: see also `DoScissor()`
+#'        - `"scPP"`: see also `DoscPP()`
+#'        - `"scPAS"`: see also `DoscPAS()`
+#'        - `"scAB"`: see also `DoscAB()`, no continuous support
+#' @param ... Additional method-specific parameters:
+#' \describe{
+#'   \item{Scissor}{\describe{
+#'     \item{scissor_alpha}{(numeric) default 0.05}
+#'     \item{scissor_cutoff}{(numeric) default 0.2}
+#'     \item{path2load_scissor_cache}{(character) default `NULL`}
+#'     \item{dir2save_scissor_inputs}{(character) default `NULl`}
+#'     \item{nfold}{(integer) default 10}
+#'     \item{reliability_test}{(logical) default FALSE}
+#'   }}
+#'   \item{scPP}{\describe{
+#'     \item{embedding_type}{(character) 嵌入类型，可选"UMAP"或"tSNE"，默认"UMAP"}
+#'   }}
+#'   \item{scPAS}{\describe{
+#'     \item{n_components}{(integer) 主成分数量，默认10}
+#'   }}
+#'   \item{scAB}{\describe{
+#'     \item{bandwidth}{(numeric) 核密度估计带宽，默认0.1}
+#'   }}
+#' }
 #'
-#' @param matched_bulk
-#' @param sc_data A Seurat object to be screened.
-#' @param phenotype
-#' @param label_type A character string indicating the name of phenotype, .
-#' @param family This argument is used in the screen_method `Scissor` and `scPAS`, support `gaussian`, `binomial`, `cox`
-#' @param phenotype_class This argument is only used in the screen_method `scAB` and `scPP`, supports `binary`, `survival` for `scAB` and supports `binary`, `continuous`, `survival` for `scPP`
-#' @param screen_method support `Scissor`, `scPP`, `scPAS`, `scAB`
-#' @param ... Other arguments to be passed to the chose screen method.
+#' @return A list containing:
+#' \describe{
+#'   \item{scRNA_data}{Filtered Seurat object with phenotype-associated cells}
+#'   \item{matched_samples}{Vector of samples used in the analysis}
+#'   \item{method_output}{Method-specific output objects}
+#' }
 #'
-#' @return A list containing the screened seurat object, in name `scRNA_data`
+#' @section Data Matching Requirements:
+#' - `matched_bulk` column names and `phenotype` names/rownames must be identical
+#' - Phenotype values must correspond to bulk samples (not directly to single cells)
+#' - Mismatches will trigger an error before analysis begins
+#'
+#' @section Method Compatibility:
+#' \tabular{lll}{
+#' **Method** \tab **Supported Phenotypes** \tab **Additional Parameters** \cr
+#' `Scissor` \tab All three types \tab `alpha`, `lambda` \cr
+#' `scPP`    \tab All three types \tab `embedding_type` \cr
+#' `scPAS`   \tab All three types \tab `n_components` \cr
+#' `scAB`    \tab Binary/Survival \tab `bandwidth` \cr
+#' }
+#'
+#' @seealso Associated functions:
+#' \itemize{
+#'   \item \code{\link{DoScissor}}
+#'   \item \code{\link{DoscPP}}
+#'   \item \code{\link{DoscPAS}}
+#'   \item \code{\link{DoscAB}}
+#' }
+#'
 #' @export
-#'
+#' @importFrom dplyr %>%
+#' @importFrom glue glue
 #'
 Screen <- function(
   matched_bulk,
   sc_data,
   phenotype,
   label_type,
-  family = c("gaussian", "binomial", "cox"),
   phenotype_class = c("binary", "survival", "continuous"),
   screen_method = c("Scissor", "scPP", "scPAS", "scAB"),
   ...
 ) {
   library(dplyr)
-  if (length(screen_method) > 1) {
+  if (length(screen_method) != 1) {
     stop("Only one screen method is allowed.")
+  }
+
+  phenotype_class = tolower(phenotype_class)
+  if (length(phenotype_class) != 1) {
+    stop("Only one phenotype class is allowed.")
+  } else if (!phenotype_class %in% c("binary", "survival", "continuous")) {
+    stop("Invalid phenotype class")
   }
 
   screened_result = tolower(screen_method) %>%
     switch(
       "scissor" = {
-        family = tolower(family)
-        if (
-          length(family) != 1 && !family %in% c("gaussian", "binomial", "cox")
-        ) {
-          stop("`family` must be one of gaussian, binomial, cox")
-        }
+        family = switch(
+          phenotype_class,
+          "binary" = "binomial",
+          "survival" = "cox",
+          "continuous" = "gaussian",
+          stop("Invalid phenotype class")
+        )
 
         DoScissor(
           sc_data = sc_data,
@@ -51,12 +118,13 @@ Screen <- function(
         )
       },
       "scpas" = {
-        family = tolower(family)
-        if (
-          length(family) != 1 && !family %in% c("gaussian", "binomial", "cox")
-        ) {
-          stop("`family` must be one of gaussian, binomial, cox")
-        }
+        family = switch(
+          phenotype_class,
+          "binary" = "binomial",
+          "survival" = "cox",
+          "continuous" = "gaussian",
+          stop("Invalid phenotype class")
+        )
 
         DoscPAS(
           sc_data = sc_data,
@@ -72,14 +140,7 @@ Screen <- function(
           toupper(substr(phenotype_class, 1, 1)),
           tolower(substr(phenotype_class, 2, nchar(phenotype_class)))
         )
-        if (
-          length(phenotype_class) != 1 &&
-            !phenotype_class %in% c("Binary", "Continuous", "Survival")
-        ) {
-          stop(
-            "`phenotype_class` must be one of Binary, Continuous, Survival"
-          )
-        }
+
         DoscPP(
           sc_data = sc_data,
           matched_bulk = matched_bulk,
@@ -90,7 +151,10 @@ Screen <- function(
         )
       },
       "scab" = {
-        phenotype_class = tolower(phenotype_class)
+        if (phenotype_class == "continuous") {
+          stop("scAB does not support continuous phenotype.")
+        }
+
         DoscAB(
           sc_data = sc_data,
           matched_bulk = matched_bulk,

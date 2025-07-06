@@ -45,7 +45,7 @@ DoscPP = function(
   ))
 
   # decide which type of phenotype data is used
-  if (length(table(phenotype[2])) == 2 || tolower(phenotype_class) = "binary") {
+  if (length(table(phenotype[2])) == 2 || tolower(phenotype_class) == "binary") {
     gene_list = ScPP::marker_Binary(
       matched_bulk,
       phenotype,
