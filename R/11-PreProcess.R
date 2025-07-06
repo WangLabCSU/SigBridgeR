@@ -1,11 +1,24 @@
 # ---- Input Data Preprocess Functions ----
 
+#' @title Preprocess single-cell RNA data
+#'
 #' @description
-#' Preprocess single-cell RNA data: Create a Seurat object, filter out the tumor cells from it, and then create another Seurat object using these tumor cells.
-#' @param sc raw scRNA data
-#' @param cnv_status The criterion for filtering tumor cells from the Seurat object, i.e. `cnv_status == "tumor"`. Additionally, another option "normal" is provided (although no use).
+#' Preprocess single-cell RNA data: Create a Seurat object, normalize data, find variable features, scale data, run PCA, find clusters and neighbors, run tSNE and UMAP.
+#'
+#' @param sc raw scRNA data read from `anndata::read.h5ad`, contains `$X` matrix and `$obs` metadata
+#' @param project The project name of the Seurat object, transfered to `SeuratObject@project`.
+#' @param min_cells The minimum number of cells that a feature must be observed in to be included in `VariableFeatures`.
+#' @param min_features The minimum number of cells that a feature must be expressed in to be included in `VariableFeatures`.
+#' @param normalization_method The method used to normalize the data. Options are `"LogNormalize"` (default), `"CLR"`, `"RC"` or `"RCLogNormalize"`.
+#' @param scale_factor A numeric value by which the data will be multiplied. Default is `10000`.
+#' @param selection_method The method used to select variable features, transferred to `SeuratObject@assays$RNA@var.features`. Options are `"vst"` (default), `"mean.var.plot"`, `"dispersion"`, `"mean.var.plot"` or `"dispersion.scaled"`.
+#' @param resolution The resolution parameter for clustering. Default is `0.6`.
+#' @param dims The dimensions to use for clustering. Default is `1:10`.
+#' @param verbose Whether to show detailed information. Default is `TRUE`.
 #' @param future_global_maxsize The memory allocated.
-#' @return A Seurat object containing the full dataset and a Seurat object containing only tumor cells.
+#' @return A Seurat object
+#'
+#' @export
 SCPreProcess = function(
   sc,
   project = "Scissor_Single_Cell",
@@ -17,7 +30,6 @@ SCPreProcess = function(
   resolution = 0.6,
   dims = 1:10,
   verbose = TRUE,
-  cnv_status = c("tumor", "normal"),
   future_global_maxsize = 6 * 1024^3
 ) {
   library(dplyr)
@@ -85,10 +97,15 @@ SCPreProcess = function(
 }
 
 
+#' @title Preprocess bulk expression data
+#'
 #' @description
-#' Preprocess bulk expression data: Use the `IDconverter` package to convert Ensembles version IDs and TCGA version IDs to genes.
+#' Preprocess bulk expression data: convert Ensembles version IDs and TCGA version IDs to genes.
 #' @param data raw bulk expression data
-BulkPreProcess = function(data = NULL) {
+#'
+#' @export
+#'
+BulkPreProcess = function(data) {
   rownames(data) <- substr(rownames(data), 1, 15)
   options(
     IDConverter.datapath = system.file("extdata", package = "IDConverter")
@@ -98,15 +115,51 @@ BulkPreProcess = function(data = NULL) {
 }
 
 
-#' @description
-#' Preprocess mutational signature data
+#' @title Preprocess Mutational Signature Data
 #'
-#' @param ms_signature mutational signature data
-#' @param filter_tumor_type The tumor type to be left. If `filter_tumor_type` is "all", all tumor types will be retained.
-#' @param col_thresh For each column, if the proportion of non-zero values is greater than `col_thresh`, it will be retained.
-#' @param accuracy_thresh A threshold for filtering rows. The value of `accuracy_thresh` ranges from 0 to 1.
-#' @param ms_search_pattern The matching pattern used to search for mutational signature columns.
+#' @description
+#' Filters and cleans mutational signature data based on tumor type, column validity thresholds,
+#' and signature accuracy. Designed for genomic datasets with columns representing
+#' mutational signatures (e.g., SBS, DBS, CNV).
+#'
+#' @param ms_signature A data frame containing raw mutational signature data.
+#'    Must include:
+#'    - A column matching tumor type (auto-detected)
+#'    - A column with signature accuracy scores (auto-detected)
+#'    - Numeric columns for signatures (filtered by `col_thresh` and `ms_search_pattern`)
+#' @param filter_tumor_type Character. Specify tumor type(s) to retain.
+#'    Special values:
+#'    - `"all"` (default): Keeps all tumor types
+#'    - `"luad"`: Keeps tumor types containing the characters "luad" (case-insensitive)
+#' @param col_thresh Numeric [0-1]. Minimum proportion of non-zero values required to
+#'    retain a signature column (default: 0.05). Columns with >95% zeros will be dropped.
+#' @param accuracy_thresh Numeric [0-1]. Minimum accuracy score to retain samples
+#'    (default: 0, keeping all samples regardless of accuracy).
+#' @param ms_search_pattern Regex pattern to identify mutational signature columns
+#'    (default: "SBS|DBS|CN|CNV|SV|ID|INDEL", case-insensitive).
+#'
+#' @return A filtered data frame with:
+#'    - Rows: Samples passing tumor type and accuracy filters
+#'    - Columns: Annotations + signature columns passing `col_thresh` and pattern match
+#'    Returns `NULL` with warning if no signature columns remain.
+#'
+#' @section Processing Steps:
+#' 1. **Column Filtering**:
+#'    - Keeps annotation columns (character/non-numeric)
+#'    - Drops numeric columns with >(1-`col_thresh`) zeros
+#' 2. **Row Filtering**:
+#'    - Subsets by `filter_tumor_type`
+#'    - Drops samples with accuracy < `accuracy_thresh`
+#' 3. **Validation**:
+#'    - Checks if any signature columns remain
+#'    - Warns if all filtered out
+#'
 #' @export
+#' @importFrom dplyr filter select
+#' @importFrom cli cli_alert_info cli_alert_warning
+#' @importFrom crayon green red bold yellow black
+#' @importFrom glue glue
+#'
 MSPreProcess <- function(
   ms_signature,
   filter_tumor_type = "all",
@@ -117,6 +170,12 @@ MSPreProcess <- function(
   library(dplyr)
 
   keep_colnames <- lapply(X = names(ms_signature), FUN = function(col_name) {
+    if (grepl(tolower(ms_search_pattern), tolower(col_name))) {
+      cli::cli_alert_info(
+        "{crayon::red(col_name)} not kept, because it does not match the pattern"
+      )
+      return(NULL)
+    }
     col <- ms_signature[[col_name]]
 
     if (is.character(col)) {
@@ -157,7 +216,10 @@ MSPreProcess <- function(
   processed_ms_signature <- ms_signature %>%
     dplyr::filter(
       .data[[accuracy_column]] >= accuracy_thresh,
-      tolower(.data[[tumor_type_col]]) %in% tolower(filter_tumor_type)
+      grepl(
+        pattern = glue::glue(tolower(filter_tumor_type), .sep = "|"),
+        x = tolower(.data[[tumor_type_col]])
+      )
     ) %>%
     dplyr::select(unlist(keep_colnames))
 
