@@ -18,7 +18,7 @@
 #'   scissor_cutoff = 0.2,
 #'   scissor_family = c("gaussian", "binomial", "cox"),
 #'   reliability_test = FALSE,
-#'   dir2save_scissor_inputs = NULL,
+#'   path2save_scissor_inputs = "Scissor_inputs.RData",
 #'   nfold = 10,
 #'   ...
 #' )
@@ -41,7 +41,7 @@
 #'        - "cox": Survival outcomes
 #' @param reliability_test Logical to perform stability assessment (default: FALSE).
 #'
-#' @param dir2save_scissor_inputs Directory to save intermediate files (default: ".").
+#' @param path2save_scissor_inputs Path to save intermediate files (default: ".").
 #' @param nfold Cross-validation folds for reliability test (default: 10).
 #' @param ... Additional arguments passed to `Scissor.v5.optimized`.
 #'
@@ -86,12 +86,12 @@ DoScissor = function(
   matched_bulk,
   sc_data,
   phenotype,
-  label_type = NULL,
+  label_type = "scissor",
   scissor_alpha = 0.05,
   scissor_cutoff = 0.2,
   scissor_family = c("gaussian", "binomial", "cox"),
   reliability_test = FALSE,
-  dir2save_scissor_inputs = ".",
+  path2save_scissor_inputs = "Scissor_inputs.RData",
   reliability_test_alpha = 0.2,
   reliability_test_n = 10,
   nfold = 10,
@@ -106,13 +106,9 @@ DoScissor = function(
       "Please choose one scissor family, use argument `scissor_family`."
     )
   }
-  if (
-    !dir.exists(dir2save_scissor_inputs) & !is.null(dir2save_scissor_inputs)
-  ) {
-    dir.create(dir2save_scissor_inputs, recursive = TRUE)
-  }
-  if (is.null(label_type)) {
-    label_type = "scissor"
+  path = dirname(path2save_scissor_inputs)
+  if (!dir.exists(path)) {
+    dir.create(path, recursive = TRUE)
   }
 
   # MAKE SURE ONLY TUMOR
@@ -127,7 +123,7 @@ DoScissor = function(
     alpha = scissor_alpha,
     cutoff = scissor_cutoff,
     family = scissor_family,
-    Save_file = file.path(dir2save_scissor_inputs, "Scissor_inputs.RData"),
+    Save_file = path2save_scissor_inputs,
     Load_file = path2load_scissor_cache,
     ...
   )

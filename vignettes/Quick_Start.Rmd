@@ -1,0 +1,21 @@
+---
+title: "Quick_Start"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick_Start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SigBridgeR)
+```
+
+# **Quick Start Guide for SigBridgeR**
