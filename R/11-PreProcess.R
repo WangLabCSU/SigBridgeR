@@ -18,7 +18,9 @@
 #' @param future_global_maxsize The memory allocated.
 #' @return A Seurat object
 #'
-#' @export
+#' @keywords internal
+#' @noRd
+#'
 SCPreProcess = function(
   sc,
   project = "Scissor_Single_Cell",
@@ -33,23 +35,30 @@ SCPreProcess = function(
   future_global_maxsize = 6 * 1024^3
 ) {
   library(dplyr)
-  if (!requireNamespace("Seurat", quietly = TRUE)) {
-    stop("Package Seurat not installed")
-  }
-  if (is.null(sc$X)) {
-    stop("Input must contain $X matrix")
-  }
-  if (is.null(cnv_status) || length(cnv_status) > 1) {
-    cnv_status = cnv_status[[1]]
-  }
-  sc_matrix <- if (inherits(sc$X, "sparseMatrix")) {
-    if (!requireNamespace("Matrix", quietly = TRUE)) {
-      stop("Matrix package required for sparse matrix support")
+  ifelse(
+    is.data.frame(sc) || is.matrix(sc),
+    {
+      # sc is a count matrix
+      cli::cli_alert_info("Start from count matrix")
+      sc_matrix = sc
+    },
+    {
+      # sc is anndata object
+      if (is.null(sc$X)) {
+        stop("Input must contain $X matrix")
+      }
+      cli::cli_alert_info("Start from anndata object")
+
+      sc_matrix <- if (inherits(sc$X, "sparseMatrix")) {
+        if (!requireNamespace("Matrix", quietly = TRUE)) {
+          stop("Matrix package required for sparse matrix support")
+        }
+        Matrix::t(sc$X)
+      } else {
+        t(sc$X)
+      }
     }
-    Matrix::t(sc$X)
-  } else {
-    t(sc$X)
-  }
+  )
   options(future.globals.maxSize = future_global_maxsize) # default 6GB
 
   sc_seurat = SeuratObject::CreateSeuratObject(
@@ -71,8 +80,11 @@ SCPreProcess = function(
     Seurat::RunPCA(
       features = SeuratObject::VariableFeatures(.),
       verbose = verbose
-    ) %>%
-    Seurat::AddMetaData(metadata = sc$obs)
+    )
+
+  if ("obs" %in% names(sc)) {
+    sc_seurat = sc_seurat %>% Seurat::AddMetaData(sc$obs)
+  }
 
   n_pcs <- ncol(sc_seurat@reductions$pca)
   if (is.null(dims) || max(dims) > n_pcs) {
@@ -207,7 +219,7 @@ MSPreProcess <- function(
 
   # *filter accuracy
   accuracy_column <- grep("[aA][cC]{2}.*", colnames(ms_signature), value = TRUE)
-  if (is.null(accuracy_column)) {
+  if (length(accuracy_column) == 0) {
     cli::cli_alert_warning(crayon::yellow(
       "No accuracy column found in the data"
     ))
@@ -227,7 +239,7 @@ MSPreProcess <- function(
     colnames(ms_signature),
     value = TRUE
   )
-  if (is.null(tumor_type_col)) {
+  if (length(tumor_type_col) == 0) {
     cli::cli_alert_warning(crayon::yellow(
       "No tumor type column found in the data"
     ))
@@ -237,7 +249,10 @@ MSPreProcess <- function(
       crayon::bold("Tumor types in data:"),
       all_tumor_types
     ))
-    cli::cli_alert_info(crayon::bold("Filtering by: {filter_tumor_type}"))
+    cli::cli_alert_info(c(
+      crayon::bold("Filtering by:"),
+      " {filter_tumor_type}"
+    ))
 
     if (tolower(filter_tumor_type) %in% c("all", "all tumor", "all types")) {
       filter_tumor_type = all_tumor_types

@@ -227,9 +227,9 @@ Scissor.v5.optimized <- function(
         )
       }
 
-      if (inherits(sc_dataset, "Seurat")) {
-        sc_exprs <- as(sc_dataset@assays$RNA$data, "dgCMatrix") # sparse matrix
-        network <- as(sc_dataset@graphs$RNA_snn, "dgCMatrix") # sparse matrix
+      if (class(sc_dataset) == "Seurat") {
+        sc_exprs <- as.matrix(sc_dataset@assays$RNA$data)
+        network <- as.matrix(sc_dataset@graphs$RNA_snn)
       } else {
         sc_exprs <- as.matrix(sc_dataset)
         Seurat_tmp <- Seurat::CreateSeuratObject(
@@ -247,45 +247,34 @@ Scissor.v5.optimized <- function(
             verbose = FALSE
           ) %>%
           Seurat::FindNeighbors(dims = 1:10, verbose = FALSE)
-        network <- as(Seurat_tmp@graphs$RNA_snn, "dgCMatrix") # sparse matrix
-        rm(Seurat_tmp)
-        gc() # clean memory
+        network <- as.matrix(Seurat_tmp@graphs$RNA_snn)
       }
       diag(network) <- 0
-      network@x[network@x != 0] <- 1
-      network = as.matrix(network)
-
-      merged_data <- cbind(bulk_dataset[common, ], sc_exprs[common, ]) %>%
-        as.matrix()
+      network[which(network != 0)] <- 1
+      dataset0 <- cbind(bulk_dataset[common, ], sc_exprs[common, ])
 
       cli::cli_alert_info(
         "[{TimeStamp()}] Normalizing quantiles of data..."
       )
 
-      merged_normalized <- preprocessCore::normalize.quantiles(merged_data)
-      rownames(merged_normalized) <- rownames(merged_data)
-      colnames(merged_normalized) <- colnames(merged_data)
+      dataset1 <- preprocessCore::normalize.quantiles(dataset0)
+      rownames(dataset1) <- rownames(dataset0)
+      colnames(dataset1) <- colnames(dataset0)
 
       cli::cli_alert_info(
         "[{TimeStamp()}] Subsetting data..."
       )
       # gene-sample
-      Expression_bulk <- merged_normalized[, 1:ncol(bulk_dataset), drop = FALSE]
+      Expression_bulk <- dataset1[, 1:ncol(bulk_dataset)]
       # gene-cell
-      Expression_cell <- merged_normalized[,
-        (ncol(bulk_dataset) + 1):ncol(merged_normalized),
-        drop = FALSE
-      ]
-      rm(merged_data, sc_exprs, merged_normalized)
+      Expression_cell <- dataset1[, (ncol(bulk_dataset) + 1):ncol(dataset1)]
+      rm(dataset0, sc_exprs, dataset1)
       gc(verbose = FALSE)
 
       cli::cli_alert_info(
         "[{TimeStamp()}] Calculating correlation..."
       )
-      X <- qlcMatrix::corSparse(
-        Expression_bulk,
-        Expression_cell
-      )
+      X <- cor(Expression_bulk, Expression_cell)
       quality_check <- stats::quantile(X)
 
       cat(strrep("-", getOption("width")), "\n", sep = "")
@@ -368,8 +357,6 @@ Scissor.v5.optimized <- function(
     }
   )
 
-  gc(verbose = FALSE)
-
   cli::cli_alert_info(c(
     "[{TimeStamp()}]",
     crayon::bold(" Screening...")
@@ -388,7 +375,6 @@ Scissor.v5.optimized <- function(
         if (exists("fit1")) {
           rm(fit1)
         }
-        gc(full = TRUE, verbose = FALSE)
 
         fit0 <- Scissor::APML1(
           X,
