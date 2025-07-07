@@ -10,3 +10,4 @@ R/9*
 9*.R
 tmp
 *.RData
+inst/doc

@@ -2,7 +2,7 @@
 % Please edit documentation in R/23-scAB_Screen.R
 \name{DoscAB}
 \alias{DoscAB}
-\title{scAB Screening}
+\title{Perform scAB Screening Analysis}
 \usage{
 DoscAB(
   matched_bulk,
@@ -17,8 +17,72 @@ DoscAB(
 )
 }
 \arguments{
-\item{tred}{}
+\item{matched_bulk}{Normalized bulk expression matrix (genes × samples) where:
+- Columns match \code{phenotype} row names
+- Genes match features in \code{sc_data}}
+
+\item{sc_data}{Seurat object containing preprocessed single-cell data:}
+
+\item{phenotype}{Data frame with clinical annotations where:
+- Rows correspond to \code{matched_bulk} columns
+- For survival: contains \code{time} and \code{status} columns}
+
+\item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time")}
+
+\item{phenotype_class}{Analysis mode:
+- \code{"binary"}: Case-control design (e.g., responder/non-responder)
+- \code{"survival"}: Time-to-event analysis data.frame}
+
+\item{alpha}{Coefficient of phenotype regularization (default=0.005).}
+
+\item{alpha_2}{Coefficent of cell-cell similarity regularization (default=5e-05).}
+
+\item{maxiter}{NMF optimization iterations (default=2000).}
+
+\item{tred}{Z-score threshold (default=2).}
+}
+\value{
+A list containing:
+\describe{
+\item{scRNA_data}{Filtered Seurat object with selected cells}
+\item{scAB_result}{scAB screening result}
 }
 \description{
-scAB Screening
+Implements the scAB algorithm to identify phenotype-associated cell subpopulations
+in single-cell RNA-seq data by integrating matched bulk expression and phenotype
+information. Uses non-negative matrix factorization (NMF) with dual regularization
+for phenotype association and cell-cell similarity.
+}
+\section{Reference}{
+
+Zhang Q, Jin S, Zou X (2022). "scAB detects multiresolution cell states with
+clinical significance by integrating single-cell genomics and bulk sequencing data."
+}
+
+\examples{
+\dontrun{
+# Binary phenotype example
+result <- DoscAB(
+  matched_bulk = bulk_matrix,
+  sc_data = seurat_obj,
+  phenotype = clinical_df,
+  label_type = "disease_status",
+  phenotype_class = "binary",
+  alpha = 0.005,
+  alpha_2 = 5e-05,
+  maxiter = 2000,
+  tred = 2
+)
+
+# Survival phenotype example
+surv_result <- DoscAB(
+  matched_bulk = bulk_matrix,
+  sc_data = seurat_obj,
+  phenotype = survival_df,
+  label_type = "OS_status",
+  phenotype_class = "survival",
+  maxiter = 3000
+)
+}
+
 }

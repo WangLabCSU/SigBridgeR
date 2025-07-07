@@ -8,7 +8,7 @@
 #' @param matched_bulk Bulk RNA-seq data (genes x samples)
 #' @param sc_data Single-cell RNA-seq data (Seurat object and preprocessed)
 #' @param phenotype Phenotype data frame with sample annotations
-#' @param label_type Column name in phenotype containing sample labels
+#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time")
 #' @param assay Assay to use from sc_data (default: 'RNA')
 #' @param imputation Logical, whether to perform imputation (default: FALSE)
 #' @param nfeature Number of features to select (default: 3000, indicating that the top 3000 highly variable genes are selected for model training
@@ -20,6 +20,10 @@
 #'
 #' @return A Seurat object from scPAS analysis
 #' @export
+#' 
+#' @importFrom cli cli_alert_info cli_alert_success
+#' @importFrom Matrix rowSums as.matrix
+#' 
 DoscPAS = function(
   matched_bulk,
   sc_data,

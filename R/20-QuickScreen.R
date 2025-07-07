@@ -50,6 +50,7 @@
 #'   \item{method_output}{Method-specific output objects}
 #' }
 #'
+#'
 #' @section Data Matching Requirements:
 #' - `matched_bulk` column names and `phenotype` names/rownames must be identical
 #' - Phenotype values must correspond to bulk samples (not directly to single cells)

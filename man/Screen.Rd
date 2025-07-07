@@ -38,16 +38,25 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 - \code{"scAB"}: see also \code{DoscAB()}, no continuous support}
 
 \item{...}{Additional method-specific parameters:
-- \code{Scissor}:
-- \code{scissor_alpha}
-- \code{scissor_cutoff}
-- \code{path2load_scissor_cache}
-- \code{dir2save_scissor_inputs}
-- \code{nfold}
-- \code{reliability_test}
-- \code{scPP}: \code{embedding_type}
-- \code{scPAS}: \code{n_components}
-- \code{scAB}: \code{bandwidth}}
+\describe{
+\item{Scissor}{\describe{
+\item{scissor_alpha}{(numeric) default 0.05}
+\item{scissor_cutoff}{(numeric) default 0.2}
+\item{path2load_scissor_cache}{(character) default \code{NULL}}
+\item{dir2save_scissor_inputs}{(character) default \code{NULl}}
+\item{nfold}{(integer) default 10}
+\item{reliability_test}{(logical) default FALSE}
+}}
+\item{scPP}{\describe{
+\item{embedding_type}{(character) 嵌入类型，可选"UMAP"或"tSNE"，默认"UMAP"}
+}}
+\item{scPAS}{\describe{
+\item{n_components}{(integer) 主成分数量，默认10}
+}}
+\item{scAB}{\describe{
+\item{bandwidth}{(numeric) 核密度估计带宽，默认0.1}
+}}
+}}
 }
 \value{
 A list containing:

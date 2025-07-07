@@ -169,19 +169,21 @@ MSPreProcess <- function(
 ) {
   library(dplyr)
 
+  # *filter columns under threshold
   keep_colnames <- lapply(X = names(ms_signature), FUN = function(col_name) {
-    if (grepl(tolower(ms_search_pattern), tolower(col_name))) {
-      cli::cli_alert_info(
-        "{crayon::red(col_name)} not kept, because it does not match the pattern"
-      )
-      return(NULL)
-    }
     col <- ms_signature[[col_name]]
 
     if (is.character(col)) {
       cli::cli_alert_info("{crayon::green(col_name)} kept")
       return(col_name) # keep annotational columns
     } else if (is.numeric(col)) {
+      if (!grepl(tolower(ms_search_pattern), tolower(col_name))) {
+        cli::cli_alert_info(
+          "{crayon::red(col_name)} not kept, because it does not match the pattern"
+        )
+        return(NULL)
+      }
+
       ifelse(
         # Retain cols where the proportion of non-zero data in the ms exceeds the threshold.
         mean(col != 0) >= col_thresh, # equal to: sum(col != 0)/length(col) >= col_thresh
@@ -200,31 +202,58 @@ MSPreProcess <- function(
       return(NULL)
     }
   })
-  # *filter accracy
+  ms_signature <- ms_signature %>%
+    dplyr::select(unlist(keep_colnames))
+
+  # *filter accuracy
   accuracy_column <- grep("[aA][cC]{2}.*", colnames(ms_signature), value = TRUE)
+  if (is.null(accuracy_column)) {
+    cli::cli_alert_warning(crayon::yellow(
+      "No accuracy column found in the data"
+    ))
+  } else {
+    ms_signature <- ms_signature %>%
+      dplyr::filter(
+        .[[accuracy_column]] >= accuracy_thresh,
+        grepl(
+          pattern = glue::glue(tolower(filter_tumor_type), .sep = "|"),
+          x = tolower(.[[tumor_type_col]])
+        )
+      )
+  }
   # *filter cancer type
   tumor_type_col <- grep(
     "[tT]umor|[Cc]ancer",
     colnames(ms_signature),
     value = TRUE
   )
+  if (is.null(tumor_type_col)) {
+    cli::cli_alert_warning(crayon::yellow(
+      "No tumor type column found in the data"
+    ))
+  } else {
+    all_tumor_types = unique(ms_signature[[tumor_type_col]])
+    cli::cli_alert_info(glue::glue(
+      crayon::bold("Tumor types in data:"),
+      all_tumor_types
+    ))
+    cli::cli_alert_info(crayon::bold("Filtering by: {filter_tumor_type}"))
 
-  if (tolower(filter_tumor_type) %in% c("all", "all tumor", "all types")) {
-    filter_tumor_type = unique(ms_signature[[tumor_type_col]])
+    if (tolower(filter_tumor_type) %in% c("all", "all tumor", "all types")) {
+      filter_tumor_type = all_tumor_types
+    }
+
+    ms_signature <- ms_signature %>%
+      dplyr::filter(
+        grepl(
+          pattern = glue::glue(tolower(filter_tumor_type), .sep = "|"),
+          x = tolower(.[[tumor_type_col]])
+        )
+      )
   }
 
-  processed_ms_signature <- ms_signature %>%
-    dplyr::filter(
-      .data[[accuracy_column]] >= accuracy_thresh,
-      grepl(
-        pattern = glue::glue(tolower(filter_tumor_type), .sep = "|"),
-        x = tolower(.data[[tumor_type_col]])
-      )
-    ) %>%
-    dplyr::select(unlist(keep_colnames))
-
   # final check for data availability
-  if (sum(grepl(ms_search_pattern, colnames(processed_ms_signature))) == 0) {
+  if (sum(grepl(ms_search_pattern, colnames(ms_signature))) == 0) {
     cli::cli_alert_warning(crayon::yellow(glue::glue(
       "{crayon::bold('All data columns were filtered out, possible reasons:')}",
       "1. Threshold too high (current: {crayon::black(col_thresh)})",
@@ -234,7 +263,7 @@ MSPreProcess <- function(
     )))
   }
 
-  return(processed_ms_signature)
+  return(ms_signature)
 }
 
 

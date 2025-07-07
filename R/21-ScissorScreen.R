@@ -1,5 +1,86 @@
 # ---- 2. DO SCISSOR ----
 
+#' @title Perform Scissor Screening Analysis
+#'
+#'
+#' @description
+#' Identifies phenotype-associated cell subpopulations in single-cell data using
+#' regularized regression on matched bulk expression profiles.
+#'
+#' @usage
+#' DoScissor(
+#'   path2load_scissor_cache = NULL,
+#'   matched_bulk,
+#'   sc_data,
+#'   phenotype,
+#'   label_type = NULL,
+#'   scissor_alpha = 0.05,
+#'   scissor_cutoff = 0.2,
+#'   scissor_family = c("gaussian", "binomial", "cox"),
+#'   reliability_test = FALSE,
+#'   dir2save_scissor_inputs = NULL,
+#'   nfold = 10,
+#'   ...
+#' )
+#'
+#' @param path2load_scissor_cache Path to precomputed Scissor inputs (RData file).
+#'        If provided, skips recomputation (default: NULL).
+#' @param matched_bulk Normalized bulk expression matrix (features × samples).
+#'        Column names must match `phenotype` identifiers.
+#' @param sc_data Seurat object containing single-cell RNA-seq data.
+#' @param phenotype Clinical outcome data. Can be:
+#'        - Vector: named with sample IDs
+#'        - Data frame: with row names matching bulk columns
+#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time")
+#' @param scissor_alpha (default: 0.05).
+#' @param scissor_cutoff  (default: 0.2).
+#'        Higher values increase specificity.
+#' @param scissor_family Model family for outcome type:
+#'        - "gaussian": Continuous outcomes
+#'        - "binomial": Binary outcomes (default)
+#'        - "cox": Survival outcomes
+#' @param reliability_test Logical to perform stability assessment (default: FALSE).
+#'
+#' @param dir2save_scissor_inputs Directory to save intermediate files (default: ".").
+#' @param nfold Cross-validation folds for reliability test (default: 10).
+#' @param ... Additional arguments passed to `Scissor.v5.optimized`.
+#'
+#' @return A list containing:
+#' \itemize{
+#'   \item{scRNA_data}{A Seurat object with screened cells:
+#'     \itemize{
+#'       \item{scissor: "Positive"/"Negative"/"Neutral" classification}
+#'       \item{label_type: Outcome label used}
+#'     }
+#'   }
+#'   \item{reliability_result}{
+#'     \itemize{
+#'       \item{}
+#'       \item{}
+#'     }
+#'   }
+#' }
+#'
+#' @section Reference:
+#' Sun S et al. (2022). "Scissor identifies phenotype-associated cell subsets
+#' in single-cell genomics." Nat Methods 19(5):600-608. \doi{10.1038/s41592-022-01452-1}
+#'
+#' @examples
+#' \dontrun{
+#' # Binary outcome example
+#' res <- DoScissor(
+#'   matched_bulk = bulk_matrix,
+#'   sc_data = seurat_obj,
+#'   phenotype = a_named_vector,
+#'   scissor_family = "binomial"
+#' )
+#' }
+#'
+#' @export
+#' @importFrom dplyr %>%
+#' @importFrom Seurat AddMetaData
+#' @importFrom Scissor reliability.test
+#'
 DoScissor = function(
   path2load_scissor_cache = NULL,
   matched_bulk,
@@ -10,7 +91,9 @@ DoScissor = function(
   scissor_cutoff = 0.2,
   scissor_family = c("gaussian", "binomial", "cox"),
   reliability_test = FALSE,
-  dir2save_scissor_inputs = NULL,
+  dir2save_scissor_inputs = ".",
+  reliability_test_alpha = 0.2,
+  reliability_test_n = 10,
   nfold = 10,
   ...
 ) {
@@ -71,10 +154,10 @@ DoScissor = function(
           infos1$X,
           infos1$Y,
           infos1$network,
-          alpha = 0.2,
+          alpha = reliability_test_alpha,
           family = "binomial",
           cell_num = length(infos1$Scissor_pos) + length(infos1$Scissor_neg),
-          n = 10,
+          n = reliability_test_n,
           nfold = nfold
         )
         cli::cli_alert_success(
@@ -95,7 +178,7 @@ DoScissor = function(
   ))
 }
 
-
+#' @title Optimized Scissor Algorithm for Seurat ver5
 #' @description
 #' Scissor.v5 from `https://doi.org/10.1038/s41587-021-01091-3`and `https://github.com/sunduanchen/Scissor/issues/59`
 #' Another version of Scissor.v5() to optimize memory usage and execution speed in preprocess.

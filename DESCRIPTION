@@ -33,3 +33,7 @@ Depends:
     dplyr,
     ggplot2,
     Seurat
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

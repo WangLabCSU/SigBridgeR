@@ -28,7 +28,7 @@ DoscPAS(
 
 \item{phenotype}{Phenotype data frame with sample annotations}
 
-\item{label_type}{Column name in phenotype containing sample labels}
+\item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time")}
 
 \item{assay}{Assay to use from sc_data (default: 'RNA')}
 
