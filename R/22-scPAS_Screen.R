@@ -19,11 +19,14 @@
 #' @param family Model family for analysis (options: "cox", "gaussian", "binomial")
 #'
 #' @return A Seurat object from scPAS analysis
-#' @export
-#' 
+#'
 #' @importFrom cli cli_alert_info cli_alert_success
 #' @importFrom Matrix rowSums as.matrix
-#' 
+#' @import dplyr
+#'
+#' @keywords internal
+#' @noRd
+#'
 DoscPAS = function(
   matched_bulk,
   sc_data,
@@ -53,7 +56,7 @@ DoscPAS = function(
 
   cli::cli_alert_info(c(
     "[{TimeStamp()}]",
-    crayon::green("Start scPAS screening.")
+    crayon::green(" Start scPAS screening.")
   ))
 
   if (extra_filter) {
@@ -97,12 +100,12 @@ DoscPAS = function(
     ) %>%
     cbind(
       metadata = data.frame(label_type = label_type),
-      row.names = colnames(.)
+      row.names = rownames(.)
     )
 
   cli::cli_alert_success(c(
     "[{TimeStamp()}]",
-    crayon::green("scPAS screening done.")
+    crayon::green(" scPAS screening done.")
   ))
 
   return(list(scRNA_data = scPAS_result))

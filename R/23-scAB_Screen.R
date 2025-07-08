@@ -45,16 +45,6 @@
 #'   maxiter = 2000,
 #'   tred = 2
 #' )
-#'
-#' # Survival phenotype example
-#' surv_result <- DoscAB(
-#'   matched_bulk = bulk_matrix,
-#'   sc_data = seurat_obj,
-#'   phenotype = survival_df,
-#'   label_type = "OS_status",
-#'   phenotype_class = "survival",
-#'   maxiter = 3000
-#' )
 #' }
 #'
 #' @export
@@ -76,7 +66,7 @@ DoscAB <- function(
   library(dplyr)
 
   # robust
-  if (!all(rownames(phenotype) == colnames(bulk_dataset))) {
+  if (!all(rownames(phenotype) == colnames(matched_bulk))) {
     stop(
       "Please check the rownames of phenotype and colnames of bulk_dataset, they should be the same"
     )
@@ -91,10 +81,9 @@ DoscAB <- function(
   sc_data = sc_data %>%
     Seurat::AddMetaData(rep(label_type, ncol(.)), col.name = "label_type")
 
-  # `Obejct` cannot be changed to `Object`
-  scAB_obj <- scAB::create_scAB(
-    Obejct = sc_data,
-    sc_data = matched_bulk,
+  scAB_obj <- create_scAB.v5(
+    Object = sc_data,
+    bulk_dataset = matched_bulk,
     phenotype = phenotype,
     method = phenotype_class
   )
@@ -108,7 +97,8 @@ DoscAB <- function(
 
   cli::cli_alert_info(c(
     "[{TimeStamp()}]",
-    "Run NMF with phenotype and cell-cell similarity regularization"
+    " Run NMF with phenotype and cell-cell similarity regularization at",
+    " K = {k}."
   ))
 
   scAB_result <- scAB::scAB(
@@ -142,4 +132,80 @@ DoscAB <- function(
   ))
 
   return(list(scRNA_data = sc_data, scAB_result = scAB_result))
+}
+
+
+#' @title scAB_data preprocess
+#' @description
+#' preprocess the single-cell data, bulk data, and phenotype data.
+#'
+#' @param Object  Seurat object
+#' @param bulk_dataset  matrix of bulk data
+#' @param phenotype Phenotype data, a matrix with two columns "time" and "state", or a vector
+#' @param method method "survival" or "binary"
+#'
+#' @return a scAB_data
+#' @importFrom preprocessCore normalize.quantiles
+#' @export
+#'
+#' @keywords internal
+#' @noRd
+#'
+create_scAB.v5 <- function(
+  Object,
+  bulk_dataset,
+  phenotype,
+  method = c("survival", "binary")
+) {
+  # cell neighbors
+  method = match.arg(method)
+  if (is.null(Object@graphs$RNA_snn)) {
+    cli::cli_alert_danger(c(
+      crayon::red("Error:"),
+      "'RNA_snn' is not found, please run FindNeighbors function in Seurat."
+    ))
+  }
+  A <- as.matrix(Object@graphs$RNA_snn)
+  diag(A) <- 0
+  A[which(A != 0)] <- 1
+  degrees <- rowSums(A)
+  D <- diag(degrees)
+  eps = 2.2204e-256
+  D12 <- diag(1 / sqrt(pmax(degrees, eps)))
+
+  L <- D12 %*% (D - A) %*% D12 # Normalized Graph Laplacian
+  Dhat <- D12 %*% (D) %*% D12
+  Ahat <- D12 %*% (A) %*% D12
+
+  # similarity matrix
+  sc_exprs <- as.data.frame(Object@assays$RNA$data)
+  common <- intersect(rownames(bulk_dataset), rownames(sc_exprs))
+  dataset0 <- cbind(bulk_dataset[common, ], sc_exprs[common, ]) # Dataset before quantile normalization.
+  dataset1 <- preprocessCore::normalize.quantiles(as.matrix(dataset0)) # Dataset after  quantile normalization.
+  rownames(dataset1) <- rownames(dataset0)
+  colnames(dataset1) <- colnames(dataset0)
+  Expression_bulk <- dataset1[, 1:ncol(bulk_dataset)]
+  Expression_cell <- dataset1[, (ncol(bulk_dataset) + 1):ncol(dataset1)]
+  X <- cor(Expression_bulk, Expression_cell)
+  X = X / norm(X, "F")
+
+  # phenotype ranking
+  if (method == "survival") {
+    ss <- scAB::guanrank(phenotype[, c("time", "status")])
+    S <- diag(1 - ss[rownames(phenotype), 3])
+  } else {
+    S <- diag(1 - phenotype)
+  }
+  # return
+  obj <- list(
+    X = X,
+    S = S,
+    L = L,
+    D = Dhat,
+    A = Ahat,
+    phenotype = phenotype,
+    method = method
+  )
+  class(obj) <- "scAB_data"
+  return(obj)
 }

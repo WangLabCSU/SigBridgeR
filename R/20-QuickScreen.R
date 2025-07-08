@@ -74,7 +74,7 @@
 #' }
 #'
 #' @export
-#' @importFrom dplyr %>%
+#' @import dplyr
 #' @importFrom glue glue
 #'
 Screen <- function(

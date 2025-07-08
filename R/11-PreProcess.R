@@ -293,7 +293,7 @@ MSPreProcess <- function(
 #' @param ms_signature A data frame containing mutational signature data. Must include:
 #'    - A sample ID column (auto-detected via case-insensitive "sample" pattern)
 #'    - A numeric column specified by `col_id` for binarization.
-#' @param TCGA_exp_count A matrix or data frame of expression counts with samples
+#' @param bulk_data A matrix or data frame of expression counts with samples
 #'    as columns. Column names should contain TCGA sample IDs.
 #' @param col_id Integer or string. Column index/name in `ms_signature` to use for:
 #'    - Binarization (values > `ms_status_thresh` become 1, others 0)
@@ -304,7 +304,7 @@ MSPreProcess <- function(
 #' @return A list with three components:
 #' \describe{
 #'   \item{phenotype}{Named integer vector (names = sample IDs) of binarized values}
-#'   \item{matched_TCGA_exp_count}{Expression matrix subset to common samples}
+#'   \item{matched_bulk_data}{Expression matrix subset to common samples}
 #'   \item{ms_select}{Character indicating which signature was used (column name)}
 #' }
 #'
@@ -331,8 +331,8 @@ MSPreProcess <- function(
 #' # Basic usage
 #' result <- MatchSample(
 #'   ms_signature = sig_data,
-#'   TCGA_exp_count = exp_matrix,
-#'   col_id = "APOBEC_score", # or 1
+#'   bulk_data = exp_matrix,
+#'   col_id = "APOBEC_score", # or 1L
 #'   ms_status_thresh = 0.5
 #' )
 #'
@@ -350,7 +350,7 @@ MSPreProcess <- function(
 #'
 MatchSample = function(
   ms_signature,
-  TCGA_exp_count,
+  bulk_data,
   col_id,
   ms_status_thresh = 0
 ) {
@@ -367,7 +367,7 @@ MatchSample = function(
   # minimum length can be used to match samples
   trunc_length <- min(
     min(nchar(ms_signature[[sample_colname]])),
-    min(nchar(colnames(TCGA_exp_count))),
+    min(nchar(colnames(bulk_data))),
     15
   )
   # convert interested column to binary variable
@@ -377,12 +377,12 @@ MatchSample = function(
       !!sample_colname := substr(.[[sample_colname]], 1, trunc_length),
       ms_status = as.integer(.[[col_id]] > ms_status_thresh)
     )
-  colnames(TCGA_exp_count) = substr(colnames(TCGA_exp_count), 1, trunc_length)
+  colnames(bulk_data) = substr(colnames(bulk_data), 1, trunc_length)
   cli::cli_alert_info("Sample match length: {trunc_length}")
   # find common sample names
   cm_samples = intersect(
     processed_ms_signature[[sample_colname]],
-    colnames(TCGA_exp_count)
+    colnames(bulk_data)
   )
   cli::cli_alert_info("Sample match: {length(cm_samples)} common samples")
 
@@ -397,7 +397,7 @@ MatchSample = function(
       {
         stats::setNames(.$ms_status, .[[sample_colname]])
       },
-    matched_TCGA_exp_count = TCGA_exp_count[, cm_samples, drop = FALSE],
+    matched_bulk_data = bulk_data[, cm_samples, drop = FALSE],
     ms_select = names(ms_signature)[[col_id]]
   )
 

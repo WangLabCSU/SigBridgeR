@@ -76,10 +76,12 @@
 #' )
 #' }
 #'
-#' @export
 #' @importFrom dplyr %>%
 #' @importFrom Seurat AddMetaData
 #' @importFrom Scissor reliability.test
+#' 
+#' @keywords internal
+#' @noRd
 #'
 DoScissor = function(
   path2load_scissor_cache = NULL,
@@ -201,7 +203,7 @@ Scissor.v5.optimized <- function(
   TimeStamp = function() format(Sys.time(), "%Y/%m/%d %H:%M:%S")
 
   cli::cli_alert_info(
-    c("[{TimeStamp()}]", crayon::bold(" Scissor start..."))
+    c("[{TimeStamp()}]", crayon::green(" Scissor start..."))
   )
 
   ifelse(
@@ -253,7 +255,7 @@ Scissor.v5.optimized <- function(
         "[{TimeStamp()}] Normalizing quantiles of data..."
       )
 
-      dataset1 <- preprocessCore::normalize.quantiles(dataset0)
+      dataset1 <- preprocessCore::normalize.quantiles(as.matrix(dataset0))
       rownames(dataset1) <- rownames(dataset0)
       colnames(dataset1) <- colnames(dataset0)
 
@@ -411,7 +413,7 @@ Scissor.v5.optimized <- function(
         ))
         if (percentage < cutoff) {
           cli::cli_alert_info(
-            c("[{TimeStamp()}]", crayon::bold(" Scissor Ended."))
+            c("[{TimeStamp()}]", crayon::green(" Scissor Ended."))
           )
           break
         }
