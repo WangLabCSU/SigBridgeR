@@ -1,8 +1,6 @@
 # ---- 2. DO SCISSOR ----
 
 #' @title Perform Scissor Screening Analysis
-#'
-#'
 #' @description
 #' Identifies phenotype-associated cell subpopulations in single-cell data using
 #' regularized regression on matched bulk expression profiles.
@@ -79,7 +77,7 @@
 #' @importFrom dplyr %>%
 #' @importFrom Seurat AddMetaData
 #' @importFrom Scissor reliability.test
-#' 
+#'
 #' @keywords internal
 #' @noRd
 #'
@@ -180,6 +178,9 @@ DoScissor = function(
 #' @description
 #' Scissor.v5 from `https://doi.org/10.1038/s41587-021-01091-3`and `https://github.com/sunduanchen/Scissor/issues/59`
 #' Another version of Scissor.v5() to optimize memory usage and execution speed in preprocess.
+#'
+#' @keywords internal
+#' @noRd
 #'
 Scissor.v5.optimized <- function(
   bulk_dataset,

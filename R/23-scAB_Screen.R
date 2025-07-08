@@ -47,10 +47,12 @@
 #' )
 #' }
 #'
-#' @export
 #' @importFrom scAB create_scAB select_K scAB findSubset
 #' @importFrom cli cli_alert_info
 #' @importFrom crayon green
+#'
+#' @keywords internal
+#' @noRd
 #'
 DoscAB <- function(
   matched_bulk,

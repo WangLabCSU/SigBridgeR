@@ -1,9 +1,94 @@
-# ---- Tumor UMAP Visualization ----
+# ----  Visualization ----
 
-#
+#' @title Generate UMAP Plots for Seurat Object
+#'
+#' @description
+#' Creates customizable UMAP visualizations for single-cell data, supporting both
+#' cluster visualization and gene expression plotting. Handles multiple plotting
+#' parameters through flexible argument passing.
+#'
+#' @usage
+#' FetchUAMP(
+#'   seurat_obj,
+#'   group_by = c("celltype"),
+#'   feature = NULL,
+#'   plot_name = NULL,
+#'   plot_show = FALSE,
+#'   point_size = 0.6,
+#'   plot_color = NULL,
+#'   label_size = 10,
+#'   umap_label = TRUE,
+#'   order = c(2, 1),
+#'   feature_max_cutoff = 2,
+#'   feature_min_cutoff = -2,
+#'   feature_plot_raster = FALSE,
+#'   ...
+#' )
+#'
+#' @param seurat_obj A Seurat object containing UMAP reduction
+#' @param group_by Metadata column(s) for cluster visualization (vector).
+#'        Set to NULL to disable.
+#' @param feature Feature(s) to plot expression (vector). Set to NULL to disable.
+#' @param plot_name Base title for cluster plots
+#' @param plot_show Logical to display combined plot immediately (default: FALSE)
+#' @param point_size Point size for UMAP (default: 0.6)
+#' @param plot_color Color palette for clusters (default: Seurat palette)
+#' @param label_size Label font size (default: 10)
+#' @param umap_label Logical to show cluster labels (default: TRUE)
+#' @param order Plotting order for points (default: c(2,1) - Significant first)
+#' @param feature_max_cutoff Maximum expression cutoff (default: NA)
+#' @param feature_min_cutoff Minimum expression cutoff (default: NA)
+#' @param feature_plot_raster Logical to rasterize feature plots (default: NULL)
+#' @param ... Additional arguments passed to either:
+#'        - `Seurat::DimPlot()` for cluster plots
+#'        - `Seurat::FeaturePlot()` for expression plots
+#'
+#' @return A list of ggplot objects containing:
+#' \itemize{
+#'   \item For `group_by`: UMAP cluster plots
+#'   \item For `feature`: Feature expression plots
+#' }
+#'
+#' @section Plotting Logic:
+#' 1. For each column in `group_by`, creates a separate DimPlot
+#' 2. For each entry in `feature`, creates a separate FeaturePlot
+#' 3. Combines all plots when `plot_show=TRUE` using patchwork
+#'
+#' @examples
+#' \dontrun{
+#' # Cluster visualization only
+#' plots <- FetchUAMP(
+#'   seurat_obj = pbmc,
+#'   group_by = c("celltype", "cluster"),
+#'   plot_name = "PBMC"
+#' )
+#'
+#' # Feature expression with custom parameters
+#' plots <- FetchUAMP(
+#'   seurat_obj = pbmc,
+#'   feature = c("CD3D", "CD8A"),
+#'   feature_max_cutoff = 3,
+#'   pt.size = 1.2
+#' )
+#'
+#' # Combined cluster and feature plots
+#' plots <- FetchUAMP(
+#'   seurat_obj = pbmc,
+#'   group_by = "celltype",
+#'   feature = "CD79A",
+#'   plot_show = TRUE
+#' )
+#' }
+#'
+#' @export
+#' @importFrom Seurat DimPlot FeaturePlot
+#' @importFrom ggplot2 ggtitle
+#' @importFrom patchwork wrap_plots
+#' @importFrom glue glue
+#'
 FetchUAMP = function(
-  SeuratObject,
-  group_by = c("celltype", NULL),
+  seurat_obj,
+  group_by = NULL,
   feature = NULL,
   plot_name = NULL,
   plot_show = FALSE,
@@ -12,9 +97,9 @@ FetchUAMP = function(
   label_size = 10,
   umap_label = TRUE,
   order = c(2, 1),
-  feature_max_cutoff = 2,
-  feature_min_cutoff = -2,
-  feature_plot_raster = FALSE,
+  feature_max_cutoff = NA,
+  feature_min_cutoff = NA,
+  feature_plot_raster = NULL,
   ...
 ) {
   extra_params <- list(...)
@@ -31,7 +116,7 @@ FetchUAMP = function(
     umap_list <- lapply(X = group_by, FUN = function(group_name) {
       dim_args <- c(
         list(
-          object = SeuratObject,
+          object = seurat_obj,
           reduction = "umap",
           label = umap_label,
           group.by = group_name,
@@ -49,11 +134,11 @@ FetchUAMP = function(
     })
   }
 
-  if (!is.null(feature)) {
+  if (!is.null(feature)) {<<<HERE
     feature_plots <- lapply(feature, function(feat) {
       feat_args <- c(
         list(
-          object = SeuratObject,
+          object = seurat_obj,
           features = feat,
           raster = feature_plot_raster,
           label = umap_label,
@@ -75,6 +160,7 @@ FetchUAMP = function(
   if (plot_count == 0) {
     stop("No plots have been generated")
   }
+  names(umap_list) <- c(group_by, feature)
 
   if (plot_show) {
     grid_size <- ifelse(plot_count < 4, plot_count, ceiling(sqrt(plot_count)))

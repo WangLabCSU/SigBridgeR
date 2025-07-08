@@ -21,7 +21,6 @@ Imports:
     IDConverter,
     Matrix,
     patchwork,
-    randomcoloR,
     scAB,
     Scissor,
     scPAS,
@@ -35,5 +34,6 @@ Depends:
     Seurat
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    randomcoloR
 VignetteBuilder: knitr

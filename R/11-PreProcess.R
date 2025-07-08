@@ -18,8 +18,7 @@
 #' @param future_global_maxsize The memory allocated.
 #' @return A Seurat object
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 #'
 SCPreProcess = function(
   sc,

@@ -1,8 +1,8 @@
-# SigBridgeR:
+# **SigBridgeR**
 
 [![CRAN Status](https://www.r-pkg.org/badges/version/SigBridgeR)](https://cran.r-project.org/package=SigBridgeR) [![R-CMD-check](https://github.com/yourusername/SigBridgeR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yourusername/SigBridgeR/actions) [![Codecov test coverage](https://codecov.io/gh/yourusername/SigBridgeR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/yourusername/SigBridgeR) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-A R package for the integration of single-cell RNA-seq data, mutational signatures and bulk expression data.
+An R package for the integration of single-cell RNA-seq data, mutational signatures and bulk expression data.
 
 ------------------------------------------------------------------------
 
@@ -24,7 +24,6 @@ SigbridgeR integrates algorithms from the following packages:
 You can use this function to quickly check if all dependencies are installed and if their versions are correct:
 
 ```{r check_dependencies}
-
 CheckPkgs <- function(packages) {
   CheckSinglePkg <- function(pkg_spec) {
     installed <- requireNamespace(pkg_spec$pkg, quietly = TRUE)
@@ -74,7 +73,7 @@ CheckPkgs(list(
 
 ```
 
-Then you can install the **SigBridgeR** using the following command options:
+Then you can install the **SigBridgeR** using the following options:
 
 ### Stable release from CRAN
 
@@ -108,18 +107,20 @@ If you encounter problems, please see:
 
 ### Data Processing
 
--   `clean_data()`:
+-   `SCPreProcess()`:
+-   `MSPreProcess()`:
+-   `BulkPreProcess()`:
+-   `MatchSample()`:
 
 ### Core Methods
 
--   `analyze()`:
+-   `Screen()`:
 
 ### Output Utilities
 
--   `summary.yourclass()`:
+-   `FetchUMAP()`:
 
 ## Contact
 
 For support or questions:\
 Maintainer: Exceret\
-Issues: https://github.com/yourusername/SigBridgeR/issues\

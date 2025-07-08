@@ -4,7 +4,7 @@
 \alias{MatchSample}
 \title{Match Samples Across TCGA Datasets}
 \usage{
-MatchSample(ms_signature, TCGA_exp_count, col_id, ms_status_thresh = 0)
+MatchSample(ms_signature, bulk_data, col_id, ms_status_thresh = 0)
 }
 \arguments{
 \item{ms_signature}{A data frame containing mutational signature data. Must include:
@@ -13,7 +13,7 @@ MatchSample(ms_signature, TCGA_exp_count, col_id, ms_status_thresh = 0)
 \item A numeric column specified by \code{col_id} for binarization.
 }}
 
-\item{TCGA_exp_count}{A matrix or data frame of expression counts with samples
+\item{bulk_data}{A matrix or data frame of expression counts with samples
 as columns. Column names should contain TCGA sample IDs.}
 
 \item{col_id}{Integer or string. Column index/name in \code{ms_signature} to use for:
@@ -29,7 +29,7 @@ binary status (default: 0). Values above threshold become 1.}
 A list with three components:
 \describe{
 \item{phenotype}{Named integer vector (names = sample IDs) of binarized values}
-\item{matched_TCGA_exp_count}{Expression matrix subset to common samples}
+\item{matched_bulk_data}{Expression matrix subset to common samples}
 \item{ms_select}{Character indicating which signature was used (column name)}
 }
 }
@@ -72,8 +72,8 @@ exp_matrix <- matrix(rnorm(20), ncol = 4,
 # Basic usage
 result <- MatchSample(
   ms_signature = sig_data,
-  TCGA_exp_count = exp_matrix,
-  col_id = "APOBEC_score", # or 1
+  bulk_data = exp_matrix,
+  col_id = "APOBEC_score", # or 1L
   ms_status_thresh = 0.5
 )
 
