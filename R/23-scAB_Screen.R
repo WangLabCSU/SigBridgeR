@@ -13,7 +13,7 @@
 #' @param phenotype Data frame with clinical annotations where:
 #'        - Rows correspond to `matched_bulk` columns
 #'        - For survival: contains `time` and `status` columns
-#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time")
+#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time"), stored in `scRNA_data@misc`
 #' @param phenotype_class Analysis mode:
 #'        - `"binary"`: Case-control design (e.g., responder/non-responder)
 #'        - `"survival"`: Time-to-event analysis data.frame
@@ -116,7 +116,12 @@ DoscAB <- function(
     " Screening cells"
   ))
 
-  sc_data <- scAB::findSubset(sc_data, scAB_Object = scAB_result, tred = tred)
+  sc_data <- scAB::findSubset(
+    sc_data,
+    scAB_Object = scAB_result,
+    tred = tred
+  ) %>%
+    AddMisc("scAB_type", label_type)
 
   sc_data@meta.data <- sc_data@meta.data %>%
     dplyr::rename(scAB = scAB_select) %>%

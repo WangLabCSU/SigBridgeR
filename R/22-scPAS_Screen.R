@@ -8,7 +8,7 @@
 #' @param matched_bulk Bulk RNA-seq data (genes x samples)
 #' @param sc_data Single-cell RNA-seq data (Seurat object and preprocessed)
 #' @param phenotype Phenotype data frame with sample annotations
-#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time")
+#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time"), stored in `scRNA_data@misc`
 #' @param assay Assay to use from sc_data (default: 'RNA')
 #' @param imputation Logical, whether to perform imputation (default: FALSE)
 #' @param nfeature Number of features to select (default: 3000, indicating that the top 3000 highly variable genes are selected for model training
@@ -87,7 +87,8 @@ DoscPAS = function(
     network_class = network_class,
     family = scPAS_family,
     ...
-  )
+  ) %>%
+    AddMisc("scPAS_type", label_type)
 
   # *rename level
   scPAS_result@meta.data = scPAS_result@meta.data %>%
@@ -97,10 +98,6 @@ DoscPAS = function(
         scPAS == "scPAS-" ~ "Negative",
         scPAS == "0" ~ "Neutral"
       )
-    ) %>%
-    cbind(
-      metadata = data.frame(label_type = label_type),
-      row.names = rownames(.)
     )
 
   cli::cli_alert_success(c(

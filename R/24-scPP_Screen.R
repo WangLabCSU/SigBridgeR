@@ -24,7 +24,7 @@
 #' @param phenotype Data frame or tibble or named vector with:
 #'        - Rownames matching `matched_bulk` columns
 #'        - For survival: must contain time and status columns
-#' @param label_type Character specifying phenotype label type (e.g., "SBS1")
+#' @param label_type Character specifying phenotype label type (e.g., "SBS1"), stored in `scRNA_data@misc`
 #' @param phenotype_class Analysis type (case-sensitive):
 #'        - `"Binary"`: Case-control studies (e.g., tumor/normal)
 #'        - `"Continuous"`: Quantitative traits (e.g., drug response)
@@ -165,22 +165,20 @@ DoscPP = function(
   sc_meta = scPP_result$metadata %>%
     dplyr::mutate(
       `ScPP` = dplyr::case_when(
-        ScPP == "Phenotype+" ~ glue::glue("Positive"),
-        ScPP == "Phenotype-" ~ glue::glue("Negative"),
-        ScPP == "Background" ~ glue::glue("Neutral")
+        ScPP == "Phenotype+" ~ "Positive",
+        ScPP == "Phenotype-" ~ "Negative",
+        ScPP == "Background" ~ "Neutral"
       )
     ) %>%
-    cbind(
-      label_type = label_type,
-      row.names = rownames(.)
-    )
+    dplyr::rename("scPP" = ScPP)
 
   sc_data <- sc_data %>%
     Seurat::AddMetaData(
-      metadata = sc_meta[, c("ScPP", "label_type")],
-      col.name = c("ScPP", "label_type")
-    )
-  
+      metadata = sc_meta[, c("scPP")],
+      col.name = c("scPP")
+    ) %>%
+    AddMisc("scPP", label_type)
+
   cli::cli_alert_success(c(
     "[{TimeStamp()}]",
     crayon::green(" scPP screening done.")

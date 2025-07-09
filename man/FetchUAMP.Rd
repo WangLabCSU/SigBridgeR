@@ -5,7 +5,7 @@
 \title{Generate UMAP Plots for Seurat Object}
 \usage{
 FetchUAMP(
-  SeuratObject,
+  seurat_obj,
   group_by = c("celltype"),
   feature = NULL,
   plot_name = NULL,
@@ -22,7 +22,7 @@ FetchUAMP(
 )
 }
 \arguments{
-\item{SeuratObject}{A Seurat object containing UMAP reduction}
+\item{seurat_obj}{A Seurat object containing UMAP reduction}
 
 \item{group_by}{Metadata column(s) for cluster visualization (vector).
 Set to NULL to disable.}
@@ -39,15 +39,15 @@ Set to NULL to disable.}
 
 \item{label_size}{Label font size (default: 10)}
 
-\item{umap_label}{Logical to show cluster labels (default: TRUE)}
+\item{label}{Logical to show cluster labels (default: TRUE)}
 
-\item{order}{Plotting order for points (default: c(2,1) - background first)}
+\item{order}{Plotting order for points (default: c(2,1) - Significant first)}
 
-\item{feature_max_cutoff}{Maximum expression cutoff (default: 2)}
+\item{feature_max_cutoff}{Maximum expression cutoff (default: NA)}
 
-\item{feature_min_cutoff}{Minimum expression cutoff (default: -2)}
+\item{feature_min_cutoff}{Minimum expression cutoff (default: NA)}
 
-\item{feature_plot_raster}{Logical to rasterize feature plots (default: FALSE)}
+\item{feature_plot_raster}{Logical to rasterize feature plots (default: NULL)}
 
 \item{...}{Additional arguments passed to either:
 - \code{Seurat::DimPlot()} for cluster plots
@@ -78,26 +78,19 @@ parameters through flexible argument passing.
 \dontrun{
 # Cluster visualization only
 plots <- FetchUAMP(
-  SeuratObject = pbmc,
+  seurat_obj = pbmc,
   group_by = c("celltype", "cluster"),
   plot_name = "PBMC"
 )
 
 # Feature expression with custom parameters
 plots <- FetchUAMP(
-  SeuratObject = pbmc,
+  seurat_obj = pbmc,
   feature = c("CD3D", "CD8A"),
   feature_max_cutoff = 3,
-  pt.size = 1.2
+  feature_min_cutoff = 0,
 )
 
-# Combined cluster and feature plots
-plots <- FetchUAMP(
-  SeuratObject = pbmc,
-  group_by = "celltype",
-  feature = "CD79A",
-  plot_show = TRUE
-)
 }
 
 }

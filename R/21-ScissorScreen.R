@@ -29,7 +29,7 @@
 #' @param phenotype Clinical outcome data. Can be:
 #'        - Vector: named with sample IDs
 #'        - Data frame: with row names matching bulk columns
-#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time")
+#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time"), stored in `scRNA_data@misc`
 #' @param scissor_alpha (default: 0.05).
 #' @param scissor_cutoff  (default: 0.2).
 #'        Higher values increase specificity.
@@ -131,12 +131,13 @@ DoScissor = function(
   # meta.data to add
   sc_meta <- data.frame(
     scissor = rep("Neutral", ncol(sc_data)),
-    label_type = label_type,
     row.names = colnames(sc_data)
   )
   sc_meta$scissor[rownames(sc_meta) %in% infos1$Scissor_pos] <- "Positive"
   sc_meta$scissor[rownames(sc_meta) %in% infos1$Scissor_neg] <- "Negative"
-  sc_data <- Seurat::AddMetaData(sc_data, metadata = sc_meta)
+  sc_data <- Seurat::AddMetaData(sc_data, metadata = sc_meta) %>%
+    AddMisc("scissor_label", label_type)
+
   # reliability test
   if (reliability_test) {
     ifelse(

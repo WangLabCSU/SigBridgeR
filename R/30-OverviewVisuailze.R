@@ -170,120 +170,19 @@ FetchUAMP = function(
   return(umap_list)
 }
 
-# ---- The proportion of cell types in different samples/sources ----
+# ---- Screened cell fraction(+/-/N)-sample/source stacked graph ----
 
-CalculateCellTypeFraction = function(
-  seuratobject,
-  cell_type_col = "Celltype",
-  select_cell_type = "All",
-  return_stats = FALSE,
-  return_plot = TRUE,
-  plot_color = NULL,
-  show_plot = TRUE,
-  title = NULL
-) {
-  require(dplyr, quietly = TRUE)
-
-  if (!inherits(seuratobject, "Seurat")) {
-    stop("Input must be a Seurat object")
-  }
-
-  cell_types <- seuratobject[[cell_type_col]] %>%
-    unique() %>%
-    unlist() %>%
-    na.omit()
-
-  # default: select all
-  if (any(tolower(select_cell_type) %in% c("all", "", NULL))) {
-    select_cell_type <- cell_types
-  }
-  # check if celltype inputed is wrong
-  invalid_types <- setdiff(select_cell_type, cell_types)
-  if (length(invalid_types) > 0) {
-    cli::cli_alert_warning(glue::glue(
-      "Available cell types:\n",
-      glue::glue(cell_types, .sep = "\n")
-    ))
-    stop("Invalid cell types: ", glue::glue(invalid_types, collapse = ", "))
-  }
-
-  stats_df <- seuratobject@meta.data %>%
-    dplyr::filter(!!rlang::sym(cell_type_col) %in% select_cell_type) %>%
-    dplyr::count(Source, !!rlang::sym(cell_type_col), name = "Type_count") %>%
-    dplyr::group_by(Source) %>%
-    dplyr::mutate(
-      Total_count = sum(Type_count),
-      Fraction = Type_count / Total_count
-    ) %>%
-    dplyr::ungroup() %>%
-    dplyr::arrange(Source, dplyr::desc(Fraction))
-
-  if (return_plot || show_plot) {
-    plot_color <- plot_color %||%
-      randomcoloR::distinctColorPalette(
-        length(unique(seuratobject@meta.data[[
-          cell_type_col
-        ]])),
-        runTsne = TRUE
-      )
-
-    gg <- ggplot2::ggplot(
-      stats_df,
-      ggplot2::aes(
-        x = `Source`,
-        y = `Fraction`,
-        fill = !!rlang::sym(cell_type_col)
-      )
-    ) +
-      ggplot2::geom_col(position = ggplot2::position_stack(reverse = TRUE)) +
-      ggplot2::scale_y_continuous(
-        labels = scales::percent_format(),
-        expand = c(0, 0)
-      ) +
-      ggplot2::scale_fill_manual(values = plot_color) +
-      ggplot2::labs(
-        x = NULL,
-        y = "Cell Fraction",
-        fill = cell_type_col,
-        title = title
-      ) +
-      ggplot2::theme_minimal(base_size = 14) +
-      ggplot2::theme(
-        axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1),
-        panel.grid.major.x = ggplot2::element_blank(),
-        legend.position = "right",
-        plot.margin = ggplot2::margin(1, 1, 1, 2, "cm"),
-        plot.title = ggplot2::element_text(hjust = 0.5, size = 15)
-      )
-
-    if (show_plot) {
-      show(gg)
-    }
-  }
-
-  return_list <- list()
-  if (return_stats) {
-    return_list$stats <- as.data.frame(stats_df)
-  }
-  if (return_plot) {
-    return_list$plot <- gg
-  }
-  return(return_list)
-}
-
-# ---- Scissor(+/-/N)-sample/source stacked graph(in tumor) ----
-
-SampleScreenFractionStackPlot = function(
+ScreenFractionPlot = function(
   screened_seurat,
-  sample_colname = "Source",
+  group_by = "Source",
   screen_type = c("scissor", "scPAS", "scPP", "scAB"),
-  return_stats = FALSE,
+  return_stats = TRUE,
   return_plot = TRUE,
   show_null = FALSE,
   plot_color = NULL,
   show_plot = TRUE
 ) {
-  require(dplyr, quietly = TRUE)
+  library(dplyr)
 
   if (!inherits(screened_seurat, "Seurat")) {
     stop("`screened_seurat` must be a Seurat object")
@@ -291,39 +190,37 @@ SampleScreenFractionStackPlot = function(
 
   if (length(screen_type) != 1) {
     stop(glue::glue(
-      "Please refer one screen algorithm type",
+      "Please refer one screen algorithm type.",
       "Available screen types: ",
-      c('scissor', 'scPAS', 'scPP', 'scAB')[
-        c('scissor', 'scPAS', 'scPP', 'scAB') %in%
-          colnames(screened_seurat@meta.data)
-      ],
+      grep(
+        "scissor$|scPAS$|[Ss]cPP$|scAB.*$",
+        screened_seurat$scRNA_data@meta.data %>% names(),
+        value = T
+      ),
       .sep = "\n"
     ))
   }
 
-  if (!return_plot & !return_stats) {
-    stop(
-      "This function is doing nothing now, please set `return_stats` or `return_plot` to `TRUE`"
-    )
-  }
-
   plot_color <- plot_color %||%
-    stats::setNames(c("N", "Pos", "Neg"), c("#CECECE", "#ff3333", "#386c9b"))
+    stats::setNames(
+      c("Neutral", "Positive", "Negative"),
+      c("#CECECE", "#ff3333", "#386c9b")
+    )
 
   stats_df <- screened_seurat@meta.data %>%
-    dplyr::count(!!sym(sample_colname), screen_type) %>%
+    dplyr::count(!!sym(group_by), screen_type) %>%
     tidyr::complete(
-      !!sym(sample_colname),
+      !!sym(group_by),
       screen_type = c("Neutral", "Positive", "Negative"),
       fill = list(n = 0)
     ) %>%
-    dplyr::group_by(!!sym(sample_colname)) |>
+    dplyr::group_by(!!sym(group_by)) |>
     dplyr::mutate(
       Total = sum(n),
       Status = factor(
         screen_type,
         levels = c("Positive", "Negative", "Neutral"),
-        labels = c("Pos", "Neg", "N")
+        labels = c("Positive", "Negative", "Neutral")
       )
     ) |>
     dplyr::ungroup() |>
@@ -338,7 +235,7 @@ SampleScreenFractionStackPlot = function(
       values_fill = 0
     ) |>
     tidyr::pivot_longer(
-      cols = c(Pos, Neg, N),
+      cols = c(Positive, Negative, Neutral),
       names_to = glue::glue("{screen_type} status"),
       values_to = "Fraction"
     )
@@ -351,7 +248,7 @@ SampleScreenFractionStackPlot = function(
     gg <- ggplot2::ggplot(
       stats_df,
       ggplot2::aes(
-        x = !!sym(sample_colname),
+        x = !!sym(group_by),
         y = `Fraction`,
         fill = `Scissor status`
       )

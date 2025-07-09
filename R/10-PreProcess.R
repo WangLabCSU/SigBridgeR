@@ -1,27 +1,65 @@
-# ---- Input Data Preprocess Functions ----
+# * ---- scRNA-seq preprocessing ----
 
-#' @title Preprocess single-cell RNA data
+#' @title Single-Cell RNA-seq Preprocessing Pipeline
 #'
 #' @description
-#' Preprocess single-cell RNA data: Create a Seurat object, normalize data, find variable features, scale data, run PCA, find clusters and neighbors, run tSNE and UMAP.
+#' A generic function for standardized preprocessing of single-cell RNA-seq data
+#' from multiple sources. Handles data.frame/matrix, AnnData, and Seurat inputs
+#' with tumor cell filtering. Implements a complete analysis pipeline
+#' from raw data to clustered embeddings.
 #'
-#' @param sc raw scRNA data read from `anndata::read.h5ad`, contains `$X` matrix and `$obs` metadata
-#' @param project The project name of the Seurat object, transfered to `SeuratObject@project`.
-#' @param min_cells The minimum number of cells that a feature must be observed in to be included in `VariableFeatures`.
-#' @param min_features The minimum number of cells that a feature must be expressed in to be included in `VariableFeatures`.
-#' @param normalization_method The method used to normalize the data. Options are `"LogNormalize"` (default), `"CLR"`, `"RC"` or `"RCLogNormalize"`.
-#' @param scale_factor A numeric value by which the data will be multiplied. Default is `10000`.
-#' @param selection_method The method used to select variable features, transferred to `SeuratObject@assays$RNA@var.features`. Options are `"vst"` (default), `"mean.var.plot"`, `"dispersion"`, `"mean.var.plot"` or `"dispersion.scaled"`.
-#' @param resolution The resolution parameter for clustering. Default is `0.6`.
-#' @param dims The dimensions to use for clustering. Default is `1:10`.
-#' @param verbose Whether to show detailed information. Default is `TRUE`.
-#' @param future_global_maxsize The memory allocated.
-#' @return A Seurat object
+#' @name SCPreProcess
+#' @usage
+#' SCPreProcess(sc, ...)
 #'
+#' @param sc Input data, one of:
+#'        - `data.frame/matrix`: Raw count matrix (features x cells)
+#'        - `AnnDataR6`: Python AnnData object via reticulate
+#'        - `Seurat`: Preprocessed Seurat object
+#' @param ... Method-specific arguments (see below)
+#'
+#' @return A Seurat object containing:
+#' \itemize{
+#'   \item Normalized and scaled expression data
+#'   \item Variable features
+#'   \item PCA/tSNE/UMAP reductions
+#'   \item Cluster identities
+#'   \item When tumor cells filtered: original dimensions in `@misc$raw_dim`
+#'   \item Final dimensions in `@misc$self_dim`
+#' }
+NULL
+
+
+#' @rdname SCPreProcess
+#' @export
+SCPreProcess <- function(sc, ...) {
+  UseMethod("SCPreProcess")
+}
+
+#' @rdname SCPreProcess
+#' @export
+SCPreProcess.default <- function(sc, ...) {
+  stop("Unknown Input type")
+}
+
+#' @rdname SCPreProcess
+#' @param column2only_tumor Metadata column for tumor cell filtering (regex patterns:
+#'        "[Tt]umor", "[Cc]ancer", "[Mm]alignant", "[Nn]eoplasm")
+#' @param project Project name for Seurat object
+#' @param min_cells Minimum cells per gene to retain
+#' @param min_features Minimum features per cell to retain
+#' @param normalization_method Normalization method ("LogNormalize", "CLR", or "RC")
+#' @param scale_factor Scaling factor for normalization
+#' @param selection_method Variable feature selection method ("vst", "mvp", or "disp")
+#' @param resolution Cluster resolution (higher for more clusters)
+#' @param dims PCA dimensions to use
+#' @param verbose Print progress messages
+#' @param future_global_maxsize Memory limit for parallelization (bytes)
 #' @export
 #'
-SCPreProcess = function(
+SCPreProcess.data.frame <- function(
   sc,
+  column2only_tumor = NULL,
   project = "Scissor_Single_Cell",
   min_cells = 400,
   min_features = 0,
@@ -31,41 +69,146 @@ SCPreProcess = function(
   resolution = 0.6,
   dims = 1:10,
   verbose = TRUE,
-  future_global_maxsize = 6 * 1024^3
+  future_global_maxsize = 6 * 1024^3,
+  ...
 ) {
-  library(dplyr)
-  ifelse(
-    is.data.frame(sc) || is.matrix(sc),
-    {
-      # sc is a count matrix
-      cli::cli_alert_info("Start from count matrix")
-      sc_matrix = sc
-    },
-    {
-      # sc is anndata object
-      if (is.null(sc$X)) {
-        stop("Input must contain $X matrix")
-      }
-      cli::cli_alert_info("Start from anndata object")
+  options(future.globals.maxSize = future_global_maxsize)
 
-      sc_matrix <- if (inherits(sc$X, "sparseMatrix")) {
-        if (!requireNamespace("Matrix", quietly = TRUE)) {
-          stop("Matrix package required for sparse matrix support")
-        }
-        Matrix::t(sc$X)
-      } else {
-        t(sc$X)
-      }
-    }
+  # sc is a count matrix
+  cli::cli_alert_info("Start from count matrix")
+
+  sc_seurat <- SeuratObject::CreateSeuratObject(
+    counts = sc,
+    project = project,
+    min.cells = min_cells,
+    min.features = min_features
+  ) %>%
+    ProcessSeuratObject(
+      normalization_method = normalization_method,
+      scale_factor = scale_factor,
+      selection_method = selection_method,
+      verbose = verbose
+    )
+
+  # Add metadata
+  if ("obs" %in% names(sc)) {
+    sc_seurat <- sc_seurat %>% Seurat::AddMetaData(sc$obs)
+  }
+
+  sc_seurat <- ClusterAndReduce(
+    sc_seurat,
+    dims = dims,
+    resolution = resolution,
+    verbose = verbose
   )
-  options(future.globals.maxSize = future_global_maxsize) # default 6GB
 
-  sc_seurat = SeuratObject::CreateSeuratObject(
+  FilterTumorCell(
+    sc_seurat,
+    column2only_tumor = column2only_tumor,
+    verbose = verbose
+  )
+}
+
+#' @rdname SCPreProcess
+#' @export
+SCPreProcess.AnnDataR6 <- function(
+  sc,
+  column2only_tumor = NULL,
+  project = "Scissor_Single_Cell",
+  min_cells = 400,
+  min_features = 0,
+  normalization_method = "LogNormalize",
+  scale_factor = 10000,
+  selection_method = "vst",
+  resolution = 0.6,
+  dims = 1:10,
+  verbose = TRUE,
+  future_global_maxsize = 6 * 1024^3,
+  ...
+) {
+  options(future.globals.maxSize = future_global_maxsize)
+
+  if (is.null(sc$X)) {
+    stop("Input must contain $X matrix")
+  }
+  cli::cli_alert_info("Start from anndata object")
+
+  sc_matrix <- if (inherits(sc$X, "sparseMatrix")) {
+    if (!requireNamespace("Matrix", quietly = TRUE)) {
+      stop("Matrix package required for sparse matrix support")
+    }
+    Matrix::t(sc$X)
+  } else {
+    t(sc$X)
+  }
+
+  sc_seurat <- SeuratObject::CreateSeuratObject(
     counts = sc_matrix,
     project = project,
     min.cells = min_cells,
     min.features = min_features
   ) %>%
+    ProcessSeuratObject(
+      normalization_method = normalization_method,
+      scale_factor = scale_factor,
+      selection_method = selection_method,
+      verbose = verbose
+    )
+
+  # Add metadata
+  if ("obs" %in% names(sc)) {
+    sc_seurat <- sc_seurat %>% Seurat::AddMetaData(sc$obs)
+  }
+
+  sc_seurat <- ClusterAndReduce(
+    sc_seurat,
+    dims = dims,
+    resolution = resolution,
+    verbose = verbose
+  )
+
+  FilterTumorCell(
+    sc_seurat,
+    column2only_tumor = column2only_tumor,
+    verbose = verbose
+  )
+}
+#' @rdname SCPreProcess
+#' @export
+#'
+SCPreProcess.Seurat <- function(
+  sc,
+  column2only_tumor = NULL,
+  resolution = 0.6,
+  dims = 1:10,
+  verbose = TRUE,
+  future_global_maxsize = 6 * 1024^3,
+  ...
+) {
+  options(future.globals.maxSize = future_global_maxsize)
+
+  FilterTumorCell(
+    obj = sc,
+    column2only_tumor = column2only_tumor,
+    verbose = verbose
+  )
+}
+
+#' Process a Seurat object (internal)
+#'
+#' @description
+#' Normalize, find variable features, scale, and run PCA
+#'
+#'
+#' @keywords internal
+ProcessSeuratObject <- function(
+  obj,
+  normalization_method = "LogNormalize",
+  scale_factor = 10000,
+  selection_method = "vst",
+  verbose = TRUE
+) {
+  obj %>%
     Seurat::NormalizeData(
       normalization.method = normalization_method,
       scale.factor = scale_factor,
@@ -80,12 +223,23 @@ SCPreProcess = function(
       features = SeuratObject::VariableFeatures(.),
       verbose = verbose
     )
+}
 
-  if ("obs" %in% names(sc)) {
-    sc_seurat = sc_seurat %>% Seurat::AddMetaData(sc$obs)
-  }
-
-  n_pcs <- ncol(sc_seurat@reductions$pca)
+#' Cluster and reduce dimensions (internal)
+#'
+#' @description
+#' FindNeighbors, FindClusters, RunTSNE, RunUMAP
+#'
+#'
+#' @keywords internal
+#'
+ClusterAndReduce <- function(
+  obj,
+  dims = 1:10,
+  resolution = 0.6,
+  verbose = TRUE
+) {
+  n_pcs <- ncol(obj@reductions$pca)
   if (is.null(dims) || max(dims) > n_pcs) {
     dims <- 1:min(max(dims), n_pcs)
     cli::cli_alert_warning(crayon::yellow(
@@ -93,20 +247,62 @@ SCPreProcess = function(
     ))
   }
 
-  process_sc_object <- function(obj) {
-    obj <- obj %>%
-      Seurat::FindNeighbors(dims = dims, verbose = verbose) %>%
-      Seurat::FindClusters(resolution = resolution, verbose = verbose) %>%
-      Seurat::RunTSNE(dims = dims) %>%
-      Seurat::RunUMAP(dims = dims, verbose = verbose)
-    return(obj)
-  }
-
-  result = process_sc_object(sc_seurat)
-
-  return(result)
+  obj %>%
+    Seurat::FindNeighbors(dims = dims, verbose = verbose) %>%
+    Seurat::FindClusters(
+      resolution = resolution,
+      verbose = verbose
+    ) %>%
+    Seurat::RunTSNE(dims = dims) %>%
+    Seurat::RunUMAP(dims = dims, verbose = verbose)
 }
 
+#' Filter tumor cells (internal)
+#'
+#' @description
+#' Filter tumor cells from Seurat object.
+#'
+#'
+#' @keywords internal
+#'
+#'
+FilterTumorCell <- function(
+  obj,
+  column2only_tumor = NULL,
+  verbose = TRUE
+) {
+  if (!is.null(column2only_tumor)) {
+    ifelse(
+      !column2only_tumor %in% colnames(obj@meta.data),
+      {
+        cli::cli_alert_danger(crayon::red(
+          "Column '{column2only_tumor}' not found, skip tumor cell filtering"
+        ))
+        obj@misc$self_dim = dim(obj)
+        return(obj)
+      },
+      {
+        labels <- obj[[column2only_tumor]][[1]]
+        tumor_cells <- grepl(
+          "^[Tt]umor|[Cc]ancer[Mm]alignant|[Nn]eoplasm",
+          labels
+        )
+
+        tumor_seurat <- obj[, tumor_cells] %>%
+          AddMisc("raw_dim", dim(obj)) %>%
+          AddMisc("self_dim", dim(.), cover = TRUE)
+
+        return(tumor_seurat)
+      }
+    )
+  } else {
+    obj = AddMisc(obj, "self_dim", dim(obj))
+    return(obj)
+  }
+}
+
+
+# * ---- Preprocess bulk expression data ----
 
 #' @title Preprocess bulk expression data
 #'
@@ -125,6 +321,8 @@ BulkPreProcess = function(data) {
   return(data)
 }
 
+
+# * ---- Preprocess Mutational Signature Data ----
 
 #' @title Preprocess Mutational Signature Data
 #'
@@ -170,6 +368,7 @@ BulkPreProcess = function(data) {
 #' @importFrom cli cli_alert_info cli_alert_warning
 #' @importFrom crayon green red bold yellow black
 #' @importFrom glue glue
+#'
 #'
 MSPreProcess <- function(
   ms_signature,
@@ -401,64 +600,4 @@ MatchSample = function(
   )
 
   return(match_result)
-}
-
-# ------------------- other function ----------------------
-
-#' @title Identify Numeric-Convertible Columns (Internal)
-#'
-#' @description
-#' Detects columns that can be safely converted to numeric based on their content pattern.
-#' Used internally for automatic data type detection before conversion.
-#'
-#' @param data A data frame or matrix containing mixed data types.
-#' @param thresh Numeric threshold [0-1]. Minimum proportion of elements in character
-#'        columns that must match numeric patterns to be considered convertible
-#'        (default: 1).
-#'
-#' @return A logical vector where:
-#'         - `TRUE`: Column should be converted to numeric (either already numeric
-#'            or character with sufficient numeric patterns)
-#'         - `FALSE`: Column should remain as-is
-#'
-#' @section Pattern Matching Rules:
-#' Uses regular expression to detect:
-#' \itemize{
-#'   \item Standard decimals (e.g., "1.23", "-0.5")
-#'   \item Scientific notation (e.g., "1e-5", "2E+10")
-#'   \item Leading/trailing decimals (e.g., ".5", "3.")
-#' }
-#' Non-character columns always return `TRUE`.
-#'
-#' @examples
-#' \dontrun{
-#' # Internal usage example:
-#' df <- data.frame(
-#'   nums = c("1.2", "3e5", "NaN"),
-#'   chars = c("A", "B", "C"),
-#'   actual_nums = rnorm(3)
-#' )
-#'
-#' # Identify convertible columns (50% threshold)
-#' convertible <- IdentifyDataColumn(df)
-#' #> nums chars actual_nums
-#' #> TRUE FALSE        TRUE
-#'
-#' # Convert identified columns
-#' df[convertible] <- lapply(df[convertible], as.numeric)
-#' }
-#'
-#' @keywords internal
-#' @noRd
-#'
-IdentifyDataColumn <- function(data, thresh = 1) {
-  pattern_based <- sapply(data, function(x) {
-    if (is.character(x)) {
-      numeric_pat <- grepl("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$", x)
-      return(mean(numeric_pat, na.rm = TRUE) >= 1)
-    } else {
-      return(TRUE)
-    }
-  })
-  return(pattern_based)
 }
