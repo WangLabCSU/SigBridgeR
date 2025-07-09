@@ -34,7 +34,7 @@
 #' @param point_size Point size for UMAP (default: 0.6)
 #' @param plot_color Color palette for clusters (default: Seurat palette)
 #' @param label_size Label font size (default: 10)
-#' @param umap_label Logical to show cluster labels (default: TRUE)
+#' @param label Logical to show cluster labels (default: TRUE)
 #' @param order Plotting order for points (default: c(2,1) - Significant first)
 #' @param feature_max_cutoff Maximum expression cutoff (default: NA)
 #' @param feature_min_cutoff Minimum expression cutoff (default: NA)
@@ -68,16 +68,9 @@
 #'   seurat_obj = pbmc,
 #'   feature = c("CD3D", "CD8A"),
 #'   feature_max_cutoff = 3,
-#'   pt.size = 1.2
+#'   feature_min_cutoff = 0,
 #' )
 #'
-#' # Combined cluster and feature plots
-#' plots <- FetchUAMP(
-#'   seurat_obj = pbmc,
-#'   group_by = "celltype",
-#'   feature = "CD79A",
-#'   plot_show = TRUE
-#' )
 #' }
 #'
 #' @export
@@ -95,7 +88,7 @@ FetchUAMP = function(
   point_size = 0.6,
   plot_color = NULL,
   label_size = 10,
-  umap_label = TRUE,
+  label = TRUE,
   order = c(2, 1),
   feature_max_cutoff = NA,
   feature_min_cutoff = NA,
@@ -118,7 +111,7 @@ FetchUAMP = function(
         list(
           object = seurat_obj,
           reduction = "umap",
-          label = umap_label,
+          label = label,
           group.by = group_name,
           cols = plot_color,
           pt.size = point_size,
@@ -134,14 +127,15 @@ FetchUAMP = function(
     })
   }
 
-  if (!is.null(feature)) {<<<HERE
+  if (!is.null(feature)) {
     feature_plots <- lapply(feature, function(feat) {
       feat_args <- c(
         list(
           object = seurat_obj,
           features = feat,
+          cols = plot_color,
           raster = feature_plot_raster,
-          label = umap_label,
+          label = label,
           order = order,
           label.size = label_size,
           max.cutoff = feature_max_cutoff,
@@ -150,8 +144,10 @@ FetchUAMP = function(
         featureplot_dot
       )
 
-      do.call(Seurat::FeaturePlot, feat_args) +
+      feature_plot <- do.call(Seurat::FeaturePlot, feat_args) +
         ggplot2::ggtitle(glue::glue("{feat} Expression"))
+
+      return(feature_plot)
     })
     umap_list <- c(umap_list, feature_plots)
   }
