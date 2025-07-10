@@ -172,10 +172,92 @@ FetchUAMP = function(
 
 # ---- Screened cell fraction(+/-/N)-sample/source stacked graph ----
 
-
-
-
-
+#' @title Visualization of Cell Screening Fractions
+#'
+#' @description
+#' Generates stacked bar plots showing the proportion of cells classified as
+#' Positive/Negative/Neutral by single-cell screening algorithms (Scissor, scPAS,
+#' scPP, or scAB) across different sample groups.
+#'
+#' @usage
+#' ScreenFractionPlot(
+#'   screened_seurat,
+#'   group_by = "Source",
+#'   screen_type = c("scissor", "scPAS", "scPP", "scAB"),
+#'   show_null = FALSE,
+#'   plot_color = NULL,
+#'   show_plot = TRUE,
+#'   plot_title = "Screen Fraction",
+#'   stack_width = 0.85,
+#'   x_text_angle = 45,
+#'   axis_linewidth = 0.8,
+#'   legend_position = "right"
+#' )
+#'
+#' @param screened_seurat A Seurat object containing screening results in metadata.
+#'        Must contain columns corresponding to `screen_type`.
+#' @param group_by Metadata column name for grouping samples (default: "Source").
+#' @param screen_type Screening algorithm used. Must match a metadata column
+#'        (case-sensitive, e.g., "scissor" for Scissor results).
+#' @param show_null Logical whether to show groups with zero cells (default: FALSE).
+#' @param plot_color Custom color palette (named vector format):
+#'        - Required names: "Positive", "Negative", "Neutral"
+#'        - Default: c("Neutral"="#CECECE", "Positive"="#ff3333", "Negative"="#386c9b")
+#' @param show_plot Logical to immediately display plot (default: TRUE).
+#' @param plot_title Plot title (default: "Screen Fraction").
+#' @param stack_width Bar width (default: 0.85).
+#' @param x_text_angle X-axis label angle (default: 45).
+#' @param axis_linewidth Axis line thickness (default: 0.8).
+#' @param legend_position Legend position (default: "right").
+#' @param x_lab X-axis label (default: NULL).
+#' @param y_lab Y-axis label (default: "Status Fraction")
+#'
+#' @return A list containing:
+#' \itemize{
+#'   \item{stats: A data frame with screening statistics including:
+#'     \itemize{
+#'       \item Grouping variable counts
+#'       \item Raw cell counts
+#'       \item Percentage fractions
+#'     }
+#'   }
+#'   \item{plot: A ggplot2 object of the stacked bar plot}
+#' }
+#'
+#' @section Visualization Details:
+#' - Bars are ordered by descending Positive fraction
+#' - Y-axis shows percentage (0-100%)
+#' - Zero-fraction groups are automatically hidden unless `show_null=TRUE`
+#'
+#' @examples
+#' \dontrun{
+#' # Basic usage with Scissor results
+#' res <- ScreenFractionPlot(
+#'   screened_seurat = scissor_result,
+#'   group_by = "PatientID",
+#'   screen_type = "scissor"
+#' )
+#'
+#' # Customized plot
+#' custom_plot <- ScreenFractionPlot(
+#'   screened_seurat = scAB_result,
+#'   group_by = "TissueType",
+#'   screen_type = "scAB",
+#'   plot_color = c("Positive"="red", "Negative"="blue", "Neutral"="grey80"),
+#'   plot_title = "scAB Screening Results",
+#'   x_text_angle = 90
+#' )
+#' }
+#'
+#' @export
+#' @importFrom dplyr count group_by mutate ungroup pull filter arrange
+#' @importFrom tidyr complete
+#' @importFrom ggplot2 ggplot aes geom_col scale_y_continuous scale_fill_manual
+#' @importFrom ggplot2 theme_classic labs theme element_text element_line
+#' @importFrom scales percent_format
+#' @importFrom glue glue
+#'
+#'
 ScreenFractionPlot = function(
   screened_seurat,
   group_by = "Source",
@@ -187,7 +269,9 @@ ScreenFractionPlot = function(
   stack_width = 0.85,
   x_text_angle = 45,
   axis_linewidth = 0.8,
-  legend_position = "right"
+  legend_position = "right",
+  x_lab = NULL,
+  y_lab = "Status fraction"
 ) {
   library(dplyr)
 
@@ -200,7 +284,7 @@ ScreenFractionPlot = function(
       "Please refer one screen algorithm type.",
       "Available screen types: ",
       grep(
-        "scissor$|scPAS$|[Ss]cPP$|scAB.*$",
+        "scissor$|scPAS$|scPP$|scAB.*$",
         screened_seurat$scRNA_data@meta.data %>% names(),
         value = T
       ),
@@ -237,6 +321,13 @@ ScreenFractionPlot = function(
     dplyr::arrange(desc(Fraction)) %>%
     dplyr::pull(!!sym(group_by))
 
+  # for plot labels
+  ms_type = screened_seurat@misc[[grep(
+    screen_type,
+    names(screened_seurat@misc),
+    value = TRUE
+  )]]
+
   # filter null records
   if (!show_null) {
     stats_df <- stats_df %>% dplyr::filter(Fraction > 0)
@@ -261,7 +352,11 @@ ScreenFractionPlot = function(
       values = plot_color
     ) +
     ggplot2::theme_classic(base_size = 14) +
-    ggplot2::labs(x = NULL, y = glue::glue("Status fraction")) +
+    ggplot2::labs(
+      x = x_lab,
+      y = y_lab,
+      fill = ms_type
+    ) +
     ggplot2::theme(
       axis.text.x = ggplot2::element_text(
         angle = x_text_angle,
