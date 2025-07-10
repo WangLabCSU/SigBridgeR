@@ -6,23 +6,17 @@
 \usage{
 AddMisc(
   seurat_obj,
-  key,
-  value
+  ..., # key = value
+  cover = TRUE # overwrite existing data
 )
 }
 \arguments{
 \item{seurat_obj}{A Seurat object to modify}
 
-\item{key}{Character string specifying the name for storing the data. Will be
-automatically made unique if already exists in \verb{@misc}.}
-
-\item{value}{Any R object to store in the \verb{@misc} slot. Common uses include:
-- Analysis results (data frames, lists)
-- Processing parameters
-- Supplemental annotations}
+\item{...}{key-value pairs to add to the \verb{@misc} slot.}
 
 \item{cover}{Logical indicating whether to overwrite existing data. If
-\code{FALSE} (default).}
+(default TRUE).}
 }
 \value{
 The modified Seurat object with added \verb{@misc} data. The original object
@@ -45,11 +39,11 @@ suffix to ensure unique key naming (e.g., "mykey1", "mykey2").
 \examples{
 \dontrun{
 # Basic usage
-seurat_obj <- AddMisc(seurat_obj, "QC_stats", qc_df)
+seurat_obj <- AddMisc(seurat_obj, "QC_stats" = qc_df)
 
 # Auto-incrementing example
-seurat_obj <- AddMisc(seurat_obj, "markers", "markers1")
-seurat_obj <- AddMisc(seurat_obj, "markers", "markers2")
+seurat_obj <- AddMisc(seurat_obj, markers = markers1)
+seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover=FALSE)
 # Stores as "markers1" and "markers2"
 
 }

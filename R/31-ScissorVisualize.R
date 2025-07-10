@@ -2,14 +2,13 @@
 
 CellTypeMSScatterBoxplot = function(
   screened_seurat,
-  raw_data,
+  raw_seurat,
   cell_type_select = "T cell",
+  group_by = "Sample",
   ms_select = NULL,
   screen_select = "Pos",
   plot_show = TRUE,
-  plot_color = NULL,
-  return_stats = FALSE,
-  return_plot = TRUE
+  plot_color = NULL
 ) {
   if (!inherits(screened_seurat, "Seurat") || !inherits(raw_data, "Seurat")) {
     stop("Both inputs  `screened_seurat` and `raw_data` must be Seurat objects")
@@ -22,13 +21,16 @@ CellTypeMSScatterBoxplot = function(
     TRUE ~ "Neutral"
   )
 
-  meta_raw <- raw_data@meta.data
   meta_screened <- screened_seurat@meta.data
 
-  x_data <- meta_raw %>%
-    dplyr::group_by(Sample) %>%
+  x_data <- raw_seurat@meta.data %>%
+    dplyr::group_by(!!sum(group_by)) %>%
     dplyr::summarise(
-      Tumor_count = sum(cnv_status == "tumor"),
+      Tumor_count = sum(grepl(
+        "tumor|cancer|malignant",
+        !!sym(raw_seurat@misc$column2only_tumor),
+        ignore.case = TRUE
+      )),
       Immune_count = sum(
         !Celltype %in%
           c(
@@ -42,7 +44,7 @@ CellTypeMSScatterBoxplot = function(
     ) %>%
     dplyr::left_join(
       meta_screened %>%
-        dplyr::group_by(Sample) %>%
+        dplyr::group_by(!!sum(group_by)) %>%
         dplyr::summarise(
           screened_seurat_tumor = sum(
             scissor == scissor_type # these cells are tumor cells
@@ -151,27 +153,21 @@ CellTypeMSScatterBoxplot = function(
     }
   }
 
-  if (return_stats) {
-    wilcox_test <- wilcox.test(Immune_fraction ~ Group, data = x_data)
+  wilcox_test <- wilcox.test(Immune_fraction ~ Group, data = x_data)
 
-    stats_all = list(
-      Cell_type = cell_type_select,
-      R_squared = model_summary$r.squared,
-      P_value_lm = model_summary$coefficients[2, 4],
-      P_value_wilcox = wilcox_test$p.value,
-      ms_select = ms_select
-    )
-  }
+  stats_all = list(
+    Cell_type = cell_type_select,
+    R_squared = model_summary$r.squared,
+    P_value_lm = model_summary$coefficients[2, 4],
+    P_value_wilcox = wilcox_test$p.value,
+    ms_select = ms_select
+  )
 
   result = list()
-  if (return_plot) {
-    result$scatter_plot = gg_scatter
-    result$box_plot = gg_box
-  }
-  if (return_stats) {
-    result$stats =
-      stats_all
-  }
+  result$scatter_plot = gg_scatter
+  result$box_plot = gg_box
+  result$stats =
+    stats_all
   return(result)
 }
 

@@ -173,6 +173,7 @@ SCPreProcess.AnnDataR6 <- function(
     verbose = verbose
   )
 }
+
 #' @rdname SCPreProcess
 #' @export
 #'
@@ -194,13 +195,20 @@ SCPreProcess.Seurat <- function(
   )
 }
 
-#' Process a Seurat object (internal)
+#' @title Process a Seurat object (internal)
 #'
 #' @description
 #' Normalize, find variable features, scale, and run PCA
 #'
+#' @param obj Seurat object
+#' @param normalization_method Normalization method ("LogNormalize", "CLR", or "RC")
+#' @param scale_factor Scaling factor for normalization
+#' @param selection_method Variable feature selection method ("vst", "mvp", or "disp")
+#' @param verbose Print progress messages
+#' @return Seurat object
 #'
 #' @keywords internal
+#'
 ProcessSeuratObject <- function(
   obj,
   normalization_method = "LogNormalize",
@@ -262,6 +270,9 @@ ClusterAndReduce <- function(
 #' @description
 #' Filter tumor cells from Seurat object.
 #'
+#' @param obj Seurat object with a column to filter out tumor cells.
+#' @param name2only_tumor Name of the column to filter out tumor cells.
+#' @param verbose Logical. Whether to print messages.
 #'
 #' @keywords internal
 #'
@@ -271,6 +282,8 @@ FilterTumorCell <- function(
   column2only_tumor = NULL,
   verbose = TRUE
 ) {
+  obj = AddMisc(obj, self_dim = dim(obj), cover = TRUE)
+
   if (!is.null(column2only_tumor)) {
     ifelse(
       !column2only_tumor %in% colnames(obj@meta.data),
@@ -278,7 +291,6 @@ FilterTumorCell <- function(
         cli::cli_alert_danger(crayon::red(
           "Column '{column2only_tumor}' not found, skip tumor cell filtering"
         ))
-        obj@misc$self_dim = dim(obj)
         return(obj)
       },
       {
@@ -289,13 +301,17 @@ FilterTumorCell <- function(
         )
 
         tumor_seurat <- obj[, tumor_cells] %>%
-          AddMisc(raw_dim = dim(obj), self_dim = dim(.), cover = TRUE)
+          AddMisc(
+            raw_dim = dim(obj),
+            self_dim = dim(.),
+            column2only_tumor = column2only_tumor,
+            cover = TRUE
+          )
 
-        return(tumor_seurat)
+        return(list(tumor_seurat = tumor_seurat, raw_seurat = obj))
       }
     )
   } else {
-    obj = AddMisc(obj, self_dim = dim(obj), cover = TRUE)
     return(obj)
   }
 }
