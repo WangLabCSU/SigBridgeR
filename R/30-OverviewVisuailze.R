@@ -172,15 +172,22 @@ FetchUAMP = function(
 
 # ---- Screened cell fraction(+/-/N)-sample/source stacked graph ----
 
+
+
+
+
 ScreenFractionPlot = function(
   screened_seurat,
   group_by = "Source",
   screen_type = c("scissor", "scPAS", "scPP", "scAB"),
-  return_stats = TRUE,
-  return_plot = TRUE,
   show_null = FALSE,
   plot_color = NULL,
-  show_plot = TRUE
+  show_plot = TRUE,
+  plot_title = "Screen Fraction",
+  stack_width = 0.85,
+  x_text_angle = 45,
+  axis_linewidth = 0.8,
+  legend_position = "right"
 ) {
   library(dplyr)
 
@@ -202,85 +209,73 @@ ScreenFractionPlot = function(
   }
 
   plot_color <- plot_color %||%
-    stats::setNames(
-      c("Neutral", "Positive", "Negative"),
-      c("#CECECE", "#ff3333", "#386c9b")
-    )
+    c("Neutral" = "#CECECE", "Positive" = "#ff3333", "Negative" = "#386c9b")
+
+  result <- list() # return
 
   stats_df <- screened_seurat@meta.data %>%
-    dplyr::count(!!sym(group_by), screen_type) %>%
+    dplyr::count(!!sym(group_by), !!sym(screen_type)) %>%
     tidyr::complete(
       !!sym(group_by),
-      screen_type = c("Neutral", "Positive", "Negative"),
+      !!sym(screen_type),
       fill = list(n = 0)
     ) %>%
-    dplyr::group_by(!!sym(group_by)) |>
+    dplyr::group_by(!!sym(group_by)) %>%
+    dplyr::mutate(Total = sum(n)) %>% # total number of each group
+    dplyr::ungroup() %>%
     dplyr::mutate(
-      Total = sum(n),
-      Status = factor(
-        screen_type,
-        levels = c("Positive", "Negative", "Neutral"),
-        labels = c("Positive", "Negative", "Neutral")
-      )
-    ) |>
-    dplyr::ungroup() |>
-    dplyr::mutate(
-      Fraction = ifelse(Total == 0, 0, n / Total),
-      .keep = "unused"
-    ) |>
-    dplyr::select(-screen_type) |>
-    tidyr::pivot_wider(
-      names_from = Status,
-      values_from = Fraction,
-      values_fill = 0
-    ) |>
-    tidyr::pivot_longer(
-      cols = c(Positive, Negative, Neutral),
-      names_to = glue::glue("{screen_type} status"),
-      values_to = "Fraction"
-    )
+      Fraction = ifelse(Total == 0, 0, n / Total)
+    ) %>%
+    {
+      result$stats <<- .
+      .
+    } %>%
+    dplyr::select(!!sym(group_by), !!sym(screen_type), Fraction)
+
+  plot_order <- stats_df %>%
+    dplyr::filter(!!sym(screen_type) == "Positive") %>%
+    dplyr::arrange(desc(Fraction)) %>%
+    dplyr::pull(!!sym(group_by))
 
   # filter null records
   if (!show_null) {
-    stats_df <- stats_df |> dplyr::filter(Fraction > 0)
-  }
-  if (show_plot || return_plot) {
-    gg <- ggplot2::ggplot(
-      stats_df,
-      ggplot2::aes(
-        x = !!sym(group_by),
-        y = `Fraction`,
-        fill = `Scissor status`
-      )
-    ) +
-      ggplot2::geom_col(position = "stack", width = 0.85) +
-      ggplot2::scale_y_continuous(
-        labels = scales::percent_format(accuracy = 1),
-        expand = c(0, 0),
-        breaks = seq(0, 1, 0.1)
-      ) +
-      ggplot2::scale_fill_manual(
-        values = plot_color
-      ) +
-      ggplot2::theme_classic(base_size = 14) +
-      ggplot2::labs(x = NULL, y = "Scissor status fraction") +
-      ggplot2::theme(
-        axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1),
-        axis.text = ggplot2::element_text(color = "black"),
-        legend.position = "right",
-        axis.line = ggplot2::element_line(linewidth = 0.8)
-      )
-    if (show_plot) {
-      print(gg)
-    }
+    stats_df <- stats_df %>% dplyr::filter(Fraction > 0)
   }
 
-  result <- list()
-  if (return_stats) {
-    result$stats <- as.data.frame(stats_df)
+  result$plot <- ggplot2::ggplot(
+    stats_df,
+    ggplot2::aes(
+      x = factor(!!sym(group_by), levels = plot_order),
+      y = `Fraction`,
+      fill = !!sym(screen_type),
+      title = plot_title
+    )
+  ) +
+    ggplot2::geom_col(position = "stack", width = stack_width) +
+    ggplot2::scale_y_continuous(
+      labels = scales::percent_format(accuracy = 1),
+      expand = c(0, 0),
+      breaks = seq(0, 1, 0.1)
+    ) +
+    ggplot2::scale_fill_manual(
+      values = plot_color
+    ) +
+    ggplot2::theme_classic(base_size = 14) +
+    ggplot2::labs(x = NULL, y = glue::glue("Status fraction")) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(
+        angle = x_text_angle,
+        hjust = 1,
+        vjust = 1
+      ),
+      axis.text = ggplot2::element_text(color = "black"),
+      legend.position = legend_position,
+      axis.line = ggplot2::element_line(linewidth = axis_linewidth)
+    )
+
+  if (show_plot) {
+    print(result$plot)
   }
-  if (return_plot) {
-    result$plot <- gg
-  }
-  if (length(result) > 0) return(result)
+
+  return(result)
 }

@@ -136,7 +136,7 @@ DoScissor = function(
   sc_meta$scissor[rownames(sc_meta) %in% infos1$Scissor_pos] <- "Positive"
   sc_meta$scissor[rownames(sc_meta) %in% infos1$Scissor_neg] <- "Negative"
   sc_data <- Seurat::AddMetaData(sc_data, metadata = sc_meta) %>%
-    AddMisc("scissor_label", label_type)
+    AddMisc(scissor_type = label_type, cover = FALSE)
 
   # reliability test
   if (reliability_test) {

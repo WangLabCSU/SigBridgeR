@@ -88,7 +88,7 @@ DoscPAS = function(
     family = scPAS_family,
     ...
   ) %>%
-    AddMisc("scPAS_type", label_type)
+    AddMisc(scPAS_type = label_type, cover = FALSE)
 
   # *rename level
   scPAS_result@meta.data = scPAS_result@meta.data %>%

@@ -121,7 +121,7 @@ DoscAB <- function(
     scAB_Object = scAB_result,
     tred = tred
   ) %>%
-    AddMisc("scAB_type", label_type)
+    AddMisc(scAB_type=label_type,cover=FALSE)
 
   sc_data@meta.data <- sc_data@meta.data %>%
     dplyr::rename(scAB = scAB_select) %>%

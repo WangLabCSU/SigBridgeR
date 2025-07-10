@@ -10,19 +10,14 @@
 #' @usage
 #' AddMisc(
 #'   seurat_obj,
-#'   key,
-#'   value
+#'   ..., # key = value
+#'   cover = TRUE # overwrite existing data
 #' )
 #'
 #' @param seurat_obj A Seurat object to modify
-#' @param key Character string specifying the name for storing the data. Will be
-#'        automatically made unique if already exists in `@misc`.
-#' @param value Any R object to store in the `@misc` slot. Common uses include:
-#'        - Analysis results (data frames, lists)
-#'        - Processing parameters
-#'        - Supplemental annotations
+#' @param ... key-value pairs to add to the `@misc` slot.
 #' @param cover Logical indicating whether to overwrite existing data. If
-#'        `FALSE` (default).
+#'         (default TRUE).
 #'
 #' @return The modified Seurat object with added `@misc` data. The original object
 #'         structure is preserved with no other modifications.
@@ -35,11 +30,11 @@
 #' @examples
 #' \dontrun{
 #' # Basic usage
-#' seurat_obj <- AddMisc(seurat_obj, "QC_stats", qc_df)
+#' seurat_obj <- AddMisc(seurat_obj, "QC_stats" = qc_df)
 #'
 #' # Auto-incrementing example
-#' seurat_obj <- AddMisc(seurat_obj, "markers", "markers1")
-#' seurat_obj <- AddMisc(seurat_obj, "markers", "markers2")
+#' seurat_obj <- AddMisc(seurat_obj, markers = markers1)
+#' seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover=FALSE)
 #' # Stores as "markers1" and "markers2"
 #'
 #' }
@@ -47,26 +42,33 @@
 #'
 #' @export
 #'
-AddMisc <- function(seurat_obj, key, value, cover = FALSE) {
-  if (key %in% names(seurat_obj@misc) && !cover) {
-    existing_keys <- grep(
-      paste0("^", key, "\\d*$"),
-      names(seurat_obj@misc),
-      value = TRUE
-    )
-    if (length(existing_keys) > 0) {
-      nums <- as.integer(sub(paste0("^", key, "(\\d+)$"), "\\1", existing_keys))
-      nums <- nums[!is.na(nums)]
-      key <- if (length(nums) > 0) {
-        paste0(key, max(nums) + 1)
+AddMisc <- function(seurat_obj, ..., cover = TRUE) {
+  # Get the key-value pairs from ... arguments
+  kv_pairs <- list(...)
+
+  for (key in names(kv_pairs)) {
+    value <- kv_pairs[[key]]
+
+    if (key %in% names(seurat_obj@misc) && !cover) {
+      existing_keys <- grep(
+        glue::glue("^{key}\\d*$"),
+        names(seurat_obj@misc),
+        value = TRUE
+      )
+      if (length(existing_keys) > 0) {
+        nums <- as.integer(sub(glue("^{key}(\\d+)$"), "\\1", existing_keys))
+        nums <- nums[!is.na(nums)]
+        key <- if (length(nums) > 0) {
+          glue::glue("{key}{max(nums) + 1}")
+        } else {
+          glue::glue("{key}1")
+        }
       } else {
-        paste0(key, "1")
+        key <- glue::glue("{key}1")
       }
-    } else {
-      key <- paste0(key, "1")
     }
+    seurat_obj@misc[[key]] <- value
   }
-  seurat_obj@misc[[key]] <- value
 
   return(seurat_obj)
 }

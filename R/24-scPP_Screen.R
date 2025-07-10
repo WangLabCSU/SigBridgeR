@@ -177,7 +177,7 @@ DoscPP = function(
       metadata = sc_meta[, c("scPP")],
       col.name = c("scPP")
     ) %>%
-    AddMisc("scPP", label_type)
+    AddMisc(scPP_type = label_type, cover = FALSE)
 
   cli::cli_alert_success(c(
     "[{TimeStamp()}]",

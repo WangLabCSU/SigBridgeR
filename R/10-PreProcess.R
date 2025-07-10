@@ -289,14 +289,13 @@ FilterTumorCell <- function(
         )
 
         tumor_seurat <- obj[, tumor_cells] %>%
-          AddMisc("raw_dim", dim(obj)) %>%
-          AddMisc("self_dim", dim(.), cover = TRUE)
+          AddMisc(raw_dim = dim(obj), self_dim = dim(.), cover = TRUE)
 
         return(tumor_seurat)
       }
     )
   } else {
-    obj = AddMisc(obj, "self_dim", dim(obj))
+    obj = AddMisc(obj, self_dim = dim(obj), cover = TRUE)
     return(obj)
   }
 }
