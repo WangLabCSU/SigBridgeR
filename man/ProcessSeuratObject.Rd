@@ -12,6 +12,20 @@ ProcessSeuratObject(
   verbose = TRUE
 )
 }
+\arguments{
+\item{obj}{Seurat object}
+
+\item{normalization_method}{Normalization method ("LogNormalize", "CLR", or "RC")}
+
+\item{scale_factor}{Scaling factor for normalization}
+
+\item{selection_method}{Variable feature selection method ("vst", "mvp", or "disp")}
+
+\item{verbose}{Print progress messages}
+}
+\value{
+Seurat object
+}
 \description{
 Normalize, find variable features, scale, and run PCA
 }

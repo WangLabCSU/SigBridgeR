@@ -79,95 +79,99 @@
 #' @importFrom patchwork wrap_plots
 #' @importFrom glue glue
 #'
-FetchUAMP = function(
-  seurat_obj,
-  group_by = NULL,
-  feature = NULL,
-  plot_name = NULL,
-  plot_show = FALSE,
-  point_size = 0.6,
-  plot_color = NULL,
-  label_size = 10,
-  label = TRUE,
-  order = c(2, 1),
-  feature_max_cutoff = NA,
-  feature_min_cutoff = NA,
-  feature_plot_raster = NULL,
-  ...
+FetchUMAP = function(
+    seurat_obj,
+    group_by = NULL,
+    feature = NULL,
+    plot_name = NULL,
+    plot_show = FALSE,
+    point_size = 0.6,
+    plot_color = NULL,
+    label_size = 10,
+    label = TRUE,
+    order = c(2, 1),
+    feature_max_cutoff = NA,
+    feature_min_cutoff = NA,
+    feature_plot_raster = NULL,
+    ...
 ) {
-  extra_params <- list(...)
+    extra_params <- list(...)
 
-  dimplot_args <- names(formals(Seurat::DimPlot))
-  featureplot_args <- names(formals(Seurat::FeaturePlot))
+    dimplot_args <- names(formals(Seurat::DimPlot))
+    featureplot_args <- names(formals(Seurat::FeaturePlot))
 
-  dimplot_dot <- extra_params[names(extra_params) %in% dimplot_args]
-  featureplot_dot <- extra_params[names(extra_params) %in% featureplot_args]
+    dimplot_dot <- extra_params[names(extra_params) %in% dimplot_args]
+    featureplot_dot <- extra_params[names(extra_params) %in% featureplot_args]
 
-  umap_list <- list()
+    umap_list <- list()
 
-  if (!is.null(group_by)) {
-    umap_list <- lapply(X = group_by, FUN = function(group_name) {
-      dim_args <- c(
-        list(
-          object = seurat_obj,
-          reduction = "umap",
-          label = label,
-          group.by = group_name,
-          cols = plot_color,
-          pt.size = point_size,
-          order = order,
-          label.size = label_size
-        ),
-        dimplot_dot
-      )
+    if (!is.null(group_by)) {
+        umap_list <- lapply(X = group_by, FUN = function(group_name) {
+            dim_args <- c(
+                list(
+                    object = seurat_obj,
+                    reduction = "umap",
+                    label = label,
+                    group.by = group_name,
+                    cols = plot_color,
+                    pt.size = point_size,
+                    order = order,
+                    label.size = label_size
+                ),
+                dimplot_dot
+            )
 
-      umap_plot <- do.call(Seurat::DimPlot, dim_args) +
-        ggplot2::ggtitle(glue::glue("{plot_name} UMAP"))
-      return(umap_plot)
-    })
-  }
+            umap_plot <- do.call(Seurat::DimPlot, dim_args) +
+                ggplot2::ggtitle(glue::glue("{plot_name} UMAP"))
+            return(umap_plot)
+        })
+    }
 
-  if (!is.null(feature)) {
-    feature_plots <- lapply(feature, function(feat) {
-      feat_args <- c(
-        list(
-          object = seurat_obj,
-          features = feat,
-          cols = plot_color,
-          raster = feature_plot_raster,
-          label = label,
-          order = order,
-          label.size = label_size,
-          max.cutoff = feature_max_cutoff,
-          min.cutoff = feature_min_cutoff
-        ),
-        featureplot_dot
-      )
+    if (!is.null(feature)) {
+        feature_plots <- lapply(feature, function(feat) {
+            feat_args <- c(
+                list(
+                    object = seurat_obj,
+                    features = feat,
+                    cols = plot_color,
+                    raster = feature_plot_raster,
+                    label = label,
+                    order = order,
+                    label.size = label_size,
+                    max.cutoff = feature_max_cutoff,
+                    min.cutoff = feature_min_cutoff
+                ),
+                featureplot_dot
+            )
 
-      feature_plot <- do.call(Seurat::FeaturePlot, feat_args) +
-        ggplot2::ggtitle(glue::glue("{feat} Expression"))
+            feature_plot <- do.call(Seurat::FeaturePlot, feat_args) +
+                ggplot2::ggtitle(glue::glue("{feat} Expression"))
 
-      return(feature_plot)
-    })
-    umap_list <- c(umap_list, feature_plots)
-  }
+            return(feature_plot)
+        })
+        umap_list <- c(umap_list, feature_plots)
+    }
 
-  plot_count <- length(umap_list)
-  if (plot_count == 0) {
-    stop("No plots have been generated")
-  }
-  names(umap_list) <- c(group_by, feature)
+    plot_count <- length(umap_list)
+    if (plot_count == 0) {
+        stop("No plots have been generated")
+    }
+    names(umap_list) <- c(group_by, feature)
 
-  if (plot_show) {
-    grid_size <- ifelse(plot_count < 4, plot_count, ceiling(sqrt(plot_count)))
-    combined_plot <- patchwork::wrap_plots(
-      umap_list,
-      ncol = grid_size,
-      nrow = ceiling(plot_count / grid_size)
-    )
-    print(combined_plot)
-  }
-  return(umap_list)
+    if (plot_show) {
+        grid_size <- ifelse(
+            plot_count < 4,
+            plot_count,
+            ceiling(sqrt(plot_count))
+        )
+        combined_plot <- patchwork::wrap_plots(
+            umap_list,
+            ncol = grid_size,
+            nrow = ceiling(plot_count / grid_size)
+        )
+        print(combined_plot)
+    }
+    return(umap_list)
 }
 
 # ---- Screened cell fraction(+/-/N)-sample/source stacked graph ----
@@ -259,118 +263,118 @@ FetchUAMP = function(
 #'
 #'
 ScreenFractionPlot = function(
-  screened_seurat,
-  group_by = "Source",
-  screen_type = c("scissor", "scPAS", "scPP", "scAB"),
-  show_null = FALSE,
-  plot_color = NULL,
-  show_plot = TRUE,
-  plot_title = "Screen Fraction",
-  stack_width = 0.85,
-  x_text_angle = 45,
-  axis_linewidth = 0.8,
-  legend_position = "right",
-  x_lab = NULL,
-  y_lab = "Status fraction"
+    screened_seurat,
+    group_by = "Source",
+    screen_type = c("scissor", "scPAS", "scPP", "scAB"),
+    show_null = FALSE,
+    plot_color = NULL,
+    show_plot = TRUE,
+    plot_title = "Screen Fraction",
+    stack_width = 0.85,
+    x_text_angle = 45,
+    axis_linewidth = 0.8,
+    legend_position = "right",
+    x_lab = NULL,
+    y_lab = "Status fraction"
 ) {
-  library(dplyr)
+    library(dplyr)
 
-  if (!inherits(screened_seurat, "Seurat")) {
-    stop("`screened_seurat` must be a Seurat object")
-  }
+    if (!inherits(screened_seurat, "Seurat")) {
+        stop("`screened_seurat` must be a Seurat object")
+    }
 
-  if (length(screen_type) != 1) {
-    stop(glue::glue(
-      "Please refer one screen algorithm type.",
-      "Available screen types: ",
-      grep(
-        "scissor$|scPAS$|scPP$|scAB.*$",
-        screened_seurat$scRNA_data@meta.data %>% names(),
-        value = T
-      ),
-      .sep = "\n"
-    ))
-  }
+    if (length(screen_type) != 1) {
+        stop(glue::glue(
+            "Please refer one screen algorithm type.",
+            "Available screen types: ",
+            grep(
+                "scissor$|scPAS$|scPP$|scAB.*$",
+                screened_seurat$scRNA_data@meta.data %>% names(),
+                value = T
+            ),
+            .sep = "\n"
+        ))
+    }
 
-  plot_color <- plot_color %||%
-    c("Neutral" = "#CECECE", "Positive" = "#ff3333", "Negative" = "#386c9b")
+    plot_color <- plot_color %||%
+        c("Neutral" = "#CECECE", "Positive" = "#ff3333", "Negative" = "#386c9b")
 
-  result <- list() # return
+    result <- list() # return
 
-  stats_df <- screened_seurat@meta.data %>%
-    dplyr::count(!!sym(group_by), !!sym(screen_type)) %>%
-    tidyr::complete(
-      !!sym(group_by),
-      !!sym(screen_type),
-      fill = list(n = 0)
-    ) %>%
-    dplyr::group_by(!!sym(group_by)) %>%
-    dplyr::mutate(Total = sum(n)) %>% # total number of each group
-    dplyr::ungroup() %>%
-    dplyr::mutate(
-      Fraction = ifelse(Total == 0, 0, n / Total)
-    ) %>%
-    {
-      result$stats <<- .
-      .
-    } %>%
-    dplyr::select(!!sym(group_by), !!sym(screen_type), Fraction)
+    stats_df <- screened_seurat@meta.data %>%
+        dplyr::count(!!sym(group_by), !!sym(screen_type)) %>%
+        tidyr::complete(
+            !!sym(group_by),
+            !!sym(screen_type),
+            fill = list(n = 0)
+        ) %>%
+        dplyr::group_by(!!sym(group_by)) %>%
+        dplyr::mutate(Total = sum(n)) %>% # total number of each group
+        dplyr::ungroup() %>%
+        dplyr::mutate(
+            Fraction = ifelse(Total == 0, 0, n / Total)
+        ) %>%
+        {
+            result$stats <<- .
+            .
+        } %>%
+        dplyr::select(!!sym(group_by), !!sym(screen_type), Fraction)
 
-  plot_order <- stats_df %>%
-    dplyr::filter(!!sym(screen_type) == "Positive") %>%
-    dplyr::arrange(desc(Fraction)) %>%
-    dplyr::pull(!!sym(group_by))
+    plot_order <- stats_df %>%
+        dplyr::filter(!!sym(screen_type) == "Positive") %>%
+        dplyr::arrange(desc(Fraction)) %>%
+        dplyr::pull(!!sym(group_by))
 
-  # for plot labels
-  ms_type = screened_seurat@misc[[grep(
-    screen_type,
-    names(screened_seurat@misc),
-    value = TRUE
-  )]]
+    # for plot labels
+    ms_type = screened_seurat@misc[[grep(
+        screen_type,
+        names(screened_seurat@misc),
+        value = TRUE
+    )]]
 
-  # filter null records
-  if (!show_null) {
-    stats_df <- stats_df %>% dplyr::filter(Fraction > 0)
-  }
+    # filter null records
+    if (!show_null) {
+        stats_df <- stats_df %>% dplyr::filter(Fraction > 0)
+    }
 
-  result$plot <- ggplot2::ggplot(
-    stats_df,
-    ggplot2::aes(
-      x = factor(!!sym(group_by), levels = plot_order),
-      y = `Fraction`,
-      fill = !!sym(screen_type),
-      title = plot_title
-    )
-  ) +
-    ggplot2::geom_col(position = "stack", width = stack_width) +
-    ggplot2::scale_y_continuous(
-      labels = scales::percent_format(accuracy = 1),
-      expand = c(0, 0),
-      breaks = seq(0, 1, 0.1)
+    result$plot <- ggplot2::ggplot(
+        stats_df,
+        ggplot2::aes(
+            x = factor(!!sym(group_by), levels = plot_order),
+            y = `Fraction`,
+            fill = !!sym(screen_type),
+            title = plot_title
+        )
     ) +
-    ggplot2::scale_fill_manual(
-      values = plot_color
-    ) +
-    ggplot2::theme_classic(base_size = 14) +
-    ggplot2::labs(
-      x = x_lab,
-      y = y_lab,
-      fill = ms_type
-    ) +
-    ggplot2::theme(
-      axis.text.x = ggplot2::element_text(
-        angle = x_text_angle,
-        hjust = 1,
-        vjust = 1
-      ),
-      axis.text = ggplot2::element_text(color = "black"),
-      legend.position = legend_position,
-      axis.line = ggplot2::element_line(linewidth = axis_linewidth)
-    )
+        ggplot2::geom_col(position = "stack", width = stack_width) +
+        ggplot2::scale_y_continuous(
+            labels = scales::percent_format(accuracy = 1),
+            expand = c(0, 0),
+            breaks = seq(0, 1, 0.1)
+        ) +
+        ggplot2::scale_fill_manual(
+            values = plot_color
+        ) +
+        ggplot2::theme_classic(base_size = 14) +
+        ggplot2::labs(
+            x = x_lab,
+            y = y_lab,
+            fill = ms_type
+        ) +
+        ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+                angle = x_text_angle,
+                hjust = 1,
+                vjust = 1
+            ),
+            axis.text = ggplot2::element_text(color = "black"),
+            legend.position = legend_position,
+            axis.line = ggplot2::element_line(linewidth = axis_linewidth)
+        )
 
-  if (show_plot) {
-    print(result$plot)
-  }
+    if (show_plot) {
+        print(result$plot)
+    }
 
-  return(result)
+    return(result)
 }

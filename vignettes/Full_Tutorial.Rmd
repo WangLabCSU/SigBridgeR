@@ -1,6 +1,7 @@
 ---
-title: "Tutorial"
-output: rmarkdown::html_vignette
+title: "Full Tutorial for SigBridgeR"
+output: 
+    rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,9 +15,4 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r}
-library(SigBridgeR)
-
-```
-
-# **Full Tutorial for SigBridgeR**
+# **Full Tutorial for SigBridgeR** {#full-tutorial-for-sigbridger}

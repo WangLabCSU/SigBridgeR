@@ -25,7 +25,7 @@
 #' @import dplyr
 #'
 #' @keywords internal
-#' @noRd
+#' @export
 #'
 DoscPAS = function(
   matched_bulk,

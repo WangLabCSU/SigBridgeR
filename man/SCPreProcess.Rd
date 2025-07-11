@@ -65,7 +65,7 @@ SCPreProcess(sc, ...)
 \item{...}{Method-specific arguments (see below)}
 
 \item{column2only_tumor}{Metadata column for tumor cell filtering (regex patterns:
-"\link{Tt}umor", "\link{Cc}ancer", "\link{Mm}alignant", "\link{Nn}eoplasm")}
+"\link{Tt}umo.?r", "\link{Cc}ancer", "\link{Mm}alignant", "\link{Nn}eoplasm")}
 
 \item{project}{Project name for Seurat object}
 

@@ -19,61 +19,7 @@ SigbridgeR integrates algorithms from the following packages:
 
 ## Installation
 
-### Dependencies
-
-You can use this function to quickly check if all dependencies are installed and if their versions are correct:
-
-```{r check_dependencies}
-CheckPkgs <- function(packages) {
-  CheckSinglePkg <- function(pkg_spec) {
-    installed <- requireNamespace(pkg_spec$pkg, quietly = TRUE)
-    current_version <- NA_character_
-    
-    if (installed) {
-      current_version <- as.character(utils::packageVersion(pkg_spec$pkg))
-      
-      if (!is.null(pkg_spec$version)) {
-        installed <- current_version >= pkg_spec$version
-      }
-    }
-    
-    data.frame(
-      Package = pkg_spec$pkg,
-      Required_Version = if (is.null(pkg_spec$version)) "Any" else pkg_spec$version,
-      Installed = installed,
-      Current_Version = if (installed) current_version else NA,
-      stringsAsFactors = FALSE
-    )
-  }
-  
-  result <- do.call(rbind, lapply(packages, CheckSinglePkg))
-  rownames(result) <- NULL  
-    
-  return(result)
-}
-
-CheckPkgs(list(
-  list(pkg = "Seurat", version = "5.0.0"),
-  list(pkg = "dplyr"),
-  list(pkg = "cli"),
-  list(pkg = "AUCell"),
-  list(pkg = "future"),
-  list(pkg = "ggrepel"),
-  list(pkg = "grid"),
-  list(pkg = "IDConverter"),
-  list(pkg = "Matrix"),
-  list(pkg = "patchwork"),
-  list(pkg = "scAB"),
-  list(pkg = "Scissor"),
-  list(pkg = "scPAS"),
-  list(pkg = "ScPP"),
-  list(pkg = "tibble"),
-  list(pkg = "tidyr"))
-)
-
-```
-
-Then you can install the **SigBridgeR** using the following options:
+You can install the **SigBridgeR** using the following options:
 
 ### Stable release from CRAN
 
@@ -96,8 +42,8 @@ In the R terminal, please use the command `?SigBridgeR` to access the help docum
 
 Key resources:
 
--   [Quick Started Guide](vignettes/Quick_Start.md)
--   [Full Tutorial](vignettes/Full_Tutorial.md)
+-   [Quick Started Guide](vignettes/Quick_Start.md) 
+-   [Full Tutorial](vignettes/Full_Tutorial.md) for informed details
 
 If you encounter problems, please see:
 

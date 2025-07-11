@@ -79,7 +79,7 @@
 #' @importFrom Scissor reliability.test
 #'
 #' @keywords internal
-#' @noRd
+#' @export
 #'
 DoScissor = function(
   path2load_scissor_cache = NULL,
@@ -103,7 +103,7 @@ DoScissor = function(
 
   if (length(scissor_family) != 1) {
     cli::cli_alert_danger(
-      "Please choose one scissor family, use argument `scissor_family`."
+      "Please choose one scissor family, use parameter `scissor_family`."
     )
   }
   path = dirname(path2save_scissor_inputs)
@@ -277,10 +277,10 @@ Scissor.v5.optimized <- function(
       X <- cor(Expression_bulk, Expression_cell)
       quality_check <- stats::quantile(X)
 
-      cat(strrep("-", getOption("width")), "\n", sep = "")
+      cat(strrep("-", floor(getOption("width")/2)), "\n", sep = "")
       message(crayon::bold("Five-number summary of correlations:\n"))
       print(quality_check)
-      cat(strrep("-", getOption("width")), "\n", sep = "")
+      cat(strrep("-", floor(getOption("width")/2)), "\n", sep = "")
       # median
       if (quality_check[3] < 0.01) {
         cli::cli_alert_warning(crayon::yellow(

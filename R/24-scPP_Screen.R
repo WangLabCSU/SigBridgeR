@@ -84,7 +84,7 @@
 #' @importFrom tibble rownames_to_column
 #'
 #' @keywords internal
-#' @noRd
+#' @export
 #'
 DoscPP = function(
   matched_bulk,

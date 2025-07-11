@@ -57,13 +57,15 @@
 #' - Mismatches will trigger an error before analysis begins
 #'
 #' @section Method Compatibility:
-#' \tabular{lll}{
-#' **Method** \tab **Supported Phenotypes** \tab **Additional Parameters** \cr
-#' `Scissor` \tab All three types \tab `alpha`, `lambda` \cr
-#' `scPP`    \tab All three types \tab `embedding_type` \cr
-#' `scPAS`   \tab All three types \tab `n_components` \cr
-#' `scAB`    \tab Binary/Survival \tab `bandwidth` \cr
-#' }
+#'
+#' | **Method** | **Supported Phenotypes**      | **Additional Parameters**      |
+#' |------------|-------------------------------|---------------------------------|
+#' | `Scissor`  | All three types               | `alpha`, `lambda`               |
+#' | `scPP`     | All three types               | `embedding_type`                |
+#' | `scPAS`    | All three types               | `n_components`                  |
+#' | `scAB`     | Binary/Survival               | `bandwidth`                     |
+#'
+#'
 #'
 #' @seealso Associated functions:
 #' \itemize{
@@ -72,101 +74,101 @@
 #'   \item \code{\link{DoscPAS}}
 #'   \item \code{\link{DoscAB}}
 #' }
-#'
+#' 
 #' @export
 #' @import dplyr
 #' @importFrom glue glue
 #'
 Screen <- function(
-  matched_bulk,
-  sc_data,
-  phenotype,
-  label_type,
-  phenotype_class = c("binary", "survival", "continuous"),
-  screen_method = c("Scissor", "scPP", "scPAS", "scAB"),
-  ...
+    matched_bulk,
+    sc_data,
+    phenotype,
+    label_type,
+    phenotype_class = c("binary", "survival", "continuous"),
+    screen_method = c("Scissor", "scPP", "scPAS", "scAB"),
+    ...
 ) {
-  library(dplyr)
-  if (length(screen_method) != 1) {
-    stop("Only one screen method is allowed.")
-  }
+    library(dplyr)
+    if (length(screen_method) != 1) {
+        stop("Only one screen method is allowed.")
+    }
 
-  phenotype_class = tolower(phenotype_class)
-  if (length(phenotype_class) != 1) {
-    stop("Only one phenotype class is allowed.")
-  } else if (!phenotype_class %in% c("binary", "survival", "continuous")) {
-    stop("Invalid phenotype class")
-  }
+    phenotype_class = tolower(phenotype_class)
+    if (length(phenotype_class) != 1) {
+        stop("Only one phenotype class is allowed.")
+    } else if (!phenotype_class %in% c("binary", "survival", "continuous")) {
+        stop("Invalid phenotype class")
+    }
 
-  screened_result = tolower(screen_method) %>%
-    switch(
-      "scissor" = {
-        family = switch(
-          phenotype_class,
-          "binary" = "binomial",
-          "survival" = "cox",
-          "continuous" = "gaussian",
-          stop("Invalid phenotype class")
+    screened_result = tolower(screen_method) %>%
+        switch(
+            "scissor" = {
+                family = switch(
+                    phenotype_class,
+                    "binary" = "binomial",
+                    "survival" = "cox",
+                    "continuous" = "gaussian",
+                    stop("Invalid phenotype class")
+                )
+
+                DoScissor(
+                    sc_data = sc_data,
+                    matched_bulk = matched_bulk,
+                    phenotype = phenotype,
+                    label_type = label_type,
+                    scissor_family = family, # "gaussian", "binomial", "cox"
+                    ...
+                )
+            },
+            "scpas" = {
+                family = switch(
+                    phenotype_class,
+                    "binary" = "binomial",
+                    "survival" = "cox",
+                    "continuous" = "gaussian",
+                    stop("Invalid phenotype class")
+                )
+
+                DoscPAS(
+                    sc_data = sc_data,
+                    matched_bulk = matched_bulk,
+                    phenotype = phenotype,
+                    label_type = label_type,
+                    scPAS_family = family, # "gaussian", "binomial", "cox"
+                    ...
+                )
+            },
+            "scpp" = {
+                phenotype_class = glue::glue(
+                    toupper(substr(phenotype_class, 1, 1)),
+                    tolower(substr(phenotype_class, 2, nchar(phenotype_class)))
+                )
+
+                DoscPP(
+                    sc_data = sc_data,
+                    matched_bulk = matched_bulk,
+                    phenotype = phenotype,
+                    label_type = label_type,
+                    phenotype_class = phenotype_class, # "Binary", "Continuous", "Survival"
+                    ...
+                )
+            },
+            "scab" = {
+                if (phenotype_class == "continuous") {
+                    stop("scAB does not support continuous phenotype.")
+                }
+
+                DoscAB(
+                    sc_data = sc_data,
+                    matched_bulk = matched_bulk,
+                    phenotype = phenotype,
+                    label_type = label_type,
+                    phenotype_class = phenotype_class, # "Binary", "Survival"
+                    ...
+                )
+            },
+            TRUE ~ stop("Screen method not found.")
         )
 
-        DoScissor(
-          sc_data = sc_data,
-          matched_bulk = matched_bulk,
-          phenotype = phenotype,
-          label_type = label_type,
-          scissor_family = family, # "gaussian", "binomial", "cox"
-          ...
-        )
-      },
-      "scpas" = {
-        family = switch(
-          phenotype_class,
-          "binary" = "binomial",
-          "survival" = "cox",
-          "continuous" = "gaussian",
-          stop("Invalid phenotype class")
-        )
-
-        DoscPAS(
-          sc_data = sc_data,
-          matched_bulk = matched_bulk,
-          phenotype = phenotype,
-          label_type = label_type,
-          scPAS_family = family, # "gaussian", "binomial", "cox"
-          ...
-        )
-      },
-      "scpp" = {
-        phenotype_class = glue::glue(
-          toupper(substr(phenotype_class, 1, 1)),
-          tolower(substr(phenotype_class, 2, nchar(phenotype_class)))
-        )
-
-        DoscPP(
-          sc_data = sc_data,
-          matched_bulk = matched_bulk,
-          phenotype = phenotype,
-          label_type = label_type,
-          phenotype_class = phenotype_class, # "Binary", "Continuous", "Survival"
-          ...
-        )
-      },
-      "scab" = {
-        if (phenotype_class == "continuous") {
-          stop("scAB does not support continuous phenotype.")
-        }
-
-        DoscAB(
-          sc_data = sc_data,
-          matched_bulk = matched_bulk,
-          phenotype = phenotype,
-          label_type = label_type,
-          phenotype_class = phenotype_class, # "Binary", "Survival"
-          ...
-        )
-      },
-      TRUE ~ stop("Screen method not found.")
-    )
-
-  return(screened_result)
+    return(screened_result)
 }

@@ -44,7 +44,7 @@ SCPreProcess.default <- function(sc, ...) {
 
 #' @rdname SCPreProcess
 #' @param column2only_tumor Metadata column for tumor cell filtering (regex patterns:
-#'        "[Tt]umor", "[Cc]ancer", "[Mm]alignant", "[Nn]eoplasm")
+#'        "[Tt]umo.?r", "[Cc]ancer", "[Mm]alignant", "[Nn]eoplasm")
 #' @param project Project name for Seurat object
 #' @param min_cells Minimum cells per gene to retain
 #' @param min_features Minimum features per cell to retain
@@ -296,7 +296,7 @@ FilterTumorCell <- function(
       {
         labels <- obj[[column2only_tumor]][[1]]
         tumor_cells <- grepl(
-          "^[Tt]umor|[Cc]ancer[Mm]alignant|[Nn]eoplasm",
+          "^[Tt]umo.?r|[Cc]ancer[Mm]alignant|[Nn]eoplasm",
           labels
         )
 
@@ -448,7 +448,7 @@ MSPreProcess <- function(
   }
   # *filter cancer type
   tumor_type_col <- grep(
-    "[tT]umor|[Cc]ancer",
+    "[tT]umo.?r|[Cc]ancer",
     colnames(ms_signature),
     value = TRUE
   )

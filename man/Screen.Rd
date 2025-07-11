@@ -82,22 +82,12 @@ before analysis.
 }
 
 \section{Method Compatibility}{
-
 \tabular{lll}{
-\strong{Method} \tab \strong{Supported Phenotypes} \tab \strong{Additional Parameters} \cr
-\code{Scissor} \tab All three types \tab \code{alpha}, \code{lambda} \cr
-\code{scPP}    \tab All three types \tab \code{embedding_type} \cr
-\code{scPAS}   \tab All three types \tab \code{n_components} \cr
-\code{scAB}    \tab Binary/Survival \tab \code{bandwidth} \cr
+   \strong{Method} \tab \strong{Supported Phenotypes} \tab \strong{Additional Parameters} \cr
+   \code{Scissor} \tab All three types \tab \code{alpha}, \code{lambda} \cr
+   \code{scPP} \tab All three types \tab \code{embedding_type} \cr
+   \code{scPAS} \tab All three types \tab \code{n_components} \cr
+   \code{scAB} \tab Binary/Survival \tab \code{bandwidth} \cr
 }
 }
 
-\seealso{
-Associated functions:
-\itemize{
-\item \code{\link{DoScissor}}
-\item \code{\link{DoscPP}}
-\item \code{\link{DoscPAS}}
-\item \code{\link{DoscAB}}
-}
-}

@@ -6,6 +6,13 @@
 \usage{
 FilterTumorCell(obj, column2only_tumor = NULL, verbose = TRUE)
 }
+\arguments{
+\item{obj}{Seurat object with a column to filter out tumor cells.}
+
+\item{verbose}{Logical. Whether to print messages.}
+
+\item{name2only_tumor}{Name of the column to filter out tumor cells.}
+}
 \description{
 Filter tumor cells from Seurat object.
 }

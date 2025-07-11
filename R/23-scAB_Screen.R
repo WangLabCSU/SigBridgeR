@@ -52,7 +52,7 @@
 #' @importFrom crayon green
 #'
 #' @keywords internal
-#' @noRd
+#' @export
 #'
 DoscAB <- function(
   matched_bulk,
