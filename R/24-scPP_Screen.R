@@ -83,106 +83,109 @@
 #' @importFrom cli cli_alert_info cli_alert_success
 #' @importFrom tibble rownames_to_column
 #'
+#' @family screen method
+#'
 #' @keywords internal
 #' @export
 #'
 DoscPP = function(
-  matched_bulk,
-  sc_data,
-  phenotype,
-  label_type,
-  phenotype_class = c("Binary", "Continuous", "Survival"),
-  ref_group = 1,
-  Log2FC_cutoff = 0.585,
-  estimate_cutoff = 0.2,
-  probs = 0.2
+    matched_bulk,
+    sc_data,
+    phenotype,
+    label_type,
+    phenotype_class = c("Binary", "Continuous", "Survival"),
+    ref_group = 1,
+    Log2FC_cutoff = 0.585,
+    estimate_cutoff = 0.2,
+    probs = 0.2
 ) {
-  library(dplyr)
-  library(Seurat)
+    library(dplyr)
+    library(Seurat)
 
-  # robust
-  if (!all(rownames(phenotype) == colnames(bulk_dataset))) {
-    stop(
-      "Please check the rownames of phenotype and colnames of bulk_dataset, they should be the same"
-    )
-  }
+    # robust
+    if (!all(rownames(phenotype) == colnames(bulk_dataset))) {
+        stop(
+            "Please check the rownames of phenotype and colnames of bulk_dataset, they should be the same"
+        )
+    }
 
-  TimeStamp = function() format(Sys.time(), '%Y/%m/%d %H:%M:%S')
+    TimeStamp = function() format(Sys.time(), '%Y/%m/%d %H:%M:%S')
 
-  cli::cli_alert_info(c(
-    "[{TimeStamp()}]",
-    crayon::green(" Start scPP screening.")
-  ))
+    cli::cli_alert_info(c(
+        "[{TimeStamp()}]",
+        crayon::green(" Start scPP screening.")
+    ))
 
-  cli::cli_alert_info(c(
-    "[{TimeStamp()}]",
-    " Finding markers..."
-  ))
+    cli::cli_alert_info(c(
+        "[{TimeStamp()}]",
+        " Finding markers..."
+    ))
 
-  matched_bulk = as.data.frame(matched_bulk)
-  # decide which type of phenotype data is used
-  if (is.vector(phenotype)) {
-    phenotype = as.data.frame(phenotype) %>%
-      tibble::rownames_to_column("Sample") %>%
-      dplyr::rename("Feature" := 2)
-  }
-  if (
-    length(table(phenotype[2])) == 2 || tolower(phenotype_class) == "binary"
-  ) {
-    gene_list = ScPP::marker_Binary(
-      bulk_data = matched_bulk,
-      features = phenotype,
-      ref_group = ref_group,
-      Log2FC_cutoff = Log2FC_cutoff
-    )
-  } else if (
-    length(table(phenotype[2])) > 3 || tolower(phenotype_class) == "continuous"
-  ) {
-    gene_list = ScPP::marker_Continuous(
-      bulk_data = matched_bulk,
-      features = phenotype[2],
-      estimate_cutoff = estimate_cutoff
-    )
-  } else if (ncol(phenotype) == 3 || tolower(phenotype_class) == "survival") {
-    gene_list = ScPP::marker_Survival(
-      bulk_data = matched_bulk,
-      features = phenotype,
-    )
-  } else {
-    stop(
-      "Unknown phenotype type, please check the `phenotype_class` and `phenotype`"
-    )
-  }
+    matched_bulk = as.data.frame(matched_bulk)
+    # decide which type of phenotype data is used
+    if (is.vector(phenotype)) {
+        phenotype = as.data.frame(phenotype) %>%
+            tibble::rownames_to_column("Sample") %>%
+            dplyr::rename("Feature" := 2)
+    }
+    if (
+        length(table(phenotype[2])) == 2 || tolower(phenotype_class) == "binary"
+    ) {
+        gene_list = ScPP::marker_Binary(
+            bulk_data = matched_bulk,
+            features = phenotype,
+            ref_group = ref_group,
+            Log2FC_cutoff = Log2FC_cutoff
+        )
+    } else if (
+        length(table(phenotype[2])) > 3 ||
+            tolower(phenotype_class) == "continuous"
+    ) {
+        gene_list = ScPP::marker_Continuous(
+            bulk_data = matched_bulk,
+            features = phenotype[2],
+            estimate_cutoff = estimate_cutoff
+        )
+    } else if (ncol(phenotype) == 3 || tolower(phenotype_class) == "survival") {
+        gene_list = ScPP::marker_Survival(
+            bulk_data = matched_bulk,
+            features = phenotype,
+        )
+    } else {
+        stop(
+            "Unknown phenotype type, please check the `phenotype_class` and `phenotype`"
+        )
+    }
 
-  cli::cli_alert_info(c(
-    "[{TimeStamp()}]",
-    " Screening..."
-  ))
+    cli::cli_alert_info(c(
+        "[{TimeStamp()}]",
+        " Screening..."
+    ))
 
-  # *Start screen
-  scPP_result <- ScPP::ScPP(sc_data, gene_list, probs = probs)
+    # *Start screen
+    scPP_result <- ScPP::ScPP(sc_data, gene_list, probs = probs)
 
-  sc_meta = scPP_result$metadata %>%
-    dplyr::mutate(
-      `ScPP` = dplyr::case_when(
-        ScPP == "Phenotype+" ~ "Positive",
-        ScPP == "Phenotype-" ~ "Negative",
-        ScPP == "Background" ~ "Neutral"
-      )
-    ) %>%
-    dplyr::rename("scPP" = ScPP)
+    sc_meta = scPP_result$metadata %>%
+        dplyr::mutate(
+            `ScPP` = dplyr::case_when(
+                ScPP == "Phenotype+" ~ "Positive",
+                ScPP == "Phenotype-" ~ "Negative",
+                ScPP == "Background" ~ "Neutral"
+            )
+        ) %>%
+        dplyr::rename("scPP" = ScPP)
 
-  sc_data <- sc_data %>%
-    Seurat::AddMetaData(
-      metadata = sc_meta[, c("scPP")],
-      col.name = c("scPP")
-    ) %>%
-    AddMisc(scPP_type = label_type, cover = FALSE)
+    sc_data <- sc_data %>%
+        Seurat::AddMetaData(
+            metadata = sc_meta[, c("scPP")],
+            col.name = c("scPP")
+        ) %>%
+        AddMisc(scPP_type = label_type, cover = FALSE)
 
-  cli::cli_alert_success(c(
-    "[{TimeStamp()}]",
-    crayon::green(" scPP screening done.")
-  ))
+    cli::cli_alert_success(c(
+        "[{TimeStamp()}]",
+        crayon::green(" scPP screening done.")
+    ))
 
-  return(list(scRNA_data = sc_data))
+    return(list(scRNA_data = sc_data))
 }

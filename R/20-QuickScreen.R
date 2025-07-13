@@ -75,6 +75,7 @@
 #'   \item \code{\link{DoscAB}}
 #' }
 #' 
+#' 
 #' @export
 #' @import dplyr
 #' @importFrom glue glue
@@ -107,8 +108,7 @@ Screen <- function(
                     phenotype_class,
                     "binary" = "binomial",
                     "survival" = "cox",
-                    "continuous" = "gaussian",
-                    stop("Invalid phenotype class")
+                    "continuous" = "gaussian"
                 )
 
                 DoScissor(

@@ -53,4 +53,9 @@ A Seurat object from scPAS analysis
 This function performs scPAS screening analysis by integrating bulk and single-cell RNA-seq data.
 It includes data filtering steps and wraps the core scPAS::scPAS function.
 }
+\seealso{
+Other screen method: 
+\code{\link{DoscPP}()}
+}
+\concept{screen method}
 \keyword{internal}

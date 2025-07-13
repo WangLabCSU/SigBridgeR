@@ -180,6 +180,8 @@ DoScissor = function(
 #' Scissor.v5 from `https://doi.org/10.1038/s41587-021-01091-3`and `https://github.com/sunduanchen/Scissor/issues/59`
 #' Another version of Scissor.v5() to optimize memory usage and execution speed in preprocess.
 #'
+#' @family screen method
+#' 
 #' @keywords internal
 #' @noRd
 #'

@@ -24,6 +24,8 @@
 #' @importFrom Matrix rowSums as.matrix
 #' @import dplyr
 #'
+#' @family screen method
+#' 
 #' @keywords internal
 #' @export
 #'

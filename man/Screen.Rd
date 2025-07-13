@@ -91,3 +91,12 @@ before analysis.
 }
 }
 
+\seealso{
+Associated functions:
+\itemize{
+\item \code{\link{DoScissor}}
+\item \code{\link{DoscPP}}
+\item \code{\link{DoscPAS}}
+\item \code{\link{DoscAB}}
+}
+}

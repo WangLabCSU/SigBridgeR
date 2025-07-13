@@ -12,9 +12,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
     AUCell,
-    CellChat,
     cli,
-    ComplexHeatmap,
+    data.table,
     future,
     ggrepel,
     grid,
@@ -35,5 +34,8 @@ Depends:
 Suggests: 
     knitr,
     rmarkdown,
-    randomcoloR
+    randomcoloR,
+    anndata,
+    reticulate,
+    org.Hs.eg.db
 VignetteBuilder: knitr

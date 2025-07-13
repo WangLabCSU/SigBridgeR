@@ -95,4 +95,9 @@ surv_res <- DoscPP(
 }
 
 }
+\seealso{
+Other screen method: 
+\code{\link{DoscPAS}()}
+}
+\concept{screen method}
 \keyword{internal}
