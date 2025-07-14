@@ -29,7 +29,7 @@
 #'        - `"Binary"`: Case-control studies (e.g., tumor/normal)
 #'        - `"Continuous"`: Quantitative traits (e.g., drug response)
 #'        - `"Survival"`: Time-to-event data (requires time/status columns)
-#' @param ref_group Reference group for binary comparisons (default: 0)
+#' @param ref_group Reference group for binary comparisons (default: 1)
 #' @param Log2FC_cutoff Minimum log2 fold-change for binary markers (default: 0.585)
 #' @param estimate_cutoff Effect size threshold for continuous traits (default: 0.2)
 #' @param probs Quantile cutoff for cell classification (default: 0.2)

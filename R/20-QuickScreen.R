@@ -74,8 +74,8 @@
 #'   \item \code{\link{DoscPAS}}
 #'   \item \code{\link{DoscAB}}
 #' }
-#' 
-#' 
+#'
+#'
 #' @export
 #' @import dplyr
 #' @importFrom glue glue

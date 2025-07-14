@@ -90,9 +90,6 @@ FetchUMAP = function(
     label_size = 10,
     label = TRUE,
     order = c(2, 1),
-    feature_max_cutoff = NA,
-    feature_min_cutoff = NA,
-    feature_plot_raster = NULL,
     ...
 ) {
     extra_params <- list(...)
@@ -134,12 +131,9 @@ FetchUMAP = function(
                     object = seurat_obj,
                     features = feat,
                     cols = plot_color,
-                    raster = feature_plot_raster,
                     label = label,
                     order = order,
                     label.size = label_size,
-                    max.cutoff = feature_max_cutoff,
-                    min.cutoff = feature_min_cutoff
                 ),
                 featureplot_dot
             )

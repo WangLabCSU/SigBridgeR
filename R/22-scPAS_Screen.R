@@ -49,8 +49,8 @@ DoscPAS = function(
 
   # robust
   if (!all(rownames(phenotype) == colnames(bulk_dataset))) {
-    stop(
-      "Please check the rownames of phenotype and colnames of bulk_dataset, they should be the same"
+    cli::cli_abort(
+      "Please check the rownames of {.var {phenotype}} and colnames of {.var {matched_bulk}}, they should be the same"
     )
   }
 

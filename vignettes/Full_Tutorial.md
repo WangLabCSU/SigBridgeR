@@ -35,10 +35,11 @@
 
 ### 0.1 Introduction to SigBridgeR
 
-SigBridgeR (short for Mutational **Sig**nature **Bridge** in **R**) is an R package for screening tumour cell highly associated with mutational signatures from single-cell RNA-seq, bulk expression and mutational signatures phenotype data at pan-cancer level. It is based on the R package [sunduanchen/Scissor](https://github.com/sunduanchen/Scissor), [Qinran-Zhang/scAB](https://github.com/Qinran-Zhang/scAB/), [WangX-Lab/ScPP](https://github.com/WangX-Lab/ScPP) and [aiminXie/scPAS](https://github.com/aiminXie/scPAS).
+SigBridgeR (short for Mutational **Sig**nature **Bridge** in **R**) is an R package for screening tumour cell highly associated with mutational signatures from single-cell RNA-seq, bulk expression and mutational signatures phenotype data at pan-cancer level. It is based on the R package [Github-sunduanchen/Scissor](https://github.com/sunduanchen/Scissor), [Github-Qinran-Zhang/scAB](https://github.com/Qinran-Zhang/scAB/), [Github-WangX-Lab/ScPP](https://github.com/WangX-Lab/ScPP) and [Github-aiminXie/scPAS](https://github.com/aiminXie/scPAS).
 
 ------------------------------------------------------------------------
 
+ 
 ## 1. Installation
 
 You can install **SigBridgeR** using the following options:
@@ -118,6 +119,7 @@ CheckPkgs(list(
 
 ------------------------------------------------------------------------
 
+ 
 ## 2. Loading and preprocessing data
 
 load `SigBridgeR` package at first:
@@ -211,11 +213,9 @@ your_seurat <- SCPreProcess(
 
 The description of data in `anndata_obj$obs` will be add to `your_seurat@meta.data`.
 
-
 ### 2.2 Bulk expression data
 
 `BulkPreProcess` performs a straightforward task: converting common gene identifiers (e.g., Ensembl IDs, Entrez) to standardized gene symbols by using the [IDConverter](https://github.com/ShixiangWang/IDConverter) package.
-
 
 ```{r bulk_preprocessing}
 # genes * samples
@@ -223,7 +223,6 @@ your_bulk_data <- read.csv("path_to_your_file.csv", header = TRUE, row.names = 1
 
 your_bulk_data <- BulkPreProcess(your_bulk_data)
 ```
-
 
 You can also use the `org.Hs.eg.db` package directly for gene symbol matching if you prefer not to use BulkPreProcess's built-in `IDConverter`.
 
@@ -258,7 +257,7 @@ Some key details of `MSPreProcess`'s parameters:
     -   Keeps only samples where: `(Number of samples with mutational signatures) / (Total samples) > col_thresh`
 -   `accuracy_thresh`: A numeric value specifying the threshold for filtering out samples with low accuracy, if `accuracy` column exists in data.
 -   `ms_search_pattern`: A character value specifying the pattern for searching mutational signatures
-    -   default: "SBS|DBS|CN|CNV|SV|ID|INDEL" (all mutational signatures included)
+    -   default: "SBS\|DBS\|CN\|CNV\|SV\|ID\|INDEL" (all mutational signatures included)
 
 ```{r mutational_signatures_preprocessing}
 your_ms_data <- read.csv("path_to_your_file.csv", header = TRUE, row.names = 1)
@@ -302,6 +301,7 @@ The function returns a list containing:
 
 ------------------------------------------------------------------------
 
+ 
 ## 3. Runing SigBridgeR
 
 The function **`Screen`** provide 4 different options for screening mutational signatures, These four algorithms come from the repositories mentioned in [Section 0.1](#01-introduction-to-sigbridger), and you can choose one of them to screen your cells.
@@ -311,8 +311,8 @@ Some key details of `Screen`'s parameters:
 -   `matched_bulk`: A data frame of bulk expression data after intersecting samples, use the output of `MatchSample` function.
 -   `sc_data`: A Seurat object after preprocessing, you can use the output of `Preprocess` function or your own preprocessed Seurat object.
 -   `phenotype`: A named vector of binary mutational signature data, use the output of `MatchSample` function.
--   `label_type`: A character value specifying the filtering labels are stored in the `\@misc` , use the output of `MatchSample` function or your own label.
--   `phenotype_class`: A character value specifying the phenotype data type, i.e. `"binary"`, `"survival"` or `"continuous"`. When the phenotype data is mutational signature, use `"binary"`
+-   `label_type`: A character value specifying the filtering labels are stored in the `Seurat_object@misc` , use the output of `MatchSample` function or your own label.
+-   `phenotype_class`: A character value specifying the phenotype data type, i.e. `"binary"`, `"survival"` or `"continuous"`. When the phenotype data is mutational signatures, use `"binary"`.
 -   `screen_method`: A character value specifying the screening method, i.e. "Scissor", "scPAS", "scAB" or "scPP"
 -   `...`: Other parameters for the screening methods.
 
@@ -320,18 +320,22 @@ Some key details of `Screen`'s parameters:
 
 Parameters pass to `...` when using `Scissor` method:
 
--   `path2save_scissor_inputs`: A character value specifying the path to save intermediate data
+-   `path2save_scissor_inputs`: A character value specifying the path to save intermediate data, default: `Scissor_inputs.RData`
 -   `path2load_scissor_cahce`: A character value specifying the path to load intermediate data
--   `scissor_alpha`:
+-   `scissor_alpha`: Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If alpha = NULL, a default searching vector is used. The range of alpha is in `[0,1]`. A larger alpha lays more emphasis on the l1 norm.
+-   `scissor_cutoff`: Cutoff for the percentage of the Scissor selected cells in total cells. This parameter is used to restrict the number of the Scissor selected cells. A cutoff less than 50% (default 20%) is recommended depending on the input data.
+-   `reliability_test_alpha`: the same as `scissor_alpha`
+-   `reliability_test_n`: Permutation times (default: 10)
+-   `nfold`: The fold number in cross-validation (default: 10)
 
-Usage:
+**Usage**:
 
 ```{r scissor_screening}
 scissor_result = Screen(
   matched_bulk = matched_bulk,
   sc_data = sc_dataset, # A Seurat object after preprocessing
   phenotype = matched_phenotype_data,
-  label_type = "TP53", # The filtering labels are stored in the `\@misc` 
+  label_type = "TP53", # The filtering labels are stored in the `@misc` 
   phenotype_class = "binary",  
   screen_method = c("Scissor"),
   path2save_scissor_inputs = "Tmp/Scissor_inputs.RData" # Intermediate data
@@ -363,24 +367,104 @@ scissor_result = Screen(
 
 ```
 
+**returning structure**: A list containing:
+
+-   `scRNA_data`: A Seurat object after screening
+-   `reliability_test`: results of the reliability test
+
 ### 3.2 (Option B) scPAS Screening
 
-```{r scPAS_screening}
+Parameters pass to `...` when using `scPAS` method (basically adapted from the `scPAS`'s documentation):
 
+-   Parameters passed to `scPAS::scPAS()`
+
+    These parameters directly interface with the core `scPAS`() function from the original package:
+
+    -   `assay`: Name of Assay to get.
+    -   `imputation`: Logical. imputation or not.
+    -   `nfeature`: Numeric. The Number of features to select as top variable features in `sc_data`. Top variable features will be used to intersect with the features of `matched_bulk`. Default is NULL and all features will be used.
+    -   `alpha`: Numeric. Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If `alpha = NULL`, a default searching vector is used. The range of alpha is in `[0,1]`. A larger alpha lays more emphasis on the l1 norm.
+    -   `network_class`: The source of feature-feature similarity network. By default this is set to sc and the other one is bulk.
+
+-   Parameters passed to `SigBridgeR::DoscPAS`
+
+    These parameters represent customizable options provided by upstream/downstream processing functions when integrating the `scPAS` workflow
+
+    -   `extra_filter`: A logical value. If `TRUE`, the following options for filtering will be applied. Default is `FALSE`.
+    -   `gene_RNAcount_filter`: A numeric value. The threshold for filtering out genes with low RNA counts. Default is `20`.
+    -   `bulk_0_filter_thresh`: A numeric value. The threshold for filtering out samples with low RNA counts. Default is `0.05`.
+
+**usage**:
+
+```{r scPAS_screening}
+scpas_result = Screen(
+  matched_bulk = matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = phenotype,
+  label_type = "TP53", # The filtering labels are stored in the `@misc` 
+  screen_method = "scpas",
+  phenotype_class = "binary", # choose `binary` if phenotype is mutational signatures
+)
 ```
+
+**returning structure**: A list containing:
+
+-   `scRNA_data`: A Seurat object after screening
 
 ### 3.3 (Option C) scAB Screening
 
-```{r scAB_screening}
+Parameters pass to `...` when using `scAB` method (basically adapted from the `scAB`'s documentation):
 
+-   `alpha`: Coefficient of phenotype regularization, default is `0.005`
+-   `alpha_2`: Coefficient of cell-cell similarity regularization, default is `5e-05`
+-   `maxiter`: Maximum number of iterations, default is `2000`
+-   `tred`: Threshold for early stopping, default is `2`
+
+**usage**:
+
+```{r scAB_screening}
+scab_result = Screen(
+  matched_bulk = your_matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "TP53", # The filtering labels are stored in the `@misc` 
+  screen_method = "scAB",
+  phenotype_class = "binary",
+)
 ```
+
+**returning structure**: A list containing:
+
+-   `scRNA_data`: A Seurat object after screening
+-   `scAB_result`: A list with the submatrix and loss value
 
 ### 3.4 (Option D) scPP Screening
 
-```{r scPP_screening}
+Parameters pass to `...` when using `scPP` method :
 
+-   `ref_group`: The reference group for the binary analysis, default is `1`
+-   `Log2FC_cutoff`: The cutoff for the log2 fold change of the binary analysis, default is `0.585`
+-   `estimate_cutoff`: Effect size threshold for continuous traits, default is `0.2`
+-   `probs`: Quantile cutoff for cell classification, default is `0.2`
+
+**usage**:
+
+```{r scPP_screening}
+scpp_result = Screen(
+  matched_bulk = your_matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "TP53", # The filtering labels are stored in the `@misc` 
+  screen_method = "scpp",
+  phenotype_class = "binary",
+)
 ```
 
+**returning structure**: A list containing:
+
+-   `scRNA_data`: A Seurat object after screening
+
+ 
 ### 3.5 (Optional) Merge screening results
 
 If you have performed multiple screening methods one the same data, you can use the function `MergeResult` to merge the results of these methods. The Seurat object or a results list from `Screen` is accepted.
@@ -408,6 +492,7 @@ This function performs a simple task of consolidating screening results into the
 
 ------------------------------------------------------------------------
 
+ 
 ## 4. Visualization
 
 After screening, you can use these two functions for plotting the results of screening, **`FetchUMAP`** and **`ScreenFractionPlot`**.
@@ -422,11 +507,14 @@ Some key details of `FetchUMAP`'s parameters:
     -   Required names: "Positive", "Negative", "Neutral"
     -   Default: c("Neutral"="#CECECE", "Positive"="#ff3333", "Negative"="#386c9b")
 -   `order`: The order of the groups. Pass to `Seurat::DimPlot`'s `order` parameter.
+-   `...`: Other parameters passed to `Seurat::DimPlot` or `Seurat::FeaturePlot`, autodetected by parameters' names.
+
+**usage**:
 
 Suppose you have performed `scissor` algorithm screening on your Seurat object and wish to examine the distribution across different celltypes and patient, you may reference and use the following code:
 
 ```{r umap_exmaple}
-FetchUAMP(
+umaps <- FetchUMAP(
   seurat_obj = your_seurat_obj,
   group_by = c("celltype","patient","scissor"),
   plot_color = NULL,
@@ -435,8 +523,26 @@ FetchUAMP(
 )
 ```
 
-This function generates three UMAP plots (one for each group specified in `group_by`), stored in a list. When `plot_show = TRUE`, you will see a composite plot displaying all groups together.
+This will generates three UMAP plots (one for each group specified in `group_by`, passed to `Seurat::DimPlot`), stored in a list. When `plot_show = TRUE`, you will see a composite plot displaying all groups together.
 
+ 
+Or suppose you have performed `scPAS` screening on your Seurat object andwant to visualize the distribution of prediction confidence scores, you may reference and use the following code:
+
+```{r umap_exmaple2}
+umaps <- FetchUMAP(
+  seurat_obj = your_seurat_obj,
+  feature = c("scPAS_Pvalue","scPAS_NRS"),
+  plot_color = NULL,
+)
+```
+
+This will generate two plots, one for each feature specified in `feature` (passed to `Seurat::FeaturePlot`), stored in a list.
+
+> helpful documents:
+>
+> [Browser-Seurat::DimPlot](https://satijalab.org/seurat/reference/DimPlot.html) [Browser-Seurat::FeaturePlot](https://satijalab.org/seurat/reference/FeaturePlot.html)
+
+ 
 ### 4.2 Stack bar plot for screening results
 
 Some key details of `ScreenFractionPlot`'s parameters:
@@ -449,9 +555,10 @@ Some key details of `ScreenFractionPlot`'s parameters:
     -   Required names: "Positive", "Negative", "Neutral"
     -   Default: c("Neutral"="#CECECE", "Positive"="#ff3333", "Negative"="#386c9b")
 
-Suppose you have already performed the `scPAS` algorithm screening on your Seurat object, and you want to check the proportion of positive cells across different patients. You can refer to and use the following code
+Suppose you have already performed the `scPAS` algorithm screening on your Seurat object, and you want to check the proportion of positive cells across different patients. You can refer to and use the following code:
 
 ```{r stack_bar_plot_example}
+# based on `ggplot2`
 plot <- ScreenFractionPlot(
    screened_seurat = your_seurat_obj,
    group_by = "patient", 
@@ -462,10 +569,11 @@ plot <- ScreenFractionPlot(
 
 The order of the groups is determined by the proportion of **Positive** cells within each group.
 
-Use `?ScreenFractionPlot` in R terminal to see more details.
+Use `?ScreenFractionPlot` in R to see more details.
 
 ------------------------------------------------------------------------
 
+ 
 ## 5. Example
 
 Here we use the example data to demonstrate how to use the functions in `SigBridgeR` to screen mutational signatures.
@@ -478,6 +586,7 @@ library(SigBridgeR)
 
 ------------------------------------------------------------------------
 
+ 
 ## 6. Other function details
 
 -   `AddMisc()` : Add miscellaneous information to the Seurat object. Support for adding multiple attributes to the `SeuratObject@misc` slot simultaneously.
@@ -498,4 +607,5 @@ Use `?AddMisc` in R to see more details.
 
 ------------------------------------------------------------------------
 
+ 
 ## 7. References

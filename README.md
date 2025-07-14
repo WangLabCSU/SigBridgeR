@@ -8,14 +8,14 @@ An R package for the integration of single-cell RNA-seq data, mutational signatu
 
 ## 🌐 Overview
 
-SigBridgeR integrates multiple algorithms to identify the cells most closely associated with the Mutational Signatures phenotype.
+SigBridgeR integrates multiple algorithms to identify the cells most closely associated with the Mutational Signatures phenotype, preforming as an birdge to the existing tools.
 
 SigbridgeR integrates algorithms from the following packages:
 
--   [sunduanchen/Scissor](https://github.com/sunduanchen/Scissor)
--   [Qinran-Zhang/scAB](https://github.com/Qinran-Zhang/scAB/)
--   [WangX-Lab/ScPP](https://github.com/WangX-Lab/ScPP)
--   [aiminXie/scPAS](https://github.com/aiminXie/scPAS)
+-   [Github-sunduanchen/Scissor](https://github.com/sunduanchen/Scissor)
+-   [Github-Qinran-Zhang/scAB](https://github.com/Qinran-Zhang/scAB/)
+-   [Github-WangX-Lab/ScPP](https://github.com/WangX-Lab/ScPP)
+-   [Github-aiminXie/scPAS](https://github.com/aiminXie/scPAS)
 
 ## 🔧 Installation
 
@@ -63,4 +63,5 @@ Other information:
 ## 📮 Contact
 
 For support or questions:
+
 Maintainer: Exceret
