@@ -1,10 +1,10 @@
-# **Full Tutorial for SigBridgeR** {#full-tutorial-for-sigbridger}
+# **Full Tutorial for SigBridgeR** 
 
 ## 0. Preface
 
 ### 0.1 Contents
 
-- [**Full Tutorial for SigBridgeR** {#full-tutorial-for-sigbridger}](#full-tutorial-for-sigbridger-full-tutorial-for-sigbridger)
+- [**Full Tutorial for SigBridgeR**](#full-tutorial-for-sigbridger)
   - [0. Preface](#0-preface)
     - [0.1 Contents](#01-contents)
     - [0.1 Introduction to SigBridgeR](#01-introduction-to-sigbridger)
@@ -35,7 +35,7 @@
 
 ### 0.1 Introduction to SigBridgeR
 
-SigBridgeR (short for Mutational **Sig**nature **Bridge** in **R**) is an R package for screening tumour cell highly associated with mutational signatures from single-cell RNA-seq, bulk expression and mutational signatures phenotype data at pan-cancer level. It is based on the R package [Github-sunduanchen/Scissor](https://github.com/sunduanchen/Scissor), [Github-Qinran-Zhang/scAB](https://github.com/Qinran-Zhang/scAB/), [Github-WangX-Lab/ScPP](https://github.com/WangX-Lab/ScPP) and [Github-aiminXie/scPAS](https://github.com/aiminXie/scPAS).
+SigBridgeR (short for Mutational **Sig**nature **Bridge** in **R**) is an R package for screening tumor cell highly associated with mutational signatures from single-cell RNA-seq, bulk expression and mutational signatures phenotype data at pan-cancer level. It is based on the R package [Github-sunduanchen/Scissor](https://github.com/sunduanchen/Scissor), [Github-Qinran-Zhang/scAB](https://github.com/Qinran-Zhang/scAB/), [Github-WangX-Lab/ScPP](https://github.com/WangX-Lab/ScPP) and [Github-aiminXie/scPAS](https://github.com/aiminXie/scPAS).
 
 ------------------------------------------------------------------------
 
@@ -144,7 +144,7 @@ your_seurat <- SCPreProcess(your_seurat, column2only_tumor = "Tissue")
 
 #### 2.1.2 (Option B) Start from raw matrix
 
-When starting from a raw count matrix, `SCPreProcess` will automatically perform standard Seurat preprocessing and the tumor cell filtration described in [Section 2.1.1](#211-option-a-start-from-seurat-object). In typical workflows where the appropriate tumor-filtering column is unknown (since you haven't yet generated the Seurat object or explored the data comprehensively), `SCPreProcess` still returns a fully processed Seurat object for downstream use.
+When starting from a raw count matrix, `SCPreProcess` will automatically perform standard Seurat preprocessing and the tumor cell filtration described in [Section 2.1.1](#211-option-a-start-from-seurat-object). In typical workflows where the appropriate tumor-filtering column is unknown (since you haven't yet generated the Seurat object or explored the data comprehensively), `SCPreProcess` still returns a fully preprocessed Seurat object for downstream use.
 
 ```{r scpreprocessing_raw_matrix}
 your_seurat <- SCPreProcess(
@@ -168,7 +168,14 @@ You may then:
 
 1.  Add metadata to annotate cell types/conditions
 2.  Specify tumor-filtering criteria (e.g., column2only_tumor = "Tissue")
-3.  Proceed with downstream processing as described in [Section 2.1.1](#211-option-a-start-from-seurat-object)
+3.  Filter out tumor cells as described in [Section 2.1.1](#211-option-a-start-from-seurat-object), or like this:
+
+```{r scpreprocessing_raw_matrix_tumor_filtering}
+your_seurat <- SCPreProcess(
+    your_seurat,
+    column2only_tumor = "Tissue",
+)
+```
 
 > Note: I don't recommend using columns like `column2only_tumor = "Celltype"` as tumor cell identities vary across tissues. instead:
 >
@@ -180,23 +187,23 @@ You may then:
 > # For glioblastoma (GBM)
 > seurat_obj@meta.data$is_tumor <- ifelse(
 >  grepl("GBM|glioblastoma|astrocytoma_grade_IV", seurat_obj@meta.data$Celltype, ignore.case = TRUE),
->  "Tumor",  # or "Tumour" (British)
+>  "Tumor",  # or "Tumour" 
 >  "Normal"  # or "Non-Tumor" 
 > )
 > ```
 
 #### 2.1.3 (Option C) Start from AnnDataR6 object
 
-SCPreProcess also supports AnnData objects
+`SCPreProcess` also supports AnnData objects. You may reference and use the following code:
 
 ```{r scpreprocessing_anndata}
-reticulate::use_pythonenv("The_path_to_your_python")
+reticulate::use_pythonenv("The_path_to_your_python") 
 
 anndata_obj <- anndata::read_h5ad("path_to_your_file.h5ad")
 
 your_seurat <- SCPreProcess(
   anndata_obj,
-  column2only_tumor = NULL, # specify a column name if already familiar with the data
+  column2only_tumor = NULL, # specify a column name if you are already familiar with the data
   project = "Scissor_Single_Cell", # Parameters used in Seurat preprocessing pipeline
   min_cells = 400,
   min_features = 0,
@@ -213,6 +220,10 @@ your_seurat <- SCPreProcess(
 
 The description of data in `anndata_obj$obs` will be add to `your_seurat@meta.data`.
 
+**helpful documentation:**
+
+-   [AnnData-book](https://anndata.readthedocs.io/en/latest/)
+
 ### 2.2 Bulk expression data
 
 `BulkPreProcess` performs a straightforward task: converting common gene identifiers (e.g., Ensembl IDs, Entrez) to standardized gene symbols by using the [IDConverter](https://github.com/ShixiangWang/IDConverter) package.
@@ -224,7 +235,7 @@ your_bulk_data <- read.csv("path_to_your_file.csv", header = TRUE, row.names = 1
 your_bulk_data <- BulkPreProcess(your_bulk_data)
 ```
 
-You can also use the `org.Hs.eg.db` package directly for gene symbol matching if you prefer not to use BulkPreProcess's built-in `IDConverter`.
+You can also use the `org.Hs.eg.db` package for gene symbol matching if you prefer not to use BulkPreProcess's built-in `IDConverter`.
 
 ```{r bulk_preprocessing2}
 library(org.Hs.eg.db)
@@ -257,7 +268,7 @@ Some key details of `MSPreProcess`'s parameters:
     -   Keeps only samples where: `(Number of samples with mutational signatures) / (Total samples) > col_thresh`
 -   `accuracy_thresh`: A numeric value specifying the threshold for filtering out samples with low accuracy, if `accuracy` column exists in data.
 -   `ms_search_pattern`: A character value specifying the pattern for searching mutational signatures
-    -   default: "SBS\|DBS\|CN\|CNV\|SV\|ID\|INDEL" (all mutational signatures included)
+    -   default: `SBS|DBS|CN|CNV|SV|ID|INDEL` (all mutational signatures included)
 
 ```{r mutational_signatures_preprocessing}
 your_ms_data <- read.csv("path_to_your_file.csv", header = TRUE, row.names = 1)
@@ -275,7 +286,7 @@ You will see some progress messages in your R console
 
 ### 2.4 Matching Samples
 
-The original phenotype and bulk expression data may contain non-identical sample sets. This processing step performs sample matching to retain only the intersecting samples.
+The original phenotype and bulk expression data may not contain identical sample sets. This processing step performs sample matching to retain only the intersecting samples.
 
 Some key details of `MatchSample`'s parameters:
 
@@ -283,15 +294,17 @@ Some key details of `MatchSample`'s parameters:
 -   `bulk_data`: A data frame of bulk expression data,
 -   `col_id`: A character or numeric value specifying the column.
 
+**usage**：
+
 ```{r matching_samples}
 match_result<-MatchSample(
-  ms_signature = tcga_ms_sbs,
-  bulk_data = tcga_exp_count,
+  ms_signature = your_ms_data,
+  bulk_data = your_bulk_data,
   col_id = col_id
 )
 ```
 
-After matching, the specified column in the mutation signature data (i.e., phenotypic data) will be binarized from continuous values - all positive numbers are recoded as 1.
+After matching, the specified column in the mutational signatures data (i.e., phenotype data) will be binarized from continuous values - all positive numbers are recoded as 1.
 
 The function returns a list containing:
 
@@ -304,7 +317,7 @@ The function returns a list containing:
  
 ## 3. Runing SigBridgeR
 
-The function **`Screen`** provide 4 different options for screening mutational signatures, These four algorithms come from the repositories mentioned in [Section 0.1](#01-introduction-to-sigbridger), and you can choose one of them to screen your cells.
+The function **`Screen`** provide 4 different options for screening mutational signatures, These 4 algorithms come from the repositories mentioned in [Section 0.1](#01-introduction-to-sigbridger), and you can choose one of them to screen your cells.
 
 Some key details of `Screen`'s parameters:
 
@@ -526,7 +539,7 @@ umaps <- FetchUMAP(
 This will generates three UMAP plots (one for each group specified in `group_by`, passed to `Seurat::DimPlot`), stored in a list. When `plot_show = TRUE`, you will see a composite plot displaying all groups together.
 
  
-Or suppose you have performed `scPAS` screening on your Seurat object andwant to visualize the distribution of prediction confidence scores, you may reference and use the following code:
+Or suppose you have performed `scPAS` screening on your Seurat object and want to visualize the distribution of prediction confidence scores, you may reference and use the following code:
 
 ```{r umap_exmaple2}
 umaps <- FetchUMAP(
@@ -576,7 +589,7 @@ Use `?ScreenFractionPlot` in R to see more details.
  
 ## 5. Example
 
-Here we use the example data to demonstrate how to use the functions in `SigBridgeR` to screen mutational signatures.
+Here we use the example data () to demonstrate how to use the functions in `SigBridgeR` to screen cells associated with mutational signatures.
 
 ```{r example}
 library(SigBridgeR)

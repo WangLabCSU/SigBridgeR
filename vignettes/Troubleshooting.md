@@ -2,9 +2,9 @@
 
 ------------------------------------------------------------------------
 
-> Error in normalize.quantiles(dataset0) : ERROR; return code from pthread_create() is 22
+> **Error in normalize.quantiles(dataset0) : ERROR; return code from pthread_create() is 22**
 
-To solve this problem, you need to install preprocessCore without threading support. Try:
+To solve this problem, you need to install `preprocessCore` without threading support. Try:
 
 ```{shell}
 git clone https://github.com/bmbolstad/preprocessCore.git
