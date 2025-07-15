@@ -130,7 +130,7 @@ DoscAB <- function(
             scAB = case_when(
                 scAB == "Other cells" ~ "Other",
                 scAB == "scAB+ cells" ~ "Positive",
-                TRUE ~ NA
+                TRUE ~ "NULL"
             )
         )
 
@@ -171,7 +171,7 @@ create_scAB.v5 <- function(
     method = match.arg(method)
     if (is.null(Object@graphs$RNA_snn)) {
         cli::cli_abort(c(
-            "x" = "'RNA_snn' is not found, please run FindNeighbors function in Seurat."
+            "x" = "{.var RNA_snn} not found, please run {.fun FindNeighbors} function in Seurat."
         ))
     }
     A <- as.matrix(Object@graphs$RNA_snn)

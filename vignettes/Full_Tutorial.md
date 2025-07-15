@@ -20,7 +20,7 @@
     - [2.2 Bulk expression data](#22-bulk-expression-data)
     - [2.3 Mutational signature data](#23-mutational-signature-data)
     - [2.4 Matching Samples](#24-matching-samples)
-  - [3. Runing SigBridgeR](#3-runing-sigbridger)
+  - [3. Screening Cells Associated with Mutational Signatures](#3-screening-cells-associated-with-mutational-signatures)
     - [3.1 (Option A) Scissor Screening](#31-option-a-scissor-screening)
     - [3.2 (Option B) scPAS Screening](#32-option-b-scpas-screening)
     - [3.3 (Option C) scAB Screening](#33-option-c-scab-screening)
@@ -111,7 +111,7 @@ CheckPkgs(list(
   list(pkg = "ScPP"),
   list(pkg = "tibble"),
   list(pkg = "tidyr"),
-  list(pkg = "data.table")
+  list(pkg = "data.table", version = "1.14.1")
   )
 )
 
@@ -292,19 +292,21 @@ Some key details of `MatchSample`'s parameters:
 
 -   `ms_signature`: A data frame of mutational signatures after preprocessing
 -   `bulk_data`: A data frame of bulk expression data,
--   `col_id`: A character or numeric value specifying the column.
+-   `col_id`: Character or numeric value specifying the column. When multiple columns are specified, the status column will only be recorded as `1` if each column > `ms_status_thresh`
+-  `ms_status_thresh`: A numeric value specifying the threshold for binarizing mutational signatures. default: `0L`
 
 **usage**：
 
 ```{r matching_samples}
-match_result<-MatchSample(
-  ms_signature = your_ms_data,
+match_result <- MatchSample(
+  ms_signature = your_ms_data, # After preprocessing
   bulk_data = your_bulk_data,
-  col_id = col_id
+  col_id = col_id,
+  ms_status_thresh = 0L
 )
 ```
 
-After matching, the specified column in the mutational signatures data (i.e., phenotype data) will be binarized from continuous values - all positive numbers are recoded as 1.
+After matching, the specified column in the mutational signatures data (i.e., phenotype data) will be binarized from continuous values - all positive numbers are recoded as 1 because `ms_status_thresh` is set to 0.
 
 The function returns a list containing:
 
@@ -315,7 +317,7 @@ The function returns a list containing:
 ------------------------------------------------------------------------
 
  
-## 3. Runing SigBridgeR
+## 3. Screening Cells Associated with Mutational Signatures
 
 The function **`Screen`** provide 4 different options for screening cells associated with mutational signatures, These 4 algorithms come from the repositories mentioned in [Section 0.1](#01-introduction-to-sigbridger), and you can choose one of them to screen your cells.
 

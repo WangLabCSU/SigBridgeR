@@ -274,19 +274,21 @@ ScreenFractionPlot = function(
     library(dplyr)
 
     if (!inherits(screened_seurat, "Seurat")) {
-        stop("`screened_seurat` must be a Seurat object")
+        cli::cli_abort(
+            c("x" = "{.var screened_seurat} must be a Seurat object"),
+            class = "TypeError"
+        )
     }
 
     if (length(screen_type) != 1) {
-        stop(glue::glue(
-            "Please refer one screen algorithm type.",
-            "Available screen types: ",
+        cli::cli_abort(c(
+            "x" = "Please refer one screen algorithm type({.var screen_type}).",
+            "i" = "Available screen types: ",
             grep(
                 "scissor$|scPAS$|scPP$|scAB.*$",
                 screened_seurat$scRNA_data@meta.data %>% names(),
-                value = T
-            ),
-            .sep = "\n"
+                value = TRUE
+            )
         ))
     }
 

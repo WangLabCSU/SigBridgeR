@@ -374,6 +374,18 @@ Scissor.v5.optimized <- function(
             load(Load_file)
         }
     )
+    # garbage collection
+    rm(
+        dataset0,
+        dataset1,
+        Expression_bulk,
+        Expression_cell,
+        sc_exprs,
+        sc_dataset,
+        Seurat_tmp,
+        bulk_dataset,
+        phenotype
+    )
 
     cli::cli_alert_info(c(
         "[{TimeStamp()}]",

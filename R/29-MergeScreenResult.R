@@ -51,7 +51,10 @@ MergeResult = function(...) {
 
     if (length(args) == 0) {
         cli::cli_abort(
-            "Input objects must be provided."
+            c(
+                "x" = "Input objects must be provided."
+            ),
+            class = "InputsNotFound"
         )
     }
 
@@ -71,7 +74,7 @@ MergeResult = function(...) {
         Filter(Negate(is.null), .)
 
     if (length(seurat_objects) == 0) {
-        cli::cli_abort("No valid Seurat objects found in inputs.")
+        cli::cli_abort(c("x" = "No valid Seurat objects found in inputs."))
     }
 
     meta_list <- lapply(seurat_objects, function(x) {

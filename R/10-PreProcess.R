@@ -521,7 +521,7 @@ MSPreProcess <- function(
 #' @param col_id Integer, string or vector. Column index/name(s) in `ms_signature` to use for:
 #'    - Binarization (values > `ms_status_thresh` become 1, others 0)
 #'    - Reporting in output as `ms_select`
-#'    - When multiple mutational signatures are specified, the `ms_status` will only be designated as `1` if each mutational signature > `ms_status_thresh`.
+#'    - When multiple mutational signatures are specified, the `ms_status` will only be recorded as `1` if each mutational signature > `ms_status_thresh`.
 #' 
 #' @param ms_status_thresh Numeric. Threshold for converting the `col_id` column to
 #'    binary status (default: 0L). Values above threshold become 1.

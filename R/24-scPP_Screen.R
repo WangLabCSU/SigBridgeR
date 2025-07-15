@@ -165,21 +165,19 @@ DoscPP = function(
     # *Start screen
     scPP_result <- ScPP::ScPP(sc_data, gene_list, probs = probs)
 
-    sc_meta = scPP_result$metadata %>%
-        dplyr::mutate(
-            `ScPP` = dplyr::case_when(
-                ScPP == "Phenotype+" ~ "Positive",
-                ScPP == "Phenotype-" ~ "Negative",
-                ScPP == "Background" ~ "Neutral"
+    sc_data@meta.data[, "scPP"] <- data.table::as.data.table(
+        scPP_result$metadata
+    )[,
+        .(
+            scPP = data.table::fifelse(
+                ScPP == "Phenotype+",
+                "Positive",
+                data.table::fifelse(ScPP == "Phenotype-", "Negative", "Neutral")
             )
-        ) %>%
-        dplyr::rename("scPP" = ScPP)
+        )
+    ]$scPP
 
     sc_data <- sc_data %>%
-        Seurat::AddMetaData(
-            metadata = sc_meta[, c("scPP")],
-            col.name = c("scPP")
-        ) %>%
         AddMisc(scPP_type = label_type, cover = FALSE)
 
     cli::cli_alert_success(c(

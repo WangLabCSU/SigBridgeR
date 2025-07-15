@@ -91,14 +91,17 @@ Screen <- function(
 ) {
     library(dplyr)
     if (length(screen_method) != 1) {
-        stop("Only one screen method is allowed.")
+        cli::cli_abort(c("x" = "Only one {.arg screen_method} is allowed."))
     }
 
     phenotype_class = tolower(phenotype_class)
     if (length(phenotype_class) != 1) {
-        stop("Only one phenotype class is allowed.")
+        cli::cli_abort(c("x" = "Only one {.arg phenotype_class} is allowed."))
     } else if (!phenotype_class %in% c("binary", "survival", "continuous")) {
-        stop("Invalid phenotype class")
+        cli::cli_abort(c(
+            "x" = "Invalid {.arg phenotype_class = {phenotype_class}}.",
+            "i" = " Must be one of {.val binary}, {.val survival}, or {.val continuous}."
+        ))
     }
 
     screened_result = tolower(screen_method) %>%
@@ -126,7 +129,6 @@ Screen <- function(
                     "binary" = "binomial",
                     "survival" = "cox",
                     "continuous" = "gaussian",
-                    stop("Invalid phenotype class")
                 )
 
                 DoscPAS(
