@@ -170,9 +170,8 @@ create_scAB.v5 <- function(
     # cell neighbors
     method = match.arg(method)
     if (is.null(Object@graphs$RNA_snn)) {
-        cli::cli_alert_danger(c(
-            crayon::red("Error:"),
-            "'RNA_snn' is not found, please run FindNeighbors function in Seurat."
+        cli::cli_abort(c(
+            "x" = "'RNA_snn' is not found, please run FindNeighbors function in Seurat."
         ))
     }
     A <- as.matrix(Object@graphs$RNA_snn)

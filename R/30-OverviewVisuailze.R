@@ -269,7 +269,7 @@ ScreenFractionPlot = function(
     axis_linewidth = 0.8,
     legend_position = "right",
     x_lab = NULL,
-    y_lab = "Status fraction"
+    y_lab = "Fraction of Status"
 ) {
     library(dplyr)
 

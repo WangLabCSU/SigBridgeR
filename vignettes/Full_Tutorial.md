@@ -18,7 +18,7 @@
       - [2.1.2 (Option B) Start from raw matrix](#212-option-b-start-from-raw-matrix)
       - [2.1.3 (Option C) Start from AnnDataR6 object](#213-option-c-start-from-anndatar6-object)
     - [2.2 Bulk expression data](#22-bulk-expression-data)
-    - [2.3 Mutational signatures data](#23-mutational-signatures-data)
+    - [2.3 Mutational signature data](#23-mutational-signature-data)
     - [2.4 Matching Samples](#24-matching-samples)
   - [3. Runing SigBridgeR](#3-runing-sigbridger)
     - [3.1 (Option A) Scissor Screening](#31-option-a-scissor-screening)
@@ -254,7 +254,7 @@ your_bulk_data <- your_bulk_data[!is.na(rownames(your_bulk_data)), ]
 
 ```
 
-### 2.3 Mutational signatures data
+### 2.3 Mutational signature data
 
 Some key details of `MSPreProcess`'s parameters:
 
@@ -317,7 +317,7 @@ The function returns a list containing:
  
 ## 3. Runing SigBridgeR
 
-The function **`Screen`** provide 4 different options for screening mutational signatures, These 4 algorithms come from the repositories mentioned in [Section 0.1](#01-introduction-to-sigbridger), and you can choose one of them to screen your cells.
+The function **`Screen`** provide 4 different options for screening cells associated with mutational signatures, These 4 algorithms come from the repositories mentioned in [Section 0.1](#01-introduction-to-sigbridger), and you can choose one of them to screen your cells.
 
 Some key details of `Screen`'s parameters:
 
@@ -325,7 +325,7 @@ Some key details of `Screen`'s parameters:
 -   `sc_data`: A Seurat object after preprocessing, you can use the output of `Preprocess` function or your own preprocessed Seurat object.
 -   `phenotype`: A named vector of binary mutational signature data, use the output of `MatchSample` function.
 -   `label_type`: A character value specifying the filtering labels are stored in the `Seurat_object@misc` , use the output of `MatchSample` function or your own label.
--   `phenotype_class`: A character value specifying the phenotype data type, i.e. `"binary"`, `"survival"` or `"continuous"`. When the phenotype data is mutational signatures, use `"binary"`.
+-   `phenotype_class`: A character value specifying the phenotype data type, i.e. `"binary"`, `"survival"` or `"continuous"`. When the phenotype data is a mutational signature, use `"binary"`.
 -   `screen_method`: A character value specifying the screening method, i.e. "Scissor", "scPAS", "scAB" or "scPP"
 -   `...`: Other parameters for the screening methods.
 
@@ -416,7 +416,7 @@ scpas_result = Screen(
   phenotype = phenotype,
   label_type = "TP53", # The filtering labels are stored in the `@misc` 
   screen_method = "scpas",
-  phenotype_class = "binary", # choose `binary` if phenotype is mutational signatures
+  phenotype_class = "binary", # choose `binary` if phenotype is a mutational signature
 )
 ```
 
@@ -551,9 +551,11 @@ umaps <- FetchUMAP(
 
 This will generate two plots, one for each feature specified in `feature` (passed to `Seurat::FeaturePlot`), stored in a list.
 
-> helpful documents:
->
-> [Browser-Seurat::DimPlot](https://satijalab.org/seurat/reference/DimPlot.html) [Browser-Seurat::FeaturePlot](https://satijalab.org/seurat/reference/FeaturePlot.html)
+**helpful documentation**:
+
+[Browser-Seurat::DimPlot](https://satijalab.org/seurat/reference/DimPlot.html) 
+
+[Browser-Seurat::FeaturePlot](https://satijalab.org/seurat/reference/FeaturePlot.html)
 
  
 ### 4.2 Stack bar plot for screening results

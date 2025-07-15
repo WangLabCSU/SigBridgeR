@@ -518,11 +518,13 @@ MSPreProcess <- function(
 #'    - A numeric column specified by `col_id` for binarization.
 #' @param bulk_data A matrix or data frame of expression counts with samples
 #'    as columns. Column names should contain TCGA sample IDs.
-#' @param col_id Integer or string. Column index/name in `ms_signature` to use for:
+#' @param col_id Integer, string or vector. Column index/name(s) in `ms_signature` to use for:
 #'    - Binarization (values > `ms_status_thresh` become 1, others 0)
 #'    - Reporting in output as `ms_select`
+#'    - When multiple mutational signatures are specified, the `ms_status` will only be designated as `1` if each mutational signature > `ms_status_thresh`.
+#' 
 #' @param ms_status_thresh Numeric. Threshold for converting the `col_id` column to
-#'    binary status (default: 0). Values above threshold become 1.
+#'    binary status (default: 0L). Values above threshold become 1.
 #'
 #' @return A list with three components:
 #' \describe{
@@ -575,11 +577,21 @@ MatchSample = function(
     ms_signature,
     bulk_data,
     col_id,
-    ms_status_thresh = 0
+    ms_status_thresh = 0L
 ) {
     require(dplyr)
-    stopifnot(col_id %in% seq_along(ms_signature))
-
+    if (
+        !all(col_id %in% colnames(ms_signature)) &&
+            !all(col_id %in% seq_along(ms_signature))
+    ) {
+        cli::cli_abort(
+            c(
+                "x" = "{.var col_id}={.val {col_id}} not found in {.var ms_signature}",
+                "i" = "Please specify a valid column name or index"
+            ),
+            class = "NotFoundError"
+        )
+    }
     # find sample column
     sample_colname = grep(
         "sample",
@@ -593,15 +605,27 @@ MatchSample = function(
         min(nchar(colnames(bulk_data))),
         15
     )
+    colnames(bulk_data) = substr(colnames(bulk_data), 1, trunc_length)
+    cli::cli_alert_info("Sample match length: {trunc_length}")
+
     # convert interested column to binary variable
     processed_ms_signature <- ms_signature %>%
         dplyr::mutate(
             # Samples exceeding the threshold will be retained and set logical
             !!sample_colname := substr(.[[sample_colname]], 1, trunc_length),
-            ms_status = as.integer(.[[col_id]] > ms_status_thresh)
+            ms_status = as.integer(
+                if (is.numeric(col_id)) {
+                    rowSums(.[, col_id, drop = FALSE] > ms_status_thresh) ==
+                        length(col_id)
+                } else {
+                    rowSums(dplyr::across(
+                        dplyr::any_of(col_id),
+                        ~ .x > ms_status_thresh
+                    )) ==
+                        length(col_id)
+                }
+            )
         )
-    colnames(bulk_data) = substr(colnames(bulk_data), 1, trunc_length)
-    cli::cli_alert_info("Sample match length: {trunc_length}")
     # find common sample names
     cm_samples = intersect(
         processed_ms_signature[[sample_colname]],
@@ -610,7 +634,10 @@ MatchSample = function(
     cli::cli_alert_info("Sample match: {length(cm_samples)} common samples")
 
     if (length(cm_samples) == 0) {
-        stop("No common sample found in data")
+        cli::cli_abort(
+            c("x" = "No common sample found in data"),
+            class = "NullCommonSample"
+        )
     }
 
     match_result = list(
