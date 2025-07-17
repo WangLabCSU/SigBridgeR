@@ -1,6 +1,6 @@
 # **SigBridgeR** Under development
 
-[![CRAN Status](https://www.r-pkg.org/badges/version/SigBridgeR)](https://cran.r-project.org/package=SigBridgeR) [![R-CMD-check](https://github.com/WangLabCSU/SigBridgeR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Codecov test coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![CRAN Status](https://www.r-pkg.org/badges/version/SigBridgeR)](https://cran.r-project.org/package=SigBridgeR) [![Repo Status](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)[![](https://img.shields.io/badge/devel%20version-0.0.0.9000-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 
 An R package for the integration of single-cell RNA-seq data, mutational signatures and bulk expression data.
 
@@ -38,11 +38,11 @@ remotes::install_github("WangLabCSU/SigBridgeR")
 
 ## 📓 Documentation
 
-Use `?SigBridgeR` to access the help documents in  R.
+Use `?SigBridgeR` to access the help documents in R.
 
 Key resources:
 
--   [Quick Started Guide](vignettes/Quick_Start.md) 
+-   [Quick Started Guide](vignettes/Quick_Start.md)
 -   [Full Tutorial](vignettes/Full_Tutorial.md) for more details
 
 If you encounter problems, please see:
@@ -51,14 +51,14 @@ If you encounter problems, please see:
 
 Other information:
 
-- What is *Mutational Signature*? 
-  - [COSMIC | Mutational Signatures - An Introduction ](https://cancer.sanger.ac.uk/cosmic)
-  - [View in Wiki](https://en.wikipedia.org/wiki/Mutational_signatures)
-  - [Nature | Mutational signatures: emerging concepts, caveats and clinical applications](https://www.nature.com/articles/s41568-021-00377-7)
-- What is *Single Cell Sequencing*? 
-  - [Veiw in Wiki](https://en.wikipedia.org/wiki/Single-cell_sequencing)
-- What is *RNA-seq*? 
-  - [View in Wiki](https://en.wikipedia.org/wiki/RNA-Seq)
+-   What is *Mutational Signature*?
+    -   [COSMIC \| Mutational Signatures - An Introduction](https://cancer.sanger.ac.uk/cosmic)
+    -   [View in Wiki](https://en.wikipedia.org/wiki/Mutational_signatures)
+    -   [Nature \| Mutational signatures: emerging concepts, caveats and clinical applications](https://www.nature.com/articles/s41568-021-00377-7)
+-   What is *Single Cell Sequencing*?
+    -   [Veiw in Wiki](https://en.wikipedia.org/wiki/Single-cell_sequencing)
+-   What is *RNA-seq*?
+    -   [View in Wiki](https://en.wikipedia.org/wiki/RNA-Seq)
 
 ## 📮 Contact
 
