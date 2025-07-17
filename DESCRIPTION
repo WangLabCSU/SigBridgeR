@@ -1,10 +1,9 @@
 Package: SigBridgeR
-Title: Multi-algorithm Integration of Mutational Signatures, scRNA-seq, and Phenotypes for Tumor Feature Cell Screening
+Title: Multi-algorithm Integration of Mutational Signatures, scRNA-seq, and Bulk Data for Tumor Cell Screening
 Version: 0.0.0.9000
 Authors@R: 
-    person("Yuxi", "Yang", "15364051195@163.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: SigBridgeR is an integrative toolkit designed to identify tumor phenotype-associated cell subpopulations by combining mutational signatures, bulk and single-cell RNA-seq data, and phenotypic information. It leverages multiple algorithms (including 'Scissor', 'scPAS', 'scPrognosis', 'DEGAS', and 'scAB') to robustly link molecular features with clinical or functional phenotypes. The package provides a unified pipeline for cross-modal data analysis, enabling the discovery of biologically and clinically relevant cell states in heterogeneous tumor samples.  
+    person("Yuxi", "Yang", "15364051195@163.com", role = "cre")
+Description: SigBridgeR is an integrative toolkit designed to identify tumor phenotype-associated cell subpopulations by combining mutational signatures (as phenotype), bulk expression and single-cell RNA-seq data, and . It leverages multiple algorithms (including 'Scissor', 'scPAS', 'scPP', and 'scAB') to robustly link molecular features with clinical or functional phenotypes. The package provides a unified pipeline for cross-modal data analysis, enabling the discovery of biologically and clinically relevant cell states in heterogeneous tumor samples.  
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
