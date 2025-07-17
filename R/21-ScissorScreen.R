@@ -103,7 +103,8 @@ DoScissor = function(
 
     if (length(scissor_family) != 1) {
         cli::cli_abort(
-            "Please choose one scissor family, use parameter {.var {scissor_family}}."
+            "Please choose one scissor family, use parameter {.var scissor_family}.",
+            class = "FamilyError"
         )
     }
     path = dirname(path2save_scissor_inputs)

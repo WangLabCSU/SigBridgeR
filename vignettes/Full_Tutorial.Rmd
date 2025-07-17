@@ -1,5 +1,7 @@
 ---
 title: "Full Tutorial for SigBridgeR"
+author: "Exceret"
+date:  "`r format(Sys.time(), '%d/%m/%y')`"
 output: 
     rmarkdown::html_vignette
 vignette: >
@@ -10,8 +12,9 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+  echo = TRUE,
+  warning = FALSE,
+  message = TRUE
 )
 ```
 

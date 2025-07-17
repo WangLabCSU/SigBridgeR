@@ -1,10 +1,10 @@
-# **Full Tutorial for SigBridgeR** 
+# **Full Tutorial for SigBridgeR** {#full-tutorial-for-sigbridger}
 
 ## 0. Preface
 
 ### 0.1 Contents
 
-- [**Full Tutorial for SigBridgeR**](#full-tutorial-for-sigbridger)
+- [**Full Tutorial for SigBridgeR** {#full-tutorial-for-sigbridger}](#full-tutorial-for-sigbridger-full-tutorial-for-sigbridger)
   - [0. Preface](#0-preface)
     - [0.1 Contents](#01-contents)
     - [0.1 Introduction to SigBridgeR](#01-introduction-to-sigbridger)
@@ -35,22 +35,19 @@
 
 ### 0.1 Introduction to SigBridgeR
 
-SigBridgeR (short for Mutational **Sig**nature **Bridge** in **R**) is an R package for screening tumor cell highly associated with mutational signatures from single-cell RNA-seq, bulk expression and mutational signatures phenotype data at pan-cancer level. It is based on the R package [Github-sunduanchen/Scissor](https://github.com/sunduanchen/Scissor), [Github-Qinran-Zhang/scAB](https://github.com/Qinran-Zhang/scAB/), [Github-WangX-Lab/ScPP](https://github.com/WangX-Lab/ScPP) and [Github-aiminXie/scPAS](https://github.com/aiminXie/scPAS).
+SigBridgeR (short for Mutational **Sig**natures **Bridge** in **R**) is an R package for screening tumor cells highly associated with mutational signatures using single-cell RNA-seq, bulk expression and mutational signature phenotype data at a pan-cancer level. It integrates functionality from these R packages: [Github-sunduanchen/Scissor](https://github.com/sunduanchen/Scissor), [Github-Qinran-Zhang/scAB](https://github.com/Qinran-Zhang/scAB/), [Github-WangX-Lab/ScPP](https://github.com/WangX-Lab/ScPP) and [Github-aiminXie/scPAS](https://github.com/aiminXie/scPAS).
 
 ------------------------------------------------------------------------
 
- 
 ## 1. Installation
 
-You can install **SigBridgeR** using the following options:
+Install **SigBridgeR** using one of these methods:
 
 ### 1.1 Stable release from CRAN
 
 ```{r install_from_cran}
 install.packages("SigBridgeR")
 ```
-
-or
 
 ### 1.2 Development version from GitHub
 
@@ -63,7 +60,7 @@ remotes::install_github("WangLabCSU/SigBridgeR")
 
 ### 1.3 Check Dependencies
 
-You can use this function to quickly check if all dependencies are installed and if their versions are correct:
+You can use this function to quickly verify installed dependencies and their versions:
 
 ```{r check_dependencies}
 CheckPkgs <- function(packages) {
@@ -119,10 +116,9 @@ CheckPkgs(list(
 
 ------------------------------------------------------------------------
 
- 
 ## 2. Loading and preprocessing data
 
-load `SigBridgeR` package at first:
+First load the package:
 
 ```{r load_package}
 library(SigBridgeR)
@@ -134,9 +130,7 @@ You can use function `SCPreProcess` to preprocess your single-cell RNA-seq data.
 
 #### 2.1.1 (Option A) Start from Seurat object
 
-if you hase a Seurat object already preprocessed with `NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunTSNE, RunUMAP`(if not, you can use `Seurat`'s preprocessing pipeline to do so), The function `SCPreProcess` will just filter out tumor cells.
-
-The parameter `column2only_tumor` specifies a column name used to filter for tumor cells exclusively.
+if you hase a preprocessed Seurat object (containing results from `NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunTSNE, RunUMAP`), `SCPreProcess` will filter out tumor cells using the specified metadata column:
 
 ```{r scpreprocessing_seurat}
 your_seurat <- SCPreProcess(your_seurat, column2only_tumor = "Tissue")
@@ -144,7 +138,7 @@ your_seurat <- SCPreProcess(your_seurat, column2only_tumor = "Tissue")
 
 #### 2.1.2 (Option B) Start from raw matrix
 
-When starting from a raw count matrix, `SCPreProcess` will automatically perform standard Seurat preprocessing and the tumor cell filtration described in [Section 2.1.1](#211-option-a-start-from-seurat-object). In typical workflows where the appropriate tumor-filtering column is unknown (since you haven't yet generated the Seurat object or explored the data comprehensively), `SCPreProcess` still returns a fully preprocessed Seurat object for downstream use.
+When starting from a raw count matrix, `SCPreProcess` will automatically perform Seurat preprocess and the tumor cell filtration described in [Section 2.1.1](#211-option-a-start-from-seurat-object). In typical workflows where the appropriate tumor-filtering column is unknown (since you haven't yet generated the Seurat object or explored the data comprehensively), `SCPreProcess` still returns a fully preprocessed Seurat object for downstream use.
 
 ```{r scpreprocessing_raw_matrix}
 your_seurat <- SCPreProcess(
@@ -256,7 +250,7 @@ your_bulk_data <- your_bulk_data[!is.na(rownames(your_bulk_data)), ]
 
 ### 2.3 Mutational signature data
 
-Some key details of `MSPreProcess`'s parameters:
+Key parameters for `MSPreProcess`:
 
 -   `ms_signature`: A data frame of mutational signatures,
     -   Each row = one sample
@@ -288,12 +282,12 @@ You will see some progress messages in your R console
 
 The original phenotype and bulk expression data may not contain identical sample sets. This processing step performs sample matching to retain only the intersecting samples.
 
-Some key details of `MatchSample`'s parameters:
+Key parameters for `MatchSample`:
 
 -   `ms_signature`: A data frame of mutational signatures after preprocessing
 -   `bulk_data`: A data frame of bulk expression data,
--   `col_id`: Character or numeric value specifying the column. When multiple columns are specified, the status column will only be recorded as `1` if each column > `ms_status_thresh`
--  `ms_status_thresh`: A numeric value specifying the threshold for binarizing mutational signatures. default: `0L`
+-   `col_id`: Character or numeric value specifying the column. When multiple columns are specified, the status column will only be recorded as `1` if each column \> `ms_status_thresh`
+-   `ms_status_thresh`: A numeric value specifying the threshold for binarizing mutational signatures. default: `0L`
 
 **usage**：
 
@@ -316,12 +310,11 @@ The function returns a list containing:
 
 ------------------------------------------------------------------------
 
- 
 ## 3. Screening Cells Associated with Mutational Signatures
 
 The function **`Screen`** provide 4 different options for screening cells associated with mutational signatures, These 4 algorithms come from the repositories mentioned in [Section 0.1](#01-introduction-to-sigbridger), and you can choose one of them to screen your cells.
 
-Some key details of `Screen`'s parameters:
+Key parameters for `Screen`:
 
 -   `matched_bulk`: A data frame of bulk expression data after intersecting samples, use the output of `MatchSample` function.
 -   `sc_data`: A Seurat object after preprocessing, you can use the output of `Preprocess` function or your own preprocessed Seurat object.
@@ -357,7 +350,7 @@ scissor_result = Screen(
 )
 ```
 
-When you run scissor screening with the same data, you can use the intermediate data to speed up the screening process. This is an inherent feature of the `scissor`.
+You can use the intermediate data for repeated runs. This is an inherent feature of the `scissor`.
 
 ```{r scissor_screening_cache}
 scissor_result = Screen(
@@ -385,7 +378,7 @@ scissor_result = Screen(
 **returning structure**: A list containing:
 
 -   `scRNA_data`: A Seurat object after screening
--   `reliability_test`: results of the reliability test
+-   `reliability_test`: Reliability test results
 
 ### 3.2 (Option B) scPAS Screening
 
@@ -479,7 +472,6 @@ scpp_result = Screen(
 
 -   `scRNA_data`: A Seurat object after screening
 
- 
 ### 3.5 (Optional) Merge screening results
 
 If you have performed multiple screening methods one the same data, you can use the function `MergeResult` to merge the results of these methods. The Seurat object or a results list from `Screen` is accepted.
@@ -507,14 +499,13 @@ This function performs a simple task of consolidating screening results into the
 
 ------------------------------------------------------------------------
 
- 
 ## 4. Visualization
 
 After screening, you can use these two functions for plotting the results of screening, **`FetchUMAP`** and **`ScreenFractionPlot`**.
 
 ### 4.1 UMAP for screening results
 
-Some key details of `FetchUMAP`'s parameters:
+Key parameters for `FetchUMAP`:
 
 -   `seurat_obj`: A Seurat object after screening.
 -   `group_by`: Used to specify the column of the meta.data in `seurat_obj`. The plot results will be grouped by this parameter. Pass to `Seurat::DimPlot`'s `group.by` parameter.
@@ -540,7 +531,6 @@ umaps <- FetchUMAP(
 
 This will generates three UMAP plots (one for each group specified in `group_by`, passed to `Seurat::DimPlot`), stored in a list. When `plot_show = TRUE`, you will see a composite plot displaying all groups together.
 
- 
 Or suppose you have performed `scPAS` screening on your Seurat object and want to visualize the distribution of prediction confidence scores, you may reference and use the following code:
 
 ```{r umap_exmaple2}
@@ -555,14 +545,13 @@ This will generate two plots, one for each feature specified in `feature` (passe
 
 **helpful documentation**:
 
-[Browser-Seurat::DimPlot](https://satijalab.org/seurat/reference/DimPlot.html) 
+[Browser-Seurat::DimPlot](https://satijalab.org/seurat/reference/DimPlot.html)
 
 [Browser-Seurat::FeaturePlot](https://satijalab.org/seurat/reference/FeaturePlot.html)
 
- 
 ### 4.2 Stack bar plot for screening results
 
-Some key details of `ScreenFractionPlot`'s parameters:
+Key parameters for `ScreenFractionPlot`:
 
 -   `seurat_obj`: A Seurat object after screening.
 -   `group_by`: Used to specify the column of the meta.data in `seurat_obj`. The plot results will be grouped by this parameter.
@@ -590,7 +579,6 @@ Use `?ScreenFractionPlot` in R to see more details.
 
 ------------------------------------------------------------------------
 
- 
 ## 5. Example
 
 Here we use the example data () to demonstrate how to use the functions in `SigBridgeR` to screen cells associated with mutational signatures.
@@ -603,7 +591,6 @@ library(SigBridgeR)
 
 ------------------------------------------------------------------------
 
- 
 ## 6. Other function details
 
 -   `AddMisc()` : Add miscellaneous information to the Seurat object. Support for adding multiple attributes to the `SeuratObject@misc` slot simultaneously.
@@ -624,5 +611,4 @@ Use `?AddMisc` in R to see more details.
 
 ------------------------------------------------------------------------
 
- 
 ## 7. References
