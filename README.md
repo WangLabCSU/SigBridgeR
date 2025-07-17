@@ -1,4 +1,4 @@
-# **SigBridgeR** <a href="https://wanglabcsu.github.io/sigbridger/"><img src="man/figures/logo.png" alt="SigBridgeR logo" style="float:right; height:139px; width:auto; margin-left:10px;"/></a>
+# **SigBridgeR** <a href="https://wanglabcsu.github.io/sigbridger/"><img src="man/figures/logo.png" alt="sigbridger website" align="right" height="139"/></a>
 
 [![CRAN Status](https://www.r-pkg.org/badges/version/SigBridgeR)](https://cran.r-project.org/package=SigBridgeR) [![Repo Status](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)[![](https://img.shields.io/badge/devel%20version-0.0.0.9000-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 
