@@ -1,0 +1,11 @@
+pandoc: 3.1.11
+pkgdown: 2.1.3
+pkgdown_sha: ~
+articles:
+  Full_Tutorial: Full_Tutorial.html
+  Quick_Start: Quick_Start.html
+  Troubleshooting: Troubleshooting.html
+last_built: 2025-08-30T02:48Z
+urls:
+  reference: https://wanglabcsu.github.io/sigbridger/reference
+  article: https://wanglabcsu.github.io/sigbridger/articles
