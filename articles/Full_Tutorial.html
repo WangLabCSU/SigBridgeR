@@ -56,7 +56,7 @@
       <h1>Full Tutorial</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2025-08-30</h4>
+            <h4 data-toc-skip class="date">2025-09-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -118,12 +118,11 @@ Filter Out Tumor Cells</a></li>
 <a href="#id_221-evaluate-the-quality-of-your-bulk-rna-seq-data">2.2.1
 Evaluate the quality of your bulk RNA-seq data</a>
 <ul>
-<li><a href="#quality-control-metrics-reported-quality-control-metrics-reported">Quality
-Control Metrics Reported: {#quality-control-metrics-reported}</a></li>
-<li><a href="#visualization-output-visualization-output">Visualization
-Output: {#visualization-output}</a></li>
-<li><a href="#recommended-parameter-adjustments-recommended-parameter-adjustments">Recommended
-Parameter Adjustments: {#recommended-parameter-adjustments}</a></li>
+<li><a href="#quality-control-metrics-reported">Quality Control Metrics
+Reported:</a></li>
+<li><a href="#visualization-output">Visualization Output:</a></li>
+<li><a href="#recommended-parameter-adjustments">Recommended Parameter
+Adjustments:</a></li>
 </ul>
 </li>
 <li><a href="#id_222-gene-symbol-conversion">2.2.2 Gene Symbol
@@ -465,7 +464,6 @@ threshold</p></li>
 <li><p>For large datasets: set <code>check = FALSE</code> for faster
 processing</p></li>
 </ul>
-<p>Use <code><a href="../reference/BulkPreProcess.html">?BulkPreProcess</a></code> in R to see more details.</p>
 </div>
 </div>
 <div class="section level5">
@@ -497,8 +495,7 @@ symbol matching if you prefer not to use SymbolConvert’s built-in
 <span>                      keytype <span class="op">=</span> <span class="st">"ENSEMBL"</span>,</span>
 <span>                      multiVals <span class="op">=</span> <span class="st">"first"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">your_bulk_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">gene_symbols</span></span>
-<span><span class="va">your_bulk_data</span> <span class="op">&lt;-</span> <span class="va">your_bulk_data</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">your_bulk_data</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">your_bulk_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">gene_symbols</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level4">
@@ -585,7 +582,7 @@ restrict the number of the Scissor selected cells. A cutoff less than
 <span>  matched_bulk <span class="op">=</span> <span class="va">matched_bulk</span>,</span>
 <span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>, <span class="co"># A Seurat object after preprocessing</span></span>
 <span>  phenotype <span class="op">=</span> <span class="va">matched_phenotype_data</span>,</span>
-<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, <span class="co"># The filtering labels are stored in the `@misc` </span></span>
+<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, <span class="co"># The filtering labels are stored in the `@misc`, you can change it to your own label</span></span>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,  </span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span><span class="op">)</span>,</span>
 <span>  path2save_scissor_inputs <span class="op">=</span> <span class="st">"Tmp/Scissor_inputs.RData"</span> <span class="co"># Intermediate data</span></span>
@@ -865,7 +862,7 @@ and patient, you may reference and use the following code:</p>
 <span>    <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">umaps</span></span></code></pre></div>
-<p>This will generate three UMAP plots separately.</p>
+<p>This will generate six UMAP plots separately.</p>
 <p>Or suppose you have performed <code>scPAS</code> screening on your
 Seurat object and want to visualize the distribution of prediction
 confidence scores, you may reference and use the following code:</p>
@@ -909,7 +906,7 @@ parameter.</li>
 <code>screen_type</code>: Screening algorithm used before.
 (case-sensitive, e.g., “scissor” for Scissor results)</li>
 <li>
-<code>show_null</code>: Logical whether to show groups with zero
+<code>show_null</code>: Logical, whether to show groups with zero
 cells (default: FALSE).</li>
 <li>
 <code>plot_color</code> Custom color palette (named vector format):
@@ -928,13 +925,12 @@ following code:</p>
 <code class="sourceCode R"><span><span class="co"># based on `ggplot2`</span></span>
 <span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
 <span>   screened_seurat <span class="op">=</span> <span class="va">your_seurat_obj</span>,</span>
-<span>   group_by <span class="op">=</span> <span class="st">"patient"</span>, </span>
+<span>   group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
 <span>   screen_type <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
 <span>   plot_title <span class="op">=</span> <span class="st">"scPAS Screening Results"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The order of the groups is determined by the proportion of
 <strong>Positive</strong> cells within each group.</p>
-<p>Use <code><a href="../reference/ScreenFractionPlot.html">?ScreenFractionPlot</a></code> in R to see more details.</p>
 </div>
 <div class="section level4">
 <h4 id="venn-diagram-for-screening-results">4.3 Venn diagram for screening results<a class="anchor" aria-label="anchor" href="#venn-diagram-for-screening-results"></a>
@@ -961,6 +957,15 @@ following code:</p>
 <span><span class="va">scpp_pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">)</span><span class="op">[</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scpp_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPP</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
 <span><span class="op">]</span></span>
+<span><span class="co"># # *Or if you have merged the results, you can use the following code:</span></span>
+<span><span class="co"># c(scissor_pos, scab_pos, scpas_pos, scpp_pos) %&lt;-%</span></span>
+<span><span class="co">#     purrr::map(</span></span>
+<span><span class="co">#         c("scissor", "scAB", "scPAS", "scPP"),</span></span>
+<span><span class="co">#         ~ colnames(merged_seurat)[</span></span>
+<span><span class="co">#             which(merged_seurat[[.x]] == "Positive")</span></span>
+<span><span class="co">#         ]</span></span>
+<span><span class="co">#     )</span></span>
+<span></span>
 <span><span class="va">all_cell</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">your_seurat_obj</span><span class="op">)</span> <span class="co"># this obj can be changed to other</span></span>
 <span></span>
 <span><span class="co"># * create a list of cell vectors</span></span>
@@ -1008,7 +1013,8 @@ https://gaospecial.github.io/ggVennDiagram/</a></p>
 in <code>SigBridgeR</code> to screen cells associated with
 phenotype.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -1036,7 +1042,6 @@ object. Support for adding multiple attributes to the
 <span></span>
 <span><span class="co"># Add multiple attributes to the `SeuratObject@misc` slot simultaneously</span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMisc.html">AddMisc</a></span><span class="op">(</span><span class="va">seurat_obj</span>, markers1 <span class="op">=</span> <span class="va">markers1</span>, markers2 <span class="op">=</span> <span class="va">markers2</span><span class="op">)</span></span></code></pre></div>
-<p>Use <code><a href="../reference/AddMisc.html">?AddMisc</a></code> in R to see more details.</p>
 </div>
 <div class="section level4">
 <h4 id="calculate-the-variance-of-each-row-in-a-matrix">6.2 Calculate the variance of each row in a matrix<a class="anchor" aria-label="anchor" href="#calculate-the-variance-of-each-row-in-a-matrix"></a>
@@ -1074,11 +1079,21 @@ matrix.</li>
 <div class="section level3">
 <h3 id="references">7. References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h3>
-<p>Identifying phenotype-associated subpopulations by integrating bulk
-and single-cell sequencing data. Nature Biotechnology (2021). <a href="https://doi.org/10.1038/s41587-021-01091-3" class="external-link uri">https://doi.org/10.1038/s41587-021-01091-3</a>. Duanchen
-Sun, Xiangnan Guan, Amy E. Moran, Ling-Yun Wu, David Z. Qian, Pepper
-Schedin, Mu-Shui Dai, Alexey V. Danilov, Joshi J. Alumkal, Andrew C.
-Adey, Paul T. Spellman and Zheng Xia</p>
+<ol style="list-style-type: decimal">
+<li><p>Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et
+al. Identifying phenotype-associated subpopulations by integrating bulk
+and single-cell sequencing data. Nat Biotechnol. 2022
+Apr;40(4):527–38.</p></li>
+<li><p>Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell
+phenotype-associated subpopulation identifier. Briefings in
+Bioinformatics. 2024 Nov 22;26(1):bbae655.</p></li>
+<li><p>Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states
+with clinical significance by integrating single-cell genomics and bulk
+sequencing data. Nucleic Acids Research. 2022 Nov
+28;50(21):12112–30.</p></li>
+<li><p>WangX-Lab/ScPP [Internet]. [cited 2025 Aug 31]. Available from:
+<a href="https://github.com/WangX-Lab/ScPP" class="external-link uri">https://github.com/WangX-Lab/ScPP</a></p></li>
+</ol>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
