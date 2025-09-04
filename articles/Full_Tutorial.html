@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,7 @@
       <h1>Full Tutorial</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2025-09-03</h4>
+            <h4 data-toc-skip class="date">2025-09-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -68,8 +68,7 @@
     
     
 <div class="section level2">
-<h2 id="full-tutorial-for-sigbridger">
-<strong>Full Tutorial for SigBridgeR</strong><a class="anchor" aria-label="anchor" href="#full-tutorial-for-sigbridger"></a>
+<h2 id="full-tutorial-for-sigbridger">Full Tutorial for SigBridgeR<a class="anchor" aria-label="anchor" href="#full-tutorial-for-sigbridger"></a>
 </h2>
 <div class="section level3">
 <h3 id="preface">0. Preface<a class="anchor" aria-label="anchor" href="#preface"></a>
@@ -79,8 +78,8 @@
 </h4>
 <ul>
 <li>
-<a href="#full-tutorial-for-sigbridger"><strong>Full Tutorial for
-SigBridgeR</strong></a>
+<a href="#full-tutorial-for-sigbridger">Full Tutorial for
+SigBridgeR</a>
 <ul>
 <li>
 <a href="#id_0-preface">0. Preface</a>
@@ -122,10 +121,10 @@ Filter Out Tumor Cells</a></li>
 Evaluate the quality of your bulk RNA-seq data</a>
 <ul>
 <li><a href="#quality-control-metrics-reported">Quality Control Metrics
-Reported:</a></li>
-<li><a href="#visualization-output">Visualization Output:</a></li>
+Reported</a></li>
+<li><a href="#visualization-output">Visualization Output</a></li>
 <li><a href="#recommended-parameter-adjustments">Recommended Parameter
-Adjustments:</a></li>
+Adjustments</a></li>
 </ul>
 </li>
 <li><a href="#id_222-gene-symbol-conversion">2.2.2 Gene Symbol
@@ -434,7 +433,7 @@ can refer to and use the following code:</p>
 <p>The function returns a filtered count matrix after applying quality
 control steps. The order of filtering is: first genes, then samples.</p>
 <div class="section level6">
-<h6 id="quality-control-metrics-reported">Quality Control Metrics Reported:<a class="anchor" aria-label="anchor" href="#quality-control-metrics-reported"></a>
+<h6 id="quality-control-metrics-reported">Quality Control Metrics Reported<a class="anchor" aria-label="anchor" href="#quality-control-metrics-reported"></a>
 </h6>
 <ul>
 <li><p>Data Integrity: Number of missing values detected</p></li>
@@ -449,14 +448,14 @@ batch</p></li>
 </ul>
 </div>
 <div class="section level6">
-<h6 id="visualization-output">Visualization Output:<a class="anchor" aria-label="anchor" href="#visualization-output"></a>
+<h6 id="visualization-output">Visualization Output<a class="anchor" aria-label="anchor" href="#visualization-output"></a>
 </h6>
 <p>When <code>show_plot_results = TRUE</code>, the function
 generates:</p>
 <p>PCA plot colored by experimental condition</p>
 </div>
 <div class="section level6">
-<h6 id="recommended-parameter-adjustments">Recommended Parameter Adjustments:<a class="anchor" aria-label="anchor" href="#recommended-parameter-adjustments"></a>
+<h6 id="recommended-parameter-adjustments">Recommended Parameter Adjustments<a class="anchor" aria-label="anchor" href="#recommended-parameter-adjustments"></a>
 </h6>
 <ul>
 <li><p>For low-depth sequencing data: reduce
@@ -750,10 +749,10 @@ applied.</p>
 <p><strong>Cell level Evaluation</strong>:</p>
 <p>You can use <code>Sissor::evaluate.cell()</code> to obtain some
 supporting information for each Scissor selected cell. First, prepare a
-benchmark data set.</p>
+benchmark data set yourself.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">evaluate_summary</span> <span class="op">&lt;-</span> <span class="fu">Scissor</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Scissor/man/evaluate.cell.html" class="external-link">evaluate.cell</a></span><span class="op">(</span></span>
-<span>    <span class="st">'./data/benchmark_data.RData'</span>,</span>
+<span>    <span class="st">'your_benchmark_data.RData'</span>, <span class="co"># file path</span></span>
 <span>    <span class="va">scissor_result</span><span class="op">$</span><span class="va">scissor_result</span>,</span>
 <span>    FDR <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>    bootstrap_n <span class="op">=</span> <span class="fl">100</span></span>
@@ -938,10 +937,10 @@ of these methods. The Seurat object or a results list from
 <span>    <span class="va">your_scAB_result</span>, </span>
 <span>    <span class="va">your_scPP_result</span>,</span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>This function performs a simple task of consolidating screening
-results into the Seurat object’s <code>meta.data</code> slot and
-returning the updated object. Please note that the intermediate data
-(e.g., <code>scissor_result$reliability.test</code> and
+<p>This function simply merges the <code>meta.data</code> and
+<code>misc</code> slots of the input Seurat objects. Please note that
+the intermediate data (e.g.,
+<code>scissor_result$reliability.test</code> and
 <code>scab_result$scAB_result</code>) will not be preserved in this
 process.</p>
 <hr>
@@ -962,6 +961,8 @@ and patient, you may reference and use the following code:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
+<span><span class="co"># library(Seurat)</span></span>
+<span><span class="co"># library(purrr)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="va">celltype_umap</span>,</span>
@@ -976,6 +977,7 @@ and patient, you may reference and use the following code:</p>
 <span>        <span class="op">~</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span></span>
 <span>            <span class="va">your_seurat_obj</span>,</span>
 <span>            group.by <span class="op">=</span> <span class="va">.x</span>,</span>
+<span>            pt.size <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>            reduction <span class="op">=</span> <span class="st">"umap"</span></span>
 <span>        <span class="op">)</span> <span class="op">+</span></span>
 <span>            <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span></span>
@@ -998,6 +1000,8 @@ confidence scores, you may reference and use the following code:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
+<span><span class="co"># library(Seurat)</span></span>
+<span><span class="co"># library(purrr)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">scPAS_Pvalue_umap</span>, <span class="va">scPAS_NRS_umap</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span></span>
 <span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
@@ -1060,6 +1064,26 @@ following code:</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The order of the groups is determined by the proportion of
 <strong>Positive</strong> cells within each group.</p>
+<p><strong>returning structure</strong>:</p>
+<p>If a single screen_type is specified</p>
+<ul>
+<li>
+<code>stats</code>: A data frame containing the proportion of
+positive cells for each group.</li>
+<li>
+<code>plot</code>: A ggplot object.</li>
+</ul>
+<p>If multiple screen_types are specified</p>
+<ul>
+<li>
+<code>stats</code>: A list containing data frames containing the
+proportion of positive cells for each group.</li>
+<li>
+<code>plot</code>: A list containing each ggplot objects.</li>
+<li>
+<code>combined_plot</code>: A ggplot object containing all the
+plots.</li>
+</ul>
 </div>
 <div class="section level4">
 <h4 id="venn-diagram-for-screening-results">4.3 Venn diagram for screening results<a class="anchor" aria-label="anchor" href="#venn-diagram-for-screening-results"></a>
@@ -1086,7 +1110,7 @@ following code:</p>
 <span><span class="va">scpp_pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">)</span><span class="op">[</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scpp_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPP</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
 <span><span class="op">]</span></span>
-<span><span class="co"># # *Or if you have merged the results, you can use the following code:</span></span>
+<span><span class="co"># # *If you have merged the results, you can use the following code instead:</span></span>
 <span><span class="co"># c(scissor_pos, scab_pos, scpas_pos, scpp_pos) %&lt;-%</span></span>
 <span><span class="co">#     purrr::map(</span></span>
 <span><span class="co">#         c("scissor", "scAB", "scPAS", "scPP"),</span></span>
