@@ -13,7 +13,7 @@ before analysis."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -153,15 +153,6 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dt>alpha</dt>
 <dd><p>(numeric) Significance threshold, default 0.01</p></dd>
 
-<dt>extra_filter</dt>
-<dd><p>(logical) Whether to perform extra filtering based on RNA count, default FALSE</p></dd>
-
-<dt>gene_RNAcount_filter</dt>
-<dd><p>(numeric) Only used when <code>extra_filter=TRUE</code>, default 20</p></dd>
-
-<dt>bulk_0_filter_thresh</dt>
-<dd><p>(numeric) Only used when <code>extra_filter=TRUE</code>,default 0.25</p></dd>
-
 
 </dl></dd>
 
@@ -190,11 +181,8 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
     <p>A list containing:</p><dl><dt>scRNA_data</dt>
 <dd><p>Filtered Seurat object with phenotype-associated cells</p></dd>
 
-<dt>matched_samples</dt>
-<dd><p>Vector of samples used in the analysis</p></dd>
-
-<dt>method_output</dt>
-<dd><p>Method-specific output objects</p></dd>
+<dt>Some screen_result</dt>
+<dd><p>Important information about the screened result related to the selected method</p></dd>
 
 
 </dl></div>
@@ -204,12 +192,12 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 
 <ul><li><p><code>matched_bulk</code> column names and <code>phenotype</code> names/rownames must be identical</p></li>
 <li><p>Phenotype values must correspond to bulk samples (not directly to single cells)</p></li>
-<li><p>Mismatches will trigger an error before analysis begins</p></li>
+<li><p>Mismatches will trigger an error before analysis begins, and there is a built-in pre-run check.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="method-compatibility">Method Compatibility<a class="anchor" aria-label="anchor" href="#method-compatibility"></a></h2>
 
-<table class="table table"><tr><td><strong>Method</strong></td><td><strong>Supported Phenotypes</strong></td><td><strong>Additional Parameters</strong></td></tr><tr><td><code>Scissor</code></td><td>All three types</td><td><code>alpha</code>, <code>lambda</code></td></tr><tr><td><code>scPP</code></td><td>All three types</td><td><code>embedding_type</code></td></tr><tr><td><code>scPAS</code></td><td>All three types</td><td><code>n_components</code></td></tr><tr><td><code>scAB</code></td><td>Binary/Survival</td><td><code>bandwidth</code></td></tr></table></div>
+<table class="table table"><tr><td><strong>Method</strong></td><td><strong>Supported Phenotypes</strong></td><td><strong>Additional Parameters</strong></td></tr><tr><td><code>Scissor</code></td><td>All three types</td><td><code>scissor_alpha</code>, <code>scissor_cutoff</code>, <code>path2load_scissor_cache</code>, <code>path2save_scissor_inputs</code>, <code>nfold</code>, <code>reliability_test</code>, <code>reliability_test_n</code></td></tr><tr><td><code>scPP</code></td><td>All three types</td><td><code>ref_group</code>, <code>Log2FC_cutoff</code>, <code>estimate_cutoff</code>, <code>probs</code></td></tr><tr><td><code>scPAS</code></td><td>All three types</td><td><code>n_components</code> ,<code>assay</code>, <code>imputation</code>,<code>nfeature</code>, <code>alpha</code>,<code>network_class</code>,<code>permutation_times</code>,<code>FDR.threshold</code>,<code>independent</code></td></tr><tr><td><code>scAB</code></td><td>Binary/Survival</td><td><code>alpha</code>, <code>alpha_2</code>, <code>maxiter</code>, <code>tred</code></td></tr></table></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Associated functions:</p><ul><li><p><code><a href="DoScissor.html">DoScissor</a></code></p></li>

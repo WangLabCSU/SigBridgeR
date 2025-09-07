@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,7 @@
       <h1>Full Tutorial</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2025-09-06</h4>
+            <h4 data-toc-skip class="date">2025-09-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -312,7 +312,7 @@ reference and use the following code:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu">use_pythonenv</span><span class="op">(</span><span class="st">"The_path_to_your_python"</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndata</span><span class="fu">::</span><span class="fu"><a href="https://anndata.dynverse.org/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># Or other formats</span></span>
+<span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndata</span><span class="fu">::</span><span class="fu"><a href="https://anndata.dynverse.org/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># Or other formats, make sure the matrix is in obj$X.</span></span>
 <span></span>
 <span><span class="va">your_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCPreProcess.html">SCPreProcess</a></span><span class="op">(</span></span>
 <span>  <span class="va">anndata_obj</span>,</span>
@@ -381,8 +381,8 @@ as columns, or a list containing count_matrix and sample_info.</li>
 ignored if data is a list.</li>
 <li>
 <code>gene_symbol_conversion</code>: Whether to convert Ensembl
-version IDs and TCGA version IDs to genes with <a href="#id_222-gene-symbol-conversion">SymbolConvert</a>, default
-TRUE.</li>
+version IDs and TCGA version IDs to genes with <a href="#id_222-gene-symbol-conversion">SymbolConvert in Section
+2.2.2</a>, default TRUE.</li>
 <li>
 <code>check</code>: Whether to perform detailed quality checks,
 default TRUE.</li>
@@ -472,7 +472,7 @@ processing</p></li>
 <h5 id="gene-symbol-conversion">2.2.2 Gene Symbol Conversion<a class="anchor" aria-label="anchor" href="#gene-symbol-conversion"></a>
 </h5>
 <p><code>SymbolConvert</code> performs a straightforward task:
-converting common gene identifiers (e.g., Ensembl IDs, Entrez) to
+converting common gene identifiers (e.g., Ensemble IDs, Entrez) to
 standardized gene symbols by using the <a href="https://github.com/ShixiangWang/IDConverter" class="external-link">IDConverter</a>
 package.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -694,10 +694,6 @@ Scissor selected cells in total cells. This parameter is used to
 restrict the number of the Scissor selected cells. A cutoff less than
 50% (default 20%) is recommended depending on the input data.</li>
 <li>
-<code>reliability_test_alpha</code>: the same as
-<code>scissor_alpha</code>
-</li>
-<li>
 <code>reliability_test_n</code>: Permutation times (default:
 10)</li>
 <li>
@@ -717,24 +713,26 @@ restrict the number of the Scissor selected cells. A cutoff less than
 <span><span class="op">)</span></span></code></pre></div>
 <p>You can use the intermediate data for repeated runs. This is an
 inherent feature of the <code>scissor</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>scissor_result <span class="ot">=</span> <span class="fu">Screen</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="at">sc_data =</span> sc_dataset, </span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="at">label_type =</span> <span class="st">"TP53"</span>, </span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="at">phenotype_class =</span> <span class="st">"binary"</span>, </span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="at">screen_method =</span> <span class="fu">c</span>(<span class="st">"Scissor"</span>),</span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  <span class="at">path2load_scissor_cahce =</span> <span class="st">"Tmp/Scissor_inputs.RData"</span> <span class="co"># Intermediate data</span></span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  <span class="at">path2save_scissor_inputs =</span> <span class="st">"Tmp/Scissor_inputs.RData"</span> </span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
+<span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>, </span>
+<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, </span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>, </span>
+<span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span><span class="op">)</span>,</span>
+<span>  path2load_scissor_cahce <span class="op">=</span> <span class="st">"Tmp/Scissor_inputs.RData"</span> <span class="co"># Intermediate data</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>If only the parameters <code>scissor_alpha</code> and
 <code>scissor_cutoff</code> are adjusted, this method can also be
 applied.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># When `scissor_alpha = NULL`, an alpha iteration will continue until phenotype-associated cells are screened out or no cells are screened out even after exceeding the `scissor_cutoff`.</span></span>
+<span><span class="va">scissor_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
+<span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>, </span>
 <span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, </span>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>, </span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span><span class="op">)</span>,</span>
 <span>  path2load_scissor_cahce <span class="op">=</span> <span class="st">"Tmp/Scissor_inputs.RData"</span>, <span class="co"># Intermediate data</span></span>
-<span>  scissor_alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
+<span>  scissor_alpha <span class="op">=</span> <span class="cn">NULL</span>, </span>
 <span>  scissor_cutoff <span class="op">=</span> <span class="fl">0.05</span> </span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><strong>Returning structure</strong>: A list containing:</p>
@@ -749,11 +747,11 @@ applied.</p>
 <p><strong>Cell level Evaluation</strong>:</p>
 <p>You can use <code>Sissor::evaluate.cell()</code> to obtain some
 supporting information for each Scissor selected cell. First, prepare a
-benchmark data set yourself.</p>
+benchmark dataset yourself.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">evaluate_summary</span> <span class="op">&lt;-</span> <span class="fu">Scissor</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Scissor/man/evaluate.cell.html" class="external-link">evaluate.cell</a></span><span class="op">(</span></span>
 <span>    <span class="st">'your_benchmark_data.RData'</span>, <span class="co"># file path</span></span>
-<span>    <span class="va">scissor_result</span><span class="op">$</span><span class="va">scissor_result</span>,</span>
+<span>    <span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span>, <span class="co"># The Seurat object after screening</span></span>
 <span>    FDR <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>    bootstrap_n <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -792,26 +790,6 @@ alpha lays more emphasis on the l1 norm.</li>
 <li>
 <code>network_class</code>: The source of feature-feature similarity
 network. By default this is set to sc and the other one is bulk.</li>
-</ul>
-</li>
-<li>
-<p>Parameters passed to <code><a href="../reference/DoscPAS.html">SigBridgeR::DoscPAS</a></code></p>
-<p>These parameters represent customizable options provided by
-upstream/downstream processing functions when integrating the
-<code>scPAS</code> workflow</p>
-<ul>
-<li>
-<code>extra_filter</code>: A logical value. If <code>TRUE</code>,
-the following options for filtering will be applied. Default is
-<code>FALSE</code>.</li>
-<li>
-<code>gene_RNAcount_filter</code>: A numeric value. The threshold
-for filtering out genes with low RNA counts. Default is
-<code>20</code>.</li>
-<li>
-<code>bulk_0_filter_thresh</code>: A numeric value. The threshold
-for filtering out samples with low RNA counts. Default is
-<code>0.05</code>.</li>
 </ul>
 </li>
 </ul>
@@ -917,10 +895,10 @@ is <code>0.2</code>
 <div class="section level4">
 <h4 id="optional-merge-screening-results">3.5 (Optional) Merge screening results<a class="anchor" aria-label="anchor" href="#optional-merge-screening-results"></a>
 </h4>
-<p>If you have performed multiple screening methods one the same data,
-you can use the function <code>MergeResult</code> to merge the results
-of these methods. The Seurat object or a results list from
-<code>Screen</code> is accepted.</p>
+<p>If you have performed multiple screening methods one the same
+single-cell data, you can use the <code>MergeResult</code> to merge the
+screening results of these methods. The Seurat object or a results list
+from <code>Screen</code> is accepted.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">merged_seurat</span><span class="op">=</span><span class="fu"><a href="../reference/MergeResult.html">MergeResult</a></span><span class="op">(</span></span>
 <span>    <span class="va">your_scissor_result</span>, </span>
@@ -940,7 +918,7 @@ of these methods. The Seurat object or a results list from
 <p>This function simply merges the <code>meta.data</code> and
 <code>misc</code> slots of the input Seurat objects. Please note that
 the intermediate data (e.g.,
-<code>scissor_result$reliability.test</code> and
+<code>scissor_result$reliability.test</code> or
 <code>scab_result$scAB_result</code>) will not be preserved in this
 process.</p>
 <hr>
@@ -973,7 +951,7 @@ and patient, you may reference and use the following code:</p>
 <span>    <span class="va">scpp_umap</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span></span>
 <span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"celltype"</span>, <span class="st">"patient"</span>, <span class="st">"scissor"</span>, <span class="st">"scAB"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span><span class="op">)</span>, <span class="co"># make sure this column names exist</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"celltype"</span>, <span class="st">"patient"</span>, <span class="st">"scissor"</span>, <span class="st">"scAB"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span><span class="op">)</span>, <span class="co"># make sure these column names exist</span></span>
 <span>        <span class="op">~</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span></span>
 <span>            <span class="va">your_seurat_obj</span>,</span>
 <span>            group.by <span class="op">=</span> <span class="va">.x</span>,</span>
@@ -1057,10 +1035,19 @@ following code:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># based on `ggplot2`</span></span>
 <span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
-<span>   screened_seurat <span class="op">=</span> <span class="va">your_seurat_obj</span>,</span>
+<span>   screened_seurat <span class="op">=</span> <span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span>, </span>
 <span>   group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
 <span>   screen_type <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
 <span>   plot_title <span class="op">=</span> <span class="st">"scPAS Screening Results"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>If you have performed multiple screening methods and already merged
+the results, you can use the following code:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
+<span>   screened_seurat <span class="op">=</span> <span class="va">merged_seurat</span>, </span>
+<span>   group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
+<span>   screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"scPP"</span><span class="op">)</span>, <span class="co"># multiple screening results</span></span>
+<span>   plot_title <span class="op">=</span> <span class="st">"Screening Results"</span> <span class="co">#  A screen_type prefix will be added to the current plot title</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The order of the groups is determined by the proportion of
 <strong>Positive</strong> cells within each group.</p>
@@ -1081,8 +1068,8 @@ proportion of positive cells for each group.</li>
 <li>
 <code>plot</code>: A list containing each ggplot objects.</li>
 <li>
-<code>combined_plot</code>: A ggplot object containing all the
-plots.</li>
+<code>combined_plot</code>: A ggplot object containing all the plots
+(2*2 grid).</li>
 </ul>
 </div>
 <div class="section level4">
@@ -1094,7 +1081,7 @@ algorithms on your Seurat object, and you want to check the overlap of
 the cells selected by each algorithm. You can refer to and use the
 following code:</p>
 <p><strong>example</strong>:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gaospecial/ggVennDiagram" class="external-link">ggVennDiagram</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># * get the cell vectors</span></span>
@@ -1128,13 +1115,14 @@ following code:</p>
 <span>    scab <span class="op">=</span> <span class="va">scab_pos</span>,</span>
 <span>    scpp <span class="op">=</span> <span class="va">scpp_pos</span>,</span>
 <span>    all_cells <span class="op">=</span> <span class="va">all_cells</span></span>
+<span>    <span class="co"># * you can add more groups here</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">venn_plot</span> <span class="op">=</span> <span class="fu">ggVennDiagram</span><span class="fu">::</span><span class="fu"><a href="https://gaospecial.github.io/ggVennDiagram/reference/ggVennDiagram.html" class="external-link">ggVennDiagram</a></span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="va">pos_venn</span>,</span>
-<span>    <span class="co"># * the names shown on the diagram</span></span>
+<span>    <span class="co"># * the labels of each group to be shown on the diagram</span></span>
 <span>    category.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>        <span class="st">"Scissor"</span>,</span>
 <span>        <span class="st">"scPAS"</span>,</span>
@@ -1165,9 +1153,12 @@ https://gaospecial.github.io/ggVennDiagram/</a></p>
 <p>Here we use the example data to demonstrate how to use the functions
 in <code>SigBridgeR</code> to screen cells associated with
 phenotype.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"SigBridgeR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># * load the example data</span></span>
+<span><span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -1185,7 +1176,7 @@ execution.</p>
 object. Support for adding multiple attributes to the
 <code>SeuratObject@misc</code> slot simultaneously.</li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># basic usage</span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMisc.html">AddMisc</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"QC_stats"</span> <span class="op">=</span> <span class="va">qc_df</span><span class="op">)</span></span>
 <span></span>
@@ -1204,7 +1195,7 @@ object. Support for adding multiple attributes to the
 <code><a href="../reference/rowVars.html">rowVars()</a></code> : Calculate the variance of each row in a
 matrix.</li>
 </ul>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="co"># Basic usage with a matrix</span></span>
 <span> <span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, nrow <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span> <span class="fu"><a href="../reference/rowVars.html">rowVars</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span></span>
