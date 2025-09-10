@@ -9,7 +9,7 @@ It supports binary, continuous, and survival phenotype types."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@ It supports binary, continuous, and survival phenotype types.</p>
 <span>  <span class="va">phenotype</span>,</span>
 <span>  label_type <span class="op">=</span> <span class="st">"scPP"</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Binary"</span>, <span class="st">"Continuous"</span>, <span class="st">"Survival"</span><span class="op">)</span>,</span>
-<span>  ref_group <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  ref_group <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  Log2FC_cutoff <span class="op">=</span> <span class="fl">0.585</span>,</span>
 <span>  estimate_cutoff <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>  probs <span class="op">=</span> <span class="fl">0.2</span></span>
@@ -91,7 +91,7 @@ It supports binary, continuous, and survival phenotype types.</p>
 
 
 <dt id="arg-ref-group">ref_group<a class="anchor" aria-label="anchor" href="#arg-ref-group"></a></dt>
-<dd><p>Reference group for binary comparisons (default: 1)</p></dd>
+<dd><p>Reference group or baseline for <strong>binary</strong> comparisons, e.g. "Normal" for Tumor/Normal studies and 0 for 0/1 case-control studies. (default: 0)</p></dd>
 
 
 <dt id="arg-log-fc-cutoff">Log2FC_cutoff<a class="anchor" aria-label="anchor" href="#arg-log-fc-cutoff"></a></dt>
@@ -99,7 +99,7 @@ It supports binary, continuous, and survival phenotype types.</p>
 
 
 <dt id="arg-estimate-cutoff">estimate_cutoff<a class="anchor" aria-label="anchor" href="#arg-estimate-cutoff"></a></dt>
-<dd><p>Effect size threshold for continuous traits (default: 0.2)</p></dd>
+<dd><p>Effect size threshold for <strong>continuous</strong> traits (default: 0.2)</p></dd>
 
 
 <dt id="arg-probs">probs<a class="anchor" aria-label="anchor" href="#arg-probs"></a></dt>

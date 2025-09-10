@@ -13,7 +13,7 @@ before analysis."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,35 +104,35 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional method-specific parameters:</p><dl><dt>Scissor</dt>
 <dd><dl><dt>scissor_alpha</dt>
-<dd><p>(numeric) default 0.05</p></dd>
+<dd><p>(numeric or NULL) Significance threshold. When NULL, alpha will keep increasing iteratively until the corresponding cells are screened out, default 0.05</p></dd>
 
 <dt>scissor_cutoff</dt>
-<dd><p>(numeric) default 0.2</p></dd>
+<dd><p>(numeric) A threshold for terminating the iteration of alpha, only work when <code>scissor_alpha</code> is NULL, default 0.2</p></dd>
 
 <dt>path2load_scissor_cache</dt>
 <dd><p>(character) default <code>NULL</code></p></dd>
 
 <dt>path2save_scissor_inputs</dt>
-<dd><p>(character) default <code>"Scissor_inputs.RData"</code></p></dd>
+<dd><p>(character) A path to save the intermediary data. By using <code>path2load_scissor_cache</code>,  the intermediary data can be loaded from the specified path. default <code>"Scissor_inputs.RData"</code></p></dd>
 
 <dt>nfold</dt>
 <dd><p>(integer) Cross-validation folds for reliability test, default 10</p></dd>
 
 <dt>reliability_test</dt>
-<dd><p>(logical) default FALSE</p></dd>
+<dd><p>(logical) Whether to perform reliability test, default FALSE</p></dd>
 
 
 </dl></dd>
 
 <dt>scPP</dt>
 <dd><dl><dt>ref_group</dt>
-<dd><p>(integer) Reference group for binary comparisons, default 1</p></dd>
+<dd><p>(integer or character) Reference group or baseline for <strong>binary</strong> comparisons, e.g. "Normal" for Tumor/Normal studies and 0 for 0/1 case-control studies. default: 0</p></dd>
 
 <dt>Log2FC_cutoff</dt>
 <dd><p>(numeric) Minimum log2 fold-change for binary markers, default 0.585</p></dd>
 
 <dt>estimate_cutoff</dt>
-<dd><p>(numeric) Effect size threshold for continuous traits, default 0.2</p></dd>
+<dd><p>(numeric) Effect size threshold for <strong>continuous</strong> traits, default 0.2</p></dd>
 
 <dt>probs</dt>
 <dd><p>(numeric) Quantile cutoff for cell classification, default 0.2</p></dd>
@@ -151,7 +151,19 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dd><p>(integer) Number of features to select, default 3000</p></dd>
 
 <dt>alpha</dt>
-<dd><p>(numeric) Significance threshold, default 0.01</p></dd>
+<dd><p>(numeric or NULL) Significance threshold, When NULL, alpha will keep increasing iteratively until the corresponding cells are screened out, default 0.01</p></dd>
+
+<dt>independent</dt>
+<dd><p>(logical) The background distribution of risk scores is constructed independently of each cell. default: TRUE</p></dd>
+
+<dt>network_class</dt>
+<dd><p>(character) Network class to use. default: 'SC', indicating gene-gene similarity networks derived from single-cell data. The other one is 'bulk'.</p></dd>
+
+<dt>permutation_times</dt>
+<dd><p>(integer) Number of permutations, default 2000</p></dd>
+
+<dt>FDR_threshold</dt>
+<dd><p>(numeric) FDR value threshold for identifying phenotype-associated cells default 0.05</p></dd>
 
 
 </dl></dd>
@@ -197,7 +209,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
     <div class="section level2">
     <h2 id="method-compatibility">Method Compatibility<a class="anchor" aria-label="anchor" href="#method-compatibility"></a></h2>
 
-<table class="table table"><tr><td><strong>Method</strong></td><td><strong>Supported Phenotypes</strong></td><td><strong>Additional Parameters</strong></td></tr><tr><td><code>Scissor</code></td><td>All three types</td><td><code>scissor_alpha</code>, <code>scissor_cutoff</code>, <code>path2load_scissor_cache</code>, <code>path2save_scissor_inputs</code>, <code>nfold</code>, <code>reliability_test</code>, <code>reliability_test_n</code></td></tr><tr><td><code>scPP</code></td><td>All three types</td><td><code>ref_group</code>, <code>Log2FC_cutoff</code>, <code>estimate_cutoff</code>, <code>probs</code></td></tr><tr><td><code>scPAS</code></td><td>All three types</td><td><code>n_components</code> ,<code>assay</code>, <code>imputation</code>,<code>nfeature</code>, <code>alpha</code>,<code>network_class</code>,<code>permutation_times</code>,<code>FDR.threshold</code>,<code>independent</code></td></tr><tr><td><code>scAB</code></td><td>Binary/Survival</td><td><code>alpha</code>, <code>alpha_2</code>, <code>maxiter</code>, <code>tred</code></td></tr></table></div>
+<table class="table table"><tr><td><strong>Method</strong></td><td><strong>Supported Phenotypes</strong></td><td><strong>Additional Parameters</strong></td></tr><tr><td><code>Scissor</code></td><td>All three types</td><td><code>scissor_alpha</code>, <code>scissor_cutoff</code>, <code>path2load_scissor_cache</code>, <code>path2save_scissor_inputs</code>, <code>nfold</code>, <code>reliability_test</code>, <code>reliability_test_n</code></td></tr><tr><td><code>scPP</code></td><td>All three types</td><td><code>ref_group</code>, <code>Log2FC_cutoff</code>, <code>estimate_cutoff</code>, <code>probs</code></td></tr><tr><td><code>scPAS</code></td><td>All three types</td><td><code>n_components</code> ,<code>assay</code>, <code>imputation</code>,<code>nfeature</code>, <code>alpha</code>,<code>network_class</code>,<code>permutation_times</code>,<code>FDR_threshold</code>,<code>independent</code></td></tr><tr><td><code>scAB</code></td><td>Binary/Survival</td><td><code>alpha</code>, <code>alpha_2</code>, <code>maxiter</code>, <code>tred</code></td></tr></table></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Associated functions:</p><ul><li><p><code><a href="DoScissor.html">DoScissor</a></code></p></li>
