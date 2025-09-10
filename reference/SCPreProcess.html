@@ -13,7 +13,7 @@ from raw data to clustered embeddings."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,6 +105,29 @@ from raw data to clustered embeddings.</p>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for class 'dgCMatrix'</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"[{TimeStamp()}]_Single_Cell_Screening_Project"</span><span class="op">)</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quality_control.pattern <span class="op">=</span> <span class="st">"^MT-"</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">6000</span><span class="op">)</span>,</span>
+<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
+<span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  future_global_maxsize <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">1024</span><span class="op">^</span><span class="fl">3</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'AnnDataR6'</span></span>
 <span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
 <span>  <span class="va">sc</span>,</span>
@@ -144,7 +167,7 @@ from raw data to clustered embeddings.</p>
 
 <dl><dt id="arg-sc">sc<a class="anchor" aria-label="anchor" href="#arg-sc"></a></dt>
 <dd><p>Input data, one of:
-- <code>data.frame/matrix</code>: Raw count matrix (features x cells)
+- <code>data.frame/matrix/dgCMatrix</code>: Raw count matrix (features x cells)
 - <code>AnnDataR6</code>: Python AnnData object via reticulate
 - <code>Seurat</code>: Preprocessed Seurat object</p></dd>
 
@@ -224,7 +247,8 @@ such as "tumor" (or "tumour"), "cancer", "malignant", or "neoplasm" (case-insens
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A Seurat object containing:</p><ul><li><p>Normalized and scaled expression data</p></li>
+    <p>A Seurat object containing:</p><ul><li><p>Data filter and quality control</p></li>
+<li><p>Normalized and scaled expression data</p></li>
 <li><p>Variable features</p></li>
 <li><p>PCA/tSNE/UMAP reductions</p></li>
 <li><p>Cluster identities</p></li>

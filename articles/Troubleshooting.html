@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,7 @@
       <h1>Troubleshooting</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2025-09-07</h4>
+            <h4 data-toc-skip class="date">2025-09-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Troubleshooting.Rmd" class="external-link"><code>vignettes/Troubleshooting.Rmd</code></a></small>
       <div class="d-none name"><code>Troubleshooting.Rmd</code></div>
@@ -75,9 +75,9 @@ encounter when using this package. If you cannot find your problem here,
 please file an issue on our GitHub repository.</p>
 <hr>
 <blockquote>
-<h3 id="error-in-normalize.quantilesdataset0-error-return-code-from-pthread_create-is-22">Error
+<h4 id="error-in-normalize.quantilesdataset0-error-return-code-from-pthread_create-is-22">Error
 in normalize.quantiles(dataset0) : ERROR; return code from
-pthread_create() is 22</h3>
+pthread_create() is 22</h4>
 </blockquote>
 <p>To solve this problem, you need to install
 <code>preprocessCore</code> without threading support. Try:</p>
@@ -96,11 +96,11 @@ R CMD INSTALL --configure-args="--disable-threading"  .</code></pre>
 for more details.</p>
 <hr>
 <blockquote>
-<h3 id="error-at-alpha0.05subscript-out-of-bounds">Error at
-alpha=0.05:subscript out of bounds</h3>
-<h3 id="error-in-scissor.v5.optimized">Error in
-<code>Scissor.v5.optimized()</code>:</h3>
-<h3 id="object-fit0-not-found">! object ‘fit0’ not found</h3>
+<h4 id="error-at-alpha0.05subscript-out-of-bounds">Error at
+alpha=0.05:subscript out of bounds</h4>
+<h4 id="error-in-scissor.v5.optimized">Error in
+<code>Scissor.v5.optimized()</code>:</h4>
+<h4 id="object-fit0-not-found">! object ‘fit0’ not found</h4>
 </blockquote>
 <p>This may be due to two reasons: first, a mismatch in the dimensions
 of the bulk expression data and the phenotype data; second, incorrect
@@ -126,6 +126,40 @@ capitalization and spelling:</p>
 <span><span class="co"># GSM70140 33.80      1</span></span>
 <span><span class="co"># GSM70144 58.53      0</span></span></code></pre></div>
 <hr>
+<blockquote>
+<h4 id="error-in-function_name">Error in
+<code>function_name()</code>:</h4>
+<h4 id="lazy-load-database-homeuserrx86_64-pc-linux-gnu-library4.4sigbridgerrsigbridger.-rdb-is-corrupt">!
+lazy-load database
+‘/home/user/R/x86_64-pc-linux-gnu-library/4.4/SigBridgeR/R/SigBridgeR.
+rdb’ is corrupt</h4>
+</blockquote>
+<p>An error occurred during installation, causing the package to be
+corrupted. Try reinstalling the package:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># I reccomend restarting R/RStudio before reinstalling</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/remove.packages.html" class="external-link">remove.packages</a></span><span class="op">(</span><span class="st">"SigBridgeR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach</a></span><span class="op">(</span><span class="st">"package:SigBridgeR"</span>, unload <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
+<hr>
+<blockquote>
+<h4 id="error">Error:</h4>
+<h4 id="invalid-syntax-cscissor_umap-scpas_umap">! Invalid syntax:
+‘c(scissor_umap, scpas_umap)’</h4>
+</blockquote>
+<p>As far as I know, this is due to the R environment being
+contaminated, which prevents the use of <code>%&lt;-%</code>. You can
+try restarting the R environment or clean up the environment.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># restart R/RStudio</span></span>
+<span><span class="fu">.rs.api.restartSession</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/Bimap-envirAPI.html" class="external-link">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
