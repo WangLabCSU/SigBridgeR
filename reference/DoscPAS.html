@@ -9,7 +9,7 @@ It includes data filtering steps and wraps the core scPAS::scPAS function."></he
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@ It includes data filtering steps and wraps the core scPAS::scPAS function."></he
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Perform scPAS Screening Analysis</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v2.2.0/R/22-scPAS_Screen.R" class="external-link"><code>R/22-scPAS_Screen.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/22-scPAS_Screen.R" class="external-link"><code>R/22-scPAS_Screen.R</code></a></small>
       <div class="d-none name"><code>DoscPAS.Rd</code></div>
     </div>
 
@@ -82,7 +82,7 @@ It includes data filtering steps and wraps the core scPAS::scPAS function.</p>
 
 
 <dt id="arg-label-type">label_type<a class="anchor" aria-label="anchor" href="#arg-label-type"></a></dt>
-<dd><p>Character specifying phenotype label type (e.g., "SBS1", "time"), stored in <code>scRNA_data@misc</code></p></dd>
+<dd><p>Character specifying phenotype label type (e.g., "SBS1", "time"), stored in <code>scRNA_data@misc</code>.  (default: "scPAS")</p></dd>
 
 
 <dt id="arg-assay">assay<a class="anchor" aria-label="anchor" href="#arg-assay"></a></dt>
@@ -94,7 +94,7 @@ It includes data filtering steps and wraps the core scPAS::scPAS function.</p>
 
 
 <dt id="arg-imputation-method">imputation_method<a class="anchor" aria-label="anchor" href="#arg-imputation-method"></a></dt>
-<dd><p>Character. Name of alternative method for imputation.</p></dd>
+<dd><p>Character. Name of alternative method for imputation. (options: "KNN", "ALRA")</p></dd>
 
 
 <dt id="arg-nfeature">nfeature<a class="anchor" aria-label="anchor" href="#arg-nfeature"></a></dt>
@@ -119,6 +119,10 @@ It includes data filtering steps and wraps the core scPAS::scPAS function.</p>
 
 <dt id="arg-fdr-threshold">FDR.threshold<a class="anchor" aria-label="anchor" href="#arg-fdr-threshold"></a></dt>
 <dd><p>Numeric. FDR value threshold for identifying phenotype-associated cells (default: 0.05)</p></dd>
+
+
+<dt id="arg-independent">independent<a class="anchor" aria-label="anchor" href="#arg-independent"></a></dt>
+<dd><p>Logical. The background distribution of risk scores is constructed independently of each cell. (default: TRUE)</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
