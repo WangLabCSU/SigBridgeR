@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
 
       <h1>Full Tutorial</h1>
             
-            <h4 data-toc-skip class="date">2025-09-11</h4>
+            <h4 data-toc-skip class="date">2025-09-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -93,6 +93,8 @@ SigBridgeR</a></li>
 <ul>
 <li><a href="#id_11-stable-release-from-github">1.1 Stable Release from
 GitHub</a></li>
+<li><a href="#id_12-release-from-r-universe">1.2 Release from
+r-universe</a></li>
 <li><a href="#id_18-check-dependencies">1.8 Check Dependencies</a></li>
 </ul>
 </li>
@@ -291,9 +293,10 @@ and their versions:</p>
 <div class="section level3">
 <h3 id="loading-and-preprocessing-data">2. Loading and preprocessing data<a class="anchor" aria-label="anchor" href="#loading-and-preprocessing-data"></a>
 </h3>
-<p>First load the package:</p>
+<p>First load the packaged:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="single-cell-rna-seq-data">2.1 Single-cell RNA-seq Data<a class="anchor" aria-label="anchor" href="#single-cell-rna-seq-data"></a>
 </h4>
@@ -472,6 +475,8 @@ is_tumor) to explicitly label cells:“Tumo(u)r”/“Normal”</p></li>
 <div class="section level4">
 <h4 id="bulk-expression-data">2.2 Bulk expression data<a class="anchor" aria-label="anchor" href="#bulk-expression-data"></a>
 </h4>
+<p>Here are some methods for processing bulk RNA-seq gene expression
+data matrices.</p>
 <div class="section level5">
 <h5 id="evaluate-the-quality-of-your-bulk-rna-seq-data">2.2.1 Evaluate the quality of your bulk RNA-seq data<a class="anchor" aria-label="anchor" href="#evaluate-the-quality-of-your-bulk-rna-seq-data"></a>
 </h5>
@@ -1630,6 +1635,10 @@ Venn diagram to see the situation.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gaospecial/ggVennDiagram" class="external-link">ggVennDiagram</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># color palette</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">my_colors</span> <span class="op">=</span> <span class="fu">randomcoloR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/randomcoloR/man/distinctColorPalette.html" class="external-link">distinctColorPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">screen_result</span><span class="op">$</span><span class="va">seurat_clusters</span><span class="op">)</span><span class="op">)</span>,runTsne <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">scissor_pos</span>, <span class="va">scab_pos</span>, <span class="va">scpas_pos</span>, <span class="va">scpp_pos</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span></span>
 <span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scAB"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span><span class="op">)</span>,</span>
@@ -1677,6 +1686,7 @@ Venn diagram to see the situation.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/venn.png"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="articles/example_figures/venn.png"><!-- --></p>
+<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/venn.png)" class="external-link"><img src="example_figures/venn.png" fig-align="center" width="400" alt="venn"></a></p>
 <p>A bar chart showing proportions can also be used to examine the
 screening results. Since the example data does not have sample metadata,
 we have created a fictional <code>Sample</code> column.</p>
@@ -1701,6 +1711,7 @@ we have created a fictional <code>Sample</code> column.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/fraction.png"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="articles/example_figures/fraction.png"><!-- --></p>
+<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/fraction.png)" class="external-link"><img src="example_figures/fraction.png" fig-align="center" width="600" alt="fraction"></a></p>
 <p>The <code>fraction_list</code> contains the statistical data and
 charts for each screening algorithm.</p>
 <pre class="text"><code>fraction_list
@@ -1723,7 +1734,8 @@ literature.</p>
 <span>  <span class="va">screen_result</span>,</span>
 <span>  group.by <span class="op">=</span> <span class="st">"Sample"</span>,</span>
 <span>  pt.size <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>  reduction <span class="op">=</span> <span class="st">"umap"</span></span>
+<span>  reduction <span class="op">=</span> <span class="st">"umap"</span>,</span>
+<span>  cols <span class="op">=</span> <span class="va">my_colors</span></span>
 <span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Sample"</span><span class="op">)</span></span>
 <span></span>
@@ -1763,6 +1775,7 @@ literature.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/umaps.png"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="articles/example_figures/umaps.png"><!-- --></p>
+<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps.png)" class="external-link"><img src="example_figures/umaps.png" fig-align="center" width="600" alt="umaps"></a></p>
 </div>
 <div class="section level4">
 <h4 id="continuous-phenotype-associated-cell-screening">5.2 Continuous phenotype associated cell screening<a class="anchor" aria-label="anchor" href="#continuous-phenotype-associated-cell-screening"></a>
