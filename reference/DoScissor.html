@@ -52,8 +52,8 @@ regularized regression on matched bulk expression profiles.</p>
 <span>   <span class="va">sc_data</span>,</span>
 <span>   <span class="va">phenotype</span>,</span>
 <span>   label_type <span class="op">=</span> <span class="st">"scissor"</span>,</span>
-<span>   scissor_alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>,<span class="cn">NULL</span><span class="op">)</span>,</span>
-<span>   scissor_cutoff <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>   alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>,<span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>   cutoff <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>   scissor_family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gaussian"</span>, <span class="st">"binomial"</span>, <span class="st">"cox"</span><span class="op">)</span>,</span>
 <span>   reliability_test <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>   path2save_scissor_inputs <span class="op">=</span> <span class="st">"Scissor_inputs.RData"</span>,</span>
@@ -91,11 +91,11 @@ Column names must match <code>phenotype</code> identifiers.</p></dd>
 <dd><p>Character specifying phenotype label type (e.g., "SBS1", "time"), stored in <code>scRNA_data@misc</code></p></dd>
 
 
-<dt id="arg-scissor-alpha">scissor_alpha<a class="anchor" aria-label="anchor" href="#arg-scissor-alpha"></a></dt>
+<dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
 <dd><p>Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If alpha = NULL, a default searching vector is used. The range of alpha is between 0 and 1. A larger alpha lays more emphasis on the l1 norm.</p></dd>
 
 
-<dt id="arg-scissor-cutoff">scissor_cutoff<a class="anchor" aria-label="anchor" href="#arg-scissor-cutoff"></a></dt>
+<dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
 <dd><p>(default: 0.2).
 Higher values increase specificity.</p></dd>
 

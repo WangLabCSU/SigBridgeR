@@ -64,7 +64,7 @@ from raw data to clustered embeddings.</p>
 <span>  <span class="va">sc</span>,</span>
 <span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"[{TimeStamp()}]_Single_Cell_Screening_Project"</span><span class="op">)</span>,</span>
+<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"{TimeStamp()}_SC_Screening_Proj"</span><span class="op">)</span>,</span>
 <span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -74,6 +74,7 @@ from raw data to clustered embeddings.</p>
 <span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
 <span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
@@ -87,7 +88,7 @@ from raw data to clustered embeddings.</p>
 <span>  <span class="va">sc</span>,</span>
 <span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"[{TimeStamp()}]_Single_Cell_Screening_Project"</span><span class="op">)</span>,</span>
+<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"{TimeStamp()}_SC_Screening_Proj"</span><span class="op">)</span>,</span>
 <span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -97,6 +98,7 @@ from raw data to clustered embeddings.</p>
 <span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
 <span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
@@ -110,7 +112,7 @@ from raw data to clustered embeddings.</p>
 <span>  <span class="va">sc</span>,</span>
 <span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"[{TimeStamp()}]_Single_Cell_Screening_Project"</span><span class="op">)</span>,</span>
+<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"{TimeStamp()}_SC_Screening_Proj"</span><span class="op">)</span>,</span>
 <span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -120,6 +122,7 @@ from raw data to clustered embeddings.</p>
 <span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
 <span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
@@ -133,7 +136,7 @@ from raw data to clustered embeddings.</p>
 <span>  <span class="va">sc</span>,</span>
 <span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"[{TimeStamp()}]_Single_Cell_Screening_Project"</span><span class="op">)</span>,</span>
+<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"{TimeStamp()}_SC_Screening_Proj"</span><span class="op">)</span>,</span>
 <span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -143,6 +146,7 @@ from raw data to clustered embeddings.</p>
 <span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
 <span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
@@ -223,6 +227,10 @@ such as "tumor" (or "tumour"), "cancer", "malignant", or "neoplasm" (case-insens
 
 <dt id="arg-scale-factor">scale_factor<a class="anchor" aria-label="anchor" href="#arg-scale-factor"></a></dt>
 <dd><p>Scaling factor for normalization</p></dd>
+
+
+<dt id="arg-scale-features">scale_features<a class="anchor" aria-label="anchor" href="#arg-scale-features"></a></dt>
+<dd><p>Scale features to unit variance</p></dd>
 
 
 <dt id="arg-selection-method">selection_method<a class="anchor" aria-label="anchor" href="#arg-selection-method"></a></dt>
