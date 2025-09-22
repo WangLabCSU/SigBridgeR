@@ -58,9 +58,9 @@
 
       <h1>Full Tutorial</h1>
             
-            <h4 data-toc-skip class="date">2025-09-20</h4>
+            <h4 data-toc-skip class="date">2025-09-22</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v2.4.0/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
     </div>
 
@@ -261,35 +261,34 @@ and their versions:</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">CheckPkgs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"Seurat"</span>, version <span class="op">=</span> <span class="st">"5.0.0"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"dplyr"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"cli"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"AUCell"</span>, version <span class="op">=</span> <span class="st">"1.20.2"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"future"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"IDConverter"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"Matrix"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"scAB"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"Scissor"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"scPAS"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ScPP"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"tibble"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"tidyr"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"data.table"</span>, version <span class="op">=</span> <span class="st">"1.14.1"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ggforce"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ggupset"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"purrr"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"edgeR"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"scales"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"doParallel"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"preprocessCore"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"Seurat"</span>, version <span class="op">=</span> <span class="st">"5.3.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"dplyr"</span>, version <span class="op">=</span> <span class="st">"1.1.4"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"cli"</span>, version <span class="op">=</span> <span class="st">"3.6.5"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"AUCell"</span>, version <span class="op">=</span> <span class="st">"1.26.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"future"</span>, version <span class="op">=</span> <span class="st">"1.67.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"IDConverter"</span>, version <span class="op">=</span> <span class="st">"0.3.5"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"Matrix"</span>, version <span class="op">=</span> <span class="st">"1.7.4"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"scAB"</span>, version <span class="op">=</span> <span class="st">"1.0.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"Scissor"</span>, version <span class="op">=</span> <span class="st">"2.0.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"scPAS"</span>, version <span class="op">=</span> <span class="st">"0.2.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ScPP"</span>, version <span class="op">=</span> <span class="st">"0.0.0.9000"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"tibble"</span>, version <span class="op">=</span> <span class="st">"3.3.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"tidyr"</span>, version <span class="op">=</span> <span class="st">"1.3.1"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"data.table"</span>, version <span class="op">=</span> <span class="st">"1.17.8"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ggforce"</span>, version <span class="op">=</span> <span class="st">"0.5.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ggplot2"</span>, version <span class="op">=</span> <span class="st">"4.0.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ggupset"</span>, version <span class="op">=</span> <span class="st">"0.4.1"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"purrr"</span>, version <span class="op">=</span> <span class="st">"1.1.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"edgeR"</span>, version <span class="op">=</span> <span class="st">"4.2.2"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"scales"</span>, version <span class="op">=</span> <span class="st">"1.4.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"preprocessCore"</span>, version <span class="op">=</span> <span class="st">"1.66.0"</span><span class="op">)</span>,</span>
 <span>  <span class="co"># suggest</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"randomcoloR"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"reticulate"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"patchwork"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"org.Hs.eg.db"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"zeallot"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ggVennDiagram"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"randomcoloR"</span>, version <span class="op">=</span> <span class="st">"1.1.0.1"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"reticulate"</span>, version <span class="op">=</span> <span class="st">"1.43.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"patchwork"</span>, version <span class="op">=</span> <span class="st">"1.3.2"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"org.Hs.eg.db"</span>, verion <span class="op">=</span> <span class="st">"3.19.1"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"zeallot"</span>, version <span class="op">=</span> <span class="st">"0.1.0"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"ggVennDiagram"</span>, version <span class="op">=</span> <span class="st">"1.5.4"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <hr>
@@ -421,7 +420,7 @@ reference and use the following code:</p>
 <code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu">use_pythonenv</span><span class="op">(</span><span class="st">"The_path_to_your_python"</span><span class="op">)</span> </span>
 <span><span class="co"># reticulate::use_condaenv("conda_env_name")</span></span>
 <span></span>
-<span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndata</span><span class="fu">::</span><span class="fu"><a href="https://anndata.dynverse.org/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># Or other formats, make sure the matrix is in obj$X.</span></span>
+<span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/anndata/man/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># Or other formats, make sure the matrix is in obj$X.</span></span>
 <span></span>
 <span><span class="va">your_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCPreProcess.html">SCPreProcess</a></span><span class="op">(</span></span>
 <span>  <span class="va">anndata_obj</span>,</span>
@@ -630,7 +629,7 @@ refer to <a href="#example">Section 5</a>.</p>
 <code class="sourceCode R"><span><span class="co"># `max_print`: output how many NA location messages at one time if NA exists</span></span>
 <span><span class="va">CheckNA</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">max_print</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Load required packages</span></span>
-<span>    <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">check_installed</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dplyr"</span>, <span class="st">"purrr"</span>, <span class="st">"cli"</span>, <span class="st">"data.table"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rlang/man/is_installed.html" class="external-link">check_installed</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dplyr"</span>, <span class="st">"purrr"</span>, <span class="st">"cli"</span>, <span class="st">"data.table"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>    <span class="co"># Convert to data.table if it's a 2D structure but not already a data.table</span></span>
 <span>    <span class="va">is_2d</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
@@ -1090,7 +1089,7 @@ and patient, you may reference and use the following code:</p>
 <span>    <span class="va">scab_umap</span> <span class="op">+</span></span>
 <span>    <span class="va">scpas_umap</span> <span class="op">+</span></span>
 <span>    <span class="va">scpp_umap</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/patchwork/man/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">umaps</span></span></code></pre></div>
 <p>This will generate six UMAP plots separately.</p>
@@ -1331,8 +1330,8 @@ functions in <code>SigBridgeR</code> to screen cells associated with
 phenotype.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"here"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>         </span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>root.dir <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>         </span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>root.dir <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  </span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
@@ -1364,9 +1363,8 @@ phenotype.</p>
 <span><span class="co"># TCGA-73-4658 52.56      1</span></span>
 <span><span class="co"># TCGA-44-6775 23.16      0</span></span>
 <span><span class="co"># TCGA-44-2655 43.50      0</span></span></code></pre></div>
-<p>This single-cell RNA data is from humans. We set the
-<code>quality_control</code> and <code>data_filter</code> to FALSE, and
-we set <code>scale_features</code> to all genes in order to maximize the
+<p>This single-cell RNA data is from humans. We set many parameters to
+<code>FALSE</code> or <code>0</code> in order to maximize the
 flexibility of downstream analyses and capture a broader range of
 biological signals, so as to avoid insignificant results caused by too
 small a dataset.</p>
@@ -1376,6 +1374,8 @@ small a dataset.</p>
 <span>  sc <span class="op">=</span> <span class="va">mat_exam</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  data_filter <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  scale_features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat_exam</span><span class="op">)</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">20</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.1</span></span>
@@ -1424,7 +1424,7 @@ survival.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scissor</span><span class="op">)</span></span>
 <span><span class="co"># Negative  Neutral Positive </span></span>
-<span><span class="co">#      244      603      246 </span></span></code></pre></div>
+<span><span class="co">#       73      755      265 </span></span></code></pre></div>
 <p>You will see an additional “Scissor_inputs.RData” in the working
 directory. This is the intermediate data generated by the Scissor
 method, which we can use to save running time. Meanwhile, we set
@@ -1523,8 +1523,8 @@ have not specified any particular parameters.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPAS</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Neutral </span></span>
-<span><span class="co">#    1093 </span></span></code></pre></div>
+<span><span class="co"># Neutral Positive </span></span>
+<span><span class="co">#     1092        1 </span></span></code></pre></div>
 <p>As you can see, due to differences in data and algorithms, not every
 screening algorithm is able to screen out cells. You can adjust the
 corresponding parameters, e.g. change the <code>alpha</code> to
@@ -1542,100 +1542,89 @@ Screening</a></p>
 <span>    screen_method <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
 <span>    alpha <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co"># ℹ [2025/09/11 09:44:42] Start scPAS screening.</span></span>
+<span><span class="co"># ℹ [2025/09/22 18:46:25] Start scPAS screening.</span></span>
 <span><span class="co"># [1] "Step 1:Quantile normalization of bulk data."</span></span>
 <span><span class="co"># [1] "Step 2: Extracting single-cell expression profiles...."</span></span>
-<span><span class="co"># Warning: The `slot` argument of `GetAssayData()` is deprecated as of SeuratObject 5.0.0.</span></span>
-<span><span class="co"># ℹ Please use the `layer` argument instead.</span></span>
-<span><span class="co"># ℹ The deprecated feature was likely used in the scPAS package.</span></span>
-<span><span class="co">#   Please report the issue to the authors.</span></span>
-<span><span class="co"># This warning is displayed once every 8 hours.</span></span>
-<span><span class="co"># Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span>
 <span><span class="co"># [1] "Step 3: Constructing a gene-gene similarity by single cell data...."</span></span>
 <span><span class="co"># Building SNN based on a provided distance matrix</span></span>
 <span><span class="co"># Computing SNN</span></span>
 <span><span class="co"># [1] "Step 4: Optimizing the network-regularized sparse regression model...."</span></span>
 <span><span class="co"># [1] "Perform cox regression on the given clinical outcomes:"</span></span>
 <span><span class="co"># [1] "alpha = 0.001"</span></span>
-<span><span class="co"># [1] "lambda = 3.22620698162906"</span></span>
-<span><span class="co"># [1] "scPAS identified 129 rick+ features and 36 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 95.376%"</span></span>
+<span><span class="co"># [1] "lambda = 7.88965313498356"</span></span>
+<span><span class="co"># [1] "scPAS identified 449 rick+ features and 236 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 78.375%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.005"</span></span>
-<span><span class="co"># [1] "lambda = 1.97047399269694"</span></span>
-<span><span class="co"># [1] "scPAS identified 94 rick+ features and 33 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 73.410%"</span></span>
+<span><span class="co"># [1] "lambda = 3.32139271651783"</span></span>
+<span><span class="co"># [1] "scPAS identified 279 rick+ features and 159 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 50.114%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.01"</span></span>
-<span><span class="co"># [1] "lambda = 1.42941018794126"</span></span>
-<span><span class="co"># [1] "scPAS identified 80 rick+ features and 27 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 61.850%"</span></span>
+<span><span class="co"># [1] "lambda = 2.5241108003373"</span></span>
+<span><span class="co"># [1] "scPAS identified 207 rick+ features and 102 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 35.355%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.05"</span></span>
-<span><span class="co"># [1] "lambda = 0.499586979737535"</span></span>
-<span><span class="co"># [1] "scPAS identified 46 rick+ features and 16 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 35.838%"</span></span>
+<span><span class="co"># [1] "lambda = 0.8038196391727"</span></span>
+<span><span class="co"># [1] "scPAS identified 82 rick+ features and 24 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 12.128%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.1"</span></span>
-<span><span class="co"># [1] "lambda = 0.274148046759175"</span></span>
-<span><span class="co"># [1] "scPAS identified 32 rick+ features and 14 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 26.590%"</span></span>
+<span><span class="co"># [1] "lambda = 0.441095530835556"</span></span>
+<span><span class="co"># [1] "scPAS identified 57 rick+ features and 12 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 7.895%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.2"</span></span>
-<span><span class="co"># [1] "lambda = 0.150438571440263"</span></span>
-<span><span class="co"># [1] "scPAS identified 21 rick+ features and 14 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 20.231%"</span></span>
+<span><span class="co"># [1] "lambda = 0.220547765417778"</span></span>
+<span><span class="co"># [1] "scPAS identified 42 rick+ features and 12 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 6.178%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.3"</span></span>
-<span><span class="co"># [1] "lambda = 0.132580625268887"</span></span>
-<span><span class="co"># [1] "scPAS identified 16 rick+ features and 8 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 13.873%"</span></span>
+<span><span class="co"># [1] "lambda = 0.154032875529483"</span></span>
+<span><span class="co"># [1] "scPAS identified 37 rick+ features and 9 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 5.263%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.4"</span></span>
-<span><span class="co"># [1] "lambda = 0.0994354689516653"</span></span>
-<span><span class="co"># [1] "scPAS identified 16 rick+ features and 8 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 13.873%"</span></span>
+<span><span class="co"># [1] "lambda = 0.115524656647112"</span></span>
+<span><span class="co"># [1] "scPAS identified 33 rick+ features and 8 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 4.691%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.5"</span></span>
-<span><span class="co"># [1] "lambda = 0.0795483751613323"</span></span>
-<span><span class="co"># [1] "scPAS identified 15 rick+ features and 8 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 13.295%"</span></span>
+<span><span class="co"># [1] "lambda = 0.0924197253176895"</span></span>
+<span><span class="co"># [1] "scPAS identified 30 rick+ features and 8 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 4.348%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.6"</span></span>
-<span><span class="co"># [1] "lambda = 0.0727535362804505"</span></span>
-<span><span class="co"># [1] "scPAS identified 14 rick+ features and 5 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 10.983%"</span></span>
+<span><span class="co"># [1] "lambda = 0.0770164377647413"</span></span>
+<span><span class="co"># [1] "scPAS identified 29 rick+ features and 8 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 4.233%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.7"</span></span>
-<span><span class="co"># [1] "lambda = 0.0623601739546719"</span></span>
-<span><span class="co"># [1] "scPAS identified 14 rick+ features and 5 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 10.983%"</span></span>
+<span><span class="co"># [1] "lambda = 0.0660140895126354"</span></span>
+<span><span class="co"># [1] "scPAS identified 28 rick+ features and 8 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 4.119%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.8"</span></span>
-<span><span class="co"># [1] "lambda = 0.0545651522103379"</span></span>
-<span><span class="co"># [1] "scPAS identified 14 rick+ features and 4 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 10.405%"</span></span>
+<span><span class="co"># [1] "lambda = 0.0577623283235559"</span></span>
+<span><span class="co"># [1] "scPAS identified 27 rick+ features and 7 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 3.890%"</span></span>
 <span></span>
 <span><span class="co"># [1] "alpha = 0.9"</span></span>
-<span><span class="co"># [1] "lambda = 0.0485023575203004"</span></span>
-<span><span class="co"># [1] "scPAS identified 14 rick+ features and 4 rick- features."</span></span>
-<span><span class="co"># [1] "The percentage of selected feature is: 10.405%"</span></span>
+<span><span class="co"># [1] "lambda = 0.0537890889507252"</span></span>
+<span><span class="co"># [1] "scPAS identified 24 rick+ features and 7 rick- features."</span></span>
+<span><span class="co"># [1] "The percentage of selected feature is: 3.547%"</span></span>
 <span></span>
 <span><span class="co"># [1] "|**************************************************|"</span></span>
 <span><span class="co"># [1] "Step 5: calculating quantified risk scores...."</span></span>
 <span><span class="co"># [1] "Step 6: qualitative identification by permutation test program with 2000 times random perturbations"</span></span>
 <span><span class="co"># [1] "Finished."</span></span>
-<span><span class="co"># ✔ [2025/09/11 09:46:02] scPAS screening done.</span></span></code></pre></div>
-<p>Unfortunatly, scPAS is not able to screen out any positive cells in
-this dataset. This means that scPAS may be not suitable for this
-dataset. You can try to adjust other parameters to screen out the
-positive cells (and no, it’s totally not because the author was too lazy
-to tune them <code>_(¦3」∠)_</code> ), and we are always happy to see
-others test our package.</p>
+<span><span class="co"># ✔ [2025/09/22 18:51:16] scPAS screening done.</span></span></code></pre></div>
+<p>Now there may be some significant cells appearing.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPAS</span><span class="op">)</span></span>
-<span><span class="co"># Neutral </span></span>
-<span><span class="co">#    1093 </span></span></code></pre></div>
+<span><span class="co"># Negative  Neutral Positive </span></span>
+<span><span class="co">#        2     1086        5 </span></span></code></pre></div>
 <p>Now we use scAB and scPP to screen cells.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scab_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
@@ -1655,7 +1644,7 @@ others test our package.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scab_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scAB</span><span class="op">)</span></span>
 <span><span class="co">#    Other Positive </span></span>
-<span><span class="co">#     1006       87 </span></span></code></pre></div>
+<span><span class="co">#     1018       75 </span></span></code></pre></div>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scpp_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
@@ -1678,7 +1667,7 @@ others test our package.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpp_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPP</span><span class="op">)</span></span>
 <span><span class="co"># Negative  Neutral Positive </span></span>
-<span><span class="co">#       57      992       44 </span></span></code></pre></div>
+<span><span class="co">#       52      993       48 </span></span></code></pre></div>
 <p>After these algorithms have been run, the four sets of data can be
 merged since screening methods performed on the same data.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
@@ -1764,9 +1753,6 @@ cells are shown in the set plot.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenUpset.html">ScreenUpset</a></span><span class="op">(</span>screened_seurat <span class="op">=</span> <span class="va">screen_result</span>,screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"scPP"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># * show the upset plot</span></span>
-<span><span class="va">upset</span><span class="op">$</span><span class="va">plot</span></span>
-<span></span>
 <span><span class="co"># * show the cell numbers of each set</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">upset</span><span class="op">$</span><span class="va">stats</span><span class="op">)</span></span>
 <span><span class="co"># # A tibble: 6 × 3</span></span>
@@ -1799,7 +1785,7 @@ we have created a fictional <code>Sample</code> column.</p>
 <span><span class="va">fraction_list</span> <span class="op">=</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
 <span>    screened_seurat <span class="op">=</span> <span class="va">screen_result</span>,</span>
 <span>    group_by <span class="op">=</span> <span class="st">"Sample"</span>,</span>
-<span>    screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPP"</span>, <span class="st">"scAB"</span><span class="op">)</span>, <span class="co"># scPAS is not included due to no positive cells</span></span>
+<span>    screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPP"</span>, <span class="st">"scAB"</span>,<span class="st">"scPAS"</span><span class="op">)</span>, <span class="co"># scPAS is not included due to no positive cells</span></span>
 <span>    show_null <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    plot_color <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    show_plot <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -1815,10 +1801,12 @@ charts for each screening algorithm.</p>
     ├── stats
     │   ├── scissor
     │   ├── scAB
+    │   ├── scPAS
     │   └── scPP
     ├── plots
     │   ├── scissor
     │   ├── scAB
+    │   ├── scPAS
     │   └── scPP   
     └── combined_plot # show 3 plots in one plot</code></pre>
 <p>UMAP is the most commonly used type of plot in academic
@@ -1866,7 +1854,7 @@ literature.</p>
 <span>  <span class="va">scab_umap</span> <span class="op">+</span></span>
 <span>  <span class="va">scpas_umap</span> <span class="op">+</span></span>
 <span>  <span class="va">scpp_umap</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/patchwork/man/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">umaps</span></span></code></pre></div>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
@@ -1884,7 +1872,7 @@ phenotypic data is introduced.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># * load the example data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mat_exam</span>, <span class="va">bulk</span>, <span class="va">pheno</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span> <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span>data_type <span class="op">=</span> <span class="st">"continuous"</span><span class="op">)</span></span>
@@ -1921,7 +1909,7 @@ data is introduced.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># * load the example data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mat_exam</span>, <span class="va">bulk</span>, <span class="va">pheno</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span> <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span>data_type <span class="op">=</span> <span class="st">"binary"</span><span class="op">)</span></span>
@@ -2044,7 +2032,7 @@ and columns represent observations. Must have row names to identify
 problematic rows in error messages.</p></li>
 <li><p><strong><code>call</code></strong> (Optional, Advanced)<br>
 The environment from which the function was called. Used internally for
-error reporting. Defaults to <code><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">rlang::caller_env()</a></code>. Most
+error reporting. Defaults to <code><a href="https://rdrr.io/pkg/rlang/man/stack.html" class="external-link">rlang::caller_env()</a></code>. Most
 users can ignore this parameter.</p></li>
 </ul>
 </div>

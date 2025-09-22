@@ -39,7 +39,7 @@ from raw data to clustered embeddings."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Single-Cell RNA-seq Preprocessing Pipeline</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v2.4.0/R/10-SCPreProcess.R" class="external-link"><code>R/10-SCPreProcess.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/10-SCPreProcess.R" class="external-link"><code>R/10-SCPreProcess.R</code></a></small>
       <div class="d-none name"><code>SCPreProcess.Rd</code></div>
     </div>
 
@@ -79,7 +79,6 @@ from raw data to clustered embeddings.</p>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  future_global_maxsize <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">1024</span><span class="op">^</span><span class="fl">3</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -103,7 +102,6 @@ from raw data to clustered embeddings.</p>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  future_global_maxsize <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">1024</span><span class="op">^</span><span class="fl">3</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -127,7 +125,6 @@ from raw data to clustered embeddings.</p>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  future_global_maxsize <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">1024</span><span class="op">^</span><span class="fl">3</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -151,18 +148,11 @@ from raw data to clustered embeddings.</p>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  future_global_maxsize <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">1024</span><span class="op">^</span><span class="fl">3</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'Seurat'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
-<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  future_global_maxsize <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">1024</span><span class="op">^</span><span class="fl">3</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -247,10 +237,6 @@ such as "tumor" (or "tumour"), "cancer", "malignant", or "neoplasm" (case-insens
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Print progress messages</p></dd>
-
-
-<dt id="arg-future-global-maxsize">future_global_maxsize<a class="anchor" aria-label="anchor" href="#arg-future-global-maxsize"></a></dt>
-<dd><p>Memory limit for parallelization (bytes)</p></dd>
 
 </dl></div>
     <div class="section level2">
