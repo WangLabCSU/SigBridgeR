@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,7 @@
       <h1>Troubleshooting</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2025-09-22</h4>
+            <h4 data-toc-skip class="date">2025-09-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Troubleshooting.Rmd" class="external-link"><code>vignettes/Troubleshooting.Rmd</code></a></small>
       <div class="d-none name"><code>Troubleshooting.Rmd</code></div>
@@ -172,6 +172,28 @@ expression data when you are using <code>scPP</code> and
 <code>binary</code> phenotype. This indicates that the expression levels
 of one (or several) genes are nearly identical across different samples.
 You should check your data.</p>
+<hr>
+<blockquote>
+<h4 id="fewer-than-20-of-the-genes-in-the-gene-sets-are-included-in-the-rankings.check-wether-the-gene-ids-in-the-rankings-and-genesets-match.">✖
+[2025/09/23 08:53:51] Fewer than 20% of the genes in the gene sets are
+included in the rankings.Check wether the gene IDs in the ‘rankings’ and
+‘geneSets’ match.</h4>
+<h4 id="ℹ-20250923-085351-scpp-screening-exit.">ℹ [2025/09/23 08:53:51]
+scPP screening exit.</h4>
+</blockquote>
+<p>This issue arises from the single-cell processing, which filtered out
+too many genes and cells. Consider Adjusting <code>min_cells</code> and
+<code>min_features</code> to a smaller value.:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">=</span> <span class="fu"><a href="../reference/SCPreProcess.html">SCPreProcess</a></span><span class="op">(</span></span>
+<span>  sc <span class="op">=</span> <span class="va">mat_exam</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">200</span>, </span>
+<span>  min_features <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  quality_control.pattern <span class="op">=</span> <span class="st">"^MT-"</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat_exam</span><span class="op">)</span>,</span>
+<span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">20</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="fl">0.1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
