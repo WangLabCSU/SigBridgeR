@@ -9,7 +9,7 @@ regularized regression on matched bulk expression profiles."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,6 +48,7 @@ regularized regression on matched bulk expression profiles.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DoScissor</span><span class="op">(</span></span>
 <span>   path2load_scissor_cache <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>   path2save_scissor_inputs <span class="op">=</span> <span class="st">"Scissor_inputs.RData"</span>,</span>
 <span>   <span class="va">matched_bulk</span>,</span>
 <span>   <span class="va">sc_data</span>,</span>
 <span>   <span class="va">phenotype</span>,</span>
@@ -56,9 +57,12 @@ regularized regression on matched bulk expression profiles.</p>
 <span>   cutoff <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>   scissor_family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gaussian"</span>, <span class="st">"binomial"</span>, <span class="st">"cox"</span><span class="op">)</span>,</span>
 <span>   reliability_test <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>   path2save_scissor_inputs <span class="op">=</span> <span class="st">"Scissor_inputs.RData"</span>,</span>
-<span>   reliability_test_n <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>   nfold <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>   reliability_test.n <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>   reliability_test.nfold <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>   cell_evaluation <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>   cell_evaluation.benchmark_data <span class="op">=</span> <span class="st">"path_to_file.RData"</span>,</span>
+<span>   cell_evaluation.FDR <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>   cell_evaluation.bootstrap_n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>   <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -70,6 +74,10 @@ regularized regression on matched bulk expression profiles.</p>
 <dl><dt id="arg-path-load-scissor-cache">path2load_scissor_cache<a class="anchor" aria-label="anchor" href="#arg-path-load-scissor-cache"></a></dt>
 <dd><p>Path to precomputed Scissor inputs (RData file).
 If provided, skips recomputation (default: NULL).</p></dd>
+
+
+<dt id="arg-path-save-scissor-inputs">path2save_scissor_inputs<a class="anchor" aria-label="anchor" href="#arg-path-save-scissor-inputs"></a></dt>
+<dd><p>Path to save intermediate files (default: "Scissor_inputs.RData").</p></dd>
 
 
 <dt id="arg-matched-bulk">matched_bulk<a class="anchor" aria-label="anchor" href="#arg-matched-bulk"></a></dt>
@@ -96,7 +104,7 @@ Column names must match <code>phenotype</code> identifiers.</p></dd>
 
 
 <dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
-<dd><p>(default: 0.2).
+<dd><p>(default: 0.2). When <code>alpha=NULL</code>, the cutoff is used to determine the optimal alpha.
 Higher values increase specificity.</p></dd>
 
 
@@ -111,16 +119,28 @@ Higher values increase specificity.</p></dd>
 <dd><p>Logical to perform stability assessment when <code>scissor_alpha</code> is specified as a value between 0 and 1.(default: TRUE).</p></dd>
 
 
-<dt id="arg-path-save-scissor-inputs">path2save_scissor_inputs<a class="anchor" aria-label="anchor" href="#arg-path-save-scissor-inputs"></a></dt>
-<dd><p>Path to save intermediate files (default: "Scissor_inputs.RData").</p></dd>
-
-
-<dt id="arg-reliability-test-n">reliability_test_n<a class="anchor" aria-label="anchor" href="#arg-reliability-test-n"></a></dt>
+<dt id="arg-reliability-test-n">reliability_test.n<a class="anchor" aria-label="anchor" href="#arg-reliability-test-n"></a></dt>
 <dd><p>Number of CV folds for reliability test (default: 10).</p></dd>
 
 
-<dt id="arg-nfold">nfold<a class="anchor" aria-label="anchor" href="#arg-nfold"></a></dt>
+<dt id="arg-reliability-test-nfold">reliability_test.nfold<a class="anchor" aria-label="anchor" href="#arg-reliability-test-nfold"></a></dt>
 <dd><p>Cross-validation folds for reliability test (default: 10).</p></dd>
+
+
+<dt id="arg-cell-evaluation">cell_evaluation<a class="anchor" aria-label="anchor" href="#arg-cell-evaluation"></a></dt>
+<dd><p>Logical to perform cell evaluation (default: FALSE).</p></dd>
+
+
+<dt id="arg-cell-evaluation-benchmark-data">cell_evaluation.benchmark_data<a class="anchor" aria-label="anchor" href="#arg-cell-evaluation-benchmark-data"></a></dt>
+<dd><p>Path to benchmark data (RData file).</p></dd>
+
+
+<dt id="arg-cell-evaluation-fdr">cell_evaluation.FDR<a class="anchor" aria-label="anchor" href="#arg-cell-evaluation-fdr"></a></dt>
+<dd><p>FDR threshold for cell evaluation (default: 0.05).</p></dd>
+
+
+<dt id="arg-cell-evaluation-bootstrap-n">cell_evaluation.bootstrap_n<a class="anchor" aria-label="anchor" href="#arg-cell-evaluation-bootstrap-n"></a></dt>
+<dd><p>Number of bootstrap iterations for cell evaluation (default: 100).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -154,6 +174,13 @@ Higher values increase specificity.</p></dd>
 
 <dt>AUC_test_back</dt>
 <dd><p>A list of AUC for background data</p></dd>
+
+
+</dl></dd>
+
+<dt>cell_evaluation</dt>
+<dd><p>If cell_evaluation=TRUE, contains:</p><dl><dt>evaluation_res</dt>
+<dd><p>A data.frame with some supporting information for each Scissor selected cell</p></dd>
 
 
 </dl></dd>

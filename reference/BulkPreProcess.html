@@ -11,7 +11,7 @@ principal component analysis, and visualization."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@ principal component analysis, and visualization.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">BulkPreProcess</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  sample_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  gene_symbol_conversion <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  gene_symbol_conversion <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  min_count_threshold <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  min_gene_expressed <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -78,43 +78,43 @@ principal component analysis, and visualization.</p>
 
 
 <dt id="arg-gene-symbol-conversion">gene_symbol_conversion<a class="anchor" aria-label="anchor" href="#arg-gene-symbol-conversion"></a></dt>
-<dd><p>Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default TRUE.</p></dd>
+<dd><p>Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: FALSE</p></dd>
 
 
 <dt id="arg-check">check<a class="anchor" aria-label="anchor" href="#arg-check"></a></dt>
-<dd><p>Whether to perform detailed quality checks, default TRUE</p></dd>
+<dd><p>Whether to perform detailed quality checks, default: TRUE</p></dd>
 
 
 <dt id="arg-min-count-threshold">min_count_threshold<a class="anchor" aria-label="anchor" href="#arg-min-count-threshold"></a></dt>
-<dd><p>Minimum count threshold for gene filtering, default 10</p></dd>
+<dd><p>Minimum count threshold for gene filtering, default: 10</p></dd>
 
 
 <dt id="arg-min-gene-expressed">min_gene_expressed<a class="anchor" aria-label="anchor" href="#arg-min-gene-expressed"></a></dt>
-<dd><p>Minimum number of samples a gene must be expressed in, default 3</p></dd>
+<dd><p>Minimum number of samples a gene must be expressed in, default: 3</p></dd>
 
 
 <dt id="arg-min-total-reads">min_total_reads<a class="anchor" aria-label="anchor" href="#arg-min-total-reads"></a></dt>
-<dd><p>Minimum total reads per sample, default 1e6</p></dd>
+<dd><p>Minimum total reads per sample, default: 1e6</p></dd>
 
 
 <dt id="arg-min-genes-detected">min_genes_detected<a class="anchor" aria-label="anchor" href="#arg-min-genes-detected"></a></dt>
-<dd><p>Minimum number of genes detected per sample, default 10000</p></dd>
+<dd><p>Minimum number of genes detected per sample, default: 10000</p></dd>
 
 
 <dt id="arg-min-correlation">min_correlation<a class="anchor" aria-label="anchor" href="#arg-min-correlation"></a></dt>
-<dd><p>Minimum correlation threshold between samples, default 0.8</p></dd>
+<dd><p>Minimum correlation threshold between samples, default: 0.8</p></dd>
 
 
 <dt id="arg-n-top-genes">n_top_genes<a class="anchor" aria-label="anchor" href="#arg-n-top-genes"></a></dt>
-<dd><p>Number of top variable genes for PCA analysis, default 500</p></dd>
+<dd><p>Number of top variable genes for PCA analysis, default: 500</p></dd>
 
 
 <dt id="arg-show-plot-results">show_plot_results<a class="anchor" aria-label="anchor" href="#arg-show-plot-results"></a></dt>
-<dd><p>Whether to generate visualization plots, default TRUE</p></dd>
+<dd><p>Whether to generate visualization plots, default: TRUE</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Whether to output detailed information, default TRUE</p></dd>
+<dd><p>Whether to output detailed information, default: TRUE</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -190,7 +190,7 @@ principal component analysis, and visualization.</p>
     <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/edgeR/man/cpm.html" class="external-link">cpm</a></code> for counts per million calculation,
 <code><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></code> for PCA analysis,
 <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></code> for correlation analysis,
-<code><a href="rowVars.html">rowVars</a></code> for variance calculation of each row,
+<code><a href="RowVars.html">RowVars</a></code> for variance calculation of each row,
 <code><a href="SymbolConvert.html">SymbolConvert</a></code> for gene symbol conversion</p></div>
     </div>
 

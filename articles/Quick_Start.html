@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
 
       <h1>Quick Start Guide for SigBridgeR</h1>
             
-            <h4 data-toc-skip class="date">2025-09-23</h4>
+            <h4 data-toc-skip class="date">2025-10-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Quick_Start.Rmd" class="external-link"><code>vignettes/Quick_Start.Rmd</code></a></small>
       <div class="d-none name"><code>Quick_Start.Rmd</code></div>
@@ -132,7 +132,7 @@ Let’s start by trying <strong>Scissor</strong>.</p>
 <span>  <span class="va">pheno_bi</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span>
 <span>  screen_method <span class="op">=</span> <span class="st">"Scissor"</span>,</span>
-<span>  scissor_alpha <span class="op">=</span> <span class="fl">0.05</span></span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.05</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Other screening methods are also available.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -159,7 +159,10 @@ Let’s start by trying <strong>Scissor</strong>.</p>
 <span>  <span class="va">merged_seurat</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span>
 <span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># names(fraction)</span></span>
+<span><span class="co"># [1] "stats"         "plot"          "combined_plot"</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/fraction_q.png"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="articles/example_figures/fraction_q.png"><!-- --></p>

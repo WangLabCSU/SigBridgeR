@@ -13,7 +13,7 @@ constant rows may cause issues in analyses (e.g., PCA, regression)."></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +76,7 @@ the function throws an error with a message listing the problematic row names.</
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>For dense matrices, variance is computed using an optimized <code>rowVars</code> function that
+    <p>For dense matrices, variance is computed using an optimized <code>RowVars</code> function that
 efficiently calculates row variances with proper NA handling. For sparse matrices of
 class <code>dgCMatrix</code>, variance is computed using a mathematical identity that avoids
 creating large intermediate matrices. Rows with fewer than 2 non-zero observations

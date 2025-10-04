@@ -13,7 +13,7 @@ before analysis."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@ before analysis.</p>
 <span>  <span class="va">phenotype</span>,</span>
 <span>  label_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"binary"</span>, <span class="st">"survival"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span>, <span class="st">"scPP"</span>, <span class="st">"scPAS"</span>, <span class="st">"scAB"</span><span class="op">)</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span>, <span class="st">"scPP"</span>, <span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"DEGAS"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -89,7 +89,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dt id="arg-phenotype-class">phenotype_class<a class="anchor" aria-label="anchor" href="#arg-phenotype-class"></a></dt>
 <dd><p>Type of phenotypic outcome (must be consistent with input data):
 - <code>"binary"</code>: Binary traits (e.g., case/control)
-- <code>"continuous"</code>: Continuous measurements (only for <code>Scissor</code>, <code>scPAS</code>, <code>scPP</code>)
+- <code>"continuous"</code>: Continuous measurements
 - <code>"survival"</code>: Survival objects</p></dd>
 
 
@@ -98,7 +98,8 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 - <code>"Scissor"</code>: see also <code><a href="DoScissor.html">DoScissor()</a></code>
 - <code>"scPP"</code>: see also <code><a href="DoscPP.html">DoscPP()</a></code>
 - <code>"scPAS"</code>: see also <code><a href="DoscPAS.html">DoscPAS()</a></code>
-- <code>"scAB"</code>: see also <code><a href="DoscAB.html">DoscAB()</a></code>, no continuous support</p></dd>
+- <code>"scAB"</code>: see also <code><a href="DoscAB.html">DoscAB()</a></code>, no continuous support
+- <code>"DEGAS"</code>: see also <code><a href="DoDEGAS.html">DoDEGAS()</a></code></p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -115,11 +116,26 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dt>path2save_scissor_inputs</dt>
 <dd><p>(character) A path to save the intermediary data. By using <code>path2load_scissor_cache</code>,  the intermediary data can be loaded from the specified path. default <code>"Scissor_inputs.RData"</code></p></dd>
 
-<dt>nfold</dt>
-<dd><p>(integer) Cross-validation folds for reliability test, default 10</p></dd>
-
 <dt>reliability_test</dt>
 <dd><p>(logical) Whether to perform reliability test, default FALSE</p></dd>
+
+<dt>reliability_test.nfold</dt>
+<dd><p>(integer) Cross-validation folds for reliability test, default 10</p></dd>
+
+<dt>reliability_test.n</dt>
+<dd><p>(integer) Number of cells to use for reliability test, default 10</p></dd>
+
+<dt>cell_evaluation</dt>
+<dd><p>(logical) Whether to perform cell evaluation, default FALSE</p></dd>
+
+<dt>cell_evaluation.benchmark_data</dt>
+<dd><p>.RData Benchmark data for cell evaluation, default NULL</p></dd>
+
+<dt>cell_evaluation.FDR</dt>
+<dd><p>(numeric) FDR threshold for cell evaluation, default 0.05</p></dd>
+
+<dt>cell_evaluation.bootstrap_n</dt>
+<dd><p>(integer) Number of bootstrap samples for cell evaluation, default 10</p></dd>
 
 
 </dl></dd>
@@ -184,6 +200,28 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 
 </dl></dd>
 
+<dt>DEGAS</dt>
+<dd><dl><dt>sc_data.pheno_colname</dt>
+<dd><p>(character) Phenotype column name in sc_data, default "NULL"</p></dd>
+
+<dt>select_fraction</dt>
+<dd><p>(numeric) Fraction of cells to select for DEGAS, default 0.05</p></dd>
+
+<dt>tmp_dir</dt>
+<dd><p>(character) Temporary directory for DEGAS, default "NULL"</p></dd>
+
+<dt>env_params</dt>
+<dd><p>(list) Environment parameters for DEGAS, default "list()"</p></dd>
+
+<dt>degas_params</dt>
+<dd><p>(list) DEGAS parameters, default "list()"</p></dd>
+
+<dt>normality_test_method</dt>
+<dd><p>(character) Normality test method for DEGAS, default "jarque-bera"</p></dd>
+
+
+</dl></dd>
+
 
 </dl></dd>
 
@@ -209,13 +247,14 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
     <div class="section level2">
     <h2 id="method-compatibility">Method Compatibility<a class="anchor" aria-label="anchor" href="#method-compatibility"></a></h2>
 
-<table class="table table"><tr><td><strong>Method</strong></td><td><strong>Supported Phenotypes</strong></td><td><strong>Additional Parameters</strong></td></tr><tr><td><code>Scissor</code></td><td>All three types</td><td><code>alpha</code>, <code>cutoff</code>, <code>path2load_scissor_cache</code>, <code>path2save_scissor_inputs</code>, <code>nfold</code>, <code>reliability_test</code>, <code>reliability_test_n</code></td></tr><tr><td><code>scPP</code></td><td>All three types</td><td><code>ref_group</code>, <code>Log2FC_cutoff</code>, <code>estimate_cutoff</code>, <code>probs</code></td></tr><tr><td><code>scPAS</code></td><td>All three types</td><td><code>n_components</code> ,<code>assay</code>, <code>imputation</code>,<code>nfeature</code>, <code>alpha</code>,<code>network_class</code>,<code>permutation_times</code>,<code>FDR_threshold</code>,<code>independent</code></td></tr><tr><td><code>scAB</code></td><td>Binary/Survival</td><td><code>alpha</code>, <code>alpha_2</code>, <code>maxiter</code>, <code>tred</code></td></tr></table></div>
+<table class="table table"><tr><td><strong>Method</strong></td><td><strong>Supported Phenotypes</strong></td><td><strong>Additional Parameters</strong></td></tr><tr><td><code>Scissor</code></td><td>All three types</td><td><code>alpha</code>, <code>cutoff</code>, <code>path2load_scissor_cache</code>, <code>path2save_scissor_inputs</code>, <code>reliability_test</code>, <code>reliability_test.n</code>,<code>reliability_test.nfold</code>, <code>cell_evaluation</code>,<code>cell_evaluation.benchmark_data</code>,<code>cell_evaluation.FDR</code>,<code>cell_evaluation.bootstrap_n</code></td></tr><tr><td><code>scPP</code></td><td>All three types</td><td><code>ref_group</code>, <code>Log2FC_cutoff</code>, <code>estimate_cutoff</code>, <code>probs</code></td></tr><tr><td><code>scPAS</code></td><td>All three types</td><td><code>n_components</code> ,<code>assay</code>, <code>imputation</code>,<code>nfeature</code>, <code>alpha</code>,<code>network_class</code>,<code>permutation_times</code>,<code>FDR_threshold</code>,<code>independent</code></td></tr><tr><td><code>scAB</code></td><td>Binary/Survival</td><td><code>alpha</code>, <code>alpha_2</code>, <code>maxiter</code>, <code>tred</code></td></tr><tr><td><code>DEGAS</code></td><td>All three types</td><td><code>sc_data.pheno_colname</code>,<code>select_fraction</code>,<code>tmp_dir</code>,<code>env_params</code>,<code>degas_params</code>,<code>normality_test_method</code></td></tr></table></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Associated functions:</p><ul><li><p><code><a href="DoScissor.html">DoScissor</a></code></p></li>
 <li><p><code><a href="DoscPP.html">DoscPP</a></code></p></li>
 <li><p><code><a href="DoscPAS.html">DoscPAS</a></code></p></li>
 <li><p><code><a href="DoscAB.html">DoscAB</a></code></p></li>
+<li><p><code><a href="DoDEGAS.html">DoDEGAS</a></code></p></li>
 </ul></div>
     </div>
 
