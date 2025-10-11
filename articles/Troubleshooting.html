@@ -61,7 +61,7 @@
             
             <h4 data-toc-skip class="date">2025-10-11</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v2.5.1/vignettes/Troubleshooting.Rmd" class="external-link"><code>vignettes/Troubleshooting.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Troubleshooting.Rmd" class="external-link"><code>vignettes/Troubleshooting.Rmd</code></a></small>
       <div class="d-none name"><code>Troubleshooting.Rmd</code></div>
     </div>
 
@@ -82,7 +82,8 @@ pthread_create() is 22</h4>
 </blockquote>
 <p>To solve this problem, you need to install
 <code>preprocessCore</code> without threading support. Try:</p>
-<pre class="shell"><code>git clone https://github.com/bmbolstad/preprocessCore.git
+<pre class="shell"><code># ! shell
+git clone https://github.com/bmbolstad/preprocessCore.git
 cd preprocessCore
 R CMD INSTALL --configure-args="--disable-threading"  .</code></pre>
 <p>or</p>
@@ -247,15 +248,19 @@ open file ‘tmp//Activations.csv’: No such file or directory</h4>
 </blockquote>
 <p>This is due to the issue with the tensorflow package. Use the
 following method to check if the tensorflow package can be imported.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># make sure you are using the correct python, i.e. r-reticulate-degas</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>sys.executable  <span class="co"># in an environment, it should be something like /home/user/miniconda3/envs/r-reticulate-degas/bin/python3</span></span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># ! python </span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co"># make sure you are using the correct python, i.e. r-reticulate-degas</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>sys.executable  <span class="co"># in an environment, it should be something like /home/user/miniconda3/envs/r-reticulate-degas/bin/python3</span></span>
 <span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>tf.__version__</span></code></pre></div>
-<pre class="shell"><code># make sure you've entered the Conda environment you want to check, i.e. r-reticulate-degas
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>tf.__version__</span></code></pre></div>
+<pre class="shell"><code># ! shell
+
+# make sure you've entered the Conda environment you want to check, i.e. r-reticulate-degas
 conda list tensorflow
 
 # packages in environment at /home/user/miniconda3/envs/r-reticulate-degas:                                                               

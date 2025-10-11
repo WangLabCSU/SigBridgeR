@@ -60,7 +60,7 @@
             
             <h4 data-toc-skip class="date">2025-10-11</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v2.5.1/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
     </div>
 
@@ -201,10 +201,9 @@ Environment</a></li>
 <strong>Bridge</strong> in <strong>R</strong>) is an R package for
 screening cells highly associated with phenotype data using single-cell
 RNA-seq, bulk expression and sample_related phenotype data at a
-pan-cancer level. It integrates functionality from these R packages: <a href="https://github.com/sunduanchen/Scissor" class="external-link">Github-sunduanchen/Scissor</a>,
-<a href="https://github.com/Qinran-Zhang/scAB/" class="external-link">Github-Qinran-Zhang/scAB</a>,
-<a href="https://github.com/WangX-Lab/ScPP" class="external-link">Github-WangX-Lab/ScPP</a>,<a href="https://github.com/aiminXie/scPAS" class="external-link">Github-aiminXie/scPAS</a> and
-<a href="https://github.com/tsteelejohnson91/DEGAS" class="external-link">Github-tsteelejohnson91/DEGAS</a>.</p>
+pan-cancer level. It integrates functionality from these R packages: <a href="https://github.com/sunduanchen/Scissor" class="external-link">sunduanchen/Scissor</a>,
+<a href="https://github.com/Qinran-Zhang/scAB/" class="external-link">Qinran-Zhang/scAB</a>,
+<a href="https://github.com/WangX-Lab/ScPP" class="external-link">WangX-Lab/ScPP</a>,<a href="https://github.com/aiminXie/scPAS" class="external-link">aiminXie/scPAS</a> and <a href="https://github.com/tsteelejohnson91/DEGAS" class="external-link">tsteelejohnson91/DEGAS</a>.</p>
 <hr>
 </div>
 </div>
@@ -1620,14 +1619,14 @@ status into two groups, which will be stored in the
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/bulk_preprocess_pca.png"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="articles/example_figures/bulk_preprocess_pca.png"><!-- --></p>
-<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/bulk_preprocess_pca.png)" class="external-link"><img src="example_figures/bulk_preprocess_pca.png" fig-align="center" width="600" alt="pca"></a></p>
+<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/bulk_preprocess_pca.png)" class="external-link"><img src="example_figures/bulk_preprocess_pca.png" fig-align="center" width="400" alt="pca"></a></p>
 <p>Thus far, we have completed all the data preprocessing. We are now
 ready to formally employ various single-cell phenotypic screening
 algorithms.</p>
 <p>First, we use <code>scissor</code> to screen cells associated with
 survival.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
 <span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
@@ -1666,7 +1665,7 @@ method, which we can use to save running time. Meanwhile, we set
 <code>reliability_test=TRUE</code>, which will run an additional
 reliability test.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>, <span class="co"># doesn't need to be provided Since the intermediate data is provided</span></span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
 <span>    phenotype <span class="op">=</span> <span class="va">pheno_ok</span>, <span class="co"># doesn't need to be provided Since the intermediate data is provided</span></span>
@@ -1728,7 +1727,7 @@ reliability test.</p>
 you only need to change the <code>screen_method</code>, as long as you
 have not specified any particular parameters.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">scpas_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">scpas_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
 <span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
@@ -1768,7 +1767,7 @@ is significant (or judged as having no significant cell subpopulations).
 See also <a href="#id_32-option-b-scpas-screening">3.2 (Option B) scPAS
 Screening</a></p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">scpas_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">scpas_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
 <span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
@@ -1909,7 +1908,7 @@ Screening</a></p>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
 <span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>    label_type <span class="op">=</span> <span class="st">"This_is_a_DEGAS_test"</span>,</span>
 <span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>    screen_method <span class="op">=</span> <span class="st">"DEGAS"</span></span>
 <span><span class="op">)</span></span>
@@ -2054,7 +2053,7 @@ cells are shown in the set plot.</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/upset.png"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="articles/example_figures/upset.png"><!-- --></p>
-<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/upset.png)" class="external-link"><img src="example_figures/upset.png" fig-align="center" width="600" alt="upset"></a></p>
+<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/upset.png)" class="external-link"><img src="example_figures/upset.png" fig-align="center" width="700" alt="upset"></a></p>
 <p>A bar chart showing proportions can also be used to examine the
 screening results. Since the example data does not have sample metadata,
 we have created a fictional <code>Sample</code> column.</p>
@@ -2096,14 +2095,35 @@ we have created a fictional <code>Sample</code> column.</p>
 <p>The <code>fraction_list</code> contains the statistical data and
 charts for each screening algorithm. The title of each plot will be
 appended with the method name as an identifier.</p>
-<p>fraction_list ├── stats │ ├── scissor │ ├── scAB │ ├── scPAS │ ├──
-scPP<br>
-│ └── DEGAS ├── plots │ ├── scissor │ ├── scAB │ ├── scPAS │ ├── scPP │
-└── DEGAS<br>
-└── combined_plot # show 5 plots in one plot</p>
+<p>fraction_list</p>
+<pre><code>├── stats
+
+│   ├── scissor
+
+│   ├── scAB
+
+│   ├── scPAS
+
+│   ├── scPP   
+
+│   └── DEGAS
+
+├── plots
+
+│   ├── scissor
+
+│   ├── scAB
+
+│   ├── scPAS
+
+│   ├── scPP
+
+│   └── DEGAS   
+
+└── combined_plot # show 5 plots in one plot</code></pre>
 <p>UMAP is the most commonly used type of plot in academic
 literature.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
@@ -2165,10 +2185,10 @@ literature.</p>
 <span><span class="co">#      width = 10,</span></span>
 <span><span class="co">#      height = 10</span></span>
 <span><span class="co"># )</span></span></code></pre></div>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/umaps.png"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="articles/example_figures/umaps.png"><!-- --></p>
-<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps.png)" class="external-link"><img src="example_figures/umaps.png" fig-align="center" width="600" alt="umaps"></a></p>
+<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps.png)" class="external-link"><img src="example_figures/umaps.png" fig-align="center" width="400" alt="umaps"></a></p>
 </div>
 <div class="section level4">
 <h4 id="continuous-phenotype-associated-cell-screening">5.2 Continuous phenotype associated cell screening<a class="anchor" aria-label="anchor" href="#continuous-phenotype-associated-cell-screening"></a>
@@ -2176,7 +2196,7 @@ literature.</p>
 <p>Generally speaking, the process is the same as described in <a href="#id_51-survival-associated-cell-screening">5.1 Survival-associated
 cell screening</a>. Here, only the preprocessing of continuous
 phenotypic data is introduced.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
@@ -2204,7 +2224,7 @@ phenotypic data is introduced.</p>
 <span><span class="co">#             178              65              91             206              63              67 </span></span></code></pre></div>
 <p>If your phenotype is a <code>data.frame</code>, try this to convert
 it to a <code>named vector</code>:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="va">your_data.frame</span><span class="op">$</span><span class="va">continuous_numeric</span>, <span class="va">your_data.frame</span><span class="op">$</span><span class="va">sample</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -2213,7 +2233,7 @@ it to a <code>named vector</code>:</p>
 <p>This process is also the same as described in <a href="#id_51-survival-associated-cell-screening">5.1 Survival-associated
 cell screening</a>. Here, only the preprocessing of binary phenotypic
 data is introduced.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
@@ -2244,7 +2264,7 @@ is stored in the “data” column, categorized as ‘Tumor’ and ‘Normal’,
 will assign ‘Tumor’ a value of 1 and ‘Normal’ a value of 0. In this way,
 cells screened as <strong>Positive</strong> will be associated with
 ‘Tumor’. Try this to convert it to a <code>named vector</code>:</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">=</span> <span class="fu">mutate</span><span class="op">(</span></span>
 <span>    <span class="va">pheno</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
@@ -2271,7 +2291,7 @@ execution.</p>
 object. Support for adding multiple attributes to the
 <code>SeuratObject@misc</code> slot simultaneously.</li>
 </ul>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># basic usage</span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMisc.html">AddMisc</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"QC_stats"</span> <span class="op">=</span> <span class="va">qc_df</span><span class="op">)</span></span>
 <span></span>
@@ -2305,7 +2325,7 @@ data.</li>
 the bulk RNA expression matrix, and the clinical phenotype data are
 loaded all at once. These data are combined into a list and
 returned.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span></span>
 <span>    data_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"survival"</span><span class="op">)</span>,</span>
 <span>    path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -2345,7 +2365,7 @@ returned.</p>
 <p>We recommend using the <code>zeallot</code> package’s
 <code>%&lt;-%</code> function to assign values and rename them
 simultaneously.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mat_exam</span>, <span class="va">bulk</span>, <span class="va">pheno</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span>  <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span></span>
@@ -2363,24 +2383,24 @@ simultaneously.</p>
 using Python and require an execution environment. Here is a function to
 help you set up a Python environment. Both Windows and Unix-like systems
 are supported.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="co"># * This is an example of setting up a Python environment using conda</span></span>
-<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a><span class="fu">SetupPyEnv</span>(</span>
-<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a>    <span class="at">env_type =</span> <span class="st">"conda"</span>,</span>
-<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a>    <span class="at">env_name =</span> <span class="st">"test-condaenv"</span>,</span>
-<span id="cb58-5"><a href="#cb58-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"reticulate"</span>, <span class="st">"system"</span>,<span class="st">"environment"</span>), <span class="co"># choose one of them, default is "reticulate"</span></span>
-<span id="cb58-6"><a href="#cb58-6" tabindex="-1"></a>    <span class="at">env_file =</span> <span class="cn">NULL</span> <span class="co"># path to environment.yml file, used when method = "environment"</span></span>
-<span id="cb58-7"><a href="#cb58-7" tabindex="-1"></a>    <span class="at">python_version =</span> <span class="cn">NULL</span>,</span>
-<span id="cb58-8"><a href="#cb58-8" tabindex="-1"></a>    <span class="at">packages =</span> <span class="fu">c</span>(</span>
-<span id="cb58-9"><a href="#cb58-9" tabindex="-1"></a>        <span class="st">"pandas"</span> <span class="ot">=</span> <span class="st">"1.3"</span>,</span>
-<span id="cb58-10"><a href="#cb58-10" tabindex="-1"></a>        <span class="st">"numpy"</span> <span class="ot">=</span> <span class="st">"any"</span></span>
-<span id="cb58-11"><a href="#cb58-11" tabindex="-1"></a>    ),</span>
-<span id="cb58-12"><a href="#cb58-12" tabindex="-1"></a>    <span class="at">recreate =</span> <span class="cn">FALSE</span>, <span class="co"># whether to remove the existing environment and recreate it</span></span>
-<span id="cb58-13"><a href="#cb58-13" tabindex="-1"></a>    <span class="at">use_conda_forge =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb58-14"><a href="#cb58-14" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
-<span id="cb58-15"><a href="#cb58-15" tabindex="-1"></a>) </span>
-<span id="cb58-16"><a href="#cb58-16" tabindex="-1"></a></span>
-<span id="cb58-17"><a href="#cb58-17" tabindex="-1"></a>reticualte<span class="sc">::</span><span class="fu">use_condaenv</span>(<span class="st">"test-condaenv"</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="co"># * This is an example of setting up a Python environment using conda</span></span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a><span class="fu">SetupPyEnv</span>(</span>
+<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a>    <span class="at">env_type =</span> <span class="st">"conda"</span>,</span>
+<span id="cb59-4"><a href="#cb59-4" tabindex="-1"></a>    <span class="at">env_name =</span> <span class="st">"test-condaenv"</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"reticulate"</span>, <span class="st">"system"</span>,<span class="st">"environment"</span>), <span class="co"># choose one of them, default is "reticulate"</span></span>
+<span id="cb59-6"><a href="#cb59-6" tabindex="-1"></a>    <span class="at">env_file =</span> <span class="cn">NULL</span> <span class="co"># path to environment.yml file, used when method = "environment"</span></span>
+<span id="cb59-7"><a href="#cb59-7" tabindex="-1"></a>    <span class="at">python_version =</span> <span class="cn">NULL</span>,</span>
+<span id="cb59-8"><a href="#cb59-8" tabindex="-1"></a>    <span class="at">packages =</span> <span class="fu">c</span>(</span>
+<span id="cb59-9"><a href="#cb59-9" tabindex="-1"></a>        <span class="st">"pandas"</span> <span class="ot">=</span> <span class="st">"1.3"</span>,</span>
+<span id="cb59-10"><a href="#cb59-10" tabindex="-1"></a>        <span class="st">"numpy"</span> <span class="ot">=</span> <span class="st">"any"</span></span>
+<span id="cb59-11"><a href="#cb59-11" tabindex="-1"></a>    ),</span>
+<span id="cb59-12"><a href="#cb59-12" tabindex="-1"></a>    <span class="at">recreate =</span> <span class="cn">FALSE</span>, <span class="co"># whether to remove the existing environment and recreate it</span></span>
+<span id="cb59-13"><a href="#cb59-13" tabindex="-1"></a>    <span class="at">use_conda_forge =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb59-14"><a href="#cb59-14" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
+<span id="cb59-15"><a href="#cb59-15" tabindex="-1"></a>) </span>
+<span id="cb59-16"><a href="#cb59-16" tabindex="-1"></a></span>
+<span id="cb59-17"><a href="#cb59-17" tabindex="-1"></a>reticualte<span class="sc">::</span><span class="fu">use_condaenv</span>(<span class="st">"test-condaenv"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Or use virtualenv via reticulate</span></span>
 <span><span class="fu"><a href="../reference/SetupPyEnv.html">SetupPyEnv</a></span><span class="op">(</span></span>
 <span>    env_type <span class="op">=</span> <span class="st">"venv"</span>, </span>
@@ -2396,7 +2416,7 @@ are supported.</p>
 <p>You can use <code><a href="../reference/ListPyEnv.html">ListPyEnv()</a></code> to list all the Python
 environments you have set up. Both conda and virtual environments are
 supported.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Unix-like systems</span></span>
 <span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#                 name                                                  python  type</span></span>
@@ -2404,7 +2424,7 @@ supported.</p>
 <span><span class="co"># 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda</span></span>
 <span><span class="co"># 3          test-venv         /home/user/miniconda3/envs/test-venv/bin/python  venv</span></span></code></pre></div>
 <p>Show the conda environments only:</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Unix-like systems</span></span>
 <span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span>env_type <span class="op">=</span> <span class="st">"conda"</span><span class="op">)</span></span>
 <span><span class="co">#                 name                                                  python  type</span></span>
@@ -2413,7 +2433,7 @@ supported.</p>
 <p>If the virtual environment isn’t installed in the default location,
 you can specify the location of the virtual environment with the
 <code>venv_locations</code> parameter.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span>env_type <span class="op">=</span> <span class="st">"venv"</span>,venv_locations <span class="op">=</span><span class="st">"~/here_is_a_dir/.virtualenvs"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
