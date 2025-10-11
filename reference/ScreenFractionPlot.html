@@ -55,7 +55,7 @@ screen types visualization.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ScreenFractionPlot</span><span class="op">(</span></span>
 <span>  <span class="va">screened_seurat</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="st">"Source"</span>,</span>
-<span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span>, <span class="st">"scAB"</span><span class="op">)</span>,</span>
+<span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span>, <span class="st">"scAB"</span>, <span class="st">"DEGAS"</span><span class="op">)</span>,</span>
 <span>  show_null <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  plot_color <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -97,7 +97,7 @@ Must match metadata column(s) (case-sensitive, e.g., "scissor" for Scissor resul
 <dt id="arg-plot-color">plot_color<a class="anchor" aria-label="anchor" href="#arg-plot-color"></a></dt>
 <dd><p>Custom color palette (named vector format):
 - Required names: "Positive", "Negative", "Neutral"
-- Default: c("Neutral"="#CECECE", "Positive"="#ff3333", "Negative"="#386c9b")</p></dd>
+- Default: c("Neutral"="#CECECE", "Other"="#CECECE", Positive"="#ff3333", "Negative"="#386c9b")</p></dd>
 
 
 <dt id="arg-show-plot">show_plot<a class="anchor" aria-label="anchor" href="#arg-show-plot"></a></dt>
@@ -166,6 +166,11 @@ with screening statistics including:
 <li><p>Zero-fraction groups are automatically hidden unless <code>show_null=TRUE</code></p></li>
 <li><p>For multiple screen types, plots can be combined using patchwork</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other visualization_function:
+<code><a href="ScreenUpset.html">ScreenUpset</a>()</code></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -181,7 +186,7 @@ with screening statistics including:
 <span class="r-in"><span><span class="va">multi_res</span> <span class="op">&lt;-</span> <span class="fu">ScreenFractionPlot</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  screened_seurat <span class="op">=</span> <span class="va">multi_screened_result</span>,</span></span>
 <span class="r-in"><span>  group_by <span class="op">=</span> <span class="st">"TissueType"</span>,</span></span>
-<span class="r-in"><span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span>, <span class="st">"scAB"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span>, <span class="st">"scAB"</span>, <span class="st">"DEGAS"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  ncol <span class="op">=</span> <span class="fl">2</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>

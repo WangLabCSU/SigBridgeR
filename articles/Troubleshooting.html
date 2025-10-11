@@ -59,7 +59,7 @@
       <h1>Troubleshooting</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2025-10-04</h4>
+            <h4 data-toc-skip class="date">2025-10-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Troubleshooting.Rmd" class="external-link"><code>vignettes/Troubleshooting.Rmd</code></a></small>
       <div class="d-none name"><code>Troubleshooting.Rmd</code></div>
@@ -73,6 +73,7 @@
 <p>This vignette provides solutions to common problems you might
 encounter when using this package. If you cannot find your problem here,
 please file an issue on our GitHub repository.</p>
+<p><br></p>
 <hr>
 <blockquote>
 <h4 id="error-in-normalize.quantilesdataset0-error-return-code-from-pthread_create-is-22">Error
@@ -94,6 +95,7 @@ R CMD INSTALL --configure-args="--disable-threading"  .</code></pre>
 <p>See <a href="https://github.com/Bioconductor/bioconductor_docker/issues/22" class="external-link">bioconductor_docker/issues/22</a>,
 <a href="https://github.com/sunduanchen/Scissor/issues/15" class="external-link">Scissor/issues/15</a>
 for more details.</p>
+<p><br></p>
 <hr>
 <blockquote>
 <h4 id="error-at-alpha0.05subscript-out-of-bounds">Error at
@@ -125,6 +127,7 @@ capitalization and spelling:</p>
 <span><span class="co"># GSM70138 60.77      0</span></span>
 <span><span class="co"># GSM70140 33.80      1</span></span>
 <span><span class="co"># GSM70144 58.53      0</span></span></code></pre></div>
+<p><br></p>
 <hr>
 <blockquote>
 <h4 id="error-in-function_name">Error in
@@ -146,6 +149,7 @@ corrupted. Try reinstalling the package:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
+<p><br></p>
 <hr>
 <blockquote>
 <h4 id="error">Error:</h4>
@@ -160,6 +164,7 @@ try restarting the R environment or clean up the environment.</p>
 <span><span class="fu">.rs.api.restartSession</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/Bimap-envirAPI.html" class="external-link">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><br></p>
 <hr>
 <blockquote>
 <h4 id="error-1">Error:</h4>
@@ -172,13 +177,16 @@ expression data when you are using <code>scPP</code> and
 <code>binary</code> phenotype. This indicates that the expression levels
 of one (or several) genes are nearly identical across different samples.
 You should check your data.</p>
+<p><br></p>
 <hr>
 <blockquote>
 <h4 id="fewer-than-20-of-the-genes-in-the-gene-sets-are-included-in-the-rankings.check-wether-the-gene-ids-in-the-rankings-and-genesets-match.">✖
-[2025/09/23 08:53:51] Fewer than 20% of the genes in the gene sets are
-included in the rankings.Check wether the gene IDs in the ‘rankings’ and
-‘geneSets’ match.</h4>
-<h4 id="ℹ-20250923-085351-scpp-screening-exit.">ℹ [2025/09/23 08:53:51]
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2025</mn><mi>/</mi><mn>09</mn><mi>/</mi><mn>23</mn><mn>08</mn><mo>:</mo><mn>53</mn><mo>:</mo><mn>51</mn></mrow><annotation encoding="application/x-tex">2025/09/23 08:53:51</annotation></semantics></math>
+Fewer than 20% of the genes in the gene sets are included in the
+rankings.Check wether the gene IDs in the ‘rankings’ and ‘geneSets’
+match.</h4>
+<h4 id="ℹ-20250923-085351-scpp-screening-exit.">ℹ
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2025</mn><mi>/</mi><mn>09</mn><mi>/</mi><mn>23</mn><mn>08</mn><mo>:</mo><mn>53</mn><mo>:</mo><mn>51</mn></mrow><annotation encoding="application/x-tex">2025/09/23 08:53:51</annotation></semantics></math>
 scPP screening exit.</h4>
 </blockquote>
 <p>This issue arises from the single-cell processing, which filtered out
@@ -194,6 +202,72 @@ too many genes and cells. Consider Adjusting <code>min_cells</code> and
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">20</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p><br></p>
+<hr>
+<blockquote>
+<h4 id="warning-in-infoenvs-partial-match-of-envs-to-envs-directories">Warning
+in info$envs : partial match of ‘envs’ to ‘envs directories’</h4>
+<h4 id="error-in-reticulateuse_condaenv">Error in
+<code>reticulate::use_condaenv()</code>:</h4>
+<h4 id="unable-to-locate-conda-environment-r-reticulate-degas.">! Unable
+to locate conda environment ‘r-reticulate-degas’.</h4>
+</blockquote>
+<p>For some reason (maybe r session is contaminated),
+<code>reticulate</code> cannot find the relevant environment. One
+solution is to pass in the Python path of the environment instead of the
+environment name.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">envs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">envs</span><span class="op">)</span> <span class="co"># goes like this</span></span>
+<span><span class="co">#                                                            name                                                  python  type</span></span>
+<span><span class="co"># /home/user/miniconda3                                       base                         /home/user/miniconda3/bin/python conda</span></span>
+<span><span class="co"># /home/user/miniconda3/envs/r-reticulate-degas r-reticulate-degas /home/user/miniconda3/envs/r-reticulate-degas/bin/python conda</span></span></code></pre></div>
+<p>For example, if I want to use the <code>r-reticulate-degas</code>
+environment, I can pass its Python location to
+<code><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">reticulate::use_condaenv()</a></code>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">py_path</span> <span class="op">&lt;-</span> <span class="va">envs</span><span class="op">[</span><span class="va">envs</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"r-reticulate-degas"</span>, <span class="st">"python"</span><span class="op">]</span></span>
+<span><span class="co"># /home/user/miniconda3/envs/r-reticulate-degas/bin/python</span></span>
+<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_condaenv</a></span><span class="op">(</span><span class="va">py_path</span><span class="op">)</span></span></code></pre></div>
+<p><br></p>
+<hr>
+<blockquote>
+<h4 id="traceback-most-recent-call-last">Traceback (most recent call
+last):</h4>
+<h4 id="file-homeuserrprojectr_codesigbridgertmptmpblankclassmtl.py-line-1-in">File
+“/home/user/R/Project/R_code/SigBridgeR/Tmp/tmp/BlankClassMTL.py”, line
+1, in <module></module>
+</h4>
+<h4 id="import-tensorflow-as-tf-need">import tensorflow as tf #NEED</h4>
+<h4 id="modulenotfounderror-no-module-named-tensorflow">ModuleNotFoundError:
+No module named ‘tensorflow’</h4>
+<h4 id="warning-in-filefile-r">Warning in file(file, “r”) :</h4>
+<h4 id="cannot-open-file-tmpactivations.csv-no-such-file-or-directory">cannot
+open file ‘tmp//Activations.csv’: No such file or directory</h4>
+</blockquote>
+<p>This is due to the issue with the tensorflow package. Use the
+following method to check if the tensorflow package can be imported.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># make sure you are using the correct python, i.e. r-reticulate-degas</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>sys.executable  <span class="co"># in an environment, it should be something like /home/user/miniconda3/envs/r-reticulate-degas/bin/python3</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>tf.__version__</span></code></pre></div>
+<pre class="shell"><code># make sure you've entered the Conda environment you want to check, i.e. r-reticulate-degas
+conda list tensorflow
+
+# packages in environment at /home/user/miniconda3/envs/r-reticulate-degas:                                                               
+#                                                                                                                                        
+# Name                     Version          Build               Channel                                                                  
+# tensorflow                 2.4.1            mkl_py39h4683426_0
+# tensorflow-base            2.4.1            mkl_py39h43e0292_0
+# tensorflow-estimator       2.6.0            py39he80948d_0      https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge</code></pre>
+<p>If the output is
+<code>ModuleNotFoundError: No module named 'tensorflow'</code>, you need
+to install the tensorflow package, and strictly control the version of
+the package (version 2.4.1 has been tested and is feasible)</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

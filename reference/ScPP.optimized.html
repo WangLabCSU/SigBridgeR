@@ -78,8 +78,8 @@ for phenotype classification. Default: 0.2 (20th and 80th percentiles).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with three components:</p><ul><li><p><code>metadata</code> - Data frame containing cell metadata with added columns:</p><ul><li><p><code>AUCup</code> - AUCell scores for positive gene set</p></li>
-<li><p><code>AUCdown</code> - AUCell scores for negative gene set</p></li>
+    <p>A list with three components:</p><ul><li><p><code>metadata</code> - Data frame containing cell metadata with added columns:</p><ul><li><p><code>scPP_AUC</code> - AUCell scores for positive gene set</p></li>
+<li><p><code>scPP_AUCwn</code> - AUCell scores for negative gene set</p></li>
 <li><p><code>ScPP</code> - Phenotype classification: "Phenotype+", "Phenotype-", or "Background"</p></li>
 </ul></li>
 <li><p><code>Genes_pos</code> - Character vector of genes significantly upregulated
@@ -131,7 +131,9 @@ structures automatically.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/AUCell/man/AUCell_buildRankings.html" class="external-link">AUCell::AUCell_buildRankings()</a></code>, <code><a href="https://rdrr.io/pkg/AUCell/man/AUCell_calcAUC.html" class="external-link">AUCell::AUCell_calcAUC()</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/FindMarkers.html" class="external-link">Seurat::FindMarkers()</a></code></p></div>
+<code><a href="https://satijalab.org/seurat/reference/FindMarkers.html" class="external-link">Seurat::FindMarkers()</a></code></p>
+<p>Other scPP:
+<code><a href="DoscPP.html">DoscPP</a>()</code></p></div>
     </div>
 
     <div class="section level2">
