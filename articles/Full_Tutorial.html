@@ -58,7 +58,7 @@
 
       <h1>Full Tutorial</h1>
             
-            <h4 data-toc-skip class="date">2025-10-16</h4>
+            <h4 data-toc-skip class="date">2025-10-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -222,7 +222,7 @@ because of the latest features and bug fixes.</p>
 <code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="release-from-r-universe">1.2 Release from r-universe<a class="anchor" aria-label="anchor" href="#release-from-r-universe"></a>
@@ -1858,7 +1858,9 @@ Screening</a></p>
 <span><span class="co"># [1] "Step 6: qualitative identification by permutation test program with 2000 times random perturbations"</span></span>
 <span><span class="co"># [1] "Finished."</span></span>
 <span><span class="co"># ✔ [2025/09/22 18:51:16] scPAS screening done.</span></span></code></pre></div>
-<p>Now there may be some significant cells appearing.</p>
+<p>Generally, a larger alpha means stricter screening, which may result
+in fewer cells being selected. The cells shown in the example can
+essentially be considered false positives.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPAS</span><span class="op">)</span></span>
 <span><span class="co"># Negative  Neutral Positive </span></span>
@@ -2476,7 +2478,7 @@ value is <code>50</code>.</p>
 <div class="section level3">
 <h3 id="troubleshooting">7. Troubleshooting<a class="anchor" aria-label="anchor" href="#troubleshooting"></a>
 </h3>
-<p>View <a href="https://wanglabcsu.github.io/SigBridgeR/articles/Troubleshooting.html" class="external-link">[Troubleshooting](https://github.com/WangX-Lab/SigBridgeR/wiki/Troubleshooting)</a>
+<p>View Troubleshooting<a href="https://wanglabcsu.github.io/SigBridgeR/articles/Troubleshooting.html" class="external-link">(https://github.com/WangX-Lab/SigBridgeR/wiki/Troubleshooting)</a>
 for troubleshooting, especially for the environment setup.</p>
 <p>Session information:</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
