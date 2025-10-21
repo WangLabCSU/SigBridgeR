@@ -57,102 +57,42 @@ from raw data to clustered embeddings.</p>
 <span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Default S3 method</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"SC_Screening_Proj"</span><span class="op">)</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
+<span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
+<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
+<span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'matrix'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
-<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"SC_Screening_Proj"</span><span class="op">)</span>,</span>
-<span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">6000</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
-<span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
-<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'data.frame'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
-<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"SC_Screening_Proj"</span><span class="op">)</span>,</span>
-<span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">6000</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
-<span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
-<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'dgCMatrix'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
-<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"SC_Screening_Proj"</span><span class="op">)</span>,</span>
-<span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="st">"^MT-"</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">6000</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
-<span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
-<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'AnnDataR6'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
-<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"SC_Screening_Proj"</span><span class="op">)</span>,</span>
-<span>  min_cells <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">6000</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
-<span>  scale_factor <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
-<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, meta_data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'Seurat'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -167,76 +107,91 @@ from raw data to clustered embeddings.</p>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Method-specific arguments (see below)</p></dd>
+<dd><p>Additional arguments passed to specific methods. Currently unused.</p></dd>
 
 
 <dt id="arg-meta-data">meta_data<a class="anchor" aria-label="anchor" href="#arg-meta-data"></a></dt>
-<dd><p>Optional metadata dataframe (rows = cells, columns = attributes)</p></dd>
+<dd><p>A data.frame containing metadata for each cell. It will be
+added to the Seurat object as <code>@meta.data</code>. If <code>NULL</code>, it will be
+extracted from the input object if possible.</p></dd>
 
 
 <dt id="arg-column-only-tumor">column2only_tumor<a class="anchor" aria-label="anchor" href="#arg-column-only-tumor"></a></dt>
-<dd><p>Metadata column used for filtering tumor cells, matching patterns
-such as "tumor" (or "tumour"), "cancer", "malignant", or "neoplasm" (case-insensitive).</p></dd>
+<dd><p>A character of column names in <code>meta_data</code>, used to
+filter the Seurat object to only tumor cells. If <code>NULL</code>, no filtering is performed.</p></dd>
 
 
 <dt id="arg-project">project<a class="anchor" aria-label="anchor" href="#arg-project"></a></dt>
-<dd><p>Project name for Seurat object</p></dd>
+<dd><p>A character of project name, used to name the Seurat object.</p></dd>
 
 
 <dt id="arg-min-cells">min_cells<a class="anchor" aria-label="anchor" href="#arg-min-cells"></a></dt>
-<dd><p>Minimum cells per gene to retain (features present in at least this many cells)</p></dd>
+<dd><p>Minimum number of cells that must express a feature for it
+to be included in the analysis. Defaults to <code>400</code>.</p></dd>
 
 
 <dt id="arg-min-features">min_features<a class="anchor" aria-label="anchor" href="#arg-min-features"></a></dt>
-<dd><p>Minimum features per cell to retain (cells with at least this many features)</p></dd>
+<dd><p>Minimum number of features that must be detected in a
+cell for it to be included in the analysis. Defaults to <code>0</code>.</p></dd>
 
 
 <dt id="arg-quality-control">quality_control<a class="anchor" aria-label="anchor" href="#arg-quality-control"></a></dt>
-<dd><p>Logical indicating whether to perform mitochondrial QC</p></dd>
+<dd><p>Logical indicating whether to perform mitochondrial
+percentage quality control. Defaults to <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-quality-control-pattern">quality_control.pattern<a class="anchor" aria-label="anchor" href="#arg-quality-control-pattern"></a></dt>
-<dd><p>Regex pattern to identify mitochondrial genes (e.g., "^MT-" for human)</p></dd>
+<dd><p>Character pattern to identify mitochondrial
+genes. Customized patterns are supported. Defaults to <code>"^MT-"</code>.</p></dd>
 
 
 <dt id="arg-data-filter">data_filter<a class="anchor" aria-label="anchor" href="#arg-data-filter"></a></dt>
-<dd><p>Logical indicating whether to filter low-quality cells</p></dd>
+<dd><p>Logical indicating whether to filter cells based on
+quality metrics. Defaults to <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-data-filter-nfeature-rna-thresh">data_filter.nFeature_RNA_thresh<a class="anchor" aria-label="anchor" href="#arg-data-filter-nfeature-rna-thresh"></a></dt>
-<dd><p>Numeric vector of length 2 specifying (min, max) features per cell</p></dd>
+<dd><p>Numeric vector of length 2 specifying
+the minimum and maximum number of features per cell. Defaults to <code>c(200, 6000)</code>.</p></dd>
 
 
 <dt id="arg-data-filter-percent-mt">data_filter.percent.mt<a class="anchor" aria-label="anchor" href="#arg-data-filter-percent-mt"></a></dt>
-<dd><p>Maximum mitochondrial percentage allowed (0-100)</p></dd>
+<dd><p>Maximum mitochondrial percentage allowed.
+Defaults to <code>20</code>.</p></dd>
 
 
 <dt id="arg-normalization-method">normalization_method<a class="anchor" aria-label="anchor" href="#arg-normalization-method"></a></dt>
-<dd><p>Normalization method ("LogNormalize", "CLR", or "RC")</p></dd>
+<dd><p>Method for normalization: "LogNormalize", "CLR",
+or "RC". Defaults to <code>"LogNormalize"</code>.</p></dd>
 
 
 <dt id="arg-scale-factor">scale_factor<a class="anchor" aria-label="anchor" href="#arg-scale-factor"></a></dt>
-<dd><p>Scaling factor for normalization</p></dd>
+<dd><p>Scaling factor for normalization. Defaults to <code>10000</code>.</p></dd>
 
 
 <dt id="arg-scale-features">scale_features<a class="anchor" aria-label="anchor" href="#arg-scale-features"></a></dt>
-<dd><p>Scale features to unit variance</p></dd>
+<dd><p>Features to use for scaling. If NULL, uses all variable
+features. Defaults to <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-selection-method">selection_method<a class="anchor" aria-label="anchor" href="#arg-selection-method"></a></dt>
-<dd><p>Variable feature selection method ("vst", "mvp", or "disp")</p></dd>
+<dd><p>Method for variable feature selection: "vst", "mvp",
+or "disp". Defaults to <code>"vst"</code>.</p></dd>
 
 
 <dt id="arg-resolution">resolution<a class="anchor" aria-label="anchor" href="#arg-resolution"></a></dt>
-<dd><p>Cluster resolution (higher for more clusters)</p></dd>
+<dd><p>Resolution parameter for clustering. Higher values lead to
+more clusters. Defaults to <code>0.6</code>.</p></dd>
 
 
 <dt id="arg-dims">dims<a class="anchor" aria-label="anchor" href="#arg-dims"></a></dt>
-<dd><p>PCA dimensions to use</p></dd>
+<dd><p>Dimensions to use for clustering and dimensionality reduction.
+If NULL, automatically determined by elbow method. Defaults to <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Print progress messages</p></dd>
+<dd><p>Logical indicating whether to print progress messages.
+Defaults to <code>TRUE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -249,7 +204,50 @@ such as "tumor" (or "tumour"), "cancer", "malignant", or "neoplasm" (case-insens
 <li><p>When tumor cells filtered: original dimensions in <code>@misc$raw_dim</code></p></li>
 <li><p>Final dimensions in <code>@misc$self_dim</code></p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></code>,
+<code><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></code>,
+<code><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></code>,
+<code><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></code>,
+<code><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></code>,
+<code><a href="https://satijalab.org/seurat/reference/RunTSNE.html" class="external-link">RunTSNE</a></code>,
+<code><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></code>,
+<code><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></code>,
+<code><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></code></p></div>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Example with matrix input</span></span></span>
+<span class="r-in"><span><span class="va">counts_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">5</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">100</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">counts_matrix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">counts_matrix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Cell"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu">SCPreProcess</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  sc <span class="op">=</span> <span class="va">counts_matrix</span>,</span></span>
+<span class="r-in"><span>  project <span class="op">=</span> <span class="st">"TestProject"</span>,</span></span>
+<span class="r-in"><span>  min_features <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>  resolution <span class="op">=</span> <span class="fl">0.8</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example with tumor cell filtering</span></span></span>
+<span class="r-in"><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  cell_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Tumor"</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Normal"</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  row.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Cell"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">tumor_seurat</span> <span class="op">&lt;-</span> <span class="fu">SCPreProcess</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  sc <span class="op">=</span> <span class="va">counts_matrix</span>,</span></span>
+<span class="r-in"><span>  meta_data <span class="op">=</span> <span class="va">metadata</span>,</span></span>
+<span class="r-in"><span>  column2only_tumor <span class="op">=</span> <span class="st">"cell_type"</span>,</span></span>
+<span class="r-in"><span>  project <span class="op">=</span> <span class="st">"TumorAnalysis"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

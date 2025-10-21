@@ -55,7 +55,7 @@ It supports binary, continuous, and survival phenotype types.</p>
 <span>  ref_group <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  Log2FC_cutoff <span class="op">=</span> <span class="fl">0.585</span>,</span>
 <span>  estimate_cutoff <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>  probs <span class="op">=</span> <span class="fl">0.2</span></span>
+<span>  probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,7 +103,7 @@ It supports binary, continuous, and survival phenotype types.</p>
 
 
 <dt id="arg-probs">probs<a class="anchor" aria-label="anchor" href="#arg-probs"></a></dt>
-<dd><p>Quantile cutoff for cell classification (default: 0.2)</p></dd>
+<dd><p>A numeric value indicating the quantile cutoff for cell classification. This parameter can also be a numeric vector, in which case an optimal threshold will be selected based on the AUC and enrichment score.(default: 0.2)</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -122,7 +122,7 @@ It supports binary, continuous, and survival phenotype types.</p>
 <dd><p>A data.frame with area under the ROC curve:</p><dl><dt>scPP_AUCup</dt>
 <dd><p>AUC for positive</p></dd>
 
-<dt>AUCdown</dt>
+<dt>scPP_AUCdown</dt>
 <dd><p>AUC for negative</p></dd>
 
 
@@ -178,6 +178,7 @@ It supports binary, continuous, and survival phenotype types.</p>
 <span class="r-in"><span>  phenotype_class <span class="op">=</span> <span class="st">"Survival"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
