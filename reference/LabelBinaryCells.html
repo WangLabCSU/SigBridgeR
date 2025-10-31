@@ -57,7 +57,8 @@ and provides detailed reporting on classification outcomes.</p>
 <span>  <span class="va">pheno_colnames</span>,</span>
 <span>  <span class="va">select_fraction</span>,</span>
 <span>  <span class="va">test_method</span>,</span>
-<span>  min_threshold <span class="op">=</span> <span class="fl">0.7</span></span>
+<span>  min_threshold <span class="op">=</span> <span class="fl">0.7</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -92,6 +93,10 @@ for normality assessment. One of: <code>"jarque-bera"</code>, <code>"d'agostino"
 <dd><p>Numeric value specifying the minimum score difference
 required for a cell to be considered "Positive". This ensures biological
 relevance by filtering out weak associations. Default: 0.7.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical, whether to print messages.</p></dd>
 
 </dl></div>
     <div class="section level2">

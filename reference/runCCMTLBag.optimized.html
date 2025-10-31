@@ -59,7 +59,8 @@ ensemble of models with different random seeds and aggregates the results.</p>
 <span>  <span class="va">architecture</span>,</span>
 <span>  <span class="va">FFdepth</span>,</span>
 <span>  <span class="va">Bagdepth</span>,</span>
-<span>  <span class="va">DEGAS.seed</span></span>
+<span>  <span class="va">DEGAS.seed</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -115,6 +116,10 @@ in the ensemble.</p></dd>
 <dt id="arg-degas-seed">DEGAS.seed<a class="anchor" aria-label="anchor" href="#arg-degas-seed"></a></dt>
 <dd><p>Integer specifying the base random seed for reproducible
 model training. Each model in the ensemble uses a derived seed.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical, whether to print messages.</p></dd>
 
 </dl></div>
     <div class="section level2">

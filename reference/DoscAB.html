@@ -61,7 +61,9 @@ for phenotype association and cell-cell similarity.</p>
 <span>  alpha <span class="op">=</span> <span class="fl">0.005</span>,</span>
 <span>  alpha_2 <span class="op">=</span> <span class="fl">5e-05</span>,</span>
 <span>  maxiter <span class="op">=</span> <span class="fl">2000</span>,</span>
-<span>  tred <span class="op">=</span> <span class="fl">2</span></span>
+<span>  tred <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,6 +112,14 @@ for phenotype association and cell-cell similarity.</p>
 <dt id="arg-tred">tred<a class="anchor" aria-label="anchor" href="#arg-tred"></a></dt>
 <dd><p>Z-score threshold (default=2).</p></dd>
 
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical indicating whether to print progress messages. Default: <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>For future update.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -140,7 +150,11 @@ A copy of the license is available at <a href="https://www.gnu.org/licenses/gpl-
 <code><a href="DoscPAS.html">DoscPAS</a>()</code>,
 <code><a href="DoscPP.html">DoscPP</a>()</code></p>
 <p>Other scAB:
-<code><a href="create_scAB.v5.html">create_scAB.v5</a>()</code></p></div>
+<code><a href="NMF.optimized.html">NMF.optimized</a>()</code>,
+<code><a href="create_scAB.v5.html">create_scAB.v5</a>()</code>,
+<code><a href="findSubset.optimized.html">findSubset.optimized</a>()</code>,
+<code><a href="scAB.optimized.html">scAB.optimized</a>()</code>,
+<code><a href="select_K.optimized.html">select_K.optimized</a>()</code></p></div>
     </div>
 
     <div class="section level2">

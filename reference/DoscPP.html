@@ -55,7 +55,9 @@ It supports binary, continuous, and survival phenotype types.</p>
 <span>  ref_group <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  Log2FC_cutoff <span class="op">=</span> <span class="fl">0.585</span>,</span>
 <span>  estimate_cutoff <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>  probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="cn">NULL</span><span class="op">)</span></span>
+<span>  probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,6 +106,14 @@ It supports binary, continuous, and survival phenotype types.</p>
 
 <dt id="arg-probs">probs<a class="anchor" aria-label="anchor" href="#arg-probs"></a></dt>
 <dd><p>A numeric value indicating the quantile cutoff for cell classification. This parameter can also be a numeric vector, in which case an optimal threshold will be selected based on the AUC and enrichment score.(default: 0.2)</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical indicating whether to print progress messages. Default: <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>For future update.</p></dd>
 
 </dl></div>
     <div class="section level2">

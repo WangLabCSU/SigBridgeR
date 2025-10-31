@@ -59,7 +59,7 @@
       <h1>Troubleshooting</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2025-10-21</h4>
+            <h4 data-toc-skip class="date">2025-10-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Troubleshooting.Rmd" class="external-link"><code>vignettes/Troubleshooting.Rmd</code></a></small>
       <div class="d-none name"><code>Troubleshooting.Rmd</code></div>
@@ -82,10 +82,10 @@ pthread_create() is 22</h4>
 </blockquote>
 <p>To solve this problem, you need to install
 <code>preprocessCore</code> without threading support. Try:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># ! shell</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/bmbolstad/preprocessCore.git</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="bu">cd</span> preprocessCore</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL <span class="at">--configure-args</span><span class="op">=</span><span class="st">"--disable-threading"</span>  .</span></code></pre></div>
+<pre class="shell"><code># ! shell
+git clone https://github.com/bmbolstad/preprocessCore.git
+cd preprocessCore
+R CMD INSTALL --configure-args="--disable-threading"  .</code></pre>
 <p>or</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span></span>
@@ -149,7 +149,7 @@ corrupted. Try reinstalling the package:</p>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <hr>
 <blockquote>
@@ -256,15 +256,15 @@ following method to check if the tensorflow package can be imported.</p>
 <span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a></span>
 <span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>tf.__version__</span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># make sure you've entered the Conda environment you want to check, i.e. r-reticulate-degas</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="ex">conda</span> list tensorflow</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># packages in environment at /home/user/miniconda3/envs/r-reticulate-degas:                                                               </span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#                                                                                                                                        </span></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co"># Name                     Version          Build               Channel                                                                  </span></span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># tensorflow                 2.4.1            mkl_py39h4683426_0</span></span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co"># tensorflow-base            2.4.1            mkl_py39h43e0292_0</span></span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co"># tensorflow-estimator       2.6.0            py39he80948d_0      https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge</span></span></code></pre></div>
+<pre class="shell"><code># make sure you've entered the Conda environment you want to check, i.e. r-reticulate-degas
+conda list tensorflow
+
+# packages in environment at /home/user/miniconda3/envs/r-reticulate-degas:                                                               
+#                                                                                                                                        
+# Name                     Version          Build               Channel                                                                  
+# tensorflow                 2.4.1            mkl_py39h4683426_0
+# tensorflow-base            2.4.1            mkl_py39h43e0292_0
+# tensorflow-estimator       2.6.0            py39he80948d_0      https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge</code></pre>
 <p>If the output is
 <code>ModuleNotFoundError: No module named 'tensorflow'</code>, you need
 to install the tensorflow package, and strictly control the version of

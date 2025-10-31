@@ -39,7 +39,7 @@ constant rows may cause issues in analyses (e.g., PCA, regression)."></head><bod
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Check for Rows with Zero Variance in a Matrix</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/82-VarCalculate.R" class="external-link"><code>R/82-VarCalculate.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/82-Calculation.R" class="external-link"><code>R/82-Calculation.R</code></a></small>
       <div class="d-none name"><code>Check0VarRows.Rd</code></div>
     </div>
 
@@ -76,13 +76,11 @@ the function throws an error with a message listing the problematic row names.</
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>For dense matrices, variance is computed using an optimized <code>RowVars</code> function that
+    <p>For dense matrices, variance is computed using <code>rowVars()</code> function that
 efficiently calculates row variances with proper NA handling. For sparse matrices of
 class <code>dgCMatrix</code>, variance is computed using a mathematical identity that avoids
 creating large intermediate matrices. Rows with fewer than 2 non-zero observations
 are treated as zero-variance.</p>
-<p>This implementation is memory-efficient and handles large matrices better than
-the original version.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -110,6 +108,7 @@ the original version.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat_sparse</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">Check0VarRows</span><span class="op">(</span><span class="va">mat_sparse</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

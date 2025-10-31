@@ -61,7 +61,30 @@ from raw data to clustered embeddings.</p>
 <span>  <span class="va">sc</span>,</span>
 <span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"SC_Screening_Proj"</span><span class="op">)</span>,</span>
+<span>  project <span class="op">=</span> <span class="st">"SC_Screening_Proj"</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
+<span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span><span class="op">)</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
+<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
+<span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'matrix'</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  project <span class="op">=</span> <span class="st">"SC_Screening_Proj"</span>,</span>
 <span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -79,20 +102,77 @@ from raw data to clustered embeddings.</p>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for class 'matrix'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S3 method for class 'data.frame'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  project <span class="op">=</span> <span class="st">"SC_Screening_Proj"</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
+<span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
+<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
+<span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'dgCMatrix'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  project <span class="op">=</span> <span class="st">"SC_Screening_Proj"</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
+<span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
+<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
+<span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'AnnDataR6'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, meta_data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  project <span class="op">=</span> <span class="st">"SC_Screening_Proj"</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
+<span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
+<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
+<span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
+<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'Seurat'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -142,7 +222,8 @@ percentage quality control. Defaults to <code>TRUE</code>.</p></dd>
 
 <dt id="arg-quality-control-pattern">quality_control.pattern<a class="anchor" aria-label="anchor" href="#arg-quality-control-pattern"></a></dt>
 <dd><p>Character pattern to identify mitochondrial
-genes. Customized patterns are supported. Defaults to <code>"^MT-"</code>.</p></dd>
+genes, ribosomal protein genes, or other unwanted genes, as well as combinations
+of these genes. Customized patterns are supported. Defaults to <code>"^MT-"</code>.</p></dd>
 
 
 <dt id="arg-data-filter">data_filter<a class="anchor" aria-label="anchor" href="#arg-data-filter"></a></dt>

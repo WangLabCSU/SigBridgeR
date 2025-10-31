@@ -46,7 +46,7 @@ Median Absolute Deviation (MAD) testing across multiple phenotypic dimensions.</
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">LabelContinuousCells</span><span class="op">(</span><span class="va">pred_dt</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">LabelContinuousCells</span><span class="op">(</span><span class="va">pred_dt</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -57,6 +57,10 @@ Median Absolute Deviation (MAD) testing across multiple phenotypic dimensions.</
 <dd><p>A data.table containing prediction scores for multiple
 phenotypic conditions. Must contain a 'cell_id' column and one or more
 columns with prediction scores for different phenotypes.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical, whether to print messages.</p></dd>
 
 </dl></div>
     <div class="section level2">

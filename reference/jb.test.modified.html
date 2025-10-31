@@ -111,6 +111,11 @@ with modified coefficients for different parameter knowledge scenarios.</p>
 
     </div>
     <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p>This test cannot be used for small sample sizes (n &lt; 500) due to the assumption
+of normality. For smaller samples, consider using the Shapiro-Wilk test.</p>
+    </div>
+    <div class="section level2">
     <h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a></h2>
 
 
@@ -119,7 +124,13 @@ Available from: <a href="https://github.com/KhrushchevSergey/Modified-Jarque-Ber
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/r/stats/shapiro.test.html" class="external-link">stats::shapiro.test()</a></code> for the Shapiro-Wilk test</p></div>
+    <div class="dont-index"><p><code><a href="https://rdrr.io/r/stats/shapiro.test.html" class="external-link">stats::shapiro.test()</a></code> for the Shapiro-Wilk test</p>
+<p>Other normality_test:
+<code><a href="ad.test.html">ad.test</a>()</code>,
+<code><a href="cvm.test.html">cvm.test</a>()</code>,
+<code><a href="dagostino.test.html">dagostino.test</a>()</code>,
+<code><a href="pearson.test.html">pearson.test</a>()</code>,
+<code><a href="sf.test.html">sf.test</a>()</code></p></div>
     </div>
 
     <div class="section level2">
