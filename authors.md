@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/WangLabCSU/SigBridgeR/blob/version3/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/WangLabCSU/SigBridgeR/blob/main/DESCRIPTION)
 
 Yang Y (2025). *SigBridgeR: Multi-algorithm Integration of Phenotypic,
 scRNA-seq, and Bulk Data for Cell Screening*. R package version 2.5.4,
