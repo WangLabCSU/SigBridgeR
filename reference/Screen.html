@@ -13,7 +13,7 @@ before analysis."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,8 +25,15 @@ before analysis."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
+    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
     <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/Optimal_Parameters.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
+    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
     <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -39,7 +46,7 @@ before analysis."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Single-Cell Data Screening</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/20-QuickScreen.R" class="external-link"><code>R/20-QuickScreen.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/version3/R/20-QuickScreen.R" class="external-link"><code>R/20-QuickScreen.R</code></a></small>
       <div class="d-none name"><code>Screen.Rd</code></div>
     </div>
 
@@ -58,7 +65,7 @@ before analysis.</p>
 <span>  <span class="va">phenotype</span>,</span>
 <span>  label_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"binary"</span>, <span class="st">"survival"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span>, <span class="st">"scPP"</span>, <span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"DEGAS"</span><span class="op">)</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span>, <span class="st">"scPP"</span>, <span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"DEGAS"</span>, <span class="st">"LP_SGL"</span>, <span class="st">"PIPET"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -79,7 +86,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dt id="arg-phenotype">phenotype<a class="anchor" aria-label="anchor" href="#arg-phenotype"></a></dt>
 <dd><p>Phenotype data, either:
 - Named vector (names match <code>matched_bulk</code> columns), or
-- Data frame with row names matching <code>matched_bulk</code> columns</p></dd>
+- Patient survival Data frame with row names matching <code>matched_bulk</code> columns, colnames named "time" and "status"</p></dd>
 
 
 <dt id="arg-label-type">label_type<a class="anchor" aria-label="anchor" href="#arg-label-type"></a></dt>
@@ -90,16 +97,17 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dd><p>Type of phenotypic outcome (must be consistent with input data):
 - <code>"binary"</code>: Binary traits (e.g., case/control)
 - <code>"continuous"</code>: Continuous measurements
-- <code>"survival"</code>: Survival objects</p></dd>
+- <code>"survival"</code>: Survival infomation</p></dd>
 
 
 <dt id="arg-screen-method">screen_method<a class="anchor" aria-label="anchor" href="#arg-screen-method"></a></dt>
-<dd><p>Screening algorithm to use, there are four options:
-- <code>"Scissor"</code>: see also <code><a href="DoScissor.html">DoScissor()</a></code>
-- <code>"scPP"</code>: see also <code><a href="DoscPP.html">DoscPP()</a></code>
-- <code>"scPAS"</code>: see also <code><a href="DoscPAS.html">DoscPAS()</a></code>
-- <code>"scAB"</code>: see also <code><a href="DoscAB.html">DoscAB()</a></code>, no continuous support
-- <code>"DEGAS"</code>: see also <code><a href="DoDEGAS.html">DoDEGAS()</a></code></p></dd>
+<dd><p>Screening algorithm to use, there are six options:</p><ul><li><p>"Scissor": see also DoScissor()</p></li>
+<li><p>"scPP": see also DoscPP()</p></li>
+<li><p>"scPAS": see also DoscPAS()</p></li>
+<li><p>"scAB": see also DoscAB(), continuous phenotype is not supported</p></li>
+<li><p>"DEGAS": see also DoDEGAS()</p></li>
+<li><p>"LP_SGL": see also DoLP_SGL()</p></li>
+</ul></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -108,13 +116,13 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dd><p>(numeric or NULL) Significance threshold. When NULL, alpha will keep increasing iteratively until the corresponding cells are screened out, default 0.05</p></dd>
 
 <dt>cutoff</dt>
-<dd><p>(numeric) A threshold for terminating the iteration of alpha, only work when <code>alpha</code> is NULL, default 0.2</p></dd>
+<dd><p>(numeric) A threshold for terminating the iteration of alpha, only work when alpha is NULL, default 0.2</p></dd>
 
 <dt>path2load_scissor_cache</dt>
-<dd><p>(character) default <code>NULL</code></p></dd>
+<dd><p>(character) default NULL</p></dd>
 
 <dt>path2save_scissor_inputs</dt>
-<dd><p>(character) A path to save the intermediary data. By using <code>path2load_scissor_cache</code>,  the intermediary data can be loaded from the specified path. default <code>"Scissor_inputs.RData"</code></p></dd>
+<dd><p>(character) A path to save the intermediary data. By using path2load_scissor_cache, the intermediary data can be loaded from the specified path. default "Scissor_inputs.RData"</p></dd>
 
 <dt>reliability_test</dt>
 <dd><p>(logical) Whether to perform reliability test, default FALSE</p></dd>
@@ -142,13 +150,13 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 
 <dt>scPP</dt>
 <dd><dl><dt>ref_group</dt>
-<dd><p>(integer or character) Reference group or baseline for <strong>binary</strong> comparisons, e.g. "Normal" for Tumor/Normal studies and 0 for 0/1 case-control studies. default: 0</p></dd>
+<dd><p>(integer or character) Reference group or baseline for binary comparisons, e.g. "Normal" for Tumor/Normal studies and 0 for 0/1 case-control studies. default: 0</p></dd>
 
 <dt>Log2FC_cutoff</dt>
 <dd><p>(numeric) Minimum log2 fold-change for binary markers, default 0.585</p></dd>
 
 <dt>estimate_cutoff</dt>
-<dd><p>(numeric) Effect size threshold for <strong>continuous</strong> traits, default 0.2</p></dd>
+<dd><p>(numeric) Effect size threshold for continuous traits, default 0.2</p></dd>
 
 <dt>probs</dt>
 <dd><p>(numeric) Quantile cutoff for cell classification, default 0.2</p></dd>
@@ -189,7 +197,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dd><p>(numeric) Coefficient of phenotype regularization ,default 0.005</p></dd>
 
 <dt>alpha_2</dt>
-<dd><p>(numeric) Coefficent of cell-cell similarity regularization, default 5e-05</p></dd>
+<dd><p>(numeric) Coefficent of cell-cell similarity regularization, default 0.005</p></dd>
 
 <dt>maxiter</dt>
 <dd><p>(integer) NMF optimization iterations, default 2000</p></dd>
@@ -222,6 +230,25 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 
 </dl></dd>
 
+<dt>LP_SGL</dt>
+<dd><dl><dt>resolution</dt>
+<dd><p>(numeric) Resolution parameter for Leiden clustering, default 0.6</p></dd>
+
+<dt>alpha</dt>
+<dd><p>(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5</p></dd>
+
+<dt>nfold</dt>
+<dd><p>(integer) Number of folds for cross-validation, default 5</p></dd>
+
+<dt>dge_analysis</dt>
+<dd><p>(list) Differential expression analysis settings:</p><ul><li><p>run: (logical) Whether to run DEG analysis, default FALSE</p></li>
+<li><p>logFC_threshold: (numeric) Log fold change threshold, default 1</p></li>
+<li><p>pval_threshold: (numeric) P-value threshold, default 0.05</p></li>
+</ul></dd>
+
+
+</dl></dd>
+
 
 </dl></dd>
 
@@ -229,7 +256,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list containing:</p><dl><dt>scRNA_data</dt>
-<dd><p>Filtered Seurat object with phenotype-associated cells</p></dd>
+<dd><p>A Seurat object with phenotype-associated cells labelled in <code>meta.data</code> column</p></dd>
 
 <dt>Some screen_result</dt>
 <dd><p>Important information about the screened result related to the selected method</p></dd>
@@ -240,14 +267,14 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
     <h2 id="data-matching-requirements">Data Matching Requirements<a class="anchor" aria-label="anchor" href="#data-matching-requirements"></a></h2>
 
 
-<ul><li><p><code>matched_bulk</code> column names and <code>phenotype</code> names/rownames must be identical</p></li>
+<ul><li><p>matched_bulk column names and phenotype names/rownames must be identical</p></li>
 <li><p>Phenotype values must correspond to bulk samples (not directly to single cells)</p></li>
 <li><p>Mismatches will trigger an error before analysis begins, and there is a built-in pre-run check.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="method-compatibility">Method Compatibility<a class="anchor" aria-label="anchor" href="#method-compatibility"></a></h2>
 
-<table class="table table"><tr><td><strong>Method</strong></td><td><strong>Supported Phenotypes</strong></td><td><strong>Additional Parameters</strong></td></tr><tr><td><code>Scissor</code></td><td>All three types</td><td><code>alpha</code>, <code>cutoff</code>, <code>path2load_scissor_cache</code>, <code>path2save_scissor_inputs</code>, <code>reliability_test</code>, <code>reliability_test.n</code>,<code>reliability_test.nfold</code>, <code>cell_evaluation</code>,<code>cell_evaluation.benchmark_data</code>,<code>cell_evaluation.FDR</code>,<code>cell_evaluation.bootstrap_n</code></td></tr><tr><td><code>scPP</code></td><td>All three types</td><td><code>ref_group</code>, <code>Log2FC_cutoff</code>, <code>estimate_cutoff</code>, <code>probs</code></td></tr><tr><td><code>scPAS</code></td><td>All three types</td><td><code>n_components</code> ,<code>assay</code>, <code>imputation</code>,<code>nfeature</code>, <code>alpha</code>,<code>network_class</code>,<code>permutation_times</code>,<code>FDR_threshold</code>,<code>independent</code></td></tr><tr><td><code>scAB</code></td><td>Binary/Survival</td><td><code>alpha</code>, <code>alpha_2</code>, <code>maxiter</code>, <code>tred</code></td></tr><tr><td><code>DEGAS</code></td><td>All three types</td><td><code>sc_data.pheno_colname</code>,<code>select_fraction</code>,<code>tmp_dir</code>,<code>env_params</code>,<code>degas_params</code>,<code>normality_test_method</code></td></tr></table></div>
+<table class="table table"><tr><td>Method</td><td>Supported Phenotypes</td><td>Additional Parameters</td></tr><tr><td>Scissor</td><td>All three types</td><td>alpha, cutoff, path2load_scissor_cache, path2save_scissor_inputs, reliability_test, reliability_test.n,reliability_test.nfold, cell_evaluation,cell_evaluation.benchmark_data,cell_evaluation.FDR,cell_evaluation.bootstrap_n</td></tr><tr><td>scPP</td><td>All three types</td><td>ref_group, Log2FC_cutoff, estimate_cutoff, probs</td></tr><tr><td>scPAS</td><td>All three types</td><td>n_components ,assay, imputation,nfeature, alpha,network_class,permutation_times,FDR_threshold,independent</td></tr><tr><td>scAB</td><td>Binary/Survival</td><td>alpha, alpha_2, maxiter, tred</td></tr><tr><td>DEGAS</td><td>All three types</td><td>sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method</td></tr><tr><td>LP_SGL</td><td>All three types</td><td>resolution, alpha, nfold, dge_analysis</td></tr></table></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Associated functions:</p><ul><li><p><code><a href="DoScissor.html">DoScissor</a></code></p></li>
@@ -255,6 +282,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <li><p><code><a href="DoscPAS.html">DoscPAS</a></code></p></li>
 <li><p><code><a href="DoscAB.html">DoscAB</a></code></p></li>
 <li><p><code><a href="DoDEGAS.html">DoDEGAS</a></code></p></li>
+<li><p><code><a href="DoLP_SGL.html">DoLP_SGL</a></code></p></li>
 </ul></div>
     </div>
 
@@ -267,7 +295,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

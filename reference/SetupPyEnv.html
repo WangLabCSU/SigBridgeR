@@ -17,7 +17,7 @@ with supported environment types."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,8 +29,15 @@ with supported environment types."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
+    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
     <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/Optimal_Parameters.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
+    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
     <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -43,7 +50,7 @@ with supported environment types."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create or Use Python Environment with Required Packages</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/42-SetupPyEnv.R" class="external-link"><code>R/42-SetupPyEnv.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/version3/R/03-Import.R" class="external-link"><code>R/03-Import.R</code></a></small>
       <div class="d-none name"><code>SetupPyEnv.Rd</code></div>
     </div>
 
@@ -58,10 +65,7 @@ with supported environment types.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">SetupPyEnv</span><span class="op">(</span>env_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"conda"</span>, <span class="st">"venv"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Default S3 method</span></span>
-<span><span class="fu">SetupPyEnv</span><span class="op">(</span>env_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"conda"</span>, <span class="st">"venv"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">SetupPyEnv</span><span class="op">(</span>env_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"conda"</span>, <span class="st">"venv"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,7 +74,7 @@ with supported environment types.</p>
 
 <dl><dt id="arg-env-type">env_type<a class="anchor" aria-label="anchor" href="#arg-env-type"></a></dt>
 <dd><p>Character string specifying the type of Python environment to
-create or use. One of: <code>"conda"</code>, <code>"venv"</code>.</p></dd>
+create or use. One of: `"conda"`, `"venv"`.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -87,19 +91,20 @@ the verification results.</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function provides a comprehensive solution for Python environment
 management in R projects, particularly for machine learning workflows
-requiring TensorFlow. Key features include:</p><ul><li><p><strong>Environment Creation</strong>: Automatically creates new environments or reuses
-existing ones with the same name</p></li>
-<li><p><strong>Package Management</strong>: Installs specified Python packages with version
-pinning support</p></li>
-<li><p><strong>Verification</strong>: Validates environment setup and package installations</p></li>
-<li><p><strong>Flexible Methods</strong>: Supports different backend methods for environment
-creation (reticulate vs system calls)</p></li>
-</ul><p>The function uses S3 method dispatch to handle different environment types,
+requiring TensorFlow. Key features include:</p>
+<p>- **Environment Creation**: Automatically creates new environments or reuses
+  existing ones with the same name
+- **Package Management**: Installs specified Python packages with version
+  pinning support
+- **Verification**: Validates environment setup and package installations
+- **Flexible Methods**: Supports different backend methods for environment
+  creation (reticulate vs system calls)</p>
+<p>The function uses S3 method dispatch to handle different environment types,
 allowing for extensible support of additional environment managers in the future.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="https://rstudio.github.io/reticulate/reference/conda-tools.html" class="external-link">reticulate::conda_create()</a></code>, <code><a href="https://rstudio.github.io/reticulate/reference/virtualenv-tools.html" class="external-link">reticulate::virtualenv_create()</a></code> for
+    <div class="dont-index"><p>[reticulate::conda_create()], [reticulate::virtualenv_create()] for
 underlying environment creation functions.</p></div>
     </div>
 
@@ -112,7 +117,6 @@ underlying environment creation functions.</p></div>
 <span class="r-in"><span><span class="co"># Setup a venv environment</span></span></span>
 <span class="r-in"><span><span class="fu">SetupPyEnv</span><span class="op">(</span><span class="st">"venv"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -124,7 +128,7 @@ underlying environment creation functions.</p></div>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

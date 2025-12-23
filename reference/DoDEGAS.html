@@ -11,7 +11,7 @@ a bootstrap aggregated multi-task learning approach."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,8 +23,15 @@ a bootstrap aggregated multi-task learning approach."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
+    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
     <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/Optimal_Parameters.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
+    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
     <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -37,7 +44,7 @@ a bootstrap aggregated multi-task learning approach."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/25-DEGAS_Screen.R" class="external-link"><code>R/25-DEGAS_Screen.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/version3/R/25-DEGAS_Screen.R" class="external-link"><code>R/25-DEGAS_Screen.R</code></a></small>
       <div class="d-none name"><code>DoDEGAS.Rd</code></div>
     </div>
 
@@ -62,7 +69,6 @@ a bootstrap aggregated multi-task learning approach.</p>
 <span>  env_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  degas_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  normality_test_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"jarque-bera"</span>, <span class="st">"d'agostino"</span>, <span class="st">"kolmogorov-smirnov"</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -72,11 +78,11 @@ a bootstrap aggregated multi-task learning approach.</p>
 
 
 <dl><dt id="arg-select-fraction">select_fraction<a class="anchor" aria-label="anchor" href="#arg-select-fraction"></a></dt>
-<dd><p>The top percentage of selected cells will be considered as Positive cells, without considering how much larger the possible correlation coefficient of the observation group is compared to that of the control group. Only usedl when <code>phenotype_class</code> is "binary" or "survival". (default: 0.05)</p></dd>
+<dd><p>The top percentage of selected cells will be considered as Positive cells, without considering how much larger the possible correlation coefficient of the observation group is compared to that of the control group. Only usedl when <code>phenotype_class</code> is "binary" or "survival". (default: <code>0.05</code>)</p></dd>
 
 
 <dt id="arg-min-thresh">min_thresh<a class="anchor" aria-label="anchor" href="#arg-min-thresh"></a></dt>
-<dd><p>DEGAS will calculate the possible correlation coefficients for each cell related to the phenotype. When the coefficient of the observation group is at least <code>min_thresh</code> larger than that of the control group, it can be considered related to the phenotype and will be marked as Positive. The priority of <code>min_thresh</code> is higher than that of <code>select_fraction.</code> (default: 0.4)</p></dd>
+<dd><p>DEGAS will calculate the possible correlation coefficients for each cell related to the phenotype. When the coefficient of the observation group is at least <code>min_thresh</code> larger than that of the control group, it can be considered related to the phenotype and will be marked as Positive. The priority of <code>min_thresh</code> is higher than that of <code>select_fraction.</code> (default: <code>0.4</code>)</p></dd>
 
 
 <dt id="arg-matched-bulk">matched_bulk<a class="anchor" aria-label="anchor" href="#arg-matched-bulk"></a></dt>
@@ -93,11 +99,11 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 
 
 <dt id="arg-sc-data-pheno-colname">sc_data.pheno_colname<a class="anchor" aria-label="anchor" href="#arg-sc-data-pheno-colname"></a></dt>
-<dd><p>Column name for single-cell phenotype in metadata (if available)</p></dd>
+<dd><p>Column name for single-cell phenotype in metadata (if available), default: <code>NULL</code></p></dd>
 
 
 <dt id="arg-label-type">label_type<a class="anchor" aria-label="anchor" href="#arg-label-type"></a></dt>
-<dd><p>Label type for DEGAS results (default: "DEGAS")</p></dd>
+<dd><p>Label type for DEGAS results (default: "<code>DEGAS"</code>)</p></dd>
 
 
 <dt id="arg-phenotype-class">phenotype_class<a class="anchor" aria-label="anchor" href="#arg-phenotype-class"></a></dt>
@@ -105,37 +111,37 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 
 
 <dt id="arg-tmp-dir">tmp_dir<a class="anchor" aria-label="anchor" href="#arg-tmp-dir"></a></dt>
-<dd><p>Temporary directory for intermediate files (default: "tmp")</p></dd>
+<dd><p>Temporary directory for intermediate files (default: <code>"tmp"</code>)</p></dd>
 
 
 <dt id="arg-env-params">env_params<a class="anchor" aria-label="anchor" href="#arg-env-params"></a></dt>
-<dd><p>List of environment parameters for Python setup including:</p><ul><li><p>env.name: environment name (default: "r-reticulate-degas")</p></li>
-<li><p>env.type: environment type "conda", "environment", or "venv" (default: "environment")</p></li>
-<li><p>env.method: environment setup method "system", "conda" (default: "system")</p></li>
+<dd><p>List of environment parameters for Python setup including:</p><ul><li><p>env.name: environment name (default: <code>"r-reticulate-degas"</code>)</p></li>
+<li><p>env.type: environment type "conda", "environment", or "venv" (default: <code>"environment"</code>)</p></li>
+<li><p>env.method: environment setup method "system", "conda" (default: <code>"system"</code>)</p></li>
 <li><p>env.file: path to environment file (default: system.file("conda/DEGAS_environment.yml", package = "SigBridgeR"))</p></li>
 <li><p>env.python_version: Python version (default: "3.9.15")</p></li>
 <li><p>env.packages: named vector of Python packages and versions (default: c("tensorflow" = "2.4.1", "protobuf" = "3.20" ,"numpy" = "any"))</p></li>
-<li><p>env.recreate: whether to recreate environment (default: FALSE)</p></li>
-<li><p>env.use_conda_forge: whether to use conda-forge channel (conda only, default: TRUE)</p></li>
-<li><p>env.verbose: verbose output (default: FALSE)</p></li>
+<li><p>env.recreate: whether to recreate environment (default: <code>FALSE</code>)</p></li>
+<li><p>env.use_conda_forge: whether to use conda-forge channel (conda only, default: <code>TRUE</code>)</p></li>
+<li><p>env.verbose: verbose output (default: <code>FALSE</code>)</p></li>
 </ul></dd>
 
 
 <dt id="arg-degas-params">degas_params<a class="anchor" aria-label="anchor" href="#arg-degas-params"></a></dt>
 <dd><p>List of DEGAS algorithm parameters including:</p><ul><li><p>DEGAS.model_type: model type ("BlankClass", "ClassBlank", "ClassClass", "ClassCox", "BlankCox")</p></li>
-<li><p>DEGAS.architecture: "Standard" (feed forward) or "DenseNet" (dense net)</p></li>
-<li><p>DEGAS.ff_depth: number of layers in model (&gt;=1, default: 3)</p></li>
-<li><p>DEGAS.pyloc: path to Python executable (default: NULL, automatic detection)</p></li>
-<li><p>DEGAS.bag_depth: bootstrap aggregation depth (&gt;=1, default: 5)</p></li>
-<li><p>DEGAS.train_steps: training steps (default: 2000)</p></li>
-<li><p>DEGAS.scbatch_sz: single-cell batch size (default: 200)</p></li>
-<li><p>DEGAS.patbatch_sz: patient batch size (default: 50)</p></li>
-<li><p>DEGAS.hidden_feats: hidden features (default: 50)</p></li>
-<li><p>DEGAS.do_prc: dropout percentage (default: 0.5)</p></li>
-<li><p>DEGAS.lambda1: regularization parameter 1 (default: 3.0)</p></li>
-<li><p>DEGAS.lambda2: regularization parameter 2 (default: 3.0)</p></li>
-<li><p>DEGAS.lambda3: regularization parameter 3 (default: 3.0)</p></li>
-<li><p>DEGAS.seed: random seed (default: 2)</p></li>
+<li><p>DEGAS.architecture: "Standard" (feed forward) or "DenseNet" (dense net), default: <code>"DenseNet"</code></p></li>
+<li><p>DEGAS.ff_depth: number of layers in model (&gt;=1, default: <code>3</code>)</p></li>
+<li><p>DEGAS.pyloc: path to Python executable (default: <code>NULL</code>, automatic detection)</p></li>
+<li><p>DEGAS.bag_depth: bootstrap aggregation depth (&gt;=1, default: <code>5</code>)</p></li>
+<li><p>DEGAS.train_steps: training steps (default: <code>2000</code>)</p></li>
+<li><p>DEGAS.scbatch_sz: single-cell batch size (default: <code>200</code>)</p></li>
+<li><p>DEGAS.patbatch_sz: patient batch size (default: <code>50</code>)</p></li>
+<li><p>DEGAS.hidden_feats: hidden features (default: <code>50</code>)</p></li>
+<li><p>DEGAS.do_prc: dropout percentage (default: <code>0.5</code>)</p></li>
+<li><p>DEGAS.lambda1: regularization parameter 1 (default: <code>3.0</code>)</p></li>
+<li><p>DEGAS.lambda2: regularization parameter 2 (default: <code>3.0</code>)</p></li>
+<li><p>DEGAS.lambda3: regularization parameter 3 (default: <code>3.0</code>)</p></li>
+<li><p>DEGAS.seed: random seed (default: <code>2</code>)</p></li>
 </ul></dd>
 
 
@@ -143,12 +149,9 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 <dd><p>Method for normality testing: "jarque-bera", "d'agostino", or "kolmogorov-smirnov"</p></dd>
 
 
-<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Logical, whether to print messages.</p></dd>
-
-
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>for future compatibility</p></dd>
+<dd><p>Additional arguments. Currently supports:</p><ul><li><p><code>verbose</code>: Logical indicating whether to print progress messages. Defaults to <code>TRUE</code>.</p></li>
+</ul></dd>
 
 </dl></div>
     <div class="section level2">
@@ -181,29 +184,18 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="Vec2sparse.html">Vec2sparse</a></code> for the structure transformation of phenotype
-<code><a href="jb.test.modified.html">jb.test.modified</a></code> for modified Jarque-Bera test
-<code><a href="mad.test.html">mad.test</a></code> for outlier detection using Median Absolute Deviation
-<code><a href="runCCMTLBag.optimized.html">runCCMTLBag.optimized</a></code> for DEGAS model training
-<code><a href="predClassBag.optimized.html">predClassBag.optimized</a></code> for DEGAS model prediction
-<code><a href="LabelBinaryCells.html">LabelBinaryCells</a></code> for binary classification
-<code><a href="LabelSurvivalCells.html">LabelSurvivalCells</a></code> for survival classification
-<code><a href="LabelContinuousCells.html">LabelContinuousCells</a></code> for continuous classification</p>
-<p>Other screen_method:
-<code><a href="DoScissor.html">DoScissor</a>()</code>,
-<code><a href="DoscAB.html">DoscAB</a>()</code>,
-<code><a href="DoscPAS.html">DoscPAS</a>()</code>,
-<code><a href="DoscPP.html">DoscPP</a>()</code></p>
+    <div class="dont-index"><p>Other screen_method:
+<code><a href="DoLP_SGL.html">DoLP_SGL()</a></code>,
+<code><a href="DoPIPET.html">DoPIPET()</a></code>,
+<code><a href="DoScissor.html">DoScissor()</a></code>,
+<code><a href="DoscAB.html">DoscAB()</a></code>,
+<code><a href="DoscPAS.html">DoscPAS()</a></code>,
+<code><a href="DoscPP.html">DoscPP()</a></code></p>
 <p>Other DEGAS:
-<code><a href="LabelBinaryCells.html">LabelBinaryCells</a>()</code>,
-<code><a href="LabelContinuousCells.html">LabelContinuousCells</a>()</code>,
-<code><a href="LabelSurvivalCells.html">LabelSurvivalCells</a>()</code>,
-<code><a href="Vec2sparse.html">Vec2sparse</a>()</code>,
-<code><a href="predClassBag.optimized.html">predClassBag.optimized</a>()</code>,
-<code><a href="readOutputFiles.optimized.html">readOutputFiles.optimized</a>()</code>,
-<code><a href="runCCMTL.optimized.html">runCCMTL.optimized</a>()</code>,
-<code><a href="runCCMTLBag.optimized.html">runCCMTLBag.optimized</a>()</code>,
-<code><a href="writeInputFiles.optimized.html">writeInputFiles.optimized</a>()</code></p></div>
+<code><a href="DEGASEnvSet.html">DEGASEnvSet()</a></code>,
+<code><a href="DEGASFindPy.html">DEGASFindPy()</a></code>,
+<code><a href="DEGASModelDetect.html">DEGASModelDetect()</a></code>,
+<code><a href="DEGASParamSet.html">DEGASParamSet()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -239,7 +231,7 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

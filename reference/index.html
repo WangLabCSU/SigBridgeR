@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,8 +19,15 @@
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
+    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
     <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/Optimal_Parameters.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
+    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
     <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -40,126 +47,185 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
 
       <dl><dt>
 
+          <code><a href="AddMetaFeature.html">AddMetaFeature()</a></code>
+
+        </dt>
+        <dd>Add Gene-Level Metadata to Seurat Object (Vectorized, ...-based)</dd>
+
+        <dt>
+
           <code><a href="AddMisc.html">AddMisc()</a></code>
 
         </dt>
         <dd>Safely Add Miscellaneous Data to Seurat Object</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="BulkPreProcess.html">BulkPreProcess()</a></code>
 
         </dt>
         <dd>Bulk RNA-seq Data Preprocessing and Quality Control Function</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="DoDEGAS.html">DoDEGAS()</a></code>
 
         </dt>
         <dd>Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration</dd>
-      </dl><dl><dt>
+
+        <dt>
+
+          <code><a href="DoLP_SGL.html">DoLP_SGL()</a></code>
+
+        </dt>
+        <dd>Perform LP-SGL Screening Analysis</dd>
+
+        <dt>
+
+          <code><a href="DoPIPET.html">DoPIPET()</a></code>
+
+        </dt>
+        <dd>Perform PIPET Screening Analysis</dd>
+
+        <dt>
 
           <code><a href="DoScissor.html">DoScissor()</a></code>
 
         </dt>
         <dd>Perform Scissor Screening Analysis</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="DoscAB.html">DoscAB()</a></code>
 
         </dt>
         <dd>Perform scAB Screening Analysis</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="DoscPAS.html">DoscPAS()</a></code>
 
         </dt>
         <dd>Perform scPAS Screening Analysis</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="DoscPP.html">DoscPP()</a></code>
 
         </dt>
         <dd>Perform scPP screening analysis</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="FindRobustElbow.html">FindRobustElbow()</a></code>
 
         </dt>
         <dd>Automatically determine optimal PCA dimensions using multiple robust methods</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="ListPyEnv.html">ListPyEnv()</a></code>
 
         </dt>
         <dd>List Available Python Environments</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="LoadRefData.html">LoadRefData()</a></code>
 
         </dt>
         <dd>Download &amp; Load Reference Data</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="MergeResult.html">MergeResult()</a></code>
 
         </dt>
         <dd>Merge Multiple Screening Analysis Results</dd>
-      </dl><dl><dt>
+
+        <dt>
+
+          <code><a href="QCFilter.html">QCFilter()</a></code>
+
+        </dt>
+        <dd>Filter Seurat object cells by QC metrics</dd>
+
+        <dt>
+
+          <code><a href="QCPatternDetect.html">QCPatternDetect()</a></code>
+
+        </dt>
+        <dd>Calculate Percentage of Features Matching Patterns</dd>
+
+        <dt>
 
           <code><a href="SCPreProcess.html">SCPreProcess()</a></code>
 
         </dt>
         <dd>Single-Cell RNA-seq Preprocessing Pipeline</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="Screen.html">Screen()</a></code>
 
         </dt>
         <dd>Single-Cell Data Screening</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="ScreenFractionPlot.html">ScreenFractionPlot()</a></code>
 
         </dt>
         <dd>Visualization of Cell Screening Fractions</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="ScreenUpset.html">ScreenUpset()</a></code>
 
         </dt>
         <dd>ScreenUpset - Visualize cell type intersections from screened Seurat object</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="SetupPyEnv.html">SetupPyEnv()</a></code>
 
         </dt>
         <dd>Create or Use Python Environment with Required Packages</dd>
-      </dl><dl><dt>
 
-          <code><a href="SetupPyEnv.conda.html">SetupPyEnv(<i>&lt;conda&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Setup Conda Python Environment</dd>
-      </dl><dl><dt>
-
-          <code><a href="SetupPyEnv.venv.html">SetupPyEnv(<i>&lt;venv&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Setup Virtual Environment (venv)</dd>
-      </dl><dl><dt>
+        <dt>
 
           <code><a href="SymbolConvert.html">SymbolConvert()</a></code>
 
         </dt>
         <dd>Convert Ensembles Version IDs &amp; TCGA Version IDs to Genes in Bulk Expression Data</dd>
+
+        <dt>
+
+          <code><a href="aggregate-dups.html">AggregateDupRows()</a></code> <code><a href="aggregate-dups.html">AggregateDupCols()</a></code> <code><a href="aggregate-dups.html">AggregateDups()</a></code>
+
+        </dt>
+        <dd>Aggregate Rows or Columns with Duplicate Names</dd>
+
+        <dt>
+
+          <code><a href="getFuncOption.html">getFuncOption()</a></code>
+
+        </dt>
+        <dd>Configuration Functions for SigBridgeR Package</dd>
+
+        <dt>
+
+          <code><a href="setFuncOption.html">setFuncOption()</a></code>
+
+        </dt>
+        <dd>Configuration Functions for SigBridgeR Package</dd>
       </dl></div>
   </main></div>
 
@@ -169,7 +235,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

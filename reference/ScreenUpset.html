@@ -13,7 +13,7 @@ number of cells positive for each combination."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,8 +25,15 @@ number of cells positive for each combination."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
+    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
     <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/Optimal_Parameters.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
+    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
     <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -39,7 +46,7 @@ number of cells positive for each combination."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>ScreenUpset - Visualize cell type intersections from screened Seurat object</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/31-ScreenUpset.R" class="external-link"><code>R/31-ScreenUpset.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/version3/R/31-ScreenUpset.R" class="external-link"><code>R/31-ScreenUpset.R</code></a></small>
       <div class="d-none name"><code>ScreenUpset.Rd</code></div>
     </div>
 
@@ -62,6 +69,7 @@ number of cells positive for each combination.</p>
 <span>  title <span class="op">=</span> <span class="st">"Cell Counts Across Screen Set Intersections"</span>,</span>
 <span>  bar_color <span class="op">=</span> <span class="st">"#4E79A7"</span>,</span>
 <span>  combmatrix_point_color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu">SigBridgeRUtils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SigBridgeRUtils/man/SigBridgeR_Function_Setting.html" class="external-link">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -108,6 +116,10 @@ Default: NULL, indicating that a self-search pattern will be used.</p></dd>
 <dd><p>Color for points in the combination matrix. Default: "black".</p></dd>
 
 
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical, whether to print a message</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">ggplot2::theme()</a></code> for customizing the plot appearance.</p></dd>
 
@@ -131,7 +143,7 @@ Default: NULL, indicating that a self-search pattern will be used.</p></dd>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other visualization_function:
-<code><a href="ScreenFractionPlot.html">ScreenFractionPlot</a>()</code></p></div>
+<code><a href="ScreenFractionPlot.html">ScreenFractionPlot()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -150,6 +162,7 @@ Default: NULL, indicating that a self-search pattern will be used.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -161,7 +174,7 @@ Default: NULL, indicating that a self-search pattern will be used.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

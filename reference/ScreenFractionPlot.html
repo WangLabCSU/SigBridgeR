@@ -13,7 +13,7 @@ screen types visualization."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,8 +25,15 @@ screen types visualization."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
+    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
     <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/Optimal_Parameters.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
+    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
     <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -39,7 +46,7 @@ screen types visualization."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Visualization of Cell Screening Fractions</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/30-ScreenFractionPlot.R" class="external-link"><code>R/30-ScreenFractionPlot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/version3/R/30-ScreenFractionPlot.R" class="external-link"><code>R/30-ScreenFractionPlot.R</code></a></small>
       <div class="d-none name"><code>ScreenFractionPlot.Rd</code></div>
     </div>
 
@@ -68,7 +75,8 @@ screen types visualization.</p>
 <span>  y_lab <span class="op">=</span> <span class="st">"Fraction of Status"</span>,</span>
 <span>  ncol <span class="op">=</span> <span class="fl">2</span>, <span class="co"># number of columns for facet wrap</span></span>
 <span>  nrow <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># number of rows for facet wrap</span></span>
-<span>  <span class="va">...</span> <span class="co"># unused</span></span>
+<span>  verbose <span class="op">=</span> <span class="fu">SigBridgeRUtils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SigBridgeRUtils/man/SigBridgeR_Function_Setting.html" class="external-link">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span> <span class="co"># ggplot2 theme arguments</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -141,6 +149,10 @@ can be a vector of titles or single title (will append screen type).</p></dd>
 <dd><p>Number of rows for facet wrap when multiple screen types (default: NULL).</p></dd>
 
 
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical, whether to print a message</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Other arguments passed to ggplot2::theme()</p></dd>
 
@@ -168,7 +180,7 @@ with screening statistics including:
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other visualization_function:
-<code><a href="ScreenUpset.html">ScreenUpset</a>()</code></p></div>
+<code><a href="ScreenUpset.html">ScreenUpset()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -201,7 +213,7 @@ with screening statistics including:
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -1,0 +1,115 @@
+# **SigBridgeR** [![sigbridger website](reference/figures/logo_white.png)](https://wanglabcsu.github.io/SigBridgeR/)
+
+[![Repo
+Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)[![License:
+GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
+[![](https://img.shields.io/badge/devel%20version-2.5.4-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
+[![R CMD
+check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
+[![registry status
+badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/)
+
+------------------------------------------------------------------------
+
+## 🌐 Overview
+
+SigBridgeR integrates multiple algorithms, using single-cell RNA
+sequencing data, bulk expression data, and sample-related phenotypic
+data, to identify the cells most closely associated with the phenotypic
+data, performing as a bridge to existing tools.
+
+## 🔧 Installation
+
+Usually we recommend installing the latest release from GitHub because
+of the latest features and bug fixes.
+
+1.  Install the development version from GitHub:
+
+``` R
+if (!requireNamespace("pak")) {
+  install.packages("pak")
+}
+pak::pkg_install("WangLabCSU/SigBridgeR")
+```
+
+1.  Install from r-universe:
+
+``` R
+install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+```
+
+**It is recommended to install the following packages:**
+
+For better performance:
+
+``` R
+pak::pkg_install(c(
+  "sparseMatrixStats",
+  "matrixStats",
+  "preprocessCore",
+  "tidyr",
+  "furrr",
+  "future",
+  "matrixTests"
+))
+```
+
+For seamless integration with other file types such as `h5ad`
+
+``` R
+pak::pkg_install("anndata")
+# or
+pak::pkg_install("anndataR") # both are supported
+```
+
+For visualization:
+
+``` R
+pak::pkg_install(c(
+  "ggplot2",
+  "randomcoloR", # or RColorBrewer
+  "ggupset", # for upset plot
+  "patchwork", # for fraction plot
+  "ggforce", # for pca plot
+  "ggVennDiagram" # for Venn Diagram
+))
+```
+
+To reproduce the tutorial to learn more usage
+
+``` R
+pak::pkg_install(c(
+  "zeallot",
+  "here",
+  "org.Hs.eg.db"
+))
+```
+
+## 📓 Documentation
+
+Get Started:
+
+- [A Quick Started
+  Guide](https://wanglabcsu.github.io/sigbridger/vignettes/Quick_Start.md)
+- [Full
+  Tutorial](https://wanglabcsu.github.io/sigbridger/vignettes/Full_Tutorial.md)
+  for more details
+- View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
+- Use `?SigBridgeR::function_name` to access the help documents in R.
+
+If you encounter problems, please check:
+
+- the [Troubleshooting
+  Guide](https://wanglabcsu.github.io/sigbridger/vignettes/Troubleshooting.md),
+  or
+- the [Github issues](https://github.com/WangLabCSU/SigBridgeR/issues)
+  page if you want to file bug reports or feature requests
+
+Let us know if you have ideas to make this project better!
+
+Other information:
+
+- What is *Single Cell Sequencing*?
+  - [Veiw in Wiki](https://en.wikipedia.org/wiki/Single-cell_sequencing)
+- What is *RNA-seq*?
+  - [View in Wiki](https://en.wikipedia.org/wiki/RNA-Seq)

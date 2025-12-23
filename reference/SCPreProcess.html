@@ -13,7 +13,7 @@ from raw data to clustered embeddings."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,8 +25,15 @@ from raw data to clustered embeddings."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
+    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
     <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/Optimal_Parameters.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
+    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
     <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -39,7 +46,7 @@ from raw data to clustered embeddings."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Single-Cell RNA-seq Preprocessing Pipeline</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/10-SCPreProcess.R" class="external-link"><code>R/10-SCPreProcess.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/version3/R/10-SCPreProcess.R" class="external-link"><code>R/10-SCPreProcess.R</code></a></small>
       <div class="d-none name"><code>SCPreProcess.Rd</code></div>
     </div>
 
@@ -54,8 +61,6 @@ from raw data to clustered embeddings.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># Default S3 method</span></span>
 <span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
 <span>  <span class="va">sc</span>,</span>
@@ -67,19 +72,18 @@ from raw data to clustered embeddings.</p>
 <span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span><span class="op">)</span>,</span>
 <span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>  data_filter.thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>, percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>    percent.rp <span class="op">=</span> <span class="fl">60L</span><span class="op">)</span>,</span>
 <span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
 <span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
 <span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for class 'matrix'</span></span>
+<span><span class="co"># S3 method for class 'R6'</span></span>
 <span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
 <span>  <span class="va">sc</span>,</span>
 <span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -88,91 +92,21 @@ from raw data to clustered embeddings.</p>
 <span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
+<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span><span class="op">)</span>,</span>
 <span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>  data_filter.thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>, percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>    percent.rp <span class="op">=</span> <span class="fl">60L</span><span class="op">)</span>,</span>
 <span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
 <span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
 <span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'data.frame'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
-<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="st">"SC_Screening_Proj"</span>,</span>
-<span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
-<span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
-<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
-<span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
-<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'dgCMatrix'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
-<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="st">"SC_Screening_Proj"</span>,</span>
-<span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
-<span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
-<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
-<span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
-<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'AnnDataR6'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
-<span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  project <span class="op">=</span> <span class="st">"SC_Screening_Proj"</span>,</span>
-<span>  min_cells <span class="op">=</span> <span class="fl">400L</span>,</span>
-<span>  min_features <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>  quality_control <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span>, <span class="st">"^mt-"</span><span class="op">)</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_filter.nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>,</span>
-<span>  data_filter.percent.mt <span class="op">=</span> <span class="fl">20L</span>,</span>
-<span>  normalization_method <span class="op">=</span> <span class="st">"LogNormalize"</span>,</span>
-<span>  scale_factor <span class="op">=</span> <span class="fl">10000L</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  selection_method <span class="op">=</span> <span class="st">"vst"</span>,</span>
-<span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'Seurat'</span></span>
-<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">SCPreProcess</span><span class="op">(</span><span class="va">sc</span>, column2only_tumor <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -181,19 +115,23 @@ from raw data to clustered embeddings.</p>
 
 <dl><dt id="arg-sc">sc<a class="anchor" aria-label="anchor" href="#arg-sc"></a></dt>
 <dd><p>Input data, one of:</p><ul><li><p><code>data.frame/matrix/dgCMatrix</code>: Raw count matrix (features x cells)</p></li>
-<li><p><code>AnnDataR6</code>: Python AnnData object via reticulate</p></li>
+<li><p><code>R6</code>: Python AnnData object, obtained via package <code>anndata</code> or <code>anndataR</code></p></li>
 <li><p><code>Seurat</code>: Preprocessed Seurat object</p></li>
 </ul></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to specific methods. Currently unused.</p></dd>
+<dd><p>Additional arguments passed to specific methods. Currently supports:</p><ul><li><p><code>verbose</code>: Logical indicating whether to print progress messages. Defaults to <code>TRUE</code>.</p></li>
+<li><p><code>dims_Neighbors</code>: Dimensions to use for <code>FindNeighbors</code>. Defaults to <code>NULL</code>, using <code>dims</code>.</p></li>
+<li><p><code>dims_TSNE</code>: Dimensions to use for <code>RunTSNE</code>. Defaults to <code>NULL</code>, using <code>dims</code>.</p></li>
+<li><p><code>dims_UMAP</code>: Dimensions to use for <code>RunUMAP</code>. Defaults to <code>NULL</code>, using <code>dims</code>.</p></li>
+</ul></dd>
 
 
 <dt id="arg-meta-data">meta_data<a class="anchor" aria-label="anchor" href="#arg-meta-data"></a></dt>
 <dd><p>A data.frame containing metadata for each cell. It will be
-added to the Seurat object as <code>@meta.data</code>. If <code>NULL</code>, it will be
-extracted from the input object if possible.</p></dd>
+added to the Seurat object as <code>@meta.data</code>. If sc is an anndata object,
+<code>obs</code> will be automatically used.</p></dd>
 
 
 <dt id="arg-column-only-tumor">column2only_tumor<a class="anchor" aria-label="anchor" href="#arg-column-only-tumor"></a></dt>
@@ -207,22 +145,23 @@ filter the Seurat object to only tumor cells. If <code>NULL</code>, no filtering
 
 <dt id="arg-min-cells">min_cells<a class="anchor" aria-label="anchor" href="#arg-min-cells"></a></dt>
 <dd><p>Minimum number of cells that must express a feature for it
-to be included in the analysis. Defaults to <code>400</code>.</p></dd>
+to be included in the analysis. Defaults to <code>400L</code>.</p></dd>
 
 
 <dt id="arg-min-features">min_features<a class="anchor" aria-label="anchor" href="#arg-min-features"></a></dt>
 <dd><p>Minimum number of features that must be detected in a
-cell for it to be included in the analysis. Defaults to <code>0</code>.</p></dd>
+cell for it to be included in the analysis. Defaults to <code>0L</code>.</p></dd>
 
 
 <dt id="arg-quality-control">quality_control<a class="anchor" aria-label="anchor" href="#arg-quality-control"></a></dt>
-<dd><p>Logical indicating whether to perform mitochondrial
-percentage quality control. Defaults to <code>TRUE</code>.</p></dd>
+<dd><p>Logical, for identification of the proportion of mitochondrial genes,
+ribosomal protein genes, or other types of genes (without filtering),
+the results will be stored in <code>meta.data</code>. Defaults to <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-quality-control-pattern">quality_control.pattern<a class="anchor" aria-label="anchor" href="#arg-quality-control-pattern"></a></dt>
-<dd><p>Character pattern to identify mitochondrial
-genes, ribosomal protein genes, or other unwanted genes, as well as combinations
+<dd><p>A vector or character containing regex pattern(s) to identify
+mitochondrial genes, ribosomal protein genes, or other unwanted genes, as well as combinations
 of these genes. Customized patterns are supported. Defaults to <code>"^MT-"</code>.</p></dd>
 
 
@@ -231,14 +170,14 @@ of these genes. Customized patterns are supported. Defaults to <code>"^MT-"</cod
 quality metrics. Defaults to <code>TRUE</code>.</p></dd>
 
 
-<dt id="arg-data-filter-nfeature-rna-thresh">data_filter.nFeature_RNA_thresh<a class="anchor" aria-label="anchor" href="#arg-data-filter-nfeature-rna-thresh"></a></dt>
-<dd><p>Numeric vector of length 2 specifying
-the minimum and maximum number of features per cell. Defaults to <code>c(200, 6000)</code>.</p></dd>
-
-
-<dt id="arg-data-filter-percent-mt">data_filter.percent.mt<a class="anchor" aria-label="anchor" href="#arg-data-filter-percent-mt"></a></dt>
-<dd><p>Maximum mitochondrial percentage allowed.
-Defaults to <code>20</code>.</p></dd>
+<dt id="arg-data-filter-thresh">data_filter.thresh<a class="anchor" aria-label="anchor" href="#arg-data-filter-thresh"></a></dt>
+<dd><p>A list containing filtering thresholds for different quality metrics:</p><ul><li><p><code>nFeature_RNA_thresh</code>: Numeric vector of length 2 specifying the minimum and maximum
+number of features per cell. Defaults to <code>c(200L, 6000L)</code></p></li>
+<li><p><code>percent.mt</code>: Maximum mitochondrial percentage allowed. Defaults to <code>20L</code></p></li>
+<li><p><code>percent.rp</code>: Maximum ribosomal protein percentage allowed. Not used in default
+unless ribosomal protein genes filter pattern (like <code>^RP[LS]</code>) is added to
+<code>quality_control.pattern</code></p></li>
+</ul></dd>
 
 
 <dt id="arg-normalization-method">normalization_method<a class="anchor" aria-label="anchor" href="#arg-normalization-method"></a></dt>
@@ -247,7 +186,7 @@ or "RC". Defaults to <code>"LogNormalize"</code>.</p></dd>
 
 
 <dt id="arg-scale-factor">scale_factor<a class="anchor" aria-label="anchor" href="#arg-scale-factor"></a></dt>
-<dd><p>Scaling factor for normalization. Defaults to <code>10000</code>.</p></dd>
+<dd><p>Scaling factor for normalization. Defaults to <code>10000L</code>.</p></dd>
 
 
 <dt id="arg-scale-features">scale_features<a class="anchor" aria-label="anchor" href="#arg-scale-features"></a></dt>
@@ -269,21 +208,30 @@ more clusters. Defaults to <code>0.6</code>.</p></dd>
 <dd><p>Dimensions to use for clustering and dimensionality reduction.
 If NULL, automatically determined by elbow method. Defaults to <code>NULL</code>.</p></dd>
 
-
-<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Logical indicating whether to print progress messages.
-Defaults to <code>TRUE</code>.</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A Seurat object containing:</p><ul><li><p>Data filter and quality control</p></li>
-<li><p>Normalized and scaled expression data</p></li>
-<li><p>Variable features</p></li>
-<li><p>PCA/tSNE/UMAP reductions</p></li>
-<li><p>Cluster identities</p></li>
+    <p>A Seurat object containing:</p><ul><li><p>Normalized and scaled expression data</p></li>
+<li><p>Variable features identified by selection method</p></li>
+<li><p>PCA, t-SNE, and UMAP dimensionality reductions</p></li>
+<li><p>Cluster identities at specified resolution</p></li>
+<li><p>Quality control metrics in <code>@meta.data</code></p></li>
 <li><p>When tumor cells filtered: original dimensions in <code>@misc$raw_dim</code></p></li>
 <li><p>Final dimensions in <code>@misc$self_dim</code></p></li>
+<li><p>Quality control column names in <code>@misc$qc_colnames</code></p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><strong>Quality Control Patterns:</strong>
+The function supports flexible pattern matching for quality control, for example:</p><ul><li><p><code>"^MT-"</code> - Mitochondrial genes (default)</p></li>
+<li><p><code>"^RP\[LS\]"</code> - Ribosomal protein genes</p></li>
+<li><p><code>"^\[rt\]rna"</code> - rRNA and tRNA genes</p></li>
+<li><p>Custom patterns using regular expressions</p></li>
+<li><p>Combined patterns: <code>"^MT-|^RP\[LS\]"</code> for both mitochondrial and ribosomal genes</p></li>
+</ul><p><strong>Flexible Filtering:</strong>
+The filtering system dynamically adapts to detected quality control patterns:</p><ul><li><p>Column names are automatically generated from patterns</p></li>
+<li><p>Multiple thresholds can be specified in <code>data_filter.thresh</code></p></li>
+<li><p>Use <code>SigBridgeR:::Pattern2Colname</code> to determine correct column names for custom patterns if still confused</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -338,7 +286,7 @@ Defaults to <code>TRUE</code>.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

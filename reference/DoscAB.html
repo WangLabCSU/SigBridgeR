@@ -13,7 +13,7 @@ for phenotype association and cell-cell similarity."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,8 +25,15 @@ for phenotype association and cell-cell similarity."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
+    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
     <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/Optimal_Parameters.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
+    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
     <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -39,7 +46,7 @@ for phenotype association and cell-cell similarity."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Perform scAB Screening Analysis</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/23-scAB_Screen.R" class="external-link"><code>R/23-scAB_Screen.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/version3/R/23-scAB_Screen.R" class="external-link"><code>R/23-scAB_Screen.R</code></a></small>
       <div class="d-none name"><code>DoscAB.Rd</code></div>
     </div>
 
@@ -58,11 +65,10 @@ for phenotype association and cell-cell similarity.</p>
 <span>  <span class="va">phenotype</span>,</span>
 <span>  label_type <span class="op">=</span> <span class="st">"scAB"</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"binary"</span>, <span class="st">"survival"</span><span class="op">)</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">0.005</span>,</span>
-<span>  alpha_2 <span class="op">=</span> <span class="fl">5e-05</span>,</span>
-<span>  maxiter <span class="op">=</span> <span class="fl">2000</span>,</span>
-<span>  tred <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  alpha_2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  maxiter <span class="op">=</span> <span class="fl">2000L</span>,</span>
+<span>  tred <span class="op">=</span> <span class="fl">2L</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -98,27 +104,25 @@ for phenotype association and cell-cell similarity.</p>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
-<dd><p>Coefficient of phenotype regularization (default=0.005).</p></dd>
+<dd><p>Coefficient of phenotype regularization (default=<code>0.005</code>).</p></dd>
 
 
 <dt id="arg-alpha-">alpha_2<a class="anchor" aria-label="anchor" href="#arg-alpha-"></a></dt>
-<dd><p>Coefficent of cell-cell similarity regularization (default=5e-05).</p></dd>
+<dd><p>Coefficent of cell-cell similarity regularization (default=<code>0.005</code>).</p></dd>
 
 
 <dt id="arg-maxiter">maxiter<a class="anchor" aria-label="anchor" href="#arg-maxiter"></a></dt>
-<dd><p>NMF optimization iterations (default=2000).</p></dd>
+<dd><p>Maximum number of iterations for NMF (default=2000).</p></dd>
 
 
 <dt id="arg-tred">tred<a class="anchor" aria-label="anchor" href="#arg-tred"></a></dt>
-<dd><p>Z-score threshold (default=2).</p></dd>
-
-
-<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Logical indicating whether to print progress messages. Default: <code>TRUE</code>.</p></dd>
+<dd><p>Z-score threshold in finding subsets (default=2).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>For future update.</p></dd>
+<dd><p>Additional arguments. Currently supports:</p><ul><li><p><code>verbose</code>: Logical indicating whether to print progress messages. Defaults to <code>TRUE</code>.</p></li>
+<li><p><code>seed</code>: For reproducibility, default is <code>123L</code></p></li>
+</ul></dd>
 
 </dl></div>
     <div class="section level2">
@@ -145,16 +149,12 @@ A copy of the license is available at <a href="https://www.gnu.org/licenses/gpl-
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other screen_method:
-<code><a href="DoDEGAS.html">DoDEGAS</a>()</code>,
-<code><a href="DoScissor.html">DoScissor</a>()</code>,
-<code><a href="DoscPAS.html">DoscPAS</a>()</code>,
-<code><a href="DoscPP.html">DoscPP</a>()</code></p>
-<p>Other scAB:
-<code><a href="NMF.optimized.html">NMF.optimized</a>()</code>,
-<code><a href="create_scAB.v5.html">create_scAB.v5</a>()</code>,
-<code><a href="findSubset.optimized.html">findSubset.optimized</a>()</code>,
-<code><a href="scAB.optimized.html">scAB.optimized</a>()</code>,
-<code><a href="select_K.optimized.html">select_K.optimized</a>()</code></p></div>
+<code><a href="DoDEGAS.html">DoDEGAS()</a></code>,
+<code><a href="DoLP_SGL.html">DoLP_SGL()</a></code>,
+<code><a href="DoPIPET.html">DoPIPET()</a></code>,
+<code><a href="DoScissor.html">DoScissor()</a></code>,
+<code><a href="DoscPAS.html">DoscPAS()</a></code>,
+<code><a href="DoscPP.html">DoscPP()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -168,7 +168,7 @@ A copy of the license is available at <a href="https://www.gnu.org/licenses/gpl-
 <span class="r-in"><span>  label_type <span class="op">=</span> <span class="st">"disease_status"</span>,</span></span>
 <span class="r-in"><span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span></span>
 <span class="r-in"><span>  alpha <span class="op">=</span> <span class="fl">0.005</span>,</span></span>
-<span class="r-in"><span>  alpha_2 <span class="op">=</span> <span class="fl">5e-05</span>,</span></span>
+<span class="r-in"><span>  alpha_2 <span class="op">=</span> <span class="fl">0.005</span>,</span></span>
 <span class="r-in"><span>  maxiter <span class="op">=</span> <span class="fl">2000</span>,</span></span>
 <span class="r-in"><span>  tred <span class="op">=</span> <span class="fl">2</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
@@ -185,7 +185,7 @@ A copy of the license is available at <a href="https://www.gnu.org/licenses/gpl-
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
