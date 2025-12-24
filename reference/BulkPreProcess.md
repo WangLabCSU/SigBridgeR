@@ -45,35 +45,37 @@ BulkPreProcess(
 
 - check:
 
-  Whether to perform detailed quality checks, default: TRUE
+  Whether to perform detailed quality checks, default: `TRUE`
 
 - min_count_threshold:
 
-  Minimum count threshold for gene filtering, default: 10
+  Minimum count threshold for gene filtering. Only values greater than
+  this threshold are considered to represent valid gene expression.
+  Default: `10L`
 
 - min_gene_expressed:
 
-  Minimum number of samples a gene must be expressed in, default: 3
+  Minimum number of samples a gene must be expressed in, default: `3L`
 
 - min_total_reads:
 
-  Minimum total reads per sample, default: 1e6
+  Minimum total reads per sample, default: `1e6L`
 
 - min_genes_detected:
 
-  Minimum number of genes detected per sample, default: 10000
+  Minimum number of genes detected per sample, default: `10000`
 
 - min_correlation:
 
-  Minimum correlation threshold between samples, default: 0.8
+  Minimum correlation threshold between samples, default: `0.8`
 
 - n_top_genes:
 
-  Number of top variable genes for PCA analysis, default: 500
+  Number of top variable genes for PCA analysis, default: `500`
 
 - show_plot_results:
 
-  Whether to generate visualization plots, default: TRUE
+  Whether to generate visualization plots, default: `TRUE`
 
 - ...:
 

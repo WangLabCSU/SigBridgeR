@@ -315,8 +315,8 @@ matrices.
 
 ##### 2.2.1 Evaluate the quality of your bulk RNA-seq data
 
-`BulkPreProcess` performs comprehensive quality control on bulk RNA-seq
-data.
+`BulkPreProcess` performs comprehensive quality control on raw bulk
+RNA-seq count matrix data.
 
 Key parameters for `BulkPreProcess`:
 
@@ -368,7 +368,7 @@ filtered_counts <- BulkPreProcess(
 ```
 
 The function returns a filtered bulk count matrix after applying quality
-control steps.
+control steps and does not perform log2 transformation on the data.
 
 ###### Quality Control Metrics Reported
 
@@ -1551,38 +1551,60 @@ head(sample_info)
 # 5 TCGA-44-6775 23.16         0 batch1
 # 6 TCGA-44-2655 43.50         0 batch1
 
-bulk <- BulkPreProcess(
-  data = bulk,
-  sample_info = sample_info,
-  min_count_threshold = 0,
-  min_gene_expressed = 0,
-  min_total_reads = 0,
-  min_genes_detected = 0,
-  min_correlation = 0.1
+set.seed(123)
+
+# * generate a mock data
+gene_ids <- c(
+  paste0("ENSG", sprintf("%011d", 1:3900)),
+  paste0("GENE_", LETTERS[1:100])
 )
-# ℹ [2025/10/11 09:17:46] Starting data preprocessing...
-# ✔ [2025/10/11 09:17:47] Data loaded: 4071 genes * 506 samples
-# ℹ [2025/10/11 09:17:47] Computing basic statistics...
-# ✔ [2025/10/11 09:17:47] 4071 genes pass expression filter
-# ℹ [2025/10/11 09:17:47] Starting detailed quality checks...
-# ℹ [2025/10/11 09:17:47] Computing sample correlations...
-# ✔ [2025/10/11 09:17:49] Correlation analysis completed: min correlation = 0.288
-# ℹ [2025/10/11 09:17:49] Performing principal component analysis...
-# ℹ [2025/10/11 09:17:49] PCA completed: PC1(9.54%) PC2(7.46%), 7 outlier samples
-# Warning: Outlier samples detected: TCGA-49-6742, TCGA-55-8513, TCGA-55-8094, TCGA-78-7150, TCGA-78-7220, TCGA-MP-A4TA, TCGA-50-5072
-# ℹ [2025/10/11 09:17:49] Generating visualization plots...
-# ✔ [2025/10/11 09:17:49] Plot generation completed
-# ℹ [2025/10/11 09:17:50] Performing data filtering...
-# ✔ [2025/10/11 09:17:50] Data filtering completed:
-# ℹ   Genes: 4071 -> 4071 (removed 0)
+library(MASS)
+mu <- c(
+  runif(500, 100, 2000), # high
+  runif(1500, 20, 200), # medium
+  rexp(2000, rate = 1 / 2) # low (gamma-like, many near-zero)
+)
+lib_size_factor <- rlnorm(506, meanlog = log(3e7), sdlog = 0.3) / 3e7 # ~20–60M reads
+counts_mat <- matrix(0L, nrow = 4000, ncol = 506)
+
+for (i in seq_len(4000)) {
+  mu_i <- mu[i] * lib_size_factor
+  # dispersion decreases with mean: phi ≈ 0.5 / sqrt(mu_i + 1)
+  phi_i <- pmax(0.05, 0.5 / sqrt(mu_i + 1))
+  size_i <- 1 / phi_i
+  counts_mat[i, ] <- rnbinom(506, mu = mu_i, size = size_i)
+}
+counts_mat <- floor(counts_mat)
+counts_mat[counts_mat < 0] <- 0L
+
+colnames(counts_mat) <- sample_info$sample
+rownames(counts_mat) <- gene_ids
+
+
+
+filtered_counts_mat <- BulkPreProcess(
+  data = counts_mat,
+  sample_info = sample_info,
+  min_count_threshold = 10L,
+  min_gene_expressed = 3L,
+  min_total_reads = 1e5L,
+  min_genes_detected = 1000L,
+  min_correlation = 0.8,
+  n_top_genes = 500L, # used in pca
+  show_plot_results = TRUE
+)
+# ✔ [2025/12/23 15:19:20] Data loaded: 4000 genes * 506 samples
+# ℹ Aggregate Duplicated genes in rownames
+# ℹ [2025/12/23 15:19:21] Starting detailed quality checks...
+# ✔ Sample correlation: Good (minimum = 0.95)
+# ℹ [2025/12/23 15:19:23] PCA completed: PC1(0.99%) PC2(0.83%), 27 outlier samples
+# Warning: Detected 27 outlier sample(s) : TCGA-86-A456, TCGA-55-A492, TCGA-78-8660, TCGA-69-7973, TCGA-69-7980, TCGA-97-7937, TCGA-55-6543, TCGA-86-8671, TCGA-86-8359, TCGA-05-4405, TCGA-62-A471,
+# TCGA-35-3615, TCGA-05-5428, TCGA-99-8025, TCGA-44-6779, TCGA-4B-A93V, TCGA-MP-A4T7, TCGA-55-8203, …, TCGA-55-8301, and TCGA-55-7727
+# ℹ [2025/12/23 15:19:23] Generating visualization plots...
+# ✔ [2025/12/23 15:19:24] Data filtering completed:
+# ℹ   Genes: 4000 -> 2703 (removed 1297)
 # ℹ   Samples: 506 -> 506 (removed 0)
-# ℹ Quality Assessment Summary:
-# ✔ Data integrity: No missing values
-# ✔ Sample read depth: All samples pass threshold (>=0)
-# ✔ Gene detection: All samples pass threshold (>=0)
-# ✔ Sample correlation: Good (minimum = 0.288)
-# Warning: Sample outliers: 7 sample(s) detected
-# ✔ [2025/10/11 09:17:50] BulkPreProcess completed
+# ✔ [2025/12/23 15:19:24] BulkPreProcess completed
 ```
 
 And we will see a PCA plot.
@@ -1890,7 +1912,7 @@ lpsgl_result <- Screen(
     matched_bulk = bulk,
     sc_data = seurat,
     phenotype = pheno,
-    label_type = "survival",
+    label_type = "LP_SGL",
     phenotype_class = "survival",
     screen_method = "LP_SGL"  
 )
@@ -1908,18 +1930,9 @@ table(lpsgl_result$scRNA_data$LP_SGL)
 #       77      778      233 
 ```
 
-``` r
-pipet_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    label_type = "survival",
-    phenotype_class = "survival",
-    screen_method = "PIPET"
-)
-
-table(pipet_result$scRNA_data$PIPET)
-```
+Note that PIPET does not support survival phenotype. We will show how to
+use PIPET in [Section
+5.3](#id_53-binarized-phenotype-associated-cell-screening)
 
 After these algorithms have been run, the four sets of data can be
 merged since screening methods performed on the same data.
@@ -1930,9 +1943,10 @@ screen_result = MergeResult(
     scpas_result,
     scab_result,
     scpp_result,
-    degas_result
+    degas_result,
+    lpsgl_result
 )
-# ✔ Successfully merged 5 objects.
+# ✔ Successfully merged 6 objects.
 
 class(screen_result)
 # [1] "Seurat"
@@ -1940,8 +1954,9 @@ class(screen_result)
 # [1] "SeuratObject"
 
 colnames(screen_result[[]])
-#  [1] "orig.ident"      "nCount_RNA"      "nFeature_RNA"    "RNA_snn_res.0.1" "seurat_clusters" "scissor"         "scPAS_RS"        "scPAS_NRS"       "scPAS_Pvalue"    "scPAS_FDR"      
-# [11] "scPAS"           "scAB"            "scAB_Subset1"    "Subset1_loading" "scAB_Subset2"    "Subset2_loading" "scPP_AUCup"      "scPP_AUCdown"    "scPP"            "DEGAS"            
+#  [1] "orig.ident"      "nCount_RNA"      "nFeature_RNA"    "test_col"        "percent.rp"      "percent.mt"      "RNA_snn_res.0.1" "seurat_clusters"
+#  [9] "scissor"         "scAB"            "scAB_Subset1"    "Subset1_loading" "scAB_Subset2"    "Subset2_loading" "scPAS_RS"        "scPAS_NRS"      
+# [17] "scPAS_Pvalue"    "scPAS_FDR"       "scPAS"           "scPP_AUCup"      "scPP_AUCdown"    "scPP"            "DEGAS"           "LP_SGL"                 
 ```
 
 Finally, we can visualize the screening results. Let’s start with a Venn
@@ -1958,9 +1973,9 @@ my_colors <- randomcoloR::distinctColorPalette(
   runTsne = TRUE
 )
 
-c(scissor_pos, scab_pos, scpas_pos, scpp_pos, degas_pos) %<-%
+c(scissor_pos, scab_pos, scpas_pos, scpp_pos, degas_pos, lpsgl_pos) %<-%
   purrr::map(
-    c("scissor", "scAB", "scPAS", "scPP", "DEGAS"),
+    c("scissor", "scAB", "scPAS", "scPP", "DEGAS", "LP_SGL"),
     ~ colnames(screen_result)[
       which(screen_result[[.x]] == "Positive")
     ]
@@ -1969,18 +1984,18 @@ c(scissor_pos, scab_pos, scpas_pos, scpp_pos, degas_pos) %<-%
 all_cells <- colnames(screen_result)
 
 # * create a list of cell vectors
-pos_venn = list(
+pos_venn <- list(
   scissor = scissor_pos,
   scpas = scpas_pos,
   scab = scab_pos,
   scpp = scpp_pos,
   degas = degas_pos,
+  lp_sgl = lpsgl_pos,
   all_cells = all_cells
 )
 
-set.seed(123)
 
-venn = ggVennDiagram::ggVennDiagram(
+venn <- ggVennDiagram::ggVennDiagram(
   x = pos_venn,
   # * the labels of each group to be shown on the diagram
   category.names = c(
@@ -1989,6 +2004,7 @@ venn = ggVennDiagram::ggVennDiagram(
     "scAB",
     "scPP",
     "DEGAS",
+    "LP_SGL",
     "All cells"
   ),
   # * the colors of each group
@@ -1998,6 +2014,7 @@ venn = ggVennDiagram::ggVennDiagram(
     "#0000f5ff",
     "#d4b100ff",
     "#e600eeff",
+    "#59108aff",
     "#008383ff"
   ),
   label_geom = "text"
@@ -2028,7 +2045,7 @@ cells are shown in the set plot.
 ``` r
 upset <- ScreenUpset(
   screened_seurat = screen_result,
-  screen_type = c("scissor", "scPAS", "scAB", "scPP", "DEGAS"),
+  screen_type = c("scissor", "scPAS", "scAB", "scPP", "DEGAS","LP_SGL"),
   n_intersections = 40
 )
 
@@ -2042,7 +2059,7 @@ head(upset$stats)
 # 3 scAB            <chr [1]>       75
 # 4 scPP            <chr [1]>       49
 # 5 DEGAS           <chr [1]>       55
-# 6 scissor & scPAS <chr [2]>        1
+# 6 LP_SGL          <chr [1]>      233
 
 # ggplot2::ggsave(
 #   "vignettes/example_figures/upset.png",
@@ -2064,7 +2081,7 @@ we have created a fictional `Sample` column.
 
 ``` r
 set.seed(123)
-# *fictional sample column
+# * fictional sample column
 screen_result$Sample <- sample(
   paste0("Sample", 1:10),
   ncol(screen_result),
@@ -2078,12 +2095,12 @@ table(screen_result$Sample)
 fraction_list = ScreenFractionPlot(
   screened_seurat = screen_result,
   group_by = "Sample",
-  screen_type = c("scissor", "scPP", "scAB", "scPAS", "DEGAS"),
+  screen_type = c("scissor", "scPP", "scAB", "scPAS", "DEGAS", "LP_SGL"),
   show_null = FALSE,
   plot_color = NULL,
   show_plot = TRUE
 )
-# Creating plots for 5 screen types...
+# Creating plots for 6 screen types...
 
 # ggplot2::ggsave(
 #   "vignettes/example_figures/fraction.png",
@@ -2118,7 +2135,9 @@ fraction_list
 
     │   ├── scPP   
 
-    │   └── DEGAS
+    │   ├── DEGAS
+
+    │   └── LP_SGL
 
     ├── plots
 
@@ -2130,9 +2149,11 @@ fraction_list
 
     │   ├── scPP
 
-    │   └── DEGAS   
+    │   ├── DEGAS
 
-    └── combined_plot # show 5 plots in one plot
+    │   └── LP_SGL
+
+    └── combined_plot # show 6 plots in one plot
 
 UMAP is the most commonly used type of plot in academic literature.
 
@@ -2145,7 +2166,7 @@ my_palette <- randomcoloR::distinctColorPalette(
   runTsne = TRUE
 )
 
-sample_umap = Seurat::DimPlot(
+sample_umap <- Seurat::DimPlot(
   screen_result,
   group.by = "Sample",
   pt.size = 1.2,
@@ -2161,10 +2182,11 @@ c(
   scab_umap,
   scpas_umap,
   scpp_umap,
-  degas_umap
+  degas_umap,
+  lpsgl_umap
 ) %<-%
   purrr::map(
-    c("scissor", "scAB", "scPAS", "scPP", "DEGAS"), # make sure these column names exist
+    c("scissor", "scAB", "scPAS", "scPP", "DEGAS", "LP_SGL"), # make sure these column names exist
     ~ Seurat::DimPlot(
       screen_result,
       group.by = .x,
@@ -2182,17 +2204,18 @@ c(
   )
 
 # * Show
-umaps = sample_umap +
+umaps <- sample_umap +
   scissor_umap +
   scab_umap +
   scpas_umap +
   scpp_umap +
   degas_umap +
-  plot_layout(ncol = 2)
+  lpsgl_umap +
+  patchwork::plot_layout(ncol = 2)
 
 umaps
 
-# ggsave(
+# ggplot2::ggsave(
 #      "vignettes/example_figures/umaps.png",
 #      plot = umaps,
 #      width = 10,
@@ -2252,7 +2275,7 @@ If your phenotype is a `data.frame`, try this to convert it to a
 `named vector`:
 
 ``` r
-pheno = setNames(your_data.frame$continuous_numeric, your_data.frame$sample)
+pheno <- setNames(your_data.frame$continuous_numeric, your_data.frame$sample)
 ```
 
 #### 5.3 Binarized phenotype associated cell screening
@@ -2305,6 +2328,11 @@ pheno = mutate(
 )
 pheno = setNames(pheno$data, pheno$Sample)
 ```
+
+**A PIPET use case**
+
+Previously, it was noted that PIPET cannot use patient survival data as
+the phenotype; here, we demonstrate using a binary phenotype instead.
 
 ------------------------------------------------------------------------
 
@@ -2425,3 +2453,12 @@ sessionInfo()
 >     al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible
 >     deep transfer learning framework for prioritizing cells in
 >     relation to disease. Genome Med. 2022 Feb 1;14(1):11.
+>
+> 6.  Li J, Zhang H, Mu B, Zuo H, Zhou K. Identifying
+>     phenotype-associated subpopulations through LP_SGL. Briefings in
+>     Bioinformatics. 2023 Nov 22;25(1):bbad424.
+>
+> 7.  Ruan X, Cheng Y, Ye Y, Wang Y, Chen X, Yang Y, et al. PIPET:
+>     predicting relevant subpopulations in single-cell data using
+>     phenotypic information from bulk data. Briefings in
+>     Bioinformatics. 2024 May 23;25(4):bbae260.

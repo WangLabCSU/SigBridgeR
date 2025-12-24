@@ -18,11 +18,9 @@ SCPreProcess(
   project = "SC_Screening_Proj",
   min_cells = 400L,
   min_features = 0L,
-  quality_control = TRUE,
-  quality_control.pattern = c("^MT-"),
-  data_filter = TRUE,
-  data_filter.thresh = list(nFeature_RNA_thresh = c(200L, 6000L), percent.mt = 20L,
-    percent.rp = 60L),
+  quality_control = list(pattern = c("^MT-")),
+  data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
+    50000L), percent.mt = 20L, percent.rp = 60L),
   normalization_method = "LogNormalize",
   scale_factor = 10000L,
   scale_features = NULL,
@@ -40,11 +38,9 @@ SCPreProcess(
   project = "SC_Screening_Proj",
   min_cells = 400L,
   min_features = 0L,
-  quality_control = TRUE,
-  quality_control.pattern = c("^MT-"),
-  data_filter = TRUE,
-  data_filter.thresh = list(nFeature_RNA_thresh = c(200L, 6000L), percent.mt = 20L,
-    percent.rp = 60L),
+  quality_control = list(pattern = c("^MT-")),
+  data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
+    50000L), percent.mt = 20L, percent.rp = 60L),
   normalization_method = "LogNormalize",
   scale_factor = 10000L,
   scale_features = NULL,
@@ -114,36 +110,19 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
 
 - quality_control:
 
-  Logical, for identification of the proportion of mitochondrial genes,
-  ribosomal protein genes, or other types of genes (without filtering),
-  the results will be stored in `meta.data`. Defaults to `TRUE`.
+  A `list` of QC settings. If `NULL`, no QC metrics are computed.
+  Default: `list(pattern = "^MT-")`.
 
-- quality_control.pattern:
+  pattern
 
-  A vector or character containing regex pattern(s) to identify
-  mitochondrial genes, ribosomal protein genes, or other unwanted genes,
-  as well as combinations of these genes. Customized patterns are
-  supported. Defaults to `"^MT-"`.
+  :   A character vector of regex patterns to identify gene groups
+      (e.g., mitochondrial, ribosomal).
 
 - data_filter:
 
-  Logical indicating whether to filter cells based on quality metrics.
-  Defaults to `TRUE`.
-
-- data_filter.thresh:
-
-  A list containing filtering thresholds for different quality metrics:
-
-  - `nFeature_RNA_thresh`: Numeric vector of length 2 specifying the
-    minimum and maximum number of features per cell. Defaults to
-    `c(200L, 6000L)`
-
-  - `percent.mt`: Maximum mitochondrial percentage allowed. Defaults to
-    `20L`
-
-  - `percent.rp`: Maximum ribosomal protein percentage allowed. Not used
-    in default unless ribosomal protein genes filter pattern (like
-    `^RP[LS]`) is added to `quality_control.pattern`
+  A `list` of filtering thresholds. If `NULL`, no cell filtering is
+  performed. Default:
+  `list( nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L, 50000L), percent.mt = 20L, percent.rp = 60L )`
 
 - normalization_method:
 
@@ -156,8 +135,9 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
 
 - scale_features:
 
-  Features to use for scaling. If NULL, uses all variable features.
-  Defaults to `NULL`.
+  Features to use for scaling. If NULL, uses all variable features. If
+  `"hvg"`, uses high-variance genes via `VariableFeatures()`. Defaults
+  to `NULL`.
 
 - selection_method:
 
