@@ -10,7 +10,8 @@ ProcessSeuratObject(
   scale_factor = 10000,
   scale_features = NULL,
   selection_method = "vst",
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ ProcessSeuratObject(
 \item{selection_method}{Variable feature selection method ("vst", "mvp", or "disp")}
 
 \item{verbose}{Print progress messages}
+
+\item{...}{Other params passed to \code{Seurat::NormalizeData}, \code{Seurat::FindVariableFeatures}, and \code{Seurat::ScaleData}}
 }
 \value{
 Seurat object

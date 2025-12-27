@@ -72,13 +72,13 @@ added to the Seurat object as \verb{@meta.data}. If sc is an anndata object,
 \item{column2only_tumor}{A character of column names in \code{meta_data}, used to
 filter the Seurat object to only tumor cells. If \code{NULL}, no filtering is performed.}
 
-\item{project}{A character of project name, used to name the Seurat object.}
+\item{project}{A character of project name, used to name the Seurat object. Pass to \code{CreateSeuratObject}.}
 
-\item{min_cells}{Minimum number of cells that must express a feature for it
-to be included in the analysis. Defaults to \code{400L}.}
+\item{min_cells}{Minimum number of cells that must express a feature for it.
+to be included in the analysis. Defaults to \code{400L}. Pass to \code{CreateSeuratObject}}
 
 \item{min_features}{Minimum number of features that must be detected in a
-cell for it to be included in the analysis. Defaults to \code{0L}.}
+cell for it to be included in the analysis. Defaults to \code{0L}. Pass to \code{CreateSeuratObject}}
 
 \item{quality_control}{A \code{list} of QC settings. If \code{NULL}, no QC metrics are computed.
 Default: \code{list(pattern = "^MT-")}.
@@ -96,18 +96,19 @@ Default:
    )}}
 
 \item{normalization_method}{Method for normalization: "LogNormalize", "CLR",
-or "RC". Defaults to \code{"LogNormalize"}.}
+or "RC". Defaults to \code{"LogNormalize"}. Pass to \code{NormalizeData}}
 
-\item{scale_factor}{Scaling factor for normalization. Defaults to \code{10000L}.}
+\item{scale_factor}{Scaling factor for normalization. Defaults to \code{10000L}. Pass to \code{ScaleData}}
 
 \item{scale_features}{Features to use for scaling. If NULL, uses all variable
-features. If \code{"hvg"}, uses high-variance genes via \code{VariableFeatures()}. Defaults to \code{NULL}.}
+features. If \code{"hvg"}, uses high-variance genes via \code{VariableFeatures()}. Defaults to \code{NULL}.
+Pass to \code{ScaleData(features = scale_features)}}
 
 \item{selection_method}{Method for variable feature selection: "vst", "mvp",
-or "disp". Defaults to \code{"vst"}.}
+or "disp". Defaults to \code{"vst"}. Pass to \code{FindVariableFeatures}}
 
 \item{resolution}{Resolution parameter for clustering. Higher values lead to
-more clusters. Defaults to \code{0.6}.}
+more clusters. Defaults to \code{0.6}. Pass to \code{FindClusters}}
 
 \item{dims}{Dimensions to use for clustering and dimensionality reduction.
 If NULL, automatically determined by elbow method. Defaults to \code{NULL}.}

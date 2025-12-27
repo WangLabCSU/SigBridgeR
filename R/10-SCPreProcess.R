@@ -19,11 +19,11 @@
 #'    `obs` will be automatically used.
 #' @param column2only_tumor A character of column names in `meta_data`, used to
 #'    filter the Seurat object to only tumor cells. If `NULL`, no filtering is performed.
-#' @param project A character of project name, used to name the Seurat object.
-#' @param min_cells Minimum number of cells that must express a feature for it
-#'    to be included in the analysis. Defaults to `400L`.
+#' @param project A character of project name, used to name the Seurat object. Pass to `CreateSeuratObject`.
+#' @param min_cells Minimum number of cells that must express a feature for it.
+#'    to be included in the analysis. Defaults to `400L`. Pass to `CreateSeuratObject`
 #' @param min_features Minimum number of features that must be detected in a
-#'    cell for it to be included in the analysis. Defaults to `0L`.
+#'    cell for it to be included in the analysis. Defaults to `0L`. Pass to `CreateSeuratObject`
 #' @param quality_control A `list` of QC settings. If `NULL`, no QC metrics are computed.
 #'    Default: `list(pattern = "^MT-")`.
 #'    \describe{
@@ -38,14 +38,15 @@
 #'      percent.rp = 60L
 #'    )}
 #' @param normalization_method Method for normalization: "LogNormalize", "CLR",
-#'    or "RC". Defaults to `"LogNormalize"`.
-#' @param scale_factor Scaling factor for normalization. Defaults to `10000L`.
+#'    or "RC". Defaults to `"LogNormalize"`. Pass to `NormalizeData`
+#' @param scale_factor Scaling factor for normalization. Defaults to `10000L`. Pass to `ScaleData`
 #' @param scale_features Features to use for scaling. If NULL, uses all variable
 #'    features. If `"hvg"`, uses high-variance genes via `VariableFeatures()`. Defaults to `NULL`.
+#'    Pass to `ScaleData(features = scale_features)`
 #' @param selection_method Method for variable feature selection: "vst", "mvp",
-#'    or "disp". Defaults to `"vst"`.
+#'    or "disp". Defaults to `"vst"`. Pass to `FindVariableFeatures`
 #' @param resolution Resolution parameter for clustering. Higher values lead to
-#'    more clusters. Defaults to `0.6`.
+#'    more clusters. Defaults to `0.6`. Pass to `FindClusters`
 #' @param dims Dimensions to use for clustering and dimensionality reduction.
 #'    If NULL, automatically determined by elbow method. Defaults to `NULL`.
 #' @param ... Additional arguments passed to specific methods. Currently supports:
@@ -223,7 +224,8 @@ SCPreProcess.default <- function(
     scale_factor = scale_factor,
     scale_features = scale_features,
     selection_method = selection_method,
-    verbose = verbose
+    verbose = verbose,
+    ...
   )
 
   sc_seurat <- ClusterAndReduce(
@@ -233,7 +235,8 @@ SCPreProcess.default <- function(
     dims_TSNE = dims_TSNE,
     dims_UMAP = dims_UMAP,
     resolution = resolution,
-    verbose = verbose
+    verbose = verbose,
+    ...
   )
 
   FilterTumorCell(
@@ -361,7 +364,8 @@ SCPreProcess.R6 <- function(
     scale_factor = scale_factor,
     scale_features = scale_features,
     selection_method = selection_method,
-    verbose = verbose
+    verbose = verbose,
+    ...
   )
 
   sc_seurat <- ClusterAndReduce(
@@ -371,7 +375,8 @@ SCPreProcess.R6 <- function(
     dims_TSNE = dims_TSNE,
     dims_UMAP = dims_UMAP,
     resolution = resolution,
-    verbose = verbose
+    verbose = verbose,
+    ...
   )
 
   FilterTumorCell(
@@ -459,6 +464,7 @@ SCPreProcess.Seurat <- function(
 #' @param scale_features Features to scale
 #' @param selection_method Variable feature selection method ("vst", "mvp", or "disp")
 #' @param verbose Print progress messages
+#' @param ... Other params passed to `Seurat::NormalizeData`, `Seurat::FindVariableFeatures`, and `Seurat::ScaleData`
 #' @return Seurat object
 #'
 #' @keywords internal
@@ -470,42 +476,50 @@ ProcessSeuratObject <- function(
   scale_factor = 10000,
   scale_features = NULL,
   selection_method = "vst",
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 ) {
   obj <- Seurat::NormalizeData(
     object = obj,
     normalization.method = normalization_method,
     scale.factor = scale_factor,
-    verbose = verbose
-  ) %>%
-    Seurat::FindVariableFeatures(
-      selection.method = selection_method,
-      verbose = verbose
-    )
+    verbose = verbose,
+    ...
+  )
+  obj <- Seurat::FindVariableFeatures(
+    object = obj,
+    selection.method = selection_method,
+    verbose = verbose,
+    ...
+  )
 
   # 🔍 Resolve scale_features with extended semantics:
   #   • NULL          → scale ALL genes (Seurat default)
   #   • "hvg" / "HVG" → scale VariableFeatures(obj)
   #   • character()   → user-provided gene list
-  if (is.null(scale_features)) {
-    scale_features <- NULL
-  } else if (
-    is.character(scale_features) &&
-      length(scale_features) == 1L &&
-      toupper(scale_features) == "HVG"
-  ) {
-    scale_features <- Seurat::VariableFeatures(obj)
-  }
+  variable_features <- SeuratObject::VariableFeatures(object = obj, ...)
 
-  Seurat::ScaleData(
+  obj <- Seurat::ScaleData(
     object = obj,
-    features = scale_features,
-    verbose = verbose
-  ) %>%
-    Seurat::RunPCA(
-      features = Seurat::VariableFeatures(obj),
-      verbose = verbose
-    )
+    features = if (
+      is.character(scale_features) &&
+        length(scale_features) == 1L &&
+        toupper(scale_features) == "HVG"
+    ) {
+      variable_features
+    } else {
+      scale_features # NULL
+    },
+    verbose = verbose,
+    ...
+  )
+
+  Seurat::RunPCA(
+    object = obj,
+    features = variable_features,
+    verbose = verbose,
+    ...
+  )
 }
 
 
@@ -521,7 +535,7 @@ ProcessSeuratObject <- function(
 #' @param dims_UMAP Dimensions for UMAP  (default: NULL, uses `dims`)
 #' @param resolution Clustering resolution parameter (default: `0.6`)
 #' @param verbose Whether to print progress messages (default: `TRUE`)
-#' @param ... Additional arguments passed to downstream methods, currently not used
+#' @param ... Additional arguments passed to `FindNeighbors`, `FindClusters`, `RunTSNE`, and `RunUMAP`
 #'
 #' @return Modified single-cell object with clustering and dimensionality reduction results
 #'
@@ -530,6 +544,7 @@ ProcessSeuratObject <- function(
 #' @note Automatically adjusts input dimensions if they exceed available PCA dimensions
 ClusterAndReduce <- function(
   obj,
+  run_tsne = TRUE,
   dims = NULL,
   dims_Neighbors = NULL,
   dims_TSNE = NULL,
@@ -555,17 +570,24 @@ ClusterAndReduce <- function(
   dims_TSNE <- dims_TSNE %||% dims
   dims_UMAP <- dims_UMAP %||% dims
 
-  Seurat::FindNeighbors(
+  obj <- Seurat::FindNeighbors(
     object = obj,
     dims = dims_Neighbors,
-    verbose = verbose
-  ) %>%
-    Seurat::FindClusters(
-      resolution = resolution,
-      verbose = verbose
-    ) %>%
-    Seurat::RunTSNE(dims = dims_TSNE) %>%
-    Seurat::RunUMAP(dims = dims_UMAP, verbose = verbose)
+    verbose = verbose,
+    ...
+  )
+  obj <- Seurat::FindClusters(
+    object = obj,
+    resolution = resolution,
+    verbose = verbose,
+    ...
+  )
+
+  if (run_tsne) {
+    obj <- Seurat::RunTSNE(object = obj, dims = dims_TSNE, ...)
+  }
+
+  Seurat::RunUMAP(object = obj, dims = dims_UMAP, verbose = verbose, ...)
 }
 
 #' @title Filter tumor cells (internal)
@@ -759,7 +781,7 @@ QCFilter <- function(
 
   if (verbose) {
     cli::cli_text(
-      "Filtering cells by {.arg nFeature_RNA} and {.arg QC metrics}"
+      "Filtering cells by {.arg nFeature_RNA}, {.arg nCount_RNA} and {.arg QC metrics}"
     )
   }
 

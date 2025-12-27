@@ -24,6 +24,7 @@
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
+#'    - `parallel`: Logical indicating whether to use parallel processing. Defaults to `FALSE`.
 #'
 #'
 #
@@ -80,8 +81,6 @@ DoscAB <- function(
     c("binary", "survival"),
     NULL
   )
-  chk::chk_range(alpha)
-  chk::chk_range(alpha_2)
   chk::chk_number(maxiter)
   chk::chk_number(tred)
   # scAB can't tolerate NA

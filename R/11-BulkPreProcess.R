@@ -143,6 +143,13 @@ BulkPreProcess <- function(
     )
   }
 
+  if (gene_symbol_conversion) {
+    counts_matrix <- SymbolConvert(counts_matrix)
+    if (verbose) {
+      ts_cli$cli_alert_success("Gene symbol conversion done")
+    }
+  }
+
   counts_matrix <- BulkCheck(
     counts_matrix = counts_matrix,
     n_genes = n_genes,
@@ -419,11 +426,8 @@ BulkPreProcess <- function(
     cli::cli_alert_info(
       "  Samples: {.val {n_samples}} -> {.val {n_samples_filtered}} (removed {.val {samples_removed}})"
     )
-  }
 
-  # * Quality Report Generation
-  if (verbose) {
-    # Sample quality
+    # * Quality Report Generation
     if (!all(samples_pass_reads[samples_to_keep])) {
       n_low_reads <- sum(!samples_pass_reads[samples_to_keep])
       cli::cli_warn(
@@ -437,16 +441,7 @@ BulkPreProcess <- function(
         "Gene detection: {.val {n_low_genes}} samples below threshold"
       )
     }
-  }
 
-  if (gene_symbol_conversion) {
-    filtered_counts <- SymbolConvert(filtered_counts)
-    if (verbose) {
-      ts_cli$cli_alert_success("Gene symbol conversion done")
-    }
-  }
-
-  if (verbose) {
     ts_cli$cli_alert_success(
       cli::col_green("BulkPreProcess completed")
     )

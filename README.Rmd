@@ -48,18 +48,21 @@ For better performance:
 
 ```{r,install_extra_packages,eval=FALSE}
 pak::pkg_install(c(
+  # faster computation
   "sparseMatrixStats",
   "matrixStats",
   "preprocessCore",
+  "WGCNA",
   "tidyr",
-  "furrr",
-  "future",
   "matrixTests",
-  "KernSmooth"
+  "KernSmooth",
+  # parallel computation
+  "furrr",
+  "future"
 ))
 ```
 
-For seamless integration with other file types such as `h5ad`
+For seamless integration with other file types such as `.h5ad`
 
 ```{r,install_extra_packages2,eval=FALSE}
 pak::pkg_install("anndata")
@@ -74,7 +77,7 @@ pak::pkg_install(c(
   "ggplot2",
   "randomcoloR", # or RColorBrewer
   "ggupset", # for upset plot
-  "patchwork", # for fraction plot
+  "patchwork", # for fraction stack plot
   "ggforce", # for pca plot
   "ggVennDiagram" # for venn diagram
 ))

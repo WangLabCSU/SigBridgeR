@@ -6,6 +6,7 @@
 \usage{
 ClusterAndReduce(
   obj,
+  run_tsne = TRUE,
   dims = NULL,
   dims_Neighbors = NULL,
   dims_TSNE = NULL,
@@ -30,7 +31,7 @@ ClusterAndReduce(
 
 \item{verbose}{Whether to print progress messages (default: \code{TRUE})}
 
-\item{...}{Additional arguments passed to downstream methods, currently not used}
+\item{...}{Additional arguments passed to \code{FindNeighbors}, \code{FindClusters}, \code{RunTSNE}, and \code{RunUMAP}}
 }
 \value{
 Modified single-cell object with clustering and dimensionality reduction results
