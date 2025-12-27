@@ -5,6 +5,8 @@
 - **Yuxi Yang**. Maintainer, author.
   [](https://orcid.org/0009-0006-1329-1224)
 
+- **Zeyu Yan**. Contributor.
+
 ## Citation
 
 Source:
