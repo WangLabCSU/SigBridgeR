@@ -13,7 +13,7 @@ from raw data to clustered embeddings."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -136,17 +136,17 @@ filter the Seurat object to only tumor cells. If <code>NULL</code>, no filtering
 
 
 <dt id="arg-project">project<a class="anchor" aria-label="anchor" href="#arg-project"></a></dt>
-<dd><p>A character of project name, used to name the Seurat object.</p></dd>
+<dd><p>A character of project name, used to name the Seurat object. Pass to <code>CreateSeuratObject</code>.</p></dd>
 
 
 <dt id="arg-min-cells">min_cells<a class="anchor" aria-label="anchor" href="#arg-min-cells"></a></dt>
-<dd><p>Minimum number of cells that must express a feature for it
-to be included in the analysis. Defaults to <code>400L</code>.</p></dd>
+<dd><p>Minimum number of cells that must express a feature for it.
+to be included in the analysis. Defaults to <code>400L</code>. Pass to <code>CreateSeuratObject</code></p></dd>
 
 
 <dt id="arg-min-features">min_features<a class="anchor" aria-label="anchor" href="#arg-min-features"></a></dt>
 <dd><p>Minimum number of features that must be detected in a
-cell for it to be included in the analysis. Defaults to <code>0L</code>.</p></dd>
+cell for it to be included in the analysis. Defaults to <code>0L</code>. Pass to <code>CreateSeuratObject</code></p></dd>
 
 
 <dt id="arg-quality-control">quality_control<a class="anchor" aria-label="anchor" href="#arg-quality-control"></a></dt>
@@ -171,26 +171,27 @@ Default:
 
 <dt id="arg-normalization-method">normalization_method<a class="anchor" aria-label="anchor" href="#arg-normalization-method"></a></dt>
 <dd><p>Method for normalization: "LogNormalize", "CLR",
-or "RC". Defaults to <code>"LogNormalize"</code>.</p></dd>
+or "RC". Defaults to <code>"LogNormalize"</code>. Pass to <code>NormalizeData</code></p></dd>
 
 
 <dt id="arg-scale-factor">scale_factor<a class="anchor" aria-label="anchor" href="#arg-scale-factor"></a></dt>
-<dd><p>Scaling factor for normalization. Defaults to <code>10000L</code>.</p></dd>
+<dd><p>Scaling factor for normalization. Defaults to <code>10000L</code>. Pass to <code>ScaleData</code></p></dd>
 
 
 <dt id="arg-scale-features">scale_features<a class="anchor" aria-label="anchor" href="#arg-scale-features"></a></dt>
 <dd><p>Features to use for scaling. If NULL, uses all variable
-features. If <code>"hvg"</code>, uses high-variance genes via <code>VariableFeatures()</code>. Defaults to <code>NULL</code>.</p></dd>
+features. If <code>"hvg"</code>, uses high-variance genes via <code>VariableFeatures()</code>. Defaults to <code>NULL</code>.
+Pass to <code>ScaleData(features = scale_features)</code></p></dd>
 
 
 <dt id="arg-selection-method">selection_method<a class="anchor" aria-label="anchor" href="#arg-selection-method"></a></dt>
 <dd><p>Method for variable feature selection: "vst", "mvp",
-or "disp". Defaults to <code>"vst"</code>.</p></dd>
+or "disp". Defaults to <code>"vst"</code>. Pass to <code>FindVariableFeatures</code></p></dd>
 
 
 <dt id="arg-resolution">resolution<a class="anchor" aria-label="anchor" href="#arg-resolution"></a></dt>
 <dd><p>Resolution parameter for clustering. Higher values lead to
-more clusters. Defaults to <code>0.6</code>.</p></dd>
+more clusters. Defaults to <code>0.6</code>. Pass to <code>FindClusters</code></p></dd>
 
 
 <dt id="arg-dims">dims<a class="anchor" aria-label="anchor" href="#arg-dims"></a></dt>

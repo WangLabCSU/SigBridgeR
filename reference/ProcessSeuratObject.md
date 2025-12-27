@@ -11,7 +11,8 @@ ProcessSeuratObject(
   scale_factor = 10000,
   scale_features = NULL,
   selection_method = "vst",
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 )
 ```
 
@@ -40,6 +41,14 @@ ProcessSeuratObject(
 - verbose:
 
   Print progress messages
+
+- ...:
+
+  Other params passed to
+  [`Seurat::NormalizeData`](https://satijalab.org/seurat/reference/NormalizeData.html),
+  [`Seurat::FindVariableFeatures`](https://satijalab.org/seurat/reference/FindVariableFeatures.html),
+  and
+  [`Seurat::ScaleData`](https://satijalab.org/seurat/reference/ScaleData.html)
 
 ## Value
 

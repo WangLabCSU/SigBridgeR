@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 <strong>SigBridgeR</strong> <a href="https://wanglabcsu.github.io/SigBridgeR/" class="external-link"><img src="reference/figures/logo_white.png" alt="sigbridger website" align="right" height="139"></a>
 <a class="anchor" aria-label="anchor" href="#sigbridger-"></a>
 </h1></div>
-<p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Repo Status"></a><a href="https://cran.r-project.org/web/licenses/GPL3" class="external-link"><img src="https://img.shields.io/badge/license-GPL3-blue.svg" alt="License: GPL3"></a> <a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link"><img src="https://img.shields.io/badge/devel%20version-3.0.1-blue.svg"></a> <a href="https://github.com/WangLabCSU/SigBridgeR/actions" class="external-link"><img src="https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg" alt="R CMD check"></a> <a href="https://wanglabcsu.r-universe.dev/" class="external-link"><img src="https://wanglabcsu.r-universe.dev/badges/:registry" alt="registry status badge"></a></p>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Repo Status"></a><a href="https://cran.r-project.org/web/licenses/GPL3" class="external-link"><img src="https://img.shields.io/badge/license-GPL3-blue.svg" alt="License: GPL3"></a> <a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link"><img src="https://img.shields.io/badge/devel%20version-3.0.2-blue.svg"></a> <a href="https://github.com/WangLabCSU/SigBridgeR/actions" class="external-link"><img src="https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg" alt="R CMD check"></a> <a href="https://wanglabcsu.r-universe.dev/" class="external-link"><img src="https://wanglabcsu.r-universe.dev/badges/:registry" alt="registry status badge"></a></p>
 <hr>
 <div class="section level2">
 <h2 id="id_-overview">🌐 Overview<a class="anchor" aria-label="anchor" href="#id_-overview"></a>
@@ -89,15 +89,19 @@
 <p><strong>It is recommended to install the following packages:</strong></p>
 <p>For better performance:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="fu">c</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="st">"sparseMatrixStats"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="st">"matrixStats"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="st">"preprocessCore"</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="st">"tidyr"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="st">"furrr"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="st">"future"</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="st">"matrixTests"</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>))</span></code></pre></div>
-<p>For seamless integration with other file types such as <code>h5ad</code></p>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="co"># faster computation</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="st">"sparseMatrixStats"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="st">"matrixStats"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="st">"preprocessCore"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="st">"WGCNA"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="st">"tidyr"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="st">"matrixTests"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="st">"KernSmooth"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="co"># parallel computation</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  <span class="st">"furrr"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="st">"future"</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>))</span></code></pre></div>
+<p>For seamless integration with other file types such as <code>.h5ad</code></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"anndata"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># or</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"anndataR"</span>) <span class="co"># both are supported</span></span></code></pre></div>
@@ -106,9 +110,9 @@
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="st">"ggplot2"</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="st">"randomcoloR"</span>, <span class="co"># or RColorBrewer</span></span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="st">"ggupset"</span>, <span class="co"># for upset plot</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="st">"patchwork"</span>, <span class="co"># for fraction plot</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="st">"patchwork"</span>, <span class="co"># for fraction stack plot</span></span>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="st">"ggforce"</span>, <span class="co"># for pca plot</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="st">"ggVennDiagram"</span> <span class="co"># for Venn Diagram</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="st">"ggVennDiagram"</span> <span class="co"># for venn diagram</span></span>
 <span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>))</span></code></pre></div>
 <p>To reproduce the tutorial to learn more usage</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="fu">c</span>(</span>
@@ -135,19 +139,6 @@
 <li>the <a href="https://github.com/WangLabCSU/SigBridgeR/issues" class="external-link">Github issues</a> page if you want to file bug reports or feature requests</li>
 </ul>
 <p>Let us know if you have ideas to make this project better!</p>
-<p>Other information:</p>
-<ul>
-<li>What is <em>Single Cell Sequencing</em>?
-<ul>
-<li><a href="https://en.wikipedia.org/wiki/Single-cell_sequencing" class="external-link">Veiw in Wiki</a></li>
-</ul>
-</li>
-<li>What is <em>RNA-seq</em>?
-<ul>
-<li><a href="https://en.wikipedia.org/wiki/RNA-Seq" class="external-link">View in Wiki</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

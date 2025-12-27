@@ -9,6 +9,7 @@ not specified.
 ``` r
 ClusterAndReduce(
   obj,
+  run_tsne = TRUE,
   dims = NULL,
   dims_Neighbors = NULL,
   dims_TSNE = NULL,
@@ -52,7 +53,8 @@ ClusterAndReduce(
 
 - ...:
 
-  Additional arguments passed to downstream methods, currently not used
+  Additional arguments passed to `FindNeighbors`, `FindClusters`,
+  `RunTSNE`, and `RunUMAP`
 
 ## Value
 

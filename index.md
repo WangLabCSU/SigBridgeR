@@ -3,7 +3,7 @@
 [![Repo
 Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)[![License:
 GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![](https://img.shields.io/badge/devel%20version-3.0.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
+[![](https://img.shields.io/badge/devel%20version-3.0.2-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![R CMD
 check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![registry status
@@ -44,17 +44,21 @@ For better performance:
 
 ``` R
 pak::pkg_install(c(
+  # faster computation
   "sparseMatrixStats",
   "matrixStats",
   "preprocessCore",
+  "WGCNA",
   "tidyr",
+  "matrixTests",
+  "KernSmooth",
+  # parallel computation
   "furrr",
-  "future",
-  "matrixTests"
+  "future"
 ))
 ```
 
-For seamless integration with other file types such as `h5ad`
+For seamless integration with other file types such as `.h5ad`
 
 ``` R
 pak::pkg_install("anndata")
@@ -69,9 +73,9 @@ pak::pkg_install(c(
   "ggplot2",
   "randomcoloR", # or RColorBrewer
   "ggupset", # for upset plot
-  "patchwork", # for fraction plot
+  "patchwork", # for fraction stack plot
   "ggforce", # for pca plot
-  "ggVennDiagram" # for Venn Diagram
+  "ggVennDiagram" # for venn diagram
 ))
 ```
 
@@ -106,10 +110,3 @@ If you encounter problems, please check:
   page if you want to file bug reports or feature requests
 
 Let us know if you have ideas to make this project better!
-
-Other information:
-
-- What is *Single Cell Sequencing*?
-  - [Veiw in Wiki](https://en.wikipedia.org/wiki/Single-cell_sequencing)
-- What is *RNA-seq*?
-  - [View in Wiki](https://en.wikipedia.org/wiki/RNA-Seq)
