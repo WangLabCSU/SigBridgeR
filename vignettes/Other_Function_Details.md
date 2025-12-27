@@ -40,7 +40,15 @@ Add a new column to the metadata
 Add a data.frame to the metadata, with the column names as the metadata
 names.
 
-    seurat_obj <- AddMetaFeature(seurat_obj, data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj)))
+    seurat_obj <- AddMetaFeature(
+      seurat_obj,
+      data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj)
+    )
+
+Add to different assays
+
+    seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "RNA")
+    seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "ATAC")
 
 If duplicate column names are detected, they will be suffixed with an
 underscore and a number (e.g., `_1`, `_2`) for disambiguation.
@@ -209,7 +217,7 @@ alt="elbow" />]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/ex
 
 ## Setting and Retriving Package Options
 
-Currently, 5 package options are provided:
+Currently, 7 package options are provided:
 
 -   `verbose`: Whether to print the progress of the function. Default is
     `TRUE`.
