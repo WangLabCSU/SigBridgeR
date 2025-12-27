@@ -2050,7 +2050,28 @@ pheno = setNames(pheno$data, pheno$Sample)
 Previously, it was noted that PIPET cannot use patient survival data as the phenotype; here, we demonstrate using a binary phenotype instead.
 
 ```{r,example_data_pipet,eval=FALSE}
+pipet_result <- Screen(
+    matched_bulk = bulk,
+    sc_data = seurat,
+    phenotype = pheno,
+    phenotype_class = "binary",
+    screen_method = "PIPET",
+    label_type = "PIPET"
+)
+#ℹ [2025/12/26 06:18:28] Starting PIPET screen
+#ℹ [2025/12/26 06:18:28] Creating marker genes from bulk data...
+#ℹ [2025/12/26 06:18:28] Fitting model with limma
+#✔ [2025/12/26 06:18:28] Created 2795 marker genes
+#ℹ [2025/12/26 06:18:28] Running PIPET correlation analysis...
+#ℹ [2025/12/26 06:18:28] The classification of markers is: group_0: 945 and group_1: 477
+#ℹ [2025/12/26 06:18:28] Normalize count data with CPM and log1p
+#ℹ [2025/12/26 06:18:29] Scale features with z-score normalization
+#ℹ [2025/12/26 06:19:49] Organize the computed results        
+#✔ [2025/12/26 06:19:49] PIPET screening done.
 
+table(pipet_result$scRNA_data$PIPET)
+# Negative  Neutral Positive 
+#     165      708      220 
 ```
 
 ------------------------------------------------------------------------
