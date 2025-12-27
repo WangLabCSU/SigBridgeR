@@ -44,21 +44,17 @@ For better performance:
 
 ``` R
 pak::pkg_install(c(
-  # faster computation
   "sparseMatrixStats",
   "matrixStats",
   "preprocessCore",
-  "WGCNA",
   "tidyr",
-  "matrixTests",
-  "KernSmooth",
-  # parallel computation
   "furrr",
-  "future"
+  "future",
+  "matrixTests"
 ))
 ```
 
-For seamless integration with other file types such as `.h5ad`
+For seamless integration with other file types such as `h5ad`
 
 ``` R
 pak::pkg_install("anndata")
@@ -73,9 +69,9 @@ pak::pkg_install(c(
   "ggplot2",
   "randomcoloR", # or RColorBrewer
   "ggupset", # for upset plot
-  "patchwork", # for fraction stack plot
+  "patchwork", # for fraction plot
   "ggforce", # for pca plot
-  "ggVennDiagram" # for venn diagram
+  "ggVennDiagram" # for Venn Diagram
 ))
 ```
 
@@ -110,6 +106,13 @@ If you encounter problems, please check:
   page if you want to file bug reports or feature requests
 
 Let us know if you have ideas to make this project better!
+
+Other information:
+
+- What is *Single Cell Sequencing*?
+  - [Veiw in Wiki](https://en.wikipedia.org/wiki/Single-cell_sequencing)
+- What is *RNA-seq*?
+  - [View in Wiki](https://en.wikipedia.org/wiki/RNA-Seq)
 
 # Package index
 

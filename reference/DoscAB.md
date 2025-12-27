@@ -76,9 +76,6 @@ DoscAB(
 
   - `seed`: For reproducibility, default is `123L`
 
-  - `parallel`: Logical indicating whether to use parallel processing.
-    Defaults to `FALSE`.
-
 ## Value
 
 A list containing:

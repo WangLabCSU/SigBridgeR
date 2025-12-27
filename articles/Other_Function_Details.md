@@ -49,17 +49,7 @@ Add a data.frame to the metadata, with the column names as the metadata
 names.
 
 ``` r
-seurat_obj <- AddMetaFeature(
-  seurat_obj,
-  data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj)
-)
-```
-
-Add to different assays
-
-``` r
-seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "RNA")
-seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "ATAC")
+seurat_obj <- AddMetaFeature(seurat_obj, data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj)))
 ```
 
 If duplicate column names are detected, they will be suffixed with an
@@ -248,7 +238,7 @@ knitr::include_graphics("vignettes/example_figures/elbow.png")
 
 ### Setting and Retriving Package Options
 
-Currently, 7 package options are provided:
+Currently, 5 package options are provided:
 
 - `verbose`: Whether to print the progress of the function. Default is
   `TRUE`.

@@ -96,20 +96,17 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
 
 - project:
 
-  A character of project name, used to name the Seurat object. Pass to
-  `CreateSeuratObject`.
+  A character of project name, used to name the Seurat object.
 
 - min_cells:
 
-  Minimum number of cells that must express a feature for it. to be
-  included in the analysis. Defaults to `400L`. Pass to
-  `CreateSeuratObject`
+  Minimum number of cells that must express a feature for it to be
+  included in the analysis. Defaults to `400L`.
 
 - min_features:
 
   Minimum number of features that must be detected in a cell for it to
-  be included in the analysis. Defaults to `0L`. Pass to
-  `CreateSeuratObject`
+  be included in the analysis. Defaults to `0L`.
 
 - quality_control:
 
@@ -130,28 +127,27 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
 - normalization_method:
 
   Method for normalization: "LogNormalize", "CLR", or "RC". Defaults to
-  `"LogNormalize"`. Pass to `NormalizeData`
+  `"LogNormalize"`.
 
 - scale_factor:
 
-  Scaling factor for normalization. Defaults to `10000L`. Pass to
-  `ScaleData`
+  Scaling factor for normalization. Defaults to `10000L`.
 
 - scale_features:
 
   Features to use for scaling. If NULL, uses all variable features. If
   `"hvg"`, uses high-variance genes via `VariableFeatures()`. Defaults
-  to `NULL`. Pass to `ScaleData(features = scale_features)`
+  to `NULL`.
 
 - selection_method:
 
   Method for variable feature selection: "vst", "mvp", or "disp".
-  Defaults to `"vst"`. Pass to `FindVariableFeatures`
+  Defaults to `"vst"`.
 
 - resolution:
 
   Resolution parameter for clustering. Higher values lead to more
-  clusters. Defaults to `0.6`. Pass to `FindClusters`
+  clusters. Defaults to `0.6`.
 
 - dims:
 
