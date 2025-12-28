@@ -95,10 +95,37 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item{run: (logical) Whether to run DEG analysis, default FALSE}
 \item{logFC_threshold: (numeric) Log fold change threshold, default 1}
 \item{pval_threshold: (numeric) P-value threshold, default 0.05}
-}
-}
 }}
+\item{PIPET}{\describe{
+\item{group}{(character or NULL) Name of a metadata column (e.g., \code{"orig.ident"}) to stratify cells before screening. When \code{NULL} (default), screening is performed globally across all cells.}
+\item{discretize_method}{(character) Strategy to binarize continuous phenotypes internally before marker identification. One of:
+\itemize{
+\item{\code{"median"} (default):} Equivalent to 2-quantile split (i.e., median threshold).
+\item{\code{"kmeans"}:} Two-cluster k-means on the continuous phenotype.
+\item{\code{"custom"}:} User-defined cutoffs via \code{cutoff}.
 }}
+\item{cutoff}{(numeric vector or NULL) Required only if \code{discretize_method = "custom"}. Specifies interior breakpoints on the \emph{normalized, log2-transformed phenotype scale} (i.e., after \code{scale(log2(x + 1))}). Must be sorted ascending and of length \code{n_group - 1}.}
+\item{label_type}{(character) Phenotype label type (e.g., \code{"PIPET_SBS1"}), stored in \code{scRNA_data@misc}. Default: \code{"PIPET"}.}
+\item{log2FC}{(numeric) Absolute log2 fold-change cutoff for differential expression marker selection in bulk data (via DESeq2-like analysis). Default: 1.}
+\item{p_adjust}{(numeric) Adjusted p-value (FDR) cutoff for marker gene selection. Default: 0.05.}
+\item{show_log2FC}{(logical) Whether to annotate markers with signed log2FC direction (e.g., \code{CD3D_up}). Default: \code{TRUE}.}
+\item{freq_counts}{(integer or NULL) Minimum number of cells a gene must be expressed in to be retained in scRNA-seq data preprocessing. Default: \code{NULL} (no filtering).}
+\item{normalize}{(logical) Whether to apply log-normalization (\code{LogNormalize}) to scRNA-seq counts prior to correlation. Default: \code{TRUE}.}
+\item{scale}{(logical) Whether to scale (center + unit-variance) gene expression across cells before computing distances. Default: \code{TRUE}.}
+\item{nPerm}{(integer) Number of label permutations to assess significance of correlation scores. Default: 1000.}
+\item{distance}{(character) Distance or similarity metric for template matching. Supported:
+\code{"cosine"} (default),
+\code{"pearson"},
+\code{"spearman"},
+\code{"kendall"},
+\code{"euclidean"},
+\code{"maximum"}.}
+\item{seed}{(integer or NULL) Random seed for reproducibility in marker creation and permutation tests. Default: inherits from \code{getFuncOption("seed")}.}
+\item{verbose}{(logical) Whether to print progress messages. Default: inherits from \code{getFuncOption("verbose")}.}
+\item{parallel}{(logical) Whether to enable parallel permutations (requires \code{future::plan()} pre-set). Default: \code{FALSE}.}
+}}
+}
+}}}
 }
 \value{
 A list containing:
@@ -131,6 +158,7 @@ before analysis.
    scAB \tab Binary/Survival \tab alpha, alpha_2, maxiter, tred \cr
    DEGAS \tab All three types \tab sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method \cr
    LP_SGL \tab All three types \tab resolution, alpha, nfold, dge_analysis \cr
+   PIPET \tab Binary/Continuous \tab group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance \cr
 }
 }
 
@@ -143,5 +171,6 @@ Associated functions:
 \item \code{\link{DoscAB}}
 \item \code{\link{DoDEGAS}}
 \item \code{\link{DoLP_SGL}}
+\item \code{\link{DoPIPET}}
 }
 }
