@@ -96,17 +96,20 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
 
 - project:
 
-  A character of project name, used to name the Seurat object.
+  A character of project name, used to name the Seurat object. Pass to
+  `CreateSeuratObject`.
 
 - min_cells:
 
-  Minimum number of cells that must express a feature for it to be
-  included in the analysis. Defaults to `400L`.
+  Minimum number of cells that must express a feature for it. to be
+  included in the analysis. Defaults to `400L`. Pass to
+  `CreateSeuratObject`
 
 - min_features:
 
   Minimum number of features that must be detected in a cell for it to
-  be included in the analysis. Defaults to `0L`.
+  be included in the analysis. Defaults to `0L`. Pass to
+  `CreateSeuratObject`
 
 - quality_control:
 
@@ -127,27 +130,28 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
 - normalization_method:
 
   Method for normalization: "LogNormalize", "CLR", or "RC". Defaults to
-  `"LogNormalize"`.
+  `"LogNormalize"`. Pass to `NormalizeData`
 
 - scale_factor:
 
-  Scaling factor for normalization. Defaults to `10000L`.
+  Scaling factor for normalization. Defaults to `10000L`. Pass to
+  `ScaleData`
 
 - scale_features:
 
   Features to use for scaling. If NULL, uses all variable features. If
   `"hvg"`, uses high-variance genes via `VariableFeatures()`. Defaults
-  to `NULL`.
+  to `NULL`. Pass to `ScaleData(features = scale_features)`
 
 - selection_method:
 
   Method for variable feature selection: "vst", "mvp", or "disp".
-  Defaults to `"vst"`.
+  Defaults to `"vst"`. Pass to `FindVariableFeatures`
 
 - resolution:
 
   Resolution parameter for clustering. Higher values lead to more
-  clusters. Defaults to `0.6`.
+  clusters. Defaults to `0.6`. Pass to `FindClusters`
 
 - dims:
 
@@ -203,14 +207,14 @@ detected quality control patterns:
 ## See also
 
 [`CreateSeuratObject`](https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html),
-[`NormalizeData`](https://satijalab.org/seurat/reference/NormalizeData.html),
-[`ScaleData`](https://satijalab.org/seurat/reference/ScaleData.html),
-[`FindVariableFeatures`](https://satijalab.org/seurat/reference/FindVariableFeatures.html),
-[`RunPCA`](https://satijalab.org/seurat/reference/RunPCA.html),
-[`RunTSNE`](https://satijalab.org/seurat/reference/RunTSNE.html),
-[`RunUMAP`](https://satijalab.org/seurat/reference/RunUMAP.html),
-[`FindNeighbors`](https://satijalab.org/seurat/reference/FindNeighbors.html),
-[`FindClusters`](https://satijalab.org/seurat/reference/FindClusters.html)
+[`NormalizeData`](https://rdrr.io/pkg/Seurat/man/NormalizeData.html),
+[`ScaleData`](https://rdrr.io/pkg/Seurat/man/ScaleData.html),
+[`FindVariableFeatures`](https://rdrr.io/pkg/Seurat/man/FindVariableFeatures.html),
+[`RunPCA`](https://rdrr.io/pkg/Seurat/man/RunPCA.html),
+[`RunTSNE`](https://rdrr.io/pkg/Seurat/man/RunTSNE.html),
+[`RunUMAP`](https://rdrr.io/pkg/Seurat/man/RunUMAP.html),
+[`FindNeighbors`](https://rdrr.io/pkg/Seurat/man/FindNeighbors.html),
+[`FindClusters`](https://rdrr.io/pkg/Seurat/man/FindClusters.html)
 
 ## Examples
 

@@ -35,7 +35,7 @@ QCPatternDetect(
 - ...:
 
   Additional arguments passed to
-  [`PercentageFeatureSet`](https://satijalab.org/seurat/reference/PercentageFeatureSet.html)
+  [`PercentageFeatureSet`](https://rdrr.io/pkg/Seurat/man/PercentageFeatureSet.html)
 
 ## Details
 

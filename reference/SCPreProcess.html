@@ -46,7 +46,7 @@ from raw data to clustered embeddings."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Single-Cell RNA-seq Preprocessing Pipeline</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v3.0.2/R/10-SCPreProcess.R" class="external-link"><code>R/10-SCPreProcess.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/10-SCPreProcess.R" class="external-link"><code>R/10-SCPreProcess.R</code></a></small>
       <div class="d-none name"><code>SCPreProcess.Rd</code></div>
     </div>
 
@@ -136,17 +136,17 @@ filter the Seurat object to only tumor cells. If <code>NULL</code>, no filtering
 
 
 <dt id="arg-project">project<a class="anchor" aria-label="anchor" href="#arg-project"></a></dt>
-<dd><p>A character of project name, used to name the Seurat object.</p></dd>
+<dd><p>A character of project name, used to name the Seurat object. Pass to <code>CreateSeuratObject</code>.</p></dd>
 
 
 <dt id="arg-min-cells">min_cells<a class="anchor" aria-label="anchor" href="#arg-min-cells"></a></dt>
-<dd><p>Minimum number of cells that must express a feature for it
-to be included in the analysis. Defaults to <code>400L</code>.</p></dd>
+<dd><p>Minimum number of cells that must express a feature for it.
+to be included in the analysis. Defaults to <code>400L</code>. Pass to <code>CreateSeuratObject</code></p></dd>
 
 
 <dt id="arg-min-features">min_features<a class="anchor" aria-label="anchor" href="#arg-min-features"></a></dt>
 <dd><p>Minimum number of features that must be detected in a
-cell for it to be included in the analysis. Defaults to <code>0L</code>.</p></dd>
+cell for it to be included in the analysis. Defaults to <code>0L</code>. Pass to <code>CreateSeuratObject</code></p></dd>
 
 
 <dt id="arg-quality-control">quality_control<a class="anchor" aria-label="anchor" href="#arg-quality-control"></a></dt>
@@ -171,26 +171,27 @@ Default:
 
 <dt id="arg-normalization-method">normalization_method<a class="anchor" aria-label="anchor" href="#arg-normalization-method"></a></dt>
 <dd><p>Method for normalization: "LogNormalize", "CLR",
-or "RC". Defaults to <code>"LogNormalize"</code>.</p></dd>
+or "RC". Defaults to <code>"LogNormalize"</code>. Pass to <code>NormalizeData</code></p></dd>
 
 
 <dt id="arg-scale-factor">scale_factor<a class="anchor" aria-label="anchor" href="#arg-scale-factor"></a></dt>
-<dd><p>Scaling factor for normalization. Defaults to <code>10000L</code>.</p></dd>
+<dd><p>Scaling factor for normalization. Defaults to <code>10000L</code>. Pass to <code>ScaleData</code></p></dd>
 
 
 <dt id="arg-scale-features">scale_features<a class="anchor" aria-label="anchor" href="#arg-scale-features"></a></dt>
 <dd><p>Features to use for scaling. If NULL, uses all variable
-features. If <code>"hvg"</code>, uses high-variance genes via <code>VariableFeatures()</code>. Defaults to <code>NULL</code>.</p></dd>
+features. If <code>"hvg"</code>, uses high-variance genes via <code>VariableFeatures()</code>. Defaults to <code>NULL</code>.
+Pass to <code>ScaleData(features = scale_features)</code></p></dd>
 
 
 <dt id="arg-selection-method">selection_method<a class="anchor" aria-label="anchor" href="#arg-selection-method"></a></dt>
 <dd><p>Method for variable feature selection: "vst", "mvp",
-or "disp". Defaults to <code>"vst"</code>.</p></dd>
+or "disp". Defaults to <code>"vst"</code>. Pass to <code>FindVariableFeatures</code></p></dd>
 
 
 <dt id="arg-resolution">resolution<a class="anchor" aria-label="anchor" href="#arg-resolution"></a></dt>
 <dd><p>Resolution parameter for clustering. Higher values lead to
-more clusters. Defaults to <code>0.6</code>.</p></dd>
+more clusters. Defaults to <code>0.6</code>. Pass to <code>FindClusters</code></p></dd>
 
 
 <dt id="arg-dims">dims<a class="anchor" aria-label="anchor" href="#arg-dims"></a></dt>
@@ -225,14 +226,14 @@ The filtering system dynamically adapts to detected quality control patterns:</p
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/RunTSNE.html" class="external-link">RunTSNE</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></code>,
-<code><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></code></p></div>
+<code><a href="https://rdrr.io/pkg/Seurat/man/NormalizeData.html" class="external-link">NormalizeData</a></code>,
+<code><a href="https://rdrr.io/pkg/Seurat/man/ScaleData.html" class="external-link">ScaleData</a></code>,
+<code><a href="https://rdrr.io/pkg/Seurat/man/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></code>,
+<code><a href="https://rdrr.io/pkg/Seurat/man/RunPCA.html" class="external-link">RunPCA</a></code>,
+<code><a href="https://rdrr.io/pkg/Seurat/man/RunTSNE.html" class="external-link">RunTSNE</a></code>,
+<code><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html" class="external-link">RunUMAP</a></code>,
+<code><a href="https://rdrr.io/pkg/Seurat/man/FindNeighbors.html" class="external-link">FindNeighbors</a></code>,
+<code><a href="https://rdrr.io/pkg/Seurat/man/FindClusters.html" class="external-link">FindClusters</a></code></p></div>
     </div>
 
     <div class="section level2">

@@ -46,7 +46,7 @@ before analysis."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Single-Cell Data Screening</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v3.0.2/R/20-QuickScreen.R" class="external-link"><code>R/20-QuickScreen.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/20-QuickScreen.R" class="external-link"><code>R/20-QuickScreen.R</code></a></small>
       <div class="d-none name"><code>Screen.Rd</code></div>
     </div>
 
@@ -246,9 +246,66 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <li><p>pval_threshold: (numeric) P-value threshold, default 0.05</p></li>
 </ul></dd>
 
+<dt>PIPET</dt>
+<dd><dl><dt>group</dt>
+<dd><p>(character or NULL) Name of a metadata column (e.g., <code>"orig.ident"</code>) to stratify cells before screening. When <code>NULL</code> (default), screening is performed globally across all cells.</p></dd>
+
+<dt>discretize_method</dt>
+<dd><p>(character) Strategy to binarize continuous phenotypes internally before marker identification. One of:</p><ul><li><p><code>"median"</code> (default): Equivalent to 2-quantile split (i.e., median threshold).</p></li>
+<li><p><code>"kmeans"</code>: Two-cluster k-means on the continuous phenotype.</p></li>
+<li><p><code>"custom"</code>: User-defined cutoffs via <code>cutoff</code>.</p></li>
+</ul></dd>
+
+<dt>cutoff</dt>
+<dd><p>(numeric vector or NULL) Required only if <code>discretize_method = "custom"</code>. Specifies interior breakpoints on the <em>normalized, log2-transformed phenotype scale</em> (i.e., after <code>scale(log2(x + 1))</code>). Must be sorted ascending and of length <code>n_group - 1</code>.</p></dd>
+
+<dt>label_type</dt>
+<dd><p>(character) Phenotype label type (e.g., <code>"PIPET_SBS1"</code>), stored in <code>scRNA_data@misc</code>. Default: <code>"PIPET"</code>.</p></dd>
+
+<dt>log2FC</dt>
+<dd><p>(numeric) Absolute log2 fold-change cutoff for differential expression marker selection in bulk data (via DESeq2-like analysis). Default: 1.</p></dd>
+
+<dt>p_adjust</dt>
+<dd><p>(numeric) Adjusted p-value (FDR) cutoff for marker gene selection. Default: 0.05.</p></dd>
+
+<dt>show_log2FC</dt>
+<dd><p>(logical) Whether to annotate markers with signed log2FC direction (e.g., <code>CD3D_up</code>). Default: <code>TRUE</code>.</p></dd>
+
+<dt>freq_counts</dt>
+<dd><p>(integer or NULL) Minimum number of cells a gene must be expressed in to be retained in scRNA-seq data preprocessing. Default: <code>NULL</code> (no filtering).</p></dd>
+
+<dt>normalize</dt>
+<dd><p>(logical) Whether to apply log-normalization (<code>LogNormalize</code>) to scRNA-seq counts prior to correlation. Default: <code>TRUE</code>.</p></dd>
+
+<dt>scale</dt>
+<dd><p>(logical) Whether to scale (center + unit-variance) gene expression across cells before computing distances. Default: <code>TRUE</code>.</p></dd>
+
+<dt>nPerm</dt>
+<dd><p>(integer) Number of label permutations to assess significance of correlation scores. Default: 1000.</p></dd>
+
+<dt>distance</dt>
+<dd><p>(character) Distance or similarity metric for template matching. Supported:
+<code>"cosine"</code> (default),
+<code>"pearson"</code>,
+<code>"spearman"</code>,
+<code>"kendall"</code>,
+<code>"euclidean"</code>,
+<code>"maximum"</code>.</p></dd>
+
+<dt>seed</dt>
+<dd><p>(integer or NULL) Random seed for reproducibility in marker creation and permutation tests. Default: inherits from <code>getFuncOption("seed")</code>.</p></dd>
+
+<dt>verbose</dt>
+<dd><p>(logical) Whether to print progress messages. Default: inherits from <code>getFuncOption("verbose")</code>.</p></dd>
+
+<dt>parallel</dt>
+<dd><p>(logical) Whether to enable parallel permutations (requires <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> pre-set). Default: <code>FALSE</code>.</p></dd>
+
 
 </dl></dd>
 
+
+</dl></dd>
 
 </dl></dd>
 
@@ -274,7 +331,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
     <div class="section level2">
     <h2 id="method-compatibility">Method Compatibility<a class="anchor" aria-label="anchor" href="#method-compatibility"></a></h2>
 
-<table class="table table"><tr><td>Method</td><td>Supported Phenotypes</td><td>Additional Parameters</td></tr><tr><td>Scissor</td><td>All three types</td><td>alpha, cutoff, path2load_scissor_cache, path2save_scissor_inputs, reliability_test, reliability_test.n,reliability_test.nfold, cell_evaluation,cell_evaluation.benchmark_data,cell_evaluation.FDR,cell_evaluation.bootstrap_n</td></tr><tr><td>scPP</td><td>All three types</td><td>ref_group, Log2FC_cutoff, estimate_cutoff, probs</td></tr><tr><td>scPAS</td><td>All three types</td><td>n_components ,assay, imputation,nfeature, alpha,network_class,permutation_times,FDR_threshold,independent</td></tr><tr><td>scAB</td><td>Binary/Survival</td><td>alpha, alpha_2, maxiter, tred</td></tr><tr><td>DEGAS</td><td>All three types</td><td>sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method</td></tr><tr><td>LP_SGL</td><td>All three types</td><td>resolution, alpha, nfold, dge_analysis</td></tr></table></div>
+<table class="table table"><tr><td>Method</td><td>Supported Phenotypes</td><td>Additional Parameters</td></tr><tr><td>Scissor</td><td>All three types</td><td>alpha, cutoff, path2load_scissor_cache, path2save_scissor_inputs, reliability_test, reliability_test.n,reliability_test.nfold, cell_evaluation,cell_evaluation.benchmark_data,cell_evaluation.FDR,cell_evaluation.bootstrap_n</td></tr><tr><td>scPP</td><td>All three types</td><td>ref_group, Log2FC_cutoff, estimate_cutoff, probs</td></tr><tr><td>scPAS</td><td>All three types</td><td>n_components ,assay, imputation,nfeature, alpha,network_class,permutation_times,FDR_threshold,independent</td></tr><tr><td>scAB</td><td>Binary/Survival</td><td>alpha, alpha_2, maxiter, tred</td></tr><tr><td>DEGAS</td><td>All three types</td><td>sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method</td></tr><tr><td>LP_SGL</td><td>All three types</td><td>resolution, alpha, nfold, dge_analysis</td></tr><tr><td>PIPET</td><td>Binary/Continuous</td><td>group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance</td></tr></table></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Associated functions:</p><ul><li><p><code><a href="DoScissor.html">DoScissor</a></code></p></li>
@@ -283,6 +340,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <li><p><code><a href="DoscAB.html">DoscAB</a></code></p></li>
 <li><p><code><a href="DoDEGAS.html">DoDEGAS</a></code></p></li>
 <li><p><code><a href="DoLP_SGL.html">DoLP_SGL</a></code></p></li>
+<li><p><code><a href="DoPIPET.html">DoPIPET</a></code></p></li>
 </ul></div>
     </div>
 

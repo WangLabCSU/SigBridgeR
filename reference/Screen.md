@@ -268,6 +268,106 @@ Screen(
 
           - pval_threshold: (numeric) P-value threshold, default 0.05
 
+      PIPET
+
+      :   
+
+          group
+
+          :   (character or NULL) Name of a metadata column (e.g.,
+              `"orig.ident"`) to stratify cells before screening. When
+              `NULL` (default), screening is performed globally across
+              all cells.
+
+          discretize_method
+
+          :   (character) Strategy to binarize continuous phenotypes
+              internally before marker identification. One of:
+
+              - `"median"` (default): Equivalent to 2-quantile split
+                (i.e., median threshold).
+
+              - `"kmeans"`: Two-cluster k-means on the continuous
+                phenotype.
+
+              - `"custom"`: User-defined cutoffs via `cutoff`.
+
+          cutoff
+
+          :   (numeric vector or NULL) Required only if
+              `discretize_method = "custom"`. Specifies interior
+              breakpoints on the *normalized, log2-transformed phenotype
+              scale* (i.e., after `scale(log2(x + 1))`). Must be sorted
+              ascending and of length `n_group - 1`.
+
+          label_type
+
+          :   (character) Phenotype label type (e.g., `"PIPET_SBS1"`),
+              stored in `scRNA_data@misc`. Default: `"PIPET"`.
+
+          log2FC
+
+          :   (numeric) Absolute log2 fold-change cutoff for
+              differential expression marker selection in bulk data (via
+              DESeq2-like analysis). Default: 1.
+
+          p_adjust
+
+          :   (numeric) Adjusted p-value (FDR) cutoff for marker gene
+              selection. Default: 0.05.
+
+          show_log2FC
+
+          :   (logical) Whether to annotate markers with signed log2FC
+              direction (e.g., `CD3D_up`). Default: `TRUE`.
+
+          freq_counts
+
+          :   (integer or NULL) Minimum number of cells a gene must be
+              expressed in to be retained in scRNA-seq data
+              preprocessing. Default: `NULL` (no filtering).
+
+          normalize
+
+          :   (logical) Whether to apply log-normalization
+              (`LogNormalize`) to scRNA-seq counts prior to correlation.
+              Default: `TRUE`.
+
+          scale
+
+          :   (logical) Whether to scale (center + unit-variance) gene
+              expression across cells before computing distances.
+              Default: `TRUE`.
+
+          nPerm
+
+          :   (integer) Number of label permutations to assess
+              significance of correlation scores. Default: 1000.
+
+          distance
+
+          :   (character) Distance or similarity metric for template
+              matching. Supported: `"cosine"` (default), `"pearson"`,
+              `"spearman"`, `"kendall"`, `"euclidean"`, `"maximum"`.
+
+          seed
+
+          :   (integer or NULL) Random seed for reproducibility in
+              marker creation and permutation tests. Default: inherits
+              from `getFuncOption("seed")`.
+
+          verbose
+
+          :   (logical) Whether to print progress messages. Default:
+              inherits from `getFuncOption("verbose")`.
+
+          parallel
+
+          :   (logical) Whether to enable parallel permutations
+              (requires
+              [`future::plan()`](https://future.futureverse.org/reference/plan.html)
+              pre-set). Default: `FALSE`.
+
 ## Value
 
 A list containing:
@@ -304,6 +404,7 @@ A list containing:
 | scAB    | Binary/Survival      | alpha, alpha_2, maxiter, tred                                                                                                                                                                                                 |
 | DEGAS   | All three types      | sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method                                                                                                                                   |
 | LP_SGL  | All three types      | resolution, alpha, nfold, dge_analysis                                                                                                                                                                                        |
+| PIPET   | Binary/Continuous    | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance                                                                                                               |
 
 ## See also
 
@@ -320,3 +421,5 @@ Associated functions:
 - [`DoDEGAS`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md)
 
 - [`DoLP_SGL`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md)
+
+- [`DoPIPET`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md)
