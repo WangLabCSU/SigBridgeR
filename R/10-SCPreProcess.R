@@ -6,12 +6,13 @@
 #' A generic function for standardized preprocessing of single-cell RNA-seq data
 #' from multiple sources. Handles data.frame/matrix, AnnData, and Seurat inputs
 #' with tumor cell filtering. Implements a complete analysis pipeline
-#' from raw data to clustered embeddings.
+#' from raw data to clustered embeddings with optional SCTransform normalization.
 #'
 #' @name SCPreProcess
 #'
 #' @param sc Input data, one of:
-#'    - `data.frame/matrix/dgCMatrix`: Raw count matrix (features x cells)
+#'    - `data.frame/matrix/dgCMatrix`: Raw count matrix (features x cells).
+#'      \strong{For SCTransform: must be integer counts.}
 #'    - `R6`: Python AnnData object, obtained via package `anndata` or `anndataR`
 #'    - `Seurat`: Preprocessed Seurat object
 #' @param meta_data A data.frame containing metadata for each cell. It will be
@@ -38,13 +39,22 @@
 #'      percent.rp = 60L
 #'    )}
 #' @param normalization_method Method for normalization: "LogNormalize", "CLR",
-#'    or "RC". Defaults to `"LogNormalize"`. Pass to `NormalizeData`
-#' @param scale_factor Scaling factor for normalization. Defaults to `10000L`. Pass to `ScaleData`
+#'    or "RC". Defaults to `"LogNormalize"`. Pass to `NormalizeData`.
+#'    \strong{Ignored when \code{use_sctransform = TRUE}.}
+#' @param scale_factor Scaling factor for normalization. Defaults to `10000L`. Pass to
+#'    `NormalizeData(scale.factor = scale_factor)`.
+#'    \strong{Ignored when \code{use_sctransform = TRUE}.}
 #' @param scale_features Features to use for scaling. If NULL, uses all variable
 #'    features. If `"hvg"`, uses high-variance genes via `VariableFeatures()`. Defaults to `NULL`.
-#'    Pass to `ScaleData(features = scale_features)`
+#'    Pass to `ScaleData(features = scale_features)`.
+#'    \strong{Ignored when \code{use_sctransform = TRUE}.}
 #' @param selection_method Method for variable feature selection: "vst", "mvp",
-#'    or "disp". Defaults to `"vst"`. Pass to `FindVariableFeatures`
+#'    or "disp". Defaults to `"vst"`. Pass to `FindVariableFeatures`.
+#'    \strong{Ignored when \code{use_sctransform = TRUE}.}
+#' @param use_sctransform Logical. If TRUE, uses \code{Seurat::SCTransform} for normalization,
+#'    replacing traditional normalization, scaling, and variable feature selection.
+#'    QC metrics detected in \code{quality_control} (e.g., percent.mt) will be automatically
+#'    used for regression. \strong{Requires raw integer counts as input.} Defaults to \code{FALSE}.
 #' @param resolution Resolution parameter for clustering. Higher values lead to
 #'    more clusters. Defaults to `0.6`. Pass to `FindClusters`
 #' @param dims Dimensions to use for clustering and dimensionality reduction.
@@ -54,11 +64,23 @@
 #'    - `dims_Neighbors`: Dimensions to use for `FindNeighbors`. Defaults to `NULL`, using `dims`.
 #'    - `dims_TSNE`: Dimensions to use for `RunTSNE`. Defaults to `NULL`, using `dims`.
 #'    - `dims_UMAP`: Dimensions to use for `RunUMAP`. Defaults to `NULL`, using `dims`.
+#'    - For \code{use_sctransform = TRUE}: additional arguments passed to \code{SCTransform}
+#'      (e.g., \code{conserve.memory}, \code{method}, \code{vars.to.regress} to override automatic selection)
 #'
 #' @return A Seurat object containing:
 #' \itemize{
-#'   \item Normalized and scaled expression data
-#'   \item Variable features identified by selection method
+#'   \item For \code{use_sctransform = FALSE}:
+#'     \itemize{
+#'       \item Normalized data in \code{RNA} assay (log-normalized)
+#'       \item Scaled data in \code{RNA} assay
+#'     }
+#'   \item For \code{use_sctransform = TRUE}:
+#'     \itemize{
+#'       \item Original counts preserved in \code{RNA} assay
+#'       \item SCT normalized data in \code{SCT} assay
+#'       \item Pearson residuals for PCA
+#'     }
+#'   \item Variable features identified by selection method or \code{SCTransform}
 #'   \item PCA, t-SNE, and UMAP dimensionality reductions
 #'   \item Cluster identities at specified resolution
 #'   \item Quality control metrics in `@meta.data`
@@ -78,6 +100,19 @@
 #'   \item Combined patterns: \code{"^MT-|^RP\[LS\]"} for both mitochondrial and ribosomal genes
 #' }
 #'
+#' \strong{SCTransform Integration:}
+#' When \code{use_sctransform = TRUE}:
+#' \itemize{
+#'   \item QC metrics detected via \code{quality_control$pattern} are automatically used
+#'     as covariates for regression (e.g., \code{percent.mt}, \code{percent.rp})
+#'   \item If multiple QC metrics exist, all non-constant metrics are used for regression
+#'   \item The function validates that input data are integer counts (essential for SCTransform)
+#'   \item \code{normalization_method}, \code{scale_factor}, \code{scale_features}, and
+#'     \code{selection_method} parameters are ignored
+#'   \item The resulting Seurat object will have two assays:
+#'     \code{RNA} (raw counts) and \code{SCT} (normalized data)
+#' }
+#'
 #' \strong{Flexible Filtering:}
 #' The filtering system dynamically adapts to detected quality control patterns:
 #' \itemize{
@@ -88,11 +123,12 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Example with matrix input
+#' # Example with matrix input using SCTransform
 #' counts_matrix <- matrix(rpois(1000, 5), nrow = 100, ncol = 10)
 #' rownames(counts_matrix) <- paste0("Gene", 1:100)
 #' colnames(counts_matrix) <- paste0("Cell", 1:10)
 #'
+#' # Standard workflow
 #' seurat_obj <- SCPreProcess(
 #'   sc = counts_matrix,
 #'   project = "TestProject",
@@ -100,17 +136,28 @@
 #'   resolution = 0.8
 #' )
 #'
-#' # Example with tumor cell filtering
+#' # SCTransform workflow (recommended for cross-platform integration)
+#' seurat_obj_sct <- SCPreProcess(
+#'   sc = counts_matrix,
+#'   project = "TestProject_SCT",
+#'   quality_control = list(pattern = c("^MT-", "^RP[LS]")),
+#'   use_sctransform = TRUE,
+#'   conserve.memory = TRUE  # Passed to SCTransform
+#' )
+#'
+#' # Example with tumor cell filtering and SCTransform
 #' metadata <- data.frame(
 #'   cell_type = c(rep("Tumor", 5), rep("Normal", 5)),
 #'   row.names = paste0("Cell", 1:10)
 #' )
 #'
-#' tumor_seurat <- SCPreProcess(
+#' tumor_seurat_sct <- SCPreProcess(
 #'   sc = counts_matrix,
 #'   meta_data = metadata,
 #'   column2only_tumor = "cell_type",
-#'   project = "TumorAnalysis"
+#'   quality_control = list(pattern = "^MT-"),
+#'   use_sctransform = TRUE,
+#'   project = "TumorAnalysis_SCT"
 #' )
 #' }
 #'
@@ -119,6 +166,7 @@
 #' \code{\link[Seurat]{NormalizeData}},
 #' \code{\link[Seurat]{ScaleData}},
 #' \code{\link[Seurat]{FindVariableFeatures}},
+#' \code{\link[Seurat]{SCTransform}},
 #' \code{\link[Seurat]{RunPCA}},
 #' \code{\link[Seurat]{RunTSNE}},
 #' \code{\link[Seurat]{RunUMAP}},
@@ -126,7 +174,6 @@
 #' \code{\link[Seurat]{FindClusters}}
 #'
 NULL
-
 
 #' @rdname SCPreProcess
 #' @export
@@ -167,6 +214,7 @@ SCPreProcess.default <- function(
   scale_factor = 10000L,
   scale_features = NULL,
   selection_method = "vst",
+  use_sctransform = FALSE,
   resolution = 0.6,
   dims = NULL,
   ...
@@ -181,7 +229,7 @@ SCPreProcess.default <- function(
   # dots arguments
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
-  # pass to `FindNeighbors`, `RunTSNE`, `RunUMAP`
+  # pass to `FindNeighbors`, `RunTSNE` & `RunUMAP`
   dims_Neighbors <- dots$dims_Neighbors
   dims_TSNE <- dots$dims_TSNE
   dims_UMAP <- dots$dims_UMAP
@@ -218,15 +266,28 @@ SCPreProcess.default <- function(
       verbose = verbose
     )
   }
-  sc_seurat <- ProcessSeuratObject(
-    obj = sc_seurat,
-    normalization_method = normalization_method,
-    scale_factor = scale_factor,
-    scale_features = scale_features,
-    selection_method = selection_method,
-    verbose = verbose,
-    ...
-  )
+
+  if (use_sctransform) {
+    vars_to_regress <- dots$vars.to.regress %||%
+      GetVars2Regress(sc_seurat, verbose = verbose)
+
+    sc_seurat <- ProcessSeuratObject_SCT(
+      obj = sc_seurat,
+      vars.to.regress = vars_to_regress,
+      verbose = verbose,
+      ...
+    )
+  } else {
+    sc_seurat <- ProcessSeuratObject(
+      obj = sc_seurat,
+      normalization_method = normalization_method,
+      scale_factor = scale_factor,
+      scale_features = scale_features,
+      selection_method = selection_method,
+      verbose = verbose,
+      ...
+    )
+  }
 
   sc_seurat <- ClusterAndReduce(
     sc_seurat,
@@ -270,6 +331,7 @@ SCPreProcess.R6 <- function(
   scale_factor = 10000L,
   scale_features = NULL,
   selection_method = "vst",
+  use_sctransform = FALSE,
   resolution = 0.6,
   dims = NULL,
   ...
@@ -358,15 +420,27 @@ SCPreProcess.R6 <- function(
       verbose = verbose
     )
   }
-  sc_seurat <- ProcessSeuratObject(
-    obj = sc_seurat,
-    normalization_method = normalization_method,
-    scale_factor = scale_factor,
-    scale_features = scale_features,
-    selection_method = selection_method,
-    verbose = verbose,
-    ...
-  )
+  if (use_sctransform) {
+    # 从QC列中获取回归变量（优先使用存在的列）
+    vars_to_regress <- dots$vars.to.regress %||% GetVars2Regress(sc_seurat)
+
+    sc_seurat <- ProcessSeuratObject_SCT(
+      obj = sc_seurat,
+      vars.to.regress = vars_to_regress,
+      verbose = verbose,
+      ...
+    )
+  } else {
+    sc_seurat <- ProcessSeuratObject(
+      obj = sc_seurat,
+      normalization_method = normalization_method,
+      scale_factor = scale_factor,
+      scale_features = scale_features,
+      selection_method = selection_method,
+      verbose = verbose,
+      ...
+    )
+  }
 
   sc_seurat <- ClusterAndReduce(
     sc_seurat,
@@ -514,6 +588,78 @@ ProcessSeuratObject <- function(
     ...
   )
 
+  Seurat::RunPCA(
+    object = obj,
+    features = variable_features,
+    verbose = verbose,
+    ...
+  )
+}
+
+#' @keywords internal
+GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
+  if (!"qc_colnames" %in% names(seurat_obj@misc)) {
+    cli::cli_warn(
+      "[{.fun GetVars2Regress}]: No QC columns found for regression in {.fun SCTransform}. Please run {.fun QCPatternDetect} first. Returning {.val NULL}."
+    )
+
+    return(NULL)
+  }
+
+  qc_cols <- unlist(seurat_obj@misc$qc_colnames, use.names = FALSE)
+  meta <- seurat_obj[[]]
+
+  existing_cols <- qc_cols[qc_cols %chin% colnames(meta)]
+
+  if (length(existing_cols) == 0) {
+    cli::cli_warn(
+      "[{.fun GetVars2Regress}]: No matching QC columns found in seurat@meta.data Returning {.val NULL}."
+    )
+
+    return(NULL)
+  }
+
+  # 移除常量列（方差为0）
+  valid_cols <- existing_cols[vapply(
+    existing_cols,
+    function(col) {
+      x <- meta[[col]]
+      !all(is.na(x)) && stats::var(x, na.rm = TRUE) > 0
+    },
+    logical(1L)
+  )]
+
+  if (length(valid_cols) == 0) {
+    cli::cli_warn(
+      "[{.fun GetVars2Regress}]: All QC columns are constant, skipping regression. Returning {.val NULL}."
+    )
+    return(NULL)
+  }
+
+  if (verbose && length(valid_cols) > 0) {
+    cli::cli_text(
+      "Using QC columns {valid_cols} for regression in {.fun SCTransform}"
+    )
+  }
+
+  valid_cols
+}
+
+#' @keywords keyword
+ProcessSeuratObject_SCT <- function(
+  obj,
+  vars.to.regress = NULL,
+  verbose = TRUE,
+  ...
+) {
+  obj <- Seurat::SCTransform(
+    object = obj,
+    vars.to.regress = vars.to.regress,
+    verbose = verbose,
+    ...
+  )
+
+  variable_features <- SeuratObject::VariableFeatures(obj, assay = "SCT")
   Seurat::RunPCA(
     object = obj,
     features = variable_features,
@@ -712,7 +858,7 @@ QCPatternDetect <- function(
       skipped_cols,
       skipped_patterns,
       ~ cli::cli_warn(
-        "Column {.val {.x}} already exists. Skipping pattern: {.val {.y}}"
+        "[{.fun QCPatternDetect}]: Column {.val {.x}} already exists. Skipping pattern: {.val {.y}}"
       )
     )
   }
@@ -770,12 +916,14 @@ QCFilter <- function(
   ...
 ) {
   if (!inherits(seurat_obj, "Seurat")) {
-    cli::cli_abort(c("x" = "seurat_obj must be a {.cls Seurat} object."))
+    cli::cli_abort(c(
+      "x" = "[{.fun QCFilter}]: seurat_obj must be a {.cls Seurat} object."
+    ))
   }
 
   if (!is.list(data_filter.thresh)) {
     cli::cli_abort(c(
-      "x" = "{.arg data_filter.thresh} must be a named {.cls list}."
+      "x" = "[{.fun QCFilter}]: {.arg data_filter.thresh} must be a named {.cls list}."
     ))
   }
 
@@ -852,8 +1000,8 @@ QCFilter <- function(
     purrr::map(valid_cols, function(col) {
       if (!col %in% names(thresh)) {
         if (verbose) {
-          cli::cli_alert_info(
-            "No threshold provided for {.val {col}}; skipping."
+          cli::cli_warn(
+            "[{.fun QCFilter}]: No threshold provided for {.val {col}}; skipping."
           )
         }
         return(NULL)
@@ -868,7 +1016,9 @@ QCFilter <- function(
 
   all_conds <- c(list(nfeat_condition, ncount_condition), qc_conds)
   if (length(all_conds) == 0) {
-    cli::cli_abort(c("x" = "No valid filtering conditions generated."))
+    cli::cli_abort(c(
+      "x" = "[{.fun QCFilter}]: No valid filtering conditions generated."
+    ))
   }
 
   full_expr <- purrr::reduce(
@@ -881,7 +1031,7 @@ QCFilter <- function(
 
   if (!is.logical(logical_vec) || length(logical_vec) != nrow(meta)) {
     cli::cli_abort(c(
-      "x" = "Internal error: filtering condition did not produce a logical vector of length {.val {nrow(meta)}}."
+      "x" = "[{.fun QCFilter}]: filtering condition did not produce a logical vector of length {.val {nrow(meta)}}."
     ))
   }
 

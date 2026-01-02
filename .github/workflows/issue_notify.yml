@@ -1,83 +1,57 @@
 name: 📬 Notify New Issue to Feishu
 
 on:
+    check_run:
+        types: [rerequested, completed]
+    check_suite:
+        types: [completed]
+    create:
+    delete:
+    deployment_status:
+    discussion:
+        types: [created, edited, answered]
+    discussion_comment:
+        types: [created, deleted]
+    gollum:
     issues:
-        types: [opened, reopened, labeled, unlabeled]
+        types: [opened, edited, milestoned, pinned, reopened]
+    issue_comment:
+        types: [created, deleted]
+    merge_group:
+        types: [checks_requested]
+    milestone:
+        types: [opened, deleted]
+    page_build:
+    project:
+        types: [created, deleted, reopened]
+    project_card:
+        types: [created, deleted]
+    project_column:
+        types: [created, deleted]
+    public:
+    pull_request:
+        branches: ["main", "devel"]
+        types: [opened, reopened]
+    pull_request_review:
+        types: [edited, dismissed, submitted]
+    pull_request_review_comment:
+        types: [created, edited, deleted]
+    pull_request_target:
+        types: [assigned, opened, synchronize, reopened]
+    registry_package:
+        types: [published]
+    status:
+    watch:
+        types: [started]
+#  schedule:
+#    - cron: '30 2 * * *'
 
 jobs:
-    notify-feishu:
+    send-event:
+        name: Webhook
         runs-on: ubuntu-latest
         steps:
-            - name: 🧾 Extract Issue Info
-              id: issue
-              run: |
-                  # 提取关键字段（兼容 UTF-8，防中文乱码）
-                  TITLE=$(echo '${{ github.event.issue.title }}' | jq -Rs .)
-                  BODY=$(echo '${{ github.event.issue.body }}' | head -c 200 | jq -Rs .)  # 截断前200字符摘要
-                  LABELS=$(echo '${{ toJSON(github.event.issue.labels) }}' | jq -r '[.[]?.name] | join("`, `")')
-                  REPO=${{ github.repository }}
-                  ACTION=${{ github.event.action }}
-                  URL=${{ github.event.issue.html_url }}
-                  USER=${{ github.event.sender.login }}
-
-                  # 设置 Actions 输出，供后续步骤使用
-                  echo "title=$TITLE" >> $GITHUB_OUTPUT
-                  echo "body=$BODY" >> $GITHUB_OUTPUT
-                  echo "labels=$LABELS" >> $GITHUB_OUTPUT
-                  echo "repo=$REPO" >> $GITHUB_OUTPUT
-                  echo "action=$ACTION" >> $GITHUB_OUTPUT
-                  echo "url=$URL" >> $GITHUB_OUTPUT
-                  echo "user=$USER" >> $GITHUB_OUTPUT
-
-            - name: 📤 Send to Feishu
-              uses: guowenmin/feishu-message-action@v1.3.0 # 稳定版
+            - uses: WangLabCSU/feishu-bot-webhook-action@main
               with:
-                  webhook: ${{ secrets.FEISHU_ISSUE_WEBHOOK }}
-                  msg_type: "interactive"
-                  # 交互式卡片（飞书支持 Markdown + 按钮）
-                  card: |
-                      {
-                        "config": {"wide_screen_mode": true},
-                        "header": {
-                          "template": "${{ fromJSON('{\"opened\":\"red\",\"reopened\":\"orange\",\"labeled\":\"blue\",\"unlabeled\":\"grey\"}')[github.event.action] || 'blue' }}",
-                          "title": {
-                            "content": "🧬 新 Issue：${{ github.repository }}",
-                            "tag": "plain_text"
-                          }
-                        },
-                        "elements": [
-                          {
-                            "tag": "div",
-                            "text": {
-                              "content": "**${{ steps.issue.outputs.user }}** `${{ github.event.action }}`\n> **${{ fromJSON(steps.issue.outputs.title) }}**\n${{ fromJSON(steps.issue.outputs.labels) && format('🏷️ `{0}`\n', steps.issue.outputs.labels) || '' }}\n💬 `${{ fromJSON(steps.issue.outputs.body) }}…`",
-                              "tag": "lark_md"
-                            }
-                          },
-                          {
-                            "tag": "action",
-                            "actions": [
-                              {
-                                "tag": "button",
-                                "text": {"content": "👀 查看 Issue", "tag": "plain_text"},
-                                "type": "default",
-                                "url": "${{ steps.issue.outputs.url }}"
-                              },
-                              {
-                                "tag": "button",
-                                "text": {"content": "🔧 跳转仓库", "tag": "plain_text"},
-                                "type": "primary",
-                                "url": "https://github.com/${{ github.repository }}"
-                              }
-                            ]
-                          },
-                          {
-                            "tag": "note",
-                            "elements": [
-                              {
-                                "tag": "plain_text",
-                                "content": "🤖 自动通知 · $(TZ='Asia/China' date +'%Y-%m-%d %H:%M')"
-                              }
-                            ]
-                          }
-                        ]
-                      }
+                  webhook: ${{ secrets.FEISHU_BOT_WEBHOOK }}
+                  signkey: ${{ secrets.FEISHU_BOT_SIGNKEY }}

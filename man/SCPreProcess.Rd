@@ -23,6 +23,7 @@ SCPreProcess(sc, ...)
   scale_factor = 10000L,
   scale_features = NULL,
   selection_method = "vst",
+  use_sctransform = FALSE,
   resolution = 0.6,
   dims = NULL,
   ...
@@ -42,6 +43,7 @@ SCPreProcess(sc, ...)
   scale_factor = 10000L,
   scale_features = NULL,
   selection_method = "vst",
+  use_sctransform = FALSE,
   resolution = 0.6,
   dims = NULL,
   ...
@@ -52,7 +54,8 @@ SCPreProcess(sc, ...)
 \arguments{
 \item{sc}{Input data, one of:
 \itemize{
-\item \code{data.frame/matrix/dgCMatrix}: Raw count matrix (features x cells)
+\item \code{data.frame/matrix/dgCMatrix}: Raw count matrix (features x cells).
+\strong{For SCTransform: must be integer counts.}
 \item \code{R6}: Python AnnData object, obtained via package \code{anndata} or \code{anndataR}
 \item \code{Seurat}: Preprocessed Seurat object
 }}
@@ -63,6 +66,8 @@ SCPreProcess(sc, ...)
 \item \code{dims_Neighbors}: Dimensions to use for \code{FindNeighbors}. Defaults to \code{NULL}, using \code{dims}.
 \item \code{dims_TSNE}: Dimensions to use for \code{RunTSNE}. Defaults to \code{NULL}, using \code{dims}.
 \item \code{dims_UMAP}: Dimensions to use for \code{RunUMAP}. Defaults to \code{NULL}, using \code{dims}.
+\item For \code{use_sctransform = TRUE}: additional arguments passed to \code{SCTransform}
+(e.g., \code{conserve.memory}, \code{method}, \code{vars.to.regress} to override automatic selection)
 }}
 
 \item{meta_data}{A data.frame containing metadata for each cell. It will be
@@ -96,16 +101,26 @@ Default:
    )}}
 
 \item{normalization_method}{Method for normalization: "LogNormalize", "CLR",
-or "RC". Defaults to \code{"LogNormalize"}. Pass to \code{NormalizeData}}
+or "RC". Defaults to \code{"LogNormalize"}. Pass to \code{NormalizeData}.
+\strong{Ignored when \code{use_sctransform = TRUE}.}}
 
-\item{scale_factor}{Scaling factor for normalization. Defaults to \code{10000L}. Pass to \code{ScaleData}}
+\item{scale_factor}{Scaling factor for normalization. Defaults to \code{10000L}. Pass to
+\code{NormalizeData(scale.factor = scale_factor)}.
+\strong{Ignored when \code{use_sctransform = TRUE}.}}
 
 \item{scale_features}{Features to use for scaling. If NULL, uses all variable
 features. If \code{"hvg"}, uses high-variance genes via \code{VariableFeatures()}. Defaults to \code{NULL}.
-Pass to \code{ScaleData(features = scale_features)}}
+Pass to \code{ScaleData(features = scale_features)}.
+\strong{Ignored when \code{use_sctransform = TRUE}.}}
 
 \item{selection_method}{Method for variable feature selection: "vst", "mvp",
-or "disp". Defaults to \code{"vst"}. Pass to \code{FindVariableFeatures}}
+or "disp". Defaults to \code{"vst"}. Pass to \code{FindVariableFeatures}.
+\strong{Ignored when \code{use_sctransform = TRUE}.}}
+
+\item{use_sctransform}{Logical. If TRUE, uses \code{Seurat::SCTransform} for normalization,
+replacing traditional normalization, scaling, and variable feature selection.
+QC metrics detected in \code{quality_control} (e.g., percent.mt) will be automatically
+used for regression. \strong{Requires raw integer counts as input.} Defaults to \code{FALSE}.}
 
 \item{resolution}{Resolution parameter for clustering. Higher values lead to
 more clusters. Defaults to \code{0.6}. Pass to \code{FindClusters}}
@@ -116,8 +131,18 @@ If NULL, automatically determined by elbow method. Defaults to \code{NULL}.}
 \value{
 A Seurat object containing:
 \itemize{
-\item Normalized and scaled expression data
-\item Variable features identified by selection method
+\item For \code{use_sctransform = FALSE}:
+\itemize{
+\item Normalized data in \code{RNA} assay (log-normalized)
+\item Scaled data in \code{RNA} assay
+}
+\item For \code{use_sctransform = TRUE}:
+\itemize{
+\item Original counts preserved in \code{RNA} assay
+\item SCT normalized data in \code{SCT} assay
+\item Pearson residuals for PCA
+}
+\item Variable features identified by selection method or \code{SCTransform}
 \item PCA, t-SNE, and UMAP dimensionality reductions
 \item Cluster identities at specified resolution
 \item Quality control metrics in \verb{@meta.data}
@@ -130,7 +155,7 @@ A Seurat object containing:
 A generic function for standardized preprocessing of single-cell RNA-seq data
 from multiple sources. Handles data.frame/matrix, AnnData, and Seurat inputs
 with tumor cell filtering. Implements a complete analysis pipeline
-from raw data to clustered embeddings.
+from raw data to clustered embeddings with optional SCTransform normalization.
 }
 \details{
 \strong{Quality Control Patterns:}
@@ -143,6 +168,19 @@ The function supports flexible pattern matching for quality control, for example
 \item Combined patterns: \code{"^MT-|^RP\[LS\]"} for both mitochondrial and ribosomal genes
 }
 
+\strong{SCTransform Integration:}
+When \code{use_sctransform = TRUE}:
+\itemize{
+\item QC metrics detected via \code{quality_control$pattern} are automatically used
+as covariates for regression (e.g., \code{percent.mt}, \code{percent.rp})
+\item If multiple QC metrics exist, all non-constant metrics are used for regression
+\item The function validates that input data are integer counts (essential for SCTransform)
+\item \code{normalization_method}, \code{scale_factor}, \code{scale_features}, and
+\code{selection_method} parameters are ignored
+\item The resulting Seurat object will have two assays:
+\code{RNA} (raw counts) and \code{SCT} (normalized data)
+}
+
 \strong{Flexible Filtering:}
 The filtering system dynamically adapts to detected quality control patterns:
 \itemize{
@@ -153,11 +191,12 @@ The filtering system dynamically adapts to detected quality control patterns:
 }
 \examples{
 \dontrun{
-# Example with matrix input
+# Example with matrix input using SCTransform
 counts_matrix <- matrix(rpois(1000, 5), nrow = 100, ncol = 10)
 rownames(counts_matrix) <- paste0("Gene", 1:100)
 colnames(counts_matrix) <- paste0("Cell", 1:10)
 
+# Standard workflow
 seurat_obj <- SCPreProcess(
   sc = counts_matrix,
   project = "TestProject",
@@ -165,17 +204,28 @@ seurat_obj <- SCPreProcess(
   resolution = 0.8
 )
 
-# Example with tumor cell filtering
+# SCTransform workflow (recommended for cross-platform integration)
+seurat_obj_sct <- SCPreProcess(
+  sc = counts_matrix,
+  project = "TestProject_SCT",
+  quality_control = list(pattern = c("^MT-", "^RP[LS]")),
+  use_sctransform = TRUE,
+  conserve.memory = TRUE  # Passed to SCTransform
+)
+
+# Example with tumor cell filtering and SCTransform
 metadata <- data.frame(
   cell_type = c(rep("Tumor", 5), rep("Normal", 5)),
   row.names = paste0("Cell", 1:10)
 )
 
-tumor_seurat <- SCPreProcess(
+tumor_seurat_sct <- SCPreProcess(
   sc = counts_matrix,
   meta_data = metadata,
   column2only_tumor = "cell_type",
-  project = "TumorAnalysis"
+  quality_control = list(pattern = "^MT-"),
+  use_sctransform = TRUE,
+  project = "TumorAnalysis_SCT"
 )
 }
 
@@ -185,6 +235,7 @@ tumor_seurat <- SCPreProcess(
 \code{\link[Seurat]{NormalizeData}},
 \code{\link[Seurat]{ScaleData}},
 \code{\link[Seurat]{FindVariableFeatures}},
+\code{\link[Seurat]{SCTransform}},
 \code{\link[Seurat]{RunPCA}},
 \code{\link[Seurat]{RunTSNE}},
 \code{\link[Seurat]{RunUMAP}},
