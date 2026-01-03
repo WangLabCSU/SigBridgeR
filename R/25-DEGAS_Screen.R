@@ -136,7 +136,10 @@ DoDEGAS <- function(
   )
 
   dots <- rlang::list2(...)
-  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
+  verbose <- dots$verbose %||%
+    SigBridgeRUtils::getFuncOption("verbose") %||%
+    TRUE
+  assay <- dots$assay %||% "RNA"
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("Starting DEGAS Screen"))
@@ -227,7 +230,7 @@ DoDEGAS <- function(
     }
 
   # Python-like data formats
-  sc_mat <- SeuratObject::LayerData(sc_data)
+  sc_mat <- SeuratObject::LayerData(sc_data, layer = "data", assay = assay)
   cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
   t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
   t_matched_bulk <- Matrix::t(matched_bulk[cm_genes, ])

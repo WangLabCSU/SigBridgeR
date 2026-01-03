@@ -73,6 +73,7 @@ Suggests:
     randomcoloR,
     reticulate,
     rmarkdown,
+    scCustomize,
     sparseMatrixStats,
     testthat (>= 3.0.0),
     tidyr,

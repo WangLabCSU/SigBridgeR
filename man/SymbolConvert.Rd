@@ -4,7 +4,13 @@
 \alias{SymbolConvert}
 \title{Convert Ensembles Version IDs & TCGA Version IDs to Genes in Bulk Expression Data}
 \usage{
-SymbolConvert(data, unknown_format = "unknown_{k}")
+SymbolConvert(
+  data,
+  unknown_format = "unknown_{k}",
+  genome_build = c("hg38", "hg19", "mm10", "mm9"),
+  verbose = SigBridgeRUtils::getFuncOption("verbose"),
+  ...
+)
 }
 \arguments{
 \item{data}{bulk expression data (matrix or data.frame)}
@@ -12,6 +18,10 @@ SymbolConvert(data, unknown_format = "unknown_{k}")
 \item{unknown_format}{A glue pattern containing \code{{k}} for replace the NA value during conversion.
 k must be wrapped in curly braces, stands for the position of the NA value in the row.
 Default: \code{"unknown_{k}"}.}
+
+\item{genome_build}{Genome build of the data. Default: \code{"hg38"}.}
+
+\item{verbose}{Whether to print verbose messages. Default: \code{TRUE}.}
 }
 \description{
 Preprocess bulk expression data: convert Ensembles version IDs and TCGA version IDs to genes. NA values are replaced with \code{unknown_k} format (k stands for the position of the NA value in the row).

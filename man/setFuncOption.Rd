@@ -41,9 +41,8 @@ before they are set in the global options.
 \details{
 This function performs the following validations:
 \describe{
-\item{verbose, parallel}{Must be single logical values (TRUE/FALSE)}
-\item{parallel.type}{Must be a single character string}
-\item{workers, timeout, seed}{Must be single integer values}
+\item{verbose}{Must be single logical values (TRUE/FALSE)}
+\item{timeout, seed}{Must be single integer values}
 }
 
 The function is automatically called by setFuncOption to ensure all

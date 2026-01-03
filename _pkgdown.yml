@@ -27,7 +27,7 @@ template:
         bg: white
         fg: black
         primary: "#2c5f9b"
-        secondary: "#6c757d"
+
 
 authors:
     - name: Yuxi Yang
