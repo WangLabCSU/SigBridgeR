@@ -274,7 +274,6 @@ SCPreProcess.default <- function(
     sc_seurat <- ProcessSeuratObject_SCT(
       obj = sc_seurat,
       vars.to.regress = vars_to_regress,
-      verbose = verbose,
       ...
     )
   } else {
@@ -284,7 +283,6 @@ SCPreProcess.default <- function(
       scale_factor = scale_factor,
       scale_features = scale_features,
       selection_method = selection_method,
-      verbose = verbose,
       ...
     )
   }
@@ -296,7 +294,6 @@ SCPreProcess.default <- function(
     dims_TSNE = dims_TSNE,
     dims_UMAP = dims_UMAP,
     resolution = resolution,
-    verbose = verbose,
     ...
   )
 

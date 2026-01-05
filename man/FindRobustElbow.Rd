@@ -6,7 +6,7 @@
 \usage{
 FindRobustElbow(
   obj,
-  verbose = SigBridgeRUtils::getFuncOption("verbose"),
+  verbose = SigBridgeRUtils::getFuncOption("verbose") \%||\% TRUE,
   ndims = 50L
 )
 }

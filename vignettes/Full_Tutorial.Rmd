@@ -717,7 +717,7 @@ Parameters pass to `...` when using `DEGAS` method
 - `normality_test_method`: Method for normality testing: `"jarque-bera", "d'agostino", or "kolmogorov-smirnov"`, default is "jarque-bera".
 
 ```{r,DEGAS_screening,eval=FALSE}
-degas_result = Screen(
+degas_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
   phenotype = your_matched_phenotype,
@@ -794,6 +794,14 @@ degas_result = Screen(
 
 This code chunk will CREATE a conda environment called "**r-reticulate-degas**" with python 3.9.15, and install the required packages (tensorflow, protobuf) for DEGAS. If an environment with the same name already exists, it will directly use this environment without creating a new one (unless specified `env_params = list(env.recreate=TRUE)`).
 
+To obtain the default parameters for DEGAS, you can use `SigBridgeR:::DEGASParamSet()`
+
+```{r,get_default_params1,eval=FALSE}
+degas_param <- SigBridgeR:::DEGASParamSet(list())
+
+env_param <- SigBridgeR:::DEGASEnvSet(list())
+```
+
 You can use `ListPyEnvs()` to list all the python environments in your system, including virtual environments. Both Windows and Unix-like systems are supported. More information can be found in [https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html)
 
 ```{r,show_python_envs,eval=FALSE}
@@ -805,7 +813,7 @@ ListPyEnv()
 # 3               test                  /home/user/.virtualenvs/test/bin/python  venv
 ```
 
-Please note that the environmental dependencies required for DEGAS to run are quite stringent, and conflicts are highly likely to occur. 
+Please note that the environmental dependencies required for DEGAS to run are quite stringent, and conflicts are highly likely to occur.
 
 **returning structure**: A list containing:
 
