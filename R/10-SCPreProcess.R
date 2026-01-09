@@ -14,13 +14,13 @@
 #'    - `data.frame/matrix/dgCMatrix`: Raw count matrix (features x cells).
 #'      \strong{For SCTransform: must be integer counts.}
 #'    - `R6`: Python AnnData object, obtained via package `anndata` or `anndataR`
-#'    - `Seurat`: Preprocessed Seurat object
+#'    - `Seurat`: Preprocessed Seurat object. This function will validate its
+#'      structure.
 #' @param meta_data A data.frame containing metadata for each cell. It will be
 #'    added to the Seurat object as `@meta.data`. If sc is an anndata object,
 #'    `obs` will be automatically used.
 #' @param column2only_tumor A character of column names in `meta_data`, used to
 #'    filter the Seurat object to only tumor cells. If `NULL`, no filtering is performed.
-#' @param project A character of project name, used to name the Seurat object. Pass to `CreateSeuratObject`.
 #' @param min_cells Minimum number of cells that must express a feature for it.
 #'    to be included in the analysis. Defaults to `400L`. Pass to `CreateSeuratObject`
 #' @param min_features Minimum number of features that must be detected in a
@@ -38,23 +38,15 @@
 #'      percent.mt = 20L,
 #'      percent.rp = 60L
 #'    )}
-#' @param normalization_method Method for normalization: "LogNormalize", "CLR",
-#'    or "RC". Defaults to `"LogNormalize"`. Pass to `NormalizeData`.
-#'    \strong{Ignored when \code{use_sctransform = TRUE}.}
-#' @param scale_factor Scaling factor for normalization. Defaults to `10000L`. Pass to
-#'    `NormalizeData(scale.factor = scale_factor)`.
-#'    \strong{Ignored when \code{use_sctransform = TRUE}.}
 #' @param scale_features Features to use for scaling. If NULL, uses all variable
 #'    features. If `"hvg"`, uses high-variance genes via `VariableFeatures()`. Defaults to `NULL`.
 #'    Pass to `ScaleData(features = scale_features)`.
-#'    \strong{Ignored when \code{use_sctransform = TRUE}.}
-#' @param selection_method Method for variable feature selection: "vst", "mvp",
-#'    or "disp". Defaults to `"vst"`. Pass to `FindVariableFeatures`.
 #'    \strong{Ignored when \code{use_sctransform = TRUE}.}
 #' @param use_sctransform Logical. If TRUE, uses \code{Seurat::SCTransform} for normalization,
 #'    replacing traditional normalization, scaling, and variable feature selection.
 #'    QC metrics detected in \code{quality_control} (e.g., percent.mt) will be automatically
 #'    used for regression. \strong{Requires raw integer counts as input.} Defaults to \code{FALSE}.
+#' @param use_normalizedata If the single-cell expression matrix supplied to the `sc` argument is TPM data, please set this parameter to `FALSE`.
 #' @param resolution Resolution parameter for clustering. Higher values lead to
 #'    more clusters. Defaults to `0.6`. Pass to `FindClusters`
 #' @param dims Dimensions to use for clustering and dimensionality reduction.
@@ -187,7 +179,6 @@ SCPreProcess.default <- function(
   sc,
   meta_data = NULL,
   column2only_tumor = NULL,
-  project = "SC_Screening_Proj",
   min_cells = 400L,
   min_features = 0L,
   quality_control = list(
@@ -210,11 +201,9 @@ SCPreProcess.default <- function(
 
     # ? Use `SigBridgeR:::Pattern2Colname()` to get the correct colname if still confused.
   ),
-  normalization_method = "LogNormalize",
-  scale_factor = 10000L,
   scale_features = NULL,
-  selection_method = "vst",
   use_sctransform = FALSE,
+  use_normalizedata = TRUE,
   resolution = 0.6,
   dims = NULL,
   ...
@@ -233,6 +222,9 @@ SCPreProcess.default <- function(
   dims_Neighbors <- dots$dims_Neighbors
   dims_TSNE <- dots$dims_TSNE
   dims_UMAP <- dots$dims_UMAP
+  project <- dots$project %||% "SC_Screen_Proj"
+  min_cells <- dots$min.cells %||% min_cells
+  min_features <- dots$min.features %||% min_features
 
   sc_seurat <- SeuratObject::CreateSeuratObject(
     counts = sc,
@@ -279,10 +271,7 @@ SCPreProcess.default <- function(
   } else {
     sc_seurat <- ProcessSeuratObject(
       obj = sc_seurat,
-      normalization_method = normalization_method,
-      scale_factor = scale_factor,
       scale_features = scale_features,
-      selection_method = selection_method,
       ...
     )
   }
@@ -312,7 +301,6 @@ SCPreProcess.R6 <- function(
   sc,
   meta_data = NULL,
   column2only_tumor = NULL,
-  project = "SC_Screening_Proj",
   min_cells = 400L,
   min_features = 0L,
   quality_control = list(
@@ -324,11 +312,9 @@ SCPreProcess.R6 <- function(
     percent.mt = 20L, # mitochondrial genes
     percent.rp = 60L # ribosomal protein genes
   ),
-  normalization_method = "LogNormalize",
-  scale_factor = 10000L,
-  scale_features = NULL,
-  selection_method = "vst",
+  scale_features = NULL, # or "hvg" to enable using `VariableFeatures`
   use_sctransform = FALSE,
+  use_normalizedata = TRUE,
   resolution = 0.6,
   dims = NULL,
   ...
@@ -347,6 +333,9 @@ SCPreProcess.R6 <- function(
   dims_Neighbors <- dots$dims_Neighbors
   dims_TSNE <- dots$dims_TSNE
   dims_UMAP <- dots$dims_UMAP
+  project <- dots$project %||% "SC_Screening_Proj"
+  min_cells <- dots$min.cells %||% min_cells
+  min_features <- dots$min.features %||% min_features
 
   # Both `anndata` and `anndataR` are based on R6
   if (is.null(sc$X)) {
@@ -364,6 +353,18 @@ SCPreProcess.R6 <- function(
     if (!is.null(meta_data)) {
       seurat <- SeuratObject::AddMetaData(seurat, meta_data)
     }
+    if (min_cells != 0) {
+      gene_cell_counts <- SigBridgeRUtils::rowSums3(
+        SeuratObject::LayerData(seurat, layer = "counts") > 0
+      )
+      seurat <- seurat[gene_cell_counts >= min_cells, ]
+    }
+    if (min_features != 0) {
+      cell_gene_counts <- SigBridgeRUtils::colSums3(
+        SeuratObject::LayerData(seurat, layer = "counts") > 0
+      )
+      seurat <- seurat[, cell_gene_counts >= min_features]
+    }
     seurat
   } else if (inherits(sc, "AnnDataR6")) {
     # * from anndata
@@ -374,10 +375,19 @@ SCPreProcess.R6 <- function(
       sc$obs
     }
     count_mat <- sc$transpose()$X
+
+    if (any(count_mat != floor(count_mat))) {
+      cli::cli_warn(
+        "[{.fun CreateSeuratObject}]: Input count matrix contains non-integer values"
+      )
+    }
+
     seurat <- SeuratObject::CreateSeuratObject(
       counts = count_mat,
       project = project,
-      meta.data = meta_data
+      meta.data = meta_data,
+      min.cells = min_cells,
+      min.features = min_features
     )
 
     if (ncol(sc$var) != 0) {
@@ -430,10 +440,7 @@ SCPreProcess.R6 <- function(
   } else {
     sc_seurat <- ProcessSeuratObject(
       obj = sc_seurat,
-      normalization_method = normalization_method,
-      scale_factor = scale_factor,
       scale_features = scale_features,
-      selection_method = selection_method,
       verbose = verbose,
       ...
     )
@@ -470,7 +477,7 @@ SCPreProcess.Seurat <- function(
   verbose <- dots$verbose %||% getFuncOption("verbose")
 
   if (verbose) {
-    ts_cli$cli_alert_info("Start from Seurat object")
+    cli::cli_text("Start from Seurat object")
   }
 
   # Validation message can be TRUE or message vector
@@ -487,9 +494,7 @@ SCPreProcess.Seurat <- function(
 
   # * Failure to validate the Seurat object
   if (verbose) {
-    ts_cli$cli_alert_info(
-      "Seurat object validation failed, try repairing it..."
-    )
+    cli::cli_alert_info("Seurat object validation failed, try repairing it...")
     cli::cli_h3(cli::style_bold("Validation message:"))
     purrr::walk(valid_msg, cli::cli_alert_danger)
     cli::cli_h3(cli::style_bold(
@@ -504,7 +509,7 @@ SCPreProcess.Seurat <- function(
   updated_res <- SafelyUpdateSeuratObject(sc)
   # Successful repair
   if (is.null(updated_res$error) && verbose) {
-    ts_cli$cli_alert_success(cli::col_green(
+    cli::cli_alert_success(cli::col_green(
       "Successfully repaired the Seurat object"
     ))
   } else if (verbose) {
@@ -530,12 +535,9 @@ SCPreProcess.Seurat <- function(
 #' Normalize, find variable features, scale, and run PCA
 #'
 #' @param obj Seurat object
-#' @param normalization_method Normalization method ("LogNormalize", "CLR", or "RC")
-#' @param scale_factor Scaling factor for normalization
-#' @param scale_features Features to scale
-#' @param selection_method Variable feature selection method ("vst", "mvp", or "disp")
+#' @param scale_features Pass to `Seurat::ScaleData`. When specifying `scale_features = "hvg"`, the variable features will be used.
 #' @param verbose Print progress messages
-#' @param ... Other params passed to `Seurat::NormalizeData`, `Seurat::FindVariableFeatures`, and `Seurat::ScaleData`
+#' @param ... Other params passed to `Seurat::NormalizeData`, `Seurat::FindVariableFeatures`, and `Seurat::ScaleData`, auto-applied
 #' @return Seurat object
 #'
 #' @keywords internal
@@ -543,34 +545,37 @@ SCPreProcess.Seurat <- function(
 #'
 ProcessSeuratObject <- function(
   obj,
-  normalization_method = "LogNormalize",
-  scale_factor = 10000,
   scale_features = NULL,
-  selection_method = "vst",
   verbose = TRUE,
   ...
 ) {
-  obj <- Seurat::NormalizeData(
+  dots <- rlang::list2(...)
+
+  obj <- rlang::exec(
+    Seurat::NormalizeData,
     object = obj,
-    normalization.method = normalization_method,
-    scale.factor = scale_factor,
     verbose = verbose,
-    ...
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::NormalizeData)
   )
-  obj <- Seurat::FindVariableFeatures(
+  obj <- rlang::exec(
+    Seurat::FindVariableFeatures,
     object = obj,
-    selection.method = selection_method,
     verbose = verbose,
-    ...
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindVariableFeatures)
   )
 
   # 🔍 Resolve scale_features with extended semantics:
   #   • NULL          → scale ALL genes (Seurat default)
   #   • "hvg" / "HVG" → scale VariableFeatures(obj)
   #   • character()   → user-provided gene list
-  variable_features <- SeuratObject::VariableFeatures(object = obj, ...)
+  variable_features <- rlang::exec(
+    SeuratObject::VariableFeatures,
+    object = obj,
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
+  )
 
-  obj <- Seurat::ScaleData(
+  obj <- rlang::exec(
+    Seurat::ScaleData,
     object = obj,
     features = if (
       is.character(scale_features) &&
@@ -582,14 +587,15 @@ ProcessSeuratObject <- function(
       scale_features # NULL
     },
     verbose = verbose,
-    ...
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::ScaleData)
   )
 
-  Seurat::RunPCA(
+  rlang::exec(
+    Seurat::RunPCA,
     object = obj,
     features = variable_features,
     verbose = verbose,
-    ...
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::RunPCA)
   )
 }
 
@@ -649,19 +655,28 @@ ProcessSeuratObject_SCT <- function(
   verbose = TRUE,
   ...
 ) {
-  obj <- Seurat::SCTransform(
+  dots <- rlang::list2(...)
+
+  obj <- rlang::exec(
+    Seurat::SCTransform,
     object = obj,
     vars.to.regress = vars.to.regress,
     verbose = verbose,
-    ...
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::SCTransform)
   )
 
-  variable_features <- SeuratObject::VariableFeatures(obj, assay = "SCT")
-  Seurat::RunPCA(
+  variable_features <- rlang::exec(
+    SeuratObject::VariableFeatures,
+    object = obj,
+    assay = "SCT",
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
+  )
+  rlang::exec(
+    Seurat::RunPCA,
     object = obj,
     features = variable_features,
     verbose = verbose,
-    ...
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::RunPCA)
   )
 }
 
@@ -696,6 +711,7 @@ ClusterAndReduce <- function(
   verbose = TRUE,
   ...
 ) {
+  dots <- rlang::list2(...)
   n_pcs <- ncol(obj@reductions$pca)
   if (
     is.null(dims) &&
@@ -713,24 +729,36 @@ ClusterAndReduce <- function(
   dims_TSNE <- dims_TSNE %||% dims
   dims_UMAP <- dims_UMAP %||% dims
 
-  obj <- Seurat::FindNeighbors(
+  obj <- rlang::exec(
+    Seurat::FindNeighbors,
     object = obj,
     dims = dims_Neighbors,
     verbose = verbose,
-    ...
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindNeighbors)
   )
-  obj <- Seurat::FindClusters(
+  obj <- rlang::exec(
+    Seurat::FindClusters,
     object = obj,
     resolution = resolution,
     verbose = verbose,
-    ...
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindClusters)
   )
 
   if (run_tsne) {
-    obj <- Seurat::RunTSNE(object = obj, dims = dims_TSNE, ...)
+    obj <- rlang::exec(
+      Seurat::RunTSNE,
+      object = obj,
+      dims = dims_TSNE,
+      !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::RunTSNE)
+    )
   }
-
-  Seurat::RunUMAP(object = obj, dims = dims_UMAP, verbose = verbose, ...)
+  rlang::exec(
+    Seurat::RunUMAP,
+    object = obj,
+    dims = dims_UMAP,
+    verbose = verbose,
+    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::RunUMAP)
+  )
 }
 
 #' @title Filter tumor cells (internal)
@@ -777,7 +805,7 @@ FilterTumorCell <- function(
     return(obj)
   }
   if (verbose) {
-    cli::cli_text(
+    ts_cli$cli_alert_info(
       "Filtering tumor cells with '{.emph {column2only_tumor}}'..."
     )
   }

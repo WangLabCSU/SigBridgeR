@@ -16,7 +16,7 @@ This document introduces several auxiliary functions of SigBridgeR.
 
 ## Add miscellaneous information to the Seurat object
 
-SigBridgeR uses `AddMisc()` to record what data features or evidence the various screening algorithms are based on during execution.
+SigBridgeR uses `AddMisc()` to record what data features or evidence the various screening algorithms are based on during execution. As a substitute for the `SeuratObject::Misc()`
 
 -   `AddMisc()` : Add miscellaneous information to the Seurat object. Support for adding multiple attributes to the `SeuratObject@misc` slot simultaneously.
 

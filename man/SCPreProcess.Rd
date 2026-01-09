@@ -13,17 +13,14 @@ SCPreProcess(sc, ...)
   sc,
   meta_data = NULL,
   column2only_tumor = NULL,
-  project = "SC_Screening_Proj",
   min_cells = 400L,
   min_features = 0L,
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
     50000L), percent.mt = 20L, percent.rp = 60L),
-  normalization_method = "LogNormalize",
-  scale_factor = 10000L,
   scale_features = NULL,
-  selection_method = "vst",
   use_sctransform = FALSE,
+  use_normalizedata = TRUE,
   resolution = 0.6,
   dims = NULL,
   ...
@@ -33,17 +30,14 @@ SCPreProcess(sc, ...)
   sc,
   meta_data = NULL,
   column2only_tumor = NULL,
-  project = "SC_Screening_Proj",
   min_cells = 400L,
   min_features = 0L,
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
     50000L), percent.mt = 20L, percent.rp = 60L),
-  normalization_method = "LogNormalize",
-  scale_factor = 10000L,
   scale_features = NULL,
-  selection_method = "vst",
   use_sctransform = FALSE,
+  use_normalizedata = TRUE,
   resolution = 0.6,
   dims = NULL,
   ...
@@ -57,7 +51,8 @@ SCPreProcess(sc, ...)
 \item \code{data.frame/matrix/dgCMatrix}: Raw count matrix (features x cells).
 \strong{For SCTransform: must be integer counts.}
 \item \code{R6}: Python AnnData object, obtained via package \code{anndata} or \code{anndataR}
-\item \code{Seurat}: Preprocessed Seurat object
+\item \code{Seurat}: Preprocessed Seurat object. This function will validate its
+structure.
 }}
 
 \item{...}{Additional arguments passed to specific methods. Currently supports:
@@ -76,8 +71,6 @@ added to the Seurat object as \verb{@meta.data}. If sc is an anndata object,
 
 \item{column2only_tumor}{A character of column names in \code{meta_data}, used to
 filter the Seurat object to only tumor cells. If \code{NULL}, no filtering is performed.}
-
-\item{project}{A character of project name, used to name the Seurat object. Pass to \code{CreateSeuratObject}.}
 
 \item{min_cells}{Minimum number of cells that must express a feature for it.
 to be included in the analysis. Defaults to \code{400L}. Pass to \code{CreateSeuratObject}}
@@ -100,27 +93,17 @@ Default:
      percent.rp = 60L
    )}}
 
-\item{normalization_method}{Method for normalization: "LogNormalize", "CLR",
-or "RC". Defaults to \code{"LogNormalize"}. Pass to \code{NormalizeData}.
-\strong{Ignored when \code{use_sctransform = TRUE}.}}
-
-\item{scale_factor}{Scaling factor for normalization. Defaults to \code{10000L}. Pass to
-\code{NormalizeData(scale.factor = scale_factor)}.
-\strong{Ignored when \code{use_sctransform = TRUE}.}}
-
 \item{scale_features}{Features to use for scaling. If NULL, uses all variable
 features. If \code{"hvg"}, uses high-variance genes via \code{VariableFeatures()}. Defaults to \code{NULL}.
 Pass to \code{ScaleData(features = scale_features)}.
-\strong{Ignored when \code{use_sctransform = TRUE}.}}
-
-\item{selection_method}{Method for variable feature selection: "vst", "mvp",
-or "disp". Defaults to \code{"vst"}. Pass to \code{FindVariableFeatures}.
 \strong{Ignored when \code{use_sctransform = TRUE}.}}
 
 \item{use_sctransform}{Logical. If TRUE, uses \code{Seurat::SCTransform} for normalization,
 replacing traditional normalization, scaling, and variable feature selection.
 QC metrics detected in \code{quality_control} (e.g., percent.mt) will be automatically
 used for regression. \strong{Requires raw integer counts as input.} Defaults to \code{FALSE}.}
+
+\item{use_normalizedata}{If the single-cell expression matrix supplied to the \code{sc} argument is TPM data, please set this parameter to \code{FALSE}.}
 
 \item{resolution}{Resolution parameter for clustering. Higher values lead to
 more clusters. Defaults to \code{0.6}. Pass to \code{FindClusters}}

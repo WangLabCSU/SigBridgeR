@@ -1933,6 +1933,12 @@ All the analysis has been completed, and we can save the data for future use.
 SeuratObject::SaveSeuratRds(object = screen_result, filename = "screened_result.rds")
 ```
 
+or in `.h5ad` format:
+
+```{r,save_example_data_2,eval=FALSE}
+anndataR::write_h5ad(object= screen_result, path = "screened_result.h5ad", compression = "gzip")
+```
+
 ### 4.2 Continuous phenotype associated cell screening
 
 Generally speaking, the process is the same as described in [5.1 Survival-associated cell screening](#51-survival-associated-cell-screening). Here, only the preprocessing of continuous phenotypic data is introduced.

@@ -4,30 +4,16 @@
 \alias{ProcessSeuratObject}
 \title{Process a Seurat object (internal)}
 \usage{
-ProcessSeuratObject(
-  obj,
-  normalization_method = "LogNormalize",
-  scale_factor = 10000,
-  scale_features = NULL,
-  selection_method = "vst",
-  verbose = TRUE,
-  ...
-)
+ProcessSeuratObject(obj, scale_features = NULL, verbose = TRUE, ...)
 }
 \arguments{
 \item{obj}{Seurat object}
 
-\item{normalization_method}{Normalization method ("LogNormalize", "CLR", or "RC")}
-
-\item{scale_factor}{Scaling factor for normalization}
-
-\item{scale_features}{Features to scale}
-
-\item{selection_method}{Variable feature selection method ("vst", "mvp", or "disp")}
+\item{scale_features}{Pass to \code{Seurat::ScaleData}. When specifying \code{scale_features = "hvg"}, the variable features will be used.}
 
 \item{verbose}{Print progress messages}
 
-\item{...}{Other params passed to \code{Seurat::NormalizeData}, \code{Seurat::FindVariableFeatures}, and \code{Seurat::ScaleData}}
+\item{...}{Other params passed to \code{Seurat::NormalizeData}, \code{Seurat::FindVariableFeatures}, and \code{Seurat::ScaleData}, auto-applied}
 }
 \value{
 Seurat object

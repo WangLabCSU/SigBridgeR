@@ -69,7 +69,7 @@ For seamless integration with other file types such as `.h5ad`
 ```{r,install_extra_packages2,eval=FALSE}
 pak::pkg_install("anndata")
 # or
-pak::pkg_install("anndataR") # both are supported
+pak::pkg_install("anndataR") # both are supported, but anndataR is recommended
 ```
 
 For visualization:

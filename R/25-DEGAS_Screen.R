@@ -122,7 +122,12 @@ DoDEGAS <- function(
   chk::chk_range(select_fraction)
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))
   chk::chk_not_any_na(matched_bulk)
-  chk::chk_is(sc_data, "Seurat")
+  if (chk::vld_is(sc_data, c("Seurat", "Matrix", "matrix"))) {
+    cli::cli_abort(c(
+      "x" = "{.arg sc_data} cannot be of type {.cls {class(sc_data)}}",
+      ">" = "Available types: {.cls {c('Seurat', 'Matrix', 'matrix')}}"
+    ))
+  }
   chk::chk_character(label_type)
   if (!is.null(sc_data.pheno_colname)) {
     chk::chk_is(sc_data.pheno_colname, c("character"))
@@ -229,8 +234,12 @@ DoDEGAS <- function(
       NULL
     }
 
-  # Python-like data formats
-  sc_mat <- SeuratObject::LayerData(sc_data, layer = "data", assay = assay)
+  # anndata-like data formats
+  sc_mat <- if (inherits(sc_data, "Seurat")) {
+    SeuratObject::LayerData(sc_data, layer = "data", assay = assay)
+  } else {
+    sc_data
+  }
   cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
   t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
   t_matched_bulk <- Matrix::t(matched_bulk[cm_genes, ])

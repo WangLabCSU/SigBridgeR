@@ -8,7 +8,7 @@
 #'
 #' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression
 #'        data (genes x samples). Column names must match names/IDs in `phenotype`.
-#' @param sc_data A Seurat object containing scRNA-seq data to be screened.
+#' @param sc_data A matrix/Matrix (genes x cells) or a Seurat object containing scRNA-seq data to be screened.
 #' @param phenotype Phenotype data, either:
 #'        - Named vector (names match `matched_bulk` columns), or
 #'        - Patient survival Data frame with row names matching `matched_bulk` columns, colnames named "time" and "status"
@@ -165,13 +165,12 @@ Screen <- function(
   ),
   ...
 ) {
-  chk::chk_is(sc_data, "Seurat")
   chk::chk_length(phenotype_class)
   chk::chk_length(screen_method)
 
   if (is.null(label_type) || length(label_type) != 1) {
     cli::cli_alert_info(c(
-      "i" = "{.var label_type} not specified or not of length {.val 1}, using {.val {screen_method}}"
+      "i" = "{.var label_type} not specified or not of length 1, using {.val {screen_method}}"
     ))
     label_type <- screen_method
   }

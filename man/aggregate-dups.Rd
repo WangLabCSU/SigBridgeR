@@ -7,21 +7,37 @@
 \alias{AggregateDups}
 \title{Aggregate Rows or Columns with Duplicate Names}
 \usage{
-AggregateDupRows(x, method = c("max", "sum", "mean", "median", "first"))
+AggregateDupRows(
+  x,
+  method = c("max", "sum", "mean", "median", "first"),
+  verbose = TRUE,
+  ...
+)
 
-AggregateDupCols(x, method = c("max", "sum", "mean", "median", "first"))
+AggregateDupCols(
+  x,
+  method = c("max", "sum", "mean", "median", "first"),
+  verbose = TRUE,
+  ...
+)
 
 AggregateDups(
   x,
   method = c("max", "sum", "mean", "median", "first"),
   row_method = NULL,
-  col_method = NULL
+  col_method = NULL,
+  verbose = TRUE,
+  ...
 )
 }
 \arguments{
 \item{x}{A numeric matrix-like object (see Details).}
 
 \item{method}{Character scalar. Aggregation method (see Methods below).}
+
+\item{verbose}{Whether to print messages}
+
+\item{...}{No usage}
 
 \item{row_method}{Aggregation method for rows. Defaults to \code{method}.}
 

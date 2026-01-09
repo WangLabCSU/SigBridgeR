@@ -15,6 +15,8 @@
 #' @param method Character scalar. Aggregation method (see Methods below).
 #' @param row_method Aggregation method for rows (in \code{AggregateDups}). If \code{NULL}, inherits \code{method}.
 #' @param col_method Aggregation method for columns (in \code{AggregateDups}). If \code{NULL}, inherits \code{method}.
+#' @param verbose Whether to print messages
+#' @param ... No usage
 #'
 #' @section Methods:
 #' Supported methods (applied column-wise for rows, row-wise for columns):
@@ -49,7 +51,9 @@ NULL
 #' @export
 AggregateDupRows <- function(
   x,
-  method = c("max", "sum", "mean", "median", "first")
+  method = c("max", "sum", "mean", "median", "first"),
+  verbose = TRUE,
+  ...
 ) {
   method <- SigBridgeRUtils::MatchArg(
     method,
@@ -62,7 +66,9 @@ AggregateDupRows <- function(
   }
 
   if (!any(duplicated(row_names))) {
-    cli::cli_alert_success("No duplicated row names found.")
+    if (verbose) {
+      cli::cli_alert_success("No duplicated row names found.")
+    }
     return(x)
   }
 
@@ -128,7 +134,9 @@ AggregateDupRows <- function(
 #' @export
 AggregateDupCols <- function(
   x,
-  method = c("max", "sum", "mean", "median", "first")
+  method = c("max", "sum", "mean", "median", "first"),
+  verbose = TRUE,
+  ...
 ) {
   method <- SigBridgeRUtils::MatchArg(
     method,
@@ -141,7 +149,9 @@ AggregateDupCols <- function(
   }
 
   if (!any(duplicated(col_names))) {
-    cli::cli_alert_success("No duplicated column names found.")
+    if (verbose) {
+      cli::cli_alert_success("No duplicated column names found.")
+    }
     return(x)
   }
 
@@ -204,7 +214,9 @@ AggregateDups <- function(
   x,
   method = c("max", "sum", "mean", "median", "first"),
   row_method = NULL,
-  col_method = NULL
+  col_method = NULL,
+  verbose = TRUE,
+  ...
 ) {
   method <- SigBridgeRUtils::MatchArg(
     method,
@@ -217,6 +229,6 @@ AggregateDups <- function(
     col_method <- method
   }
 
-  x <- AggregateDupRows(x, method = row_method)
-  AggregateDupCols(x, method = col_method)
+  x <- AggregateDupRows(x, method = row_method, verbose = verbose, ...)
+  AggregateDupCols(x, method = col_method, verbose = verbose, ...)
 }
