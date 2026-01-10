@@ -42,6 +42,7 @@ Other single_cell_preprocess:
 \code{\link{FilterTumorCell}()},
 \code{\link{FindRobustElbow}()},
 \code{\link{Pattern2Colname}()},
-\code{\link{ProcessSeuratObject}()}
+\code{\link{SCPreProcess}()},
+\code{\link{compatible_with_3.0.2}()}
 }
 \concept{single_cell_preprocess}

@@ -64,40 +64,64 @@ First load the packages, you will see a version number message indicating succes
 
 ```{r,load_package,eval=FALSE}
 library(SigBridgeR)
-# ✔ SigBridgeR v2.x.x loaded
+# ✔ SigBridgeR v3.x.x loaded
 ```
 
 ### 1.1 Single-cell RNA-seq Data
 
-You can use function `SCPreProcess` to preprocess your single-cell RNA-seq data. Here are some options:
+You can use function `SCPreProcess` to preprocess your single-cell RNA-seq data. This function utilizes a flexible pipeline system, allowing you to customize the analysis workflow using character codes:
+
+**Pipeline Code Table:**
+
+| Code | Function | Description |
+| --- | --- | --- |
+| **o** | `CreateSeuratObject` | **Required.** Must be the first step. |
+| **n** | `NormalizeData` | Standard normalization. |
+| **s** | `ScaleData` | Scales data for PCA. |
+| **v** | `FindVariableFeatures` | Selects highly variable genes. |
+| **p** | `RunPCA` | Principal Component Analysis. |
+| **e** | `FindNeighbors` | Computes SNN graph. |
+| **c** | `FindClusters` | Louvain algorithm clustering. |
+| **t** | `RunTSNE` | t-SNE reduction. |
+| **u** | `RunUMAP` | UMAP reduction. |
+| **r** | `SCTransform` | **SCT workflow.** Replaces n, s, v. |
 
 #### 1.1.1 (Option A) Start from Raw Matrix
 
-When starting from a raw count matrix (data.frame, matrix or dgCMatrix), `SCPreProcess` will automatically perform Seurat preprocess (including `NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunTSNE, RunUMAP`). `SCPreProcess` returns a fully preprocessed Seurat object for downstream use.
+When starting from a raw count matrix (data.frame, matrix or dgCMatrix), `SCPreProcess` executes the steps defined in the pipeline argument (Default: `"onsvpcetu"`). You can customize parameters for each step via the `params` list.
 
 ```{r,scpreprocessing_raw_matrix,eval=FALSE}
 your_seurat <- SCPreProcess(
-  your_matrix,
-  # * Parameters used in Seurat preprocessing pipeline
-  meta_data = NULL,
-  project = "Screen_Single_Cell", 
-  min_cells = 400,
-  min_features = 0,
-  normalization_method = "LogNormalize",
-  scale_factor = 10000,
-  # When ` scale_features = "hvg"`, high-variance genes via `VariableFeatures()` are used.
-  scale_features = NULL,
-  selection_method = "vst",
-  resolution = 0.6,   
-  # When specify `NULL`, `dims` will be auto-selected by `FindRobustElbow`
-  dims = 1:10,
-  dims_Neighbors = dims,
-  run_TSNE = TRUE, # whether to run `RunTSNE`
-  dims_TSNE = dims,
-  dims_UMAP = dims,
-  verbose = TRUE,
-  # * Parameters used in SigBridgeR workflow
-  # Filter mitochondrial genes, human for '^MT-', mouse for '^mt-', or specify your own pattern
+  sc = your_matrix,
+  ...,
+  pipeline = "onsvpcetu",
+  params = list(
+    # * CreateSeuratObject
+    o = list(
+      project = "SC_Screen_Proj",
+      min.cells = 400L
+    ),
+    # * NormalizeData
+    n = list(),
+    # * ScaleData
+    s = list(),
+    # * FindVariableFeatures
+    v = list(),
+    # * RunPCA
+    p = list(),
+    # * FindNeightbors
+    e = list(),
+    # * FindClusters
+    c = list(
+      resolution = 0.6
+    ),
+    # * RunTSNE
+    t = list(),
+    # * RunUMAP
+    u = list()
+    # * SCTransform
+    # r = list()
+  ),
   quality_control = list(
     pattern = c("^MT-")
   ),
@@ -116,55 +140,29 @@ your_seurat <- SCPreProcess(
     # `quality_control$pattern <- "^[rt]rna"`
     # Correct threshhold setting is `percent.rt_rna = 60L`
 
-    # ? Use `SigBridgeR:::Pattern2Colname()` to get the correct colname if still confused.
-  )
-  # A meta data column name for binary label (Tumour, Normal)
-  column2only_tumor = NULL,
-  # use `SCTransform` instead of `NormalizeData` + `FindVariableFeatures` + `ScaleData`
-  use_sctransfrom = FALSE,
-  ...
+    # ? Use `SigBridgeR::Pattern2Colname()` to get the correct colname if still confused.
+  ),
+  column2only_tumor = NULL
 )
 ```
 
-1.  **Build the initial Seurat object**
+**Key Workflow Steps:**
 
-    -   Imports the count matrix.\
-    -   Applies the first, coarse filters: genes must be detected in \>= `min_cells` cells; cells must contain \>= `min_features` genes.\
-    -   Attaches optional sample metadata.
+1. Pipeline Execution: The function runs Seurat methods in the order specified by the `pipeline` string (e.g., 'o' then 'n').
 
-2.  **Mitochondrial QC (default: ON)**
+2. QC & Filtering:
 
-    -   A single regular expression (`^MT-` or `^mt-`) is used to compute the percentage of mitochondrial reads per cell. Customized regexps are also supported.
-    -   The metric is stored in `object$percent.mt` for later filtering.
+    - Detection: Regex patterns in `quality_control` (e.g., `^MT-`) automatically generate metadata columns (e.g.,` percent.mt`).
 
-3.  **Cell filtering (default: ON)**\
-    Cells are retained only if they satisfy **all** of the following:
+    - Filtering: Cells are filtered based on `data_filter` thresholds. Note: Custom patterns generate specific column names (e.g., `^[rt]rna` becomes `percent.rt_rna`).
 
-    -   `nFeature_RNA` lies between the lower and upper bounds defined by `data_filter.thresh$nFeature_RNA_thresh`.\
-    -   `percent.mt` is below the user-defined cut-off (`data_filter.thresh$percent.mt`).
-
-4.  **Normalisation, variable-feature selection and scaling**\
-    Encapsulated in `ProcessSeuratObject()`:
-
-    -   Counts are normalised with the chosen method (default: *LogNormalize*).\
-    -   Highly variable features are identified using the requested algorithm (default: *vst*).\
-    -   Expression values of those features are scaled to unit variance.
-
-5.  **Dimensionality reduction and clustering**\
-    `ClusterAndReduce()` runs:
-
-    -   PCA -\> nearest-neighbour graph -\> Louvain clustering (resolution parameterised).\
-    -   UMAP for two-dimensional visualization.\
-    -   Optionally removes very small or low-quality clusters.
-
-6.  **Tumour-cell flagging**\
-    `FilterTumorCell()` use a binary label (Tumour, Normal) from the column specified by `column2only_tumor` and filters the Seurat object to contain only the cancer cells. 
+3. Tumor Filtering: If `column2only_tumor` is provided, the function retains only cells with `"Tumor/Cancer/Malignant"`(case-insensitive) labels in that metadata column.
 
 #### 1.1.2 (Option B) Start from AnnData Object
 
-`SCPreProcess` also supports AnnData objects, which is a popular format for storing single-cell data. You can use package `anndata` or `anndataR` to read in your AnnData object from `.h5ad` file. 
+SCPreProcess natively supports AnnData object. You can use package `anndata` or `anndataR` to read in your AnnData object from `.h5ad` file. 
 
-You may reference and use the following code to read in your file via `anndata`:
+First, import the data
 
 ```{r,scpreprocessing_anndata,eval=FALSE}
 reticulate::use_pythonenv("The_path_to_your_python") 
@@ -187,7 +185,8 @@ Then just pass it to `SCPreProcess`:
 ```{r,scpreprocessing_in_anndata,eval=FALSE}
 your_seurat <- SCPreProcess(
   anndata_obj,
-  column2only_tumor = "Tissue" # keep only cells from tumor tissues
+  pipeline = "onsvpcetu", # Standard pipeline
+  column2only_tumor = "Tissue" # Optional: keep only tumor tissue
 )
 ```
 
@@ -200,14 +199,14 @@ For the structure of `anndata`, you can refer to
 -   [AnnData for R](https://github.com/dynverse/anndata)
 -   [{anndataR}: An R package for working with AnnData objects](https://github.com/scverse/anndataR)
 
-For more quality control, please use [scCustmoize](https://samuel-marsh.github.io/scCustomize/index.html), like `scCustomize::Add_Cell_QC_Metrics()`
+For more quality control, please use [scCustmoize](https://samuel-marsh.github.io/scCustomize/index.html), like `scCustomize::Add_Cell_QC_Metrics()`.
 
 #### 1.1.8 (Optional) Filter Out Tumor Cells
 
-If you aim to filter out phenotype-associated cells in all tumor cells. With a preprocessed Seurat object (containing results from ), `SCPreProcess` will filter out tumor cells using the specified metadata column:
+If you already have a Seurat object and aim to filter out phenotype-associated cells in tumor cells. `SCPreProcess` will validate its structure and filter out tumor cells using the specified metadata column:
 
 ```{r,scpreprocessing_seurat,eval=FALSE}
-your_seurat <- SCPreProcess(your_seurat, column2only_tumor = "Tissue")
+your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
 ```
 
 > Note: I don't recommend using columns like `column2only_tumor = "Celltype"` as tumor cell identities vary across tissues. instead:
@@ -218,8 +217,8 @@ your_seurat <- SCPreProcess(your_seurat, column2only_tumor = "Tissue")
 >
 > ```{r,choose_tumor_column,eval=FALSE}
 > # For glioblastoma (GBM)
-> seurat_obj[[]]$is_tumor <- ifelse(
->  grepl("GBM|glioblastoma|astrocytoma_grade_IV", seurat_obj[[]]$Celltype, ignore.case = TRUE),
+> seurat_obj$is_tumor <- ifelse(
+>  grepl("GBM|glioblastoma|astrocytoma_grade_IV", seurat_obj$Celltype, ignore.case = TRUE),
 >  "Tumor",  # or "Tumour" 
 >  "Normal"  # or "Non-Tumor" 
 > )

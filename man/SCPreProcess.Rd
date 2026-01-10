@@ -11,217 +11,135 @@ SCPreProcess(sc, ...)
 
 \method{SCPreProcess}{default}(
   sc,
-  meta_data = NULL,
-  column2only_tumor = NULL,
-  min_cells = 400L,
-  min_features = 0L,
+  ...,
+  pipeline = "onsvpcetu",
+  params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
+    list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
+    = list()),
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
     50000L), percent.mt = 20L, percent.rp = 60L),
-  scale_features = NULL,
-  use_sctransform = FALSE,
-  use_normalizedata = TRUE,
-  resolution = 0.6,
-  dims = NULL,
-  ...
+  column2only_tumor = NULL
 )
 
 \method{SCPreProcess}{R6}(
   sc,
-  meta_data = NULL,
-  column2only_tumor = NULL,
-  min_cells = 400L,
-  min_features = 0L,
+  ...,
+  pipeline = "onsvpcetu",
+  params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
+    list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
+    = list()),
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
     50000L), percent.mt = 20L, percent.rp = 60L),
-  scale_features = NULL,
-  use_sctransform = FALSE,
-  use_normalizedata = TRUE,
-  resolution = 0.6,
-  dims = NULL,
-  ...
+  column2only_tumor = NULL
 )
 
 \method{SCPreProcess}{Seurat}(sc, column2only_tumor = NULL, ...)
 }
 \arguments{
-\item{sc}{Input data, one of:
+\item{sc}{Input data. Can be:
 \itemize{
-\item \code{data.frame/matrix/dgCMatrix}: Raw count matrix (features x cells).
-\strong{For SCTransform: must be integer counts.}
-\item \code{R6}: Python AnnData object, obtained via package \code{anndata} or \code{anndataR}
-\item \code{Seurat}: Preprocessed Seurat object. This function will validate its
-structure.
+\item \strong{Matrix/Data frame}: Raw count matrix (genes x cells).
+\item \strong{AnnData}: Python AnnData object (read via \code{anndata} or \code{anndataR} packages).
+\item \strong{Seurat}: A Seurat object (automatically validated and repaired if necessary).
 }}
 
-\item{...}{Additional arguments passed to specific methods. Currently supports:
+\item{...}{Additional arguments for backward compatibility (mapped to \code{params}) or verbose control.}
+
+\item{pipeline}{A character string defining the processing steps and order.
+Characters map to Seurat functions:
 \itemize{
-\item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
-\item \code{dims_Neighbors}: Dimensions to use for \code{FindNeighbors}. Defaults to \code{NULL}, using \code{dims}.
-\item \code{dims_TSNE}: Dimensions to use for \code{RunTSNE}. Defaults to \code{NULL}, using \code{dims}.
-\item \code{dims_UMAP}: Dimensions to use for \code{RunUMAP}. Defaults to \code{NULL}, using \code{dims}.
-\item For \code{use_sctransform = TRUE}: additional arguments passed to \code{SCTransform}
-(e.g., \code{conserve.memory}, \code{method}, \code{vars.to.regress} to override automatic selection)
+\item \code{'o'}: \code{CreateSeuratObject} (Must be the first step and cannot be deleted)
+\item \code{'n'}: \code{NormalizeData}
+\item \code{'s'}: \code{ScaleData}
+\item \code{'v'}: \code{FindVariableFeatures}
+\item \code{'p'}: \code{RunPCA}
+\item \code{'e'}: \code{FindNeighbors} (Because "n" is used)
+\item \code{'c'}: \code{FindClusters}
+\item \code{'t'}: \code{RunTSNE}
+\item \code{'u'}: \code{RunUMAP}
+\item \code{'r'}: \code{SCTransform} (Alternative to n/s/v)
+}
+Default is \code{"onsvpcetu"}.}
+
+\item{params}{A named list of lists containing arguments for each pipeline step.
+Keys match the pipeline characters (e.g., \code{params$n} for \code{NormalizeData}).
+Default structure:
+\preformatted{
+list(
+  o = list(project = "SC_Screen_Proj", min.cells = 400L), # do not pass `counts`
+  n = list(),             # NormalizeData args
+  s = list(),             # ScaleData args
+  v = list(),             # FindVariableFeatures args
+  c = list(resolution = 0.6),
+  ...
+)
 }}
 
-\item{meta_data}{A data.frame containing metadata for each cell. It will be
-added to the Seurat object as \verb{@meta.data}. If sc is an anndata object,
-\code{obs} will be automatically used.}
+\item{quality_control}{A list containing regex patterns for QC metric calculation. (See \link{QCPatternDetect})
+Default: \code{list(pattern = "^MT-")}. Detected metrics (e.g., percent.mt) are added to meta.data.}
 
-\item{column2only_tumor}{A character of column names in \code{meta_data}, used to
-filter the Seurat object to only tumor cells. If \code{NULL}, no filtering is performed.}
+\item{data_filter}{A list of thresholds for cell filtering.
+Default: \code{nFeature_RNA} (200-6000), \code{nCount_RNA} (500-50000), \code{percent.mt} (<20), \code{percent.rp} (<60).
+Only metrics detected via \code{quality_control} are filtered, i.e., nFeature_RNA, nCount_RNA and percent.mt.}
 
-\item{min_cells}{Minimum number of cells that must express a feature for it.
-to be included in the analysis. Defaults to \code{400L}. Pass to \code{CreateSeuratObject}}
-
-\item{min_features}{Minimum number of features that must be detected in a
-cell for it to be included in the analysis. Defaults to \code{0L}. Pass to \code{CreateSeuratObject}}
-
-\item{quality_control}{A \code{list} of QC settings. If \code{NULL}, no QC metrics are computed.
-Default: \code{list(pattern = "^MT-")}.
-\describe{
-\item{pattern}{A character vector of regex patterns to identify gene groups (e.g., mitochondrial, ribosomal).}
-}}
-
-\item{data_filter}{A \code{list} of filtering thresholds. If \code{NULL}, no cell filtering is performed.
-Default:
-\code{list(
-     nFeature_RNA_thresh = c(200L, 6000L),
-     nCount_RNA_thresh = c(500L, 50000L),
-     percent.mt = 20L,
-     percent.rp = 60L
-   )}}
-
-\item{scale_features}{Features to use for scaling. If NULL, uses all variable
-features. If \code{"hvg"}, uses high-variance genes via \code{VariableFeatures()}. Defaults to \code{NULL}.
-Pass to \code{ScaleData(features = scale_features)}.
-\strong{Ignored when \code{use_sctransform = TRUE}.}}
-
-\item{use_sctransform}{Logical. If TRUE, uses \code{Seurat::SCTransform} for normalization,
-replacing traditional normalization, scaling, and variable feature selection.
-QC metrics detected in \code{quality_control} (e.g., percent.mt) will be automatically
-used for regression. \strong{Requires raw integer counts as input.} Defaults to \code{FALSE}.}
-
-\item{use_normalizedata}{If the single-cell expression matrix supplied to the \code{sc} argument is TPM data, please set this parameter to \code{FALSE}.}
-
-\item{resolution}{Resolution parameter for clustering. Higher values lead to
-more clusters. Defaults to \code{0.6}. Pass to \code{FindClusters}}
-
-\item{dims}{Dimensions to use for clustering and dimensionality reduction.
-If NULL, automatically determined by elbow method. Defaults to \code{NULL}.}
+\item{column2only_tumor}{Optional character. Column name in metadata to filter for tumor cells
+(matches "Tumor", "Cancer", "Malignant", etc.). If \code{NULL}, no filtering is performed.}
 }
 \value{
-A Seurat object containing:
-\itemize{
-\item For \code{use_sctransform = FALSE}:
-\itemize{
-\item Normalized data in \code{RNA} assay (log-normalized)
-\item Scaled data in \code{RNA} assay
-}
-\item For \code{use_sctransform = TRUE}:
-\itemize{
-\item Original counts preserved in \code{RNA} assay
-\item SCT normalized data in \code{SCT} assay
-\item Pearson residuals for PCA
-}
-\item Variable features identified by selection method or \code{SCTransform}
-\item PCA, t-SNE, and UMAP dimensionality reductions
-\item Cluster identities at specified resolution
-\item Quality control metrics in \verb{@meta.data}
-\item When tumor cells filtered: original dimensions in \verb{@misc$raw_dim}
-\item Final dimensions in \verb{@misc$self_dim}
-\item Quality control column names in \verb{@misc$qc_colnames}
-}
+A processed Seurat object with reductions, clusters, and QC metrics.
 }
 \description{
-A generic function for standardized preprocessing of single-cell RNA-seq data
-from multiple sources. Handles data.frame/matrix, AnnData, and Seurat inputs
-with tumor cell filtering. Implements a complete analysis pipeline
-from raw data to clustered embeddings with optional SCTransform normalization.
+A unified interface for standardized single-cell RNA-seq preprocessing.
+It accepts raw counts (matrix/data.frame), AnnData (via \code{anndata} or \code{anndataR}), or existing Seurat objects.
+The analysis flow is fully customizable via a character string \code{pipeline} and a configuration list \code{params}.
 }
 \details{
-\strong{Quality Control Patterns:}
-The function supports flexible pattern matching for quality control, for example:
-\itemize{
-\item \code{"^MT-"} - Mitochondrial genes (default)
-\item \code{"^RP\[LS\]"} - Ribosomal protein genes
-\item \code{"^\[rt\]rna"} - rRNA and tRNA genes
-\item Custom patterns using regular expressions
-\item Combined patterns: \code{"^MT-|^RP\[LS\]"} for both mitochondrial and ribosomal genes
-}
+\strong{Pipeline Strategy:}
+The function parses the \code{pipeline} string and executes corresponding Seurat functions in order.
+To use \code{SCTransform}, simply change the pipeline string (e.g., \code{"orpetu"}) and provide parameters in \code{params$r}.
 
-\strong{SCTransform Integration:}
-When \code{use_sctransform = TRUE}:
-\itemize{
-\item QC metrics detected via \code{quality_control$pattern} are automatically used
-as covariates for regression (e.g., \code{percent.mt}, \code{percent.rp})
-\item If multiple QC metrics exist, all non-constant metrics are used for regression
-\item The function validates that input data are integer counts (essential for SCTransform)
-\item \code{normalization_method}, \code{scale_factor}, \code{scale_features}, and
-\code{selection_method} parameters are ignored
-\item The resulting Seurat object will have two assays:
-\code{RNA} (raw counts) and \code{SCT} (normalized data)
-}
-
-\strong{Flexible Filtering:}
-The filtering system dynamically adapts to detected quality control patterns:
-\itemize{
-\item Column names are automatically generated from patterns
-\item Multiple thresholds can be specified in \code{data_filter.thresh}
-\item Use \code{SigBridgeR:::Pattern2Colname} to determine correct column names for custom patterns if still confused
-}
+\strong{Quality Control & Filtering:}
+QC metrics are generated based on regex patterns in \code{quality_control}.
+Cells are then filtered based on thresholds in \code{data_filter}.
+Column names for filtering are auto-generated (e.g., pattern "^MT-" -> filter "percent.mt").
+If confused about the column name, use \code{SigBridgeR:::Pattern2Colname()}.
 }
 \examples{
 \dontrun{
-# Example with matrix input using SCTransform
-counts_matrix <- matrix(rpois(1000, 5), nrow = 100, ncol = 10)
-rownames(counts_matrix) <- paste0("Gene", 1:100)
-colnames(counts_matrix) <- paste0("Cell", 1:10)
-
-# Standard workflow
-seurat_obj <- SCPreProcess(
+# 1. Standard pipeline (LogNormalize -> Scale -> PCA -> UMAP)
+obj <- SCPreProcess(
   sc = counts_matrix,
-  project = "TestProject",
-  min_features = 50,
-  resolution = 0.8
+  pipeline = "onsvpcetu",
+  params = list(c = list(resolution = 0.8))
 )
 
-# SCTransform workflow (recommended for cross-platform integration)
-seurat_obj_sct <- SCPreProcess(
+# 2. SCTransform pipeline
+obj_sct <- SCPreProcess(
   sc = counts_matrix,
-  project = "TestProject_SCT",
+  pipeline = "orpcu", # Create -> SCT -> PCA -> Clusters -> UMAP
   quality_control = list(pattern = c("^MT-", "^RP[LS]")),
-  use_sctransform = TRUE,
-  conserve.memory = TRUE  # Passed to SCTransform
+  params = list(
+    r = list(vars.to.regress = "percent.mt")
+  )
 )
 
-# Example with tumor cell filtering and SCTransform
-metadata <- data.frame(
-  cell_type = c(rep("Tumor", 5), rep("Normal", 5)),
-  row.names = paste0("Cell", 1:10)
-)
-
-tumor_seurat_sct <- SCPreProcess(
-  sc = counts_matrix,
-  meta_data = metadata,
-  column2only_tumor = "cell_type",
-  quality_control = list(pattern = "^MT-"),
-  use_sctransform = TRUE,
-  project = "TumorAnalysis_SCT"
+# 3. Start from AnnData with tumor filtering
+adata_object <- anndataR::read_h5ad("data.h5ad")
+obj_ad <- SCPreProcess(
+  sc = adata_object,
+  column2only_tumor = "tissue"
 )
 }
 
 }
 \seealso{
-\code{\link[Seurat]{CreateSeuratObject}},
-\code{\link[Seurat]{NormalizeData}},
-\code{\link[Seurat]{ScaleData}},
-\code{\link[Seurat]{FindVariableFeatures}},
-\code{\link[Seurat]{SCTransform}},
-\code{\link[Seurat]{RunPCA}},
-\code{\link[Seurat]{RunTSNE}},
-\code{\link[Seurat]{RunUMAP}},
-\code{\link[Seurat]{FindNeighbors}},
-\code{\link[Seurat]{FindClusters}}
+Other single_cell_preprocess: 
+\code{\link{FilterTumorCell}()},
+\code{\link{FindRobustElbow}()},
+\code{\link{Pattern2Colname}()},
+\code{\link{QCPatternDetect}()},
+\code{\link{compatible_with_3.0.2}()}
 }
+\concept{single_cell_preprocess}

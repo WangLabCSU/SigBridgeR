@@ -1,169 +1,98 @@
 # * ---- scRNA-seq preprocessing ----
 
 #' @title Single-Cell RNA-seq Preprocessing Pipeline
-#'
-#' @description
-#' A generic function for standardized preprocessing of single-cell RNA-seq data
-#' from multiple sources. Handles data.frame/matrix, AnnData, and Seurat inputs
-#' with tumor cell filtering. Implements a complete analysis pipeline
-#' from raw data to clustered embeddings with optional SCTransform normalization.
-#'
 #' @name SCPreProcess
 #'
-#' @param sc Input data, one of:
-#'    - `data.frame/matrix/dgCMatrix`: Raw count matrix (features x cells).
-#'      \strong{For SCTransform: must be integer counts.}
-#'    - `R6`: Python AnnData object, obtained via package `anndata` or `anndataR`
-#'    - `Seurat`: Preprocessed Seurat object. This function will validate its
-#'      structure.
-#' @param meta_data A data.frame containing metadata for each cell. It will be
-#'    added to the Seurat object as `@meta.data`. If sc is an anndata object,
-#'    `obs` will be automatically used.
-#' @param column2only_tumor A character of column names in `meta_data`, used to
-#'    filter the Seurat object to only tumor cells. If `NULL`, no filtering is performed.
-#' @param min_cells Minimum number of cells that must express a feature for it.
-#'    to be included in the analysis. Defaults to `400L`. Pass to `CreateSeuratObject`
-#' @param min_features Minimum number of features that must be detected in a
-#'    cell for it to be included in the analysis. Defaults to `0L`. Pass to `CreateSeuratObject`
-#' @param quality_control A `list` of QC settings. If `NULL`, no QC metrics are computed.
-#'    Default: `list(pattern = "^MT-")`.
-#'    \describe{
-#'      \item{pattern}{A character vector of regex patterns to identify gene groups (e.g., mitochondrial, ribosomal).}
-#'    }
-#' @param data_filter A `list` of filtering thresholds. If `NULL`, no cell filtering is performed.
-#'    Default:
-#'    \code{list(
-#'      nFeature_RNA_thresh = c(200L, 6000L),
-#'      nCount_RNA_thresh = c(500L, 50000L),
-#'      percent.mt = 20L,
-#'      percent.rp = 60L
-#'    )}
-#' @param scale_features Features to use for scaling. If NULL, uses all variable
-#'    features. If `"hvg"`, uses high-variance genes via `VariableFeatures()`. Defaults to `NULL`.
-#'    Pass to `ScaleData(features = scale_features)`.
-#'    \strong{Ignored when \code{use_sctransform = TRUE}.}
-#' @param use_sctransform Logical. If TRUE, uses \code{Seurat::SCTransform} for normalization,
-#'    replacing traditional normalization, scaling, and variable feature selection.
-#'    QC metrics detected in \code{quality_control} (e.g., percent.mt) will be automatically
-#'    used for regression. \strong{Requires raw integer counts as input.} Defaults to \code{FALSE}.
-#' @param use_normalizedata If the single-cell expression matrix supplied to the `sc` argument is TPM data, please set this parameter to `FALSE`.
-#' @param resolution Resolution parameter for clustering. Higher values lead to
-#'    more clusters. Defaults to `0.6`. Pass to `FindClusters`
-#' @param dims Dimensions to use for clustering and dimensionality reduction.
-#'    If NULL, automatically determined by elbow method. Defaults to `NULL`.
-#' @param ... Additional arguments passed to specific methods. Currently supports:
-#'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
-#'    - `dims_Neighbors`: Dimensions to use for `FindNeighbors`. Defaults to `NULL`, using `dims`.
-#'    - `dims_TSNE`: Dimensions to use for `RunTSNE`. Defaults to `NULL`, using `dims`.
-#'    - `dims_UMAP`: Dimensions to use for `RunUMAP`. Defaults to `NULL`, using `dims`.
-#'    - For \code{use_sctransform = TRUE}: additional arguments passed to \code{SCTransform}
-#'      (e.g., \code{conserve.memory}, \code{method}, \code{vars.to.regress} to override automatic selection)
+#' @description
+#' A unified interface for standardized single-cell RNA-seq preprocessing.
+#' It accepts raw counts (matrix/data.frame), AnnData (via `anndata` or `anndataR`), or existing Seurat objects.
+#' The analysis flow is fully customizable via a character string \code{pipeline} and a configuration list \code{params}.
 #'
-#' @return A Seurat object containing:
+#' @param sc Input data. Can be:
 #' \itemize{
-#'   \item For \code{use_sctransform = FALSE}:
-#'     \itemize{
-#'       \item Normalized data in \code{RNA} assay (log-normalized)
-#'       \item Scaled data in \code{RNA} assay
-#'     }
-#'   \item For \code{use_sctransform = TRUE}:
-#'     \itemize{
-#'       \item Original counts preserved in \code{RNA} assay
-#'       \item SCT normalized data in \code{SCT} assay
-#'       \item Pearson residuals for PCA
-#'     }
-#'   \item Variable features identified by selection method or \code{SCTransform}
-#'   \item PCA, t-SNE, and UMAP dimensionality reductions
-#'   \item Cluster identities at specified resolution
-#'   \item Quality control metrics in `@meta.data`
-#'   \item When tumor cells filtered: original dimensions in `@misc$raw_dim`
-#'   \item Final dimensions in `@misc$self_dim`
-#'   \item Quality control column names in `@misc$qc_colnames`
+#'   \item \strong{Matrix/Data frame}: Raw count matrix (genes x cells).
+#'   \item \strong{AnnData}: Python AnnData object (read via \code{anndata} or \code{anndataR} packages).
+#'   \item \strong{Seurat}: A Seurat object (automatically validated and repaired if necessary).
 #' }
+#' @param pipeline A character string defining the processing steps and order.
+#' Characters map to Seurat functions:
+#' \itemize{
+#'   \item \code{'o'}: \code{CreateSeuratObject} (Must be the first step and cannot be deleted)
+#'   \item \code{'n'}: \code{NormalizeData}
+#'   \item \code{'s'}: \code{ScaleData}
+#'   \item \code{'v'}: \code{FindVariableFeatures}
+#'   \item \code{'p'}: \code{RunPCA}
+#'   \item \code{'e'}: \code{FindNeighbors} (Because "n" is used)
+#'   \item \code{'c'}: \code{FindClusters}
+#'   \item \code{'t'}: \code{RunTSNE}
+#'   \item \code{'u'}: \code{RunUMAP}
+#'   \item \code{'r'}: \code{SCTransform} (Alternative to n/s/v)
+#' }
+#' Default is \code{"onsvpcetu"}.
+#' @param params A named list of lists containing arguments for each pipeline step.
+#' Keys match the pipeline characters (e.g., \code{params$n} for \code{NormalizeData}).
+#' Default structure:
+#' \preformatted{
+#' list(
+#'   o = list(project = "SC_Screen_Proj", min.cells = 400L), # do not pass `counts`
+#'   n = list(),             # NormalizeData args
+#'   s = list(),             # ScaleData args
+#'   v = list(),             # FindVariableFeatures args
+#'   c = list(resolution = 0.6),
+#'   ...
+#' )
+#' }
+#' @param quality_control A list containing regex patterns for QC metric calculation. (See [QCPatternDetect])
+#' Default: \code{list(pattern = "^MT-")}. Detected metrics (e.g., percent.mt) are added to meta.data.
+#' @param data_filter A list of thresholds for cell filtering.
+#' Default: \code{nFeature_RNA} (200-6000), \code{nCount_RNA} (500-50000), \code{percent.mt} (<20), \code{percent.rp} (<60).
+#' Only metrics detected via \code{quality_control} are filtered, i.e., nFeature_RNA, nCount_RNA and percent.mt.
+#' @param column2only_tumor Optional character. Column name in metadata to filter for tumor cells
+#' (matches "Tumor", "Cancer", "Malignant", etc.). If \code{NULL}, no filtering is performed.
+#' @param ... Additional arguments for backward compatibility (mapped to \code{params}) or verbose control.
+#'
+#' @return A processed Seurat object with reductions, clusters, and QC metrics.
 #'
 #' @details
-#' \strong{Quality Control Patterns:}
-#' The function supports flexible pattern matching for quality control, for example:
-#' \itemize{
-#'   \item \code{"^MT-"} - Mitochondrial genes (default)
-#'   \item \code{"^RP\[LS\]"} - Ribosomal protein genes
-#'   \item \code{"^\[rt\]rna"} - rRNA and tRNA genes
-#'   \item Custom patterns using regular expressions
-#'   \item Combined patterns: \code{"^MT-|^RP\[LS\]"} for both mitochondrial and ribosomal genes
-#' }
+#' \strong{Pipeline Strategy:}
+#' The function parses the \code{pipeline} string and executes corresponding Seurat functions in order.
+#' To use \code{SCTransform}, simply change the pipeline string (e.g., \code{"orpetu"}) and provide parameters in \code{params$r}.
 #'
-#' \strong{SCTransform Integration:}
-#' When \code{use_sctransform = TRUE}:
-#' \itemize{
-#'   \item QC metrics detected via \code{quality_control$pattern} are automatically used
-#'     as covariates for regression (e.g., \code{percent.mt}, \code{percent.rp})
-#'   \item If multiple QC metrics exist, all non-constant metrics are used for regression
-#'   \item The function validates that input data are integer counts (essential for SCTransform)
-#'   \item \code{normalization_method}, \code{scale_factor}, \code{scale_features}, and
-#'     \code{selection_method} parameters are ignored
-#'   \item The resulting Seurat object will have two assays:
-#'     \code{RNA} (raw counts) and \code{SCT} (normalized data)
-#' }
-#'
-#' \strong{Flexible Filtering:}
-#' The filtering system dynamically adapts to detected quality control patterns:
-#' \itemize{
-#'   \item Column names are automatically generated from patterns
-#'   \item Multiple thresholds can be specified in \code{data_filter.thresh}
-#'   \item Use \code{SigBridgeR:::Pattern2Colname} to determine correct column names for custom patterns if still confused
-#' }
+#' \strong{Quality Control & Filtering:}
+#' QC metrics are generated based on regex patterns in \code{quality_control}.
+#' Cells are then filtered based on thresholds in \code{data_filter}.
+#' Column names for filtering are auto-generated (e.g., pattern "^MT-" -> filter "percent.mt").
+#' If confused about the column name, use \code{SigBridgeR:::Pattern2Colname()}.
 #'
 #' @examples
 #' \dontrun{
-#' # Example with matrix input using SCTransform
-#' counts_matrix <- matrix(rpois(1000, 5), nrow = 100, ncol = 10)
-#' rownames(counts_matrix) <- paste0("Gene", 1:100)
-#' colnames(counts_matrix) <- paste0("Cell", 1:10)
-#'
-#' # Standard workflow
-#' seurat_obj <- SCPreProcess(
+#' # 1. Standard pipeline (LogNormalize -> Scale -> PCA -> UMAP)
+#' obj <- SCPreProcess(
 #'   sc = counts_matrix,
-#'   project = "TestProject",
-#'   min_features = 50,
-#'   resolution = 0.8
+#'   pipeline = "onsvpcetu",
+#'   params = list(c = list(resolution = 0.8))
 #' )
 #'
-#' # SCTransform workflow (recommended for cross-platform integration)
-#' seurat_obj_sct <- SCPreProcess(
+#' # 2. SCTransform pipeline
+#' obj_sct <- SCPreProcess(
 #'   sc = counts_matrix,
-#'   project = "TestProject_SCT",
+#'   pipeline = "orpcu", # Create -> SCT -> PCA -> Clusters -> UMAP
 #'   quality_control = list(pattern = c("^MT-", "^RP[LS]")),
-#'   use_sctransform = TRUE,
-#'   conserve.memory = TRUE  # Passed to SCTransform
+#'   params = list(
+#'     r = list(vars.to.regress = "percent.mt")
+#'   )
 #' )
 #'
-#' # Example with tumor cell filtering and SCTransform
-#' metadata <- data.frame(
-#'   cell_type = c(rep("Tumor", 5), rep("Normal", 5)),
-#'   row.names = paste0("Cell", 1:10)
-#' )
-#'
-#' tumor_seurat_sct <- SCPreProcess(
-#'   sc = counts_matrix,
-#'   meta_data = metadata,
-#'   column2only_tumor = "cell_type",
-#'   quality_control = list(pattern = "^MT-"),
-#'   use_sctransform = TRUE,
-#'   project = "TumorAnalysis_SCT"
+#' # 3. Start from AnnData with tumor filtering
+#' adata_object <- anndataR::read_h5ad("data.h5ad")
+#' obj_ad <- SCPreProcess(
+#'   sc = adata_object,
+#'   column2only_tumor = "tissue"
 #' )
 #' }
 #'
-#' @seealso
-#' \code{\link[Seurat]{CreateSeuratObject}},
-#' \code{\link[Seurat]{NormalizeData}},
-#' \code{\link[Seurat]{ScaleData}},
-#' \code{\link[Seurat]{FindVariableFeatures}},
-#' \code{\link[Seurat]{SCTransform}},
-#' \code{\link[Seurat]{RunPCA}},
-#' \code{\link[Seurat]{RunTSNE}},
-#' \code{\link[Seurat]{RunUMAP}},
-#' \code{\link[Seurat]{FindNeighbors}},
-#' \code{\link[Seurat]{FindClusters}}
+#' @family single_cell_preprocess
+#' @export
 #'
 NULL
 
@@ -177,10 +106,35 @@ SCPreProcess <- function(sc, ...) {
 #' @export
 SCPreProcess.default <- function(
   sc,
-  meta_data = NULL,
-  column2only_tumor = NULL,
-  min_cells = 400L,
-  min_features = 0L,
+  ...,
+  pipeline = "onsvpcetu",
+  params = list(
+    # * CreateSeuratObject
+    o = list(
+      project = "SC_Screen_Proj",
+      min.cells = 400L
+    ),
+    # * NormalizeData
+    n = list(),
+    # * ScaleData
+    s = list(),
+    # * FindVariableFeatures
+    v = list(),
+    # * RunPCA
+    p = list(),
+    # * FindNeightbors
+    e = list(),
+    # * FindClusters
+    c = list(
+      resolution = 0.6
+    ),
+    # * RunTSNE
+    t = list(),
+    # * RunUMAP
+    u = list()
+    # * SCTransform
+    # r = list()
+  ),
   quality_control = list(
     pattern = c("^MT-")
   ),
@@ -201,37 +155,48 @@ SCPreProcess.default <- function(
 
     # ? Use `SigBridgeR:::Pattern2Colname()` to get the correct colname if still confused.
   ),
-  scale_features = NULL,
-  use_sctransform = FALSE,
-  use_normalizedata = TRUE,
-  resolution = 0.6,
-  dims = NULL,
-  ...
+  column2only_tumor = NULL
 ) {
-  if (!is.null(meta_data)) {
-    chk::chk_data(meta_data)
-  }
+  # * check
   if (!is.null(column2only_tumor)) {
     chk::chk_character(column2only_tumor)
   }
+  chk::chk_character(pipeline)
+  purrr::walk(c(quality_control, data_filter, params), ~ chk::chk_list)
+  purrr::walk(params, ~ chk::chk_list)
 
-  # dots arguments
+  # * dots arguments, to be compatible last version
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
-  # pass to `FindNeighbors`, `RunTSNE` & `RunUMAP`
-  dims_Neighbors <- dots$dims_Neighbors
-  dims_TSNE <- dots$dims_TSNE
-  dims_UMAP <- dots$dims_UMAP
-  project <- dots$project %||% "SC_Screen_Proj"
-  min_cells <- dots$min.cells %||% min_cells
-  min_features <- dots$min.features %||% min_features
 
-  sc_seurat <- SeuratObject::CreateSeuratObject(
+  params <- compatible_with_3.0.2(..., params = params) # backward compatibility
+  params <- handle_usr_params(params) # combine with default params
+
+  # * handling pipeline
+  steps <- unlist(strsplit(pipeline, ""))
+  steps_to_run <- steps[steps %chin% names(sc_processing_strategies)] # a vector
+
+  unknown <- setdiff(steps, steps_to_run)
+  if (length(unknown) != 0) {
+    cli::cli_warn(
+      "[{.fun SCIntegrate}]: Unknown pipeline steps: {.val {unknown}}"
+    )
+  }
+  if (steps_to_run[[1]] != "o") {
+    cli::cli_abort(
+      "[{.fun SCPreProcess}]: The first step of {.arg pipeline} must be 'o' for CreateSeuratObject"
+    )
+  }
+  if (!is.null(params$o$counts)) {
+    cli::cli_abort(c(
+      "x" = "[{.fun SCPreProcess}]: The parameter {.arg params$o$counts} is deprecated, please use {.arg sc} instead"
+    ))
+  }
+
+  sc_seurat <- rlang::exec(
+    SeuratObject::CreateSeuratObject,
     counts = sc,
-    project = project,
-    meta.data = meta_data,
-    min.cells = min_cells,
-    min.features = min_features
+    !!!params$o
   )
 
   if (has_pattern(quality_control)) {
@@ -259,32 +224,19 @@ SCPreProcess.default <- function(
     )
   }
 
-  if (use_sctransform) {
-    vars_to_regress <- dots$vars.to.regress %||%
-      GetVars2Regress(sc_seurat, verbose = verbose)
+  # a list containing functions
+  execution_queue <- sc_processing_strategies[steps_to_run]
 
-    sc_seurat <- ProcessSeuratObject_SCT(
-      obj = sc_seurat,
-      vars.to.regress = vars_to_regress,
-      ...
-    )
-  } else {
-    sc_seurat <- ProcessSeuratObject(
-      obj = sc_seurat,
-      scale_features = scale_features,
-      ...
+  # the first step is CreateSeuratObject("o")
+  for (step in 2:length(steps_to_run)) {
+    # step: an index
+    step_fun <- execution_queue[[step]]
+    sc_seurat <- step_fun(
+      object = sc_seurat,
+      # steps_to_run[[step]] -- a letter
+      params = params[[steps_to_run[[step]]]]
     )
   }
-
-  sc_seurat <- ClusterAndReduce(
-    sc_seurat,
-    dims = dims,
-    dims_Neighbors = dims_Neighbors,
-    dims_TSNE = dims_TSNE,
-    dims_UMAP = dims_UMAP,
-    resolution = resolution,
-    ...
-  )
 
   FilterTumorCell(
     obj = sc_seurat,
@@ -299,47 +251,99 @@ SCPreProcess.default <- function(
 #' @export
 SCPreProcess.R6 <- function(
   sc,
-  meta_data = NULL,
-  column2only_tumor = NULL,
-  min_cells = 400L,
-  min_features = 0L,
+  ...,
+  pipeline = "onsvpcetu",
+  params = list(
+    # * CreateSeuratObject
+    o = list(
+      project = "SC_Screen_Proj",
+      min.cells = 400L
+    ),
+    # * NormalizeData
+    n = list(),
+    # * ScaleData
+    s = list(),
+    # * FindVariableFeatures
+    v = list(),
+    # * RunPCA
+    p = list(),
+    # * FindNeightbors
+    e = list(),
+    # * FindClusters
+    c = list(
+      resolution = 0.6
+    ),
+    # * RunTSNE
+    t = list(),
+    # * RunUMAP
+    u = list()
+    # * SCTransform
+    # r = list()
+  ),
   quality_control = list(
     pattern = c("^MT-")
   ),
   data_filter = list(
     nFeature_RNA_thresh = c(200L, 6000L),
     nCount_RNA_thresh = c(500L, 50000L),
+    # * only used when specifed in `quality_control.pattern`
     percent.mt = 20L, # mitochondrial genes
     percent.rp = 60L # ribosomal protein genes
+    # ? When combined pattern is used, like `quality_control$pattern <- "^MT-|^RP[LS]"`
+    # ? Use `_` to separate different patterns like this:
+    # percent.mt_rp = 60L
+
+    # ? When filtering for non-mitochondrial genes and non-ribosomal proteins RNA genes,
+    # ? the column names are in lowercase letter form with regular expression symbols removed.
+    # `quality_control$pattern <- "^[rt]rna"`
+    # Correct threshhold setting is `percent.rt_rna = 60L`
+
+    # ? Use `SigBridgeR:::Pattern2Colname()` to get the correct colname if still confused.
   ),
-  scale_features = NULL, # or "hvg" to enable using `VariableFeatures`
-  use_sctransform = FALSE,
-  use_normalizedata = TRUE,
-  resolution = 0.6,
-  dims = NULL,
-  ...
+  column2only_tumor = NULL
 ) {
-  if (!is.null(meta_data)) {
-    chk::chk_data(meta_data)
-  }
+  # Both `anndata` and `anndataR` are based on R6
+
+  # * check
   if (!is.null(column2only_tumor)) {
     chk::chk_character(column2only_tumor)
   }
+  chk::chk_character(pipeline)
+  purrr::walk(c(quality_control, data_filter, params), ~ chk::chk_list)
+  purrr::walk(params, ~ chk::chk_list)
 
-  # dots arguments
+  # * dots arguments, to be compatible last version
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
-  # pass to `FindNeighbors`, `RunTSNE`, `RunUMAP`
-  dims_Neighbors <- dots$dims_Neighbors
-  dims_TSNE <- dots$dims_TSNE
-  dims_UMAP <- dots$dims_UMAP
-  project <- dots$project %||% "SC_Screening_Proj"
-  min_cells <- dots$min.cells %||% min_cells
-  min_features <- dots$min.features %||% min_features
 
-  # Both `anndata` and `anndataR` are based on R6
+  params <- compatible_with_3.0.2(..., params = params) # backward compatibility
+  params <- handle_usr_params(params) # combine with default params
+
+  # * handling pipeline
+  steps <- unlist(strsplit(pipeline, ""))
+  steps_to_run <- steps[steps %chin% names(sc_processing_strategies)] # a vector
+
+  unknown <- setdiff(steps, steps_to_run)
+  if (length(unknown) != 0) {
+    cli::cli_warn(
+      "[{.fun SCPreProcess}]: Unknown pipeline steps: {.val {unknown}}"
+    )
+  }
+  if (steps_to_run[[1]] != "o") {
+    cli::cli_abort(
+      "[{.fun SCPreProcess}]: The first step of {.arg pipeline} must be 'o' for CreateSeuratObject"
+    )
+  }
+  if (!is.null(params$o$counts)) {
+    cli::cli_abort(c(
+      "x" = "[{.fun SCPreProcess}]: The parameter {.arg params$o$counts} is deprecated, please use {.arg sc} instead"
+    ))
+  }
+
   if (is.null(sc$X)) {
-    cli::cli_abort(c("x" = "Input must contain $X matrix"))
+    cli::cli_abort(c(
+      "x" = "[{.fun SCPreProcess}]: {.arg sc} must contain $X matrix"
+    ))
   }
   if (verbose) {
     cli::cli_text(
@@ -349,17 +353,18 @@ SCPreProcess.R6 <- function(
 
   sc_seurat <- if (inherits(sc, "InMemoryAnnData")) {
     # * from AnnDataR
+
     seurat <- sc$as_Seurat()
     if (!is.null(meta_data)) {
       seurat <- SeuratObject::AddMetaData(seurat, meta_data)
     }
-    if (min_cells != 0) {
+    if (params$o$min.cells != 0) {
       gene_cell_counts <- SigBridgeRUtils::rowSums3(
         SeuratObject::LayerData(seurat, layer = "counts") > 0
       )
       seurat <- seurat[gene_cell_counts >= min_cells, ]
     }
-    if (min_features != 0) {
+    if (params$o$min.features != 0) {
       cell_gene_counts <- SigBridgeRUtils::colSums3(
         SeuratObject::LayerData(seurat, layer = "counts") > 0
       )
@@ -369,25 +374,23 @@ SCPreProcess.R6 <- function(
   } else if (inherits(sc, "AnnDataR6")) {
     # * from anndata
 
-    meta_data <- if (!is.null(sc$obs) && !is.null(meta_data)) {
-      cbind(meta_data, sc$obs)
+    params$o$meta.data <- if (!is.null(sc$obs)) {
+      dplyr::bind_cols(params$o$meta.data, sc$obs)
     } else if (!is.null(sc$obs)) {
-      sc$obs
+      params$o$meta.data
     }
     count_mat <- sc$transpose()$X
 
     if (any(count_mat != floor(count_mat))) {
       cli::cli_warn(
-        "[{.fun CreateSeuratObject}]: Input count matrix contains non-integer values"
+        "[{.fun SCPreProcess}]: Input count matrix in {.arg sc} contains {.emph non-integer} values"
       )
     }
 
-    seurat <- SeuratObject::CreateSeuratObject(
+    seurat <- rlang::exec(
+      SeuratObject::CreateSeuratObject,
       counts = count_mat,
-      project = project,
-      meta.data = meta_data,
-      min.cells = min_cells,
-      min.features = min_features
+      !!!params$o
     )
 
     if (ncol(sc$var) != 0) {
@@ -396,7 +399,7 @@ SCPreProcess.R6 <- function(
     seurat
   } else {
     cli::cli_abort(c(
-      "x" = "Input must be an anndata or anndataR object",
+      "x" = "{.arg sc} must be an anndata or anndataR object",
       ">" = "Current input is of class {.cls {class(sc)}}"
     ))
   }
@@ -427,35 +430,21 @@ SCPreProcess.R6 <- function(
       verbose = verbose
     )
   }
-  if (use_sctransform) {
-    # 从QC列中获取回归变量（优先使用存在的列）
-    vars_to_regress <- dots$vars.to.regress %||% GetVars2Regress(sc_seurat)
 
-    sc_seurat <- ProcessSeuratObject_SCT(
-      obj = sc_seurat,
-      vars.to.regress = vars_to_regress,
-      verbose = verbose,
-      ...
-    )
-  } else {
-    sc_seurat <- ProcessSeuratObject(
-      obj = sc_seurat,
-      scale_features = scale_features,
-      verbose = verbose,
-      ...
+  # a list containing functions
+  execution_queue <- sc_processing_strategies[steps_to_run]
+
+  # the first stop is CreateSeuratObject("o")
+  # step: an index
+  for (step in 2:length(steps_to_run)) {
+    # step_fun: a function
+    step_fun <- execution_queue[[step]]
+    sc_seurat <- step_fun(
+      object = sc_seurat,
+      # steps_to_run[[step]]: a letter
+      params = params[[steps_to_run[[step]]]]
     )
   }
-
-  sc_seurat <- ClusterAndReduce(
-    sc_seurat,
-    dims = dims,
-    dims_Neighbors = dims_Neighbors,
-    dims_TSNE = dims_TSNE,
-    dims_UMAP = dims_UMAP,
-    resolution = resolution,
-    verbose = verbose,
-    ...
-  )
 
   FilterTumorCell(
     obj = sc_seurat,
@@ -527,78 +516,6 @@ SCPreProcess.Seurat <- function(
   )
 }
 
-# * ---- Preprocess ----
-
-#' @title Process a Seurat object (internal)
-#'
-#' @description
-#' Normalize, find variable features, scale, and run PCA
-#'
-#' @param obj Seurat object
-#' @param scale_features Pass to `Seurat::ScaleData`. When specifying `scale_features = "hvg"`, the variable features will be used.
-#' @param verbose Print progress messages
-#' @param ... Other params passed to `Seurat::NormalizeData`, `Seurat::FindVariableFeatures`, and `Seurat::ScaleData`, auto-applied
-#' @return Seurat object
-#'
-#' @keywords internal
-#' @family single_cell_preprocess
-#'
-ProcessSeuratObject <- function(
-  obj,
-  scale_features = NULL,
-  verbose = TRUE,
-  ...
-) {
-  dots <- rlang::list2(...)
-
-  obj <- rlang::exec(
-    Seurat::NormalizeData,
-    object = obj,
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::NormalizeData)
-  )
-  obj <- rlang::exec(
-    Seurat::FindVariableFeatures,
-    object = obj,
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindVariableFeatures)
-  )
-
-  # 🔍 Resolve scale_features with extended semantics:
-  #   • NULL          → scale ALL genes (Seurat default)
-  #   • "hvg" / "HVG" → scale VariableFeatures(obj)
-  #   • character()   → user-provided gene list
-  variable_features <- rlang::exec(
-    SeuratObject::VariableFeatures,
-    object = obj,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
-  )
-
-  obj <- rlang::exec(
-    Seurat::ScaleData,
-    object = obj,
-    features = if (
-      is.character(scale_features) &&
-        length(scale_features) == 1L &&
-        toupper(scale_features) == "HVG"
-    ) {
-      variable_features
-    } else {
-      scale_features # NULL
-    },
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::ScaleData)
-  )
-
-  rlang::exec(
-    Seurat::RunPCA,
-    object = obj,
-    features = variable_features,
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::RunPCA)
-  )
-}
-
 #' @keywords internal
 GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
   if (!"qc_colnames" %in% names(seurat_obj@misc)) {
@@ -646,119 +563,6 @@ GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
   }
 
   valid_cols
-}
-
-#' @keywords keyword
-ProcessSeuratObject_SCT <- function(
-  obj,
-  vars.to.regress = NULL,
-  verbose = TRUE,
-  ...
-) {
-  dots <- rlang::list2(...)
-
-  obj <- rlang::exec(
-    Seurat::SCTransform,
-    object = obj,
-    vars.to.regress = vars.to.regress,
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::SCTransform)
-  )
-
-  variable_features <- rlang::exec(
-    SeuratObject::VariableFeatures,
-    object = obj,
-    assay = "SCT",
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
-  )
-  rlang::exec(
-    Seurat::RunPCA,
-    object = obj,
-    features = variable_features,
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::RunPCA)
-  )
-}
-
-
-#' @title Cluster and reduce dimensionality of single-cell data
-#' @description
-#' Performs clustering and dimensionality reduction on a single-cell object using PCA components.
-#' Automatically determines optimal dimensions when not specified.
-#'
-#' @param obj A single-cell seurat object containing PCA reductions
-#' @param dims Vector of dimensions to use (default: `NULL`, auto-determines using `FindRobustElbow`)
-#' @param dims_Neighbors Dimensions for neighbor calculation (default: NULL, uses `dims`)
-#' @param dims_TSNE Dimensions for t-SNE  (default: NULL, uses `dims`)
-#' @param dims_UMAP Dimensions for UMAP  (default: NULL, uses `dims`)
-#' @param resolution Clustering resolution parameter (default: `0.6`)
-#' @param verbose Whether to print progress messages (default: `TRUE`)
-#' @param ... Additional arguments passed to `FindNeighbors`, `FindClusters`, `RunTSNE`, and `RunUMAP`
-#'
-#' @return Modified single-cell object with clustering and dimensionality reduction results
-#'
-#' @keywords internal
-#'
-#' @note Automatically adjusts input dimensions if they exceed available PCA dimensions
-ClusterAndReduce <- function(
-  obj,
-  run_tsne = TRUE,
-  dims = NULL,
-  dims_Neighbors = NULL,
-  dims_TSNE = NULL,
-  dims_UMAP = NULL,
-  resolution = 0.6,
-  verbose = TRUE,
-  ...
-) {
-  dots <- rlang::list2(...)
-  n_pcs <- ncol(obj@reductions$pca)
-  if (
-    is.null(dims) &&
-      any(is.null(dims_Neighbors), is.null(dims_TSNE), is.null(dims_UMAP))
-  ) {
-    dims <- seq_len(FindRobustElbow(obj, verbose = verbose, ndims = 50))
-  }
-  if (max(dims) > n_pcs) {
-    dims <- seq_len(min(max(dims), n_pcs))
-    cli::cli_warn(
-      "The input dimension is greater than the dimension in PCA. It is now set to the maximum dimension in PCA."
-    )
-  }
-  dims_Neighbors <- dims_Neighbors %||% dims
-  dims_TSNE <- dims_TSNE %||% dims
-  dims_UMAP <- dims_UMAP %||% dims
-
-  obj <- rlang::exec(
-    Seurat::FindNeighbors,
-    object = obj,
-    dims = dims_Neighbors,
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindNeighbors)
-  )
-  obj <- rlang::exec(
-    Seurat::FindClusters,
-    object = obj,
-    resolution = resolution,
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindClusters)
-  )
-
-  if (run_tsne) {
-    obj <- rlang::exec(
-      Seurat::RunTSNE,
-      object = obj,
-      dims = dims_TSNE,
-      !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::RunTSNE)
-    )
-  }
-  rlang::exec(
-    Seurat::RunUMAP,
-    object = obj,
-    dims = dims_UMAP,
-    verbose = verbose,
-    !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::RunUMAP)
-  )
 }
 
 #' @title Filter tumor cells (internal)
@@ -1106,7 +910,7 @@ QCFilter <- function(
 #' Pattern2Colname("Custom_Pattern[0-9]+")    # Returns "custom_pattern_0_9"
 #' }
 #'
-#' @keywords internal
+#' @export
 #' @family single_cell_preprocess
 #'
 Pattern2Colname <- function(pat) {
@@ -1136,15 +940,4 @@ Pattern2Colname <- function(pat) {
       tolower(clean)
     }
   )
-}
-
-
-#' @keywords internal
-has_pattern <- function(qc_list) {
-  !is.null(qc_list) && !is.null(qc_list$pattern) && length(qc_list$pattern) > 0
-}
-
-#' @keywords internal
-is_filtering <- function(filter_list) {
-  !is.null(filter_list)
 }

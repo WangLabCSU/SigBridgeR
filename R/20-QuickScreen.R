@@ -249,7 +249,7 @@ Screen <- function(
     "scAB" = {
       if (phenotype_class == "continuous") {
         cli::cli_abort(c(
-          "x" = "{.strong scAB} does not support continuous phenotype."
+          "x" = "[{.fun Screen}]: {.strong scAB} does not support continuous phenotype."
         ))
       }
 
@@ -291,7 +291,7 @@ Screen <- function(
     "PIPET" = {
       if (phenotype_class == "survival") {
         cli::cli_abort(c(
-          "x" = "{.strong PIPET} does not support survival phenotype."
+          "x" = "[{.fun Screen}]: {.strong PIPET} does not support survival phenotype."
         ))
       }
       DoPIPET(

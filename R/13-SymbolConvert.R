@@ -9,6 +9,7 @@
 #'     Default: `"unknown_{k}"`.
 #' @param genome_build Genome build of the data. Default: `"hg38"`.
 #' @param verbose Whether to print verbose messages. Default: `TRUE`.
+#' @param ... No usage
 #'
 #' @export
 #'

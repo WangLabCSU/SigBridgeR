@@ -73,7 +73,7 @@ SCIntegrate <- function(
     cli::cli_abort(c("[{.fun SCIntegrate}]: No arguments provided."))
   }
   .quos <- rlang::enquos(...)
-  if (inherits(dots[[1]], "matrix")) {
+  if (is.matrix(dots[[1]])) {
     return(SCIntegrate.matrix(..., .quos = .quos))
   }
   if (inherits(dots[[1]], "Seurat")) {
@@ -209,112 +209,34 @@ SCIntegrate.Seurat <- function(
   }
 
   # * use `pipeline` to control steps
-  step_map <- rlang::list2(
-    r = function() {
-      rlang::exec(
-        Seurat::SCTransform,
-        object = merged,
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          Seurat::SCTransform
-        )
-      )
-    },
-    n = function() {
-      rlang::exec(
-        Seurat::NormalizeData,
-        object = merged,
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          Seurat::NormalizeData
-        )
-      )
-    },
-    s = function() {
-      rlang::exec(
-        Seurat::ScaleData,
-        object = merged,
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          Seurat::ScaleData
-        )
-      )
-    },
-    v = function() {
-      rlang::exec(
-        Seurat::FindVariableFeatures,
-        object = merged,
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          method
-        )
-      )
-    },
-    p = function() {
-      rlang::exec(
-        Seurat::RunPCA,
-        object = merged,
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          Seurat::RunPCA
-        )
-      )
-    },
-    i = function() {
-      rlang::exec(
-        Seurat::IntegrateLayers,
-        object = merged,
-        !!!dots[!is_seurat] # pass ... param to method
-      )
-    },
-    e = function() {
-      rlang::exec(
-        FindNeighbors,
-        object = merged,
+  steps <- unlist(strsplit(pipeline, ""))
+  steps_to_run <- steps[steps %chin% names(sc_processing_strategies)] # letters
 
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          FindNeighbors
-        )
-      )
-    },
-    c = function() {
-      rlang::exec(
-        Seurat::FindClusters,
-        object = merged,
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          Seurat::FindClusters
-        )
-      )
-    },
-    t = function() {
-      rlang::exec(
-        Seurat::RunTSNE,
-        object = merged,
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          Seurat::RunTSNE
-        )
-      )
-    },
-    u = function() {
-      rlang::exec(
-        Seurat::RunUMAP,
-        object = merged,
-        !!!SigBridgeRUtils::FilterArgs4Func(
-          dots[!is_seurat],
-          Seurat::RunUMAP
-        )
-      )
-    }
-  )
+  unknown <- setdiff(steps, steps_to_run)
+  if (length(unknown) != 0) {
+    cli::cli_warn(
+      "[{.fun SCIntegrate.Seurat}]: Unknown pipeline steps: {.val {unknown}}"
+    )
+  }
 
-  steps_to_run <- unlist(strsplit(pipeline, ""))
-  execution_queue <- step_map[steps_to_run[steps_to_run %chin% names(step_map)]]
-
-  for (step_name in names(execution_queue)) {
-    merged <- execution_queue[[step_name]]()
+  # step: a letter
+  for (step in steps_to_run) {
+    step_fun <- sc_processing_strategies[[step]] # a function
+    merged <- step_fun(
+      object = merged,
+      # steps_to_run[[step]] -- a letter
+      params = if (step != "i") {
+        SigBridgeRUtils::FilterArgs4Func(dots[!is_seurat], step_fun)
+      } else {
+        utils::modifyList(
+          SigBridgeRUtils::FilterArgs4Func(dots[!is_seurat], method),
+          SigBridgeRUtils::FilterArgs4Func(
+            dots[!is_seurat],
+            Seurat::IntegrateLayers
+          )
+        )
+      }
+    )
   }
 
   if (verbose) {
