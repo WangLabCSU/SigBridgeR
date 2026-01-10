@@ -146,10 +146,16 @@ Let us know if you have ideas to make this project better!
   : Download & Load Reference Data
 - [`MergeResult()`](https://wanglabcsu.github.io/sigbridger/reference/MergeResult.md)
   : Merge Multiple Screening Analysis Results
+- [`Pattern2Colname()`](https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.md)
+  : convert regex patterns to column names (internal)
 - [`QCFilter()`](https://wanglabcsu.github.io/sigbridger/reference/QCFilter.md)
   : Filter Seurat object cells by QC metrics
 - [`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md)
   : Calculate Percentage of Features Matching Patterns
+- [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.matrix()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.Seurat()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  : Integrate Single-Cell Datasets
 - [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
   : Single-Cell RNA-seq Preprocessing Pipeline
 - [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)

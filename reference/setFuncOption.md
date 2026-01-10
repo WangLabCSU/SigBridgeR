@@ -45,15 +45,11 @@ the required specifications for the given option.
 
 This function performs the following validations:
 
-- verbose, parallel:
+- verbose:
 
   Must be single logical values (TRUE/FALSE)
 
-- parallel.type:
-
-  Must be a single character string
-
-- workers, timeout, seed:
+- timeout, seed:
 
   Must be single integer values
 

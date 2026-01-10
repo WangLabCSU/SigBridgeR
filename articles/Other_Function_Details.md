@@ -9,7 +9,8 @@ This document introduces several auxiliary functions of SigBridgeR.
 SigBridgeR uses
 [`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
 to record what data features or evidence the various screening
-algorithms are based on during execution.
+algorithms are based on during execution. As a substitute for the
+[`SeuratObject::Misc()`](https://satijalab.github.io/seurat-object/reference/Misc.html)
 
 - [`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
   : Add miscellaneous information to the Seurat object. Support for
@@ -64,6 +65,118 @@ seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "ATAC"
 
 If duplicate column names are detected, they will be suffixed with an
 underscore and a number (e.g., `_1`, `_2`) for disambiguation.
+
+### Integration of Single Cell Data
+
+#### Matrix Integration
+
+When passing raw matrices, the function performs a “join” operation
+based on the union of all genes. Missing values are filled with NA.
+
+``` r
+# Create dummy matrices
+mat1 <- matrix(rpois(50, 5), nrow = 10, dimnames = list(paste0("G", 1:10), paste0("C", 1:5)))
+mat2 <- matrix(rpois(60, 6), nrow = 10, dimnames = list(paste0("G", 5:14), paste0("C", 1:6)))
+
+# Integrate matrices with custom prefixes
+integrated_mat <- SCIntegrate(BatchA = mat1, BatchB = mat2)
+# default prefixed
+integrated_mat2 <- SCIntegrate(mat1, mat2)
+```
+
+``` r
+integrated_mat[1:6, 1:4]
+#     BatchA_C1 BatchA_C2 BatchA_C3 BatchA_C4
+# G1          3         2         4         5
+# G10         2         4         3         4
+# G11        NA        NA        NA        NA
+# G12        NA        NA        NA        NA
+# G13        NA        NA        NA        NA
+# G14        NA        NA        NA        NA
+integrated_mat2[1:6, 1:4]
+#     mat1_C1 mat1_C2 mat1_C3 mat1_C4
+# G1        3       2       4       5
+# G10       2       4       3       4
+# G11      NA      NA      NA      NA
+# G12      NA      NA      NA      NA
+# G13      NA      NA      NA      NA
+# G14      NA      NA      NA      NA
+```
+
+Key Features:
+
+- Duplicate Resolution: Automatically calls `AggregateDups` to handle
+  redundant gene symbols.
+
+- Auto-Naming: Uses argument names (like BatchA) as cell ID prefixes.
+
+#### Seurat Integration
+
+For Seurat objects, `SCIntegrate` automates the standard workflow via
+the pipeline parameter.
+
+The Pipeline String: Each letter in the pipeline argument triggers a
+specific Seurat command:
+
+| Code  | Function               | Description                         |
+|-------|------------------------|-------------------------------------|
+| **o** | `CreateSeuratObject`   | (do not use it in this function)    |
+| **n** | `NormalizeData`        | Standard normalization.             |
+| **s** | `ScaleData`            | Scales data for PCA.                |
+| **v** | `FindVariableFeatures` | Selects highly variable genes.      |
+| **p** | `RunPCA`               | Principal Component Analysis.       |
+| **e** | `FindNeighbors`        | Computes SNN graph.                 |
+| **c** | `FindClusters`         | Louvain algorithm clustering.       |
+| **t** | `RunTSNE`              | t-SNE reduction.                    |
+| **u** | `RunUMAP`              | UMAP reduction.                     |
+| **r** | `SCTransform`          | **SCT workflow.** Replaces n, s, v. |
+
+Example Usage
+
+``` r
+integrated <- SCIntegrate(
+  obj1, obj2, # -> merge.Seurat
+  pipeline = "nsvpi",
+  method = Seurat::RPCAIntegration, # Change integration method
+  dims = 1:30,                      # Passed to RunPCA and IntegrateLayers
+  k.weight = 50                     # Passed to IntegrateLayers
+)
+```
+
+An example using mock data
+
+``` r
+mat1 <- matrix(
+  rpois(1000, 5),
+  nrow = 20,
+  dimnames = list(paste0("G", 1:20), paste0("C", 1:50))
+)
+mat2 <- matrix(
+  rpois(1200, 6),
+  nrow = 20,
+  dimnames = list(paste0("G", 11:30), paste0("C", 1:60))
+)
+
+seu1 <- Seurat::CreateSeuratObject(mat1)
+seu2 <- Seurat::CreateSeuratObject(mat2)
+integrated_seu <- SCIntegrate(
+  seu1,
+  seu2,
+  method = Seurat::CCAIntegration,
+  pipeline = "nsvpi",
+  dims = 1:10,
+  k.weight = 40
+)
+```
+
+``` r
+integrated_seu
+# An object of class Seurat 
+# 30 features across 110 samples within 1 assay 
+# Active assay: RNA (30 features, 10 variable features)
+#  5 layers present: counts.1, counts.2, data.1, data.2, scale.data
+#  2 dimensional reductions calculated: pca, integrated.dr
+```
 
 ### Load reference data
 

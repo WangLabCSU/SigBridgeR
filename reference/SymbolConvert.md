@@ -7,7 +7,13 @@ stands for the position of the NA value in the row).
 ## Usage
 
 ``` r
-SymbolConvert(data, unknown_format = "unknown_{k}")
+SymbolConvert(
+  data,
+  unknown_format = "unknown_{k}",
+  genome_build = c("hg38", "hg19", "mm10", "mm9"),
+  verbose = SigBridgeRUtils::getFuncOption("verbose"),
+  ...
+)
 ```
 
 ## Arguments
@@ -21,3 +27,15 @@ SymbolConvert(data, unknown_format = "unknown_{k}")
   A glue pattern containing `{k}` for replace the NA value during
   conversion. k must be wrapped in curly braces, stands for the position
   of the NA value in the row. Default: `"unknown_{k}"`.
+
+- genome_build:
+
+  Genome build of the data. Default: `"hg38"`.
+
+- verbose:
+
+  Whether to print verbose messages. Default: `TRUE`.
+
+- ...:
+
+  No usage

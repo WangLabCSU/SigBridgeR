@@ -28,7 +28,8 @@ Screen(
 
 - sc_data:
 
-  A Seurat object containing scRNA-seq data to be screened.
+  A matrix/Matrix (genes x cells) or a Seurat object containing
+  scRNA-seq data to be screened.
 
 - phenotype:
 

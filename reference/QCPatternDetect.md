@@ -35,7 +35,7 @@ QCPatternDetect(
 - ...:
 
   Additional arguments passed to
-  [`PercentageFeatureSet`](https://rdrr.io/pkg/Seurat/man/PercentageFeatureSet.html)
+  [`PercentageFeatureSet`](https://satijalab.org/seurat/reference/PercentageFeatureSet.html)
 
 ## Details
 
@@ -58,4 +58,5 @@ Other single_cell_preprocess:
 [`FilterTumorCell()`](https://wanglabcsu.github.io/sigbridger/reference/FilterTumorCell.md),
 [`FindRobustElbow()`](https://wanglabcsu.github.io/sigbridger/reference/FindRobustElbow.md),
 [`Pattern2Colname()`](https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.md),
-[`ProcessSeuratObject()`](https://wanglabcsu.github.io/sigbridger/reference/ProcessSeuratObject.md)
+[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md),
+[`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)

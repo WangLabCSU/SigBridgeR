@@ -1,9 +1,10 @@
 # Single-Cell RNA-seq Preprocessing Pipeline
 
-A generic function for standardized preprocessing of single-cell RNA-seq
-data from multiple sources. Handles data.frame/matrix, AnnData, and
-Seurat inputs with tumor cell filtering. Implements a complete analysis
-pipeline from raw data to clustered embeddings.
+A unified interface for standardized single-cell RNA-seq preprocessing.
+It accepts raw counts (matrix/data.frame), AnnData (via `anndata` or
+`anndataR`), or existing Seurat objects. The analysis flow is fully
+customizable via a character string `pipeline` and a configuration list
+`params`.
 
 ## Usage
 
@@ -13,41 +14,29 @@ SCPreProcess(sc, ...)
 # Default S3 method
 SCPreProcess(
   sc,
-  meta_data = NULL,
-  column2only_tumor = NULL,
-  project = "SC_Screening_Proj",
-  min_cells = 400L,
-  min_features = 0L,
+  ...,
+  pipeline = "onsvpcetu",
+  params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
+    list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
+    = list()),
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
     50000L), percent.mt = 20L, percent.rp = 60L),
-  normalization_method = "LogNormalize",
-  scale_factor = 10000L,
-  scale_features = NULL,
-  selection_method = "vst",
-  resolution = 0.6,
-  dims = NULL,
-  ...
+  column2only_tumor = NULL
 )
 
 # S3 method for class 'R6'
 SCPreProcess(
   sc,
-  meta_data = NULL,
-  column2only_tumor = NULL,
-  project = "SC_Screening_Proj",
-  min_cells = 400L,
-  min_features = 0L,
+  ...,
+  pipeline = "onsvpcetu",
+  params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
+    list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
+    = list()),
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
     50000L), percent.mt = 20L, percent.rp = 60L),
-  normalization_method = "LogNormalize",
-  scale_factor = 10000L,
-  scale_features = NULL,
-  selection_method = "vst",
-  resolution = 0.6,
-  dims = NULL,
-  ...
+  column2only_tumor = NULL
 )
 
 # S3 method for class 'Seurat'
@@ -58,191 +47,136 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
 
 - sc:
 
-  Input data, one of:
+  Input data. Can be:
 
-  - `data.frame/matrix/dgCMatrix`: Raw count matrix (features x cells)
+  - **Matrix/Data frame**: Raw count matrix (genes x cells).
 
-  - `R6`: Python AnnData object, obtained via package `anndata` or
-    `anndataR`
+  - **AnnData**: Python AnnData object (read via `anndata` or `anndataR`
+    packages).
 
-  - `Seurat`: Preprocessed Seurat object
+  - **Seurat**: A Seurat object (automatically validated and repaired if
+    necessary).
 
 - ...:
 
-  Additional arguments passed to specific methods. Currently supports:
+  Additional arguments for backward compatibility (mapped to `params`)
+  or verbose control.
 
-  - `verbose`: Logical indicating whether to print progress messages.
-    Defaults to `TRUE`.
+- pipeline:
 
-  - `dims_Neighbors`: Dimensions to use for `FindNeighbors`. Defaults to
-    `NULL`, using `dims`.
+  A character string defining the processing steps and order. Characters
+  map to Seurat functions:
 
-  - `dims_TSNE`: Dimensions to use for `RunTSNE`. Defaults to `NULL`,
-    using `dims`.
+  - `'o'`: `CreateSeuratObject` (Must be the first step and cannot be
+    deleted)
 
-  - `dims_UMAP`: Dimensions to use for `RunUMAP`. Defaults to `NULL`,
-    using `dims`.
+  - `'n'`: `NormalizeData`
 
-- meta_data:
+  - `'s'`: `ScaleData`
 
-  A data.frame containing metadata for each cell. It will be added to
-  the Seurat object as `@meta.data`. If sc is an anndata object, `obs`
-  will be automatically used.
+  - `'v'`: `FindVariableFeatures`
 
-- column2only_tumor:
+  - `'p'`: `RunPCA`
 
-  A character of column names in `meta_data`, used to filter the Seurat
-  object to only tumor cells. If `NULL`, no filtering is performed.
+  - `'e'`: `FindNeighbors` (Because "n" is used)
 
-- project:
+  - `'c'`: `FindClusters`
 
-  A character of project name, used to name the Seurat object. Pass to
-  `CreateSeuratObject`.
+  - `'t'`: `RunTSNE`
 
-- min_cells:
+  - `'u'`: `RunUMAP`
 
-  Minimum number of cells that must express a feature for it. to be
-  included in the analysis. Defaults to `400L`. Pass to
-  `CreateSeuratObject`
+  - `'r'`: `SCTransform` (Alternative to n/s/v)
 
-- min_features:
+  Default is `"onsvpcetu"`.
 
-  Minimum number of features that must be detected in a cell for it to
-  be included in the analysis. Defaults to `0L`. Pass to
-  `CreateSeuratObject`
+- params:
+
+  A named list of lists containing arguments for each pipeline step.
+  Keys match the pipeline characters (e.g., `params$n` for
+  `NormalizeData`). Default structure:
+
+      list(
+        o = list(project = "SC_Screen_Proj", min.cells = 400L), # do not pass `counts`
+        n = list(),             # NormalizeData args
+        s = list(),             # ScaleData args
+        v = list(),             # FindVariableFeatures args
+        c = list(resolution = 0.6),
+        ...
+      )
 
 - quality_control:
 
-  A `list` of QC settings. If `NULL`, no QC metrics are computed.
-  Default: `list(pattern = "^MT-")`.
-
-  pattern
-
-  :   A character vector of regex patterns to identify gene groups
-      (e.g., mitochondrial, ribosomal).
+  A list containing regex patterns for QC metric calculation. (See
+  [QCPatternDetect](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md))
+  Default: `list(pattern = "^MT-")`. Detected metrics (e.g., percent.mt)
+  are added to meta.data.
 
 - data_filter:
 
-  A `list` of filtering thresholds. If `NULL`, no cell filtering is
-  performed. Default:
-  `list( nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L, 50000L), percent.mt = 20L, percent.rp = 60L )`
+  A list of thresholds for cell filtering. Default: `nFeature_RNA`
+  (200-6000), `nCount_RNA` (500-50000), `percent.mt` (\<20),
+  `percent.rp` (\<60). Only metrics detected via `quality_control` are
+  filtered, i.e., nFeature_RNA, nCount_RNA and percent.mt.
 
-- normalization_method:
+- column2only_tumor:
 
-  Method for normalization: "LogNormalize", "CLR", or "RC". Defaults to
-  `"LogNormalize"`. Pass to `NormalizeData`
-
-- scale_factor:
-
-  Scaling factor for normalization. Defaults to `10000L`. Pass to
-  `ScaleData`
-
-- scale_features:
-
-  Features to use for scaling. If NULL, uses all variable features. If
-  `"hvg"`, uses high-variance genes via `VariableFeatures()`. Defaults
-  to `NULL`. Pass to `ScaleData(features = scale_features)`
-
-- selection_method:
-
-  Method for variable feature selection: "vst", "mvp", or "disp".
-  Defaults to `"vst"`. Pass to `FindVariableFeatures`
-
-- resolution:
-
-  Resolution parameter for clustering. Higher values lead to more
-  clusters. Defaults to `0.6`. Pass to `FindClusters`
-
-- dims:
-
-  Dimensions to use for clustering and dimensionality reduction. If
-  NULL, automatically determined by elbow method. Defaults to `NULL`.
+  Optional character. Column name in metadata to filter for tumor cells
+  (matches "Tumor", "Cancer", "Malignant", etc.). If `NULL`, no
+  filtering is performed.
 
 ## Value
 
-A Seurat object containing:
-
-- Normalized and scaled expression data
-
-- Variable features identified by selection method
-
-- PCA, t-SNE, and UMAP dimensionality reductions
-
-- Cluster identities at specified resolution
-
-- Quality control metrics in `@meta.data`
-
-- When tumor cells filtered: original dimensions in `@misc$raw_dim`
-
-- Final dimensions in `@misc$self_dim`
-
-- Quality control column names in `@misc$qc_colnames`
+A processed Seurat object with reductions, clusters, and QC metrics.
 
 ## Details
 
-**Quality Control Patterns:** The function supports flexible pattern
-matching for quality control, for example:
+**Pipeline Strategy:** The function parses the `pipeline` string and
+executes corresponding Seurat functions in order. To use `SCTransform`,
+simply change the pipeline string (e.g., `"orpetu"`) and provide
+parameters in `params$r`.
 
-- `"^MT-"` - Mitochondrial genes (default)
-
-- `"^RP\[LS\]"` - Ribosomal protein genes
-
-- `"^\[rt\]rna"` - rRNA and tRNA genes
-
-- Custom patterns using regular expressions
-
-- Combined patterns: `"^MT-|^RP\[LS\]"` for both mitochondrial and
-  ribosomal genes
-
-**Flexible Filtering:** The filtering system dynamically adapts to
-detected quality control patterns:
-
-- Column names are automatically generated from patterns
-
-- Multiple thresholds can be specified in `data_filter.thresh`
-
-- Use `SigBridgeR:::Pattern2Colname` to determine correct column names
-  for custom patterns if still confused
+**Quality Control & Filtering:** QC metrics are generated based on regex
+patterns in `quality_control`. Cells are then filtered based on
+thresholds in `data_filter`. Column names for filtering are
+auto-generated (e.g., pattern "^MT-" -\> filter "percent.mt"). If
+confused about the column name, use `SigBridgeR:::Pattern2Colname()`.
 
 ## See also
 
-[`CreateSeuratObject`](https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html),
-[`NormalizeData`](https://rdrr.io/pkg/Seurat/man/NormalizeData.html),
-[`ScaleData`](https://rdrr.io/pkg/Seurat/man/ScaleData.html),
-[`FindVariableFeatures`](https://rdrr.io/pkg/Seurat/man/FindVariableFeatures.html),
-[`RunPCA`](https://rdrr.io/pkg/Seurat/man/RunPCA.html),
-[`RunTSNE`](https://rdrr.io/pkg/Seurat/man/RunTSNE.html),
-[`RunUMAP`](https://rdrr.io/pkg/Seurat/man/RunUMAP.html),
-[`FindNeighbors`](https://rdrr.io/pkg/Seurat/man/FindNeighbors.html),
-[`FindClusters`](https://rdrr.io/pkg/Seurat/man/FindClusters.html)
+Other single_cell_preprocess:
+[`FilterTumorCell()`](https://wanglabcsu.github.io/sigbridger/reference/FilterTumorCell.md),
+[`FindRobustElbow()`](https://wanglabcsu.github.io/sigbridger/reference/FindRobustElbow.md),
+[`Pattern2Colname()`](https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.md),
+[`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md),
+[`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-# Example with matrix input
-counts_matrix <- matrix(rpois(1000, 5), nrow = 100, ncol = 10)
-rownames(counts_matrix) <- paste0("Gene", 1:100)
-colnames(counts_matrix) <- paste0("Cell", 1:10)
-
-seurat_obj <- SCPreProcess(
+# 1. Standard pipeline (LogNormalize -> Scale -> PCA -> UMAP)
+obj <- SCPreProcess(
   sc = counts_matrix,
-  project = "TestProject",
-  min_features = 50,
-  resolution = 0.8
+  pipeline = "onsvpcetu",
+  params = list(c = list(resolution = 0.8))
 )
 
-# Example with tumor cell filtering
-metadata <- data.frame(
-  cell_type = c(rep("Tumor", 5), rep("Normal", 5)),
-  row.names = paste0("Cell", 1:10)
+# 2. SCTransform pipeline
+obj_sct <- SCPreProcess(
+  sc = counts_matrix,
+  pipeline = "orpcu", # Create -> SCT -> PCA -> Clusters -> UMAP
+  quality_control = list(pattern = c("^MT-", "^RP[LS]")),
+  params = list(
+    r = list(vars.to.regress = "percent.mt")
+  )
 )
 
-tumor_seurat <- SCPreProcess(
-  sc = counts_matrix,
-  meta_data = metadata,
-  column2only_tumor = "cell_type",
-  project = "TumorAnalysis"
+# 3. Start from AnnData with tumor filtering
+adata_object <- anndataR::read_h5ad("data.h5ad")
+obj_ad <- SCPreProcess(
+  sc = adata_object,
+  column2only_tumor = "tissue"
 )
 } # }
 ```

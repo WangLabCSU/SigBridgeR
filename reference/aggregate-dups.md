@@ -28,15 +28,27 @@ sample duplication may occur.
 ## Usage
 
 ``` r
-AggregateDupRows(x, method = c("max", "sum", "mean", "median", "first"))
+AggregateDupRows(
+  x,
+  method = c("max", "sum", "mean", "median", "first"),
+  verbose = TRUE,
+  ...
+)
 
-AggregateDupCols(x, method = c("max", "sum", "mean", "median", "first"))
+AggregateDupCols(
+  x,
+  method = c("max", "sum", "mean", "median", "first"),
+  verbose = TRUE,
+  ...
+)
 
 AggregateDups(
   x,
   method = c("max", "sum", "mean", "median", "first"),
   row_method = NULL,
-  col_method = NULL
+  col_method = NULL,
+  verbose = TRUE,
+  ...
 )
 ```
 
@@ -49,6 +61,14 @@ AggregateDups(
 - method:
 
   Character scalar. Aggregation method (see Methods below).
+
+- verbose:
+
+  Whether to print messages
+
+- ...:
+
+  No usage
 
 - row_method:
 

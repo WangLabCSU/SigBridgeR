@@ -61,7 +61,7 @@ comprehensive visualization for result validation.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">FindRobustElbow</span><span class="op">(</span></span>
 <span>  <span class="va">obj</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="fu">SigBridgeRUtils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SigBridgeRUtils/man/SigBridgeR_Function_Setting.html" class="external-link">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu">SigBridgeRUtils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SigBridgeRUtils/man/SigBridgeR_Function_Setting.html" class="external-link">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="cn">TRUE</span>,</span>
 <span>  ndims <span class="op">=</span> <span class="fl">50L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -92,8 +92,9 @@ visualization plot. If FALSE returns only the final dimension.</p></dd>
     <div class="dont-index"><p>Other single_cell_preprocess:
 <code><a href="FilterTumorCell.html">FilterTumorCell()</a></code>,
 <code><a href="Pattern2Colname.html">Pattern2Colname()</a></code>,
-<code><a href="ProcessSeuratObject.html">ProcessSeuratObject()</a></code>,
-<code><a href="QCPatternDetect.html">QCPatternDetect()</a></code></p></div>
+<code><a href="QCPatternDetect.html">QCPatternDetect()</a></code>,
+<code><a href="SCPreProcess.html">SCPreProcess()</a></code>,
+<code><a href="compatible_with_3.0.2.html">compatible_with_3.0.2()</a></code></p></div>
     </div>
 
     <div class="section level2">

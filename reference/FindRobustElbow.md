@@ -11,7 +11,7 @@ visualization for result validation.
 ``` r
 FindRobustElbow(
   obj,
-  verbose = SigBridgeRUtils::getFuncOption("verbose"),
+  verbose = SigBridgeRUtils::getFuncOption("verbose") %||% TRUE,
   ndims = 50L
 )
 ```
@@ -41,8 +41,9 @@ analysis
 Other single_cell_preprocess:
 [`FilterTumorCell()`](https://wanglabcsu.github.io/sigbridger/reference/FilterTumorCell.md),
 [`Pattern2Colname()`](https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.md),
-[`ProcessSeuratObject()`](https://wanglabcsu.github.io/sigbridger/reference/ProcessSeuratObject.md),
-[`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md)
+[`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md),
+[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md),
+[`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)
 
 ## Examples
 
