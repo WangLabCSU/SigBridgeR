@@ -9,61 +9,57 @@
         -   [0.1 Contents](#01-contents)
         -   [0.1 Introduction to
             SigBridgeR](#01-introduction-to-sigbridger)
-    -   [1. Installation](#1-installation)
-        -   [1.1 Stable Release from
-            GitHub](#11-stable-release-from-github)
-        -   [1.2 Release from r-universe](#12-release-from-r-universe)
-    -   [2. Load and Preprocess data](#2-load-and-preprocess-data)
-        -   [2.1 Single-cell RNA-seq Data](#21-single-cell-rna-seq-data)
-            -   [2.1.1 (Option A) Start from Raw
-                Matrix](#211-option-a-start-from-raw-matrix)
-            -   [2.1.2 (Option B) Start from AnnData
-                Object](#212-option-b-start-from-anndata-object)
-            -   [2.1.8 (Optional) Filter Out Tumor
-                Cells](#218-optional-filter-out-tumor-cells)
-        -   [2.2 Bulk expression data](#22-bulk-expression-data)
-            -   [2.2.1 Evaluate the quality of your bulk RNA-seq
-                data](#221-evaluate-the-quality-of-your-bulk-rna-seq-data)
+    -   [1. Load and Preprocess data](#1-load-and-preprocess-data)
+        -   [1.1 Single-cell RNA-seq Data](#11-single-cell-rna-seq-data)
+            -   [1.1.1 (Option A) Start from Raw
+                Matrix](#111-option-a-start-from-raw-matrix)
+            -   [1.1.2 (Option B) Start from AnnData
+                Object](#112-option-b-start-from-anndata-object)
+            -   [1.1.8 (Optional) Filter Out Tumor
+                Cells](#118-optional-filter-out-tumor-cells)
+        -   [1.2 Bulk expression data](#12-bulk-expression-data)
+            -   [1.2.1 Evaluate the quality of your bulk RNA-seq
+                data](#121-evaluate-the-quality-of-your-bulk-rna-seq-data)
                 -   [Quality Control Metrics
                     Reported](#quality-control-metrics-reported)
                 -   [Recommended Parameter
                     Adjustments](#recommended-parameter-adjustments)
-            -   [2.2.2 Gene Symbol
-                Conversion](#222-gene-symbol-conversion)
-        -   [2.3 Phenotype Data](#23-phenotype-data)
-    -   [3. Screen Cells Associated with
-        Phenotype](#3-screen-cells-associated-with-phenotype)
-        -   [3.1 (Option A) Scissor
-            Screening](#31-option-a-scissor-screening)
-        -   [3.2 (Option B) scPAS
-            Screening](#32-option-b-scpas-screening)
-        -   [3.3 (Option C) scAB Screening](#33-option-c-scab-screening)
-        -   [3.4 (Option D) scPP Screening](#34-option-d-scpp-screening)
-        -   [3.5 (Option E) DEGAS
-            Screening](#35-option-e-degas-screening)
-        -   [3.6 (Option F) LP\_SGL
-            Screening](#36-option-f-lp_sgl-screening)
-        -   [3.7 (Option G) PIPET
-            Screening](#37-option-g-pipet-screening)
-        -   [3.8 Merge screening results](#38-merge-screening-results)
-    -   [4. Visualization](#4-visualization)
-        -   [4.1 UMAP for screening
-            results](#41-umap-for-screening-results)
-        -   [4.2 Stack bar plot for screening
-            results](#42-stack-bar-plot-for-screening-results)
-        -   [4.3 Venn diagram for screening
-            results](#43-venn-diagram-for-screening-results)
-        -   [4.4 Upset plot for screening
-            results](#44-upset-plot-for-screening-results)
-    -   [5. Example](#5-example)
-        -   [5.1 Survival-associated cell
-            screening](#51-survival-associated-cell-screening)
-        -   [5.2 Continuous Phenotype-associated cell
-            screening](#52-continuous-phenotype-associated-cell-screening)
-        -   [5.3 Binarized phenotype-associated cell
-            screening](#53-binarized-phenotype-associated-cell-screening)
-    -   [6. Troubleshooting](#6-troubleshooting)
-    -   [7. References](#7-references)
+            -   [1.2.2 Gene Symbol
+                Conversion](#122-gene-symbol-conversion)
+        -   [1.3 Phenotype Data](#13-phenotype-data)
+    -   [2. Screen Cells Associated with
+        Phenotype](#2-screen-cells-associated-with-phenotype)
+        -   [2.1 (Option A) Scissor
+            Screening](#21-option-a-scissor-screening)
+        -   [2.2 (Option B) scPAS
+            Screening](#22-option-b-scpas-screening)
+        -   [2.3 (Option C) scAB Screening](#23-option-c-scab-screening)
+        -   [2.4 (Option D) scPP Screening](#24-option-d-scpp-screening)
+        -   [2.5 (Option E) DEGAS
+            Screening](#25-option-e-degas-screening)
+        -   [2.6 (Option F) LP\_SGL
+            Screening](#26-option-f-lp_sgl-screening)
+        -   [2.7 (Option G) PIPET
+            Screening](#27-option-g-pipet-screening)
+        -   [2.8 Merge screening results](#28-merge-screening-results)
+    -   [3. Visualization](#3-visualization)
+        -   [3.1 UMAP for screening
+            results](#31-umap-for-screening-results)
+        -   [3.2 Stack bar plot for screening
+            results](#32-stack-bar-plot-for-screening-results)
+        -   [3.3 Venn diagram for screening
+            results](#33-venn-diagram-for-screening-results)
+        -   [3.4 Upset plot for screening
+            results](#34-upset-plot-for-screening-results)
+    -   [4. Example](#4-example)
+        -   [4.1 Survival-associated cell
+            screening](#41-survival-associated-cell-screening)
+        -   [4.2 Continuous Phenotype-associated cell
+            screening](#42-continuous-phenotype-associated-cell-screening)
+        -   [4.3 Binarized phenotype-associated cell
+            screening](#43-binarized-phenotype-associated-cell-screening)
+    -   [5. Troubleshooting](#5-troubleshooting)
+    -   [6. References](#6-references)
 
 ### 0.1 Introduction to SigBridgeR
 
@@ -78,138 +74,170 @@ integration panel.
 
 ------------------------------------------------------------------------
 
-## 1. Installation
-
-Install **SigBridgeR** using one of these methods:
-
-### 1.1 Release from GitHub
-
-Usually we recommend installing the latest release from GitHub because
-of the latest features and bug fixes.
-
-    if(!requireNamespace("pak")) {
-      install.packages("pak")
-    }
-    pak::pkg_install("WangLabCSU/SigBridgeR")
-
-### 1.2 Release from r-universe
-
-    install.packages("SigBridgeR", repos = "https://wanglab.r-universe.dev")
-
-If you encounter compatibility issues, you can install the version of
-the package indicated in [7. Troubleshooting](#7-troubleshooting).
-
-------------------------------------------------------------------------
-
-## 2. Load and Preprocess data
+## 1. Load and Preprocess data
 
 First load the packages, you will see a version number message
 indicating successful loading:
 
     library(SigBridgeR)
-    # ✔ SigBridgeR v2.x.x loaded
+    # ✔ SigBridgeR v3.x.x loaded
 
-### 2.1 Single-cell RNA-seq Data
+### 1.1 Single-cell RNA-seq Data
 
 You can use function `SCPreProcess` to preprocess your single-cell
-RNA-seq data. Here are some options:
+RNA-seq data. This function utilizes a flexible pipeline system,
+allowing you to customize the analysis workflow using character codes:
 
-#### 2.1.1 (Option A) Start from Raw Matrix
+**Pipeline Code Table:**
+
+<table>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>o</strong></td>
+<td><code>CreateSeuratObject</code></td>
+<td><strong>Required.</strong> Must be the first step.</td>
+</tr>
+<tr class="even">
+<td><strong>n</strong></td>
+<td><code>NormalizeData</code></td>
+<td>Standard normalization.</td>
+</tr>
+<tr class="odd">
+<td><strong>s</strong></td>
+<td><code>ScaleData</code></td>
+<td>Scales data for PCA.</td>
+</tr>
+<tr class="even">
+<td><strong>v</strong></td>
+<td><code>FindVariableFeatures</code></td>
+<td>Selects highly variable genes.</td>
+</tr>
+<tr class="odd">
+<td><strong>p</strong></td>
+<td><code>RunPCA</code></td>
+<td>Principal Component Analysis.</td>
+</tr>
+<tr class="even">
+<td><strong>e</strong></td>
+<td><code>FindNeighbors</code></td>
+<td>Computes SNN graph.</td>
+</tr>
+<tr class="odd">
+<td><strong>c</strong></td>
+<td><code>FindClusters</code></td>
+<td>Louvain algorithm clustering.</td>
+</tr>
+<tr class="even">
+<td><strong>t</strong></td>
+<td><code>RunTSNE</code></td>
+<td>t-SNE reduction.</td>
+</tr>
+<tr class="odd">
+<td><strong>u</strong></td>
+<td><code>RunUMAP</code></td>
+<td>UMAP reduction.</td>
+</tr>
+<tr class="even">
+<td><strong>r</strong></td>
+<td><code>SCTransform</code></td>
+<td><strong>SCT workflow.</strong> Replaces n, s, v.</td>
+</tr>
+</tbody>
+</table>
+
+#### 1.1.1 (Option A) Start from Raw Matrix
 
 When starting from a raw count matrix (data.frame, matrix or dgCMatrix),
-`SCPreProcess` will automatically perform Seurat preprocess (including
-`NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunTSNE, RunUMAP`).
-`SCPreProcess` returns a fully preprocessed Seurat object for downstream
-use.
+`SCPreProcess` executes the steps defined in the pipeline argument
+(Default: `"onsvpcetu"`). You can customize parameters for each step via
+the `params` list.
 
     your_seurat <- SCPreProcess(
-      your_matrix,
-      # * Parameters used in Seurat preprocessing pipeline
-      meta_data = NULL,
-      project = "Screen_Single_Cell", 
-      min_cells = 400,
-      min_features = 0,
-      normalization_method = "LogNormalize",
-      scale_factor = 10000,
-      scale_features = NULL,
-      selection_method = "vst",
-      resolution = 0.6,
-      dims = 1:10,
-      verbose = TRUE,
-      # * Parameters used in SigBridgeR workflow
-      quality_control = TRUE,
-      # Filter mitochondrial genes, human for '^MT-', mouse for '^mt-', or specify your own pattern
-      quality_control.pattern = c("^MT-"), 
-      data_filter = TRUE,
-      data_filter.thresh = list(
+      sc = your_matrix,
+      ...,
+      pipeline = "onsvpcetu",
+      params = list(
+        # * CreateSeuratObject
+        o = list(
+          project = "SC_Screen_Proj",
+          min.cells = 400L
+        ),
+        # * NormalizeData
+        n = list(),
+        # * ScaleData
+        s = list(),
+        # * FindVariableFeatures
+        v = list(),
+        # * RunPCA
+        p = list(),
+        # * FindNeightbors
+        e = list(),
+        # * FindClusters
+        c = list(
+          resolution = 0.6
+        ),
+        # * RunTSNE
+        t = list(),
+        # * RunUMAP
+        u = list()
+        # * SCTransform
+        # r = list()
+      ),
+      quality_control = list(
+        pattern = c("^MT-")
+      ),
+      data_filter = list(
         nFeature_RNA_thresh = c(200L, 6000L),
+        nCount_RNA_thresh = c(500L, 50000L),
+        # * only used when specifed in `quality_control.pattern`
         percent.mt = 20L, # mitochondrial genes
-        # percent.rp = 60L # ribosomal protein genes
+        percent.rp = 60L # ribosomal protein genes
+        # ? When combined pattern is used, like `quality_control$pattern <- "^MT-|^RP[LS]"`
+        # ? Use `_` to separate different patterns like this:
+        # percent.mt_rp = 60L
 
         # ? When filtering for non-mitochondrial genes and non-ribosomal proteins RNA genes,
         # ? the column names are in lowercase letter form with regular expression symbols removed.
-        # `quality_control.pattern = "^[rt]rna"`
+        # `quality_control$pattern <- "^[rt]rna"`
         # Correct threshhold setting is `percent.rt_rna = 60L`
 
-        # ? Use `SigBridgeR:::Pattern2Colname()` to get the correct colname if still confused.
+        # ? Use `SigBridgeR::Pattern2Colname()` to get the correct colname if still confused.
       ),
-      column2only_tumor = NULL,
-      ...
+      column2only_tumor = NULL
     )
 
-1.  **Build the initial Seurat object**
+**Key Workflow Steps:**
 
-    -   Imports the count matrix.  
-    -   Applies the first, coarse filters: genes must be detected in
-        &gt;= `min_cells` cells; cells must contain &gt;= `min_features`
-        genes.  
-    -   Attaches optional sample metadata.
+1.  Pipeline Execution: The function runs Seurat methods in the order
+    specified by the `pipeline` string (e.g., ‘o’ then ‘n’).
 
-2.  **Mitochondrial QC (default: ON)**
+2.  QC & Filtering:
 
-    -   A single regular expression (`^MT-` or `^mt-`) is used to
-        compute the percentage of mitochondrial reads per cell.
-        Customized regexps are also supported.
-    -   The metric is stored in `object$percent.mt` for later filtering.
+    -   Detection: Regex patterns in `quality_control` (e.g., `^MT-`)
+        automatically generate metadata columns (e.g.,`percent.mt`).
 
-3.  **Cell filtering (default: ON)**  
-    Cells are retained only if they satisfy **all** of the following:
+    -   Filtering: Cells are filtered based on `data_filter` thresholds.
+        Note: Custom patterns generate specific column names (e.g.,
+        `^[rt]rna` becomes `percent.rt_rna`).
 
-    -   `nFeature_RNA` lies between the lower and upper bounds defined
-        by `data_filter.thresh$nFeature_RNA_thresh`.  
-    -   `percent.mt` is below the user-defined cut-off
-        (`data_filter.thresh$percent.mt`).
+3.  Tumor Filtering: If `column2only_tumor` is provided, the function
+    retains only cells with `"Tumor/Cancer/Malignant"`(case-insensitive)
+    labels in that metadata column.
 
-4.  **Normalisation, variable-feature selection and scaling**  
-    Encapsulated in `ProcessSeuratObject()`:
+#### 1.1.2 (Option B) Start from AnnData Object
 
-    -   Counts are normalised with the chosen method (default:
-        *LogNormalize*).  
-    -   Highly variable features are identified using the requested
-        algorithm (default: *vst*).  
-    -   Expression values of those features are scaled to unit variance.
+SCPreProcess natively supports AnnData object. You can use package
+`anndata` or `anndataR` to read in your AnnData object from `.h5ad`
+file.
 
-5.  **Dimensionality reduction and clustering**  
-    `ClusterAndReduce()` runs:
-
-    -   PCA -&gt; nearest-neighbour graph -&gt; Louvain clustering
-        (resolution parameterised).  
-    -   UMAP for two-dimensional visualization.  
-    -   Optionally removes very small or low-quality clusters.
-
-6.  **Tumour-cell flagging**  
-    `FilterTumorCell()` use a binary label (Tumour, Normal) from the
-    column specified by `column2only_tumor` and filters the Seurat
-    object to contain only the cancer cells.
-
-#### 2.1.2 (Option B) Start from AnnData Object
-
-`SCPreProcess` also supports AnnData objects, which is a popular format
-for storing single-cell data. You can use package `anndata` or
-`anndataR` to read in your AnnData object from `.h5ad` file.
-
-You may reference and use the following code to read in your file via
-`anndata`:
+First, import the data
 
     reticulate::use_pythonenv("The_path_to_your_python") 
     # reticulate::use_condaenv("conda_env_name")
@@ -227,31 +255,8 @@ Then just pass it to `SCPreProcess`:
 
     your_seurat <- SCPreProcess(
       anndata_obj,
-      # * Parameters used in Seurat preprocessing pipeline
-      meta_data = NULL, # auto-detect from anndata_obj$obs
-      project = "Screen_Single_Cell",
-      min_cells = 400,
-      min_features = 0,
-      normalization_method = "LogNormalize",
-      scale_factor = 10000,
-      scale_features = NULL,
-      selection_method = "vst",
-      resolution = 0.6,
-      dims = NULL, # auto-detect from an elbow plot
-      verbose = TRUE,
-      # * Parameters used in SigBridgeR workflow
-      quality_control = TRUE,
-      # Filter mitochondrial genes and ribosomal protein genes,
-      quality_control.pattern = c("^MT-", "^RP[SL]"),
-      data_filter = TRUE,
-      data_filter.thresh = list(
-        nFeature_RNA_thresh = c(200L, 6000L),
-        # Corresponding to `quality_control.pattern`
-        percent.mt = 20L, # mitochondrial genes
-        percent.rp = 60L # ribosomal protein genes
-      ),
-      column2only_tumor = "Tissue", # keep only cells from tumor tissues
-      ...
+      pipeline = "onsvpcetu", # Standard pipeline
+      column2only_tumor = "Tissue" # Optional: keep only tumor tissue
     )
 
 The description of data (meta.data) in `anndata_obj$obs` will be add to
@@ -265,14 +270,18 @@ For the structure of `anndata`, you can refer to
 -   [{anndataR}: An R package for working with AnnData
     objects](https://github.com/scverse/anndataR)
 
-#### 2.1.8 (Optional) Filter Out Tumor Cells
+For more quality control, please use
+[scCustmoize](https://samuel-marsh.github.io/scCustomize/index.html),
+like `scCustomize::Add_Cell_QC_Metrics()`.
 
-If you aim to filter out phenotype-associated cells in all tumor cells.
-With a preprocessed Seurat object (containing results from ),
-`SCPreProcess` will filter out tumor cells using the specified metadata
+#### 1.1.8 (Optional) Filter Out Tumor Cells
+
+If you already have a Seurat object and aim to filter out
+phenotype-associated cells in tumor cells. `SCPreProcess` will validate
+its structure and filter out tumor cells using the specified metadata
 column:
 
-    your_seurat <- SCPreProcess(your_seurat, column2only_tumor = "Tissue")
+    your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
 
 > Note: I don’t recommend using columns like
 > `column2only_tumor = "Celltype"` as tumor cell identities vary across
@@ -286,18 +295,18 @@ column:
 > <!-- -->
 >
 >     # For glioblastoma (GBM)
->     seurat_obj[[]]$is_tumor <- ifelse(
->      grepl("GBM|glioblastoma|astrocytoma_grade_IV", seurat_obj[[]]$Celltype, ignore.case = TRUE),
+>     seurat_obj$is_tumor <- ifelse(
+>      grepl("GBM|glioblastoma|astrocytoma_grade_IV", seurat_obj$Celltype, ignore.case = TRUE),
 >      "Tumor",  # or "Tumour" 
 >      "Normal"  # or "Non-Tumor" 
 >     )
 
-### 2.2 Bulk expression data
+### 1.2 Bulk expression data
 
 Here are some methods for processing bulk RNA-seq gene expression data
 matrices.
 
-#### 2.2.1 Evaluate the quality of your bulk RNA-seq data
+#### 1.2.1 Evaluate the quality of your bulk RNA-seq data
 
 `BulkPreProcess` performs comprehensive quality control on raw bulk
 RNA-seq count matrix data.
@@ -426,7 +435,7 @@ All parameters are set based on empirical values, and users should make
 appropriate adjustments according to the specific experimental design
 and sequencing platform characteristics.
 
-#### 2.2.2 Gene Symbol Conversion
+#### 1.2.2 Gene Symbol Conversion
 
 `SymbolConvert` performs a straightforward task: converting common gene
 identifiers (e.g., Ensemble IDs, Entrez) to standardized gene symbols by
@@ -457,7 +466,7 @@ matching if you prefer not to use SymbolConvert’s built-in
 
     rownames(your_bulk_data) <- gene_symbols
 
-### 2.3 Phenotype Data
+### 1.3 Phenotype Data
 
 Bascially you can just use your phenotype data directly. If you are
 confused about the structure `Screen()` requires, please refer to
@@ -593,7 +602,7 @@ location of NA values in your phenotype data:
 
 ------------------------------------------------------------------------
 
-## 3. Screen Cells Associated with Phenotype
+## 2. Screen Cells Associated with Phenotype
 
 The function **`Screen`** provide 5 different options for screening
 cells associated with phenotype, These 5 algorithms come from the
@@ -620,7 +629,7 @@ Key parameters for `Screen`:
     “PIPET”
 -   `...`: Other parameters for the screening methods, see below
 
-### 3.1 (Option A) Scissor Screening
+### 2.1 (Option A) Scissor Screening
 
 Parameters pass to `...` when using `Scissor` method:
 
@@ -723,7 +732,7 @@ helpful documentation:
 [Scissor-Cell Level
 Evaluations](https://sunduanchen.github.io/Scissor/vignettes/Scissor_Tutorial.html#cell-level-evaluations)
 
-### 3.2 (Option B) scPAS Screening
+### 2.2 (Option B) scPAS Screening
 
 Parameters pass to `...` when using `scPAS` method (basically adapted
 from the `scPAS`’s documentation):
@@ -788,7 +797,7 @@ from the `scPAS`’s documentation):
 -   `stats`: A data.frame the significance of scPAS screening results
 -   `para`: A list containing the parameters used in scPAS screening
 
-### 3.3 (Option C) scAB Screening
+### 2.3 (Option C) scAB Screening
 
 Parameters pass to `...` when using `scAB` method (basically adapted
 from the `scAB`’s documentation):
@@ -833,7 +842,7 @@ Then simply run the function directly.
 -   `scRNA_data`: A Seurat object after screening
 -   `scAB_result`: A list with the submatrix and loss value
 
-### 3.4 (Option D) scPP Screening
+### 2.4 (Option D) scPP Screening
 
 Parameters pass to `...` when using `scPP` method :
 
@@ -868,7 +877,7 @@ Parameters pass to `...` when using `scPP` method :
 -   `scRNA_data`: A Seurat object after screening
 -   `gene_list`: A list containing positive genes and negative genes
 
-### 3.5 (Option E) DEGAS Screening
+### 2.5 (Option E) DEGAS Screening
 
 Parameters pass to `...` when using `DEGAS` method
 
@@ -887,7 +896,7 @@ Parameters pass to `...` when using `DEGAS` method
 
 <!-- -->
 
-    degas_result = Screen(
+    degas_result <- Screen(
       matched_bulk = your_matched_bulk,
       sc_data = A_Seurat_object,
       phenotype = your_matched_phenotype,
@@ -968,6 +977,13 @@ same name already exists, it will directly use this environment without
 creating a new one (unless specified
 `env_params = list(env.recreate=TRUE)`).
 
+To obtain the default parameters for DEGAS, you can use
+`SigBridgeR:::DEGASParamSet()`
+
+    degas_param <- SigBridgeR:::DEGASParamSet(list())
+
+    env_param <- SigBridgeR:::DEGASEnvSet(list())
+
 You can use `ListPyEnvs()` to list all the python environments in your
 system, including virtual environments. Both Windows and Unix-like
 systems are supported. More information can be found in
@@ -992,7 +1008,7 @@ run are quite stringent, and conflicts are highly likely to occur.
     cell, resulting in a data.frame where each phenotype has a predicted
     probability score.
 
-### 3.6 (Option F) LP\_SGL Screening
+### 2.6 (Option F) LP\_SGL Screening
 
 Parameters pass to `...` when using `LP_SGL` method
 
@@ -1032,7 +1048,7 @@ Parameters pass to `...` when using `LP_SGL` method
 -   `dge_res` : Differential expression results if requested (NULL
     otherwise)
 
-### 3.7 (Option G) PIPET Screening
+### 2.7 (Option G) PIPET Screening
 
 Parameters pass to `...` when using `PIPET` method
 
@@ -1073,7 +1089,7 @@ Parameters pass to `...` when using `PIPET` method
     annotations in meta.data)
 -   `markers`: Phenotype-specific marker genes
 
-### 3.8 Merge screening results
+### 2.9 Merge screening results
 
 If you have performed multiple screening methods one the same
 single-cell data, you can use the `MergeResult` to merge the screening
@@ -1118,7 +1134,7 @@ A Seurat object with all merged slots.
 
 ------------------------------------------------------------------------
 
-## 4. Visualization
+## 3. Visualization
 
 Here we provide some visualization methods for the screening results.
 Considering that many people have different needs for data
@@ -1126,7 +1142,7 @@ visualization, `SigBridgeR` hardly provides visualization (except for
 fraction plot and upset plot, because we provide some statistic results
 for them). We only provide the source code for reference.
 
-### 4.1 UMAP for screening results
+### 3.1 UMAP for screening results
 
 **example**:
 
@@ -1210,7 +1226,7 @@ https://satijalab.org/seurat/reference/DimPlot.html](https://satijalab.org/seura
 [Seurat::FeaturePlot -
 https://satijalab.org/seurat/reference/FeaturePlot.html](https://satijalab.org/seurat/reference/FeaturePlot.html)
 
-### 4.2 Stack bar plot for screening results
+### 3.2 Stack bar plot for screening results
 
 Key parameters for `ScreenFractionPlot`:
 
@@ -1267,7 +1283,7 @@ If multiple screen\_types are specified
 -   `combined_plot`: A ggplot2 object containing all the plots (2\*2
     grid).
 
-### 4.3 Venn diagram for screening results
+### 3.3 Venn diagram for screening results
 
 `ggVennDiagram` is used to generate a Venn diagram for the screening
 results. Suppose you have performed some of the screening algorithms on
@@ -1349,7 +1365,7 @@ selected by each algorithm. You can refer to and use the following code:
 [ggVennDiagram -
 https://gaospecial.github.io/ggVennDiagram/](https://gaospecial.github.io/ggVennDiagram/)
 
-### 4.4 Upset plot for screening results
+### 3.4 Upset plot for screening results
 
 If too many screening meyhods are selected, the number of intersections
 among cells screened by different methods will also increase. In this
@@ -1392,9 +1408,9 @@ https://github.com/const-ae/ggupset](https://github.com/const-ae/ggupset)
 
 ------------------------------------------------------------------------
 
-## 5. Example
+## 4. Example
 
-### 5.1 Survival-associated cell screening
+### 4.1 Survival-associated cell screening
 
 Here we use the example data LUAD to demonstrate how to use the
 functions in `SigBridgeR` to screen cells associated with phenotype.
@@ -2136,7 +2152,11 @@ use.
 
     SeuratObject::SaveSeuratRds(object = screen_result, filename = "screened_result.rds")
 
-### 5.2 Continuous phenotype associated cell screening
+or in `.h5ad` format:
+
+    anndataR::write_h5ad(object= screen_result, path = "screened_result.h5ad", compression = "gzip")
+
+### 4.2 Continuous phenotype associated cell screening
 
 Generally speaking, the process is the same as described in [5.1
 Survival-associated cell
@@ -2174,7 +2194,7 @@ If your phenotype is a `data.frame`, try this to convert it to a
 
     pheno <- setNames(your_data.frame$continuous_numeric, your_data.frame$sample)
 
-### 5.3 Binarized phenotype associated cell screening
+### 4.3 Binarized phenotype associated cell screening
 
 This process is also the same as described in [5.1 Survival-associated
 cell screening](#51-survival-associated-cell-screening). Here, only the
@@ -2251,7 +2271,7 @@ the phenotype; here, we demonstrate using a binary phenotype instead.
 
 ------------------------------------------------------------------------
 
-## 6. Troubleshooting
+## 5. Troubleshooting
 
 View
 Troubleshooting[(https://github.com/WangX-Lab/SigBridgeR/wiki/Troubleshooting)](https://wanglabcsu.github.io/SigBridgeR/articles/Troubleshooting.html)
@@ -2311,7 +2331,7 @@ Session information:
 
 ------------------------------------------------------------------------
 
-## 7. References
+## 6. References
 
 > 1.  Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et
 >     al. Identifying phenotype-associated subpopulations by integrating
