@@ -20,7 +20,6 @@ Imports:
     DEGAS (>= 1.0.0),
     dplyr,
     edgeR,
-    glue,
     IDConverter (>= 0.3.5),
     LPSGL (>= 0.0.0.9000),
     Matrix,
@@ -35,8 +34,7 @@ Imports:
     ScPP (>= 0.0.0.9000),
     Seurat (>= 5.0.0),
     SeuratObject (>= 5.0.0),
-    SigBridgeRUtils (>= 0.1.0),
-    tibble
+    SigBridgeRUtils (>= 0.1.0)
 Depends: 
     R (>= 4.1.0)
 Remotes: 
@@ -62,6 +60,7 @@ Suggests:
     ggplot2,
     ggupset,
     ggVennDiagram,
+    glue,
     here,
     KernSmooth,
     knitr,
@@ -71,11 +70,13 @@ Suggests:
     patchwork,
     preprocessCore,
     randomcoloR,
+    RColorBrewer,
     reticulate,
     rmarkdown,
     scCustomize,
     sparseMatrixStats,
     testthat (>= 3.0.0),
+    tibble,
     tidyr,
     zeallot
 VignetteBuilder: knitr

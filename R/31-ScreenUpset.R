@@ -69,6 +69,7 @@ ScreenUpset <- function(
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
   ...
 ) {
+  rlang::check_installed(c("tibble", "ggplot2", "ggupset"))
   # Robust
   chk::chk_is(screened_seurat, "Seurat")
   if (!is.null(screen_type)) {
