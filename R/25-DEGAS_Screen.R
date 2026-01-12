@@ -122,7 +122,7 @@ DoDEGAS <- function(
   chk::chk_range(select_fraction)
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))
   chk::chk_not_any_na(matched_bulk)
-  if (chk::vld_is(sc_data, c("Seurat", "Matrix", "matrix"))) {
+  if (!chk::vld_is(sc_data, c("Seurat", "Matrix", "matrix"))) {
     cli::cli_abort(c(
       "x" = "{.arg sc_data} cannot be of type {.cls {class(sc_data)}}",
       ">" = "Available types: {.cls {c('Seurat', 'Matrix', 'matrix')}}"

@@ -2,6 +2,7 @@
 #' @family single_cell_preprocess
 #' @keywords internal
 compatible_with_3.0.2 <- function(..., params) {
+  on.exit(gc(verbose = FALSE))
   dots <- rlang::list2(...)
 
   params$o$min.cells <- params$o$min.cells %||% dots$min_cells

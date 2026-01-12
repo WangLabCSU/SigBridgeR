@@ -8,7 +8,7 @@
 #'
 #' @param obj A Seurat object that has PCA computed (after `RunPCA`)
 #' @param verbose Logical, if TRUE outputs detailed method results and creates
-#'                visualization plot. If FALSE returns only the final dimension.
+#'                visualization plot. If `FALSE` returns only the final dimension.
 #' @param ndims Integer, maximum number of dimensions to consider (default: `50L`)
 #'
 #' @return Integer, the recommended number of PCA dimensions for downstream analysis
@@ -225,7 +225,7 @@ FindRobustElbow <- function(
         ggplot2::annotate(
           "text",
           x = method1_results$cumulative_90,
-          y = max(pct_variance),
+          y = max(pct_variance) * 0.5,
           label = "Cumulative Variance > 90%",
           color = "#0a9696ff",
           hjust = -0.1,
@@ -234,7 +234,7 @@ FindRobustElbow <- function(
         ggplot2::annotate(
           "text",
           x = method1_results$cumulative_80,
-          y = max(pct_variance),
+          y = max(pct_variance) * 0.4,
           label = "Cumulative Variance > 80%",
           color = "#d699ffff",
           hjust = -0.1,
@@ -247,7 +247,6 @@ FindRobustElbow <- function(
           label = "Variance > Mean",
           color = "#63118aff",
           hjust = -0.1,
-          linewidth = 4,
           fontface = "bold"
         ) +
         ggplot2::annotate(

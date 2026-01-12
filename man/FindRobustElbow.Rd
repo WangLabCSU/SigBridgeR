@@ -14,7 +14,7 @@ FindRobustElbow(
 \item{obj}{A Seurat object that has PCA computed (after \code{RunPCA})}
 
 \item{verbose}{Logical, if TRUE outputs detailed method results and creates
-visualization plot. If FALSE returns only the final dimension.}
+visualization plot. If \code{FALSE} returns only the final dimension.}
 
 \item{ndims}{Integer, maximum number of dimensions to consider (default: \code{50L})}
 }

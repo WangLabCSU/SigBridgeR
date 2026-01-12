@@ -609,7 +609,7 @@ FilterTumorCell <- function(
     return(obj)
   }
   if (verbose) {
-    ts_cli$cli_alert_info(
+    cli::cli_alert_info(
       "Filtering tumor cells with '{.emph {column2only_tumor}}'..."
     )
   }
