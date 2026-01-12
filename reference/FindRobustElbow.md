@@ -25,7 +25,7 @@ FindRobustElbow(
 - verbose:
 
   Logical, if TRUE outputs detailed method results and creates
-  visualization plot. If FALSE returns only the final dimension.
+  visualization plot. If `FALSE` returns only the final dimension.
 
 - ndims:
 
