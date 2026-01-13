@@ -64,7 +64,7 @@ test_that("generate a mock bulk count matrix", {
   data <- BulkPreProcess(
     counts,
     sample_info = data.frame(
-      batch = sample(c("batch1", "batch2"), n_samples))
+      batch = sample_(c("batch1", "batch2"), n_samples, replace = TRUE),
       sample = sample_names,
       condition = c(
         rep("control", n_samples_per_batch),
