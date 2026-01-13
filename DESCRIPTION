@@ -1,6 +1,6 @@
 Package: SigBridgeR
 Title: Multi-algorithm Integration of Phenotypic, scRNA-seq, and Bulk Data for Cell Screening
-Version: 3.1.0
+Version: 3.1.1
 Authors@R: 
     c(
         person("Yuxi", "Yang", email = "15364051195@163.com", role = c("cre", "aut"), comment = c(ORCID = "0009-0006-1329-1224")),
