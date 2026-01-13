@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # **SigBridgeR** <a href="https://wanglabcsu.github.io/SigBridgeR/"><img src="man/figures/logo_white.png" alt="sigbridger website" align="right" height="139"/></a>
@@ -29,75 +30,86 @@ of the latest features and bug fixes.
 
 1.  Install the development version from GitHub:
 
-<!-- -->
+``` r
+if (!requireNamespace("pak")) {
+  install.packages("pak")
+}
+pak::pkg_install("WangLabCSU/SigBridgeR")
+```
 
-    if (!requireNamespace("pak")) {
-      install.packages("pak")
-    }
-    pak::pkg_install("WangLabCSU/SigBridgeR")
+2.  Install from r-universe:
 
-1.  Install from r-universe:
-
-<!-- -->
-
-    install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+``` r
+install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+```
 
 **It is recommended to install the following packages:**
 
 For better performance:
 
-    pak::pkg_install(c(
-      # faster computation
-      "sparseMatrixStats",
-      "matrixStats",
-      "preprocessCore",
-      "WGCNA",
-      "tidyr",
-      "matrixTests",
-      "KernSmooth",
-      # parallel computation
-      "furrr",
-      "future"
-    ))
+``` r
+pak::pkg_install(c(
+  # faster computation
+  "sparseMatrixStats",
+  "matrixStats",
+  "preprocessCore",
+  "WGCNA",
+  "tidyr",
+  "matrixTests",
+  "KernSmooth",
+  "cheapr",
+  # better gene symbol conversion
+  "scCustomize",
+  # parallel computation
+  "furrr",
+  "future"
+))
+```
 
 For seamless integration with other file types such as `.h5ad`
 
-    pak::pkg_install("anndata")
-    # or
-    pak::pkg_install("anndataR") # both are supported
+``` r
+pak::pkg_install("anndata")
+# or
+pak::pkg_install("anndataR") # both are supported, but anndataR is recommended
+```
 
 For visualization:
 
-    pak::pkg_install(c(
-      "ggplot2",
-      "randomcoloR", # or RColorBrewer
-      "ggupset", # for upset plot
-      "patchwork", # for fraction stack plot
-      "ggforce", # for pca plot
-      "ggVennDiagram" # for venn diagram
-    ))
+``` r
+pak::pkg_install(c(
+  "ggplot2",
+  "randomcoloR", # or RColorBrewer
+  "ggupset", # for upset plot
+  "patchwork", # for fraction stack plot
+  "ggforce", # for pca plot
+  "ggVennDiagram" # for venn diagram
+))
+```
 
 To reproduce the tutorial to learn more usage
 
-    pak::pkg_install(c(
-      "zeallot",
-      "here",
-      "org.Hs.eg.db"
-    ))
+``` r
+pak::pkg_install(c(
+  "zeallot",
+  "here",
+  "org.Hs.eg.db"
+))
+```
 
 ## 📓 Documentation
 
 Get Started:
 
--   [A Quick Started Guide](vignettes/Quick_Start.md)
--   [Full Tutorial](vignettes/Full_Tutorial.md) for more details
--   View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
--   Use `?SigBridgeR::function_name` to access the help documents in R.
+- [A Quick Started Guide](vignettes/Quick_Start.md)
+- [Full Tutorial](vignettes/Full_Tutorial.md) for more details
+- View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
+- Use `?SigBridgeR::function_name` to access the help documents in R.
 
 If you encounter problems, please check:
 
--   the [Troubleshooting Guide](vignettes/Troubleshooting.md), or
--   the [Github issues](https://github.com/WangLabCSU/SigBridgeR/issues)
-    page if you want to file bug reports or feature requests
+- the [Troubleshooting Guide](vignettes/Troubleshooting.md), or
+- the [Github issues](https://github.com/WangLabCSU/SigBridgeR/issues)
+  page if you want to file bug reports or feature requests
 
 Let us know if you have ideas to make this project better!

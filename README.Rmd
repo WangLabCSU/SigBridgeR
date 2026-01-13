@@ -56,6 +56,7 @@ pak::pkg_install(c(
   "tidyr",
   "matrixTests",
   "KernSmooth",
+  "cheapr",
   # better gene symbol conversion
   "scCustomize",
   # parallel computation

@@ -26,7 +26,7 @@
 #'
 #' @param data Expression matrix with genes as rows and samples as columns, or a list containing count_matrix and sample_info
 #' @param sample_info Sample information data frame (optional), ignored if data is a list. A qualified `sample_info` should contain both `sample` and `condition` columns (case-sensitive), and there are no specific requirements for the data type stored in the `condition` column. `batch` column is optional, which is used for batch effect detection.
-#' @param gene_symbol_conversion Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: FALSE
+#' @param gene_symbol_conversion Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: `FALSE`
 #' @param check Whether to perform detailed quality checks, default: `TRUE`
 #' @param min_count_threshold Minimum count threshold for gene filtering. Only values greater than this threshold are considered to represent valid gene expression. Default: `10L`
 #' @param min_gene_expressed Minimum number of samples a gene must be expressed in, default: `3L`
@@ -38,6 +38,7 @@
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
+#'    - `method`: Method for duplicates aggregation, see [AggregateDups]
 #'
 #' @section Quality Metrics:
 #' The function calculates and reports several quality metrics:
@@ -108,7 +109,10 @@ BulkPreProcess <- function(
     ),
     ~ chk::chk_numeric
   )
-  purrr::walk(list(check, show_plot_results), ~ chk::chk_flag)
+  purrr::walk(
+    list(gene_symbol_conversion, check, show_plot_results),
+    ~ chk::chk_flag
+  )
 
   # dots arguments
   dots <- rlang::list2(...)
@@ -119,7 +123,7 @@ BulkPreProcess <- function(
   set.seed(seed)
 
   # * Handle input data format
-  if (is.list(data) && !is.data.frame(data)) {
+  if (is.list(data)) {
     if ("count_matrix" %chin% names(data)) {
       counts_matrix <- as.matrix(data$count_matrix)
       if ("sample_info" %chin% names(data) && is.null(sample_info)) {
@@ -155,7 +159,8 @@ BulkPreProcess <- function(
     n_genes = n_genes,
     min_genes_detected = min_genes_detected,
     min_count_threshold = min_count_threshold,
-    method = method
+    method = method,
+    verbose = verbose
   )
 
   if (is.null(sample_info)) {
@@ -168,7 +173,11 @@ BulkPreProcess <- function(
     sample_info <- data.frame(
       sample = colnames(counts_matrix) %||%
         glue::glue("Sample_{seq_len(n_samples)}"),
-      condition = rep("unknown", n_samples),
+      condition = if (rlang::is_installed("cheapr")) {
+        cheapr::rep_("unknown", n_samples)
+      } else {
+        rep("unknown", n_samples)
+      },
       stringsAsFactors = FALSE
     )
   } else {
@@ -189,9 +198,15 @@ BulkPreProcess <- function(
     )
   }
 
-  total_reads_per_sample <- colSums(counts_matrix, na.rm = TRUE)
-  genes_detected_per_sample <- colSums(counts_matrix > 0, na.rm = TRUE)
-  genes_with_reads <- rowSums(counts_matrix > 0, na.rm = TRUE)
+  total_reads_per_sample <- SigBridgeRUtils::colSums3(
+    counts_matrix,
+    na.rm = TRUE
+  )
+  genes_detected_per_sample <- SigBridgeRUtils::colSums3(
+    counts_matrix > 0,
+    na.rm = TRUE
+  )
+  genes_with_reads <- SigBridgeRUtils::rowSums3(counts_matrix > 0, na.rm = TRUE)
   genes_expressed_multiple <- sum(genes_with_reads >= min_gene_expressed)
 
   # Detailed Quality Checks (Conditional Execution)
@@ -206,11 +221,11 @@ BulkPreProcess <- function(
     cpm_values <- edgeR::cpm(counts_matrix, log = TRUE, prior.count = 1)
 
     # Sample correlation
-    sample_cor <- stats::cor(
-      cpm_values,
-      method = "pearson",
-      use = "pairwise.complete.obs"
-    )
+    sample_cor <- if (rlang::is_installed("WGCNA")) {
+      WGCNA::cor(cpm_values, method = "pearson", use = "pairwise.complete.obs")
+    } else {
+      stats::cor(cpm_values, method = "pearson", use = "pairwise.complete.obs")
+    }
 
     # Quick identification of low correlations
     cor_lower_tri <- sample_cor[lower.tri(sample_cor)]
@@ -253,11 +268,15 @@ BulkPreProcess <- function(
       pc12 <- pca_result$x[, c(1, 2)]
       mahal_dist <- stats::mahalanobis(
         pc12,
-        center = colMeans(pc12),
+        center = SigBridgeRUtils::colMeans3(pc12),
         cov = stats::cov(pc12)
       )
       outlier_threshold <- stats::qchisq(0.95, df = 2)
-      outliers <- which(mahal_dist > outlier_threshold)
+      outliers <- if (rlang::is_installed("cheapr")) {
+        cheapr::which_(mahal_dist > outlier_threshold)
+      } else {
+        which(mahal_dist > outlier_threshold)
+      }
     } else {
       outliers <- integer(0)
     }
@@ -309,10 +328,9 @@ BulkPreProcess <- function(
         batch_sig_prop <- mean(batch_pvalues < 0.05, na.rm = TRUE)
 
         if (verbose) {
-          ts_cli$cli_alert_success(sprintf(
-            "Batch effect detection completed: {.val {%s}}% genes affected",
-            round(batch_sig_prop * 100, 2)
-          ))
+          ts_cli$cli_alert_success(
+            "Batch effect detection completed: {.val {round(batch_sig_prop * 100, 2)}}% genes affected"
+          )
           if (batch_sig_prop > 0.3) {
             cli::cli_warn(
               "Strong batch effects detected, consider batch correction."
@@ -393,7 +411,9 @@ BulkPreProcess <- function(
 
   # * Data Filtering
   # Gene filtering
-  genes_pass_count <- rowSums(counts_matrix >= min_count_threshold) >=
+  genes_pass_count <- SigBridgeRUtils::rowSums3(
+    counts_matrix >= min_count_threshold
+  ) >=
     min_gene_expressed
 
   # Sample filtering
@@ -403,7 +423,7 @@ BulkPreProcess <- function(
 
   # Correlation filtering (if correlation was computed)
   if (check && exists("sample_cor")) {
-    sample_mean_cor <- colMeans(sample_cor, na.rm = TRUE)
+    sample_mean_cor <- SigBridgeRUtils::colMeans3(sample_cor, na.rm = TRUE)
     samples_to_keep <- samples_to_keep & sample_mean_cor >= min_correlation
   }
 
@@ -456,7 +476,8 @@ BulkCheck <- function(
   n_genes,
   min_genes_detected,
   min_count_threshold,
-  method
+  method,
+  verbose = TRUE
 ) {
   if (any(counts_matrix < 0, na.rm = TRUE)) {
     cli::cli_abort(c(
@@ -464,9 +485,7 @@ BulkCheck <- function(
     ))
   }
   if (any(counts_matrix != floor(counts_matrix))) {
-    cli::cli_abort(c(
-      "x" = "Expression matrix must be integer (Raw count matrix), not log2 transformed"
-    ))
+    cli::cli_warn("Expression matrix contains non-integre value")
   }
   if (min_genes_detected > n_genes) {
     cli::cli_abort(c(
@@ -484,11 +503,19 @@ BulkCheck <- function(
   # * Handle duplicated genes and samples
   if (any(duplicated(rownames(counts_matrix)))) {
     cli::cli_alert_info("Aggregate Duplicated genes in rownames")
-    counts_matrix <- AggregateDupRows(counts_matrix, method = method)
+    counts_matrix <- AggregateDupRows(
+      counts_matrix,
+      method = method,
+      verbose = FALSE
+    )
   }
   if (any(duplicated(colnames(counts_matrix)))) {
     cli::cli_alert_info("Aggregate Duplicated samples in colnames")
-    counts_matrix <- AggregateDupCols(counts_matrix, method = method)
+    counts_matrix <- AggregateDupCols(
+      counts_matrix,
+      method = method,
+      verbose = FALSE
+    )
   }
 
   # * Handle data type

@@ -53,6 +53,7 @@ Suggests:
     ALRA,
     anndata,
     carrier,
+    cheapr,
     furrr,
     future,
     future.mirai,
@@ -78,6 +79,7 @@ Suggests:
     testthat (>= 3.0.0),
     tibble,
     tidyr,
+    WGCNA,
     zeallot
 VignetteBuilder: knitr
 Config/testthat/edition: 3
