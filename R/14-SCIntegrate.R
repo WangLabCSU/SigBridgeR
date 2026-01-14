@@ -76,6 +76,9 @@ SCIntegrate <- function(
   if (is.matrix(dots[[1]])) {
     return(SCIntegrate.matrix(..., .quos = .quos))
   }
+  if (inherits(dots[[1]],"Matrix")) {
+    return(SCIntegrate.Matrix(..., .quos = .quos))
+  }
   if (inherits(dots[[1]], "Seurat")) {
     return(SCIntegrate.Seurat(
       ...,
@@ -112,11 +115,11 @@ SCIntegrate <- function(
 #' dim(integrated_mat)  # 20 genes × 11 cells
 #' head(colnames(integrated_mat))
 #' }
-#' @export
+#' @keywords internal
 SCIntegrate.matrix <- function(..., .quos = NULL) {
   dots <- rlang::list2(...)
   .quos <- .quos %||% rlang::enquos(...)
-  is_mat <- vapply(dots, \(x) inherits(x, "matrix"), logical(1))
+  is_mat <- vapply(dots, \(x) is.matrix(x), logical(1))
   # * remove dups
   mats <- purrr::map(dots[is_mat], \(x) {
     rlang::exec(
@@ -126,8 +129,6 @@ SCIntegrate.matrix <- function(..., .quos = NULL) {
       !!!SigBridgeRUtils::FilterArgs4Func(dots[!is_mat], AggregateDups)
     )
   })
-
-  all_genes <- unique(unlist(lapply(mats, rownames)))
 
   prefixes <- get_names_4_ids(..., .quoses = .quos)[is_mat]
 
@@ -159,8 +160,58 @@ SCIntegrate.matrix <- function(..., .quos = NULL) {
   result_mat
 }
 
+#' @keywords internal
 #' @rdname SCIntegrate
-#' @export
+SCIntegrate.Matrix <- function(..., .quos = NULL) {
+  dots <- rlang::list2(...)
+  .quos <- .quos %||% rlang::enquos(...)
+
+  is_mat <- vapply(dots, \(x) inherits(x, "Matrix"), logical(1))
+  mats <- purrr::map(dots[is_mat], \(x) {
+    rlang::exec(
+      AggregateDups,
+      x = x,
+      verbose = FALSE,
+      !!!SigBridgeRUtils::FilterArgs4Func(dots[!is_mat], AggregateDups)
+    )
+  })
+
+  all_genes <- unique(unlist(lapply(mats, rownames)))
+
+  prefixes <- get_names_4_ids(..., .quoses = .quos)[is_mat]
+
+  mat_list <- vector("list", length(mats))
+
+  for (i in seq_along(mats)) {
+    mat <- mats[[i]]
+    prefix <- prefixes[i]
+
+    current_genes <- rownames(mat)
+    current_samples <- colnames(mat)
+
+    expanded_mat <- Matrix::Matrix(
+      0,
+      nrow = length(all_genes),
+      ncol = ncol(mat),
+      sparse = TRUE
+    )
+
+    # 设置行名和列名
+    rownames(expanded_mat) <- all_genes
+    colnames(expanded_mat) <- paste0(prefix, "_", current_samples)
+
+    # 填充数据
+    gene_idx <- match(current_genes, all_genes)
+    expanded_mat[gene_idx, ] <- mat
+
+    mat_list[[i]] <- expanded_mat
+  }
+
+  rlang::exec(Matrix::cbind2, !!!mat_list)
+}
+
+#' @rdname SCIntegrate
+#' @keywords internal
 SCIntegrate.Seurat <- function(
   ...,
   pipeline = "nsvpiectu",

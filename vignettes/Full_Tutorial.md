@@ -256,7 +256,7 @@ Then just pass it to `SCPreProcess`:
     your_seurat <- SCPreProcess(
       anndata_obj,
       pipeline = "onsvpcetu", # Standard pipeline
-      column2only_tumor = "Tissue" # Optional: keep only tumor tissue
+      column2only_tumor = "Tissue" # Optional: keep only tumor cells
     )
 
 The description of data (meta.data) in `anndata_obj$obs` will be add to
@@ -1437,8 +1437,8 @@ functions in `SigBridgeR` to screen cells associated with phenotype.
     # HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
     # RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
     # HMGCLL1       2.7476       5.8513       3.8334       3.6447       2.9188       4.8820
-    # LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882
-    # GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311
+    # LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882 # nolint
+    # GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311 # nolint: line_length_linter.
     # LRRTM3        1.7458       2.0092       0.0000       1.4468       0.0000       0.0000
     nrow(pheno)
     # [1] 506
@@ -1462,15 +1462,19 @@ as needed for your specific use case.
 Now we use `SCPreProcess()` to pre-process the single-cell RNA
 expression matrix data.
 
-    seurat = SCPreProcess(
+    seurat <- SCPreProcess(
       sc = mat_exam,
+      params = list(
+        o = list(
+          min.cells = 0,
+          min.features = 0,
+        ),
+        s = list(
+          scale.features = rownames(mat_exam),
+        )  
+      ),
       quality_control = FALSE,
-      data_filter = FALSE,
-      min_cells = 0,
-      min_features = 0,
-      scale_features = rownames(mat_exam),
-      dims = 1:20,
-      resolution = 0.1
+      data_filter = FALSE
     )
 
 `BulkPreProcess()` is to pre-process the bulk expression data and the
@@ -1492,11 +1496,11 @@ only and is not recommended for real analyses.
 
     sample_info <- tibble::rownames_to_column(pheno, var = "sample") %>%
       dplyr::rename(condition = status)
-    sample_info$batch <- 'batch1'
+    sample_info$batch <- "batch1"
 
     head(sample_info)
     #         sample  time condition  batch
-    # 1 TCGA-69-7978  4.40         0 batch1   
+    # 1 TCGA-69-7978  4.40         0 batch1
     # 2 TCGA-62-8399 88.57         0 batch1
     # 3 TCGA-78-7539 25.99         0 batch1
     # 4 TCGA-73-4658 52.56         1 batch1
@@ -1770,7 +1774,7 @@ You can also adjust the `cutoff` parameter as you like.
 
 Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
 
-    scab_result = Screen(
+    scab_result <- Screen(
         matched_bulk = bulk,
         sc_data = seurat,
         phenotype = pheno,
@@ -1789,7 +1793,7 @@ Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
     #    Other Positive 
     #     1018       75 
 
-    scpp_result = Screen(
+    scpp_result <- Screen(
         matched_bulk = bulk,
         sc_data = seurat,
         phenotype = pheno,
@@ -1800,9 +1804,9 @@ Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
     # ℹ [2025/09/08 17:00:28] Start scPP screening.
     # ℹ [2025/09/08 17:00:28] Finding markers...
     # Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :
-    #   Loglik converged before variable  1 ; coefficient may be infinite. 
+    #   Loglik converged before variable  1 ; coefficient may be infinite.
     # ℹ [2025/09/08 17:00:52] Screening...
-    # Genes in the gene sets NOT available in the dataset: 
+    # Genes in the gene sets NOT available in the dataset:
     #   gene_pos:   13 (6% of 230)
     #   gene_neg:   54 (12% of 446)
     # There are no genes significantly upregulated in Phenotype- compared to Phenotype+.
@@ -1813,7 +1817,7 @@ Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
     #       52      993       48 
 
     # I recommend running this code in the background.
-    degas_result = Screen(
+    degas_result <- Screen(
         matched_bulk = bulk,
         sc_data = seurat,
         phenotype = pheno,
@@ -1847,7 +1851,7 @@ Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
         phenotype = pheno,
         label_type = "LP_SGL",
         phenotype_class = "survival",
-        screen_method = "LP_SGL"  
+        screen_method = "LP_SGL"
     )
     # ℹ [2025/11/22 21:14:29] Starting LP-SGL screening analysis
     # ℹ [2025/11/22 21:14:29] Fetch graph from Seurat object
@@ -1869,7 +1873,7 @@ use PIPET in [Section
 After these algorithms have been run, the four sets of data can be
 merged since screening methods performed on the same data.
 
-    screen_result = MergeResult(
+    screen_result <- MergeResult(
         scissor_result,
         scpas_result,
         scab_result,
@@ -2015,7 +2019,7 @@ we have created a fictional `Sample` column.
     #  Sample1 Sample10  Sample2  Sample3  Sample4  Sample5  Sample6  Sample7  Sample8  Sample9
     #       98      117       96      119       95      100      101      131      115      121
 
-    fraction_list = ScreenFractionPlot(
+    fraction_list <- ScreenFractionPlot(
       screened_seurat = screen_result,
       group_by = "Sample",
       screen_type = c("scissor", "scPP", "scAB", "scPAS", "DEGAS", "LP_SGL"),
@@ -2044,37 +2048,22 @@ The `fraction_list` contains the statistical data and charts for each
 screening algorithm. The title of each plot will be appended with the
 method name as an identifier.
 
-fraction\_list
-
-    ├── stats
-
-    │   ├── scissor
-
-    │   ├── scAB
-
-    │   ├── scPAS
-
-    │   ├── scPP   
-
-    │   ├── DEGAS
-
-    │   └── LP_SGL
-
-    ├── plots
-
-    │   ├── scissor
-
-    │   ├── scAB
-
-    │   ├── scPAS
-
-    │   ├── scPP
-
-    │   ├── DEGAS
-
-    │   └── LP_SGL
-
-    └── combined_plot # show 6 plots in one plot
+fraction\_list  
+├── stats  
+│ ├── scissor  
+│ ├── scAB  
+│ ├── scPAS  
+│ ├── scPP  
+│ ├── DEGAS  
+│ └── LP\_SGL  
+├── plots  
+│ ├── scissor  
+│ ├── scAB  
+│ ├── scPAS  
+│ ├── scPP  
+│ ├── DEGAS  
+│ └── LP\_SGL  
+└── combined\_plot \# show 6 plots in one plot
 
 UMAP is the most commonly used type of plot in academic literature.
 
@@ -2172,7 +2161,7 @@ preprocessing of continuous phenotypic data is introduced.
     c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "continuous")
 
     dim(mat_exam)
-     #[1] 33694  1093
+    # [1] 33694  1093
     dim(bulk) 
     # [1] 4106  289
     bulk[1:6,1:6]
@@ -2209,7 +2198,7 @@ preprocessing of binary phenotypic data is introduced.
     c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "binary")
 
     dim(mat_exam)
-     #[1] 33694  1093
+    #[1] 33694  1093
     dim(bulk) 
     # [1] 4106  434
     bulk[1:6,1:6]
@@ -2232,14 +2221,14 @@ the “data” column, categorized as ‘Tumor’ and ‘Normal’, we will assi
 screened as **Positive** will be associated with ‘Tumor’. Try this to
 convert it to a `named vector`:
 
-    pheno = mutate(
+    pheno <- mutate(
         pheno,
         data = dplyr::case_when(
             data == "Tumor" ~ 1,
             data == "Normal" ~ 0
         )
     )
-    pheno = setNames(pheno$data, pheno$Sample)
+    pheno <- setNames(pheno$data, pheno$Sample)
 
 **A PIPET use case**
 
@@ -2262,7 +2251,7 @@ the phenotype; here, we demonstrate using a binary phenotype instead.
     #ℹ [2025/12/26 06:18:28] The classification of markers is: group_0: 945 and group_1: 477
     #ℹ [2025/12/26 06:18:28] Normalize count data with CPM and log1p
     #ℹ [2025/12/26 06:18:29] Scale features with z-score normalization
-    #ℹ [2025/12/26 06:19:49] Organize the computed results        
+    #ℹ [2025/12/26 06:19:49] Organize the computed results
     #✔ [2025/12/26 06:19:49] PIPET screening done.
 
     table(pipet_result$scRNA_data$PIPET)
