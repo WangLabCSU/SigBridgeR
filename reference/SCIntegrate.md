@@ -19,6 +19,8 @@ SCIntegrate(
 
 SCIntegrate.matrix(..., .quos = NULL)
 
+SCIntegrate.Matrix(..., .quos = NULL)
+
 SCIntegrate.Seurat(
   ...,
   pipeline = "nsvpiectu",

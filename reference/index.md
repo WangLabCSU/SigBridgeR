@@ -37,10 +37,6 @@
   : Filter Seurat object cells by QC metrics
 - [`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md)
   : Calculate Percentage of Features Matching Patterns
-- [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
-  [`SCIntegrate.matrix()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
-  [`SCIntegrate.Seurat()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
-  : Integrate Single-Cell Datasets
 - [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
   : Single-Cell RNA-seq Preprocessing Pipeline
 - [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
