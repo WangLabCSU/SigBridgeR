@@ -23,6 +23,13 @@ test_that("It works with matrices", {
 
   integrated <- SCIntegrate(A = mat1, B = mat2)
   # colnames(integrated)
+
+  mat3 <- Matrix::Matrix(mat1)
+  mat4 <- Matrix::Matrix(mat2)
+
+  integrated2 <- SCIntegrate(mat3, mat4)
+  class(integrated2)
+  expect_s4_class(integrated2, "dgCMatrix")
 })
 
 test_that("It works with Seurat", {

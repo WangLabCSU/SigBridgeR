@@ -3,6 +3,7 @@
 \name{SCIntegrate}
 \alias{SCIntegrate}
 \alias{SCIntegrate.matrix}
+\alias{SCIntegrate.Matrix}
 \alias{SCIntegrate.Seurat}
 \title{Integrate Single-Cell Datasets}
 \usage{
@@ -17,6 +18,8 @@ SCIntegrate(
 )
 
 SCIntegrate.matrix(..., .quos = NULL)
+
+SCIntegrate.Matrix(..., .quos = NULL)
 
 SCIntegrate.Seurat(
   ...,
@@ -105,3 +108,4 @@ dim(integrated_mat)  # 20 genes × 11 cells
 head(colnames(integrated_mat))
 }
 }
+\keyword{internal}
