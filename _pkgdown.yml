@@ -20,6 +20,7 @@ favicons:
 
 template:
     bootstrap: 5
+    light-switch: true
     bslib:
         bootswatch: sandstone
         code_font: { google: "JetBrains Mono" }

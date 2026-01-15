@@ -40,7 +40,7 @@ library(zeallot) # %<-%
 c(mat_exam, bulk_bi, pheno_bi) %<-% LoadRefData(data_type = "binary")
 ```
 
-`mat_exam` is a single-cell RNA expression matrix, `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a named vector.
+`mat_exam` is a single-cell RNA expression matrix, `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.
 
 ```{r,binary_phenotype,eval=FALSE}
 head(pheno_bi)
@@ -48,7 +48,7 @@ head(pheno_bi)
 #               1               1               1               1               1               1
 ```
 
-By the way, when usinng a survival phenotype, the reference data is a data.frame.
+By the way, when using patients' survival data as phenotype, the reference data is a **data.frame**.
 
 ```{r,survival_phenotype,eval=FALSE}
 pheno_sur <- LoadRefData(data_type = "survival")[[3]]
@@ -62,14 +62,16 @@ head(pheno_sur)
 # TCGA-44-2655 43.50      0
 ```
 
-The single-cell RNA expression matrix needs to be processed into a Seurat object. We set scale_features to all genes in order to maximize the flexibility of downstream analyses and capture a broader range of biological signals, so as to avoid insignificant results caused by too small a dataset.
+The single-cell RNA expression matrix needs to be processed into a Seurat object. We set `scale.features` to all genes in order to maximize the flexibility of downstream analyses and capture a broader range of biological signals, so as to avoid insignificant results caused by too small a dataset.
 
 ```{r,seurat,eval=FALSE}
 seurat_obj <- SCPreProcess(
   mat_exam,
-  quality_control.pattern = "^MT-",
-  scale_features = rownames(mat_exam),
-  dims = 1:20
+  params = list(
+    s = list(
+      scale.feature = rownames(mat_exam)
+    )
+  )
 )
 ```
 
@@ -113,7 +115,7 @@ Finally, we visualize the screening results.
 -   stacked bar plot:
 
 ```{r,visualize_fraction,eval=FALSE}
-fraction = ScreenFractionPlot(
+fraction <- ScreenFractionPlot(
   merged_seurat,
   group_by = "seurat_clusters",
   screen_type = c("scissor", "scPAS")
@@ -142,7 +144,7 @@ c(scissor_pos, scpas_pos) %<-%
 
 all_cells <- colnames(seurat_obj)
 
-pos_venn = list(
+pos_venn <- list(
   scissor = scissor_pos,
   scpas = scpas_pos,
   all_cells = all_cells
@@ -150,7 +152,7 @@ pos_venn = list(
 
 set.seed(123)
 
-venn_plot = ggVennDiagram::ggVennDiagram(
+venn_plot <- ggVennDiagram::ggVennDiagram(
   x = pos_venn,
   # * the labels of each group to be shown on the diagram
   category.names = c(
@@ -235,7 +237,7 @@ cluster_umap <- Seurat::DimPlot(
 
 
 # * Show
-umaps = cluster_umap +
+umaps <- cluster_umap +
   scissor_umap +
   scpas_umap +
   plot_layout(ncol = 2)
@@ -249,56 +251,10 @@ knitr::include_graphics("vignettes/example_figures/umaps_q.png")
 
 [![umaps_q](example_figures/umaps_q.png "umaps_q"){fig-alt="umaps_q" fig-align="center" width="600"}](https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps_q.png)
 
+For more detail, please see [Full Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html).
+
 Session information:
 
-```{r,session_info,echo=FALSE}
+```{r,session_info}
 sessionInfo()
-# R version 4.4.1 (2024-06-14)
-# Platform: x86_64-pc-linux-gnu
-# Running under: Ubuntu 24.04.3 LTS
-
-# Matrix products: default
-# BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
-# LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
-
-# locale:
-#  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=zh_CN.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=zh_CN.UTF-8
-#  [6] LC_MESSAGES=en_US.UTF-8    LC_PAPER=zh_CN.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C
-# [11] LC_MEASUREMENT=zh_CN.UTF-8 LC_IDENTIFICATION=C
-
-# time zone: Asia/Shanghai
-# tzcode source: system (glibc)
-
-# attached base packages:
-# [1] stats     graphics  grDevices utils     datasets  methods   base
-
-# other attached packages:
-# [1] magrittr_2.0.4 dplyr_1.1.4
-
-# loaded via a namespace (and not attached):
-#   [1] RColorBrewer_1.1-3     sys_3.4.3              jsonlite_2.0.0         spatstat.utils_3.2-0   farver_2.1.2           Scissor_2.0.0
-#   [7] vctrs_0.6.5            ROCR_1.0-11            spatstat.explore_3.5-3 memoise_2.0.1          RCurl_1.98-1.17        askpass_1.2.1
-#  [13] htmltools_0.5.8.1      BiocBaseUtils_1.6.0    curl_7.0.0             sctransform_0.4.2      parallelly_1.45.1      KernSmooth_2.23-24
-#  [19] htmlwidgets_1.6.4      ica_1.0-3              plyr_1.8.9             httr2_1.0.4            plotly_4.11.0          zoo_1.8-14
-#  [25] cachem_1.1.0           igraph_2.2.0           mime_0.13              lifecycle_1.0.4        pkgconfig_2.0.3        Matrix_1.7-4
-#  [31] R6_2.6.1               fastmap_1.2.0          BiocCheck_1.40.0       fitdistrplus_1.2-4     future_1.67.0          shiny_1.11.1
-#  [37] digest_0.6.37          patchwork_1.3.2        ps_1.8.0               tensor_1.5.1           Seurat_5.3.0           RSpectra_0.16-2
-#  [43] irlba_2.3.5.1          RSQLite_2.4.3          filelock_1.0.3         progressr_0.16.0       spatstat.sparse_3.1-0  polyclip_1.10-7
-#  [49] abind_1.4-8            httr_1.4.7             compiler_4.4.1         bit64_4.6.0-1          withr_3.0.2            S7_0.2.0
-#  [55] biocViews_1.72.0       DBI_1.2.3              chk_0.10.0             fastDummies_1.7.5      ggupset_0.4.1          ScPP_0.0.0.9000
-#  [61] MASS_7.3-60.2          openssl_2.3.4          rappdirs_0.3.3         tools_4.4.1            lmtest_0.9-40          httpuv_1.6.16
-#  [67] future.apply_1.20.0    goftest_1.2-3          glue_1.8.0             callr_3.7.6            nlme_3.1-164           promises_1.3.3
-#  [73] grid_4.4.1             stringdist_0.9.14      Rtsne_0.17             cluster_2.1.6          reshape2_1.4.4         generics_0.1.4
-#  [79] spatstat.data_3.1-8    gtable_0.3.6           preprocessCore_1.66.0  tidyr_1.3.1            data.table_1.17.8      sp_2.2-0
-#  [85] spatstat.geom_3.6-0    BiocGenerics_0.50.0    RcppAnnoy_0.0.22       stringr_1.5.2          ggrepel_0.9.6          RANN_2.6.2
-#  [91] pillar_1.11.1          spam_2.11-1            RcppHNSW_0.6.0         later_1.4.4            splines_4.4.1          scAB_1.0.0
-#  [97] BiocFileCache_2.12.0   lattice_0.22-6         deldir_2.0-4           survival_3.6-4         bit_4.6.0              tidyselect_1.2.1
-# [103] RBGL_1.80.0            miniUI_0.1.2           pbapply_1.7-4          knitr_1.50             gridExtra_2.3          scattermore_1.2
-# [109] stats4_4.4.1           xfun_0.53              Biobase_2.64.0         credentials_2.0.1      matrixStats_1.5.0      stringi_1.8.7
-# [115] lazyeval_0.2.2         evaluate_1.0.5         codetools_0.2-20       tibble_3.3.0           BiocManager_1.30.26    graph_1.82.0
-# [121] cli_3.6.5              uwot_0.2.3             xtable_1.8-4           reticulate_1.43.0      processx_3.8.4         dichromat_2.0-0.1
-# [127] Rcpp_1.1.0             gert_2.1.2             spatstat.random_3.4-2  globals_0.18.0         dbplyr_2.5.1           png_0.1-8
-# [133] spatstat.univar_3.1-4  XML_3.99-0.19          RUnit_0.4.33.1         parallel_4.4.1         ggplot2_4.0.0          blob_1.2.4
-# [139] dotCall64_1.2          bitops_1.0-9           listenv_0.9.1          viridisLite_0.4.2      scales_1.4.0           ggridges_0.5.7
-# [145] SeuratObject_5.2.0     purrr_1.1.0            rlang_1.1.6            cowplot_1.2.0
 ```

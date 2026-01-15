@@ -120,6 +120,13 @@ DoscAB <- function(
     verbose = verbose
   )
 
+  if (any(scAB_obj$X < 0)) {
+    cli::cli_warn(
+      "Found negative values in `X` after correlation, truncating to 0"
+    )
+    scAB_obj$X[scAB_obj$X < 0] <- 0L
+  }
+
   if (verbose) {
     ts_cli$cli_alert_info("Selecting K")
   }

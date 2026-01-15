@@ -40,7 +40,6 @@ sc_processing_strategies <- list(
     rlang::exec(
       Seurat::FindVariableFeatures,
       object = object,
-
       !!!params
     )
   },
@@ -48,7 +47,6 @@ sc_processing_strategies <- list(
     rlang::exec(
       Seurat::ScaleData,
       object = object,
-
       !!!params
     )
   },
@@ -109,12 +107,18 @@ sc_processing_strategies <- list(
 #' @keywords internal
 #' @family single_cell_preprocess
 has_pattern <- function(qc_list) {
+  if (!is.list(qc_list)) {
+    return(FALSE)
+  }
   !is.null(qc_list) && !is.null(qc_list$pattern) && length(qc_list$pattern) > 0
 }
 
 #' @keywords internal
 #' @family single_cell_preprocess
 is_filtering <- function(filter_list) {
+  if (!is.list(filter_list)) {
+    return(FALSE)
+  }
   !is.null(filter_list)
 }
 

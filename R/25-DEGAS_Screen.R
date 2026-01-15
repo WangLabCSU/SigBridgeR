@@ -241,6 +241,14 @@ DoDEGAS <- function(
     sc_data
   }
   cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
+
+  if (length(cm_genes) == 0) {
+    cli::cli_abort(c(
+      "x" = "No common genes found between single cell data and bulk data",
+      ">" = "Please check the inputs"
+    ))
+  }
+
   t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
   t_matched_bulk <- Matrix::t(matched_bulk[cm_genes, ])
 

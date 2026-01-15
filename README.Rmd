@@ -31,7 +31,15 @@ Usually we recommend installing the latest release from GitHub because of the la
 
 ```{r,install_from_github,eval=FALSE}
 if (!requireNamespace("pak")) {
-  install.packages("pak")
+  install.packages(
+    "pak",
+    repos = sprintf(
+      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
+      .Platform$pkgType,
+      R.Version()$os,
+      R.Version()$arch
+    )
+  )
 }
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
