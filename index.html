@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Multi-algorithm Integration of Phenotypic, scRNA-seq, and Bulk Data for Cell Screening • SigBridgeR</title>
-<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -19,7 +19,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">SigBridgeR</a>
 
@@ -79,9 +79,17 @@
 <li>Install the development version from GitHub:</li>
 </ol>
 <!-- --><div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pak"</span>)) {</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"pak"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>}</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"WangLabCSU/SigBridgeR"</span>)</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">install.packages</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>    <span class="st">"pak"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="at">repos =</span> <span class="fu">sprintf</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>      <span class="st">"https://r-lib.github.io/p/pak/stable/%s/%s/%s"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>      .Platform<span class="sc">$</span>pkgType,</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>      <span class="fu">R.Version</span>()<span class="sc">$</span>os,</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>      <span class="fu">R.Version</span>()<span class="sc">$</span>arch</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    )</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  )</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>}</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"WangLabCSU/SigBridgeR"</span>)</span></code></pre></div>
 <ol style="list-style-type: decimal">
 <li>Install from r-universe:</li>
 </ol>
@@ -97,14 +105,17 @@
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="st">"tidyr"</span>,</span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="st">"matrixTests"</span>,</span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="st">"KernSmooth"</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="co"># parallel computation</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  <span class="st">"furrr"</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="st">"future"</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>))</span></code></pre></div>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="st">"cheapr"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  <span class="co"># better gene symbol conversion</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="st">"scCustomize"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>  <span class="co"># parallel computation</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>  <span class="st">"furrr"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>  <span class="st">"future"</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>))</span></code></pre></div>
 <p>For seamless integration with other file types such as <code>.h5ad</code></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"anndata"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># or</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"anndataR"</span>) <span class="co"># both are supported</span></span></code></pre></div>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"anndataR"</span>) <span class="co"># both are supported, but anndataR is recommended</span></span></code></pre></div>
 <p>For visualization:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="fu">c</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="st">"ggplot2"</span>,</span>

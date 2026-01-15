@@ -33,7 +33,7 @@ c(mat_exam, bulk_bi, pheno_bi) %<-% LoadRefData(data_type = "binary")
 `mat_exam` is a single-cell RNA expression matrix, `bulk_bi` is a bulk
 tissue RNA expression matrix, and `pheno_bi` is the phenotypic data
 associated with `bulk_bi`. When using a binary or continuous phenotype,
-the reference phenotype data is a named vector.
+the reference phenotype data is a **named vector**.
 
 ``` r
 head(pheno_bi)
@@ -41,8 +41,8 @@ head(pheno_bi)
 #               1               1               1               1               1               1
 ```
 
-By the way, when usinng a survival phenotype, the reference data is a
-data.frame.
+By the way, when using patients’ survival data as phenotype, the
+reference data is a **data.frame**.
 
 ``` r
 pheno_sur <- LoadRefData(data_type = "survival")[[3]]
@@ -57,7 +57,7 @@ head(pheno_sur)
 ```
 
 The single-cell RNA expression matrix needs to be processed into a
-Seurat object. We set scale_features to all genes in order to maximize
+Seurat object. We set `scale.features` to all genes in order to maximize
 the flexibility of downstream analyses and capture a broader range of
 biological signals, so as to avoid insignificant results caused by too
 small a dataset.
@@ -65,9 +65,11 @@ small a dataset.
 ``` r
 seurat_obj <- SCPreProcess(
   mat_exam,
-  quality_control.pattern = "^MT-",
-  scale_features = rownames(mat_exam),
-  dims = 1:20
+  params = list(
+    s = list(
+      scale.feature = rownames(mat_exam)
+    )
+  )
 )
 ```
 
@@ -112,7 +114,7 @@ Finally, we visualize the screening results.
 - stacked bar plot:
 
 ``` r
-fraction = ScreenFractionPlot(
+fraction <- ScreenFractionPlot(
   merged_seurat,
   group_by = "seurat_clusters",
   screen_type = c("scissor", "scPAS")
@@ -141,7 +143,7 @@ c(scissor_pos, scpas_pos) %<-%
 
 all_cells <- colnames(seurat_obj)
 
-pos_venn = list(
+pos_venn <- list(
   scissor = scissor_pos,
   scpas = scpas_pos,
   all_cells = all_cells
@@ -149,7 +151,7 @@ pos_venn = list(
 
 set.seed(123)
 
-venn_plot = ggVennDiagram::ggVennDiagram(
+venn_plot <- ggVennDiagram::ggVennDiagram(
   x = pos_venn,
   # * the labels of each group to be shown on the diagram
   category.names = c(
@@ -233,7 +235,7 @@ cluster_umap <- Seurat::DimPlot(
 
 
 # * Show
-umaps = cluster_umap +
+umaps <- cluster_umap +
   scissor_umap +
   scpas_umap +
   plot_layout(ncol = 2)
@@ -247,7 +249,14 @@ knitr::include_graphics("vignettes/example_figures/umaps_q.png")
 
 [![umaps_q](example_figures/umaps_q.png "umaps_q")](https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps_q.png)
 
+For more detail, please see [Full
+Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html).
+
 Session information:
+
+``` r
+sessionInfo()
+```
 
     ## R version 4.5.2 (2025-10-31)
     ## Platform: x86_64-pc-linux-gnu

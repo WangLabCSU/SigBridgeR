@@ -1435,16 +1435,25 @@ library(zeallot)
 c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "survival")
 
 dim(mat_exam)
- #[1] 33694  1093
+#[1] 33694  1093
+mat_exam[1:6, 1:2]
+#          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT
+# A1BG                            0                        0
+# A1BG.AS1                        0                        0
+# A1CF                            0                        2
+# A2M                             0                        0
+# A2M.AS1                         0                        0
+# A2ML1                           0                        0
+
 dim(bulk) 
 # [1] 4071  506
-bulk[1:6,1:6]
+bulk[1:6,1:6] # already log2 transformed
 #         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
 # HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
 # RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
 # HMGCLL1       2.7476       5.8513       3.8334       3.6447       2.9188       4.8820
-# LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882 # nolint
-# GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311 # nolint: line_length_linter.
+# LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882 
+# GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311 
 # LRRTM3        1.7458       2.0092       0.0000       1.4468       0.0000       0.0000
 nrow(pheno)
 # [1] 506
@@ -1459,7 +1468,7 @@ head(pheno)
 ```
 
 This single-cell RNA data is from humans. We set many parameters to
-`FALSE` or `0` in order to maximize the flexibility of downstream
+`NULL` or `0` in order to maximize the flexibility of downstream
 analyses and capture a broader range of biological signals, so as to
 avoid insignificant results caused by too small a dataset.
 
@@ -1476,14 +1485,14 @@ seurat <- SCPreProcess(
   params = list(
     o = list(
       min.cells = 0,
-      min.features = 0,
+      min.features = 0
     ),
     s = list(
-      scale.features = rownames(mat_exam),
+      features = rownames(mat_exam)
     )  
   ),
-  quality_control = FALSE,
-  data_filter = FALSE
+  quality_control = list(),
+  data_filter = list()
 )
 ```
 

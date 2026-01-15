@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Quick Start Guide for SigBridgeR • SigBridgeR</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -17,7 +17,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
@@ -65,7 +65,7 @@
 
       <h1>Quick Start Guide for SigBridgeR</h1>
             
-            <h4 data-toc-skip class="date">2026-01-14</h4>
+            <h4 data-toc-skip class="date">2026-01-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Quick_Start.Rmd" class="external-link"><code>vignettes/Quick_Start.Rmd</code></a></small>
       <div class="d-none name"><code>Quick_Start.Rmd</code></div>
@@ -101,13 +101,13 @@
 <code>bulk_bi</code> is a bulk tissue RNA expression matrix, and
 <code>pheno_bi</code> is the phenotypic data associated with
 <code>bulk_bi</code>. When using a binary or continuous phenotype, the
-reference phenotype data is a named vector.</p>
+reference phenotype data is a <strong>named vector</strong>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pheno_bi</span><span class="op">)</span></span>
 <span><span class="co"># TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01</span></span>
 <span><span class="co">#               1               1               1               1               1               1</span></span></code></pre></div>
-<p>By the way, when usinng a survival phenotype, the reference data is a
-data.frame.</p>
+<p>By the way, when using patients’ survival data as phenotype, the
+reference data is a <strong>data.frame</strong>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno_sur</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span>data_type <span class="op">=</span> <span class="st">"survival"</span><span class="op">)</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pheno_sur</span><span class="op">)</span></span>
@@ -119,16 +119,18 @@ data.frame.</p>
 <span><span class="co"># TCGA-44-6775 23.16      0</span></span>
 <span><span class="co"># TCGA-44-2655 43.50      0</span></span></code></pre></div>
 <p>The single-cell RNA expression matrix needs to be processed into a
-Seurat object. We set scale_features to all genes in order to maximize
-the flexibility of downstream analyses and capture a broader range of
-biological signals, so as to avoid insignificant results caused by too
-small a dataset.</p>
+Seurat object. We set <code>scale.features</code> to all genes in order
+to maximize the flexibility of downstream analyses and capture a broader
+range of biological signals, so as to avoid insignificant results caused
+by too small a dataset.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCPreProcess.html">SCPreProcess</a></span><span class="op">(</span></span>
 <span>  <span class="va">mat_exam</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="st">"^MT-"</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat_exam</span><span class="op">)</span>,</span>
-<span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">20</span></span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    s <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      scale.feature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat_exam</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Then we can use these data to screen out phenotype-assoicated cells.
 Let’s start by trying <strong>Scissor</strong>.</p>
@@ -162,7 +164,7 @@ Let’s start by trying <strong>Scissor</strong>.</p>
 <li>stacked bar plot:</li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fraction</span> <span class="op">=</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">fraction</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
 <span>  <span class="va">merged_seurat</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span>
 <span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span><span class="op">)</span></span>
@@ -187,7 +189,7 @@ Let’s start by trying <strong>Scissor</strong>.</p>
 <span></span>
 <span><span class="va">all_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">seurat_obj</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pos_venn</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span><span class="va">pos_venn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  scissor <span class="op">=</span> <span class="va">scissor_pos</span>,</span>
 <span>  scpas <span class="op">=</span> <span class="va">scpas_pos</span>,</span>
 <span>  all_cells <span class="op">=</span> <span class="va">all_cells</span></span>
@@ -195,7 +197,7 @@ Let’s start by trying <strong>Scissor</strong>.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">venn_plot</span> <span class="op">=</span> <span class="fu">ggVennDiagram</span><span class="fu">::</span><span class="fu"><a href="https://gaospecial.github.io/ggVennDiagram/reference/ggVennDiagram.html" class="external-link">ggVennDiagram</a></span><span class="op">(</span></span>
+<span><span class="va">venn_plot</span> <span class="op">&lt;-</span> <span class="fu">ggVennDiagram</span><span class="fu">::</span><span class="fu"><a href="https://gaospecial.github.io/ggVennDiagram/reference/ggVennDiagram.html" class="external-link">ggVennDiagram</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">pos_venn</span>,</span>
 <span>  <span class="co"># * the labels of each group to be shown on the diagram</span></span>
 <span>  category.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -271,7 +273,7 @@ Let’s start by trying <strong>Scissor</strong>.</p>
 <span></span>
 <span></span>
 <span><span class="co"># * Show</span></span>
-<span><span class="va">umaps</span> <span class="op">=</span> <span class="va">cluster_umap</span> <span class="op">+</span></span>
+<span><span class="va">umaps</span> <span class="op">&lt;-</span> <span class="va">cluster_umap</span> <span class="op">+</span></span>
 <span>  <span class="va">scissor_umap</span> <span class="op">+</span></span>
 <span>  <span class="va">scpas_umap</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -280,7 +282,11 @@ Let’s start by trying <strong>Scissor</strong>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/umaps_q.png"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps_q.png" class="external-link"><img src="example_figures/umaps_q.png" title="umaps_q" fig-alt="umaps_q" fig-align="center" width="600" alt="umaps_q"></a></p>
+<p>For more detail, please see <a href="https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html" class="external-link">Full
+Tutorial</a>.</p>
 <p>Session information:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">## Running under: Ubuntu 24.04.3 LTS</span></span>

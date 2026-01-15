@@ -41,7 +41,7 @@ BulkPreProcess(
 - gene_symbol_conversion:
 
   Whether to convert Ensembles version IDs and TCGA version IDs to genes
-  with IDConverter, default: FALSE
+  with IDConverter, default: `FALSE`
 
 - check:
 
@@ -85,6 +85,9 @@ BulkPreProcess(
     Defaults to `TRUE`.
 
   - `seed`: For reproducibility, default is `123L`
+
+  - `method`: Method for duplicates aggregation, see
+    [AggregateDups](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
 
 ## Value
 

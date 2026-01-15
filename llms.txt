@@ -29,7 +29,15 @@ of the latest features and bug fixes.
 
 ``` R
 if (!requireNamespace("pak")) {
-  install.packages("pak")
+  install.packages(
+    "pak",
+    repos = sprintf(
+      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
+      .Platform$pkgType,
+      R.Version()$os,
+      R.Version()$arch
+    )
+  )
 }
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
@@ -54,6 +62,9 @@ pak::pkg_install(c(
   "tidyr",
   "matrixTests",
   "KernSmooth",
+  "cheapr",
+  # better gene symbol conversion
+  "scCustomize",
   # parallel computation
   "furrr",
   "future"
@@ -65,7 +76,7 @@ For seamless integration with other file types such as `.h5ad`
 ``` R
 pak::pkg_install("anndata")
 # or
-pak::pkg_install("anndataR") # both are supported
+pak::pkg_install("anndataR") # both are supported, but anndataR is recommended
 ```
 
 For visualization:
