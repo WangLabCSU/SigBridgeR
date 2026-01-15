@@ -25,14 +25,14 @@ We will start with a simple example.
 `mat_exam` is a single-cell RNA expression matrix, `bulk_bi` is a bulk
 tissue RNA expression matrix, and `pheno_bi` is the phenotypic data
 associated with `bulk_bi`. When using a binary or continuous phenotype,
-the reference phenotype data is a named vector.
+the reference phenotype data is a **named vector**.
 
     head(pheno_bi)
     # TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01
     #               1               1               1               1               1               1
 
-By the way, when usinng a survival phenotype, the reference data is a
-data.frame.
+By the way, when using patients’ survival data as phenotype, the
+reference data is a **data.frame**.
 
     pheno_sur <- LoadRefData(data_type = "survival")[[3]]
     head(pheno_sur)
@@ -45,16 +45,18 @@ data.frame.
     # TCGA-44-2655 43.50      0
 
 The single-cell RNA expression matrix needs to be processed into a
-Seurat object. We set scale\_features to all genes in order to maximize
+Seurat object. We set `scale.features` to all genes in order to maximize
 the flexibility of downstream analyses and capture a broader range of
 biological signals, so as to avoid insignificant results caused by too
 small a dataset.
 
     seurat_obj <- SCPreProcess(
       mat_exam,
-      quality_control.pattern = "^MT-",
-      scale_features = rownames(mat_exam),
-      dims = 1:20
+      params = list(
+        s = list(
+          scale.feature = rownames(mat_exam)
+        )
+      )
     )
 
 Then we can use these data to screen out phenotype-assoicated cells.
@@ -93,7 +95,7 @@ Finally, we visualize the screening results.
 
 <!-- -->
 
-    fraction = ScreenFractionPlot(
+    fraction <- ScreenFractionPlot(
       merged_seurat,
       group_by = "seurat_clusters",
       screen_type = c("scissor", "scPAS")
@@ -121,7 +123,7 @@ width="600" alt="fraction_q" />](https://github.com/WangLabCSU/SigBridgeR/blob/m
 
     all_cells <- colnames(seurat_obj)
 
-    pos_venn = list(
+    pos_venn <- list(
       scissor = scissor_pos,
       scpas = scpas_pos,
       all_cells = all_cells
@@ -129,7 +131,7 @@ width="600" alt="fraction_q" />](https://github.com/WangLabCSU/SigBridgeR/blob/m
 
     set.seed(123)
 
-    venn_plot = ggVennDiagram::ggVennDiagram(
+    venn_plot <- ggVennDiagram::ggVennDiagram(
       x = pos_venn,
       # * the labels of each group to be shown on the diagram
       category.names = c(
@@ -211,7 +213,7 @@ width="400" alt="upset_q" />]((https://github.com/WangLabCSU/SigBridgeR/blob/mai
 
 
     # * Show
-    umaps = cluster_umap +
+    umaps <- cluster_umap +
       scissor_umap +
       scpas_umap +
       plot_layout(ncol = 2)
@@ -224,4 +226,9 @@ width="400" alt="upset_q" />]((https://github.com/WangLabCSU/SigBridgeR/blob/mai
 data-fig-alt="umaps_q" data-fig-align="center" width="600"
 alt="umaps_q" />](https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps_q.png)
 
+For more detail, please see [Full
+Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html).
+
 Session information:
+
+    sessionInfo()
