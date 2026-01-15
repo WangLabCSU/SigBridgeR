@@ -138,7 +138,6 @@ DoPIPET <- function(
     sc_data = sc_data,
     markers = markers,
     group = group,
-    rm_NA = rm_NA,
     freq_counts = freq_counts,
     normalize = normalize,
     scale = scale,
