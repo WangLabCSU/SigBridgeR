@@ -17,13 +17,14 @@
 #'        - `"binary"`: Binary traits (e.g., case/control)
 #'        - `"continuous"`: Continuous measurements
 #'        - `"survival"`: Survival infomation
-#' @param screen_method Screening algorithm to use, there are six options:
+#' @param screen_method Screening algorithm to use, there are seven options:
 #' - "Scissor": see also DoScissor()
 #' - "scPP": see also DoscPP()
 #' - "scPAS": see also DoscPAS()
 #' - "scAB": see also DoscAB(), continuous phenotype is not supported
 #' - "DEGAS": see also DoDEGAS()
 #' - "LP_SGL": see also DoLP_SGL()
+#' - "PIPET": see also DoPIPET(), using survival as phenotype is not supported
 #' @param ... Additional method-specific parameters:
 #' \describe{
 #' \item{Scissor}{\describe{

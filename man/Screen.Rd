@@ -31,7 +31,7 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 - \code{"continuous"}: Continuous measurements
 - \code{"survival"}: Survival infomation}
 
-\item{screen_method}{Screening algorithm to use, there are six options:
+\item{screen_method}{Screening algorithm to use, there are seven options:
 \itemize{
 \item "Scissor": see also DoScissor()
 \item "scPP": see also DoscPP()
@@ -39,6 +39,7 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item "scAB": see also DoscAB(), continuous phenotype is not supported
 \item "DEGAS": see also DoDEGAS()
 \item "LP_SGL": see also DoLP_SGL()
+\item "PIPET": see also DoPIPET(), using survival as phenotype is not supported
 }}
 
 \item{...}{Additional method-specific parameters:
