@@ -37,12 +37,16 @@
   : Filter Seurat object cells by QC metrics
 - [`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md)
   : Calculate Percentage of Features Matching Patterns
+- [`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
+  : Register a Custom Screening Method for Phenotype-Driven Analysis
 - [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
   : Single-Cell RNA-seq Preprocessing Pipeline
 - [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
   : Single-Cell Data Screening
 - [`ScreenFractionPlot()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenFractionPlot.md)
   : Visualization of Cell Screening Fractions
+- [`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md)
+  : Registry of Phenotype-Associated Cell Screening Methods
 - [`ScreenUpset()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenUpset.md)
   : ScreenUpset - Visualize cell type intersections from screened Seurat
   object
@@ -51,6 +55,8 @@
 - [`SymbolConvert()`](https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.md)
   : Convert Ensembles Version IDs & TCGA Version IDs to Genes in Bulk
   Expression Data
+- [`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md)
+  : Validate Custom Screening Function Compliance
 - [`AggregateDupRows()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
   [`AggregateDupCols()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
   [`AggregateDups()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)

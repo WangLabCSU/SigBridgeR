@@ -9,7 +9,7 @@ It includes data filtering steps and wraps the core scPAS::scPAS function."></he
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,12 +21,9 @@ It includes data filtering steps and wraps the core scPAS::scPAS function."></he
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
-    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
-    <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>Advanced Usage</h6></li>
     <li><a class="dropdown-item" href="../articles/Optimal_Params.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><a class="dropdown-item" href="../articles/Extending.html"><span class="fa fa-code-branch"></span> Extend SigBridgeR</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
     <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
@@ -65,7 +62,7 @@ It includes data filtering steps and wraps the core scPAS::scPAS function.</p>
 <span>  alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="cn">NULL</span><span class="op">)</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>  network_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SC"</span>, <span class="st">"bulk"</span><span class="op">)</span>,</span>
-<span>  scPAS_family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cox"</span>, <span class="st">"gaussian"</span>, <span class="st">"binomial"</span><span class="op">)</span>,</span>
+<span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cox"</span>, <span class="st">"gaussian"</span>, <span class="st">"binomial"</span><span class="op">)</span>,</span>
 <span>  permutation_times <span class="op">=</span> <span class="fl">2000L</span>,</span>
 <span>  FDR_threshold <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  independent <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -121,7 +118,7 @@ It includes data filtering steps and wraps the core scPAS::scPAS function.</p>
 <dd><p>Network class to use (default: 'SC', indicating gene-gene similarity networks derived from single-cell data. The other one is 'bulk'.)</p></dd>
 
 
-<dt id="arg-scpas-family">scPAS_family<a class="anchor" aria-label="anchor" href="#arg-scpas-family"></a></dt>
+<dt id="arg-family">family<a class="anchor" aria-label="anchor" href="#arg-family"></a></dt>
 <dd><p>Model family for analysis (options: "cox", "gaussian", "binomial")</p></dd>
 
 

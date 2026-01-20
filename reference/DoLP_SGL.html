@@ -13,7 +13,7 @@ associated with phenotypic outcomes."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,12 +25,9 @@ associated with phenotypic outcomes."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
-    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
-    <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>Advanced Usage</h6></li>
     <li><a class="dropdown-item" href="../articles/Optimal_Params.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><a class="dropdown-item" href="../articles/Extending.html"><span class="fa fa-code-branch"></span> Extend SigBridgeR</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
     <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
@@ -64,7 +61,7 @@ associated with phenotypic outcomes.</p>
 <span>  <span class="va">sc_data</span>,</span>
 <span>  <span class="va">phenotype</span>,</span>
 <span>  label_type <span class="op">=</span> <span class="st">"LP_SGL"</span>,</span>
-<span>  LPSGL_family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"logit"</span>, <span class="st">"cox"</span>, <span class="st">"linear"</span><span class="op">)</span>,</span>
+<span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"logit"</span>, <span class="st">"cox"</span>, <span class="st">"linear"</span><span class="op">)</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  nfold <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -93,7 +90,7 @@ associated with phenotypic outcomes.</p>
 <dd><p>Character specifying phenotype label type (default: "LP_SGL")</p></dd>
 
 
-<dt id="arg-lpsgl-family">LPSGL_family<a class="anchor" aria-label="anchor" href="#arg-lpsgl-family"></a></dt>
+<dt id="arg-family">family<a class="anchor" aria-label="anchor" href="#arg-family"></a></dt>
 <dd><p>Type of regression model: "<code>logit</code>" (logistic), "<code>cox</code>" (Cox),
 or "<code>linear</code>" (linear regression)</p></dd>
 
@@ -170,7 +167,7 @@ or "<code>linear</code>" (linear regression)</p></dd>
 <span class="r-in"><span>matched_bulk <span class="op">=</span> <span class="va">bulk_data</span>,</span></span>
 <span class="r-in"><span>sc_data <span class="op">=</span> <span class="va">sc_data</span>,</span></span>
 <span class="r-in"><span>phenotype <span class="op">=</span> <span class="va">phenotype</span>,</span></span>
-<span class="r-in"><span>LPSGL_family <span class="op">=</span> <span class="st">"logit"</span>,</span></span>
+<span class="r-in"><span>family <span class="op">=</span> <span class="st">"logit"</span>,</span></span>
 <span class="r-in"><span>resolution <span class="op">=</span> <span class="fl">0.6</span>,</span></span>
 <span class="r-in"><span>dge_analysis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>run <span class="op">=</span> <span class="cn">TRUE</span>, logFC_threshold <span class="op">=</span> <span class="fl">1</span>, pval_threshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

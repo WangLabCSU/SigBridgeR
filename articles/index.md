@@ -2,6 +2,8 @@
 
 ### All vignettes
 
+- [Extending SigBridgeR: A Guide for Custom
+  Extensions](https://wanglabcsu.github.io/sigbridger/articles/Extending.md):
 - [Full
   Tutorial](https://wanglabcsu.github.io/sigbridger/articles/Full_Tutorial.md):
 - [Find Optimal Parameters for My

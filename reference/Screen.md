@@ -49,7 +49,7 @@ Screen(
 
 - screen_method:
 
-  Screening algorithm to use, there are six options:
+  Screening algorithm to use, there are seven options:
 
   - "Scissor": see also DoScissor()
 
@@ -62,6 +62,9 @@ Screen(
   - "DEGAS": see also DoDEGAS()
 
   - "LP_SGL": see also DoLP_SGL()
+
+  - "PIPET": see also DoPIPET(), using survival as phenotype is not
+    supported
 
 - ...:
 

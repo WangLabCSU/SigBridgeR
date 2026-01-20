@@ -13,7 +13,7 @@ associated with phenotypic outcomes."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,12 +25,9 @@ associated with phenotypic outcomes."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-book-open"></span> Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>How to use SigBridgeR</h6></li>
-    <li><a class="dropdown-item" href="../articles/Quick_Start.html"><span class="fa fa-rocket"></span> Get Started</a></li>
-    <li><a class="dropdown-item" href="../articles/Full_Tutorial.html"><span class="fa fa-book"></span> Full Tutorial</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>Advanced Usage</h6></li>
     <li><a class="dropdown-item" href="../articles/Optimal_Params.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
+    <li><a class="dropdown-item" href="../articles/Extending.html"><span class="fa fa-code-branch"></span> Extend SigBridgeR</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
     <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
@@ -68,7 +65,7 @@ associated with phenotypic outcomes.</p>
 <span>   label_type <span class="op">=</span> <span class="st">"scissor"</span>,</span>
 <span>   alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="cn">NULL</span><span class="op">)</span>,</span>
 <span>   cutoff <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>   scissor_family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gaussian"</span>, <span class="st">"binomial"</span>, <span class="st">"cox"</span><span class="op">)</span>,</span>
+<span>   family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gaussian"</span>, <span class="st">"binomial"</span>, <span class="st">"cox"</span><span class="op">)</span>,</span>
 <span>   reliability_test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>     run <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># whether to run reliability test</span></span>
 <span>     n <span class="op">=</span> <span class="fl">10L</span>, <span class="co"># permutation times</span></span>
@@ -125,7 +122,7 @@ Column names must match <code>phenotype</code> identifiers.</p></dd>
 Higher values increase specificity.</p></dd>
 
 
-<dt id="arg-scissor-family">scissor_family<a class="anchor" aria-label="anchor" href="#arg-scissor-family"></a></dt>
+<dt id="arg-family">family<a class="anchor" aria-label="anchor" href="#arg-family"></a></dt>
 <dd><p>Model family for outcome type:
 - "gaussian": Continuous outcomes
 - "binomial": Binary outcomes (default)
@@ -226,7 +223,7 @@ A copy of the license is available at <a href="https://www.gnu.org/licenses/gpl-
 <span class="r-in"><span>  matched_bulk <span class="op">=</span> <span class="va">bulk_matrix</span>,</span></span>
 <span class="r-in"><span>  sc_data <span class="op">=</span> <span class="va">seurat_obj</span>,</span></span>
 <span class="r-in"><span>  phenotype <span class="op">=</span> <span class="va">a_named_vector</span>,</span></span>
-<span class="r-in"><span>  scissor_family <span class="op">=</span> <span class="st">"binomial"</span></span></span>
+<span class="r-in"><span>  family <span class="op">=</span> <span class="st">"binomial"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>

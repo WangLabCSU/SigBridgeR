@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://wanglabcsu.github.io/sigbridger/404.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/LICENSE.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/articles/Extending.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Full_Tutorial.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Optimal_Params.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Other_Function_Details.html</loc></url>
@@ -36,14 +37,17 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/QCFilter.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/Screen.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ScreenFractionPlot.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ScreenUpset.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SetupPyEnv.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-package.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/complete_counts.html</loc></url>
