@@ -48,7 +48,8 @@ Remotes:
     github::Exceret/scPAS,
     github::Exceret/ScPP,
     github::WangLabCSU/SigBridgeRUtils,
-    github::ShixiangWang/IDConverter
+    github::ShixiangWang/IDConverter,
+    github::yonicd/tidycheckUsage
 Suggests: 
     ALRA,
     anndata,
