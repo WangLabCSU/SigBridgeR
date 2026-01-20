@@ -8,7 +8,7 @@ DoPIPET(
   matched_bulk,
   sc_data,
   phenotype,
-  phenotype_class = c("binary", "continuous"),
+  phenotype_class = c("binary", "continuous", "survival"),
   group = NULL,
   discretize_method = c("kmeans", "median", "custom"),
   cutoff = NULL,
@@ -36,13 +36,14 @@ Column names must match \code{phenotype} identifiers.}
 
 \item{phenotype_class}{Analysis mode:
 - \code{"binary"}: Case-control design (e.g., responder/non-responder)
-- \code{"continuous"}: Continuous outcome (e.g.,)}
+- \code{"continuous"}: Continuous outcome (e.g., age, size)
+- \code{"survival"}: Patient survival}
 
 \item{group}{A character, name of one metadata column to group cells by (for example, orig.ident). The default value is \code{NULL}. In this case, screening will be performed on each group separately.}
 
 \item{discretize_method}{\code{c("median", "kmeans", "custom")}. Discretization
 strategy for continuous phenotypes. Note: \code{"median"} is mapped internally to
-\code{"quantile"} (2-group quantile split). Default: \code{"median"}.}
+\code{"quantile"} (2-group quantile split). Default: \code{"kmeans"}.}
 
 \item{cutoff}{Numeric vector of length \code{n_group - 1}. Required only when
 \code{discretize_method = "custom"}. Defines interior breakpoints on the

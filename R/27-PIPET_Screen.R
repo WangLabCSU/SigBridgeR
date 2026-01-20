@@ -14,11 +14,12 @@
 #'        - Data frame: with row names matching bulk columns
 #' @param phenotype_class Analysis mode:
 #'        - `"binary"`: Case-control design (e.g., responder/non-responder)
-#'        - `"continuous"`: Continuous outcome (e.g.,)
+#'        - `"continuous"`: Continuous outcome (e.g., age, size)
+#'        - `"survival"`: Patient survival
 #' @param group A character, name of one metadata column to group cells by (for example, orig.ident). The default value is `NULL`. In this case, screening will be performed on each group separately.
 #' @param discretize_method \code{c("median", "kmeans", "custom")}. Discretization
 #'   strategy for continuous phenotypes. Note: `"median"` is mapped internally to
-#'   `"quantile"` (2-group quantile split). Default: `"median"`.
+#'   `"quantile"` (2-group quantile split). Default: `"kmeans"`.
 #' @param cutoff Numeric vector of length `n_group - 1`. Required only when
 #'   \code{discretize_method = "custom"}. Defines interior breakpoints on the
 #'   *normalized, log2-transformed scale* (i.e., after `scale(log2(x + 1))`).
@@ -45,7 +46,7 @@ DoPIPET <- function(
   matched_bulk,
   sc_data,
   phenotype,
-  phenotype_class = c("binary", "continuous"),
+  phenotype_class = c("binary", "continuous", "survival"),
   group = NULL,
   discretize_method = c("kmeans", "median", "custom"),
   cutoff = NULL,
@@ -73,17 +74,17 @@ DoPIPET <- function(
   chk::chk_character(label_type)
   phenotype_class <- SigBridgeRUtils::MatchArg(
     phenotype_class,
-    c("binary", "continuous"),
+    c("binary", "continuous", "survival"),
     NULL
   )
-  purrr::walk(c(show_log2FC, rm_NA, normalize, scale), chk::chk_flag)
+  purrr::walk(c(show_log2FC, normalize, scale), chk::chk_flag)
   purrr::walk(
     c(group, distance),
     ~ {
       if (!is.null(.x)) chk::chk_character(.x)
     }
   )
-  chk::chk_integer(nPerm)
+  chk::chk_integer(c(nPerm, freq_counts))
   purrr::walk(c(log2FC, p_adjust), chk::chk_double)
 
   # * Default params

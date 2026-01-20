@@ -24,7 +24,7 @@ Imports:
     LPSGL (>= 0.0.0.9000),
     Matrix,
     methods,
-    PIPET (>= 0.1.2),
+    PIPET (>= 0.1.4),
     processx,
     purrr,
     rlang,
