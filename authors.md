@@ -12,12 +12,12 @@
 Source:
 [`DESCRIPTION`](https://github.com/WangLabCSU/SigBridgeR/blob/main/DESCRIPTION)
 
-Yang Y (2026). *SigBridgeR: Multi-algorithm Integration of Phenotypic,
-scRNA-seq, and Bulk Data for Cell Screening*. R package version 3.2.0,
-<https://github.com/WangLabCSU/SigBridgeR>.
+Yang Y (2026). *SigBridgeR: Integrative Toolkit for Linking Phenotypes
+to Cell Subpopulations via scRNA-seq and Bulk Data*. R package version
+3.2.0, <https://github.com/WangLabCSU/SigBridgeR>.
 
     @Manual{,
-      title = {SigBridgeR: Multi-algorithm Integration of Phenotypic, scRNA-seq, and Bulk Data for Cell Screening},
+      title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data},
       author = {Yuxi Yang},
       year = {2026},
       note = {R package version 3.2.0},

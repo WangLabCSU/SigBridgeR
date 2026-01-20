@@ -1,12 +1,13 @@
 # **SigBridgeR** [![sigbridger website](reference/figures/logo_white.png)](https://wanglabcsu.github.io/SigBridgeR/)
 
 [![Repo
-Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)[![License:
+Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![License:
 GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
 [![](https://img.shields.io/badge/devel%20version-3.2.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![SigBridgeR status
-badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)[![R
-CMD
+badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
+[![R CMD
 check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![registry status
 badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/)
@@ -27,7 +28,7 @@ of the latest features and bug fixes.
 
 1.  Install the development version from GitHub:
 
-``` R
+``` r
 if (!requireNamespace("pak")) {
   install.packages(
     "pak",
@@ -42,9 +43,9 @@ if (!requireNamespace("pak")) {
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
 
-1.  Install from r-universe:
+2.  Install from r-universe:
 
-``` R
+``` r
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
@@ -52,7 +53,7 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 
 For better performance:
 
-``` R
+``` r
 pak::pkg_install(c(
   # faster computation
   "sparseMatrixStats",
@@ -73,15 +74,15 @@ pak::pkg_install(c(
 
 For seamless integration with other file types such as `.h5ad`
 
-``` R
+``` r
 pak::pkg_install("anndata")
 # or
-pak::pkg_install("anndataR") # both are supported, but anndataR is recommended
+pak::pkg_install("anndataR") # both are supported
 ```
 
 For visualization:
 
-``` R
+``` r
 pak::pkg_install(c(
   "ggplot2",
   "randomcoloR", # or RColorBrewer
@@ -94,7 +95,7 @@ pak::pkg_install(c(
 
 To reproduce the tutorial to learn more usage
 
-``` R
+``` r
 pak::pkg_install(c(
   "zeallot",
   "here",
