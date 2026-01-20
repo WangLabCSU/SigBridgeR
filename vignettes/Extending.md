@@ -2,7 +2,13 @@
 
 It’s recommended to install these packages for checking the code
 
-    pak::pkg_install(c("tictoc", "tidycheckUsage", "codetools", "knitr", "lintr"))
+    pak::pkg_install(c(
+      "tictoc",
+      "yonicd/tidycheckUsage",
+      "codetools",
+      "knitr",
+      "lintr"
+    ))
 
 ## Prepare a custom function
 
