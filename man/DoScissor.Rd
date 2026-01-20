@@ -13,7 +13,7 @@ DoScissor(
    label_type = "scissor",
    alpha = c(0.05, NULL),
    cutoff = 0.2,
-   scissor_family = c("gaussian", "binomial", "cox"),
+   family = c("gaussian", "binomial", "cox"),
    reliability_test = list(
      run = FALSE, # whether to run reliability test
      n = 10L, # permutation times
@@ -50,7 +50,7 @@ Column names must match \code{phenotype} identifiers.}
 \item{cutoff}{(default: \code{0.2}). When \code{alpha=NULL}, the cutoff is used to determine the optimal alpha.
 Higher values increase specificity.}
 
-\item{scissor_family}{Model family for outcome type:
+\item{family}{Model family for outcome type:
 - "gaussian": Continuous outcomes
 - "binomial": Binary outcomes (default)
 - "cox": Survival outcomes}
@@ -120,7 +120,7 @@ res <- DoScissor(
   matched_bulk = bulk_matrix,
   sc_data = seurat_obj,
   phenotype = a_named_vector,
-  scissor_family = "binomial"
+  family = "binomial"
 )
 }
 

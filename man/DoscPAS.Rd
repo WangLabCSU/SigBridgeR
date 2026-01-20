@@ -16,7 +16,7 @@ DoscPAS(
   alpha = c(0.01, NULL),
   cutoff = 0.2,
   network_class = c("SC", "bulk"),
-  scPAS_family = c("cox", "gaussian", "binomial"),
+  family = c("cox", "gaussian", "binomial"),
   permutation_times = 2000L,
   FDR_threshold = 0.05,
   independent = TRUE,
@@ -46,7 +46,7 @@ DoscPAS(
 
 \item{network_class}{Network class to use (default: 'SC', indicating gene-gene similarity networks derived from single-cell data. The other one is 'bulk'.)}
 
-\item{scPAS_family}{Model family for analysis (options: "cox", "gaussian", "binomial")}
+\item{family}{Model family for analysis (options: "cox", "gaussian", "binomial")}
 
 \item{permutation_times}{Number of permutations to perform (default: 2000)}
 

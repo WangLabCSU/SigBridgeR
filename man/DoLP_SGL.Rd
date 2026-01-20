@@ -9,7 +9,7 @@ DoLP_SGL(
   sc_data,
   phenotype,
   label_type = "LP_SGL",
-  LPSGL_family = c("logit", "cox", "linear"),
+  family = c("logit", "cox", "linear"),
   resolution = 0.6,
   alpha = 0.5,
   nfold = 5,
@@ -26,7 +26,7 @@ DoLP_SGL(
 
 \item{label_type}{Character specifying phenotype label type (default: "LP_SGL")}
 
-\item{LPSGL_family}{Type of regression model: "\code{logit}" (logistic), "\code{cox}" (Cox),
+\item{family}{Type of regression model: "\code{logit}" (logistic), "\code{cox}" (Cox),
 or "\code{linear}" (linear regression)}
 
 \item{resolution}{Resolution parameter for Leiden clustering (default: \code{0.6})}
@@ -76,7 +76,7 @@ results <- DoLP_SGL(
 matched_bulk = bulk_data,
 sc_data = sc_data,
 phenotype = phenotype,
-LPSGL_family = "logit",
+family = "logit",
 resolution = 0.6,
 dge_analysis = list(run = TRUE, logFC_threshold = 1, pval_threshold = 0.05)
 )

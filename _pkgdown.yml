@@ -56,22 +56,25 @@ navbar:
             text: Functions
             icon: fa-code
             href: reference/index.html
+        get_started:
+            text: Get Started
+            icon: fa-rocket
+            href: articles/Quick_Start.html
+        tutorial:
+            text: Full Tutorial
+            icon: fa-book
+            href: articles/Full_Tutorial.html
         articles:
             text: Articles
             icon: fa-book-open
             menu:
-                - text: How to use SigBridgeR
-                - text: Get Started
-                  icon: fa-rocket
-                  href: articles/Quick_Start.html
-                - text: Full Tutorial
-                  icon: fa-book
-                  href: articles/Full_Tutorial.html
-                - text: -------
-                - text: Advanced
+                - text: Advanced Usage
                 - text: Find the optimal parameters
                   icon: fa-cogs
                   href: articles/Optimal_Params.html
+                - text: Extend SigBridgeR
+                  icon: fa-code-branch
+                  href: articles/Extending.html
                 - text: -------
                 - text: Other
                 - text: Other functions

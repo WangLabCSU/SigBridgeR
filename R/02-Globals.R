@@ -1,11 +1,8 @@
-# ? Global variables
+# ? General global variables
 
 #' @importFrom data.table `:=` `%chin%`
 #' @importFrom dplyr %>%
 NULL
 
-# These symbols are used inside the package
-utils::globalVariables(c(
-    # environment variables
-    "ts_cli"
-))
+#' @keywords internal
+ts_cli <- SigBridgeRUtils::CreateTimeStampCliEnv()

@@ -17,7 +17,7 @@
 #'    label_type = "scissor",
 #'    alpha = c(0.05, NULL),
 #'    cutoff = 0.2,
-#'    scissor_family = c("gaussian", "binomial", "cox"),
+#'    family = c("gaussian", "binomial", "cox"),
 #'    reliability_test = list(
 #'      run = FALSE, # whether to run reliability test
 #'      n = 10L, # permutation times
@@ -45,7 +45,7 @@
 #' @param alpha Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If alpha = NULL, a default searching vector is used. The range of alpha is between 0 and 1. A larger alpha lays more emphasis on the l1 norm.
 #' @param cutoff  (default: `0.2`). When `alpha=NULL`, the cutoff is used to determine the optimal alpha.
 #'        Higher values increase specificity.
-#' @param scissor_family Model family for outcome type:
+#' @param family Model family for outcome type:
 #'        - "gaussian": Continuous outcomes
 #'        - "binomial": Binary outcomes (default)
 #'        - "cox": Survival outcomes
@@ -100,7 +100,7 @@
 #'   matched_bulk = bulk_matrix,
 #'   sc_data = seurat_obj,
 #'   phenotype = a_named_vector,
-#'   scissor_family = "binomial"
+#'   family = "binomial"
 #' )
 #' }
 #'
@@ -117,7 +117,7 @@ DoScissor <- function(
   label_type = "scissor",
   alpha = c(0.05, NULL),
   cutoff = 0.2,
-  scissor_family = c("gaussian", "binomial", "cox"),
+  family = c("gaussian", "binomial", "cox"),
   reliability_test = list(
     run = FALSE,
     n = 10L,
@@ -136,8 +136,8 @@ DoScissor <- function(
   chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
   chk::chk_range(cutoff)
-  scissor_family <- SigBridgeRUtils::MatchArg(
-    scissor_family,
+  family <- SigBridgeRUtils::MatchArg(
+    family,
     c("gaussian", "binomial", "cox"),
     NULL
   )
@@ -170,12 +170,12 @@ DoScissor <- function(
     cell_evaluation
   )
 
-  if (scissor_family %chin% c("binomial", "cox")) {
+  if (family %chin% c("binomial", "cox")) {
     label_type_scissor <- c(
       glue::glue("{label_type}_Negative"),
       glue::glue("{label_type}_Positive")
     )
-  } else if (scissor_family == "gaussian") {
+  } else if (family == "gaussian") {
     n <- length(table(phenotype))
     label_type_scissor <- glue::glue("{label_type}_{seq_len(n)}")
   }
@@ -194,7 +194,7 @@ DoScissor <- function(
     tag = label_type_scissor,
     alpha = alpha,
     cutoff = cutoff,
-    family = scissor_family,
+    family = family,
     Save_file = path2save_scissor_inputs,
     Load_file = path2load_scissor_cache,
     verbose = verbose,
@@ -220,7 +220,7 @@ DoScissor <- function(
     DoScissorRelTest(
       scissor_res = infos1,
       alpha = alpha,
-      family = scissor_family,
+      family = family,
       cell_num = length(infos1$Scissor_pos) +
         length(infos1$Scissor_neg),
       n = reliability_test$n,

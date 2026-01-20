@@ -152,8 +152,8 @@ DoscPP <- function(
   }
 
   gene_list <- switch(
-    phenotype_class,
-    "Binary" = {
+    tolwer(phenotype_class),
+    "binary" = {
       if (estimate_cutoff != 0.2) {
         cli::cli_warn(
           "The parameters {.arg estimate_cutoff} are not used for survival analysis. Ignore it"
@@ -166,7 +166,7 @@ DoscPP <- function(
         Log2FC_cutoff = Log2FC_cutoff
       )
     },
-    "Continuous" = {
+    "continuous" = {
       if (Log2FC_cutoff != 0.585) {
         cli::cli_warn(
           "The parameters {.arg Log2FC_cutoff} are not used for survival analysis. Ignore it"
@@ -179,7 +179,7 @@ DoscPP <- function(
         estimate_cutoff = estimate_cutoff
       )
     },
-    "Survival" = {
+    "survival" = {
       if (estimate_cutoff != 0.2) {
         cli::cli_warn(
           "The parameters {.arg estimate_cutoff} are not used for survival analysis. Ignore it"

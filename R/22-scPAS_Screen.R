@@ -16,7 +16,7 @@
 #' @param alpha Numeric. Significance threshold. Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If alpha = NULL, a default searching vector is used. The range of alpha is in `[0,1]`. A larger alpha lays more emphasis on the l1 norm. (default: 0.01)
 #' @param cutoff Numeric. Cutoff value for selecting the optimal alpha value when alpha = NULL. (default: 0.2)
 #' @param network_class Network class to use (default: 'SC', indicating gene-gene similarity networks derived from single-cell data. The other one is 'bulk'.)
-#' @param scPAS_family Model family for analysis (options: "cox", "gaussian", "binomial")
+#' @param family Model family for analysis (options: "cox", "gaussian", "binomial")
 #' @param permutation_times Number of permutations to perform (default: 2000)
 #' @param FDR_threshold Numeric. FDR value threshold for identifying phenotype-associated cells (default: 0.05)
 #' @param independent Logical. The background distribution of risk scores is constructed independently of each cell. (default: TRUE)
@@ -50,7 +50,7 @@ DoscPAS <- function(
   alpha = c(0.01, NULL),
   cutoff = 0.2,
   network_class = c("SC", "bulk"),
-  scPAS_family = c("cox", "gaussian", "binomial"),
+  family = c("cox", "gaussian", "binomial"),
   permutation_times = 2000L,
   FDR_threshold = 0.05,
   independent = TRUE,
@@ -75,9 +75,9 @@ DoscPAS <- function(
   }
   # default network_class is SC
   network_class <- SigBridgeRUtils::MatchArg(network_class, c("SC", "bulk"))
-  # No default for scPAS_family
-  scPAS_family <- SigBridgeRUtils::MatchArg(
-    scPAS_family,
+  # No default for family
+  family <- SigBridgeRUtils::MatchArg(
+    family,
     c("cox", "gaussian", "binomial"),
     NULL
   )
@@ -86,7 +86,7 @@ DoscPAS <- function(
     ~ chk::chk_number
   )
 
-  if (scPAS_family == "cox") {
+  if (family == "cox") {
     if (is.null(intersect(colnames(matched_bulk), rownames(phenotype)))) {
       cli::cli_abort(c(
         "x" = "No intersection between the rownames of {.var phenotype} and colnames of {.var matched_bulk}."
@@ -128,7 +128,7 @@ DoscPAS <- function(
     alpha = alpha,
     cutoff = cutoff,
     network_class = network_class,
-    family = scPAS_family,
+    family = family,
     independent = independent,
     permutation_times = permutation_times,
     FDR.threshold = FDR_threshold,

@@ -9,7 +9,7 @@
 #' @param sc_data Single-cell RNA-seq data (Seurat object)
 #' @param phenotype Binary phenotype vector for bulk samples
 #' @param label_type Character specifying phenotype label type (default: "LP_SGL")
-#' @param LPSGL_family Type of regression model: "`logit`" (logistic), "`cox`" (Cox),
+#' @param family Type of regression model: "`logit`" (logistic), "`cox`" (Cox),
 #' or "`linear`" (linear regression)
 #' @param resolution Resolution parameter for Leiden clustering (default: `0.6`)
 #' @param alpha Alpha parameter for SGL balancing L1 and L2 penalties (default: `0.5`)
@@ -47,7 +47,7 @@
 #' matched_bulk = bulk_data,
 #' sc_data = sc_data,
 #' phenotype = phenotype,
-#' LPSGL_family = "logit",
+#' family = "logit",
 #' resolution = 0.6,
 #' dge_analysis = list(run = TRUE, logFC_threshold = 1, pval_threshold = 0.05)
 #' )
@@ -68,7 +68,7 @@ DoLP_SGL <- function(
   sc_data,
   phenotype,
   label_type = "LP_SGL",
-  LPSGL_family = c('logit', 'cox', 'linear'),
+  family = c('logit', 'cox', 'linear'),
   resolution = 0.6,
   alpha = 0.5,
   nfold = 5,
@@ -83,8 +83,8 @@ DoLP_SGL <- function(
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))
   chk::chk_is(sc_data, c("Seurat"))
   chk::chk_list(dge_analysis)
-  LPSGL_family <- SigBridgeRUtils::MatchArg(
-    LPSGL_family,
+  family <- SigBridgeRUtils::MatchArg(
+    family,
     c('logit', 'cox', 'linear'),
     NULL
   )
@@ -116,7 +116,7 @@ DoLP_SGL <- function(
     cluster_membership = leiden_results,
     alpha = alpha,
     nfold = nfold,
-    type = LPSGL_family,
+    type = family,
     verbose = verbose,
     seed = seed
   )
