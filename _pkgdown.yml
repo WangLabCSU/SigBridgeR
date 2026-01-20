@@ -29,7 +29,6 @@ template:
         fg: black
         primary: "#2c5f9b"
 
-
 authors:
     - name: Yuxi Yang
     - email: 15364051195@163.com
@@ -40,6 +39,83 @@ description: >-
 logo:
     light: man/figures/logo_white.png
     dark: man/figures/logo_black.png
+
+reference:
+    - title: Data Preprocessing
+      desc: >
+          Functions for preprocessing bulk and single-cell RNA-seq data.
+      contents:
+          - BulkPreProcess
+          - SCPreProcess
+          - QCFilter
+          - QCPatternDetect
+          - Pattern2Colname
+          - SymbolConvert
+          - AggregateDups
+          - AggregateDupRows
+          - AggregateDupCols
+
+    - title: Result Integration & Visualization
+      desc: >
+          Merge and visualize screening results across methods or conditions.
+      contents:
+          - MergeResult
+          - ScreenFractionPlot
+          - ScreenUpset
+
+    - title: Screening Framework
+      desc: >
+          Core functions for phenotype-driven single-cell screening and method registration.
+      contents:
+          - Screen
+
+    - title: Screening Methods
+      desc: >
+          Built-in screening algorithms.
+      contents:
+          - DoLP_SGL
+          - DoPIPET
+          - DoScissor
+          - DoscAB
+          - DoscPAS
+          - DoscPP
+          - DoDEGAS
+
+    - title: Seurat Object Utilities
+      desc: >
+          Helper functions to extend or annotate Seurat objects safely.
+      contents:
+          - AddMetaFeature
+          - AddMisc
+          - FindRobustElbow
+
+    - title: Reference Data & External Resources
+      desc: >
+          Load reference datasets.
+      contents:
+          - LoadRefData
+
+    - title: Python Environment Management
+      desc: >
+          Manage Python environments for integrated R/Python workflows.
+      contents:
+          - SetupPyEnv
+          - ListPyEnv
+
+    - title: Extension Tools
+      desc: >
+          Other functions for extending SigBridgeR.
+      contents:
+          - RegisterScreenMethod
+          - ValidateScreenFunc
+          - ScreenStrategy
+
+    - title: Package Configuration
+      desc: >
+          Get and set global options for SigBridgeR behavior.
+      contents:
+          - getFuncOption
+          - setFuncOption
 
 # 导航栏配置
 navbar:
@@ -67,7 +143,7 @@ navbar:
                 - text: Full Tutorial
                   icon: fa-book
                   href: articles/Full_Tutorial.html
-                - text: -------  
+                - text: -------
                 - text: Advanced Usage
                 - text: Find the optimal parameters
                   icon: fa-cogs
@@ -75,15 +151,15 @@ navbar:
                 - text: Extend SigBridgeR
                   icon: fa-code-branch
                   href: articles/Extending.html
-                - text: -------
-                - text: Other
-                - text: Other functions
-                  icon: fa-bars
-                  href: articles/Other_Function_Details.html
-                - text: Troubleshooting
-                  icon: fa-bug
-                  href: articles/Troubleshooting.html
             assets: vignettes/example_figures
+        other_function:
+            text: Auxiliary utils
+            icon: fa-bars
+            href: articles/Other_Function_Details.html
+        troubleshooting:
+            text: Troubleshooting
+            icon: fa-bug
+            href: articles/Troubleshooting.html
         github:
             icon: fa-github
             href: https://github.com/wanglabcsu/sigbridger/

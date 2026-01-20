@@ -10,7 +10,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Quick Start Guide for SigBridgeR
+## Preparation
 
 ```{r,prework,eval=FALSE}
 if (!requireNamespace("remotes")) {
@@ -75,6 +75,8 @@ seurat_obj <- SCPreProcess(
 )
 ```
 
+## Screening
+
 Then we can use these data to screen out phenotype-assoicated cells. Let's start by trying **Scissor**.
 
 ```{r,scissor,eval=FALSE}
@@ -109,6 +111,8 @@ merged_seurat <- MergeResult(
   scpas_res
 )
 ```
+
+## Visualization
 
 Finally, we visualize the screening results.
 

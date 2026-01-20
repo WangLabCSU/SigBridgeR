@@ -1,16 +1,14 @@
 ---
-title: "Other Function Details in SigBridgeR"
+title: "Auxiliary Utils"
 date: '`r Sys.Date()`'
 output: 
   html_document
 knit: knitted
 vignette: >
-  %\VignetteIndexEntry{Other Function Details in SigBridgeR}
+  %\VignetteIndexEntry{Auxiliary Utils}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
-# Other Function Details in SigBridgeR
 
 This document introduces several auxiliary functions of SigBridgeR.
 
