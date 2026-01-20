@@ -1,6 +1,6 @@
 # Quick Start Guide for SigBridgeR
 
-## Quick Start Guide for SigBridgeR
+## Preparation
 
 ``` r
 if (!requireNamespace("remotes")) {
@@ -73,6 +73,8 @@ seurat_obj <- SCPreProcess(
 )
 ```
 
+## Screening
+
 Then we can use these data to screen out phenotype-assoicated cells.
 Let’s start by trying **Scissor**.
 
@@ -108,6 +110,8 @@ merged_seurat <- MergeResult(
   scpas_res
 )
 ```
+
+## Visualization
 
 Finally, we visualize the screening results.
 

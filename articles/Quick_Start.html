@@ -42,12 +42,10 @@
     <li><h6 class="dropdown-header" data-toc-skip>Advanced Usage</h6></li>
     <li><a class="dropdown-item" href="../articles/Optimal_Params.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
     <li><a class="dropdown-item" href="../articles/Extending.html"><span class="fa fa-code-branch"></span> Extend SigBridgeR</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
-    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
-    <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Auxiliary Utils</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
@@ -75,7 +73,7 @@
     
     
 <div class="section level2">
-<h2 id="quick-start-guide-for-sigbridger">Quick Start Guide for SigBridgeR<a class="anchor" aria-label="anchor" href="#quick-start-guide-for-sigbridger"></a>
+<h2 id="preparation">Preparation<a class="anchor" aria-label="anchor" href="#preparation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -133,6 +131,10 @@ by too small a dataset.</p>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="screening">Screening<a class="anchor" aria-label="anchor" href="#screening"></a>
+</h2>
 <p>Then we can use these data to screen out phenotype-assoicated cells.
 Let’s start by trying <strong>Scissor</strong>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -160,6 +162,10 @@ Let’s start by trying <strong>Scissor</strong>.</p>
 <span>  <span class="va">scissor_res</span>,</span>
 <span>  <span class="va">scpas_res</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="visualization">Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a>
+</h2>
 <p>Finally, we visualize the screening results.</p>
 <ul>
 <li>stacked bar plot:</li>

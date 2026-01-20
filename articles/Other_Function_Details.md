@@ -1,10 +1,8 @@
-# Other Function Details in SigBridgeR
-
-## Other Function Details in SigBridgeR
+# Auxiliary Utils
 
 This document introduces several auxiliary functions of SigBridgeR.
 
-### Add miscellaneous information to the Seurat object
+## Add miscellaneous information to the Seurat object
 
 SigBridgeR uses
 [`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
@@ -32,7 +30,7 @@ seurat_obj <- AddMisc(seurat_obj, markers1 = markers1, markers2 = markers2)
 seurat_obj <- AddMisc(seurat_obj, list(attr1 = "value1", attr2 = "value2"))
 ```
 
-### Add Gene-level Metadata to the Seurat object
+## Add Gene-level Metadata to the Seurat object
 
 SigBridgeR uses
 [`AddMetaFeature()`](https://wanglabcsu.github.io/sigbridger/reference/AddMetaFeature.md)
@@ -66,9 +64,9 @@ seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "ATAC"
 If duplicate column names are detected, they will be suffixed with an
 underscore and a number (e.g., `_1`, `_2`) for disambiguation.
 
-### Integration of Single Cell Data
+## Integration of Single Cell Data
 
-#### Matrix Integration
+### Matrix Integration
 
 When passing raw matrices, the function performs a “join” operation
 based on the union of all genes. Missing values are filled with NA.
@@ -110,7 +108,7 @@ Key Features:
 
 - Auto-Naming: Uses argument names (like BatchA) as cell ID prefixes.
 
-#### Seurat Integration
+### Seurat Integration
 
 For Seurat objects, `SCIntegrate` automates the standard workflow via
 the pipeline parameter.
@@ -178,9 +176,9 @@ integrated_seu
 #  2 dimensional reductions calculated: pca, integrated.dr
 ```
 
-### Load reference data
+## Load reference data
 
-#### Parameters
+### Parameters
 
 - `data_type`: The type of data to load. Can be either “continuous”,
   “survival” or “binary”, case-insensitive.
@@ -245,7 +243,7 @@ c(mat_exam, bulk, pheno) %<-%  LoadRefData(
 )
 ```
 
-### Setting up Python Environment
+## Setting up Python Environment
 
 Some screening methods (e.g. [Section 3.5
 DEGAS](#id_35-option-e-degas-screening)) are built using Python and
@@ -319,7 +317,7 @@ can specify the location of the virtual environment with the
 ListPyEnv(env_type = "venv", venv_locations ="~/here_is_a_dir/.virtualenvs")
 ```
 
-### Finding the Optimal Number of Principle Components
+## Finding the Optimal Number of Principle Components
 
 Usually the number if principle components (PCs) is manually set to 10
 or 20 according to the elbow plot. However, it is not always the case
@@ -359,7 +357,7 @@ knitr::include_graphics("vignettes/example_figures/elbow.png")
 
 [![elbow](example_figures/elbow.png)](NA)
 
-### Setting and Retriving Package Options
+## Setting and Retriving Package Options
 
 Currently, 7 package options are provided:
 

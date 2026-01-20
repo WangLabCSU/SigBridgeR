@@ -127,16 +127,52 @@ Let us know if you have ideas to make this project better!
 
 # Package index
 
-## All functions
+## Data Preprocessing
 
-- [`AddMetaFeature()`](https://wanglabcsu.github.io/sigbridger/reference/AddMetaFeature.md)
-  : Add Gene-Level Metadata to Seurat Object (Vectorized, ...-based)
-- [`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
-  : Safely Add Miscellaneous Data to Seurat Object
+Functions for preprocessing bulk and single-cell RNA-seq data.
+
 - [`BulkPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.md)
   : Bulk RNA-seq Data Preprocessing and Quality Control Function
-- [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md)
-  : Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration
+- [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
+  : Single-Cell RNA-seq Preprocessing Pipeline
+- [`QCFilter()`](https://wanglabcsu.github.io/sigbridger/reference/QCFilter.md)
+  : Filter Seurat object cells by QC metrics
+- [`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md)
+  : Calculate Percentage of Features Matching Patterns
+- [`Pattern2Colname()`](https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.md)
+  : convert regex patterns to column names (internal)
+- [`SymbolConvert()`](https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.md)
+  : Convert Ensembles Version IDs & TCGA Version IDs to Genes in Bulk
+  Expression Data
+- [`AggregateDupRows()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
+  [`AggregateDupCols()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
+  [`AggregateDups()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
+  : Aggregate Rows or Columns with Duplicate Names
+
+## Result Integration & Visualization
+
+Merge and visualize screening results across methods or conditions.
+
+- [`MergeResult()`](https://wanglabcsu.github.io/sigbridger/reference/MergeResult.md)
+  : Merge Multiple Screening Analysis Results
+- [`ScreenFractionPlot()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenFractionPlot.md)
+  : Visualization of Cell Screening Fractions
+- [`ScreenUpset()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenUpset.md)
+  : ScreenUpset - Visualize cell type intersections from screened Seurat
+  object
+
+## Screening Framework
+
+Core functions for phenotype-driven single-cell screening and method
+registration.
+
+- [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
+  : Single-Cell Data Screening
+
+## Screening Methods
+
+Built-in screening algorithms.
+
 - [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md)
   : Perform LP-SGL Screening Analysis
 - [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md)
@@ -149,45 +185,52 @@ Let us know if you have ideas to make this project better!
   : Perform scPAS Screening Analysis
 - [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)
   : Perform scPP screening analysis
+- [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md)
+  : Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration
+
+## Seurat Object Utilities
+
+Helper functions to extend or annotate Seurat objects safely.
+
+- [`AddMetaFeature()`](https://wanglabcsu.github.io/sigbridger/reference/AddMetaFeature.md)
+  : Add Gene-Level Metadata to Seurat Object (Vectorized, ...-based)
+- [`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
+  : Safely Add Miscellaneous Data to Seurat Object
 - [`FindRobustElbow()`](https://wanglabcsu.github.io/sigbridger/reference/FindRobustElbow.md)
   : Automatically determine optimal PCA dimensions using multiple robust
   methods
-- [`ListPyEnv()`](https://wanglabcsu.github.io/sigbridger/reference/ListPyEnv.md)
-  : List Available Python Environments
+
+## Reference Data & External Resources
+
+Load reference datasets.
+
 - [`LoadRefData()`](https://wanglabcsu.github.io/sigbridger/reference/LoadRefData.md)
   : Download & Load Reference Data
-- [`MergeResult()`](https://wanglabcsu.github.io/sigbridger/reference/MergeResult.md)
-  : Merge Multiple Screening Analysis Results
-- [`Pattern2Colname()`](https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.md)
-  : convert regex patterns to column names (internal)
-- [`QCFilter()`](https://wanglabcsu.github.io/sigbridger/reference/QCFilter.md)
-  : Filter Seurat object cells by QC metrics
-- [`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md)
-  : Calculate Percentage of Features Matching Patterns
-- [`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
-  : Register a Custom Screening Method for Phenotype-Driven Analysis
-- [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
-  : Single-Cell RNA-seq Preprocessing Pipeline
-- [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
-  : Single-Cell Data Screening
-- [`ScreenFractionPlot()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenFractionPlot.md)
-  : Visualization of Cell Screening Fractions
-- [`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md)
-  : Registry of Phenotype-Associated Cell Screening Methods
-- [`ScreenUpset()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenUpset.md)
-  : ScreenUpset - Visualize cell type intersections from screened Seurat
-  object
+
+## Python Environment Management
+
+Manage Python environments for integrated R/Python workflows.
+
 - [`SetupPyEnv()`](https://wanglabcsu.github.io/sigbridger/reference/SetupPyEnv.md)
   : Create or Use Python Environment with Required Packages
-- [`SymbolConvert()`](https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.md)
-  : Convert Ensembles Version IDs & TCGA Version IDs to Genes in Bulk
-  Expression Data
+- [`ListPyEnv()`](https://wanglabcsu.github.io/sigbridger/reference/ListPyEnv.md)
+  : List Available Python Environments
+
+## Extension Tools
+
+Other functions for extending SigBridgeR.
+
+- [`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
+  : Register a Custom Screening Method for Phenotype-Driven Analysis
 - [`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md)
   : Validate Custom Screening Function Compliance
-- [`AggregateDupRows()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
-  [`AggregateDupCols()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
-  [`AggregateDups()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
-  : Aggregate Rows or Columns with Duplicate Names
+- [`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md)
+  : Registry of Phenotype-Associated Cell Screening Methods
+
+## Package Configuration
+
+Get and set global options for SigBridgeR behavior.
+
 - [`getFuncOption()`](https://wanglabcsu.github.io/sigbridger/reference/getFuncOption.md)
   : Configuration Functions for SigBridgeR Package
 - [`setFuncOption()`](https://wanglabcsu.github.io/sigbridger/reference/setFuncOption.md)
@@ -204,8 +247,8 @@ Let us know if you have ideas to make this project better!
 - [Find Optimal Parameters for My
   Screening](https://wanglabcsu.github.io/sigbridger/articles/Optimal_Params.md)
   :
-- [Other Function Details in
-  SigBridgeR](https://wanglabcsu.github.io/sigbridger/articles/Other_Function_Details.md):
+- [Auxiliary
+  Utils](https://wanglabcsu.github.io/sigbridger/articles/Other_Function_Details.md):
 - [Quick Start Guide for
   SigBridgeR](https://wanglabcsu.github.io/sigbridger/articles/Quick_Start.md):
 - [Troubleshooting](https://wanglabcsu.github.io/sigbridger/articles/Troubleshooting.md):

@@ -26,11 +26,9 @@
     <li><h6 class="dropdown-header" data-toc-skip>Advanced Usage</h6></li>
     <li><a class="dropdown-item" href="../articles/Optimal_Params.html"><span class="fa fa-cogs"></span> Find the optimal parameters</a></li>
     <li><a class="dropdown-item" href="../articles/Extending.html"><span class="fa fa-code-branch"></span> Extend SigBridgeR</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Other</h6></li>
-    <li><a class="dropdown-item" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Other functions</a></li>
-    <li><a class="dropdown-item" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/Other_Function_Details.html"><span class="fa fa-bars"></span> Auxiliary Utils</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/Troubleshooting.html"><span class="fa fa-bug"></span> Troubleshooting</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/wanglabcsu/sigbridger/"><span class="fa fa-github"></span></a></li>
       </ul></div>
 
@@ -44,9 +42,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="data-preprocessing">Data Preprocessing<a class="anchor" aria-label="anchor" href="#data-preprocessing"></a></h2>
 
-
+      <div class="section-desc"><p>Functions for preprocessing bulk and single-cell RNA-seq data.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -55,20 +53,6 @@
 
       <dl><dt>
 
-          <code><a href="AddMetaFeature.html">AddMetaFeature()</a></code>
-
-        </dt>
-        <dd>Add Gene-Level Metadata to Seurat Object (Vectorized, ...-based)</dd>
-
-        <dt>
-
-          <code><a href="AddMisc.html">AddMisc()</a></code>
-
-        </dt>
-        <dd>Safely Add Miscellaneous Data to Seurat Object</dd>
-
-        <dt>
-
           <code><a href="BulkPreProcess.html">BulkPreProcess()</a></code>
 
         </dt>
@@ -76,12 +60,102 @@
 
         <dt>
 
-          <code><a href="DoDEGAS.html">DoDEGAS()</a></code>
+          <code><a href="SCPreProcess.html">SCPreProcess()</a></code>
 
         </dt>
-        <dd>Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration</dd>
+        <dd>Single-Cell RNA-seq Preprocessing Pipeline</dd>
 
         <dt>
+
+          <code><a href="QCFilter.html">QCFilter()</a></code>
+
+        </dt>
+        <dd>Filter Seurat object cells by QC metrics</dd>
+
+        <dt>
+
+          <code><a href="QCPatternDetect.html">QCPatternDetect()</a></code>
+
+        </dt>
+        <dd>Calculate Percentage of Features Matching Patterns</dd>
+
+        <dt>
+
+          <code><a href="Pattern2Colname.html">Pattern2Colname()</a></code>
+
+        </dt>
+        <dd>convert regex patterns to column names (internal)</dd>
+
+        <dt>
+
+          <code><a href="SymbolConvert.html">SymbolConvert()</a></code>
+
+        </dt>
+        <dd>Convert Ensembles Version IDs &amp; TCGA Version IDs to Genes in Bulk Expression Data</dd>
+
+        <dt>
+
+          <code><a href="aggregate-dups.html">AggregateDupRows()</a></code> <code><a href="aggregate-dups.html">AggregateDupCols()</a></code> <code><a href="aggregate-dups.html">AggregateDups()</a></code>
+
+        </dt>
+        <dd>Aggregate Rows or Columns with Duplicate Names</dd>
+      </dl></div><div class="section level2">
+      <h2 id="result-integration-visualization">Result Integration &amp; Visualization<a class="anchor" aria-label="anchor" href="#result-integration-visualization"></a></h2>
+
+      <div class="section-desc"><p>Merge and visualize screening results across methods or conditions.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="MergeResult.html">MergeResult()</a></code>
+
+        </dt>
+        <dd>Merge Multiple Screening Analysis Results</dd>
+
+        <dt>
+
+          <code><a href="ScreenFractionPlot.html">ScreenFractionPlot()</a></code>
+
+        </dt>
+        <dd>Visualization of Cell Screening Fractions</dd>
+
+        <dt>
+
+          <code><a href="ScreenUpset.html">ScreenUpset()</a></code>
+
+        </dt>
+        <dd>ScreenUpset - Visualize cell type intersections from screened Seurat object</dd>
+      </dl></div><div class="section level2">
+      <h2 id="screening-framework">Screening Framework<a class="anchor" aria-label="anchor" href="#screening-framework"></a></h2>
+
+      <div class="section-desc"><p>Core functions for phenotype-driven single-cell screening and method registration.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="Screen.html">Screen()</a></code>
+
+        </dt>
+        <dd>Single-Cell Data Screening</dd>
+      </dl></div><div class="section level2">
+      <h2 id="screening-methods">Screening Methods<a class="anchor" aria-label="anchor" href="#screening-methods"></a></h2>
+
+      <div class="section-desc"><p>Built-in screening algorithms.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="DoLP_SGL.html">DoLP_SGL()</a></code>
 
@@ -125,96 +199,67 @@
 
         <dt>
 
+          <code><a href="DoDEGAS.html">DoDEGAS()</a></code>
+
+        </dt>
+        <dd>Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration</dd>
+      </dl></div><div class="section level2">
+      <h2 id="seurat-object-utilities">Seurat Object Utilities<a class="anchor" aria-label="anchor" href="#seurat-object-utilities"></a></h2>
+
+      <div class="section-desc"><p>Helper functions to extend or annotate Seurat objects safely.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="AddMetaFeature.html">AddMetaFeature()</a></code>
+
+        </dt>
+        <dd>Add Gene-Level Metadata to Seurat Object (Vectorized, ...-based)</dd>
+
+        <dt>
+
+          <code><a href="AddMisc.html">AddMisc()</a></code>
+
+        </dt>
+        <dd>Safely Add Miscellaneous Data to Seurat Object</dd>
+
+        <dt>
+
           <code><a href="FindRobustElbow.html">FindRobustElbow()</a></code>
 
         </dt>
         <dd>Automatically determine optimal PCA dimensions using multiple robust methods</dd>
+      </dl></div><div class="section level2">
+      <h2 id="reference-data-external-resources">Reference Data &amp; External Resources<a class="anchor" aria-label="anchor" href="#reference-data-external-resources"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Load reference datasets.</p></div>
 
-          <code><a href="ListPyEnv.html">ListPyEnv()</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>List Available Python Environments</dd>
 
-        <dt>
+
+
+      <dl><dt>
 
           <code><a href="LoadRefData.html">LoadRefData()</a></code>
 
         </dt>
         <dd>Download &amp; Load Reference Data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="python-environment-management">Python Environment Management<a class="anchor" aria-label="anchor" href="#python-environment-management"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Manage Python environments for integrated R/Python workflows.</p></div>
 
-          <code><a href="MergeResult.html">MergeResult()</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Merge Multiple Screening Analysis Results</dd>
 
-        <dt>
 
-          <code><a href="Pattern2Colname.html">Pattern2Colname()</a></code>
 
-        </dt>
-        <dd>convert regex patterns to column names (internal)</dd>
-
-        <dt>
-
-          <code><a href="QCFilter.html">QCFilter()</a></code>
-
-        </dt>
-        <dd>Filter Seurat object cells by QC metrics</dd>
-
-        <dt>
-
-          <code><a href="QCPatternDetect.html">QCPatternDetect()</a></code>
-
-        </dt>
-        <dd>Calculate Percentage of Features Matching Patterns</dd>
-
-        <dt>
-
-          <code><a href="RegisterScreenMethod.html">RegisterScreenMethod()</a></code>
-
-        </dt>
-        <dd>Register a Custom Screening Method for Phenotype-Driven Analysis</dd>
-
-        <dt>
-
-          <code><a href="SCPreProcess.html">SCPreProcess()</a></code>
-
-        </dt>
-        <dd>Single-Cell RNA-seq Preprocessing Pipeline</dd>
-
-        <dt>
-
-          <code><a href="Screen.html">Screen()</a></code>
-
-        </dt>
-        <dd>Single-Cell Data Screening</dd>
-
-        <dt>
-
-          <code><a href="ScreenFractionPlot.html">ScreenFractionPlot()</a></code>
-
-        </dt>
-        <dd>Visualization of Cell Screening Fractions</dd>
-
-        <dt>
-
-          <code><a href="ScreenStrategy.html">ScreenStrategy</a></code>
-
-        </dt>
-        <dd>Registry of Phenotype-Associated Cell Screening Methods</dd>
-
-        <dt>
-
-          <code><a href="ScreenUpset.html">ScreenUpset()</a></code>
-
-        </dt>
-        <dd>ScreenUpset - Visualize cell type intersections from screened Seurat object</dd>
-
-        <dt>
+      <dl><dt>
 
           <code><a href="SetupPyEnv.html">SetupPyEnv()</a></code>
 
@@ -223,10 +268,26 @@
 
         <dt>
 
-          <code><a href="SymbolConvert.html">SymbolConvert()</a></code>
+          <code><a href="ListPyEnv.html">ListPyEnv()</a></code>
 
         </dt>
-        <dd>Convert Ensembles Version IDs &amp; TCGA Version IDs to Genes in Bulk Expression Data</dd>
+        <dd>List Available Python Environments</dd>
+      </dl></div><div class="section level2">
+      <h2 id="extension-tools">Extension Tools<a class="anchor" aria-label="anchor" href="#extension-tools"></a></h2>
+
+      <div class="section-desc"><p>Other functions for extending SigBridgeR.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="RegisterScreenMethod.html">RegisterScreenMethod()</a></code>
+
+        </dt>
+        <dd>Register a Custom Screening Method for Phenotype-Driven Analysis</dd>
 
         <dt>
 
@@ -237,12 +298,21 @@
 
         <dt>
 
-          <code><a href="aggregate-dups.html">AggregateDupRows()</a></code> <code><a href="aggregate-dups.html">AggregateDupCols()</a></code> <code><a href="aggregate-dups.html">AggregateDups()</a></code>
+          <code><a href="ScreenStrategy.html">ScreenStrategy</a></code>
 
         </dt>
-        <dd>Aggregate Rows or Columns with Duplicate Names</dd>
+        <dd>Registry of Phenotype-Associated Cell Screening Methods</dd>
+      </dl></div><div class="section level2">
+      <h2 id="package-configuration">Package Configuration<a class="anchor" aria-label="anchor" href="#package-configuration"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Get and set global options for SigBridgeR behavior.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="getFuncOption.html">getFuncOption()</a></code>
 
@@ -256,7 +326,8 @@
         </dt>
         <dd>Configuration Functions for SigBridgeR Package</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
