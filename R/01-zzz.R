@@ -76,7 +76,7 @@
 
   RegisterScreenMethod(
     "PIPET" = DoPIPET,
-    supported_phenotypes = c("binary", "continuous"),
+    supported_phenotypes = c("binary", "continuous", "survival"),
     parameter_mapper = NULL,
     registry = ScreenStrategy,
     verbose = FALSE
