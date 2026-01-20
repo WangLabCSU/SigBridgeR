@@ -27,3 +27,4 @@ prework
 ^tests/
 ^[.]?air[.]toml$
 ^\.vscode$
+^inst/docs
