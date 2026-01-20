@@ -1,3 +1,6 @@
+This document introduces a guide for extending SigBridgeR with custom
+algorithms.
+
 ## Installation
 
 It’s recommended to install these packages for checking the code

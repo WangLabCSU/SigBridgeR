@@ -1,4 +1,4 @@
-# Quick Start Guide for SigBridgeR
+## Preparation
 
     if (!requireNamespace("remotes")) {
       install.packages("remotes")
@@ -59,6 +59,8 @@ small a dataset.
       )
     )
 
+## Screening
+
 Then we can use these data to screen out phenotype-assoicated cells.
 Let’s start by trying **Scissor**.
 
@@ -88,6 +90,8 @@ Since the screening is performed on the same data, we merge them.
       scissor_res,
       scpas_res
     )
+
+## Visualization
 
 Finally, we visualize the screening results.
 

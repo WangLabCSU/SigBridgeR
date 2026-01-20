@@ -1,5 +1,3 @@
-# Other Function Details in SigBridgeR
-
 This document introduces several auxiliary functions of SigBridgeR.
 
 ## Add miscellaneous information to the Seurat object
