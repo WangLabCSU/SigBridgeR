@@ -120,7 +120,7 @@ reference:
 # 导航栏配置
 navbar:
     structure:
-        left: [home, reference, articles, troubleshooting, other_function]
+        left: [home, reference, articles, other_function, troubleshooting]
         right: [toggle_theme, github]
     components:
         toggle_theme: ~
