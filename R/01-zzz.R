@@ -44,6 +44,7 @@
   RegisterScreenMethod(
     "scPP" = DoscPP,
     "DEGAS" = DoDEGAS,
+    "PIPET" = DoPIPET,
     supported_phenotypes = c("binary", "survival", "continuous"),
     parameter_mapper = NULL,
     registry = ScreenStrategy,
@@ -73,14 +74,5 @@
     registry = ScreenStrategy,
     verbose = FALSE
   )
-
-  RegisterScreenMethod(
-    "PIPET" = DoPIPET,
-    supported_phenotypes = c("binary", "continuous", "survival"),
-    parameter_mapper = NULL,
-    registry = ScreenStrategy,
-    verbose = FALSE
-  )
-
   invisible()
 }

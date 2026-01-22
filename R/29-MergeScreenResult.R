@@ -42,116 +42,116 @@
 #' @export
 #'
 MergeResult <- function(
-    ...,
-    verbose = SigBridgeRUtils::getFuncOption("verbose")
+  ...,
+  verbose = SigBridgeRUtils::getFuncOption("verbose")
 ) {
-    args <- rlang::list2(...)
+  args <- rlang::list2(...)
 
-    if (length(args) == 0) {
-        cli::cli_abort(
-            c("x" = "Input objects must be provided."),
-            class = "InputsNotFound"
-        )
+  if (length(args) == 0) {
+    cli::cli_abort(
+      c("x" = "Input objects must be provided."),
+      class = "InputsNotFound"
+    )
+  }
+  # Extract Seurat objects
+  seurat_objects <- list()
+  seurat_objects <- lapply(args, function(x) {
+    if (inherits(x, "Seurat")) {
+      return(x)
+    } else if (is.list(x) && inherits(x$scRNA_data, "Seurat")) {
+      return(x$scRNA_data)
+    } else {
+      cli::cli_warn(
+        "Skipping object of class {.code {class(x)}} - not a Seurat object or a list with Seurat object"
+      )
+      return(NULL)
     }
-    # Extract Seurat objects
-    seurat_objects <- list()
-    seurat_objects <- lapply(args, function(x) {
-        if (inherits(x, "Seurat")) {
-            return(x)
-        } else if (is.list(x) && inherits(x$scRNA_data, "Seurat")) {
-            return(x$scRNA_data)
-        } else {
-            cli::cli_warn(
-                "Skipping object of class {.code {class(x)}} - not a Seurat object or a list with Seurat object"
-            )
-            return(NULL)
-        }
-    }) %>%
-        Filter(Negate(is.null), .)
+  }) %>%
+    Filter(Negate(is.null), .)
 
-    if (length(seurat_objects) == 0) {
-        cli::cli_abort(c("x" = "No valid Seurat objects found in inputs."))
-    }
+  if (length(seurat_objects) == 0) {
+    cli::cli_abort(c("x" = "No valid Seurat objects found in inputs."))
+  }
 
-    # extract metadata
-    meta_list <- lapply(seurat_objects, function(x) {
-        data.table::as.data.table(x[[]], keep.rownames = "cell_id")
+  # extract metadata
+  meta_list <- lapply(seurat_objects, function(x) {
+    data.table::as.data.table(x[[]], keep.rownames = "cell_id")
+  })
+
+  merged_meta <- Reduce(
+    function(x, y) {
+      duplicate_cols <- setdiff(intersect(names(x), names(y)), "cell_id")
+
+      if (length(duplicate_cols) > 0) {
+        y <- y[, !..duplicate_cols]
+      }
+
+      data.table::merge.data.table(x, y, by = "cell_id", all = FALSE)
+    },
+    meta_list
+  )
+
+  common_cells <- merged_meta$cell_id
+  # check if all cells are present, ignore it if data are identical
+  common_cells_len <- length(common_cells)
+  first_seurat_cells <- ncol(seurat_objects[[1]])
+  if (common_cells_len != first_seurat_cells) {
+    cli::cli_warn(
+      c(
+        "i" = "The {.fun MergeResult} was not originally designed for integrating heterogeneous single-cell datasets",
+        ">" = " Only the intersection of cells will be retained",
+        ">" = "After intersection, only {.val {common_cells_len}} cells retained from {.val {first_seurat_cells}} cells in the first base object"
+      )
+    )
+  }
+
+  merged_obj <- subset(seurat_objects[[1]], cells = common_cells)
+  merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
+
+  # merge slots
+  merged_obj <- Reduce(
+    function(merged_obj, slot_type) {
+      MergeSlot(
+        slot_type = slot_type,
+        merged_obj = merged_obj,
+        seurat_objects = seurat_objects,
+        common_cells = common_cells
+      )
+    },
+    c("assays", "reductions", "graphs", "images"),
+    init = merged_obj
+  )
+
+  # merge misc
+  all_keys <- unique(unlist(lapply(seurat_objects, function(obj) {
+    if (!is.null(obj@misc)) names(obj@misc) else character(0)
+  })))
+
+  misc_list <- stats::setNames(vector("list", length(all_keys)), all_keys)
+
+  for (key in all_keys) {
+    values <- lapply(seurat_objects, function(obj) {
+      if (!is.null(obj@misc) && key %chin% names(obj@misc)) {
+        obj@misc[[key]]
+      } else {
+        NULL
+      }
     })
 
-    merged_meta <- Reduce(
-        function(x, y) {
-            duplicate_cols <- setdiff(intersect(names(x), names(y)), "cell_id")
+    values <- values[!vapply(values, is.null, FUN.VALUE = logical(1))]
 
-            if (length(duplicate_cols) > 0) {
-                y <- y[, !..duplicate_cols]
-            }
+    misc_list[[key]] <- if (length(values) == 1) values[[1]] else values
+  }
 
-            data.table::merge.data.table(x, y, by = "cell_id", all = FALSE)
-        },
-        meta_list
+  merged_obj <- SigBridgeRUtils::AddMisc(merged_obj, misc_list, cover = TRUE)
+
+  if (verbose) {
+    cli::cli_alert_success(
+      "Successfully merged {.val {length(seurat_objects)}} objects."
     )
+  }
 
-    common_cells <- merged_meta$cell_id
-    # check if all cells are present, ignore it if data are identical
-    common_cells_len <- length(common_cells)
-    first_seurat_cells <- ncol(seurat_objects[[1]])
-    if (common_cells_len != first_seurat_cells) {
-        cli::cli_warn(
-            c(
-                "i" = "The {.fun MergeResult} was not originally designed for integrating heterogeneous single-cell datasets",
-                ">" = " Only the intersection of cells will be retained",
-                ">" = "After intersection, only {.val {common_cells_len}} cells retained from {.val {first_seurat_cells}} cells in the first base object"
-            )
-        )
-    }
-
-    merged_obj <- subset(seurat_objects[[1]], cells = common_cells)
-    merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
-
-    # merge slots
-    merged_obj <- Reduce(
-        function(merged_obj, slot_type) {
-            MergeSlot(
-                slot_type = slot_type,
-                merged_obj = merged_obj,
-                seurat_objects = seurat_objects,
-                common_cells = common_cells
-            )
-        },
-        c("assays", "reductions", "graphs", "images"),
-        init = merged_obj
-    )
-
-    # merge misc
-    all_keys <- unique(unlist(lapply(seurat_objects, function(obj) {
-        if (!is.null(obj@misc)) names(obj@misc) else character(0)
-    })))
-
-    misc_list <- stats::setNames(vector("list", length(all_keys)), all_keys)
-
-    for (key in all_keys) {
-        values <- lapply(seurat_objects, function(obj) {
-            if (!is.null(obj@misc) && key %chin% names(obj@misc)) {
-                obj@misc[[key]]
-            } else {
-                NULL
-            }
-        })
-
-        values <- values[!vapply(values, is.null, FUN.VALUE = logical(1))]
-
-        misc_list[[key]] <- if (length(values) == 1) values[[1]] else values
-    }
-
-    merged_obj <- SigBridgeRUtils::AddMisc(merged_obj, misc_list, cover = TRUE)
-
-    if (verbose) {
-        cli::cli_alert_success(
-            "Successfully merged {.val {length(seurat_objects)}} objects."
-        )
-    }
-
-    merged_obj
+  merged_obj
 }
 
 #' @title Helper function to get slot names
@@ -160,14 +160,14 @@ MergeResult <- function(
 #'
 #' @keywords internal
 GetSlotNames <- function(obj, slot_type) {
-    switch(
-        slot_type,
-        "assays" = names(obj@assays),
-        "graphs" = names(obj@graphs),
-        "reductions" = names(obj@reductions),
-        "images" = names(obj@images),
-        character(0)
-    )
+  switch(
+    slot_type,
+    "assays" = names(obj@assays),
+    "graphs" = names(obj@graphs),
+    "reductions" = names(obj@reductions),
+    "images" = names(obj@images),
+    character(0)
+  )
 }
 
 #' @title Helper function to merge slot
@@ -177,47 +177,47 @@ GetSlotNames <- function(obj, slot_type) {
 #'
 #' @keywords internal
 MergeSlot <- function(slot_type, merged_obj, seurat_objects, common_cells) {
-    base_names <- GetSlotNames(merged_obj, slot_type)
-    # The first object is the base object
-    for (i in seq_along(seurat_objects)[-1]) {
-        current_obj <- seurat_objects[[i]]
-        current_names <- GetSlotNames(current_obj, slot_type)
+  base_names <- GetSlotNames(merged_obj, slot_type)
+  # The first object is the base object
+  for (i in seq_along(seurat_objects)[-1]) {
+    current_obj <- seurat_objects[[i]]
+    current_names <- GetSlotNames(current_obj, slot_type)
 
-        # Find unique names not in base
-        unique_names <- setdiff(current_names, base_names)
+    # Find unique names not in base
+    unique_names <- setdiff(current_names, base_names)
 
-        # Add unique items
-        for (name in unique_names) {
-            item <- switch(
-                slot_type,
-                "assays" = current_obj@assays[[name]],
-                "graphs" = current_obj@graphs[[name]],
-                "reductions" = current_obj@reductions[[name]],
-                "images" = current_obj@images[[name]]
-            )
+    # Add unique items
+    for (name in unique_names) {
+      item <- switch(
+        slot_type,
+        "assays" = current_obj@assays[[name]],
+        "graphs" = current_obj@graphs[[name]],
+        "reductions" = current_obj@reductions[[name]],
+        "images" = current_obj@images[[name]]
+      )
 
-            # Subset to common cells if applicable
-            if (slot_type == "assays") {
-                item <- subset(item, cells = common_cells)
-                merged_obj@assays[[name]] <- item
-            } else if (slot_type == "reductions") {
-                valid_cells <- intersect(
-                    rownames(item),
-                    common_cells
-                )
-                if (length(valid_cells) > 0) {
-                    item <- item[valid_cells, ]
-                    merged_obj@reductions[[name]] <- item
-                }
-            } else if (slot_type == "graphs") {
-                merged_obj@graphs[[name]] <- item
-            } else if (slot_type == "images") {
-                merged_obj@images[[name]] <- item
-            }
+      # Subset to common cells if applicable
+      if (slot_type == "assays") {
+        item <- subset(item, cells = common_cells)
+        merged_obj@assays[[name]] <- item
+      } else if (slot_type == "reductions") {
+        valid_cells <- intersect(
+          rownames(item),
+          common_cells
+        )
+        if (length(valid_cells) > 0) {
+          item <- item[valid_cells, ]
+          merged_obj@reductions[[name]] <- item
         }
-
-        base_names <- GetSlotNames(merged_obj, slot_type)
+      } else if (slot_type == "graphs") {
+        merged_obj@graphs[[name]] <- item
+      } else if (slot_type == "images") {
+        merged_obj@images[[name]] <- item
+      }
     }
 
-    merged_obj
+    base_names <- GetSlotNames(merged_obj, slot_type)
+  }
+
+  merged_obj
 }

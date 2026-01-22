@@ -7,6 +7,6 @@
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "quarto.quarto"
     },
-    "positron.r.useNativePipe": true,
-    "positron.r.pipe": "|>"
+    "positron.r.useNativePipe": false,
+    "positron.r.pipe": "%>%"
 }

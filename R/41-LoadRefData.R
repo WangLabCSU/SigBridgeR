@@ -19,138 +19,132 @@
 #' }
 #'
 LoadRefData <- function(
-    data_type = c("survival", "binary", "continuous"),
-    path = NULL,
-    timeout = SigBridgeRUtils::getFuncOption("timeout"),
-    ...
+  data_type = c("survival", "binary", "continuous"),
+  path = NULL,
+  timeout = SigBridgeRUtils::getFuncOption("timeout"),
+  ...
 ) {
-    data_type <- SigBridgeRUtils::MatchArg(
-        data_type,
-        c("survival", "binary", "continuous"),
-        NULL
-    )
-    if (!is.null(path)) {
-        chk::chk_dir(path)
+  data_type <- SigBridgeRUtils::MatchArg(
+    data_type,
+    c("survival", "binary", "continuous"),
+    NULL
+  )
+  if (!is.null(path)) {
+    chk::chk_dir(path)
+  } else {
+    path <- if (.Platform$OS.type == "windows") {
+      file.path(Sys.getenv("LOCALAPPDATA"), "SigBridgeR", "cache")
     } else {
-        path <- if (.Platform$OS.type == "windows") {
-            file.path(Sys.getenv("LOCALAPPDATA"), "SigBridgeR", "cache")
-        } else {
-            file.path(Sys.getenv("HOME"), ".cache", "SigBridgeR")
-        }
-        dir.create(path, recursive = TRUE, showWarnings = FALSE)
+      file.path(Sys.getenv("HOME"), ".cache", "SigBridgeR")
     }
-    chk::chk_whole_number(timeout)
+    dir.create(path, recursive = TRUE, showWarnings = FALSE)
+  }
+  chk::chk_whole_number(timeout)
 
-    dots <- rlang::list2(...)
-    verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
+  dots <- rlang::list2(...)
+  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
 
-    local_file <- file.path(path, glue::glue("{data_type}_ref_data.rds"))
+  local_file <- file.path(path, glue::glue("{data_type}_ref_data.rds"))
 
-    # Set timeout for the download
-    old_timeout <- getOption("timeout")
-    options(timeout = timeout)
-    on.exit(options(timeout = old_timeout))
+  # Set timeout for the download
+  old_timeout <- getOption("timeout")
+  options(timeout = timeout)
+  on.exit(options(timeout = old_timeout))
 
-    if (!file.exists(local_file)) {
-        if (verbose) {
-            cli::cli_alert_info("Downloading reference data...")
-        }
-
-        # Define multiple sources with priority order
-        data_urls <- list(
-            survival = list(
-                "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/survival_example_data.rds",
-                "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/survival_example_data.rds",
-                "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/survival_example_data.rds"
-            ),
-            binary = list(
-                "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/binary_example_data.rds",
-                "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/binary_example_data.rds",
-                "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/binary_example_data.rds"
-            ),
-            continuous = list(
-                "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/continuous_example_data.rds",
-                "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/continuous_example_data.rds",
-                "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/continuous_example_data.rds"
-            )
-        )
-
-        available_urls <- data_urls[[data_type]]
-        success <- FALSE
-
-        # Try each source in priority order
-        for (i in seq_along(available_urls)) {
-            source_name <- names(available_urls)[i]
-            data_url <- available_urls[[i]]
-
-            if (verbose) {
-                cli::cli_alert_info(glue::glue("Trying {source_name}..."))
-            }
-
-            success <- rlang::try_fetch(
-                {
-                    fileDownload(
-                        url = data_url,
-                        destfile = local_file,
-                        mode = "wb",
-                        quiet = FALSE # Show progress
-                    )
-
-                    if (verbose) {
-                        cli::cli_alert_success(
-                            "Successfully downloaded from {source_name}"
-                        )
-                    }
-                    TRUE
-                },
-                error = function(e) {
-                    if (file.exists(local_file)) {
-                        unlink(local_file)
-                    }
-
-                    if (verbose) {
-                        cli::cli_warn(
-                            "Failed from {source_name}: {e$message}"
-                        )
-                    }
-
-                    # If this was the last source, show final error
-                    if (i == length(available_urls)) {
-                        options(timeout = old_timeout)
-                        cli::cli_abort(c(
-                            "x" = cli::col_red("All download attempts failed."),
-                            "i" = "Please check your internet connection or try again later.",
-                            "i" = "Error from last attempt: {e$message}"
-                        ))
-                    }
-                    FALSE
-                }
-            )
-
-            if (success) break
-        }
-    } else if (verbose) {
-        cli::cli_alert_info("Found cached data.")
-    }
-
-    data <- rlang::try_fetch(
-        readRDS(local_file),
-        error = function(e) {
-            if (file.exists(local_file)) {
-                unlink(local_file) # Clean up corrupted file
-            }
-            cli::cli_abort(c(
-                "x" = e$message
-            ))
-        }
-    )
+  if (!file.exists(local_file)) {
     if (verbose) {
-        cli::cli_alert_success(cli::col_green("Data loaded successfully."))
+      cli::cli_alert_info("Downloading reference data...")
     }
 
-    if (file.exists(local_file)) {
-        unlink(local_file)
-    }
+    # Define multiple sources with priority order
+    data_urls <- list(
+      survival = list(
+        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/survival_example_data.rds",
+        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/survival_example_data.rds",
+        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/survival_example_data.rds"
+      ),
+      binary = list(
+        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/binary_example_data.rds",
+        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/binary_example_data.rds",
+        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/binary_example_data.rds"
+      ),
+      continuous = list(
+        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/continuous_example_data.rds",
+        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/continuous_example_data.rds",
+        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/continuous_example_data.rds"
+      )
+    )
 
-    data
+    available_urls <- data_urls[[data_type]]
+    success <- FALSE
+
+    # Try each source in priority order
+    for (i in seq_along(available_urls)) {
+      source_name <- names(available_urls)[i]
+      data_url <- available_urls[[i]]
+
+      if (verbose) {
+        cli::cli_alert_info(glue::glue("Trying {source_name}..."))
+      }
+
+      success <- rlang::try_fetch(
+        {
+          fileDownload(
+            url = data_url,
+            destfile = local_file,
+            mode = "wb",
+            quiet = FALSE # Show progress
+          )
+
+          if (verbose) {
+            cli::cli_alert_success(
+              "Successfully downloaded from {source_name}"
+            )
+          }
+          TRUE
+        },
+        error = function(e) {
+          if (file.exists(local_file)) {
+            unlink(local_file)
+          }
+
+          if (verbose) {
+            cli::cli_warn(
+              "Failed from {source_name}: {e$message}"
+            )
+          }
+
+          # If this was the last source, show final error
+          if (i == length(available_urls)) {
+            options(timeout = old_timeout)
+            cli::cli_abort(c(
+              "x" = cli::col_red("All download attempts failed."),
+              "i" = "Please check your internet connection or try again later.",
+              "i" = "Error from last attempt: {e$message}"
+            ))
+          }
+          FALSE
+        }
+      )
+
+      if (success) break
+    }
+  } else if (verbose) {
+    cli::cli_alert_info("Found cached data.")
+  }
+
+  data <- rlang::try_fetch(
+    readRDS(local_file),
+    error = function(e) {
+      if (file.exists(local_file)) {
+        unlink(local_file) # Clean up corrupted file
+      }
+      cli::cli_abort(c("x" = "{e$message}"))
+    }
+  )
+  if (verbose) {
+    cli::cli_alert_success(cli::col_green("Data loaded successfully."))
+  }
+
+  data
 }

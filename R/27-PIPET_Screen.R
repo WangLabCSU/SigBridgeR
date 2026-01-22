@@ -80,9 +80,7 @@ DoPIPET <- function(
   purrr::walk(c(show_log2FC, normalize, scale), chk::chk_flag)
   purrr::walk(
     c(group, distance),
-    ~ {
-      if (!is.null(.x)) chk::chk_character(.x)
-    }
+    ~ if (!is.null(.x)) chk::chk_character(.x)
   )
   chk::chk_integer(c(nPerm, freq_counts))
   purrr::walk(c(log2FC, p_adjust), chk::chk_double)

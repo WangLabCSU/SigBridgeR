@@ -81,7 +81,7 @@ ScreenUpset <- function(
     list(x_lab, y_lab, title, bar_color, combmatrix_point_color),
     ~ chk::chk_character
   )
-  rlang::check_installed(c("ggplot2", "ggupset"))
+  rlang::check_installed(c("ggplot2", "ggupset", "tibble"))
 
   meta_data <- screened_seurat[[]]
   all_screen_types <- colnames(meta_data)
@@ -92,12 +92,7 @@ ScreenUpset <- function(
       value = TRUE
     )
   }
-  if (
-    !all(purrr::map_vec(
-      screen_type,
-      ~ . %in% all_screen_types
-    ))
-  ) {
+  if (!all(screen_type %in% all_screen_types)) {
     cli::cli_abort(c("x" = "Screen type(s) not found in metadata."))
   }
 
@@ -142,6 +137,7 @@ ScreenUpset <- function(
         drop = FALSE
       ]) ==
         length(sets)
+      
       sum(row_matches, na.rm = TRUE)
     },
     numeric(1)
