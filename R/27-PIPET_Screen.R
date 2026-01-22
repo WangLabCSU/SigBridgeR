@@ -123,7 +123,7 @@ DoPIPET <- function(
     bulk_data = matched_bulk,
     colData = phenotype_df,
     class_col = "class",
-    log2FC = log2FC,
+    lg2FC = log2FC,
     p.adjust = p_adjust,
     show_log2FC = show_log2FC,
     verbose = verbose,
