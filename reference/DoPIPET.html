@@ -62,7 +62,7 @@ testing for significance assessment.</p>
 <span>  <span class="va">matched_bulk</span>,</span>
 <span>  <span class="va">sc_data</span>,</span>
 <span>  <span class="va">phenotype</span>,</span>
-<span>  phenotype_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"binary"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"binary"</span>, <span class="st">"continuous"</span>, <span class="st">"survival"</span><span class="op">)</span>,</span>
 <span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  discretize_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"kmeans"</span>, <span class="st">"median"</span>, <span class="st">"custom"</span><span class="op">)</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -101,7 +101,8 @@ Column names must match <code>phenotype</code> identifiers.</p></dd>
 <dt id="arg-phenotype-class">phenotype_class<a class="anchor" aria-label="anchor" href="#arg-phenotype-class"></a></dt>
 <dd><p>Analysis mode:
 - <code>"binary"</code>: Case-control design (e.g., responder/non-responder)
-- <code>"continuous"</code>: Continuous outcome (e.g.,)</p></dd>
+- <code>"continuous"</code>: Continuous outcome (e.g., age, size)
+- <code>"survival"</code>: Patient survival</p></dd>
 
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
@@ -111,7 +112,7 @@ Column names must match <code>phenotype</code> identifiers.</p></dd>
 <dt id="arg-discretize-method">discretize_method<a class="anchor" aria-label="anchor" href="#arg-discretize-method"></a></dt>
 <dd><p><code>c("median", "kmeans", "custom")</code>. Discretization
 strategy for continuous phenotypes. Note: <code>"median"</code> is mapped internally to
-<code>"quantile"</code> (2-group quantile split). Default: <code>"median"</code>.</p></dd>
+<code>"quantile"</code> (2-group quantile split). Default: <code>"kmeans"</code>.</p></dd>
 
 
 <dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
