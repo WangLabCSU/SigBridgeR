@@ -17,7 +17,7 @@ SCIntegrate(
   project = "Integrated Seurat"
 )
 
-SCIntegrate.matrix(..., .quos = NULL)
+SCIntegrate.data.frame(..., .quos = NULL)
 
 SCIntegrate.Matrix(..., .quos = NULL)
 
@@ -93,16 +93,6 @@ SCIntegrate.Seurat(
 - **Seurat method**: Integrated `Seurat` object with processed layers
   according to `pipeline`.
 
-## Matrix Method Details
-
-- Duplicate genes (e.g., due to symbol aliasing) are resolved via
-  [`AggregateDups`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
-  (default: sum).
-
-- Dataset identifiers are auto-inferred from argument names or object
-  names (e.g., `SCIntegrate(matA, B = matB)` → prefixes `"matA"`,
-  `"B"`).
-
 ## Examples
 
 ``` r
@@ -124,13 +114,5 @@ integrated <- SCIntegrate(A = mat1, B = mat2)
 seu1 <- CreateSeuratObject(mat1)
 seu2 <- CreateSeuratObject(mat2)
 integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsfpi")
-} # }
-
-if (FALSE) { # \dontrun{
-mat1 <- matrix(rpois(100, 5), nrow = 20, dimnames = list(paste0("G", 1:20), paste0("C", 1:5)))
-mat2 <- matrix(rpois(120, 6), nrow = 20, dimnames = list(paste0("G", 1:20), paste0("C", 1:6)))
-integrated_mat <- SCIntegrate(mat1, mat2)
-dim(integrated_mat)  # 20 genes × 11 cells
-head(colnames(integrated_mat))
 } # }
 ```
