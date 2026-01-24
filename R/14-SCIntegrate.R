@@ -73,10 +73,11 @@ SCIntegrate <- function(
     cli::cli_abort(c("[{.fun SCIntegrate}]: No arguments provided."))
   }
   .quos <- rlang::enquos(...)
-  if (is.matrix(dots[[1]])) {
-    return(SCIntegrate.matrix(..., .quos = .quos))
-  }
-  if (inherits(dots[[1]],"Matrix")) {
+  if (
+    is.data.frame(dots[[1]]) ||
+      data.table::is.data.table(dots[[1]]) ||
+      tibble::is_tibble(dots[[1]])
+  ) {
     return(SCIntegrate.Matrix(..., .quos = .quos))
   }
   if (inherits(dots[[1]], "Seurat")) {
@@ -91,8 +92,11 @@ SCIntegrate <- function(
       .quos = .quos
     ))
   }
+  if (!inherits(dots[[1]], "Matrix") && !is.matrix(dots[[1]])) {
+    return(SCIntegrate.data.frame(..., .quos = .quos))
+  }
 
-  cls <- c("Seurat", "matrix")
+  cls <- c("Seurat", "matrix", "Matrix", "data.table", "tibble", "data.frame")
   cli::cli_abort(c(
     "x" = "[{.fun SCIntegrate}]: No implementation for class {.cls {class(dots[[1]])}}",
     ">" = "Available classes: {.cls {cls}}"
@@ -100,26 +104,15 @@ SCIntegrate <- function(
 }
 
 #' @rdname SCIntegrate
-#' @section Matrix Method Details:
-#'   \itemize{
-#'     \item Duplicate genes (e.g., due to symbol aliasing) are resolved via
-#'           \code{\link{AggregateDups}} (default: sum).
-#'     \item Dataset identifiers are auto-inferred from argument names or
-#'           object names (e.g., \code{SCIntegrate(matA, B = matB)} → prefixes \code{"matA"}, \code{"B"}).
-#'   }
-#' @examples
-#' \dontrun{
-#' mat1 <- matrix(rpois(100, 5), nrow = 20, dimnames = list(paste0("G", 1:20), paste0("C", 1:5)))
-#' mat2 <- matrix(rpois(120, 6), nrow = 20, dimnames = list(paste0("G", 1:20), paste0("C", 1:6)))
-#' integrated_mat <- SCIntegrate(mat1, mat2)
-#' dim(integrated_mat)  # 20 genes × 11 cells
-#' head(colnames(integrated_mat))
-#' }
 #' @keywords internal
-SCIntegrate.matrix <- function(..., .quos = NULL) {
+SCIntegrate.data.frame <- function(..., .quos = NULL) {
   dots <- rlang::list2(...)
   .quos <- .quos %||% rlang::enquos(...)
-  is_mat <- vapply(dots, \(x) is.matrix(x), logical(1))
+  is_mat <- vapply(
+    dots,
+    \(x) !is.matrix(x) & !inherits(x, "Matrix"),
+    logical(1)
+  )
   # * remove dups
   mats <- purrr::map(dots[is_mat], \(x) {
     rlang::exec(
@@ -166,7 +159,7 @@ SCIntegrate.Matrix <- function(..., .quos = NULL) {
   dots <- rlang::list2(...)
   .quos <- .quos %||% rlang::enquos(...)
 
-  is_mat <- vapply(dots, \(x) inherits(x, "Matrix"), logical(1))
+  is_mat <- vapply(dots, \(x) inherits(x, "Matrix") | is.matrix(x), logical(1))
   mats <- purrr::map(dots[is_mat], \(x) {
     rlang::exec(
       AggregateDups,
