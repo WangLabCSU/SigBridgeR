@@ -22,7 +22,6 @@
 #'   stack_width = 0.85,
 #'   x_text_angle = 45,
 #'   axis_linewidth = 0.8,
-#'   legend_position = "right",
 #'   x_lab = NULL,
 #'   y_lab = "Fraction of Status",
 #'   ncol = 2, # number of columns for facet wrap
@@ -42,11 +41,10 @@
 #'        - Default: c("Neutral"="#CECECE", "Other"="#CECECE", Positive"="#ff3333", "Negative"="#386c9b")
 #' @param show_plot Logical to immediately display plot (default: TRUE).
 #' @param plot_title Plot title (default: "Screen Fraction"). When multiple screen types,
-#'        can be a vector of titles or single title (will append screen type).
+#'        can be a vector of titles or single title (will append screen type prefix).
 #' @param stack_width Bar width (default: 0.85).
 #' @param x_text_angle X-axis label angle (default: 45).
 #' @param axis_linewidth Axis line thickness (default: 0.8).
-#' @param legend_position Legend position (default: "right").
 #' @param x_lab X-axis label (default: NULL).
 #' @param y_lab Y-axis label (default: "Fraction of Status").
 #' @param ncol Number of columns for facet wrap when multiple screen types (default: 2).
@@ -106,7 +104,6 @@ ScreenFractionPlot <- function(
   stack_width = 0.85,
   x_text_angle = 45L,
   axis_linewidth = 0.8,
-  legend_position = "right",
   x_lab = NULL,
   y_lab = "Fraction of Status",
   ncol = 2L,
@@ -120,6 +117,7 @@ ScreenFractionPlot <- function(
   chk::chk_flag(show_null)
   if (!is.null(plot_color)) {
     chk::chk_vector(plot_color)
+    chk::chk_named(plot_color)
   }
   rlang::check_installed(c("ggplot2", "patchwork"))
 
@@ -247,7 +245,7 @@ ScreenFractionPlot <- function(
           vjust = 1
         ),
         axis.text = ggplot2::element_text(color = "black"),
-        legend.position = legend_position,
+        legend.position = legend.position,
         axis.line = ggplot2::element_line(linewidth = axis_linewidth),
         !!!theme_args
       )

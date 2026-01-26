@@ -94,6 +94,13 @@ DoLP_SGL <- function(
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$seed %||% getFuncOption("seed")
 
+  if (ncol(sc_data) > 5e4) {
+    cli::cli_warn(
+      "The number of cells in the scRNA-seq data is too large (>50k), \\
+       this may result in segmentation fault"
+    )
+  }
+
   # * Start
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green(
