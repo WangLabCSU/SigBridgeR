@@ -25,6 +25,7 @@
 #'   *normalized, log2-transformed scale* (i.e., after `scale(log2(x + 1))`).
 #'   Must be sorted in ascending order.
 #' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time"), stored in `scRNA_data@misc`
+#' @param marker_finder A character, the marker finder method. The default value is `"limma"`.
 #' @param log2FC In the DESeq differential expression analysis results, the cutoff value of log2FC. The default value is `1L`.
 #' @param p_adjust In the DESeq differential expression analysis results, the cutoff value of adjust P. The default value is `0.05`.
 #' @param show_log2FC Select whether to show log2 fold changes. The default value is `TRUE`.
@@ -51,6 +52,7 @@ DoPIPET <- function(
   discretize_method = c("kmeans", "median", "custom"),
   cutoff = NULL,
   label_type = "PIPET",
+  marker_finder = c("limma", "DESeq2"),
   log2FC = 1L,
   p_adjust = 0.05,
   show_log2FC = TRUE,
@@ -84,6 +86,10 @@ DoPIPET <- function(
   )
   chk::chk_integer(c(nPerm, freq_counts))
   purrr::walk(c(log2FC, p_adjust), chk::chk_double)
+  marker_finder <- SigBridgeRUtils::MatchArg(
+    marker_finder,
+    c("limma", "DESeq2")
+  )
 
   # * Default params
   ## * general params
@@ -117,16 +123,29 @@ DoPIPET <- function(
     cutoff = cutoff
   )
 
-  markers <- PIPET::Create_Markers2(
-    bulk_data = matched_bulk,
-    colData = phenotype_df,
-    class_col = "class",
-    lg2FC = log2FC,
-    p.adjust = p_adjust,
-    show_log2FC = show_log2FC,
-    verbose = verbose,
-    seed = seed
-  )
+  markers <- if (marker_finder == "limma") {
+    PIPET::Create_Markers2(
+      bulk_data = matched_bulk,
+      colData = phenotype_df,
+      class_col = "class",
+      lg2FC = log2FC,
+      p.adjust = p_adjust,
+      show_log2FC = show_log2FC,
+      verbose = verbose,
+      seed = seed
+    )
+  } else {
+    PIPET::Create_Markers(
+      bulk_data = matched_bulk,
+      colData = phenotype_df,
+      class_col = "class",
+      lg2FC = log2FC,
+      p.adjust = p_adjust,
+      show_log2FC = show_log2FC,
+      verbose = verbose,
+      seed = seed
+    )
+  }
 
   # Run PIPET core algorithm
   if (verbose) {
@@ -146,6 +165,13 @@ DoPIPET <- function(
     seed = seed,
     parallel = parallel
   )
+
+  if (is.null(pipet_result)) {
+    cli::cli_abort(c(
+      "x" = "PIPET screening failed.",
+      ">" = "Try different parameters"
+    ))
+  }
 
   # Add results to Seurat object if applicable
 

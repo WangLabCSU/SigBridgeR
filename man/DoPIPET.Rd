@@ -13,6 +13,7 @@ DoPIPET(
   discretize_method = c("kmeans", "median", "custom"),
   cutoff = NULL,
   label_type = "PIPET",
+  marker_finder = c("limma", "DESeq2"),
   log2FC = 1L,
   p_adjust = 0.05,
   show_log2FC = TRUE,
