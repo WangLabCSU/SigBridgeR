@@ -1,4 +1,5 @@
 #' @title Validate Custom Screening Function Compliance
+#' @keywords Add_Screen_method
 #'
 #' @description
 #' Verifies if a user-provided function meets the interface requirements for

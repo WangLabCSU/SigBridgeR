@@ -105,7 +105,7 @@ SCPreProcess <- function(sc, ...) {
 #' @rdname SCPreProcess
 #' @export
 SCPreProcess.default <- function(
-  sc,
+  sc = NULL,
   ...,
   pipeline = "onsvpcetu",
   params = list(
@@ -174,7 +174,7 @@ SCPreProcess.default <- function(
 
   # * handling pipeline
   steps <- unlist(strsplit(pipeline, ""))
-  steps_to_run <- steps[steps %chin% names(sc_processing_strategies)] # a vector
+  steps_to_run <- steps[steps %chin% names(SCPreProcessStrategy)] # a vector
 
   unknown <- setdiff(steps, steps_to_run)
   if (length(unknown) != 0) {
@@ -182,22 +182,37 @@ SCPreProcess.default <- function(
       "[{.fun SCIntegrate}]: Unknown pipeline steps: {.val {unknown}}"
     )
   }
-  if (steps_to_run[[1]] != "o") {
-    cli::cli_abort(
-      "[{.fun SCPreProcess}]: The first step of {.arg pipeline} must be 'o' for CreateSeuratObject"
+  if (steps_to_run[[1]] == "o" && !is.null(sc)) {
+    sc_seurat <- if (!is.null(params$o$counts)) {
+      cli::cli_warn(
+        "[{.fun SCPreProcess}]: The parameter `params$o$counts` is not NULL, `sc` will be ignored."
+      )
+      rlang::exec(
+        SeuratObject::CreateSeuratObject,
+        !!!params$o
+      )
+    } else {
+      rlang::exec(
+        SeuratObject::CreateSeuratObject,
+        counts = sc,
+        !!!params$o
+      )
+    }
+  } else {
+    # * CreateSeuratObject("o") is not in the pipeline. Use the provided custom method
+    if (verbose) {
+      cli::cli_inform("Use custom method to create Seurat object")
+    }
+    if (!is.null(sc)) {
+      cli::cli_warn(
+        "[{.fun SCPreProcess}]: The parameter `sc` will be ignored when using custom method"
+      )
+    }
+    sc_seurat <- rlang::exec(
+      SCPreProcessStrategy[[steps_to_run[[1]]]],
+      !!!params[[steps_to_run[[1]]]]
     )
   }
-  if (!is.null(params$o$counts)) {
-    cli::cli_abort(c(
-      "x" = "[{.fun SCPreProcess}]: The parameter {.arg params$o$counts} is deprecated, please use {.arg sc} instead"
-    ))
-  }
-
-  sc_seurat <- rlang::exec(
-    SeuratObject::CreateSeuratObject,
-    counts = sc,
-    !!!params$o
-  )
 
   if (has_pattern(quality_control)) {
     chk::chk_character(quality_control$pattern)
@@ -224,18 +239,20 @@ SCPreProcess.default <- function(
     )
   }
 
-  # a list containing functions
-  execution_queue <- sc_processing_strategies[steps_to_run]
-
   # the first step is CreateSeuratObject("o")
   for (step in 2:length(steps_to_run)) {
     # step: an index
-    step_fun <- execution_queue[[step]]
-    sc_seurat <- step_fun(
-      object = sc_seurat,
-      # steps_to_run[[step]] -- a letter
-      params = params[[steps_to_run[[step]]]]
-    )
+    letter <- steps_to_run[[step]]
+    step_fun <- SCPreProcessStrategy[[letter]]
+
+    if (!is.function(step_fun)) {
+      cli::cli_abort(c(
+        "x" = "[{.fun SCPreProcess}]: Step {.val {steps_to_run[[step]]}} function not found",
+        ">" = "Available steps: {.val {names(SCPreProcessStrategy)}}",
+        ">" = "Use {.fun RegisterSeuratMethod} to add custom function"
+      ))
+    }
+    sc_seurat <- step_fun(sc_seurat, params[[letter]])
   }
 
   FilterTumorCell(
@@ -321,7 +338,7 @@ SCPreProcess.R6 <- function(
 
   # * handling pipeline
   steps <- unlist(strsplit(pipeline, ""))
-  steps_to_run <- steps[steps %chin% names(sc_processing_strategies)] # a vector
+  steps_to_run <- steps[steps %chin% names(SCPreProcessStrategy)] # a vector
 
   unknown <- setdiff(steps, steps_to_run)
   if (length(unknown) != 0) {
@@ -432,7 +449,7 @@ SCPreProcess.R6 <- function(
   }
 
   # a list containing functions
-  execution_queue <- sc_processing_strategies[steps_to_run]
+  execution_queue <- SCPreProcessStrategy[steps_to_run]
 
   # the first stop is CreateSeuratObject("o")
   # step: an index

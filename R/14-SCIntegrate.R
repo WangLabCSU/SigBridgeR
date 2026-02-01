@@ -254,7 +254,7 @@ SCIntegrate.Seurat <- function(
 
   # * use `pipeline` to control steps
   steps <- unlist(strsplit(pipeline, ""))
-  steps_to_run <- steps[steps %chin% names(sc_processing_strategies)] # letters
+  steps_to_run <- steps[steps %chin% names(SCPreProcessStrategy)] # letters
 
   unknown <- setdiff(steps, steps_to_run)
   if (length(unknown) != 0) {
@@ -265,7 +265,7 @@ SCIntegrate.Seurat <- function(
 
   # step: a letter
   for (step in steps_to_run) {
-    step_fun <- sc_processing_strategies[[step]] # a function
+    step_fun <- SCPreProcessStrategy[[step]] # a function
     merged <- step_fun(
       object = merged,
       # steps_to_run[[step]] -- a letter

@@ -1,4 +1,5 @@
 #' @title Register a Custom Screening Method for Phenotype-Driven Analysis
+#' @keywords Add_Screen_method
 #' @description
 #' Registers one or more user-defined screening functions into a shared registry
 #' (i.e., \code{ScreenStrategy}), enabling dynamic dispatch based on phenotype type

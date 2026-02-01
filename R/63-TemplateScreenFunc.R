@@ -1,5 +1,5 @@
 #' @title Generate a Template Screening Function with Optional Roxygen2 Documentation
-#'
+#' @keywords Add_Screen_method
 #' @description
 #' Creates a scaffold for a new screening function that conforms to the expected
 #' interface for bulk-scRNA integration workflows. The template includes standard

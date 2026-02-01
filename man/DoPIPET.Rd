@@ -53,6 +53,8 @@ Must be sorted in ascending order.}
 
 \item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time"), stored in \code{scRNA_data@misc}}
 
+\item{marker_finder}{A character, the marker finder method. The default value is \code{"limma"}.}
+
 \item{log2FC}{In the DESeq differential expression analysis results, the cutoff value of log2FC. The default value is \code{1L}.}
 
 \item{p_adjust}{In the DESeq differential expression analysis results, the cutoff value of adjust P. The default value is \code{0.05}.}

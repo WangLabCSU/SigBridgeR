@@ -1,4 +1,5 @@
 #' @title Registry of Phenotype-Associated Cell Screening Methods
+#' @keywords Add_Screen_method
 #' @description
 #' An environment storing methods for screening phenotype-associated cells.
 #'
