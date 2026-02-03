@@ -266,8 +266,7 @@ DoDEGAS <- function(
   }
 
   rlang::check_installed("reticulate")
-  use_python <- getExportedValue("reticulate", "use_python")
-  use_python(
+  reticulate::use_python(
     degas_params$DEGAS.pyloc,
     required = TRUE
   )
@@ -495,7 +494,7 @@ DEGASParamSet <- function(user_list) {
 #' @family DEGAS
 DEGASFindPy <- function(env_params, verbose = TRUE, ...) {
   # * Check if environment exists
-  existing_envs <- DEGAS::ListPyEnv(
+  existing_envs <- ListPyEnv(
     env_type = env_params$env.type,
     verbose = FALSE
   )

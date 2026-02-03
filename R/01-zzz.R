@@ -23,56 +23,5 @@
     options(op_pkg[toset])
   }
 
-  # register screening method
-  RegisterScreenMethod(
-    "Scissor" = DoScissor,
-    "scPAS" = DoscPAS,
-    supported_phenotypes = c("binary", "survival", "continuous"),
-    parameter_mapper = function(params) {
-      params$family <- switch(
-        params$phenotype_class,
-        "binary" = "binomial",
-        "survival" = "cox",
-        "continuous" = "gaussian"
-      )
-      params
-    },
-    registry = ScreenStrategy,
-    verbose = FALSE
-  )
-
-  RegisterScreenMethod(
-    "scPP" = DoscPP,
-    "DEGAS" = DoDEGAS,
-    "PIPET" = DoPIPET,
-    supported_phenotypes = c("binary", "survival", "continuous"),
-    parameter_mapper = NULL,
-    registry = ScreenStrategy,
-    verbose = FALSE
-  )
-
-  RegisterScreenMethod(
-    "scAB" = DoscAB,
-    supported_phenotypes = c("binary", "survival"),
-    parameter_mapper = NULL,
-    registry = ScreenStrategy,
-    verbose = FALSE
-  )
-
-  RegisterScreenMethod(
-    "LP_SGL" = DoLP_SGL,
-    supported_phenotypes = c("binary", "survival", "continuous"),
-    parameter_mapper = function(params) {
-      params$family <- switch(
-        params$phenotype_class,
-        "binary" = 'logit',
-        "survival" = 'cox',
-        "continuous" = 'linear'
-      )
-      params
-    },
-    registry = ScreenStrategy,
-    verbose = FALSE
-  )
   invisible()
 }

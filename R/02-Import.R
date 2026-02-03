@@ -2,13 +2,13 @@
 #' @export
 AddMisc <- SigBridgeRUtils::AddMisc
 
-#' @inherit DEGAS::SetupPyEnv
+#' @inherit SigBridgeRUtils::SetupPyEnv
 #' @export
-SetupPyEnv <- DEGAS::SetupPyEnv
+SetupPyEnv <- SigBridgeRUtils::SetupPyEnv
 
-#' @inherit DEGAS::ListPyEnv
+#' @inherit SigBridgeRUtils::ListPyEnv
 #' @export
-ListPyEnv <- DEGAS::ListPyEnv
+ListPyEnv <- SigBridgeRUtils::ListPyEnv
 
 # ? General global variables
 

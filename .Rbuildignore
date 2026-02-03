@@ -26,9 +26,3 @@ prework
 ^[.]?air[.]toml$
 ^\.vscode$
 ^inst/docs
-inst/python/73-CellTypistAnnotate\.py
-R/16-SCAnnotate\.R
-R/70-AnnotationStrategy\.R
-R/73-CellTypistAnnotate\.R
-R/72-SingleRAnnotate\.R
-R/71-mLLMCellTypeAnnotate\.R

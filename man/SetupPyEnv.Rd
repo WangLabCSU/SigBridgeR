@@ -8,7 +8,7 @@ SetupPyEnv(env_type = c("conda", "venv"), ...)
 }
 \arguments{
 \item{env_type}{Character string specifying the type of Python environment to
-create or use. One of: `"conda"`, `"venv"`.}
+create or use. One of: \code{"conda"}, \code{"venv"}.}
 
 \item{...}{Additional parameters passed to specific environment methods.}
 }
@@ -18,7 +18,7 @@ including installation status of all required packages. Invisibly returns
 the verification results.
 }
 \description{
-Sets up a Python environment with specified packages for DEGAS screening methods.
+Sets up a Python environment with specified packages.
 This function can create new environments or reuse existing ones, supporting
 both Conda and venv environment types. It ensures all required dependencies
 are properly installed and verified.
@@ -30,14 +30,15 @@ with supported environment types.
 This function provides a comprehensive solution for Python environment
 management in R projects, particularly for machine learning workflows
 requiring TensorFlow. Key features include:
-
-- **Environment Creation**: Automatically creates new environments or reuses
-  existing ones with the same name
-- **Package Management**: Installs specified Python packages with version
-  pinning support
-- **Verification**: Validates environment setup and package installations
-- **Flexible Methods**: Supports different backend methods for environment
-  creation (reticulate vs system calls)
+\itemize{
+\item \strong{Environment Creation}: Automatically creates new environments or reuses
+existing ones with the same name
+\item \strong{Package Management}: Installs specified Python packages with version
+pinning support
+\item \strong{Verification}: Validates environment setup and package installations
+\item \strong{Flexible Methods}: Supports different backend methods for environment
+creation (reticulate vs system calls)
+}
 
 The function uses S3 method dispatch to handle different environment types,
 allowing for extensible support of additional environment managers in the future.
@@ -52,6 +53,6 @@ SetupPyEnv("venv")
 }
 }
 \seealso{
-[reticulate::conda_create()], [reticulate::virtualenv_create()] for
+\code{\link[reticulate:conda-tools]{reticulate::conda_create()}}, \code{\link[reticulate:virtualenv-tools]{reticulate::virtualenv_create()}} for
 underlying environment creation functions.
 }

@@ -10,7 +10,7 @@
 SCPreProcess(sc, ...)
 
 \method{SCPreProcess}{default}(
-  sc,
+  sc = NULL,
   ...,
   pipeline = "onsvpcetu",
   params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
@@ -140,6 +140,7 @@ Other single_cell_preprocess:
 \code{\link{FindRobustElbow}()},
 \code{\link{Pattern2Colname}()},
 \code{\link{QCPatternDetect}()},
+\code{\link{SCPreProcessStrategy}},
 \code{\link{compatible_with_3.0.2}()}
 }
 \concept{single_cell_preprocess}

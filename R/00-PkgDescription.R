@@ -1,6 +1,6 @@
 # ? Package Description
 
-#' @title SigBridgeR: Multi-algorithm Integration of Phenotypic, scRNA-seq, and Bulk Data for Cell Screening
+#' @title SigBridgeR: Integrative Framework and Toolkit for Single-Cell Screening of Phenotype-Associated Cells
 #'
 #' @description
 #' SigBridgeR is an integrative toolkit designed to identify phenotype-associated cell subpopulations by combining phenotype(e.g. survival, drug sensitivity), bulk expression and single-cell RNA-seq data. It leverages multiple algorithms to robustly link cell features with clinical or functional phenotypes. The package provides a unified pipeline for cross-modal data analysis, enabling the discovery of biologically and clinically relevant cell states in heterogeneous samples.

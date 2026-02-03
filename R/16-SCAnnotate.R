@@ -1,14 +1,13 @@
-#' @keywords internal
+#' @export
 SCAnnotate <- function(
   sc,
   method = c("CellTypist", "SingleR", "mLLMCelltype"),
   ...
 ) {
   chk::chk_is(sc, "Seurat")
-  method <- tolower(method)
   method <- SigBridgeRUtils::MatchArg(
     method,
-    c("celltypist", "singler", "mllmCelltype"),
+    names(AnnotationStrategy),
     NULL
   ) # must chosen
 
@@ -17,4 +16,9 @@ SCAnnotate <- function(
   seed <- dots$verbose %||% getFuncOption("seed")
 
   set.seed(seed)
+
+  AnnotationStrategy[[method]](
+    sc,
+    ...
+  )
 }

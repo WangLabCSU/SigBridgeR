@@ -1,7 +1,7 @@
 #' @title Preprocessing Strategy Registry for Single-Cell Workflows
 #'
 #' @description
-#' An environment that maps single-letter codes to standardized Seurat preprocessing
+#' An object that maps single-letter codes to standardized Seurat preprocessing
 #' operations. Each entry is a function of the form \code{function(object, params)}
 #' that wraps a core Seurat step (e.g., normalization, PCA, clustering) using
 #' \code{rlang::exec()} for safe parameter injection.
@@ -38,8 +38,8 @@
 #'
 #' @family single_cell_preprocess
 #' @export
-SCPreProcessStrategy <- rlang::new_environment(
-  data = rlang::list2(
+SCPreProcessStrategy <- structure(
+  list(
     o = function(object, params) {
       rlang::exec(
         SeuratObject::CreateSeuratObject,
@@ -117,5 +117,6 @@ SCPreProcessStrategy <- rlang::new_environment(
         !!!params
       )
     }
-  )
+  ),
+  class = c("SCPreProcessStrategy", "list")
 )

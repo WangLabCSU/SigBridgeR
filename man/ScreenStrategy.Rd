@@ -5,13 +5,13 @@
 \alias{ScreenStrategy}
 \title{Registry of Phenotype-Associated Cell Screening Methods}
 \format{
-An object of class \code{environment} of length 7.
+An object of class \code{ScreenStrategy} (inherits from \code{list}) of length 7.
 }
 \usage{
 ScreenStrategy
 }
 \description{
-An environment storing methods for screening phenotype-associated cells.
+An object storing methods for screening phenotype-associated cells.
 }
 \details{
 Storing structure - named list
@@ -26,4 +26,4 @@ Storing structure - named list
 }
 }
 }
-\keyword{datasets}
+\keyword{Add_Screen_method}

@@ -1,5 +1,6 @@
 #' @title Register a Custom Screening Method for Phenotype-Driven Analysis
 #' @keywords Add_Screen_method
+#' @keywords Registering
 #' @description
 #' Registers one or more user-defined screening functions into a shared registry
 #' (i.e., \code{ScreenStrategy}), enabling dynamic dispatch based on phenotype type
@@ -95,7 +96,7 @@ RegisterScreenMethod <- function(
     ))
   }
   chk::chk_logical(verbose)
-  chk::chk_environment(registry)
+  chk::chk_is(registry, "ScreenStrategy")
 
   # * detect where are functions
   dots <- rlang::list2(...)
@@ -119,7 +120,9 @@ RegisterScreenMethod <- function(
   }
 
   if (verbose) {
-    cli::cli_alert_success("Registered {.arg {method_names}}")
+    cli::cli_alert_success(
+      "[RegisterScreenMethod()] Registered {.arg {method_names}}"
+    )
   }
 
   invisible(TRUE)

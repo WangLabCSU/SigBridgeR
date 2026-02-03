@@ -1,5 +1,5 @@
 #' @title Register a Seurat Processing Strategy
-#'
+#' @keywords Registering
 #' @description
 #' Dynamically registers one or more new preprocessing strategies into a strategy
 #' environment (i.e., \code{SCPreProcessStrategy}). Each strategy is stored under
@@ -18,10 +18,10 @@
 #'     \item A **character string** specifying a function (e.g., \code{"Seurat::RunHarmony"} or \code{"stats::prcomp"}).
 #'   }
 #'   The function will be automatically wrapped to accept \code{object} and \code{params}, making it compatible with `SCPreProcess()` pipelines.
-#' @param registry Environment. The target registry to store strategies.
-#'   Default: \code{SCPreProcessStrategy}.
 #' @param overwrite Logical. If \code{FALSE} (default), throws an error when attempting
 #'   to replace an existing strategy. Set to \code{TRUE} to allow updates.
+#' @param registry Environment. The target registry to store strategies.
+#'   Default: \code{SCPreProcessStrategy}.
 #' @param verbose Logical. Whether to print registration messages.
 #'   Default: inherits from \code{getOption("SigBridgeR.verbose")}.
 #'
@@ -42,13 +42,13 @@
 #'
 RegisterSeuratMethod <- function(
   ...,
-  registry = SCPreProcessStrategy,
   overwrite = FALSE,
+  registry = SCPreProcessStrategy,
   verbose = getFuncOption("verbose")
 ) {
   chk::chk_logical(verbose)
   chk::chk_logical(overwrite)
-  chk::chk_environment(registry)
+  chk::chk_is(registry, "SCPreProcessStrategy")
   dots <- rlang::list2(...)
   chk::chk_named(dots)
 
@@ -57,10 +57,15 @@ RegisterSeuratMethod <- function(
   for (i in seq_len(length(dots))) {
     letter <- method_names[i]
 
+    if (nchar(letter) != 1) {
+      cli::cli_abort(c("x" = "Method key name must be a single character"))
+    }
+
     lookup <- exists(x = letter, envir = registry, inherits = FALSE)
     if (lookup && !overwrite) {
       cli::cli_abort(c(
         "x" = "Method already exists: {.val {letter}}",
+        ">" = "Registered letters: {.val {names(registry)}}",
         ">" = "Use `overwrite = TRUE` to force replacement"
       ))
     }
@@ -80,7 +85,7 @@ RegisterSeuratMethod <- function(
       executor
     } else {
       cli::cli_abort(c(
-        "Function provided must be a function object or character function name."
+        "x" = "Provided function must be a function object or character function name."
       ))
     }
 
@@ -89,9 +94,13 @@ RegisterSeuratMethod <- function(
     }
 
     if (verbose && !lookup) {
-      cli::cli_alert_success("Strategy {.field {letter}} registered")
+      cli::cli_alert_success(
+        "[RegisterSeuratMethod()] Registered {.field {letter}}"
+      )
     } else if (verbose) {
-      cli::cli_alert_success("Strategy {.field {letter}} updated")
+      cli::cli_alert_warning(
+        "[RegisterSeuratMethod()] Updated {.field {letter}}"
+      )
     }
   }
 
