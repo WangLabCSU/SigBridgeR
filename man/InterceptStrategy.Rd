@@ -20,9 +20,6 @@ or \code{"AnnotationStrategy"}. Partial matching is supported.}
 Default: \code{FALSE}.}
 
 \item{...}{Additional arguments (currently unused, reserved for future extension).}
-
-\item{verbose}{Logical. Whether to print a formatted table of results using \code{knitr::kable()}.
-Default: \code{TRUE}.}
 }
 \value{
 Invisibly returns a \code{data.frame}:

@@ -245,7 +245,6 @@ ScreenFractionPlot <- function(
           vjust = 1
         ),
         axis.text = ggplot2::element_text(color = "black"),
-        legend.position = legend.position,
         axis.line = ggplot2::element_line(linewidth = axis_linewidth),
         !!!theme_args
       )

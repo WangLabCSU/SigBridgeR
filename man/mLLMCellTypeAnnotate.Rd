@@ -45,6 +45,8 @@ For single-model mode, only the first model is used.}
 }
 Example: \code{list(openai = "sk-...", anthropic = "sk-ant-...")}.
 \strong{Note}: Default placeholder keys (\code{"your-xxx-key"}) will fail—users must supply valid keys.}
+
+\item{...}{Additional arguments passed to \code{Seurat::FindAllMarkers()}, \code{mLLMCelltype::annotate_cell_types} and \code{mLLMCelltype::interactive_consensus_annotation()}.}
 }
 \value{
 The input \code{Seurat} object with the following metadata columns added:

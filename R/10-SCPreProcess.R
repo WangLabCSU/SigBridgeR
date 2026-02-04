@@ -372,20 +372,23 @@ SCPreProcess.R6 <- function(
     # * from AnnDataR
 
     seurat <- sc$as_Seurat()
-    if (!is.null(meta_data)) {
-      seurat <- SeuratObject::AddMetaData(seurat, meta_data)
+    if (!is.null(params$o$meta.data)) {
+      chk::chk_data(params$o$meta.data)
+      seurat <- SeuratObject::AddMetaData(seurat, params$o$meta.data)
     }
     if (params$o$min.cells != 0) {
+      chk::chk_whole_number(params$o$min.cells)
       gene_cell_counts <- SigBridgeRUtils::rowSums3(
         SeuratObject::LayerData(seurat, layer = "counts") > 0
       )
-      seurat <- seurat[gene_cell_counts >= min_cells, ]
+      seurat <- seurat[gene_cell_counts >= params$o$min.cells, ]
     }
     if (params$o$min.features != 0) {
+      chk::chk_whole_number(params$o$min.features)
       cell_gene_counts <- SigBridgeRUtils::colSums3(
         SeuratObject::LayerData(seurat, layer = "counts") > 0
       )
-      seurat <- seurat[, cell_gene_counts >= min_features]
+      seurat <- seurat[, cell_gene_counts >= params$o$min.features]
     }
     seurat
   } else if (inherits(sc, "AnnDataR6")) {

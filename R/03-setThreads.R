@@ -1,40 +1,25 @@
-#' @title Configure Parallel Threads
+#' @title Configure Parallel Thread Counts for Computational Backends
 #' @description
-#' Unified interface to set parallel thread counts for computational backends
-#' commonly used with OpenML data workflows.
+#' Sets thread counts for OpenMP and data.table to optimize performance in
+#' data-intensive workflows. Automatically uses half the available physical cores
+#' if \code{n_threads} is unspecified.
 #'
-#' @param n_threads Integer specifying the number of threads to use.
-#'   If \code{NULL} (default), automatically use half physical cores via
-#'   \code{future::availableCores()}.
-#' @param backend Character vector specifying which backends to configure.
-#'   Supported values:
-#'   \itemize{
-#'     \item{"openmp"}{ — Sets \code{OMP_NUM_THREADS}}
-#'     \item{"dt"}{ — Sets \code{data.table} thread count via \code{setDTthreads()}}
-#'   }
-#'   Default: \code{c("openmp", "blas", "dt", "mlr3")}.
-#' @param ... Additional setting, includes:
-#'   \itemize{
-#'     \item{\code{verbose}}{Logical. If \code{TRUE}, print messages to console.}
-#'     \item{Other arguments passed to `data.table::setDTthreads()`}
-#'   }
+#' @param n_threads Integer. Number of threads to set. If \code{NULL} (default),
+#'   uses \code{floor(availableCores() / 2)}.
+#' @param backend Character vector. Backends to configure:
+#'   \code{"openmp"} (sets \code{OMP_NUM_THREADS} env var) and/or
+#'   \code{"dt"} (sets data.table threads). Default: \code{c("openmp", "dt")}.
+#' @param ... Additional arguments passed to \code{data.table::setDTthreads()}
+#'   (e.g., \code{restore}). Includes \code{verbose} logical flag (default: \code{TRUE}).
 #'
-#' @return Invisible list containing the actual thread counts set for each backend.
-#'   Values may be integers (successfully set), \code{"env_only"} (environment
-#'   variables set but no runtime control), or \code{"unsupported"} (backend not
-#'   available/configurable).
-#'
+#' @return Invisible list with old/new thread counts per backend.
 #' @export
+#'
 #' @examples
 #' \dontrun{
-#' # Set all backends to 4 threads
-#' setThreads(4L)
-#'
-#' # Configure only OpenMP backends
-#' setThreads(8L, backend = c("openmp"))
-#'
-#' # Silent mode (no output)
-#' setThreads(2L, verbose = FALSE)
+#' setThreads(4)                 # Set both backends to 4 threads
+#' setThreads(backend = "dt")    # Auto-set only data.table threads
+#' setThreads(8, verbose = FALSE) # Silent mode
 #' }
 setThreads <- function(
   n_threads = NULL,

@@ -78,7 +78,7 @@ pak::pkg_install(c(
 ))
 ```
 
-For seamless integration with other file types such as `.h5ad`
+For seamless integration with other file types such as `.h5ad`:
 
 ```{r,install_extra_packages2,eval=FALSE}
 pak::pkg_install("anndata")
@@ -99,13 +99,42 @@ pak::pkg_install(c(
 ))
 ```
 
-To reproduce the tutorial to learn more usage
+To use the built-in cell annotation methods:
+
+```{r,install_extra_packages5,eval=FALSE}
+pak::pkg_install(c(
+  # SingleR
+  "SingleR-inc/SingleR",
+  "celldex",
+  # mLLMCelltype
+  "mLLMCelltype",
+  "plyr",
+  # CellTypist
+  "reticulate",
+  "AnnDataR"
+))
+```
+
+To add custom extension functions to SigBridgeR:
+
+```{r,install_extra_packages6,eval=FALSE}
+pak::pkg_install(c(
+  "codetools",
+  "knitr",
+  "lintr",
+  "rstudioapi",
+  "yonicd/tidycheckUsage"
+))
+```
+
+To reproduce the tutorial to learn more usage:
 
 ```{r,install_extra_packages4,eval=FALSE}
 pak::pkg_install(c(
   "zeallot",
   "here",
-  "org.Hs.eg.db"
+  "org.Hs.eg.db",
+  "processx"
 ))
 ```
 
@@ -113,9 +142,9 @@ pak::pkg_install(c(
 
 Get Started:
 
+-   View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 -   [A Quick Started Guide](vignettes/Quick_Start.md)
 -   [Full Tutorial](vignettes/Full_Tutorial.md) for more details
--   View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 -   Use `?SigBridgeR::function_name` to access the help documents in R.
 
 If you encounter problems, please check:

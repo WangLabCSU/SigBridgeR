@@ -2,7 +2,7 @@
 % Please edit documentation in R/15-ChooseNormalization.R
 \name{ChooseNormalization}
 \alias{ChooseNormalization}
-\title{Decide Preprocessing Method for Single-Cell RNA-seq Data}
+\title{Data-Driven Selection of Single-Cell Normalization Methods}
 \usage{
 ChooseNormalization(
   ...,
@@ -14,52 +14,136 @@ ChooseNormalization(
 )
 }
 \arguments{
-\item{subset_size}{Number of cells for diagnostic subsampling. If \code{NULL},
-dynamically determined based on metadata complexity (default: 10,000 or
-all cells, whichever is smaller)}
+\item{...}{Named arguments where each value is a \code{Seurat} object representing
+a distinct preprocessing strategy (e.g., \code{SCT = sct_obj, Log = log_obj}).
+\strong{Requirements}:
+\itemize{
+\item Must be named (names become method identifiers)
+\item Must contain normalized data in the \code{data} slot of the specified assay/layer
+\item Must have identical cell counts (for fair comparison)
+}}
 
-\item{known_hvgs}{Named list of marker genes for cell types
-(e.g., \code{list(T_cell = c("CD3D", "CD3E"))}). Used to evaluate biological
-signal retention in highly variable genes.}
+\item{subset_size}{Integer. Number of cells to subsample for diagnostics.
+If missing or empty, defaults to \code{min(10000, total_cells)}. Smaller subsets
+accelerate computation with minimal accuracy loss for large datasets (>50k cells).}
 
-\item{sc}{A \code{Seurat} object or raw count matrix (\code{dgCMatrix}, \code{dgeMatrix},
-\code{matrix}, or \code{data.frame} with integer counts)}
+\item{known_hvgs}{Named list of canonical marker genes for cell types. Format:
+\code{list(cell_type1 = c("geneA", "geneB"), cell_type2 = c("geneC", ...))}.
+Used to compute \code{marker_retention} metric. If \code{NULL} (default), this
+metric is omitted from scoring.}
 
-\item{batch_column}{Column name in meta.data indicating batch variable
-(e.g., "orig.ident"). Required for batch-aware diagnostics.}
+\item{n_hvgs}{Integer. Number of top highly variable genes to evaluate for marker
+retention. Default: \code{2000L}. Only relevant when \code{known_hvgs} is provided.}
 
-\item{verbose}{Whether to display diagnostic messages}
+\item{low_expressed_thresh}{Numeric (0–1). Quantile threshold for filtering lowly
+expressed genes during variance-mean correlation calculation. Genes below this
+quantile of mean expression are excluded. Default: \code{0.2} (bottom 20\% excluded).}
 
-\item{seed}{Random seed for reproducible subsampling}
+\item{weight}{Named numeric vector specifying weights for composite scoring. Must
+contain exactly these components summing to 1:
+\describe{
+\item{\code{variance_stability}}{Weight for variance-mean decoupling (default: 0.4)}
+\item{\code{marker_signal}}{Weight for marker gene retention (default: 0.35)}
+\item{\code{dropout_robustness}}{Weight for dropout bias removal (default: 0.25)}
+}}
 }
 \value{
-A \code{list} containing:
+A list containing:
 \describe{
-\item{recommendation}{Character: method name}
-\item{metrics}{\code{data.table} with quantified diagnostic metrics}
+\item{\code{metrics}}{A \code{data.table} with diagnostic metrics per method:
+\itemize{
+\item \code{variance_mean_cor}: Pearson correlation between log10(mean) and
+log10(variance) of normalized expression (lower = better)
+\item \code{marker_retention}: Proportion of known markers in top HVGs
+(higher = better; NA if \code{known_hvgs} not provided)
+\item \code{mean_dropout_residual}: Absolute Spearman correlation between
+dropout rate (from counts) and normalized means (lower = better)
+\item \code{composite_score}: Weighted combination of normalized metrics (0–1 scale)
+\item \code{rank}: Method ranking (1 = best)
+}
+}
+\item{\code{recommendation}}{Character string naming the top-ranked method}
+\item{\code{plots}}{(Optional) Diagnostic visualizations if \code{ggplot2} available}
 }
 }
 \description{
-Data-driven decision framework to select between SCTransform and
-LogNormalization based on quantifiable metrics rather than heuristics.
-Evaluates variance stabilization, data sparsity, sequencing depth
-heterogeneity, and biological signal retention.
+A quantitative framework for selecting optimal normalization strategies
+(e.g., SCTransform vs. LogNormalization) based on diagnostic metrics rather
+than heuristics. Evaluates three critical dimensions of preprocessing quality:
+\enumerate{
+\item \strong{Variance stabilization}: Decoupling of mean-variance relationship
+in normalized expression (lower correlation = better).
+\item \strong{Biological signal retention}: Preservation of known marker genes
+within highly variable genes (higher retention = better).
+\item \strong{Dropout robustness}: Removal of technical dropout bias from
+normalized values (lower correlation with dropout rate = better).
 }
+
+Methods are ranked using a weighted composite score. Designed for head-to-head
+comparison of preprocessed Seurat objects.
+}
+\section{Workflow}{
+
+\enumerate{
+\item Validates input objects (naming, cell count consistency, data slot presence)
+\item Subsamples cells (if needed) for computational efficiency
+\item Computes three core metrics per method:
+\describe{
+\item{Variance stabilization}{Correlation between log-transformed mean and
+variance of normalized expression}
+\item{Marker retention}{Overlap between user-provided markers and top HVGs}
+\item{Dropout robustness}{Correlation between gene dropout rate (from counts)
+and normalized expression means}
+}
+\item Normalizes metrics to 0-1  scale (inverting where lower=better)
+\item Computes weighted composite score and ranks methods
+\item Returns top recommendation with full diagnostic report
+}
+}
+
+\section{Notes}{
+
+\itemize{
+\item Requires \emph{pre-normalized} Seurat objects—this function \strong{does not}
+perform normalization itself. Users must first run \code{SCTransform()},
+\code{NormalizeData()}, etc., and store results in the \code{data} slot.
+\item Marker retention metric is only computed when \code{known_hvgs} is provided.
+Without it, scoring relies solely on variance stabilization and dropout robustness.
+\item Weights should sum to 1 (not enforced but recommended for interpretable scores).
+}
+}
+
 \examples{
 \dontrun{
-# Basic usage with Seurat object
-result <- ChooseNormalization(seurat_obj)
+# Compare two preprocessed Seurat objects
+sct_obj <- SCTransform(seurat_raw, verbose = FALSE)
+log_obj <- NormalizeData(seurat_raw, normalization.method = "LogNormalize")
+
+result <- ChooseNormalization(
+  SCT = sct_obj,
+  Log = log_obj,
+  subset_size = 5000,
+  verbose = TRUE
+)
+
+# Top recommendation
 result$recommendation
 
-# With marker genes for refined decision
+# Full metrics table
+result$metrics[, .(method, composite_score, rank)]
+
+# With marker genes for refined scoring
 markers <- list(
   T_cell = c("CD3D", "CD3E", "CD8A"),
-  B_cell = c("CD79A", "MS4A1")
+  B_cell = c("CD79A", "MS4A1", "CD19"),
+  Myeloid = c("CD14", "LYZ", "FCGR3A")
 )
-result <- ChooseNormalization(seurat_obj, known_hvgs = markers)
 
-# Visualize diagnostic plots
-print(result$diagnostics$var_mean_plot)
+result <- ChooseNormalization(
+  SCT = sct_obj,
+  Log = log_obj,
+  known_hvgs = markers,
+  weight = c(variance_stability = 0.3, marker_signal = 0.5, dropout_robustness = 0.2)
+)
 }
-
 }

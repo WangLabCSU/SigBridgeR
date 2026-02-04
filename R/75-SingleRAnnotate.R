@@ -105,7 +105,9 @@ SingleRAnnotate = function(
   chk::chk_whole_number(assay.type.test)
 
   if (verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Start SingleR prediction"))
+    ts_cli$cli_alert_info(cli::col_green(
+      "[SingleR] Start annotating cell types"
+    ))
   }
 
   # * run

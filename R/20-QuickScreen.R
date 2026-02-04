@@ -178,7 +178,7 @@ Screen <- function(
 
   screen_method <- SigBridgeRUtils::MatchArg(
     screen_method,
-    GetExistingStrategy(),
+    names(ScreenStrategy),
     NULL
   )
   method_config <- ScreenStrategy[[screen_method]]

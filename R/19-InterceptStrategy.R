@@ -16,8 +16,6 @@
 #' @param detailed Logical. If \code{TRUE}, performs deep inspection of function objects
 #'   (e.g., argument count, presence of \code{...}, body length, closure environment).
 #'   Default: \code{FALSE}.
-#' @param verbose Logical. Whether to print a formatted table of results using \code{knitr::kable()}.
-#'   Default: \code{TRUE}.
 #' @param ... Additional arguments (currently unused, reserved for future extension).
 #'
 #' @return Invisibly returns a \code{data.frame}:

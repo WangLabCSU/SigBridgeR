@@ -42,6 +42,8 @@
 #'   Example: \code{list(openai = "sk-...", anthropic = "sk-ant-...")}.
 #'   \strong{Note}: Default placeholder keys (\code{"your-xxx-key"}) will fail—users must supply valid keys.
 #'
+#' @param ... Additional arguments passed to \code{Seurat::FindAllMarkers()}, \code{mLLMCelltype::annotate_cell_types} and \code{mLLMCelltype::interactive_consensus_annotation()}.
+#'
 #' @return The input \code{Seurat} object with the following metadata columns added:
 #'   \describe{
 #'     \item{\code{mllmcelltype_cell_type}}{Consensus cell type annotation per cell.}
@@ -128,7 +130,6 @@ mLLMCellTypeAnnotate <- function(
   chk::chk_list(api_keys)
   chk::chk_vector(models)
   chk::chk_named(api_keys)
-  purrr::walk(c(top_gene_count, controversy_threshold), ~ chk::chk_number)
   check_model_key(models = models, api_keys = api_keys)
 
   dots <- rlang::list2(...)
@@ -136,7 +137,9 @@ mLLMCellTypeAnnotate <- function(
   seed <- dots$seed %||% getFuncOption("seed")
 
   if (verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Start Annotating Cell Types"))
+    ts_cli$cli_alert_info(cli::col_green(
+      "[mLLMCelltype] Start annotating cell types"
+    ))
   }
 
   # Find marker genes for each cluster

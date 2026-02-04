@@ -152,7 +152,7 @@ DoscPP <- function(
   }
 
   gene_list <- switch(
-    tolwer(phenotype_class),
+    tolower(phenotype_class),
     "binary" = {
       if (estimate_cutoff != 0.2) {
         cli::cli_warn(

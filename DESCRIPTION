@@ -51,6 +51,7 @@ Remotes:
 Suggests: 
     ALRA,
     anndata,
+    anndataR,
     carrier,
     celldex,
     cheapr,
@@ -73,6 +74,7 @@ Suggests:
     mLLMCelltype,
     org.Hs.eg.db,
     patchwork,
+    plyr,
     preprocessCore,
     processx,
     randomcoloR,
