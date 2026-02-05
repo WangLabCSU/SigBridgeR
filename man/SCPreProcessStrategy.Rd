@@ -5,13 +5,13 @@
 \alias{SCPreProcessStrategy}
 \title{Preprocessing Strategy Registry for Single-Cell Workflows}
 \format{
-An object of class \code{SCPreProcessStrategy} (inherits from \code{list}) of length 11.
+An object of class \code{environment} of length 11.
 }
 \usage{
 SCPreProcessStrategy
 }
 \description{
-An object that maps single-letter codes to standardized Seurat preprocessing
+An environment that maps single-letter codes to standardized Seurat preprocessing
 operations. Each entry is a function of the form \code{function(object, params)}
 that wraps a core Seurat step (e.g., normalization, PCA, clustering) using
 \code{rlang::exec()} for safe parameter injection.

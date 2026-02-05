@@ -6,7 +6,7 @@
 \usage{
 RegisterAnnoMethod(
   ...,
-  registry = AnnotationStrategy,
+  registry = SCAnnotateStrategy,
   verbose = getFuncOption("verbose")
 )
 }
@@ -17,7 +17,7 @@ annotation method. The name becomes the method identifier (e.g.,
 Unnamed arguments are auto-named using their expression via \code{get_names_4_ids()}.}
 
 \item{registry}{Target registry to store annotation methods.
-Default: \code{AnnotationStrategy}.}
+Default: \code{SCAnnotateStrategy}.}
 
 \item{verbose}{Logical. Whether to print a success message upon registration.
 Default: inherits from package option \code{getOption("SigBridgeRUtils.verbose")}.}
@@ -27,7 +27,7 @@ Invisibly returns \code{TRUE} on successful registration.
 }
 \description{
 Registers one or more user-defined annotation functions into a shared registry
-environment (e.g., \code{AnnotationStrategy}). Each method is stored with minimal
+environment (e.g., \code{SCAnnotateStrategy}). Each method is stored with minimal
 metadata (\code{method_name} and \code{executor}) to enable dynamic dispatch in
 annotation pipelines.
 
@@ -45,11 +45,11 @@ MyAnnotator <- function(sc, ...) {
 
 RegisterAnnoMethod(
   custom_annot = MyAnnotator,
-  registry = AnnotationStrategy
+  registry = SCAnnotateStrategy
 )
 
 # Verify registration
-names(AnnotationStrategy)
+names(SCAnnotateStrategy)
 }
 
 }

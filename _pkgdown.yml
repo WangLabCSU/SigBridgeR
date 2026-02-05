@@ -29,10 +29,6 @@ template:
         fg: black
         primary: "#2c5f9b"
 
-authors:
-    - name: Yuxi Yang
-    - email: 15364051195@163.com
-
 title: SigBridgeR
 description: >-
     SigBridgeR: SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data, bulk expression data, and sample-related phenotypic data, to identify the cells most closely associated with the phenotypic data, performing as a bridge to existing tools.
@@ -54,6 +50,8 @@ reference:
           - AggregateDups
           - AggregateDupRows
           - AggregateDupCols
+          - ChooseNormalization
+          - SCIntegrate
 
     - title: Result Integration & Visualization
       desc: >
@@ -63,16 +61,11 @@ reference:
           - ScreenFractionPlot
           - ScreenUpset
 
-    - title: Screening Framework
-      desc: >
-          Core functions for phenotype-driven single-cell screening and method registration.
-      contents:
-          - Screen
-
     - title: Screening Methods
       desc: >
           Built-in screening algorithms.
       contents:
+          - Screen
           - DoLP_SGL
           - DoPIPET
           - DoScissor
@@ -88,6 +81,15 @@ reference:
           - AddMetaFeature
           - AddMisc
           - FindRobustElbow
+
+    - title: Annotate Cell Types in Single-cell Datasets
+      desc: >
+          Built-in annotationa algorithms.
+      contents:
+          - SCAnnotate
+          - CellTypistAnnotate
+          - SingleRAnnotate
+          - mLLMCelltypeAnnotate
 
     - title: Reference Data & External Resources
       desc: >
@@ -106,9 +108,13 @@ reference:
       desc: >
           Other functions for extending SigBridgeR.
       contents:
+          - InterceptStrategy
+          - Register
           - RegisterScreenMethod
+          - RegisterAnnoMethod
+          - RegisterSeuratMethod
           - ValidateScreenFunc
-          - ScreenStrategy
+          - TemplateScreenFunc
 
     - title: Package Configuration
       desc: >
@@ -116,6 +122,7 @@ reference:
       contents:
           - getFuncOption
           - setFuncOption
+          - setThreads
 
 # 导航栏配置
 navbar:

@@ -138,7 +138,7 @@ CellTypistAnnotate <- function(
     ts_cli$cli_alert_info(cli::col_green("Annotation done"))
   }
 
-  res <- reticulate::py_to_r(py$predictions)
+  res <- reticulate::py_to_r(py$res)
   colnames(res) <- paste0("celltypist_", colnames(res))
   Seurat::AddMetaData(object = sc, metadata = res)
 }

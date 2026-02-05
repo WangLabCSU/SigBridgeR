@@ -96,7 +96,7 @@ RegisterScreenMethod <- function(
     ))
   }
   chk::chk_logical(verbose)
-  chk::chk_is(registry, "ScreenStrategy")
+  chk::chk_environment(registry)
 
   # * detect where are functions
   dots <- rlang::list2(...)
@@ -121,7 +121,7 @@ RegisterScreenMethod <- function(
 
   if (verbose) {
     cli::cli_alert_success(
-      "[RegisterScreenMethod()] Registered {.arg {method_names}}"
+      "Registered {.arg {method_names}}"
     )
   }
 

@@ -1,7 +1,7 @@
 #' @title Unified Interface for Single-Cell Annotation Methods
 #' @description
 #' A dispatch wrapper that routes cell type annotation requests to registered methods
-#' stored in \code{AnnotationStrategy}. Provides a consistent API for applying
+#' stored in \code{SCAnnotateStrategy}. Provides a consistent API for applying
 #' different annotation strategies (e.g., \code{CellTypist}, \code{SingleR},
 #' \code{mLLMCelltype}) to a \code{Seurat} object without needing to call each
 #' method directly.
@@ -9,9 +9,9 @@
 #' @param sc A \code{Seurat} object containing single-cell RNA-seq data with
 #'   preprocessed expression matrix and (optionally) pre-computed clusters.
 #' @param method Character. Annotation method to use. Must be one of the keys
-#'   registered in \code{AnnotationStrategy} (e.g., \code{"CellTypist"},
+#'   registered in \code{SCAnnotateStrategy} (e.g., \code{"CellTypist"},
 #'   \code{"SingleR"}, \code{"mLLMCelltype"}). Partial matching is supported.
-#'   Use \code{names(AnnotationStrategy)} to list available methods.
+#'   Use \code{names(SCAnnotateStrategy)} to list available methods.
 #' @param ... Method-specific parameters passed to the underlying annotation function.
 #'   Examples:
 #'   \itemize{
@@ -37,7 +37,7 @@
 #' @examples
 #' \dontrun{
 #' # List available annotation methods
-#' names(AnnotationStrategy)
+#' names(SCAnnotateStrategy)
 #'
 #' # SingleR annotation with HPCA reference
 #' annotated <- SCAnnotate(
@@ -77,7 +77,7 @@ SCAnnotate <- function(
 ) {
   method <- SigBridgeRUtils::MatchArg(
     method,
-    names(AnnotationStrategy),
+    names(SCAnnotateStrategy),
     NULL
   ) # must chosen
 
@@ -87,8 +87,79 @@ SCAnnotate <- function(
 
   set.seed(seed)
 
-  AnnotationStrategy[[method]](
-    sc,
-    ...
-  )
+  if (method != "CellTypist") {
+    SCAnnotateStrategy[[method]](
+      sc,
+      ...
+    )
+  } else {
+    dots <- rlang::list2(...)
+
+    if (is.null(dots$conda) && is.null(dots$python)) {
+      existing_envs <- ListPyEnv()
+      if (!"r-reticulate-celltypist" %in% existing_envs$name) {
+        choice <- utils::askYesNo(
+          "Create a new conda environment for CellTypist?"
+        )
+
+        if (!isTRUE(choice)) {
+          cli::cli_abort(c(
+            "x" = "Aborted. Please specify a conda environment or python interpreter"
+          ))
+        }
+
+        default_args <- list(
+          env_type = "conda",
+          env_name = "r-reticulate-celltypist",
+          method = c("environment"),
+          env_file = system.file(
+            "conda/celltypist_environment.yml",
+            package = "SigBridgeR"
+          ),
+          python_version = "3.9.15",
+          packages = c(
+            "celltypist" = "any"
+          ),
+          env.verbose = SigBridgeRUtils::getFuncOption("verbose"),
+        )
+
+        rlang::exec(
+          SetupPyEnv,
+          utils::modifyList(
+            default_args,
+            SigBridgeRUtils::FilterArgs4Func(dots, SetupPyEnv)
+          )
+        )
+      } else if (verbose) {
+        ts_cli$cli_alert_info(
+          "Existing environment {.val r-reticulate-celltypist} found"
+        )
+      }
+      dots$conda <- "r-reticulate-celltypist"
+    }
+
+    # * used to filter out relevant arguments, pass to python function celltypist.annotate
+    celltypist.annotate <- \(
+      filename,
+      model,
+      transpose_input,
+      gene_file,
+      cell_file,
+      mode,
+      p_thres,
+      majority_voting,
+      over_clustering,
+      use_GPU,
+      min_prop
+    ) {
+      1
+    }
+
+    rlang::exec(
+      SCAnnotateStrategy[[method]],
+      sc = sc,
+      !!!SigBridgeRUtils::FilterArgs4Func(dots, SCAnnotateStrategy[[method]]),
+      !!!SigBridgeRUtils::FilterArgs4Func(dots, celltypist.annotate)
+    )
+  }
 }

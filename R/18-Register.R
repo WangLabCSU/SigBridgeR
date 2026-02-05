@@ -11,7 +11,7 @@
 #' \itemize{
 #'   \item \code{registry = "ScreenStrategy"} → \code{\link{RegisterScreenMethod}}
 #'   \item \code{registry = "SCPreProcessStrategy"} → \code{\link{RegisterSeuratMethod}}
-#'   \item \code{registry = "AnnotationStrategy"} → \code{\link{RegisterAnnoMethod}}
+#'   \item \code{registry = "SCAnnotateStrategy"} → \code{\link{RegisterAnnoMethod}}
 #' }
 #'
 #' @param ... Arguments passed to the underlying registrar. The exact requirements
@@ -21,11 +21,11 @@
 #'       \code{parameter_mapper}, etc. (see \code{\link{RegisterScreenMethod}}).}
 #'     \item{\code{SCPreProcessStrategy}}{Named functions or character specifications
 #'       (e.g., \code{"h" = "Seurat::RunHarmony"}; see \code{\link{RegisterSeuratMethod}}).}
-#'     \item{\code{AnnotationStrategy}}{Named annotation functions (see \code{\link{RegisterAnnoMethod}}).}
+#'     \item{\code{SCAnnotateStrategy}}{Named annotation functions (see \code{\link{RegisterAnnoMethod}}).}
 #'   }
 #' @param registry Character. Target strategy environment for registration.
 #'   Must be one of: \code{"ScreenStrategy"}, \code{"SCPreProcessStrategy"}, or
-#'   \code{"AnnotationStrategy"}. Partial matching is supported (e.g., \code{"screen"} → \code{"ScreenStrategy"}).
+#'   \code{"SCAnnotateStrategy"}. Partial matching is supported (e.g., \code{"screen"} → \code{"ScreenStrategy"}).
 #' @param verbose Logical. Whether to print registration success messages.
 #'   Default: inherits from package option \code{getOption("SigBridgeRUtils.verbose")}.
 #'
@@ -50,7 +50,7 @@
 #'
 #' # Register an annotation method
 #' Register(
-#'   registry = "AnnotationStrategy",
+#'   registry = "SCAnnotateStrategy",
 #'   my_annot = MyCustomAnnotator
 #' )
 #'
@@ -65,7 +65,7 @@
 #'   \code{\link{SCPreProcessStrategy}}
 Register <- function(
   ...,
-  registry = c("ScreenStrategy", "SCPreProcessStrategy", "AnnotationStrategy"),
+  registry = c("ScreenStrategy", "SCPreProcessStrategy", "SCAnnotateStrategy"),
   verbose = getFuncOption("verbose")
 ) {
   #   dots <- rlang::list2(...)
@@ -73,7 +73,8 @@ Register <- function(
   if (is.character(registry)) {
     registry <- SigBridgeRUtils::MatchArg(
       registry,
-      c("ScreenStrategy", "SCPreProcessStrategy", "AnnotationStrategy")
+      c("ScreenStrategy", "SCPreProcessStrategy", "SCAnnotateStrategy"),
+      NULL
     )
     registry_obj <- get0(registry)
   } else {
@@ -92,7 +93,7 @@ Register <- function(
       registry = registry_obj,
       verbose = verbose
     ),
-    "AnnotationStrategy" = RegisterAnnoMethod(
+    "SCAnnotateStrategy" = RegisterAnnoMethod(
       ...,
       registry = registry_obj,
       verbose = verbose

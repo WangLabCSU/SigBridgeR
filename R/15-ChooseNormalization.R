@@ -338,12 +338,7 @@ ChooseNormalizationCheck <- function(
   )
   chk::chk_vector(weight)
   chk::chk_length(weight, 3)
-  if (
-    weight$variance_stability +
-      weight$marker_signal +
-      weight$dropout_robustness !=
-      1
-  ) {
+  if (sum(weight) != 1) {
     cli::cli_abort(c("x" = "weight must sum to 1"))
   }
 }

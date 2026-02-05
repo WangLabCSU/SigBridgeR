@@ -2,7 +2,6 @@
 # ! Don't run this script directly, use `R/73-CellTypistAnnotate.R` instead
 # -------------------------------------------------------------------------------------------------------
 
-from _tracemalloc import stop
 from anndata import AnnData
 import celltypist
 from celltypist import models
@@ -10,7 +9,7 @@ from datetime import datetime
 from typing import Literal, Optional, Callable, Any
 import inspect
 import sys
-
+import pandas as pd
 
 def ts_print(
     message: str,
@@ -63,7 +62,7 @@ def filter_args_4_func(dict: dict[str, Any], func: Callable) -> dict[str, Any]:
     return {k: v for k, v in dict.items() if k in func_params}
 
 
-def main() -> None:
+def main() -> pd.DataFrame:
     # * recept from R script
     model: str = globals().get("model")
     adata: AnnData = globals().get("adata")
@@ -84,6 +83,4 @@ def main() -> None:
     else:
         sys.exit(f"Unknown type of model {type(model)}\n> Expected <class 'str'>")
 
-
-if __name__ == "__main__":
-    res = main()
+res: pd.DataFrame = main()

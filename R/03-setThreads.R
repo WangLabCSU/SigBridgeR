@@ -29,15 +29,11 @@ setThreads <- function(
   rlang::check_installed("future")
   backend <- tolower(backend)
   # Determine thread count
-  n_threads <- n_threads %||% floor(future::availableCores() / 2)
+  n_threads <- n_threads %||% as.integer(floor(future::availableCores() / 2))
   chk::chk_integer(n_threads)
 
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
-
-  if (verbose) {
-    cli::cli_alert_info("Auto-detected physical cores: {.val {n_threads}}")
-  }
 
   results <- rlang::list2()
 

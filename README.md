@@ -106,6 +106,7 @@ To use the built-in cell annotation methods:
 To add custom extension functions to SigBridgeR:
 
     pak::pkg_install(c(
+      "tictoc",
       "codetools",
       "knitr",
       "lintr",

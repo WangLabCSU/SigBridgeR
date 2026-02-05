@@ -119,6 +119,7 @@ To add custom extension functions to SigBridgeR:
 
 ```{r,install_extra_packages6,eval=FALSE}
 pak::pkg_install(c(
+  "tictoc",
   "codetools",
   "knitr",
   "lintr",

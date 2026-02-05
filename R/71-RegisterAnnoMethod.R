@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Registers one or more user-defined annotation functions into a shared registry
-#' environment (e.g., \code{AnnotationStrategy}). Each method is stored with minimal
+#' environment (e.g., \code{SCAnnotateStrategy}). Each method is stored with minimal
 #' metadata (\code{method_name} and \code{executor}) to enable dynamic dispatch in
 #' annotation pipelines.
 #'
@@ -15,7 +15,7 @@
 #'   \code{SingleR = SingleRAnnotate} registers under key \code{"SingleR"}).
 #'   Unnamed arguments are auto-named using their expression via \code{get_names_4_ids()}.
 #' @param registry Target registry to store annotation methods.
-#'   Default: \code{AnnotationStrategy}.
+#'   Default: \code{SCAnnotateStrategy}.
 #' @param verbose Logical. Whether to print a success message upon registration.
 #'   Default: inherits from package option \code{getOption("SigBridgeRUtils.verbose")}.
 #'
@@ -34,20 +34,20 @@
 #'
 #' RegisterAnnoMethod(
 #'   custom_annot = MyAnnotator,
-#'   registry = AnnotationStrategy
+#'   registry = SCAnnotateStrategy
 #' )
 #'
 #' # Verify registration
-#' names(AnnotationStrategy)
+#' names(SCAnnotateStrategy)
 #' }
 #'
 RegisterAnnoMethod <- function(
   ...,
-  registry = AnnotationStrategy,
+  registry = SCAnnotateStrategy,
   verbose = getFuncOption("verbose")
 ) {
   chk::chk_logical(verbose)
-  chk::chk_is(registry, "AnnotationStrategy")
+  chk::chk_environment(registry)
 
   # * detect where are functions
   dots <- rlang::list2(...)
@@ -70,7 +70,7 @@ RegisterAnnoMethod <- function(
 
   if (verbose) {
     cli::cli_alert_success(
-      "[RegisterAnnoMethod()] Registered {.arg {method_names}}"
+      "Registered {.arg {method_names}}"
     )
   }
 

@@ -435,7 +435,7 @@ DEGASEnvSet <- function(user_list) {
     env.method = "environment",
     env.file = system.file(
       "conda/DEGAS_environment.yml",
-      package = "DEGAS"
+      package = "SigBridgeR"
     ),
     env.python_verion = "3.9.15",
     env.packages = c(
@@ -502,9 +502,17 @@ DEGASFindPy <- function(env_params, verbose = TRUE, ...) {
     !env_params$env.name %chin% existing_envs$name ||
       env_params$env.recreate
   ) {
+    choice <- utils::askYesNo("Create a new conda environment for DEGAS?")
+
+    if (!isTRUE(choice)) {
+      cli::cli_abort(c(
+        "x" = "Aborted. Please specify a valid environment name"
+      ))
+    }
+
     # setup environment or recreate if needed
     rlang::exec(
-      DEGAS::SetupPyEnv,
+      SetupPyEnv,
       env_type = env_params$env.type,
       env_name = env_params$env.name,
       python_version = env_params$env.python_verion,

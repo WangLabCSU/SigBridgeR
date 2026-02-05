@@ -11,9 +11,9 @@ SCAnnotate(sc, method = c("CellTypist", "SingleR", "mLLMCelltype"), ...)
 preprocessed expression matrix and (optionally) pre-computed clusters.}
 
 \item{method}{Character. Annotation method to use. Must be one of the keys
-registered in \code{AnnotationStrategy} (e.g., \code{"CellTypist"},
+registered in \code{SCAnnotateStrategy} (e.g., \code{"CellTypist"},
 \code{"SingleR"}, \code{"mLLMCelltype"}). Partial matching is supported.
-Use \code{names(AnnotationStrategy)} to list available methods.}
+Use \code{names(SCAnnotateStrategy)} to list available methods.}
 
 \item{...}{Method-specific parameters passed to the underlying annotation function.
 Examples:
@@ -35,7 +35,7 @@ metadata columns. Column names and content depend on the chosen method:
 }
 \description{
 A dispatch wrapper that routes cell type annotation requests to registered methods
-stored in \code{AnnotationStrategy}. Provides a consistent API for applying
+stored in \code{SCAnnotateStrategy}. Provides a consistent API for applying
 different annotation strategies (e.g., \code{CellTypist}, \code{SingleR},
 \code{mLLMCelltype}) to a \code{Seurat} object without needing to call each
 method directly.
@@ -50,7 +50,7 @@ immediately available through this dispatcher.
 \examples{
 \dontrun{
 # List available annotation methods
-names(AnnotationStrategy)
+names(SCAnnotateStrategy)
 
 # SingleR annotation with HPCA reference
 annotated <- SCAnnotate(

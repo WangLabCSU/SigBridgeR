@@ -48,7 +48,7 @@ RegisterSeuratMethod <- function(
 ) {
   chk::chk_logical(verbose)
   chk::chk_logical(overwrite)
-  chk::chk_is(registry, "SCPreProcessStrategy")
+  chk::chk_environment(registry)
   dots <- rlang::list2(...)
   chk::chk_named(dots)
 
@@ -61,7 +61,7 @@ RegisterSeuratMethod <- function(
       cli::cli_abort(c("x" = "Method key name must be a single character"))
     }
 
-    lookup <- exists(x = letter, envir = registry, inherits = FALSE)
+    lookup <- letter %chin% names(registry)
     if (lookup && !overwrite) {
       cli::cli_abort(c(
         "x" = "Method already exists: {.val {letter}}",
@@ -95,11 +95,11 @@ RegisterSeuratMethod <- function(
 
     if (verbose && !lookup) {
       cli::cli_alert_success(
-        "[RegisterSeuratMethod()] Registered {.field {letter}}"
+        "Registered {.field {letter}}"
       )
     } else if (verbose) {
       cli::cli_alert_warning(
-        "[RegisterSeuratMethod()] Updated {.field {letter}}"
+        "Updated {.field {letter}}"
       )
     }
   }

@@ -12,6 +12,176 @@ vignette: >
 
 This document introduces several auxiliary functions of SigBridgeR.
 
+# Setting
+
+## Setting and Retriving Package Options
+
+Currently, 3 package options are provided:
+
+- `verbose`: Whether to print the progress of the function. Default is `TRUE`.
+- `seed`: The random seed used in the function. Default is `123L`.
+- `timeout`: The maximum timeout time when downloading data. Default is `180L`.
+
+These options can be modified using either the `setFuncOption` or `Options` function (the former is recommended).
+
+```{r,package_options_example,eval=FALSE}
+setFuncOption(seed = 321L)
+
+options(SigBridgeR.seed = 321L)
+```
+
+`setFuncOption` automatically detects the prefix, so parameters with a package name prefix are also compatible.
+
+```{r,package_options_example_2,eval=FALSE}
+setFuncOption(SigBridgeR.seed = 321L)
+```
+
+`getFuncOption` is used to retrieve the global parameters of SigBridgeR.
+
+```{r,package_options_example_3,eval=FALSE}
+getFuncOption("seed")
+# 321
+
+# * Auto-detect prefix 
+getFuncOption("SigBridgeR.seed")
+# 321
+```
+
+## Setting Threads
+
+Used to control the number of threads for OpenMP and data.table. By default, uses half of the maximum available threads.
+
+Default:
+
+```{r,set_threads_example,eval=FALSE}
+setThreads(
+  n_threads = NULL,
+  backend = c("openmp", "dt")
+)
+```
+
+Example Usage:
+
+```{r,set_threads_example_2,eval=FALSE}
+setThreads(1L)
+```
+
+```{r,set_threads_example_3,eval=FALSE}
+# ── System Threads Config ───────────────────────────────────────────────────────────────────────────────────────────────────
+#   OpenMP version (_OPENMP)       201511
+#   omp_get_num_procs()            192
+#   R_DATATABLE_NUM_PROCS_PERCENT  unset (default 50)
+#   R_DATATABLE_NUM_THREADS        unset
+#   R_DATATABLE_THROTTLE           unset (default 1024)
+#   omp_get_thread_limit()         2147483647
+#   omp_get_max_threads()          192
+#   OMP_THREAD_LIMIT               unset
+#   OMP_NUM_THREADS                1
+#   RestoreAfterFork               true
+#   data.table is using 1 threads with throttle==1024. See ?setDTthreads.
+
+# ── Changes 
+# • "OMP_NUM_THREADS": 1 -> 1
+# • "data.table": 96 -> 1
+```
+
+# Seurat Utilities
+
+## Find the Optimal Normalization Method for Seurat
+
+A simple scoring function for selecting a normalization method.
+
+Evaluates 3 dimensions of preprocessing quality:
+
+- **Variance stabilization**: Decoupling of mean-variance relationship in normalized expression (lower correlation = better).
+
+- **Biological signal retention**: Preservation of known marker genes within highly variable genes (higher retention = better).
+
+- **Dropout robustness**: Removal of technical dropout bias from normalized values (lower correlation with dropout rate = better).
+
+
+Exmaple Usage:
+
+```{r,optimal_normalization,eval=FALSE}
+obj <- Seurat::CreateSeuratObject(counts)
+
+sct <- Seurat::SCTransfrom(obj)
+lognorm <- Seurat::NormalizeData(obj) %>%
+    Seurat::ScaleData() %>%
+    Seurat::FindVariableFeatures()
+
+ChooseNormalization(
+  sct = sct,
+  lognorm = lognorm, 
+  # * More can be added here
+  subset_size = integer(),
+  known_hvgs = list(),
+  n_hvgs = 2000L,
+  low_expressed_thresh = 0.2,
+  weight = c(
+    variance_stability = 0.4,
+    marker_signal = 0.35,
+    dropout_robustness = 0.25
+  )
+) 
+```
+
+```{r,,eval=FALSE}
+# ℹ Using 1088 cells
+# ℹ Comparing 2 methods: sct and lognorm
+# ── Method Ranking (Composite Score) 
+# Top method: log_norm
+# [1] log_norm: 0.825
+# [2] sctransform: 0.175
+```
+
+Supports simultaneously adding Seurat objects preprocessed with multiple methods, ensuring they are equivalent to the standard workflow of `NormalizeData` + `ScaleData` + `FindVariableFeatures`.
+
+### Parameters
+
+- `subset_size`: Size of the single-cell data subset (i.e., number of cells) to be evaludated.
+- `known_hvgs`: list or character. Known highly variable genes, provided as a reference baseline. 
+- `n_hvgs`: Maximum number of highly variable genes to consider.
+- `low_expressed_thresh`: Percentage of genes excluded from consideration, ranked by expression level.
+- `weight`: Scoring weight that sum to 1.
+
+
+
+## Finding the Optimal Number of Principle Components 
+
+Usually the number if principle components (PCs) is manually set to 10 or 20 according to the elbow plot. However, it is not always the case that the PCs with the highest variance are the most informative. Here is a function to help you find the optimal number of PCs.
+
+```{r,find_optimal_pc_example,eval=FALSE}
+ndims <- FindRobustElbow(
+  obj = seurat,
+  verbose = TRUE,
+  ndims = 50 
+)
+# ── Method Results 
+# ℹ Method 1A (Cumulative Variance > 90%): 1:40
+# ℹ Method 1B (Variance > Mean): 1:11
+# ℹ Method 1C (Variance > 2*SD): 1:4
+# ℹ Method 2 (Second Derivative): 1:2
+# ℹ Method 3 (Distance-based): 1:8
+# ✔ Final Recommended Dimensions:  1:35
+
+# ── Summary 
+# ℹ Cumulative variance at 35 PCs: 84.8%
+# ℹ Variance explained by PC35: 1.09%
+
+print(ndims)
+# 35
+```
+
+This function will draw an elbow plot with each method and the recommended number of PCs. You can also use the `ndims` parameter to specify the maximum number of PCs to be tested. The default value is `50`.
+
+```{r,example_data_elbow_plot,eval=FALSE}
+knitr::include_graphics("vignettes/example_figures/elbow.png")
+```
+
+[![elbow](example_figures/elbow.png){fig-align="center" width="600"}]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/elbow.png))
+
+
 ## Add miscellaneous information to the Seurat object
 
 SigBridgeR uses `AddMisc()` to record what data features or evidence the various screening algorithms are based on during execution. As a substitute for the `SeuratObject::Misc()`
@@ -61,6 +231,7 @@ seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "ATAC"
 ```
 
 If duplicate column names are detected, they will be suffixed with an underscore and a number (e.g., `_1`, `_2`) for disambiguation.
+
 
 
 ## Integration of Single Cell Data
@@ -124,6 +295,8 @@ The Pipeline String: Each letter in the pipeline argument triggers a specific Se
 | **u** | `RunUMAP` | UMAP reduction. |
 | **r** | `SCTransform` | **SCT workflow.** Replaces n, s, v. |
 
+If more are needed, see [A Guide for Custom Extensions](https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html)
+
 Example Usage
 
 ```{r,seurat_integration_example,eval=FALSE}
@@ -153,8 +326,8 @@ mat2 <- matrix(
 seu1 <- Seurat::CreateSeuratObject(mat1)
 seu2 <- Seurat::CreateSeuratObject(mat2)
 integrated_seu <- SCIntegrate(
-  seu1,
-  seu2,
+  Seurat1 = seu1, # Add prefixes
+  Seurat2 = seu2,
   method = Seurat::CCAIntegration,
   pipeline = "nsvpi",
   dims = 1:10,
@@ -169,6 +342,66 @@ integrated_seu
 # Active assay: RNA (30 features, 10 variable features)
 #  5 layers present: counts.1, counts.2, data.1, data.2, scale.data
 #  2 dimensional reductions calculated: pca, integrated.dr
+```
+
+## Cell Type Annotation 
+
+As of version 3.3.0, three built-in cell annotation algorithms are included and can be applied directly to Seurat objects. Using them requires installing additional dependencies. See the [README](https://wanglabcsu.github.io/SigBridgeR/index.html).
+
+Basic usage:
+
+```{r,cell_type_annotation_example,eval=FALSE}
+seurat <- SCAnnotate(
+  sc = seurat,
+  method = c("CellTypist", "SingleR", "mLLMCelltype")
+  # * more arguments passed to each method
+)
+```
+
+or control it manually:
+
+### CellTypist Annotation
+
+This is the direct R wrapper of celltypist.annotate. Unlike `SCAnnotate`, it does not prepare an environment for you.
+
+```{r,cell_typist_annotation_example_2,eval=FALSE}
+seurat <- CellTypistAnnotate(
+  sc,
+  model = NULL,
+  download = TRUE,
+  conda = NULL,
+  python = NULL,
+  verbose = getFuncOption("verbose"),
+  celltypist_tools = system.file(
+    "python/73-CellTypistAnnotate.py",
+    package = "SigBridgeR"
+  ),
+  # * more arguments pass to celltypist.annotate (python)
+) 
+```
+
+**Parameters**
+
+- `sc`: A Seurat object.
+- `model`: Charater/str. The model to use. If `NULL`, the default model will be used.
+- `download`: Logical/bool. Whether to download the model. Defaults to `TRUE`.
+- `conda`: Character/str. conda environment name. If `NULL`, try to use `python`.
+- `python`: Character/str. The path to the python executable. If `NULL`, try to use `conda`.
+- `verbose`: Logical/bool. Whether to print verbose messages. Defaults to `TRUE`.
+- `celltypist_tools`: The path to the celltypist_tools.py file. If `NULL`, the default path will be used.
+
+helpful link: [https://github.com/Teichlab/celltypist](https://github.com/Teichlab/celltypist)
+
+### mLLMCelltype Annotation
+
+```{r,mLLMCelltype_annotation_example,eval=FALSE}
+
+```
+
+### SingleR Annotation
+
+```{r,singleR_annotation_example,eval=FALSE}
+
 ```
 
 ## Load reference data
@@ -234,7 +467,7 @@ c(mat_exam, bulk, pheno) %<-%  LoadRefData(
 )
 ```
 
-## Setting up Python Environment
+# Setting up Python Environment
 
 Some screening methods (e.g. [Section 3.5 DEGAS](#35-option-e-degas-screening)) are built using Python and require an execution environment. Here is a function to help you set up a Python environment. Both Windows and Unix-like systems are supported.
 
@@ -298,71 +531,4 @@ If the virtual environment isn't installed in the default location, you can spec
 
 ```{r,list_py_env_example_3,eval=FALSE}
 ListPyEnv(env_type = "venv", venv_locations ="~/here_is_a_dir/.virtualenvs")
-```
-
-## Finding the Optimal Number of Principle Components 
-
-Usually the number if principle components (PCs) is manually set to 10 or 20 according to the elbow plot. However, it is not always the case that the PCs with the highest variance are the most informative. Here is a function to help you find the optimal number of PCs.
-
-```{r,find_optimal_pc_example,eval=FALSE}
-ndims <- FindRobustElbow(
-  obj = seurat,
-  verbose = TRUE,
-  ndims = 50 
-)
-# ── Method Results 
-# ℹ Method 1A (Cumulative Variance > 90%): 1:40
-# ℹ Method 1B (Variance > Mean): 1:11
-# ℹ Method 1C (Variance > 2*SD): 1:4
-# ℹ Method 2 (Second Derivative): 1:2
-# ℹ Method 3 (Distance-based): 1:8
-# ✔ Final Recommended Dimensions:  1:35
-
-# ── Summary 
-# ℹ Cumulative variance at 35 PCs: 84.8%
-# ℹ Variance explained by PC35: 1.09%
-
-print(ndims)
-# 35
-```
-
-This function will draw an elbow plot with each method and the recommended number of PCs. You can also use the `ndims` parameter to specify the maximum number of PCs to be tested. The default value is `50`.
-
-```{r,example_data_elbow_plot,eval=FALSE}
-knitr::include_graphics("vignettes/example_figures/elbow.png")
-```
-
-[![elbow](example_figures/elbow.png){fig-align="center" width="600"}]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/elbow.png))
-
-## Setting and Retriving Package Options
-
-Currently, 7 package options are provided:
-
-- `verbose`: Whether to print the progress of the function. Default is `TRUE`.
-- `seed`: The random seed used in the function. Default is `123L`.
-- `timeout`: The maximum timeout time when downloading data. Default is `180L`.
-
-These options can be modified using either the `setFuncOption` or `Options` function (the former is recommended).
-
-```{r,package_options_example,eval=FALSE}
-setFuncOption(seed = 321L)
-
-options(SigBridgeR.seed = 321L)
-```
-
-`setFuncOption` automatically detects the prefix, so parameters with a package name prefix are also compatible.
-
-```{r,package_options_example_2,eval=FALSE}
-setFuncOption(SigBridgeR.seed = 321L)
-```
-
-`getFuncOption` is used to retrieve the global parameters of SigBridgeR.
-
-```{r,package_options_example_3,eval=FALSE}
-getFuncOption("seed")
-# 321
-
-# * Auto-detect prefix 
-getFuncOption("SigBridgeR.seed")
-# 321
 ```

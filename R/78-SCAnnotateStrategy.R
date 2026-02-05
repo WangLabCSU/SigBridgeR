@@ -1,7 +1,7 @@
 #' @title Registry of Cell Type Annotation Methods
 #' @keywords Single_Cell_Annotation_Method
 #' @description
-#' An object storing methods for annotating cell types.
+#' An environment storing methods for annotating cell types.
 #'
 #' @details
 #' Storing structure - named list
@@ -11,7 +11,7 @@
 #'     - `executor`: function implementation of the method
 #'
 #' @export
-AnnotationStrategy <- structure(
+SCAnnotateStrategy <- rlang::new_environment(
   list(
     CellTypist = list(
       method_name = "CellTypist",
@@ -25,6 +25,5 @@ AnnotationStrategy <- structure(
       method_name = "SingleR",
       executor = SingleRAnnotate
     )
-  ),
-  class = c("AnnotationStrategy", "list")
+  )
 )

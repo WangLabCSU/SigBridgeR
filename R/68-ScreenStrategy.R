@@ -1,7 +1,7 @@
 #' @title Registry of Phenotype-Associated Cell Screening Methods
 #' @keywords Add_Screen_method
 #' @description
-#' An object storing methods for screening phenotype-associated cells.
+#' An environment storing methods for screening phenotype-associated cells.
 #'
 #' @details
 #' Storing structure - named list
@@ -13,7 +13,7 @@
 #'     - `mapper`: A function that transforms the parameters passed to the `Screen` function before forwarding them to the executor; both input and output must be of type `list`.
 #'
 #' @export
-ScreenStrategy <- structure(
+ScreenStrategy <- rlang::new_environment(
   list(
     Scissor = list(
       method_name = "Scissor",
@@ -81,6 +81,5 @@ ScreenStrategy <- structure(
       phenotypes = c("binary", "survival", "continuous"),
       mapper = NULL
     )
-  ),
-  class = c("ScreenStrategy", "list")
+  )
 )
