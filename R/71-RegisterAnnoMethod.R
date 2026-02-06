@@ -21,8 +21,8 @@
 #'
 #' @return Invisibly returns \code{TRUE} on successful registration.
 #' @export
-#' @keywords Registering
-#' @keywords Single_Cell_Annotation_Method
+#' @family Registering
+#' @family Single_Cell_Annotation_Method
 #'
 #' @examples
 #' \dontrun{

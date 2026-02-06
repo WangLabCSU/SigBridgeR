@@ -53,6 +53,7 @@
 #' }
 #'
 #' @name SCIntegrate
+#' @family single_cell_preprocess
 #' @export
 NULL
 

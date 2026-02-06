@@ -67,9 +67,10 @@
 #' )
 #'
 #' # Partial matching works
-#' annotated <- SCAnnotate(sc = seurat_obj, method = "single")  # → "SingleR"
+#' annotated <- SCAnnotate(sc = seurat_obj, method = "single")  # -> "SingleR"
 #' }
 #' @export
+#' @family single_cell_preprocess
 SCAnnotate <- function(
   sc,
   method = c("CellTypist", "SingleR", "mLLMCelltype"),
@@ -87,12 +88,18 @@ SCAnnotate <- function(
 
   set.seed(seed)
 
-  if (method != "CellTypist") {
+  if (method == "mLLMCelltype") {
     SCAnnotateStrategy[[method]](
       sc,
       ...
     )
-  } else {
+  } else if (method == "SingleR") {
+    SCAnnotateStrategy[[method]](
+      sc,
+      ref = dots$ref %||% "HPCA",
+      ...
+    )
+  } else if (method == "CellTypist") {
     dots <- rlang::list2(...)
 
     if (is.null(dots$conda) && is.null(dots$python)) {
@@ -120,7 +127,7 @@ SCAnnotate <- function(
           packages = c(
             "celltypist" = "any"
           ),
-          env.verbose = SigBridgeRUtils::getFuncOption("verbose"),
+          env.verbose = SigBridgeRUtils::getFuncOption("verbose")
         )
 
         rlang::exec(

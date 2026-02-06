@@ -1,5 +1,6 @@
 #' @title Register a Seurat Processing Strategy
-#' @keywords Registering
+#' @family Registering
+#' @family single_cell_preprocess
 #' @description
 #' Dynamically registers one or more new preprocessing strategies into a strategy
 #' environment (i.e., \code{SCPreProcessStrategy}). Each strategy is stored under

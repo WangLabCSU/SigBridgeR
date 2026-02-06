@@ -5,9 +5,9 @@
 \title{Annotate Cell Types Using Multi-LLM Consensus Approach}
 \usage{
 mLLMCellTypeAnnotate(
-  seurat_obj,
+  sc,
   seurat_obj_markers = NULL,
-  tissue_name = "Human Tumor",
+  tissue_name = "Human Cancer",
   models = c("gpt-5", "claude-sonnet-4-5-20250929", "gemini-3-pro",
     "qwen-max-2025-01-25"),
   api_keys = list(anthropic = "your-anthropic-key", openai = "your-openai-key", gemini =
@@ -16,8 +16,8 @@ mLLMCellTypeAnnotate(
 )
 }
 \arguments{
-\item{seurat_obj}{A \code{Seurat} object with pre-computed clusters
-(stored in \code{Idents(seurat_obj)} or \code{seurat_obj$seurat_clusters}).}
+\item{sc}{A \code{Seurat} object with pre-computed clusters
+(stored in \code{Idents(sc)} or \code{sc$seurat_clusters}).}
 
 \item{seurat_obj_markers}{Optional pre-computed marker gene table or list (output of
 \code{Seurat::FindAllMarkers()}). If \code{NULL} (default), markers are computed
@@ -90,7 +90,7 @@ or user-provided markers).
 \dontrun{
 # Multi-model consensus annotation
 annotated <- mLLMCellTypeAnnotate(
-  seurat_obj = pbmc_small,
+  sc = pbmc_small,
   tissue_name = "Peripheral Blood Mononuclear Cells",
   models = c("gpt-4o", "claude-3-5-sonnet-20240620"),
   api_keys = list(
@@ -117,7 +117,7 @@ markers_df <- data.frame(
 
 # Single-model annotation (faster, no consensus metrics)
 annotated <- mLLMCellTypeAnnotate(
-  seurat_obj = pbmc_small,
+  sc = pbmc_small,
   models = "gpt-4o-mini",
   api_keys = list(openai = Sys.getenv("OPENAI_API_KEY"))
 )
@@ -130,5 +130,11 @@ head(annotated$mllmcelltype_consensus_proportion)  # Only present in multi-model
 \seealso{
 \code{\link[mLLMCelltype]{annotate_cell_types}},
 \code{\link[mLLMCelltype]{interactive_consensus_annotation}}
+
+Other Single_Cell_Annotation_Method: 
+\code{\link{CellTypistAnnotate}()},
+\code{\link{RegisterAnnoMethod}()},
+\code{\link{SCAnnotateStrategy}},
+\code{\link{SingleRAnnotate}()}
 }
-\keyword{Single_Cell_Annotation_Method}
+\concept{Single_Cell_Annotation_Method}

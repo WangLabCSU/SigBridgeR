@@ -88,4 +88,11 @@ annotated <- CellTypistAnnotate(
 )
 }
 }
-\keyword{Single_Cell_Annotation_Method}
+\seealso{
+Other Single_Cell_Annotation_Method: 
+\code{\link{RegisterAnnoMethod}()},
+\code{\link{SCAnnotateStrategy}},
+\code{\link{SingleRAnnotate}()},
+\code{\link{mLLMCellTypeAnnotate}()}
+}
+\concept{Single_Cell_Annotation_Method}

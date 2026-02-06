@@ -1,5 +1,5 @@
 #' @title Registry of Cell Type Annotation Methods
-#' @keywords Single_Cell_Annotation_Method
+#' @family Single_Cell_Annotation_Method
 #' @description
 #' An environment storing methods for annotating cell types.
 #'

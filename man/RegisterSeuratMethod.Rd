@@ -56,4 +56,22 @@ RegisterSeuratMethod(
 }
 
 }
-\keyword{Registering}
+\seealso{
+Other Registering: 
+\code{\link{Register}()},
+\code{\link{RegisterAnnoMethod}()},
+\code{\link{RegisterScreenMethod}()}
+
+Other single_cell_preprocess: 
+\code{\link{FilterTumorCell}()},
+\code{\link{FindRobustElbow}()},
+\code{\link{Pattern2Colname}()},
+\code{\link{QCPatternDetect}()},
+\code{\link{SCAnnotate}()},
+\code{\link{SCIntegrate}()},
+\code{\link{SCPreProcess}()},
+\code{\link{SCPreProcessStrategy}},
+\code{\link{compatible_with_3.0.2}()}
+}
+\concept{Registering}
+\concept{single_cell_preprocess}

@@ -26,4 +26,11 @@ Storing structure - named list
 }
 }
 }
-\keyword{Add_Screen_method}
+\seealso{
+Other Add_Screen_method: 
+\code{\link{RegisterScreenMethod}()},
+\code{\link{TemplateScreenFunc}()},
+\code{\link{ValidateScreenFunc}()}
+}
+\concept{Add_Screen_method}
+\keyword{datasets}

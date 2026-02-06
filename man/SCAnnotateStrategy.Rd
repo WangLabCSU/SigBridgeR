@@ -24,4 +24,12 @@ Storing structure - named list
 }
 }
 }
-\keyword{Single_Cell_Annotation_Method}
+\seealso{
+Other Single_Cell_Annotation_Method: 
+\code{\link{CellTypistAnnotate}()},
+\code{\link{RegisterAnnoMethod}()},
+\code{\link{SingleRAnnotate}()},
+\code{\link{mLLMCellTypeAnnotate}()}
+}
+\concept{Single_Cell_Annotation_Method}
+\keyword{datasets}

@@ -53,5 +53,17 @@ names(SCAnnotateStrategy)
 }
 
 }
-\keyword{Registering}
-\keyword{Single_Cell_Annotation_Method}
+\seealso{
+Other Registering: 
+\code{\link{Register}()},
+\code{\link{RegisterScreenMethod}()},
+\code{\link{RegisterSeuratMethod}()}
+
+Other Single_Cell_Annotation_Method: 
+\code{\link{CellTypistAnnotate}()},
+\code{\link{SCAnnotateStrategy}},
+\code{\link{SingleRAnnotate}()},
+\code{\link{mLLMCellTypeAnnotate}()}
+}
+\concept{Registering}
+\concept{Single_Cell_Annotation_Method}

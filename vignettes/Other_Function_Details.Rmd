@@ -344,7 +344,7 @@ integrated_seu
 #  2 dimensional reductions calculated: pca, integrated.dr
 ```
 
-## Cell Type Annotation 
+# Cell Type Annotation 
 
 As of version 3.3.0, three built-in cell annotation algorithms are included and can be applied directly to Seurat objects. Using them requires installing additional dependencies. See the [README](https://wanglabcsu.github.io/SigBridgeR/index.html).
 
@@ -360,7 +360,7 @@ seurat <- SCAnnotate(
 
 or control it manually:
 
-### CellTypist Annotation
+## CellTypist Annotation
 
 This is the direct R wrapper of celltypist.annotate. Unlike `SCAnnotate`, it does not prepare an environment for you.
 
@@ -371,7 +371,7 @@ seurat <- CellTypistAnnotate(
   download = TRUE,
   conda = NULL,
   python = NULL,
-  verbose = getFuncOption("verbose"),
+  verbose = getFuncOption("verbose"), # TRUE
   celltypist_tools = system.file(
     "python/73-CellTypistAnnotate.py",
     package = "SigBridgeR"
@@ -392,21 +392,66 @@ seurat <- CellTypistAnnotate(
 
 helpful link: [https://github.com/Teichlab/celltypist](https://github.com/Teichlab/celltypist)
 
-### mLLMCelltype Annotation
+## mLLMCelltype Annotation
 
 ```{r,mLLMCelltype_annotation_example,eval=FALSE}
-
+seurat <- mLLMCellTypeAnnotate(
+  sc,
+  seurat_obj_markers = NULL,
+  # * Context for large language models
+  tissue_name = "Human Cancer", 
+  models = c(
+    "gpt-5",
+    "claude-sonnet-4-5-20250929",
+    "gemini-3-pro",
+    "qwen-max-2025-01-25"
+  ),
+  api_keys = list(
+    anthropic = "your-anthropic-key",
+    openai = "your-openai-key",
+    gemini = "your-google-key",
+    qwen = "your-qwen-key"
+  ),
+  # Other arguments passed to `mLLMCelltype::annotate_cell_types` or ` mLLMCelltype::interactive_consensus_annotation`
+)
 ```
 
-### SingleR Annotation
+helpful link: [https://github.com/cafferychen777/mLLMCelltype](https://github.com/cafferychen777/mLLMCelltype)
+
+## SingleR Annotation
 
 ```{r,singleR_annotation_example,eval=FALSE}
-
+seurat <- SingleRAnnotate(
+  sc,
+  verbose = getFuncOption("verbose"), # TRUE
+  # * pass to `celldex::HumanPrimaryCellAtlasData`
+  ensembl = FALSE,
+  cell.ont = c("all", "nonna", "none"),
+  legacy = FALSE,
+  # * pass to `SingleR::SingleR`
+  ref = c("HPCA", "custom"),
+  labels = NULL,
+  # Other arguments passed to `SingleR::SingleR`
+)
 ```
+
+**Parameters**
+
+- `sc`: A Seurat object.
+- `verbose`: Logical. Whether to print progress messages. Defaults to `TRUE`.
+- `ensembl`: Logical. Whether to convert row names to Ensembl IDs. Genes without a valid mapping are discarded.
+- `cell.ont`: Character. specifying Cell Ontology term handling. Use `"nonna"` to discard samples without valid terms, `"all"` to keep all samples (with possible `NA`), or `"none"` to skip.
+- `legacy`: Logical. Whether to use legacy ExperimentHub backend. Default uses gypsum.
+- `ref`: Reference data for annotation. Either `"HPCA"` (Human Primary Cell Atlas from `celldex`) or a `SingleCellExperiment` object with pre-labeled cells. For multiple references, a list of matrices or `SummarizedExperiment` objects.
+- `labels`: Character vector of cell type labels for `ref` columns. Required for custom references; defaults to `ref$label.main` for `"HPCA"`. If `ref` is a list, `labels` must be a corresponding list.
+
+helpful link: [https://github.com/SingleR-inc/SingleR](https://github.com/SingleR-inc/SingleR)
+
+# Other Functions
 
 ## Load reference data
 
-### Parameters
+**Parameters**
 
 - `data_type`: The type of data to load. Can be either "continuous", "survival" or "binary", case-insensitive.
 - `path`: The path to the data directory. 

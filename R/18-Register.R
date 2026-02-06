@@ -31,7 +31,7 @@
 #'
 #' @return Invisibly returns \code{TRUE} on successful registration (via the underlying registrar).
 #' @export
-#' @keywords Registering
+#' @family Registering
 #'
 #' @examples
 #' \dontrun{

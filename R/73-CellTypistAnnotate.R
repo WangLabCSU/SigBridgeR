@@ -60,7 +60,7 @@
 #'   python = "/path/to/miniconda3/envs/celltypist/bin/python"
 #' )
 #' }
-#' @keywords Single_Cell_Annotation_Method
+#' @family Single_Cell_Annotation_Method
 #' @export
 CellTypistAnnotate <- function(
   sc,

@@ -13,19 +13,19 @@ This document introduces a guide for extending SigBridgeR with custom algorithms
 
 Extend `SCPreProcess`: key = func
 
-```{r,tl_dr}
+```{r,tl_dr,eval= FALSE}
 Register(h = Seurat::RunHarmony, "SCP")
 ```
 
 Extend `SCAnnotate`: key = func
 
-```{r,tl_dr2}
+```{r,tl_dr2,eval= FALSE}
 Register(my = my_function, "SCA")
 ```
 
 Extend `Screen`: key = func
 
-```{r,tl_dr3}
+```{r,tl_dr3,eval= FALSE}
 ValidateScreenFunc(my_function)
 Register(my = my_function, "Scr")
 ```
@@ -310,7 +310,7 @@ RegisterSeuratMethod(x = Seurat::LoadXenium)
 
 To check:
 
-```{r,check_seurat_extended,eval=FASLE}
+```{r,check_seurat_extended,eval=FALSE}
 names(SCPreProcessStrategy)
 #  [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"
 ```

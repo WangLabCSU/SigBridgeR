@@ -16,8 +16,8 @@
 #'   \item Adds results as metadata columns to the Seurat object.
 #' }
 #'
-#' @param seurat_obj A \code{Seurat} object with pre-computed clusters
-#'   (stored in \code{Idents(seurat_obj)} or \code{seurat_obj$seurat_clusters}).
+#' @param sc A \code{Seurat} object with pre-computed clusters
+#'   (stored in \code{Idents(sc)} or \code{sc$seurat_clusters}).
 #' @param seurat_obj_markers Optional pre-computed marker gene table or list (output of
 #'   \code{Seurat::FindAllMarkers()}). If \code{NULL} (default), markers are computed
 #'   automatically using parameters passed via \code{...}.
@@ -67,7 +67,7 @@
 #' \dontrun{
 #' # Multi-model consensus annotation
 #' annotated <- mLLMCellTypeAnnotate(
-#'   seurat_obj = pbmc_small,
+#'   sc = pbmc_small,
 #'   tissue_name = "Peripheral Blood Mononuclear Cells",
 #'   models = c("gpt-4o", "claude-3-5-sonnet-20240620"),
 #'   api_keys = list(
@@ -94,7 +94,7 @@
 #'
 #' # Single-model annotation (faster, no consensus metrics)
 #' annotated <- mLLMCellTypeAnnotate(
-#'   seurat_obj = pbmc_small,
+#'   sc = pbmc_small,
 #'   models = "gpt-4o-mini",
 #'   api_keys = list(openai = Sys.getenv("OPENAI_API_KEY"))
 #' )
@@ -103,14 +103,14 @@
 #' table(annotated$mllmcelltype_cell_type)
 #' head(annotated$mllmcelltype_consensus_proportion)  # Only present in multi-model mode
 #' }
-#' @keywords Single_Cell_Annotation_Method
+#' @family Single_Cell_Annotation_Method
 #' @seealso \code{\link[mLLMCelltype]{annotate_cell_types}},
 #'          \code{\link[mLLMCelltype]{interactive_consensus_annotation}}
 #' @export
 mLLMCellTypeAnnotate <- function(
-  seurat_obj,
+  sc,
   seurat_obj_markers = NULL,
-  tissue_name = "Human Tumor",
+  tissue_name = "Human Cancer", # context
   models = c(
     "gpt-5",
     "claude-sonnet-4-5-20250929",
@@ -126,7 +126,7 @@ mLLMCellTypeAnnotate <- function(
   ...
 ) {
   rlang::check_installed(c("mLLMCelltype", "plyr"))
-  chk::chk_is(seurat_obj, "Seurat")
+  chk::chk_is(sc, "Seurat")
   chk::chk_list(api_keys)
   chk::chk_vector(models)
   chk::chk_named(api_keys)
@@ -149,7 +149,7 @@ mLLMCellTypeAnnotate <- function(
     }
     seurat_obj_markers <- rlang::exec(
       Seurat::FindAllMarkers,
-      object = seurat_obj,
+      object = sc,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindAllMarkers)
     )
   } else if (verbose) {
@@ -181,13 +181,13 @@ mLLMCellTypeAnnotate <- function(
       ts_cli$cli_alert_success("Annotation Finished")
     }
 
-    seurat_obj$mllmcelltype_cell_type <- plyr::mapvalues(
-      x = as.character(SeuratObject::Idents(seurat_obj)),
+    sc$mllmcelltype_cell_type <- plyr::mapvalues(
+      x = as.character(SeuratObject::Idents(sc)),
       from = as.character(0:(length(single_model_results) - 1)),
       to = single_model_results
     )
 
-    return(seurat_obj)
+    return(sc)
   }
   # Multiple model prediction
   consensus_results <- rlang::exec(
@@ -207,7 +207,7 @@ mLLMCellTypeAnnotate <- function(
   cluster_to_celltype_map <- consensus_results$final_annotations
 
   ## Create a new column for cell type identifiers.
-  cell_types <- as.character(Seurat::Idents(seurat_obj))
+  cell_types <- as.character(Seurat::Idents(sc))
   for (cluster_id in names(cluster_to_celltype_map)) {
     cell_types[cell_types == cluster_id] <- cluster_to_celltype_map[[
       cluster_id
@@ -215,7 +215,7 @@ mLLMCellTypeAnnotate <- function(
   }
 
   ## Add cell type annotations to the Seurat object.
-  seurat_obj$mllmcelltype_cell_type <- cell_types
+  sc$mllmcelltype_cell_type <- cell_types
 
   # Add uncertainty metrics.
   ## Extract detailed consensus results containing metrics.
@@ -233,12 +233,12 @@ mLLMCellTypeAnnotate <- function(
 
   # Add uncertainty metrics for each cell.
   ## Match each cell with its corresponding clustering metrics using `seurat_clusters`.
-  current_clusters <- seurat_obj$seurat_clusters
-  seurat_obj$mllmcelltype_consensus_proportion <- uncertainty_metrics$consensus_proportion[match(
+  current_clusters <- sc$seurat_clusters
+  sc$mllmcelltype_consensus_proportion <- uncertainty_metrics$consensus_proportion[match(
     current_clusters,
     uncertainty_metrics$cluster_id
   )]
-  seurat_obj$mllmcelltype_entropy <- uncertainty_metrics$entropy[match(
+  sc$mllmcelltype_entropy <- uncertainty_metrics$entropy[match(
     current_clusters,
     uncertainty_metrics$cluster_id
   )]
@@ -247,7 +247,7 @@ mLLMCellTypeAnnotate <- function(
     ts_cli$cli_alert_info("Annotation Finished")
   }
 
-  seurat_obj
+  sc
 }
 
 #' @keywords internal

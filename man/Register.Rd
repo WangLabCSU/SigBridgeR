@@ -76,5 +76,10 @@ Register(registry = "anno", my_annot2 = AnotherAnnotator)
 \code{\link{RegisterSeuratMethod}},
 \code{\link{RegisterAnnoMethod}},
 \code{\link{SCPreProcessStrategy}}
+
+Other Registering: 
+\code{\link{RegisterAnnoMethod}()},
+\code{\link{RegisterScreenMethod}()},
+\code{\link{RegisterSeuratMethod}()}
 }
-\keyword{Registering}
+\concept{Registering}

@@ -78,5 +78,16 @@ RegisterScreenMethod(
 }
 
 }
-\keyword{Add_Screen_method}
-\keyword{Registering}
+\seealso{
+Other Add_Screen_method: 
+\code{\link{ScreenStrategy}},
+\code{\link{TemplateScreenFunc}()},
+\code{\link{ValidateScreenFunc}()}
+
+Other Registering: 
+\code{\link{Register}()},
+\code{\link{RegisterAnnoMethod}()},
+\code{\link{RegisterSeuratMethod}()}
+}
+\concept{Add_Screen_method}
+\concept{Registering}

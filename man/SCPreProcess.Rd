@@ -140,6 +140,9 @@ Other single_cell_preprocess:
 \code{\link{FindRobustElbow}()},
 \code{\link{Pattern2Colname}()},
 \code{\link{QCPatternDetect}()},
+\code{\link{RegisterSeuratMethod}()},
+\code{\link{SCAnnotate}()},
+\code{\link{SCIntegrate}()},
 \code{\link{SCPreProcessStrategy}},
 \code{\link{compatible_with_3.0.2}()}
 }

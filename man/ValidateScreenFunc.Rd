@@ -43,4 +43,10 @@ my_screen <- function(
 ValidateScreenFunc(my_screen)
 }
 }
-\keyword{Add_Screen_method}
+\seealso{
+Other Add_Screen_method: 
+\code{\link{RegisterScreenMethod}()},
+\code{\link{ScreenStrategy}},
+\code{\link{TemplateScreenFunc}()}
+}
+\concept{Add_Screen_method}

@@ -7,11 +7,11 @@
 SingleRAnnotate(
   sc,
   verbose = getFuncOption("verbose"),
+  ensembl = FALSE,
+  cell.ont = c("all", "nonna", "none"),
+  legacy = FALSE,
   ref = c("HPCA", "custom"),
   labels = NULL,
-  de.method = "wilcox",
-  de.n = 20L,
-  assay.type.test = 1L,
   ...
 )
 }
@@ -23,28 +23,29 @@ SingleRAnnotate(
 }}
 
 \item{verbose}{Logical. Whether to print progress messages.
-Default: inherits from package option \code{getOption("SigBridgeRUtils.verbose")}.}
+Default: inherits from package option \code{getOption("SigBridgeR.verbose")}.}
+
+\item{ensembl}{Logical scalar indicating whether to convert row names to Ensembl IDs. Genes without a mapping to a non-duplicated Ensembl ID are discarded.}
+
+\item{cell.ont}{String specifying whether Cell Ontology terms should be included in the colData. If \code{"nonna"}, all samples without a valid term are discarded; if \code{"all"}, all samples are returned with (possibly NA) terms; if \code{"none"}, terms are not added.}
+
+\item{legacy}{Logical scalar indicating whether to pull data from ExperimentHub. By default, we use data from the gypsum backend.}
 
 \item{ref}{Reference data for annotation. One of:
 \itemize{
 \item \code{"HPCA"}: Uses the \emph{Human Primary Cell Atlas} from the \code{celldex} package.
 \item A \code{SingleCellExperiment} object containing pre-labeled reference cells.
 }
-Note: The placeholder option \code{"Your pre-labelled single cell dataset reference"}
-is not valid—users must provide an actual reference object.}
+Note: The placeholder option \code{"custom"} is not valid—users must provide an actual reference object.
+
+A numeric matrix of (usually normalized and log-transformed) expression values from a reference dataset, or a SummarizedExperiment object containing such a matrix; see \code{SingleR::trainSingleR} for details.
+Alternatively, a list or List of SummarizedExperiment objects or numeric matrices containing multiple references. Row names may be different across entries but only the intersection will be used,}
 
 \item{labels}{A character vector of cell type labels corresponding to the columns of \code{ref}.
 Required when \code{ref} is a custom \code{SingleCellExperiment}. For \code{"HPCA"},
-defaults to \code{ref$label.main}.}
+defaults to \code{ref$label.main}.
 
-\item{de.method}{Method for differential expression during scoring. Passed to \code{SingleR::SingleR()}.
-Options include \code{"wilcox"} (default) or \code{"classic"}. See \code{?SingleR::SingleR} for details.}
-
-\item{de.n}{Integer. Number of top marker genes per label to use in scoring.
-Larger values may improve accuracy at the cost of speed. Default: \code{20L}.}
-
-\item{assay.type.test}{Integer or character. Specifies which assay in \code{sc} to use for testing.
-Default: \code{1L} (first assay). Passed to \code{SingleR::SingleR()}.}
+Alternatively, if ref is a list, labels should be a list of the same length. Each element should contain a character vector or factor specifying the labels for the columns of the corresponding element of ref.}
 
 \item{...}{Additional arguments passed to \code{SingleR::SingleR()} (e.g., \code{assay.type.ref}, \code{genes}).}
 }
@@ -89,4 +90,11 @@ annotated_sce <- SingleRAnnotate(
 )
 }
 }
-\keyword{Single_Cell_Annotation_Method}
+\seealso{
+Other Single_Cell_Annotation_Method: 
+\code{\link{CellTypistAnnotate}()},
+\code{\link{RegisterAnnoMethod}()},
+\code{\link{SCAnnotateStrategy}},
+\code{\link{mLLMCellTypeAnnotate}()}
+}
+\concept{Single_Cell_Annotation_Method}
