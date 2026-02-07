@@ -10,12 +10,14 @@
 #' novel classifiers (e.g., custom SingleR wrappers, marker-based assigners, or deep
 #' learning models) while maintaining a uniform execution interface.
 #'
-#' @param ... Named arguments where each value is a **function** implementing an
+#' @param ... Named arguments where each value is a function implementing an
 #'   annotation method. The name becomes the method identifier (e.g.,
 #'   \code{SingleR = SingleRAnnotate} registers under key \code{"SingleR"}).
 #'   Unnamed arguments are auto-named using their expression via \code{get_names_4_ids()}.
 #' @param registry Target registry to store annotation methods.
 #'   Default: \code{SCAnnotateStrategy}.
+#' @param overwrite Logical. If \code{FALSE} (default), throws an error when attempting
+#'   to replace an existing method. Set to \code{TRUE} to allow updates.
 #' @param verbose Logical. Whether to print a success message upon registration.
 #'   Default: inherits from package option \code{getOption("SigBridgeRUtils.verbose")}.
 #'
@@ -37,16 +39,17 @@
 #'   registry = SCAnnotateStrategy
 #' )
 #'
-#' # Verify registration
-#' names(SCAnnotateStrategy)
+#' # Attempting to re-register without `overwrite = TRUE` will fail
+#' # RegisterAnnoMethod(custom_annot = AnotherAnnotator)  # Error!
 #' }
-#'
 RegisterAnnoMethod <- function(
   ...,
   registry = SCAnnotateStrategy,
+  overwrite = FALSE,
   verbose = getFuncOption("verbose")
 ) {
   chk::chk_logical(verbose)
+  chk::chk_logical(overwrite)
   chk::chk_environment(registry)
 
   # * detect where are functions
@@ -62,16 +65,28 @@ RegisterAnnoMethod <- function(
     method_name <- method_names[i]
     executor <- dots[is_fun][[i]]
 
+    # Check for existing method
+    exists_already <- method_name %chin% names(registry)
+    if (exists_already && !overwrite) {
+      cli::cli_abort(c(
+        "x" = "Method already exists: {.val {method_name}}",
+        "i" = "Registered methods: {.val {names(registry)}}",
+        "i" = "Use {.code overwrite = TRUE} to force replacement"
+      ))
+    }
+
     registry[[method_name]] <- rlang::list2(
       method_name = method_name,
       executor = executor
     )
-  }
 
-  if (verbose) {
-    cli::cli_alert_success(
-      "Registered {.arg {method_names}}"
-    )
+    if (verbose) {
+      if (exists_already) {
+        cli::cli_alert_warning("Updated {.field {method_name}}")
+      } else {
+        cli::cli_alert_success("Registered {.field {method_name}}")
+      }
+    }
   }
 
   invisible(TRUE)

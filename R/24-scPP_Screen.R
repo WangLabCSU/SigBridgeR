@@ -89,7 +89,7 @@ DoscPP <- function(
   sc_data,
   phenotype,
   label_type = "scPP",
-  phenotype_class = c("Binary", "Continuous", "Survival"),
+  phenotype_class = c("binary", "continuous", "survival"),
   ref_group = 0L,
   Log2FC_cutoff = 0.585,
   estimate_cutoff = 0.2,
@@ -98,9 +98,10 @@ DoscPP <- function(
 ) {
   chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
+  phenotype_class <- tolower(phenotype_class)
   phenotype_class <- SigBridgeRUtils::MatchArg(
     phenotype_class,
-    c("Binary", "Continuous", "Survival"),
+    c("binary", "continuous", "survival"),
     NULL
   )
   chk::chk_number(ref_group)
@@ -114,7 +115,7 @@ DoscPP <- function(
   chk::chk_not_any_na(phenotype)
 
   # robust, scPP is more strict than scissor and scPAS
-  if (phenotype_class == "Survival") {
+  if (phenotype_class == "survival") {
     if (!all(rownames(phenotype) == colnames(matched_bulk))) {
       cli::cli_abort(c(
         "x" = "Please check the rownames of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
@@ -152,7 +153,7 @@ DoscPP <- function(
   }
 
   gene_list <- switch(
-    tolower(phenotype_class),
+    phenotype_class,
     "binary" = {
       if (estimate_cutoff != 0.2) {
         cli::cli_warn(

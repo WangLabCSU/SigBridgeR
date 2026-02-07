@@ -1,0 +1,48 @@
+---
+title: "Application of SigBridgeR to single-cell spatial transcriptomics data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spatial_Transcriptome}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SigBridgeR)
+```
+
+## Load Data
+
+To load spatial transcriptomics (e.g., Xenium) data, you first need to register the corresponding loading function in `SCPreProcess`, as these functions are not natively built into the package.
+
+```{r,registering ,eval = FALSE}
+Register(x = Seurat::LoadXenium)
+```
+
+```{r,registering2,eval=FALSE}
+# ℹ Auto-detected registry: SCPreProcessStrategy
+# ✔ Registered x
+```
+
+```{r,check,eval = FALSE}
+names(SCPreProcessStrategy)
+```
+
+```{r,check2,eval=FALSE}
+# [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"
+```
+
+Then preprocess the data.
+
+```{r,eval=FALSE}
+seurat <- SCPreProcess(
+  sc
+)
+```

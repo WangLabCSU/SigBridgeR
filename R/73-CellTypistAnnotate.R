@@ -35,7 +35,7 @@
 #'   }
 #'   See \url{https://celltypist.readthedocs.io/en/latest/api.html#celltypist.annotate} for full options.
 #'
-#' @return The input \code{Seurat} object with some metadata columns added, Column names may vary slightly depending on CellTypist version and options used.
+#' @return The input \code{Seurat} object with some metadata columns added, Column names may vary slightly depending on CellTypist version and options used. Usually cell type labels will be added to `meta.data`, and scoring matrix will be add to `misc$celltypist`
 #'
 #' @section Requirements:
 #'   \itemize{
@@ -75,7 +75,7 @@ CellTypistAnnotate <- function(
   ),
   ...
 ) {
-  rlang::check_installed(c("AnnDataR", "reticulate"))
+  rlang::check_installed(c("anndataR", "reticulate"))
   chk::chk_is(sc, "Seurat")
   if (!is.null(model)) {
     chk::chk_character(model)
@@ -90,14 +90,7 @@ CellTypistAnnotate <- function(
   }
 
   py_envs <- ListPyEnv(verbose = FALSE)
-  if (is.null(conda)) {
-    python <- python %||% py_envs$python[[1]]
-    chk::chk_file(python)
-    reticulate::use_python(python)
-    if (verbose) {
-      ts_cli$cli_alert_info("Using Python: {.file {python}}")
-    }
-  } else {
+  if (!is.null(conda)) {
     if (!is.null(python)) {
       cli::cli_warn("`python` is ignored due to `conda` specified")
     }
@@ -106,23 +99,35 @@ CellTypistAnnotate <- function(
       py_envs$name[py_envs$type == "conda"],
       NULL
     )
-    reticulate::use_condaenv(conda)
+    reticulate::use_condaenv(py_envs$python[py_envs$name == conda])
     if (verbose) {
       ts_cli$cli_alert_info("Using Conda Env: {.val {conda}}")
     }
+  } else {
+    python <- python %||% py_envs$python[[1]]
+    chk::chk_file(python)
+    reticulate::use_python(python)
+    if (verbose) {
+      ts_cli$cli_alert_info("Using Python: {.file {python}}")
+    }
   }
 
-  if (grepl("\\.pkl", model)) {
-    model <- paste0(model, ".pkl")
+  if (!is.null(model)) {
+    if (!grepl("\\.pkl", model)) {
+      model <- paste0(model, ".pkl")
+    }
   }
 
   dots <- rlang::list2(...)
 
   # * initiate
-  reticulate::py_run_string("print('Python executable checked')")
   py <- reticulate::py
 
-  py$adata <- anndataR::as_AnnData(sc, output_class = "ReticulateAnnData")
+  py$adata <- anndataR::as_AnnData(
+    x = sc,
+    x_mapping = "data",
+    output_class = "ReticulateAnnData"
+  )
   py$model <- reticulate::r_to_py(model) # A string
   py$download <- reticulate::r_to_py(download)
   py$verbose <- reticulate::r_to_py(verbose) # A boolean
@@ -138,7 +143,19 @@ CellTypistAnnotate <- function(
     ts_cli$cli_alert_info(cli::col_green("Annotation done"))
   }
 
-  res <- reticulate::py_to_r(py$res)
-  colnames(res) <- paste0("celltypist_", colnames(res))
-  Seurat::AddMetaData(object = sc, metadata = res)
+  predicted_labels <- reticulate::py_to_r(py$predicted_labels)
+  decision_matrix <- reticulate::py_to_r(py$decision_matrix)
+  probability_matrix <- reticulate::py_to_r(py$probability_matrix)
+
+  colnames(predicted_labels) <- paste0(
+    "celltypist_",
+    colnames(predicted_labels)
+  )
+  Seurat::AddMetaData(object = sc, metadata = predicted_labels) %>%
+    AddMisc(
+      celltypist = list(
+        decision_matrix = decision_matrix,
+        probability_matrix = probability_matrix
+      )
+    )
 }

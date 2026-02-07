@@ -52,7 +52,7 @@ Typically should not be modified by users.}
 See \url{https://celltypist.readthedocs.io/en/latest/api.html#celltypist.annotate} for full options.}
 }
 \value{
-The input \code{Seurat} object with some metadata columns added, Column names may vary slightly depending on CellTypist version and options used.
+The input \code{Seurat} object with some metadata columns added, Column names may vary slightly depending on CellTypist version and options used. Usually cell type labels will be added to \code{meta.data}, and scoring matrix will be add to \code{misc$celltypist}
 }
 \description{
 Performs automated cell type annotation via the \code{celltypist} Python package

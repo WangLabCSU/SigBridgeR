@@ -75,8 +75,6 @@ reference:
           - DoDEGAS
 
     - title: Seurat Object Utilities
-      desc: >
-          Helper functions to extend or annotate Seurat objects safely.
       contents:
           - AddMetaFeature
           - AddMisc

@@ -11,23 +11,26 @@ This document introduces a guide for extending SigBridgeR with custom algorithms
 
 # Too Long; Didn't Read
 
-Extend `SCPreProcess`: key = func
+(auto dispatch)
+
+Extend `SCPreProcess`: key = func 
 
 ```{r,tl_dr,eval= FALSE}
-Register(h = Seurat::RunHarmony, "SCP")
+Register(h = Seurat::RunHarmony)
 ```
 
 Extend `SCAnnotate`: key = func
 
 ```{r,tl_dr2,eval= FALSE}
-Register(my = my_function, "SCA")
+Register(my = my_function)
 ```
 
 Extend `Screen`: key = func
 
 ```{r,tl_dr3,eval= FALSE}
+TemplateScreenFunc() # create a file
 ValidateScreenFunc(my_function)
-Register(my = my_function, "Scr")
+Register(my = my_function)
 ```
 
 # Extend Screening Methods

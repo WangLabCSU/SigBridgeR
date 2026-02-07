@@ -8,8 +8,45 @@ from celltypist import models
 from datetime import datetime
 from typing import Literal, Optional, Callable, Any
 import inspect
-import sys
+import os
 import pandas as pd
+from pathlib import Path
+import re
+
+
+def get_dirname(path_str: str) -> str:
+    """
+    获取路径的 dirname（目录名）
+
+    Returns:
+        str: 路径中的目录部分，纯文件名则返回空字符串
+    """
+    path = Path(path_str)
+
+    # 如果是纯文件名（没有父目录），返回空字符串
+    if path.parent == Path("."):
+        return ""
+
+    return str(path.parent)
+
+
+def is_path(input_str: str) -> bool:
+    """
+    检查输入字符串是否是文件路径
+
+    Returns:
+        bool: True 如果是路径，False 如果是纯名称
+    """
+    path = Path(input_str)
+    # 检查是否是绝对路径
+    is_absolute = path.is_absolute()
+    # 检查字符串中是否包含路径分隔符
+    contains_separator = "/" in input_str or "\\" in input_str
+    # 检查是否包含 Windows 盘符 (如 C:, D:)
+    has_windows_drive = bool(re.match(r"^[A-Za-z]:", input_str))
+    # 满足任一条件即为路径
+    return is_absolute or contains_separator or has_windows_drive
+
 
 def ts_print(
     message: str,
@@ -34,7 +71,7 @@ def ts_print(
         "debug": ("🐞", "\033[35m" if color else ""),  # Magenta
     }
 
-    prefix = f"{timestamp} "
+    prefix: str = f"{timestamp} "
     if symbol in symbols:
         sym, col = symbols[symbol]
         prefix += f"{col}{sym} \033[0m" if color else f"{sym} "
@@ -42,7 +79,7 @@ def ts_print(
     print(f"{prefix}{message}" if not color else f"{prefix}\033[0m{message}")
 
 
-def filter_args_4_func(dict: dict[str, Any], func: Callable) -> dict[str, Any]:
+def filter_args_4_func(input_dict: dict[str, Any], func: Callable) -> dict[str, Any]:
     """
     从 input_dict 中提取出所有键名与 func 的参数名匹配的键值对。
 
@@ -59,28 +96,54 @@ def filter_args_4_func(dict: dict[str, Any], func: Callable) -> dict[str, Any]:
     """
     sig = inspect.signature(func)
     func_params = set(sig.parameters.keys())
-    return {k: v for k, v in dict.items() if k in func_params}
+    return {k: v for k, v in input_dict.items() if k in func_params}
 
 
 def main() -> pd.DataFrame:
     # * recept from R script
-    model: str = globals().get("model")
     adata: AnnData = globals().get("adata")
+    model: str = globals().get("model")
     verbose: bool = globals().get("verbose")
     download: bool = globals().get("download")
-    kwarg = filter_args_4_func(dict=globals(), func=celltypist.annotate)
+
+
+    if type(model) is not str:
+        raise ValueError(
+            f"Unknown type of model {type(model)}, expected <class 'str'>)"
+        )
+
+    if is_path(model):
+        model: str = Path(model).name
+        os.environ["CELLTYPIST_FOLDER"] = get_dirname(model)
 
     if download:
         if verbose:
-            ts_print(message="Download CellTypist models", symbol="info")
+            ts_print(message=f"Download CellTypist models: {model}", symbol="info")
+
         models.download_models(model=model, force_update=True)
+
         if verbose:
-            ts_print(message=f"Models saved to `{models.models_path}`")
+            ts_print(
+                message=f"Models saved to `{models.models_path}`", symbols="success"
+            )
 
-    if type(model) is str:
-        predictions = celltypist.annotate(adata, model=model, **kwarg)
-        return predictions.predicted_labels
-    else:
-        sys.exit(f"Unknown type of model {type(model)}\n> Expected <class 'str'>")
+    model: celltypist.models.Model = models.Model.load(model=model)
 
-res: pd.DataFrame = main()
+    kwarg: dict[str, Any] = filter_args_4_func(
+        input_dict=globals(), func=celltypist.annotate
+    )
+
+    predictions = celltypist.annotate(adata, **kwarg)
+
+    return (
+        # the predicted cell type labels
+        predictions.predicted_labels,
+        # the matrix representing the decision score of each cell belonging to a given cell type
+        predictions.decision_matrix,
+        # the matrix representing the probability each cell belongs to a given cell type
+        # (transformed from decision matrix by the sigmoid function)
+        predictions.probability_matrix,
+    )
+
+
+predicted_labels, decision_matrix, probability_matrix = main()

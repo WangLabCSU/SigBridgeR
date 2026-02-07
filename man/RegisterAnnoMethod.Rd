@@ -7,17 +7,21 @@
 RegisterAnnoMethod(
   ...,
   registry = SCAnnotateStrategy,
+  overwrite = FALSE,
   verbose = getFuncOption("verbose")
 )
 }
 \arguments{
-\item{...}{Named arguments where each value is a \strong{function} implementing an
+\item{...}{Named arguments where each value is a function implementing an
 annotation method. The name becomes the method identifier (e.g.,
 \code{SingleR = SingleRAnnotate} registers under key \code{"SingleR"}).
 Unnamed arguments are auto-named using their expression via \code{get_names_4_ids()}.}
 
 \item{registry}{Target registry to store annotation methods.
 Default: \code{SCAnnotateStrategy}.}
+
+\item{overwrite}{Logical. If \code{FALSE} (default), throws an error when attempting
+to replace an existing method. Set to \code{TRUE} to allow updates.}
 
 \item{verbose}{Logical. Whether to print a success message upon registration.
 Default: inherits from package option \code{getOption("SigBridgeRUtils.verbose")}.}
@@ -48,10 +52,9 @@ RegisterAnnoMethod(
   registry = SCAnnotateStrategy
 )
 
-# Verify registration
-names(SCAnnotateStrategy)
+# Attempting to re-register without `overwrite = TRUE` will fail
+# RegisterAnnoMethod(custom_annot = AnotherAnnotator)  # Error!
 }
-
 }
 \seealso{
 Other Registering: 

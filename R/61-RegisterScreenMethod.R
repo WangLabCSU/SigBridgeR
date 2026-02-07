@@ -9,10 +9,9 @@
 #'
 #' This function supports community-driven extension of analysis pipelines—ideal for
 #' integrating novel single cell phenotypic screening methods while
-#' maintaining compatibility with downstream validation and execution frameworks
+#' maintaining compatibility with downstream validation and execution frameworks.
 #'
-#'
-#' @param ... Named arguments where each value is a **function** implementing a screening method.
+#' @param ... Named arguments where each value is a function implementing a screening method.
 #'   The name becomes the method identifier (e.g., \code{Scissor = DoScissor} registers
 #'   \code{DoScissor} under the key \code{"Scissor"}). Unnamed arguments are auto-named
 #'   using their expression (e.g., \code{Scissor} → name \code{"Scissor"}).
@@ -21,12 +20,14 @@
 #' @param parameter_mapper A function that transforms the input parameter list before
 #'   passing it to the executor. Useful for changing parameters from interface function.
 #'   Receives a named list \code{params} and must return a modified list.
-#'   Default: `NULL`.
+#'   Default: \code{NULL}.
 #' @param registry An environment used as a method registry (e.g., \code{ScreenStrategy}).
 #'   New methods are stored as \code{registry[["MethodName"]]} = metadata list.
 #'   Default: \code{ScreenStrategy}.
+#' @param overwrite Logical. If \code{FALSE} (default), throws an error when attempting
+#'   to replace an existing method. Set to \code{TRUE} to allow updates.
 #' @param verbose Logical. Whether to print a success message upon registration.
-#'   Default: \code{TRUE}.
+#'   Default: inherits from package option.
 #'
 #' @section Registry Entry Structure:
 #' Each registered method is stored as a list with four elements:
@@ -53,13 +54,12 @@
 #'   # If `continuous` phenotype is not supported
 #'   supported_phenotypes = c("survival", "binary"),
 #'   parameter_mapper = function(params) {
-#'     # If I perfer to use `quiet` instead of `verbose`
+#'     # If I prefer to use `quiet` instead of `verbose`
 #'     params$quiet <- !params$verbose
 #'     params
 #'   }
 #' )
 #' }
-#'
 RegisterScreenMethod <- function(
   # ? Register a new screen method using named functions:
   # ? Usage:
@@ -82,7 +82,8 @@ RegisterScreenMethod <- function(
   parameter_mapper = NULL,
   # ? an environment to store the screen methods
   registry = ScreenStrategy,
-  verbose = getFuncOption("verbose") %||% TRUE
+  overwrite = FALSE,
+  verbose = getFuncOption("verbose")
 ) {
   # * check the input
   if (!is.null(parameter_mapper)) {
@@ -96,6 +97,7 @@ RegisterScreenMethod <- function(
     ))
   }
   chk::chk_logical(verbose)
+  chk::chk_logical(overwrite)
   chk::chk_environment(registry)
 
   # * detect where are functions
@@ -111,18 +113,30 @@ RegisterScreenMethod <- function(
     method_name <- method_names[i]
     executor <- dots[is_fun][[i]]
 
+    # Check for existing method
+    exists_already <- method_name %chin% names(registry)
+    if (exists_already && !overwrite) {
+      cli::cli_abort(c(
+        "x" = "Method already exists: {.val {method_name}}",
+        "i" = "Registered methods: {.val {names(registry)}}",
+        "i" = "Use {.code overwrite = TRUE} to force replacement"
+      ))
+    }
+
     registry[[method_name]] <- rlang::list2(
       method_name = method_name,
       executor = executor,
       phenotypes = supported_phenotypes,
       mapper = parameter_mapper
     )
-  }
 
-  if (verbose) {
-    cli::cli_alert_success(
-      "Registered {.arg {method_names}}"
-    )
+    if (verbose) {
+      if (exists_already) {
+        cli::cli_alert_warning("Updated {.field {method_name}}")
+      } else {
+        cli::cli_alert_success("Registered {.field {method_name}}")
+      }
+    }
   }
 
   invisible(TRUE)

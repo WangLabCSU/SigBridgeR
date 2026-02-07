@@ -2,33 +2,67 @@
 % Please edit documentation in R/03-setThreads.R
 \name{setThreads}
 \alias{setThreads}
-\title{Configure Parallel Thread Counts for Computational Backends}
+\title{Configure Parallel Execution Backends}
 \usage{
-setThreads(n_threads = NULL, backend = c("openmp", "dt"), ...)
+setThreads(threads = NULL, backend = c("openmp", "dt"), tf_config = NULL, ...)
 }
 \arguments{
-\item{n_threads}{Integer. Number of threads to set. If \code{NULL} (default),
-uses \code{floor(availableCores() / 2)}.}
+\item{threads}{Integer. Global thread count used as default for all backends.
+If \code{NULL} (default), uses \code{floor(availableCores() / 2)}.
+Applied to: OpenMP, data.table, and TensorFlow intra-op (unless overridden).}
 
-\item{backend}{Character vector. Backends to configure:
-\code{"openmp"} (sets \code{OMP_NUM_THREADS} env var) and/or
-\code{"dt"} (sets data.table threads). Default: \code{c("openmp", "dt")}.}
+\item{backend}{Character vector. System-level backends to configure:
+\code{"openmp"} (sets \code{OMP_NUM_THREADS}), \code{"dt"} (data.table threads).
+Default: \code{c("openmp", "dt")}.}
 
-\item{...}{Additional arguments passed to \code{data.table::setDTthreads()}
-(e.g., \code{restore}). Includes \code{verbose} logical flag (default: \code{TRUE}).}
+\item{tf_config}{Named list for TensorFlow-specific configuration:
+\itemize{
+\item \code{xla}: Logical. Enable XLA JIT compilation (default: \code{FALSE})
+\item \code{inter_op}: Integer. Inter-op parallelism threads (default: auto-derived)
+\item \code{intra_op}: Integer. Intra-op parallelism threads (default: \code{threads})
+}
+\strong{Must be set BEFORE importing TensorFlow}.}
+
+\item{...}{Additional arguments for \code{data.table::setDTthreads()} (e.g., \code{restore}).
+Includes \code{verbose} logical flag (default: \code{TRUE}).}
 }
 \value{
-Invisible list with old/new thread counts per backend.
+Invisible list with old/new values per backend.
 }
 \description{
-Sets thread counts for OpenMP and data.table to optimize performance in
-data-intensive workflows. Automatically uses half the available physical cores
-if \code{n_threads} is unspecified.
+Unified interface to configure thread counts and acceleration features across
+system-level (OpenMP/data.table) and TensorFlow backends. Uses a hierarchical
+configuration model:
+\itemize{
+\item \code{threads}: Global thread count (default: half physical cores)
+\item \code{backend}: System-level backends to configure
+\item \code{tf_config}: Named list for TensorFlow-specific settings
+}
 }
 \examples{
 \dontrun{
-setThreads(4)                 # Set both backends to 4 threads
-setThreads(backend = "dt")    # Auto-set only data.table threads
-setThreads(8, verbose = FALSE) # Silent mode
+# Minimal: auto-configure all backends with half cores
+setThreads()
+
+# Explicit global thread count
+setThreads(threads = 8)
+
+# TensorFlow optimization (MUST run BEFORE importing TensorFlow)
+setThreads(
+  threads = 8,
+  tf_config = list(
+    xla = TRUE,
+    inter_op = 2,
+    intra_op = 8
+  )
+)
+reticulate::import("tensorflow")  # Import AFTER configuration
+
+# Fine-grained control: override specific backends
+setThreads(
+  threads = 16,
+  backend = "dt",  # Only configure data.table
+  tf_config = list(inter_op = 4)  # intra_op inherits threads=16
+)
 }
 }

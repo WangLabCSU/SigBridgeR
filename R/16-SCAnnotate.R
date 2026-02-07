@@ -88,13 +88,15 @@ SCAnnotate <- function(
 
   set.seed(seed)
 
+  anno_func <- SCAnnotateStrategy[[method]]$executor
+
   if (method == "mLLMCelltype") {
-    SCAnnotateStrategy[[method]](
+    anno_func(
       sc,
       ...
     )
   } else if (method == "SingleR") {
-    SCAnnotateStrategy[[method]](
+    anno_func(
       sc,
       ref = dots$ref %||% "HPCA",
       ...
@@ -103,7 +105,7 @@ SCAnnotate <- function(
     dots <- rlang::list2(...)
 
     if (is.null(dots$conda) && is.null(dots$python)) {
-      existing_envs <- ListPyEnv()
+      existing_envs <- ListPyEnv(verbose = FALSE)
       if (!"r-reticulate-celltypist" %in% existing_envs$name) {
         choice <- utils::askYesNo(
           "Create a new conda environment for CellTypist?"
@@ -147,8 +149,8 @@ SCAnnotate <- function(
 
     # * used to filter out relevant arguments, pass to python function celltypist.annotate
     celltypist.annotate <- \(
-      filename,
-      model,
+      #   filename,
+      #   model,
       transpose_input,
       gene_file,
       cell_file,
@@ -162,10 +164,13 @@ SCAnnotate <- function(
       1
     }
 
+    # * default args
+    dots$majority_voting <- dots$majority_voting %||% TRUE
+
     rlang::exec(
-      SCAnnotateStrategy[[method]],
+      anno_func,
       sc = sc,
-      !!!SigBridgeRUtils::FilterArgs4Func(dots, SCAnnotateStrategy[[method]]),
+      !!!SigBridgeRUtils::FilterArgs4Func(dots, anno_func),
       !!!SigBridgeRUtils::FilterArgs4Func(dots, celltypist.annotate)
     )
   }

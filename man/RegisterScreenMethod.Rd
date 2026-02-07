@@ -9,11 +9,12 @@ RegisterScreenMethod(
   supported_phenotypes = c("binary", "survival", "continuous"),
   parameter_mapper = NULL,
   registry = ScreenStrategy,
-  verbose = getFuncOption("verbose") \%||\% TRUE
+  overwrite = FALSE,
+  verbose = getFuncOption("verbose")
 )
 }
 \arguments{
-\item{...}{Named arguments where each value is a \strong{function} implementing a screening method.
+\item{...}{Named arguments where each value is a function implementing a screening method.
 The name becomes the method identifier (e.g., \code{Scissor = DoScissor} registers
 \code{DoScissor} under the key \code{"Scissor"}). Unnamed arguments are auto-named
 using their expression (e.g., \code{Scissor} → name \code{"Scissor"}).}
@@ -30,8 +31,11 @@ Default: \code{NULL}.}
 New methods are stored as \code{registry[["MethodName"]]} = metadata list.
 Default: \code{ScreenStrategy}.}
 
+\item{overwrite}{Logical. If \code{FALSE} (default), throws an error when attempting
+to replace an existing method. Set to \code{TRUE} to allow updates.}
+
 \item{verbose}{Logical. Whether to print a success message upon registration.
-Default: \code{TRUE}.}
+Default: inherits from package option.}
 }
 \value{
 Invisibly returns \code{TRUE} on successful registration.
@@ -44,7 +48,7 @@ supported phenotypes and an optional parameter remapping function.
 
 This function supports community-driven extension of analysis pipelines—ideal for
 integrating novel single cell phenotypic screening methods while
-maintaining compatibility with downstream validation and execution frameworks
+maintaining compatibility with downstream validation and execution frameworks.
 }
 \section{Registry Entry Structure}{
 
@@ -70,13 +74,12 @@ RegisterScreenMethod(
   # If `continuous` phenotype is not supported
   supported_phenotypes = c("survival", "binary"),
   parameter_mapper = function(params) {
-    # If I perfer to use `quiet` instead of `verbose`
+    # If I prefer to use `quiet` instead of `verbose`
     params$quiet <- !params$verbose
     params
   }
 )
 }
-
 }
 \seealso{
 Other Add_Screen_method: 

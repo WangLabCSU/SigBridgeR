@@ -80,7 +80,7 @@ annotated <- SCAnnotate(
 )
 
 # Partial matching works
-annotated <- SCAnnotate(sc = seurat_obj, method = "single")  # → "SingleR"
+annotated <- SCAnnotate(sc = seurat_obj, method = "single")  # -> "SingleR"
 }
 }
 \seealso{
