@@ -431,21 +431,21 @@ seurat <- mLLMCellTypeAnnotate(
 - `seurat_obj_markers` : Optional pre-computed marker gene table or list (output of `Seurat::FindAllMarkers()`). If `NULL` (default), markers are computed automatically using parameters passed via `...`.
 - `tissue_name` : Character. Biological context for annotation (e.g., tissue type, disease state). Helps LLMs interpret marker genes appropriately. Default: `"Human Tumor"`.
 - `models` : Character vector of LLM model identifiers. Supported formats:
-  - OpenAI: `"gpt-4o"`, `"gpt-4o-mini"`, etc.
-  - Anthropic: `"claude-3-5-sonnet-20240620"`, etc.
-  - Google: `"gemini-1.5-pro"`, etc.
-  - Alibaba: `"qwen-max"`, `"qwen-plus"`, etc.
-  
-  Default: `c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")`. For single-model mode, only the first model is used.
+    - OpenAI: `"gpt-4o"`, `"gpt-4o-mini"`, etc.
+    - Anthropic: `"claude-3-5-sonnet-20240620"`, etc.
+    - Google: `"gemini-1.5-pro"`, etc.
+    - Alibaba: `"qwen-max"`, `"qwen-plus"`, etc.
+    
+    Default: `c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")`. For single-model mode, only the first model is used.
 - `api_keys` : Named list of API keys with provider names as keys:
-  - `openai`: OpenAI API key
-  - `anthropic`: Anthropic API key
-  - `gemini`: Google Cloud API key (with Gemini enabled)
-  - `qwen`: Alibaba DashScope API key
-  
-  Example: `list(openai = "sk-...", anthropic = "sk-ant-...")`.
-  
-  **Note**: Default placeholder keys (`"your-xxx-key"`) will fail—users must supply valid keys.
+    - `openai`: OpenAI API key
+    - `anthropic`: Anthropic API key
+    - `gemini`: Google Cloud API key (with Gemini enabled)
+    - `qwen`: Alibaba DashScope API key
+    
+    Example: `list(openai = "sk-...", anthropic = "sk-ant-...")`.
+    
+    **Note**: Default placeholder keys (`"your-xxx-key"`) will fail—users must supply valid keys.
 
 
 **Returns**:
