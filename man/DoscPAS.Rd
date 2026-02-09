@@ -58,6 +58,7 @@ DoscPAS(
 \itemize{
 \item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
 \item \code{seed}: For reproducibility, default is \code{123L}
+\item \code{assay}: Assay to use for single-cell data. Defaults to `"RNA"
 }}
 }
 \value{

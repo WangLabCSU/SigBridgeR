@@ -23,7 +23,7 @@
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
-#'
+#'    - `assay`: Assay to use for single-cell data. Defaults to `"RNA"
 #' @return A Seurat object from scPAS analysis
 #'
 #' @references
@@ -119,7 +119,7 @@ DoscPAS <- function(
   scPAS_result <- scPAS::scPAS.optimized(
     bulk_dataset = as.matrix(matched_bulk),
     sc_dataset = sc_data,
-    assay = 'RNA',
+    assay = assay,
     tag = label_type,
     phenotype = phenotype,
     imputation = imputation,
@@ -133,8 +133,7 @@ DoscPAS <- function(
     permutation_times = permutation_times,
     FDR.threshold = FDR_threshold,
     seed = seed,
-    verbose = verbose,
-    ...
+    verbose = verbose
   ) %>%
     SigBridgeRUtils::AddMisc(scPAS_type = label_type, cover = FALSE)
 

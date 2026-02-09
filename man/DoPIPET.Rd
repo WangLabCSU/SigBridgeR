@@ -76,6 +76,7 @@ Must be sorted in ascending order.}
 \item seed: Random seed for reproducibility
 \item verbose: Whether to show progress messages
 \item parallel: Whether to use parallel processing, default is \code{FALSE}. future::plan() must be set before calling this function.
+\item assay: The assay to use, default is \code{"RNA"}
 }}
 }
 \description{

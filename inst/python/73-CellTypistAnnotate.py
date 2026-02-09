@@ -1,6 +1,6 @@
-# -------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 # ! Don't run this script directly, use `R/73-CellTypistAnnotate.R` instead
-# -------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 from anndata import AnnData
 import celltypist
@@ -100,12 +100,12 @@ def filter_args_4_func(input_dict: dict[str, Any], func: Callable) -> dict[str, 
 
 
 def main() -> pd.DataFrame:
-    # * recept from R script
+    # * recept them from R script
     adata: AnnData = globals().get("adata")
     model: str = globals().get("model")
     verbose: bool = globals().get("verbose")
     download: bool = globals().get("download")
-
+    force_update: bool = globals().get("force_update")
 
     if type(model) is not str:
         raise ValueError(
@@ -120,11 +120,13 @@ def main() -> pd.DataFrame:
         if verbose:
             ts_print(message=f"Download CellTypist models: {model}", symbol="info")
 
-        models.download_models(model=model, force_update=True)
+        # ! tried but failed with native `celltypist.models.download_models` when
+        # ! asked by R script
+        models.download_models(force_update=force_update)
 
         if verbose:
             ts_print(
-                message=f"Models saved to `{models.models_path}`", symbols="success"
+                message=f"Models saved to `{models.models_path}`", symbol="success"
             )
 
     model: celltypist.models.Model = models.Model.load(model=model)

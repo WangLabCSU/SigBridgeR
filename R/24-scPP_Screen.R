@@ -37,7 +37,7 @@
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
-#'
+#'    - `assay`: The assay to use for single-cell data. Defaults to `RNA`.
 #'
 #'
 #' @return A list containing:
@@ -135,6 +135,7 @@ DoscPP <- function(
   parallel <- (dots$parallel %||% FALSE) &
     !inherits(future::plan("list")[[1]], "sequential")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
+  assay <- dots$assay %||% "RNA"
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start scPP screening."))
@@ -232,7 +233,8 @@ DoscPP <- function(
     probs = probs,
     verbose = verbose,
     parallel = parallel,
-    seed = seed
+    seed = seed,
+    assay = assay
   )
   sc_data[[]] <- scPP_result$metadata
   sc_data <- SigBridgeRUtils::AddMisc(

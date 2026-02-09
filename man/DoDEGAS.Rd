@@ -76,6 +76,7 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 \item{...}{Additional arguments. Currently supports:
 \itemize{
 \item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
+\item \code{assay}: Name of assay to use. Defaults to "RNA".
 }}
 }
 \value{

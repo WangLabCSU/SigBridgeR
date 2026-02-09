@@ -2,9 +2,8 @@
 #'
 #' @description
 #' An environment that maps single-letter codes to standardized Seurat preprocessing
-#' operations. Each entry is a function of the form \code{function(object, params)}
-#' that wraps a core Seurat step (e.g., normalization, PCA, clustering) using
-#' \code{rlang::exec()} for safe parameter injection.
+#' operations. Each entry is a function of the form \code{function(...)}
+#' that wraps a core Seurat step (e.g., normalization, PCA, clustering)
 #'
 #' This registry enables compact, composable pipeline definitions (e.g., via character
 #' strings like \code{"onvps"} for "Create → Normalize → VariableFeatures → Scale → PCA")
@@ -29,8 +28,6 @@
 #' \itemize{
 #'   \item These functions are **not intended for direct interactive use**. They are
 #'         internal building blocks for workflow engines (i.e., \code{SCPreProcess}).
-#'   \item Each function expects \code{object} (a matrix or Seurat object) and
-#'         \code{params} (a named list of arguments passed via \code{!!!} splicing).
 #'   \item You can access any operation via \code{SCPreProcessStrategy$letter},
 #'         but doing so bypasses pipeline validation and error handling.
 #'   \item To add more operations, use \code{RegisterSeuratMethod()}
@@ -40,82 +37,42 @@
 #' @export
 SCPreProcessStrategy <- rlang::new_environment(
   list(
-    o = function(object, params) {
-      rlang::exec(
-        SeuratObject::CreateSeuratObject,
-        counts = object,
-        !!!params
-      )
+    o = function(...) {
+      SeuratObject::CreateSeuratObject(...)
     },
-    n = function(object, params) {
-      rlang::exec(
-        Seurat::NormalizeData,
-        object = object,
-        !!!params
-      )
+    n = function(...) {
+      Seurat::NormalizeData(...)
     },
-    v = function(object, params) {
-      rlang::exec(
-        Seurat::FindVariableFeatures,
-        object = object,
-        !!!params
-      )
+    v = function(...) {
+      Seurat::FindVariableFeatures(...)
     },
-    s = function(object, params) {
-      rlang::exec(
-        Seurat::ScaleData,
-        object = object,
-        !!!params
-      )
+    s = function(...) {
+      Seurat::ScaleData(...)
     },
-    p = function(object, params) {
-      rlang::exec(
-        Seurat::RunPCA,
-        object = object,
-        !!!params
-      )
+    p = function(...) {
+      dots <- rlang::list2(...)
+      if (dots$features == "all") {
+        dots$features <- rownames(dots[[1]])
+      }
+      rlang::exec(Seurat::RunPCA, !!!dots)
     },
-    c = function(object, params) {
-      rlang::exec(
-        Seurat::FindClusters,
-        object = object,
-        !!!params
-      )
+    c = function(...) {
+      Seurat::FindClusters(...)
     },
-    e = function(object, params) {
-      rlang::exec(
-        Seurat::FindNeighbors,
-        object = object,
-        !!!params
-      )
+    e = function(...) {
+      Seurat::FindNeighbors(...)
     },
-    t = function(object, params) {
-      rlang::exec(
-        Seurat::RunTSNE,
-        object = object,
-        !!!params
-      )
+    t = function(...) {
+      Seurat::RunTSNE(...)
     },
-    u = function(object, params) {
-      rlang::exec(
-        Seurat::RunUMAP,
-        object = object,
-        !!!params
-      )
+    u = function(...) {
+      Seurat::RunUMAP(...)
     },
-    r = function(object, params) {
-      rlang::exec(
-        Seurat::SCTransform,
-        object = object,
-        !!!params
-      )
+    r = function(...) {
+      Seurat::SCTransform(...)
     },
-    i = function(object, params) {
-      rlang::exec(
-        Seurat::IntegrateLayers,
-        object = object,
-        !!!params
-      )
+    i = function(...) {
+      Seurat::IntegrateLayers(...)
     }
   )
 )

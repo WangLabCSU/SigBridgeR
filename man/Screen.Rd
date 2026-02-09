@@ -39,7 +39,7 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item "scAB": see also DoscAB(), continuous phenotype is not supported
 \item "DEGAS": see also DoDEGAS()
 \item "LP_SGL": see also DoLP_SGL()
-\item "PIPET": see also DoPIPET(), using survival as phenotype is not supported
+\item "PIPET": see also DoPIPET()
 }}
 
 \item{...}{Additional method-specific parameters:

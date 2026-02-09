@@ -10,6 +10,8 @@ CellTypistAnnotate(
   download = TRUE,
   conda = NULL,
   python = NULL,
+  venv_locations = NULL,
+  force_update = TRUE,
   verbose = getFuncOption("verbose"),
   celltypist_tools = system.file("python/73-CellTypistAnnotate.py", package =
     "SigBridgeR"),
@@ -22,19 +24,21 @@ a valid assay with gene expression matrix.}
 
 \item{model}{Character. CellTypist model specification. One of:
 \itemize{
-\item \code{NULL} (default): Uses CellTypist's default model (auto-downloaded if \code{download = TRUE}).
-\item Model name (e.g., \code{"Immune_All_Low"}): Downloads or loads the specified built-in model.
+\item Model name (e.g., \code{"Immune_All_Low"}): Loads the specified built-in model.
 \item Path to a local \code{.pkl} model file.
-}
-See \url{https://celltypist.readthedocs.io/en/latest/models.html} for available models.}
+}}
 
-\item{download}{Logical. Whether to automatically download the specified model first.
+\item{download}{Logical. Whether to automatically download the model first.
 Default: \code{TRUE}.}
 
 \item{conda}{Character. Conda environment name. Ignore \code{python} if specified.}
 
 \item{python}{Character. Path to Python executable with \code{celltypist} installed.
 If \code{NULL} (default), auto-detected via \code{ListPyEnv()}. Must point to a valid Python binary.}
+
+\item{venv_locations}{Character. Path to parent dirtectory storing Python virtual environment.}
+
+\item{force_update}{Logical. Whether to force update the model file. \code{download} must be \code{TRUE} before this option is effective.}
 
 \item{verbose}{Logical. Whether to print progress messages during annotation.
 Default: inherits from package option \code{getOption("SigBridgeR.verbose")}.}
@@ -45,11 +49,16 @@ Typically should not be modified by users.}
 
 \item{...}{Additional arguments passed to CellTypist's \code{annotate()} function via Python, such as:
 \itemize{
-\item \code{majority_voting}: Logical. Whether to apply majority voting for cluster-level annotation.
-\item \code{mode}: Character. Prediction mode (\code{"best match"} or \code{"prob match"}).
-\item \code{p_thres}: Numeric. Probability threshold for \code{"prob match"} mode.
-}
-See \url{https://celltypist.readthedocs.io/en/latest/api.html#celltypist.annotate} for full options.}
+\item \code{majority_voting}: Logical. Whether to refine predicted labels by running majority voting classifier after over-clustering. (Default: \code{FALSE})
+\item \code{mode}: Character. Prediction mode (\code{"best match"} or \code{"prob match"}). For \code{"best match"}, selects cell type with largest score; \code{"prob match"} enables multi-label classification. (Default: \code{"best match"})
+\item \code{p_thres}: Numeric. Probability threshold for multi-label classification in \code{"prob match"} mode. Ignored if \code{mode = "best match"}. (Default: 0.5)
+\item \code{transpose_input}: Logical. Whether to transpose input matrix. Set to \code{TRUE} if filename is in gene-by-cell format. (Default: \code{FALSE})
+\item \code{gene_file}: Character. Path to file with genes (one per line) corresponding to rows in mtx file. Ignored if input is not in mtx format.
+\item \code{cell_file}: Character. Path to file with cells (one per line) corresponding to columns in mtx file. Ignored if input is not in mtx format.
+\item \code{over_clustering}: Character or vector. Over-clustering specification: (1) path to plain file with one cluster ID per line; (2) metadata column name in AnnData; (3) vector/array of cluster assignments; or (4) omitted for heuristic approach. Ignored if \code{majority_voting = FALSE}.
+\item \code{use_GPU}: Logical. Whether to use GPU acceleration via rapids-singlecell for over-clustering. Only relevant when \code{majority_voting = TRUE}. (Default: \code{FALSE})
+\item \code{min_prop}: Numeric. Minimum proportion of dominant cell type required to name a subcluster. Subclusters below threshold are labeled 'Heterogeneous'. Ignored if \code{majority_voting = FALSE}. (Default: 0)
+}}
 }
 \value{
 The input \code{Seurat} object with some metadata columns added, Column names may vary slightly depending on CellTypist version and options used. Usually cell type labels will be added to \code{meta.data}, and scoring matrix will be add to \code{misc$celltypist}
@@ -93,6 +102,6 @@ Other Single_Cell_Annotation_Method:
 \code{\link{RegisterAnnoMethod}()},
 \code{\link{SCAnnotateStrategy}},
 \code{\link{SingleRAnnotate}()},
-\code{\link{mLLMCellTypeAnnotate}()}
+\code{\link{mLLMCelltypeAnnotate}()}
 }
 \concept{Single_Cell_Annotation_Method}

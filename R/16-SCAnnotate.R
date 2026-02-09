@@ -76,32 +76,58 @@ SCAnnotate <- function(
   method = c("CellTypist", "SingleR", "mLLMCelltype"),
   ...
 ) {
-  method <- SigBridgeRUtils::MatchArg(
-    method,
-    names(SCAnnotateStrategy),
-    NULL
-  ) # must chosen
-
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$verbose %||% getFuncOption("seed")
 
   set.seed(seed)
 
-  anno_func <- SCAnnotateStrategy[[method]]$executor
+  if (length(method) > 1) {
+    method <- SigBridgeRUtils::MatchFunc2Args(
+      dots,
+      mLLMCelltypeAnnotate,
+      SingleRAnnotate,
+      CellTypistAnnotate,
+      name_only = TRUE
+    )
+    if (length(method) != 1) {
+      cli::cli_abort(c(
+        "x" = "Cannot auto-find a suitable method, please specify a method"
+      ))
+    } else if (verbose) {
+      cli::cli_alert_info(
+        "Multiple methods detected, auto-using {.pkg {method}}"
+      )
+    }
 
-  if (method == "mLLMCelltype") {
+    anno_func <- switch(
+      method,
+      "mLLMCelltypeAnnotate" = mLLMCelltypeAnnotate,
+      "SingleRAnnotate" = SingleRAnnotate,
+      "CellTypistAnnotate" = CellTypistAnnotate
+    )
+  } else {
+    method <- SigBridgeRUtils::MatchArg(
+      method,
+      names(SCAnnotateStrategy),
+      NULL
+    ) # must chosen
+
+    anno_func <- SCAnnotateStrategy[[method]]$executor
+  }
+
+  if (method %chin% c("mLLMCelltype", "mLLMCelltypeAnnotate")) {
     anno_func(
       sc,
       ...
     )
-  } else if (method == "SingleR") {
+  } else if (method %chin% c("SingleR", "SingleRAnnotate")) {
     anno_func(
       sc,
       ref = dots$ref %||% "HPCA",
       ...
     )
-  } else if (method == "CellTypist") {
+  } else if (method %chin% c("CellTypist", "CellTypistAnnotate")) {
     dots <- rlang::list2(...)
 
     if (is.null(dots$conda) && is.null(dots$python)) {
@@ -148,7 +174,7 @@ SCAnnotate <- function(
     }
 
     # * used to filter out relevant arguments, pass to python function celltypist.annotate
-    celltypist.annotate <- \(
+    celltypist.annotate <- function(
       #   filename,
       #   model,
       transpose_input,
@@ -173,5 +199,7 @@ SCAnnotate <- function(
       !!!SigBridgeRUtils::FilterArgs4Func(dots, anno_func),
       !!!SigBridgeRUtils::FilterArgs4Func(dots, celltypist.annotate)
     )
+  } else {
+    cli::cli_abort(c("x" = "Unsupported method"))
   }
 }

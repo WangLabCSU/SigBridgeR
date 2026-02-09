@@ -66,7 +66,7 @@ Other Single_Cell_Annotation_Method:
 \code{\link{CellTypistAnnotate}()},
 \code{\link{SCAnnotateStrategy}},
 \code{\link{SingleRAnnotate}()},
-\code{\link{mLLMCellTypeAnnotate}()}
+\code{\link{mLLMCelltypeAnnotate}()}
 }
 \concept{Registering}
 \concept{Single_Cell_Annotation_Method}

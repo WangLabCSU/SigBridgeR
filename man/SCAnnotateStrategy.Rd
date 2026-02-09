@@ -29,7 +29,7 @@ Other Single_Cell_Annotation_Method:
 \code{\link{CellTypistAnnotate}()},
 \code{\link{RegisterAnnoMethod}()},
 \code{\link{SingleRAnnotate}()},
-\code{\link{mLLMCellTypeAnnotate}()}
+\code{\link{mLLMCelltypeAnnotate}()}
 }
 \concept{Single_Cell_Annotation_Method}
 \keyword{datasets}

@@ -45,7 +45,7 @@
 #' @param quality_control A list containing regex patterns for QC metric calculation. (See [QCPatternDetect])
 #' Default: \code{list(pattern = "^MT-")}. Detected metrics (e.g., percent.mt) are added to meta.data.
 #' @param data_filter A list of thresholds for cell filtering.
-#' Default: \code{nFeature_RNA} (200-6000), \code{nCount_RNA} (500-50000), \code{percent.mt} (<20), \code{percent.rp} (<60).
+#' Default: \code{assay} ("RNA"), \code{nFeature_RNA} (200-6000), \code{nCount_RNA} (500-50000), \code{percent.mt} (<20), \code{percent.rp} (<60).
 #' Only metrics detected via \code{quality_control} are filtered, i.e., nFeature_RNA, nCount_RNA and percent.mt.
 #' @param column2only_tumor Optional character. Column name in metadata to filter for tumor cells
 #' (matches "Tumor", "Cancer", "Malignant", etc.). If \code{NULL}, no filtering is performed.
@@ -139,8 +139,9 @@ SCPreProcess.default <- function(
     pattern = c("^MT-")
   ),
   data_filter = list(
-    nFeature_RNA_thresh = c(200L, 6000L),
-    nCount_RNA_thresh = c(500L, 50000L),
+    # assay = "RNA", # detect default assay
+    nFeature_thresh = c(200L, 6000L),
+    nCount_thresh = c(500L, 50000L),
     # * only used when specifed in `quality_control.pattern`
     percent.mt = 20L, # mitochondrial genes
     percent.rp = 60L # ribosomal protein genes
@@ -178,9 +179,9 @@ SCPreProcess.default <- function(
 
   unknown <- setdiff(steps, steps_to_run)
   if (length(unknown) != 0) {
-    cli::cli_warn(
-      "[{.fun SCIntegrate}]: Unknown pipeline steps: {.val {unknown}}"
-    )
+    cli::cli_abort(c(
+      "x" = "[{.fun SCPreProcess}]: Unknown pipeline steps: {.val {unknown}}"
+    ))
   }
   if (steps_to_run[[1]] == "o" && !is.null(sc)) {
     sc_seurat <- if (!is.null(params$o$counts)) {
@@ -203,14 +204,18 @@ SCPreProcess.default <- function(
     if (verbose) {
       cli::cli_inform("Use custom method to create Seurat object")
     }
+    letter <- steps_to_run[[1]]
+
     if (!is.null(sc)) {
       cli::cli_warn(
-        "[{.fun SCPreProcess}]: The parameter `sc` will be ignored when using custom method"
+        "It is recommend to set `sc` to NULL when using custom method"
       )
     }
+
     sc_seurat <- rlang::exec(
-      SCPreProcessStrategy[[steps_to_run[[1]]]],
-      !!!params[[steps_to_run[[1]]]]
+      SCPreProcessStrategy[[letter]],
+      sc,
+      !!!params[[letter]]
     )
   }
 
@@ -225,12 +230,12 @@ SCPreProcess.default <- function(
   if (is_filtering(data_filter)) {
     # first 2 numbers will be used
     chk::chk_lt(
-      data_filter$nFeature_RNA_thresh[1],
-      data_filter$nFeature_RNA_thresh[2]
+      data_filter$nFeature_thresh[1],
+      data_filter$nFeature_thresh[2]
     )
     chk::chk_lt(
-      data_filter$nCount_RNA_thresh[1],
-      data_filter$nCount_RNA_thresh[2]
+      data_filter$nCount_thresh[1],
+      data_filter$nCount_thresh[2]
     )
     sc_seurat <- QCFilter(
       seurat_obj = sc_seurat,
@@ -243,16 +248,16 @@ SCPreProcess.default <- function(
   for (step in 2:length(steps_to_run)) {
     # step: an index
     letter <- steps_to_run[[step]]
-    step_fun <- SCPreProcessStrategy[[letter]]
+    step_fun <- SCPreProcessStrategy[[letter]] # function
 
-    if (!is.function(step_fun)) {
-      cli::cli_abort(c(
-        "x" = "[{.fun SCPreProcess}]: Step {.val {steps_to_run[[step]]}} function not found",
-        ">" = "Available steps: {.val {names(SCPreProcessStrategy)}}",
-        ">" = "Use {.fun RegisterSeuratMethod} to add custom function"
-      ))
-    }
-    sc_seurat <- step_fun(sc_seurat, params[[letter]])
+    # if (!is.function(step_fun)) {
+    #   cli::cli_abort(c(
+    #     "x" = "[{.fun SCPreProcess}]: Step {.val {steps_to_run[[step]]}} function not found",
+    #     ">" = "Available steps: {.val {names(SCPreProcessStrategy)}}",
+    #     ">" = "Use {.fun RegisterSeuratMethod} to add custom function"
+    #   ))
+    # }
+    sc_seurat <- rlang::exec(step_fun, sc_seurat, !!!params[[letter]])
   }
 
   FilterTumorCell(
@@ -301,8 +306,9 @@ SCPreProcess.R6 <- function(
     pattern = c("^MT-")
   ),
   data_filter = list(
-    nFeature_RNA_thresh = c(200L, 6000L),
-    nCount_RNA_thresh = c(500L, 50000L),
+    # assay = "RNA", # detect default assay
+    nFeature_thresh = c(200L, 6000L),
+    nCount_thresh = c(500L, 50000L),
     # * only used when specifed in `quality_control.pattern`
     percent.mt = 20L, # mitochondrial genes
     percent.rp = 60L # ribosomal protein genes
@@ -437,12 +443,12 @@ SCPreProcess.R6 <- function(
   if (is_filtering(data_filter)) {
     # first 2 numbers will be used
     chk::chk_lt(
-      data_filter$nFeature_RNA_thresh[1],
-      data_filter$nFeature_RNA_thresh[2]
+      data_filter$nFeature_thresh[1],
+      data_filter$nFeature_thresh[2]
     )
     chk::chk_lt(
-      data_filter$nCount_RNA_thresh[1],
-      data_filter$nCount_RNA_thresh[2]
+      data_filter$nCount_thresh[1],
+      data_filter$nCount_thresh[2]
     )
     sc_seurat <- QCFilter(
       seurat_obj = sc_seurat,
@@ -459,10 +465,11 @@ SCPreProcess.R6 <- function(
   for (step in 2:length(steps_to_run)) {
     # step_fun: a function
     step_fun <- execution_queue[[step]]
-    sc_seurat <- step_fun(
-      object = sc_seurat,
+    sc_seurat <- rlang::exec(
+      step_fun,
+      sc_seurat,
       # steps_to_run[[step]]: a letter
-      params = params[[steps_to_run[[step]]]]
+      !!!params[[steps_to_run[[step]]]]
     )
   }
 
@@ -741,8 +748,8 @@ QCPatternDetect <- function(
 #' @param seurat_obj A \code{Seurat} object.
 #' @param data_filter.thresh A named list with thresholds. Default:
 #'   \code{list(
-#'     nFeature_RNA_thresh = c(200L, 6000L),
-#'     nCount_RNA_thresh    = c(500L, 25000L),
+#'     nFeature_thresh = c(200L, 6000L),
+#'     nCount_thresh    = c(500L, 25000L),
 #'     percent.mt = 20L,
 #'     percent.rp = 60L
 #'   )}.
@@ -756,63 +763,53 @@ QCPatternDetect <- function(
 QCFilter <- function(
   seurat_obj,
   data_filter.thresh = list(
-    nFeature_RNA_thresh = c(200L, 6000L),
-    nCount_RNA_thresh = c(500L, 50000L),
+    assay = names(seurat_obj@assays)[[1]],
+    nFeature_thresh = c(200L, 6000L),
+    nCount_thresh = c(500L, 50000L),
     percent.mt = 20L,
     percent.rp = 60L
   ),
   verbose = TRUE,
   ...
 ) {
-  if (!inherits(seurat_obj, "Seurat")) {
-    cli::cli_abort(c(
-      "x" = "[{.fun QCFilter}]: seurat_obj must be a {.cls Seurat} object."
-    ))
-  }
-
-  if (!is.list(data_filter.thresh)) {
-    cli::cli_abort(c(
-      "x" = "[{.fun QCFilter}]: {.arg data_filter.thresh} must be a named {.cls list}."
-    ))
-  }
-
-  if (verbose) {
-    cli::cli_text(
-      "Filtering cells by {.arg nFeature_RNA}, {.arg nCount_RNA} and {.arg QC metrics}"
-    )
-  }
+  chk::chk_is(seurat_obj, "Seurat")
+  chk::chk_list(data_filter.thresh)
 
   defaults <- list(
-    nFeature_RNA_thresh = c(200L, 6000L),
-    nCount_RNA_thresh = c(500L, 50000L),
+    assay = names(seurat_obj@assays)[[1]],
+    nFeature_thresh = c(200L, 6000L),
+    nCount_thresh = c(500L, 50000L),
     percent.mt = 20L,
     percent.rp = 60L
   )
   thresh <- utils::modifyList(defaults, data_filter.thresh)
 
-  # Ensure nFeature_RNA_thresh is length-2 integer
-  if (length(thresh$nFeature_RNA_thresh) != 2) {
-    cli::cli_abort(c(
-      "x" = "{.arg nFeature_RNA_thresh} must be a integer vector of length 2."
-    ))
+  if (verbose) {
+    feature_name <- paste0("nFeature_", thresh$assay)
+    count_name <- paste0("nCount_", thresh$assay)
+    cli::cli_text(
+      "Filtering cells by {.arg {feature_name}}, {.arg {count_name}} and {.arg QC metrics}"
+    )
   }
-  if (length(thresh$nCount_RNA_thresh) != 2) {
-    cli::cli_abort(c(
-      "x" = "{.arg nCount_RNA_thresh} must be a integer vector of length 2."
-    ))
-  }
-  thresh$nFeature_RNA_thresh <- as.integer(thresh$nFeature_RNA_thresh)
-  thresh$nCount_RNA_thresh <- as.integer(thresh$nCount_RNA_thresh)
+
+  # * Ensure nFeature_thresh is length-2 integer
+  chk::chk_length(thresh$nFeature_thresh, 2)
+  chk::chk_length(thresh$nCount_thresh, 2)
+
+  thresh$nFeature_thresh <- as.integer(thresh$nFeature_thresh)
+  thresh$nCount_thresh <- as.integer(thresh$nCount_thresh)
 
   # filter expr is a string of the form
   # which is used to subset the Seurat object
   nfeat_condition <- rlang::expr(
-    nFeature_RNA > !!thresh$nFeature_RNA_thresh[1] &
-      nFeature_RNA < !!thresh$nFeature_RNA_thresh[2]
+    !!as.symbol(paste0("nFeature_", thresh$assay)) >
+      !!thresh$nFeature_thresh[1] &
+      !!as.symbol(paste0("nFeature_", thresh$assay)) <
+        !!thresh$nFeature_thresh[2]
   )
   ncount_condition <- rlang::expr(
-    nCount_RNA > !!thresh$nCount_RNA_thresh[1] &
-      nCount_RNA < !!thresh$nCount_RNA_thresh[2]
+    !!as.symbol(paste0("nCount_", thresh$assay)) > !!thresh$nCount_thresh[1] &
+      !!as.symbol(paste0("nCount_", thresh$assay)) < !!thresh$nCount_thresh[2]
   )
 
   # see `QCPatternDetect()` for the column names generation
@@ -833,13 +830,19 @@ QCFilter <- function(
     present_cols <- qc_colnames[qc_colnames %in% colnames(meta)]
 
     valid_cols <- present_cols[vapply(
-      present_cols,
-      function(col) {
+      X = present_cols,
+      FUN = function(col) {
         x <- meta[[col]]
-        any(!is.na(x) & x > 0, na.rm = TRUE) &&
+        has_vals <- any(!is.na(x) & x >= 0, na.rm = TRUE)
+        non_0_var <- if (rlang::is_installed("cheapr")) {
+          cheapr::var_(x, na.rm = TRUE) > 0
+        } else {
           stats::var(x, na.rm = TRUE) > 0
+        }
+
+        has_vals & non_0_var
       },
-      logical(1L)
+      FUN.VALUE = logical(1L)
     )]
 
     if (length(valid_cols) == 0) {
@@ -848,11 +851,9 @@ QCFilter <- function(
 
     purrr::map(valid_cols, function(col) {
       if (!col %in% names(thresh)) {
-        if (verbose) {
-          cli::cli_warn(
-            "[{.fun QCFilter}]: No threshold provided for {.val {col}}; skipping."
-          )
-        }
+        cli::cli_warn(
+          "[{.fun QCFilter}]: No threshold provided for {.val {col}}; skipping."
+        )
         return(NULL)
       }
       rlang::expr(!!dplyr::sym(col) < !!thresh[[col]])

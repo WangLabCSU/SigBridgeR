@@ -43,6 +43,7 @@
 #' @param normality_test_method Method for normality testing: "jarque-bera", "d'agostino", or "kolmogorov-smirnov"
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
+#'    - `assay`: Name of assay to use. Defaults to "RNA".
 #'
 #' @return A list containing:
 #'   - scRNA_data: Seurat object with DEGAS labels added to metadata

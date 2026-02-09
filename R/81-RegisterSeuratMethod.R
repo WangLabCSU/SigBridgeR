@@ -90,8 +90,9 @@ RegisterSeuratMethod <- function(
       ))
     }
 
-    registry[[letter]] <- function(object, params) {
-      rlang::exec(executor, object = object, !!!params)
+    registry[[letter]] <- function(...) {
+      dots <- rlang::list2(...)
+      rlang::exec(executor, !!!dots)
     }
 
     if (verbose && !lookup) {

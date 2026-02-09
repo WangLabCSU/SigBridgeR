@@ -19,7 +19,7 @@ SCAnnotateStrategy <- rlang::new_environment(
     ),
     mLLMCelltype = list(
       method_name = "mLLMCelltype",
-      executor = mLLMCellTypeAnnotate
+      executor = mLLMCelltypeAnnotate
     ),
     SingleR = list(
       method_name = "SingleR",

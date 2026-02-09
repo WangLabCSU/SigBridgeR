@@ -24,6 +24,7 @@
 #' \itemize{
 #' \item{verbose: Whether to print progress messages (default: `TRUE`)}
 #' \item{seed: Random seed for reproducibility (default: `123L`)}
+#' \item{assay: Assay to use for clustering (default: `"RNA"`)}
 #' }
 #'
 #' @return A list containing:
@@ -93,6 +94,7 @@ DoLP_SGL <- function(
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$seed %||% getFuncOption("seed")
+  assay <- dots$assay %||% "RNA"
 
   if (ncol(sc_data) > 5e4) {
     cli::cli_warn(
@@ -110,7 +112,7 @@ DoLP_SGL <- function(
   # * Run Leiden clustering
   leiden_results <- LPSGL::run_leiden_clustering(
     seurat_obj = sc_data,
-    graph_name = "RNA_snn",
+    graph_name = paste0(assay, "_snn"),
     resolution = resolution,
     verbose = verbose,
     seed = seed

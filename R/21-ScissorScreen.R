@@ -61,6 +61,7 @@
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
+#'    - `assay`: Assay to use for single-cell data. Defaults to `"RNA"
 #'
 #' @return A list containing:
 #' \describe{
@@ -148,6 +149,7 @@ DoScissor <- function(
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
+  assay <- dots$assay %||% "RNA"
 
   # * default setting for `reliability_test` & `cell_evaluation`
   default_reliability_test <- list(
@@ -198,7 +200,8 @@ DoScissor <- function(
     Save_file = path2save_scissor_inputs,
     Load_file = path2load_scissor_cache,
     verbose = verbose,
-    seed = seed
+    seed = seed,
+    assay = assay
   )
 
   # meta.data to add

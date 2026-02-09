@@ -25,7 +25,8 @@
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
 #'    - `parallel`: Logical indicating whether to use parallel processing. Defaults to `FALSE`.
-#'
+#'    - Other arguments are passed to `scAB::create_scAB.v5()`
+#'    - `assay`: Character specifying the assay to use. Defaults to `"RNA"`.
 #'
 #
 #'
@@ -107,6 +108,7 @@ DoscAB <- function(
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
   parallel <- (dots$parallel %||% FALSE) &
     !inherits(future::plan("list")[[1]], "sequential")
+  assay <- dots$assay %||% "RNA"
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start scAB screening."))
@@ -117,7 +119,8 @@ DoscAB <- function(
     bulk_dataset = matched_bulk,
     phenotype = phenotype,
     method = phenotype_class,
-    verbose = verbose
+    verbose = verbose,
+    assay = assay
   )
 
   if (any(scAB_obj$X < 0)) {

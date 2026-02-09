@@ -42,7 +42,25 @@
 #'   Example: \code{list(openai = "sk-...", anthropic = "sk-ant-...")}.
 #'   \strong{Note}: Default placeholder keys (\code{"your-xxx-key"}) will fail—users must supply valid keys.
 #'
-#' @param ... Additional arguments passed to \code{Seurat::FindAllMarkers()}, \code{mLLMCelltype::annotate_cell_types} and \code{mLLMCelltype::interactive_consensus_annotation()}.
+#' @param ... Additional arguments passed to downstream functions. Parameters are routed as follows:
+#' \describe{
+#'   \item{To \code{mLLMCelltype::annotate_cell_types()} and \code{mLLMCelltype::interactive_consensus_annotation()}:}{
+#'     \describe{
+#'       \item{\code{top_gene_count}}{Number of top genes to use per cluster (default: 10L).}
+#'       \item{\code{debug}}{Logical. If \code{TRUE}, prints debugging information.}
+#'       \item{\code{base_urls}}{Custom API base URLs: single character string (applied globally) or named list with provider-specific URLs (e.g., \code{list(openai = "...", anthropic = "...")}). Useful for proxies, enterprise gateways, or testing environments.}
+#'       \item{\code{controversy_threshold}}{Consensus proportion threshold (default: 0.7). Clusters below this value are flagged as controversial.}
+#'       \item{\code{entropy_threshold}}{Entropy threshold for controversial cluster detection (default: 1.0).}
+#'       \item{\code{max_discussion_rounds}}{Maximum discussion rounds for controversial clusters (default: 3).}
+#'       \item{\code{consensus_check_model}}{Model used for consensus validation.}
+#'       \item{\code{log_dir}}{Directory for log storage (default: \code{tempdir()}).}
+#'       \item{\code{cache_dir}}{Directory for cache storage (default: \code{tempdir()}).}
+#'       \item{\code{use_cache}}{Logical. Whether to use cached results (default: \code{TRUE}).}
+#'       \item{\code{clusters_to_analyze}}{Character/numeric vector of cluster IDs to analyze. Non-existent IDs trigger warnings.}
+#'       \item{\code{force_rerun}}{Logical. If \code{TRUE}, bypasses cache and forces re-analysis (affects discussion phase only). Default: \code{FALSE}.}
+#'     }
+#'   }
+#' }
 #'
 #' @return The input \code{Seurat} object with the following metadata columns added:
 #'   \describe{
@@ -107,7 +125,7 @@
 #' @seealso \code{\link[mLLMCelltype]{annotate_cell_types}},
 #'          \code{\link[mLLMCelltype]{interactive_consensus_annotation}}
 #' @export
-mLLMCellTypeAnnotate <- function(
+mLLMCelltypeAnnotate <- function(
   sc,
   seurat_obj_markers = NULL,
   tissue_name = "Human Cancer", # context
@@ -152,6 +170,9 @@ mLLMCellTypeAnnotate <- function(
       object = sc,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindAllMarkers)
     )
+    if (nrow(seurat_obj_markers) == 0) {
+      cli::cli_abort(c("x" = "No marker genes found"))
+    }
   } else if (verbose) {
     ts_cli$cli_alert_info("Use provided marker genes")
   }
@@ -277,99 +298,126 @@ check_model_key <- function(models = vector(), api_keys = list()) {
     ))
   }
 
-  if (length(models) > 0) {
-    known_models <- tolower(c(
-      # OpenAI
-      "gpt-5",
-      "gpt-4o-mini",
-      "gpt-4.1",
-      "gpt-4.1-mini",
-      "gpt-4.1-nano",
-      "gpt-4-turbo",
-      "gpt-3.5-turbo",
-      "o1",
-      "o1-mini",
-      "o1-preview",
-      "o1-pro",
-      # Anthropic
-      "claude-sonnet-4-5-20250929",
-      "claude-3-5-sonnet-20241022",
-      "claude-3-5-haiku-20241022",
-      "claude-3-opus-20240229",
-      # DeepSeek
-      "deepseek-chat",
-      "deepseek-reasoner",
-      # Google
-      "gemini-3-pro",
-      "gemini-3-flash",
-      "gemini-2.0-flash",
-      "gemini-2.0-flash-lite",
-      "gemini-1.5-pro",
-      "gemini-1.5-flash",
-      # Qwen
-      "qwen-max-2025-01-25",
-      # Stepfun
-      "step-2-mini",
-      "step-2-16k",
-      "step-1-8k",
-      # Zhipu
-      "glm-4-plus",
-      "glm-3-turbo",
-      # MiniMax
-      "minimax-text-01",
-      # Grok
-      "grok-3",
-      "grok-3-latest",
-      "grok-3-fast",
-      "grok-3-fast-latest",
-      "grok-3-mini",
-      "grok-3-mini-latest",
-      "grok-3-mini-fast",
-      "grok-3-mini-fast-latest",
-      # OpenRouter 格式：provider/model-name
-      # OpenAI
-      "openai/gpt-5",
-      "openai/gpt-4o-mini",
-      "openai/gpt-4-turbo",
-      "openai/gpt-4",
-      "openai/gpt-3.5-turbo",
-      # Anthropic
-      "anthropic/claude-sonnet-4.5",
-      "anthropic/claude-haiku-4",
-      "anthropic/claude-opus-4.1",
-      # Meta
-      "meta-llama/llama-3-70b-instruct",
-      "meta-llama/llama-3-8b-instruct",
-      "meta-llama/llama-2-70b-chat",
-      # Google
-      "google/gemini-3-pro",
-      "google/gemini-3-flash",
-      "google/gemini-1.5-pro-latest",
-      "google/gemini-1.5-flash",
-      # Mistral
-      "mistralai/mistral-large",
-      "mistralai/mistral-medium",
-      "mistralai/mistral-small",
-      # 其他
-      "microsoft/mai-ds-r1",
-      "perplexity/sonar-small-chat",
-      "cohere/command-r",
-      "deepseek/deepseek-chat",
-      "thudm/glm-z1-32b"
-    ))
+  #   if (length(models) > 0) {
+  #     known_models <- tolower(c(
+  #       # OpenAI
+  #       "gpt-5",
+  #       "gpt-4o-mini",
+  #       "gpt-4.1",
+  #       "gpt-4.1-mini",
+  #       "gpt-4.1-nano",
+  #       "gpt-4-turbo",
+  #       "gpt-3.5-turbo",
+  #       "o1",
+  #       "o1-mini",
+  #       "o1-preview",
+  #       "o1-pro",
+  #       # Anthropic
+  #       "claude-sonnet-4-5-20250929",
+  #       "claude-3-5-sonnet-20241022",
+  #       "claude-3-5-haiku-20241022",
+  #       "claude-3-opus-20240229",
+  #       # DeepSeek
+  #       "deepseek-chat",
+  #       "deepseek-reasoner",
+  #       # Google
+  #       "gemini-3-pro",
+  #       "gemini-3-flash",
+  #       "gemini-2.0-flash",
+  #       "gemini-2.0-flash-lite",
+  #       "gemini-1.5-pro",
+  #       "gemini-1.5-flash",
+  #       # Qwen
+  #       "qwen-max-2025-01-25",
+  #       # Stepfun
+  #       "step-2-mini",
+  #       "step-2-16k",
+  #       "step-1-8k",
+  #       # Zhipu
+  #       "glm-4-plus",
+  #       "glm-3-turbo",
+  #       # MiniMax
+  #       "minimax-text-01",
+  #       # Grok
+  #       "grok-3",
+  #       "grok-3-latest",
+  #       "grok-3-fast",
+  #       "grok-3-fast-latest",
+  #       "grok-3-mini",
+  #       "grok-3-mini-latest",
+  #       "grok-3-mini-fast",
+  #       "grok-3-mini-fast-latest",
+  #       # OpenRouter 格式：provider/model-name
+  #       # OpenAI
+  #       "openai/gpt-5",
+  #       "openai/gpt-4o-mini",
+  #       "openai/gpt-4-turbo",
+  #       "openai/gpt-4",
+  #       "openai/gpt-3.5-turbo",
+  #       # Anthropic
+  #       "anthropic/claude-sonnet-4.5",
+  #       "anthropic/claude-haiku-4",
+  #       "anthropic/claude-opus-4.1",
+  #       # Meta
+  #       "meta-llama/llama-3-70b-instruct",
+  #       "meta-llama/llama-3-8b-instruct",
+  #       "meta-llama/llama-2-70b-chat",
+  #       # Google
+  #       "google/gemini-3-pro",
+  #       "google/gemini-3-flash",
+  #       "google/gemini-1.5-pro-latest",
+  #       "google/gemini-1.5-flash",
+  #       # Mistral
+  #       "mistralai/mistral-large",
+  #       "mistralai/mistral-medium",
+  #       "mistralai/mistral-small",
+  #       # 其他
+  #       "microsoft/mai-ds-r1",
+  #       "perplexity/sonar-small-chat",
+  #       "cohere/command-r",
+  #       "deepseek/deepseek-chat",
+  #       "thudm/glm-z1-32b",
+  #       # =====2026.02 update=====
+  #       # OpenAI
+  #       "gpt-5.2",
+  #       "gpt-5.1",
+  #       "gpt-5",
+  #       "o3-pro",
+  #       "o4-mini",
+  #       # Anthropic
+  #       "claude opus 4.6",
+  #       "claude opus 4.5",
+  #       "claude sonnet 4.5",
+  #       # Google
+  #       "gemini 3 pro",
+  #       "gemini 3 flash",
+  #       "gemini 2.5 pro/flash",
+  #       # X.AI
+  #       "grok 4",
+  #       "grok 4.1",
+  #       "grok 4 heavy",
+  #       # DeepSeek
+  #       "deepseek r1",
+  #       # Alibaba
+  #       "qwen 3 max",
+  #       # Zhipu
+  #       "glm-4.7",
+  #       # MiniMax
+  #       "minimax m2.1"
+  #     ))
 
-    cleaned_models <- trimws(tolower(models))
-    invalid_mask <- !cleaned_models %in% known_models
+  #     cleaned_models <- trimws(tolower(models))
+  #     invalid_mask <- !cleaned_models %in% known_models
 
-    if (any(invalid_mask)) {
-      invalid_original <- models[invalid_mask]
-      cli::cli_abort(c(
-        "x" = "[mLLMCelltypeAnnotate()] Invalid model(s) provided",
-        "i" = "The following model(s) are not in the allowed list:",
-        ">" = "{invalid_original}",
-        "i" = "Allowed models include direct calls (e.g., 'gpt-4o-mini') and OpenRouter format (e.g., 'openai/gpt-4o-mini').",
-        "i" = "See {.url https://github.com/cafferychen777/mLLMCelltype} for full model list."
-      ))
-    }
-  }
+  #     if (any(invalid_mask)) {
+  #       invalid_original <- models[invalid_mask]
+  #       cli::cli_abort(c(
+  #         "x" = "[mLLMCelltypeAnnotate()] Invalid model(s) provided",
+  #         "i" = "The following model(s) are not in the allowed list:",
+  #         ">" = "{invalid_original}",
+  #         "i" = "Allowed models include direct calls (e.g., 'gpt-4o-mini') and OpenRouter format (e.g., 'openai/gpt-4o-mini').",
+  #         "i" = "See {.url https://github.com/cafferychen777/mLLMCelltype} for full model list."
+  #       ))
+  #     }
+  #   }
 }

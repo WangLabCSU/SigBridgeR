@@ -182,7 +182,7 @@ setThreads <- function(
     cli::cli_h2(cli::col_yellow("TensorFlow Configuration"))
     purrr::walk(tf_results, function(cfg) {
       cli::cli_text(
-        "{cli::symbol$bullet} {.val {cfg$name}}: {cfg$old} -> {cfg$new}"
+        "{cli::symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
       )
     })
   }

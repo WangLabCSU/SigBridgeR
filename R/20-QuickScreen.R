@@ -24,7 +24,7 @@
 #' - "scAB": see also DoscAB(), continuous phenotype is not supported
 #' - "DEGAS": see also DoDEGAS()
 #' - "LP_SGL": see also DoLP_SGL()
-#' - "PIPET": see also DoPIPET(), using survival as phenotype is not supported
+#' - "PIPET": see also DoPIPET()
 #' @param ... Additional method-specific parameters:
 #' \describe{
 #' \item{Scissor}{\describe{

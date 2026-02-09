@@ -46,6 +46,7 @@ or "\code{linear}" (linear regression)}
 \itemize{
 \item{verbose: Whether to print progress messages (default: \code{TRUE})}
 \item{seed: Random seed for reproducibility (default: \code{123L})}
+\item{assay: Assay to use for clustering (default: \code{"RNA"})}
 }}
 }
 \value{

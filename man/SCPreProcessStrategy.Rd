@@ -12,9 +12,8 @@ SCPreProcessStrategy
 }
 \description{
 An environment that maps single-letter codes to standardized Seurat preprocessing
-operations. Each entry is a function of the form \code{function(object, params)}
-that wraps a core Seurat step (e.g., normalization, PCA, clustering) using
-\code{rlang::exec()} for safe parameter injection.
+operations. Each entry is a function of the form \code{function(...)}
+that wraps a core Seurat step (e.g., normalization, PCA, clustering)
 
 This registry enables compact, composable pipeline definitions (e.g., via character
 strings like \code{"onvps"} for "Create → Normalize → VariableFeatures → Scale → PCA")
@@ -42,8 +41,6 @@ and supports both standard (\code{NormalizeData}) and SCTransform-based workflow
 \itemize{
 \item These functions are \strong{not intended for direct interactive use}. They are
 internal building blocks for workflow engines (i.e., \code{SCPreProcess}).
-\item Each function expects \code{object} (a matrix or Seurat object) and
-\code{params} (a named list of arguments passed via \code{!!!} splicing).
 \item You can access any operation via \code{SCPreProcessStrategy$letter},
 but doing so bypasses pipeline validation and error handling.
 \item To add more operations, use \code{RegisterSeuratMethod()}

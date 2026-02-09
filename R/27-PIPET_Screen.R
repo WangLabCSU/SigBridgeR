@@ -38,6 +38,7 @@
 #' - seed: Random seed for reproducibility
 #' - verbose: Whether to show progress messages
 #' - parallel: Whether to use parallel processing, default is `FALSE`. future::plan() must be set before calling this function.
+#' - assay: The assay to use, default is `"RNA"`
 #'
 #'
 #' @family screen_method
@@ -98,6 +99,8 @@ DoPIPET <- function(
   seed <- dots$seed %||% getFuncOption("seed")
   parallel <- (dots$parallel %||% FALSE) &
     !inherits(future::plan("list")[[1]], "sequential")
+  assay <- dots$assay %||% "RNA"
+
   ## * PIPET params
   distance <- SigBridgeRUtils::MatchArg(
     distance,
@@ -163,7 +166,8 @@ DoPIPET <- function(
     distance = distance,
     verbose = verbose,
     seed = seed,
-    parallel = parallel
+    parallel = parallel,
+    assay = assay
   )
 
   if (is.null(pipet_result)) {

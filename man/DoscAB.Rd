@@ -47,6 +47,8 @@ DoscAB(
 \item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
 \item \code{seed}: For reproducibility, default is \code{123L}
 \item \code{parallel}: Logical indicating whether to use parallel processing. Defaults to \code{FALSE}.
+\item Other arguments are passed to \code{scAB::create_scAB.v5()}
+\item \code{assay}: Character specifying the assay to use. Defaults to \code{"RNA"}.
 }}
 }
 \value{

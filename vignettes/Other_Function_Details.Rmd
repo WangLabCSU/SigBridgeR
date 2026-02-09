@@ -358,7 +358,9 @@ seurat <- SCAnnotate(
 )
 ```
 
-or control it manually:
+`SCAnnotate` will automatically set up the required dependencies for you (making it even more plug-and-play). If the `method` argument is not specified, it will automatically select the appropriate annotation method based on the provided arguments.
+
+To control it manually, use following functions:
 
 ## CellTypist Annotation
 
@@ -380,15 +382,22 @@ seurat <- CellTypistAnnotate(
 ) 
 ```
 
-**Parameters**
+**Parameters**:
 
 - `sc`: A Seurat object.
 - `model`: Charater/str. The model to use. If `NULL`, the default model will be used.
-- `download`: Logical/bool. Whether to download the model. Defaults to `TRUE`.
+- `download`: Logical/bool. Whether to download the model. Defaults to `TRUE`-download all models. if model already exists, skip download.
+- `force_update`: Logical. Whether to force update the model file.
 - `conda`: Character/str. conda environment name. If `NULL`, try to use `python`.
 - `python`: Character/str. The path to the python executable. If `NULL`, try to use `conda`.
 - `verbose`: Logical/bool. Whether to print verbose messages. Defaults to `TRUE`.
 - `celltypist_tools`: The path to the celltypist_tools.py file. If `NULL`, the default path will be used.
+
+**Returns**:
+
+A Seurat object with the cell type annotation added as metadata columns.
+
+Other parameters supported by `celltypist.annotate` will be automatically passed through and can be directly supplied to `CellTypistAnnotate`.
 
 helpful link: [https://github.com/Teichlab/celltypist](https://github.com/Teichlab/celltypist)
 
@@ -415,6 +424,33 @@ seurat <- mLLMCellTypeAnnotate(
   # Other arguments passed to `mLLMCelltype::annotate_cell_types` or ` mLLMCelltype::interactive_consensus_annotation`
 )
 ```
+
+**Parameters**
+
+- `sc` : A Seurat object with pre-computed clusters (stored in `Idents(sc)` or `sc$seurat_clusters`).
+- `seurat_obj_markers` : Optional pre-computed marker gene table or list (output of `Seurat::FindAllMarkers()`). If `NULL` (default), markers are computed automatically using parameters passed via `...`.
+- `tissue_name` : Character. Biological context for annotation (e.g., tissue type, disease state). Helps LLMs interpret marker genes appropriately. Default: `"Human Tumor"`.
+- `models` : Character vector of LLM model identifiers. Supported formats:
+  - OpenAI: `"gpt-4o"`, `"gpt-4o-mini"`, etc.
+  - Anthropic: `"claude-3-5-sonnet-20240620"`, etc.
+  - Google: `"gemini-1.5-pro"`, etc.
+  - Alibaba: `"qwen-max"`, `"qwen-plus"`, etc.
+  
+  Default: `c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")`. For single-model mode, only the first model is used.
+- `api_keys` : Named list of API keys with provider names as keys:
+  - `openai`: OpenAI API key
+  - `anthropic`: Anthropic API key
+  - `gemini`: Google Cloud API key (with Gemini enabled)
+  - `qwen`: Alibaba DashScope API key
+  
+  Example: `list(openai = "sk-...", anthropic = "sk-ant-...")`.
+  
+  **Note**: Default placeholder keys (`"your-xxx-key"`) will fail—users must supply valid keys.
+
+
+**Returns**:
+
+A Seurat object with the cell type annotation added as metadata columns.
 
 helpful link: [https://github.com/cafferychen777/mLLMCelltype](https://github.com/cafferychen777/mLLMCelltype)
 
@@ -444,6 +480,10 @@ seurat <- SingleRAnnotate(
 - `legacy`: Logical. Whether to use legacy ExperimentHub backend. Default uses gypsum.
 - `ref`: Reference data for annotation. Either `"HPCA"` (Human Primary Cell Atlas from `celldex`) or a `SingleCellExperiment` object with pre-labeled cells. For multiple references, a list of matrices or `SummarizedExperiment` objects.
 - `labels`: Character vector of cell type labels for `ref` columns. Required for custom references; defaults to `ref$label.main` for `"HPCA"`. If `ref` is a list, `labels` must be a corresponding list.
+
+**Returns**:
+
+A Seurat object with the cell type annotation added as metadata columns.
 
 helpful link: [https://github.com/SingleR-inc/SingleR](https://github.com/SingleR-inc/SingleR)
 

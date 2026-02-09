@@ -267,13 +267,14 @@ SCIntegrate.Seurat <- function(
   # step: a letter
   for (step in steps_to_run) {
     step_fun <- SCPreProcessStrategy[[step]] # a function
-    merged <- step_fun(
-      object = merged,
+    merged <- rlang::exec(
+      step_fun,
+      merged,
       # steps_to_run[[step]] -- a letter
-      params = if (step != "i") {
-        SigBridgeRUtils::FilterArgs4Func(dots[!is_seurat], step_fun)
+      if (step != "i") {
+        !!!dots[!is_seurat]
       } else {
-        utils::modifyList(
+        !!!utils::modifyList(
           SigBridgeRUtils::FilterArgs4Func(dots[!is_seurat], method),
           SigBridgeRUtils::FilterArgs4Func(
             dots[!is_seurat],
