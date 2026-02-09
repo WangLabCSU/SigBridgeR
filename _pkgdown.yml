@@ -103,8 +103,6 @@ reference:
           - ListPyEnv
 
     - title: Extension Tools
-      desc: >
-          Other functions for extending SigBridgeR.
       contents:
           - InterceptStrategy
           - Register
@@ -113,6 +111,14 @@ reference:
           - RegisterSeuratMethod
           - ValidateScreenFunc
           - TemplateScreenFunc
+
+    - title: Registry
+      desc: >
+          Extended registry for SigBridgeR
+      contents:
+          - SCPreProcessStrategy
+          - SCAnnotateStrategy
+          - ScreenStrategy
 
     - title: Package Configuration
       desc: >

@@ -9,7 +9,7 @@ Authors@R:
 Description: Identifies phenotype-associated cell subpopulations by integrating phenotypic data (e.g., survival, drug sensitivity), bulk gene expression, and single-cell RNA-seq (scRNA-seq) profiles. It employs multiple algorithms to reliably connect cellular features with clinical or functional phenotypes, offering a unified pipeline for multi-modal analysis that uncovers biologically and clinically relevant cell states in heterogeneous datasets.  
 License: GPL (>= 3)
 Encoding: UTF-8
-URL: https://github.com/WangLabCSU/SigBridgeR
+URL: https://wanglabcsu.github.io/sigbridger
 BugReports: https://github.com/WangLabCSU/SigBridgeR/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
