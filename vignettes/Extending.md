@@ -1,6 +1,26 @@
 This document introduces a guide for extending SigBridgeR with custom
 algorithms.
 
+# Too Long; Didn’t Read
+
+(auto dispatch)
+
+Extend `SCPreProcess`: key = func
+
+    Register(h = Seurat::RunHarmony)
+
+Extend `SCAnnotate`: key = func
+
+    Register(my = my_function)
+
+Extend `Screen`: key = func
+
+    TemplateScreenFunc() # create a file
+    ValidateScreenFunc(my_function)
+    Register(my = my_function)
+
+# Extend Screening Methods
+
 ## Installation
 
 It’s recommended to install these packages for checking the code
@@ -20,6 +40,9 @@ It’s recommended to install these packages for checking the code
 After the v3.2.0 update, SigBridgeR supports registering custom
 algorithms for screening phenotype-associated cell method into the
 package. Let’s do this with a detailed example:
+
+(Template can be obtained via `TemplateScreenFunc`, which will create a
+file and open it in the editor.)
 
     my_screen_function <- function(
       matched_bulk,
@@ -179,8 +202,10 @@ Details of the arguments:
 
 Let’s check whether it has indeed been registered
 
-    GetExistingStrategy()
+    tbl <- InterceptStrategy("ScreenStrategy")
+    # A tibble: 22 × 4
 
+    names(ScreenStrategy)
     # [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"
 
 ## Use the function
@@ -222,3 +247,129 @@ Now we can use the function in the `Screen` function:
 If you still have questions, please use GitHub
 [Issues](https://github.com/WangLabCSU/SigBridgeR/issues) or
 [Discussions](https://github.com/WangLabCSU/SigBridgeR/discussions).
+
+# Extend Seurat Methods
+
+In general, any Seurat function can be registered for use within
+`SCPreProcess`. However, due to the character-length limitation of the
+pipeline code string, at most **52** functions can be registered—one for
+each uppercase and lowercase letter (A–Z, a–z).
+
+By default, the registry is defined as follows:
+
+**Pipeline Code Table:**
+
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 30%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>o</strong></td>
+<td><code>CreateSeuratObject</code></td>
+<td><strong>Required.</strong> Must be the first step.</td>
+</tr>
+<tr class="even">
+<td><strong>n</strong></td>
+<td><code>NormalizeData</code></td>
+<td>Standard normalization.</td>
+</tr>
+<tr class="odd">
+<td><strong>s</strong></td>
+<td><code>ScaleData</code></td>
+<td>Scales data for PCA.</td>
+</tr>
+<tr class="even">
+<td><strong>v</strong></td>
+<td><code>FindVariableFeatures</code></td>
+<td>Selects highly variable genes.</td>
+</tr>
+<tr class="odd">
+<td><strong>p</strong></td>
+<td><code>RunPCA</code></td>
+<td>Principal Component Analysis.</td>
+</tr>
+<tr class="even">
+<td><strong>e</strong></td>
+<td><code>FindNeighbors</code></td>
+<td>Computes SNN graph.</td>
+</tr>
+<tr class="odd">
+<td><strong>c</strong></td>
+<td><code>FindClusters</code></td>
+<td>Louvain algorithm clustering.</td>
+</tr>
+<tr class="even">
+<td><strong>t</strong></td>
+<td><code>RunTSNE</code></td>
+<td>t-SNE reduction.</td>
+</tr>
+<tr class="odd">
+<td><strong>u</strong></td>
+<td><code>RunUMAP</code></td>
+<td>UMAP reduction.</td>
+</tr>
+<tr class="even">
+<td><strong>r</strong></td>
+<td><code>SCTransform</code></td>
+<td><strong>SCT workflow.</strong> Replaces n, s, v.</td>
+</tr>
+</tbody>
+</table>
+
+For example, if we need to use `Seurat::LoadXenium` to load Xenium data
+for screening, register this function first.
+
+    RegisterSeuratMethod(x = Seurat::LoadXenium)
+    # ✔ Registered x
+
+To check:
+
+    names(SCPreProcessStrategy)
+    #  [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"
+
+    tbl <- InterceptStrategy("SCPreProcessStrategy")
+    # tibble [12 × 2]
+
+# Extend Cell Type Annotation Methods
+
+By default, SigBridgeR includes three built-in cell type annotation
+algorithms: **SingleR**, **CellTypist**, and **mLLMCelltype**—all of
+which require additional installation and dependencies (See
+[README](https://wanglabcsu.github.io/SigBridgeR/index.html)). They can
+all be invoked through the unified interface function `SCAnnotate`.
+
+Extending cell annotation method is also very easy:
+
+    my_method <- function(seurat_obj, ...) {
+      # placeholder
+      return(seurat_obj)
+    }
+
+    RegisterAnnoMethod(
+      my = my_method
+    )
+    # ✔ Registered `my`
+
+To check:
+
+    names(SCAnnotateStrategy)
+    # [1] "my"           "mLLMCelltype" "CellTypist"   "SingleR"
+
+Here are some recommendations for user-defined cell annotation
+functions.
+
+1.  The first input and the first output must both be Seurat objects.
+2.  If multiple objects need to be returned, it is recommended to use a
+    `list` format.
+3.  Use `tidycheckUsage::tidycheckUsage()` to check the function’s
+    syntax.
