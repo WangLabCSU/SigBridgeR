@@ -285,13 +285,13 @@ p2 <- Seurat::SpatialDimPlot(
 
 To statistically assess the composition of Positive cells, you can do the following:
 
-```{r,viz2,eval=FALSE}
+```{r,stats,eval=FALSE}
 table(res$scRNA_data$mllmcelltype_cell_type[
   res$scRNA_data$scissor == "Positive"
 ])
 ```
 
-```{r,viz2,eval=FALSE}
+```{r,stats_output,eval=FALSE}
 #     Acinar cells           Adipocytes              B cells         Chondrocytes    Endothelial cells
 #              106                  100                   98                  566                   27
 #      Enterocytes     Epithelial cells          Fibroblasts        Gastric cells         Goblet cells

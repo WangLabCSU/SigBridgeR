@@ -9,7 +9,7 @@
 #'
 #' Internally routes to:
 #' \itemize{
-#'   \item \code{registry = "auto"} → \code{\link{detect_registry}}
+#'   \item \code{registry = "auto"} → \code{detect_registry()}
 #'   \item \code{registry = "ScreenStrategy"} → \code{\link{RegisterScreenMethod}}
 #'   \item \code{registry = "SCPreProcessStrategy"} → \code{\link{RegisterSeuratMethod}}
 #'   \item \code{registry = "SCAnnotateStrategy"} → \code{\link{RegisterAnnoMethod}}
@@ -178,7 +178,7 @@ detect_registry <- function(method_name, func, dots, verbose = FALSE) {
           "label_type",
           "phenotype_class"
         ) %chin%
-          formalArgs(func)
+          methods::formalArgs(func)
       )
   ) {
     if (verbose) {

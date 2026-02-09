@@ -10,7 +10,7 @@
 #'   sc_data,
 #'   phenotype,
 #'   label_type = "scPP",
-#'   phenotype_class = c("Binary", "Continuous", "Survival"),
+#'   phenotype_class = c("binary", "continuous", "survival"),
 #'   ref_group = 0,
 #'   Log2FC_cutoff = 0.585,
 #'   estimate_cutoff = 0.2,
