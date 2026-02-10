@@ -35,36 +35,46 @@ package name prefix are also compatible.
 
 ## Setting Threads
 
-Used to control the number of threads for OpenMP and data.table. By
-default, uses half of the maximum available threads.
+`setThreads()` configures thread counts for OpenMP, data.table, and
+TensorFlow backends. By default, it uses **half of available physical
+cores** to balance performance and system responsiveness.
 
-Default:
+### Basic Usage
+
+    # Auto-configure all backends (default: half cores)
+    setThreads()
+
+    # Set explicit thread count
+    setThreads(8)
+
+    # Configure specific backends only
+    setThreads(threads = 4, backend = "dt")      # data.table only
+    setThreads(threads = 4, backend = "openmp")  # OpenMP only
+
+### TensorFlow Optimization
+
+⚠️ **Must configure BEFORE importing TensorFlow**:
 
     setThreads(
-      n_threads = NULL,
-      backend = c("openmp", "dt")
+      threads = 8,
+      tf_config = list(
+        xla = TRUE,
+        inter_op = 2,
+        intra_op = 8
+      )
     )
+    tf <- reticulate::import("tensorflow")  # Import AFTER configuration
 
-Example Usage:
+### Options
 
-    setThreads(1L)
+-   `verbose = FALSE`: suppress console output
+-   Returns invisible list of old/new values for programmatic use
+-   Additional `data.table::setDTthreads()` arguments accepted via `...`
+    (e.g., `restore = TRUE`)
 
-    # ── System Threads Config ───────────────────────────────────────────────────────────────────────────────────────────────────
-    #   OpenMP version (_OPENMP)       201511
-    #   omp_get_num_procs()            192
-    #   R_DATATABLE_NUM_PROCS_PERCENT  unset (default 50)
-    #   R_DATATABLE_NUM_THREADS        unset
-    #   R_DATATABLE_THROTTLE           unset (default 1024)
-    #   omp_get_thread_limit()         2147483647
-    #   omp_get_max_threads()          192
-    #   OMP_THREAD_LIMIT               unset
-    #   OMP_NUM_THREADS                1
-    #   RestoreAfterFork               true
-    #   data.table is using 1 threads with throttle==1024. See ?setDTthreads.
-
-    # ── Changes 
-    # • "OMP_NUM_THREADS": 1 -> 1
-    # • "data.table": 96 -> 1
+> 💡 **Tip**: Default half-core allocation prevents oversubscription.
+> Use full cores (`threads = availableCores()`) only on dedicated
+> compute nodes.
 
 # Seurat Utilities
 
@@ -673,3 +683,89 @@ values and rename them simultaneously.
         cache = TRUE,
         timeout = 60
     )
+
+## Aggregating Duplicate Rows or Columns
+
+These functions collapse duplicated row names (e.g., gene symbols) or
+column names (e.g., sample IDs) in expression matrices and count tables
+using configurable aggregation methods.
+
+### Core Functions
+
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AggregateDupRows()</code></td>
+<td>Merge rows with identical names (e.g., duplicate genes)</td>
+</tr>
+<tr class="even">
+<td><code>AggregateDupCols()</code></td>
+<td>Merge columns with identical names (e.g., duplicate samples)</td>
+</tr>
+<tr class="odd">
+<td><code>AggregateDups()</code></td>
+<td>Convenience wrapper: merge rows &amp; columns</td>
+</tr>
+</tbody>
+</table>
+
+### Supported Methods
+
+-   `"max"` (default), `"sum"`, `"mean"`, `"median"`, `"first"`
+
+### Basic Usage
+
+    # Example matrix with duplicate genes (rows) and samples (columns)
+    mat <- matrix(1:16, nrow = 4,
+      dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"),
+                      c("S1", "S1", "S2", "S3")))
+
+    mat
+    #       S1 S1 S2 S3
+    # TP53   1  5  9 13
+    # TP53   2  6 10 14
+    # BRCA1  3  7 11 15
+    # ACTB   4  8 12 16
+
+
+    # Collapse duplicate genes using sum
+    AggregateDupRows(mat, method = "sum")
+    #       S1 S1.1 S2 S3
+    # TP53   2    6 10 14
+    # BRCA1  3    7 11 15
+    # ACTB   4    8 12 16
+
+    # Collapse duplicate samples using max
+    AggregateDupCols(mat, method = "max")
+    #       S1 S2 S3
+    # TP53   5  9 13
+    # TP53   6 10 14
+    # BRCA1  7 11 15
+    # ACTB   8 12 16
+
+    # Full deduplication in one step
+    AggregateDups(mat, method = "sum")
+    #       S1 S2 S3
+    # TP53  14 19 27
+    # BRCA1 10 11 15
+    # ACTB  12 12 16
+
+### Features
+
+-   ✅ Handles `matrix`, `data.frame`, and S4 `Matrix` classes (e.g.,
+    `dgCMatrix`)
+-   ✅ Preserves original order of *first occurrence* for each unique
+    name
+-   ✅ Silent mode: `verbose = FALSE`
+-   ✅ Independent row/column methods via
+    `AggregateDups(row_method, col_method)`
