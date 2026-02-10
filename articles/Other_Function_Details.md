@@ -548,75 +548,6 @@ A Seurat object with the cell type annotation added as metadata columns.
 
 helpful link: <https://github.com/SingleR-inc/SingleR>
 
-## Other Functions
-
-### Load reference data
-
-**Parameters**
-
-- `data_type`: The type of data to load. Can be either “continuous”,
-  “survival” or “binary”, case-insensitive.
-- `path`: The path to the data directory.
-- `cache`: Whether to cache the data. Defaults to `TRUE`.
-- `timeout`: The maximum timeout time when downloading data.
-
-When loading the example data, the single-cell RNA expression matrix,
-the bulk RNA expression matrix, and the clinical phenotype data are
-loaded all at once. These data are combined into a list and returned.
-
-``` r
-mydata <- LoadRefData(
-    data_type = c("survival"),
-    path = tempdir(),
-    cache = TRUE,
-    timeout = 60
-)
-
-# * mat_exam (matrix_example)
-mydata[[1]][1:6,1:6]
-#          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT SMC01.T_AAACCTGTCCCTTGCA SMC01.T_AAACGGGAGGGAAACA SMC01.T_AAACGGGGTATAGGTA SMC01.T_AAAGATGAGGCCGAAT
-# A1BG                            0                        0                        0                        0                        0                        0
-# A1BG.AS1                        0                        0                        0                        0                        0                        0
-# A1CF                            0                        2                        0                        0                        3                        0
-# A2M                             0                        0                        0                        0                        0                        0
-# A2M.AS1                         0                        0                        0                        0                        0                        0
-# A2ML1                           0                        0                        0                        0                        0                        0
-
-# * bulk_survival
-mydata[[2]][1:6,1:6]
-#         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
-# HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
-# RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
-# HMGCLL1       2.7476       5.8513       3.8334       3.6447       2.9188       4.8820
-# LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882
-# GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311
-# LRRTM3        1.7458       2.0092       0.0000       1.4468       0.0000       0.0000
-
-# * pheno_survival
-mydata[[3]] |> head()
-#               time status
-# TCGA-69-7978  4.40      0
-# TCGA-62-8399 88.57      0
-# TCGA-78-7539 25.99      0
-# TCGA-73-4658 52.56      1
-# TCGA-44-6775 23.16      0
-# TCGA-44-2655 43.50      0
-```
-
-We recommend using the `zeallot` package’s `%<-%` function to assign
-values and rename them simultaneously.
-
-``` r
-library(zeallot)
-
-c(mat_exam, bulk, pheno) %<-%  LoadRefData(
-    data_type = c("survival"),
-    path = tempdir(),
-    cache = TRUE,
-    timeout = 60
-)
-```
-
 ## Setting up Python Environment
 
 Some screening methods (e.g. [Section 3.5
@@ -689,4 +620,73 @@ can specify the location of the virtual environment with the
 
 ``` r
 ListPyEnv(env_type = "venv", venv_locations ="~/here_is_a_dir/.virtualenvs")
+```
+
+## Other Functions
+
+### Load reference data
+
+**Parameters**
+
+- `data_type`: The type of data to load. Can be either “continuous”,
+  “survival” or “binary”, case-insensitive.
+- `path`: The path to the data directory.
+- `cache`: Whether to cache the data. Defaults to `TRUE`.
+- `timeout`: The maximum timeout time when downloading data.
+
+When loading the example data, the single-cell RNA expression matrix,
+the bulk RNA expression matrix, and the clinical phenotype data are
+loaded all at once. These data are combined into a list and returned.
+
+``` r
+mydata <- LoadRefData(
+    data_type = c("survival"),
+    path = tempdir(),
+    cache = TRUE,
+    timeout = 60
+)
+
+# * mat_exam (matrix_example)
+mydata[[1]][1:6,1:6]
+#          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT SMC01.T_AAACCTGTCCCTTGCA SMC01.T_AAACGGGAGGGAAACA SMC01.T_AAACGGGGTATAGGTA SMC01.T_AAAGATGAGGCCGAAT
+# A1BG                            0                        0                        0                        0                        0                        0
+# A1BG.AS1                        0                        0                        0                        0                        0                        0
+# A1CF                            0                        2                        0                        0                        3                        0
+# A2M                             0                        0                        0                        0                        0                        0
+# A2M.AS1                         0                        0                        0                        0                        0                        0
+# A2ML1                           0                        0                        0                        0                        0                        0
+
+# * bulk_survival
+mydata[[2]][1:6,1:6]
+#         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
+# HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
+# RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
+# HMGCLL1       2.7476       5.8513       3.8334       3.6447       2.9188       4.8820
+# LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882
+# GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311
+# LRRTM3        1.7458       2.0092       0.0000       1.4468       0.0000       0.0000
+
+# * pheno_survival
+mydata[[3]] |> head()
+#               time status
+# TCGA-69-7978  4.40      0
+# TCGA-62-8399 88.57      0
+# TCGA-78-7539 25.99      0
+# TCGA-73-4658 52.56      1
+# TCGA-44-6775 23.16      0
+# TCGA-44-2655 43.50      0
+```
+
+We recommend using the `zeallot` package’s `%<-%` function to assign
+values and rename them simultaneously.
+
+``` r
+library(zeallot)
+
+c(mat_exam, bulk, pheno) %<-%  LoadRefData(
+    data_type = c("survival"),
+    path = tempdir(),
+    cache = TRUE,
+    timeout = 60
+)
 ```
