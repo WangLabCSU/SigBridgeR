@@ -154,6 +154,9 @@ navbar:
                 - text: Full Tutorial
                   icon: fa-book
                   href: articles/Full_Tutorial.html
+                - text: Sptial Workflow
+                  icon: fa-map-location
+                  href: articles/Spatial_Transcriptome.html
                 - text: -------
                 - text: Advanced Usage
                 - text: Find the optimal parameters
