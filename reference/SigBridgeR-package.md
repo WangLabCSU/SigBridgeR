@@ -1,4 +1,4 @@
-# SigBridgeR: Multi-algorithm Integration of Phenotypic, scRNA-seq, and Bulk Data for Cell Screening
+# SigBridgeR: Integrative Framework and Toolkit for Single-Cell Screening of Phenotype-Associated Cells
 
 SigBridgeR is an integrative toolkit designed to identify
 phenotype-associated cell subpopulations by combining phenotype(e.g.
@@ -38,7 +38,7 @@ file for details.
 
 Useful links:
 
-- <https://github.com/WangLabCSU/SigBridgeR>
+- <https://wanglabcsu.github.io/sigbridger>
 
 - Report bugs at <https://github.com/WangLabCSU/SigBridgeR/issues>
 

@@ -18,6 +18,7 @@ DoPIPET(
   discretize_method = c("kmeans", "median", "custom"),
   cutoff = NULL,
   label_type = "PIPET",
+  marker_finder = c("limma", "DESeq2"),
   log2FC = 1L,
   p_adjust = 0.05,
   show_log2FC = TRUE,
@@ -76,6 +77,10 @@ DoPIPET(
   Character specifying phenotype label type (e.g., "SBS1", "time"),
   stored in `scRNA_data@misc`
 
+- marker_finder:
+
+  A character, the marker finder method. The default value is `"limma"`.
+
 - log2FC:
 
   In the DESeq differential expression analysis results, the cutoff
@@ -126,6 +131,8 @@ DoPIPET(
 
   - parallel: Whether to use parallel processing, default is `FALSE`.
     future::plan() must be set before calling this function.
+
+  - assay: The assay to use, default is `"RNA"`
 
 ## See also
 

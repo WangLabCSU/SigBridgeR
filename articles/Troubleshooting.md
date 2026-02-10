@@ -10,7 +10,10 @@ file an issue on our GitHub repository.
 
 ------------------------------------------------------------------------
 
-> #### Error in normalize.quantiles(dataset0) : ERROR; return code from pthread_create() is 22
+#### Scissor
+
+> **Error in normalize.quantiles(dataset0) : ERROR; return code from
+> pthread_create() is 22**
 
 To solve this problem, you need to install `preprocessCore` without
 threading support. Try:
@@ -41,11 +44,11 @@ for more details.
 
 ------------------------------------------------------------------------
 
-> #### Error at alpha=0.05:subscript out of bounds
+> **Error at alpha=0.05:subscript out of bounds**
 >
-> #### Error in `Scissor.v5.optimized()`:
+> **Error in `Scissor.v5.optimized()`:**
 >
-> #### ! object ‘fit0’ not found
+> **! object ‘fit0’ not found**
 
 This may be due to two reasons: first, a mismatch in the dimensions of
 the bulk expression data and the phenotype data; second, incorrect
@@ -80,9 +83,13 @@ head(survival_phenotype) # case-sensitive
 
 ------------------------------------------------------------------------
 
-> #### Error in `function_name()`:
+#### Package
+
+> **Error in `function_name()`:**
 >
-> #### ! lazy-load database ‘/home/user/R/x86_64-pc-linux-gnu-library/4.4/SigBridgeR/R/SigBridgeR. rdb’ is corrupt
+> **! lazy-load database
+> ‘/home/user/R/x86_64-pc-linux-gnu-library/4.4/SigBridgeR/R/SigBridgeR.
+> rdb’ is corrupt**
 
 An error occurred during installation, causing the package to be
 corrupted. Try reinstalling the package:
@@ -103,13 +110,15 @@ remotes::install_github("WangLabCSU/SigBridgeR")
 
 ------------------------------------------------------------------------
 
-> #### Error:
->
-> #### ! Invalid syntax: ‘c(scissor_umap, scpas_umap)’
+## Visualization
 
-As far as I know, this is due to the R environment being contaminated,
-which prevents the use of `%<-%`. You can try restarting the R
-environment or clean up the environment.
+> **Error:**
+>
+> **! Invalid syntax: ‘c(scissor_umap, scpas_umap)’**
+
+This may be due to the R environment being contaminated, which prevents
+the use of `%<-%`. You can try restarting the R environment or clean up
+the environment.
 
 ``` r
 # restart R/RStudio
@@ -124,11 +133,13 @@ rm(list = ls(all.names = TRUE))
 
 ------------------------------------------------------------------------
 
-> #### Error:
+#### scPP
+
+> **Error:**
 >
-> #### ! Detected n gene(s) with zero variance:
+> **! Detected n gene(s) with zero variance:**
 >
-> #### ℹ “gene name(s)”
+> **ℹ “gene name(s)”**
 
 This is due to the presence of genes with zero variance in the bulk
 expression data when you are using `scPP` and `binary` phenotype. This
@@ -139,39 +150,33 @@ nearly identical across different samples. You should check your data.
 
 ------------------------------------------------------------------------
 
-> #### ✖ $$2025/09/2308:53:51$$ Fewer than 20% of the genes in the gene sets are included in the rankings.Check wether the gene IDs in the ‘rankings’ and ‘geneSets’ match.
+> **✖ $$2025/09/2308:53:51$$ Fewer than 20% of the genes in the gene
+> sets are included in the rankings.Check wether the gene IDs in the
+> ‘rankings’ and ‘geneSets’ match.**
 >
-> #### ℹ $$2025/09/2308:53:51$$ scPP screening exit.
+> **ℹ $$2025/09/2308:53:51$$ scPP screening exit.**
 
 This issue arises from the single-cell processing, which filtered out
-too many genes and cells. Consider Adjusting `min_cells` and
-`min_features` to a smaller value.:
-
-``` r
-seurat = SCPreProcess(
-  sc = mat_exam,
-  min_cells = 200,
-  min_features = 3,
-  quality_control.pattern = "^MT-",
-  scale_features = rownames(mat_exam),
-  dims = 1:20,
-  resolution = 0.1
-)
-```
+too many genes and cells. Consider Adjusting `min.cells` and
+`min.features` to a smaller value.:
 
   
 
+#### DEGAS
+
 ------------------------------------------------------------------------
 
-> #### Warning in info\$envs : partial match of ‘envs’ to ‘envs directories’
+> **Warning in info\$envs : partial match of ‘envs’ to ‘envs
+> directories’**
 >
-> #### Error in `reticulate::use_condaenv()`:
+> **Error in
+> [`reticulate::use_condaenv()`](https://rstudio.github.io/reticulate/reference/use_python.html):**
 >
-> #### ! Unable to locate conda environment ‘r-reticulate-degas’.
+> **! Unable to locate conda environment ‘r-reticulate-degas’.**
 
-For some reason (maybe r session is contaminated), `reticulate` cannot
-find the relevant environment. One solution is to pass in the Python
-path of the environment instead of the environment name.
+`reticulate` cannot find the relevant environment because a Python
+backend has been registered. One solution is to pass in the Python path
+of the environment instead of the environment name.
 
 ``` r
 envs <- ListPyEnv()
@@ -181,8 +186,8 @@ head(envs) # goes like this
 # /home/user/miniconda3/envs/r-reticulate-degas r-reticulate-degas /home/user/miniconda3/envs/r-reticulate-degas/bin/python conda
 ```
 
-For example, if I want to use the `r-reticulate-degas` environment, I
-can pass its Python location to
+For example, if wanna use the `r-reticulate-degas` environment, pass its
+Python location to
 [`reticulate::use_condaenv()`](https://rstudio.github.io/reticulate/reference/use_python.html).
 
 ``` r
@@ -195,17 +200,19 @@ reticulate::use_condaenv(py_path)
 
 ------------------------------------------------------------------------
 
-> #### Traceback (most recent call last):
+> **Traceback (most recent call last):**
 >
-> #### File “/home/user/R/Project/R_code/SigBridgeR/Tmp/tmp/BlankClassMTL.py”, line 1, in
+> **File
+> “/home/user/R/Project/R_code/SigBridgeR/Tmp/tmp/BlankClassMTL.py”,
+> line 1, in**
 >
-> #### import tensorflow as tf \#NEED
+> **import tensorflow as tf \#NEED**
 >
-> #### ModuleNotFoundError: No module named ‘tensorflow’
+> **ModuleNotFoundError: No module named ‘tensorflow’**
 >
-> #### Warning in file(file, “r”) :
+> **Warning in file(file, “r”) :**
 >
-> #### cannot open file ‘tmp//Activations.csv’: No such file or directory
+> **cannot open file ‘tmp//Activations.csv’: No such file or directory**
 
 This is due to the issue with the tensorflow package. Use the following
 method to check if the tensorflow package can be imported.
@@ -236,3 +243,34 @@ conda list tensorflow
 If the output is `ModuleNotFoundError: No module named 'tensorflow'`,
 you need to install the tensorflow package, and strictly control the
 version of the package (version 2.4.1 has been tested and is feasible)
+
+  
+
+------------------------------------------------------------------------
+
+#### Seurat
+
+**Excessive time during running SCTransfomm**
+
+Output message is probably like this:
+
+``` r
+# Running SCTransform on assay: Xenium
+# vst.flavor='v2' set. Using model with fixed slope and excluding poisson genes.
+# Calculating cell attributes from input UMI matrix: log_umi
+# Variance stabilizing transformation of count matrix of size 248 by 36553
+# Model formula is y ~ log_umi
+# Get Negative Binomial regression parameters per gene
+# Using 248 genes, 5000 cells
+# Second step: Get residuals using fitted parameters for 248 genes
+# Computing corrected count matrix for 248 genes
+# Calculating gene attributes
+# Wall clock passed: Time difference of 7.166213 secs
+# Determine variable features
+# ! stuck here.
+```
+
+This is a bug from Seurat, see [Seurat
+\#10153](https://github.com/satijalab/seurat/issues/10153)
+
+Try update `Seurat` to latest version

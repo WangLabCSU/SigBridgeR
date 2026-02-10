@@ -11,7 +11,7 @@ The analysis flow is fully customizable via a character string pipeline and a co
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,15 +59,15 @@ The analysis flow is fully customizable via a character string <code>pipeline</c
 <span></span>
 <span><span class="co"># Default S3 method</span></span>
 <span><span class="fu">SCPreProcess</span><span class="op">(</span></span>
-<span>  <span class="va">sc</span>,</span>
+<span>  sc <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  pipeline <span class="op">=</span> <span class="st">"onsvpcetu"</span>,</span>
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>o <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>project <span class="op">=</span> <span class="st">"SC_Screen_Proj"</span>, min.cells <span class="op">=</span> <span class="fl">400L</span><span class="op">)</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, s <span class="op">=</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, e <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>resolution <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span>, t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, u</span>
 <span>    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>, nCount_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500L</span>,</span>
-<span>    <span class="fl">50000L</span><span class="op">)</span>, percent.mt <span class="op">=</span> <span class="fl">20L</span>, percent.rp <span class="op">=</span> <span class="fl">60L</span><span class="op">)</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nFeature_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>, nCount_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500L</span>, <span class="fl">50000L</span><span class="op">)</span>,</span>
+<span>    percent.mt <span class="op">=</span> <span class="fl">20L</span>, percent.rp <span class="op">=</span> <span class="fl">60L</span><span class="op">)</span>,</span>
 <span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -80,8 +80,8 @@ The analysis flow is fully customizable via a character string <code>pipeline</c
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, e <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>resolution <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span>, t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, u</span>
 <span>    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^MT-"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  data_filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nFeature_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>, nCount_RNA_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500L</span>,</span>
-<span>    <span class="fl">50000L</span><span class="op">)</span>, percent.mt <span class="op">=</span> <span class="fl">20L</span>, percent.rp <span class="op">=</span> <span class="fl">60L</span><span class="op">)</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nFeature_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200L</span>, <span class="fl">6000L</span><span class="op">)</span>, nCount_thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500L</span>, <span class="fl">50000L</span><span class="op">)</span>,</span>
+<span>    percent.mt <span class="op">=</span> <span class="fl">20L</span>, percent.rp <span class="op">=</span> <span class="fl">60L</span><span class="op">)</span>,</span>
 <span>  column2only_tumor <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -140,7 +140,7 @@ Default: <code>list(pattern = "^MT-")</code>. Detected metrics (e.g., percent.mt
 
 <dt id="arg-data-filter">data_filter<a class="anchor" aria-label="anchor" href="#arg-data-filter"></a></dt>
 <dd><p>A list of thresholds for cell filtering.
-Default: <code>nFeature_RNA</code> (200-6000), <code>nCount_RNA</code> (500-50000), <code>percent.mt</code> (&lt;20), <code>percent.rp</code> (&lt;60).
+Default: <code>assay</code> ("RNA"), <code>nFeature_RNA</code> (200-6000), <code>nCount_RNA</code> (500-50000), <code>percent.mt</code> (&lt;20), <code>percent.rp</code> (&lt;60).
 Only metrics detected via <code>quality_control</code> are filtered, i.e., nFeature_RNA, nCount_RNA and percent.mt.</p></dd>
 
 
@@ -171,6 +171,10 @@ If confused about the column name, use <code>SigBridgeR:::Pattern2Colname()</cod
 <code><a href="FindRobustElbow.html">FindRobustElbow()</a></code>,
 <code><a href="Pattern2Colname.html">Pattern2Colname()</a></code>,
 <code><a href="QCPatternDetect.html">QCPatternDetect()</a></code>,
+<code><a href="RegisterSeuratMethod.html">RegisterSeuratMethod()</a></code>,
+<code><a href="SCAnnotate.html">SCAnnotate()</a></code>,
+<code><a href="SCIntegrate.html">SCIntegrate()</a></code>,
+<code><a href="SCPreProcessStrategy.html">SCPreProcessStrategy</a></code>,
 <code><a href="compatible_with_3.0.2.html">compatible_with_3.0.2()</a></code></p></div>
     </div>
 
@@ -195,7 +199,7 @@ If confused about the column name, use <code>SigBridgeR:::Pattern2Colname()</cod
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 3. Start from AnnData with tumor filtering</span></span></span>
-<span class="r-in"><span><span class="va">adata_object</span> <span class="op">&lt;-</span> <span class="fu">anndataR</span><span class="fu">::</span><span class="fu">read_h5ad</span><span class="op">(</span><span class="st">"data.h5ad"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">adata_object</span> <span class="op">&lt;-</span> <span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.data-intuitive.com/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"data.h5ad"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">obj_ad</span> <span class="op">&lt;-</span> <span class="fu">SCPreProcess</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  sc <span class="op">=</span> <span class="va">adata_object</span>,</span></span>
 <span class="r-in"><span>  column2only_tumor <span class="op">=</span> <span class="st">"tissue"</span></span></span>

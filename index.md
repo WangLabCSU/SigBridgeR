@@ -4,7 +4,7 @@
 Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:
 GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![](https://img.shields.io/badge/devel%20version-3.2.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
+[![](https://img.shields.io/badge/devel%20version-3.3.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![SigBridgeR status
 badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
 [![R CMD
@@ -28,7 +28,7 @@ of the latest features and bug fixes.
 
 1.  Install the development version from GitHub:
 
-``` r
+``` R
 if (!requireNamespace("pak")) {
   install.packages(
     "pak",
@@ -43,9 +43,9 @@ if (!requireNamespace("pak")) {
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
 
-2.  Install from r-universe:
+1.  Install from r-universe:
 
-``` r
+``` R
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
@@ -53,7 +53,7 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 
 For better performance:
 
-``` r
+``` R
 pak::pkg_install(c(
   # faster computation
   "sparseMatrixStats",
@@ -72,9 +72,9 @@ pak::pkg_install(c(
 ))
 ```
 
-For seamless integration with other file types such as `.h5ad`
+For seamless integration with other file types such as `.h5ad`:
 
-``` r
+``` R
 pak::pkg_install("anndata")
 # or
 pak::pkg_install("anndataR") # both are supported
@@ -82,7 +82,7 @@ pak::pkg_install("anndataR") # both are supported
 
 For visualization:
 
-``` r
+``` R
 pak::pkg_install(c(
   "ggplot2",
   "randomcoloR", # or RColorBrewer
@@ -93,13 +93,43 @@ pak::pkg_install(c(
 ))
 ```
 
-To reproduce the tutorial to learn more usage
+To use the built-in cell annotation methods:
 
-``` r
+``` R
+pak::pkg_install(c(
+  # SingleR
+  "SingleR-inc/SingleR",
+  "celldex",
+  # mLLMCelltype
+  "mLLMCelltype",
+  "plyr",
+  # CellTypist
+  "reticulate",
+  "AnnDataR"
+))
+```
+
+To add custom extension functions to SigBridgeR:
+
+``` R
+pak::pkg_install(c(
+  "tictoc",
+  "codetools",
+  "knitr",
+  "lintr",
+  "rstudioapi",
+  "yonicd/tidycheckUsage"
+))
+```
+
+To reproduce the tutorial to learn more usage:
+
+``` R
 pak::pkg_install(c(
   "zeallot",
   "here",
-  "org.Hs.eg.db"
+  "org.Hs.eg.db",
+  "processx"
 ))
 ```
 
@@ -107,12 +137,12 @@ pak::pkg_install(c(
 
 Get Started:
 
+- View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 - [A Quick Started
   Guide](https://wanglabcsu.github.io/sigbridger/vignettes/Quick_Start.md)
 - [Full
   Tutorial](https://wanglabcsu.github.io/sigbridger/vignettes/Full_Tutorial.md)
   for more details
-- View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 - Use `?SigBridgeR::function_name` to access the help documents in R.
 
 If you encounter problems, please check:

@@ -79,6 +79,11 @@ DoscAB(
   - `parallel`: Logical indicating whether to use parallel processing.
     Defaults to `FALSE`.
 
+  - Other arguments are passed to
+    [`scAB::create_scAB.v5()`](https://rdrr.io/pkg/scAB/man/create_scAB.v5.html)
+
+  - `assay`: Character specifying the assay to use. Defaults to `"RNA"`.
+
 ## Value
 
 A list containing:

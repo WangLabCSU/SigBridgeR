@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
       <h1>Troubleshooting</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2026-01-24</h4>
+            <h4 data-toc-skip class="date">2026-02-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Troubleshooting.Rmd" class="external-link"><code>vignettes/Troubleshooting.Rmd</code></a></small>
       <div class="d-none name"><code>Troubleshooting.Rmd</code></div>
@@ -81,10 +81,12 @@ encounter when using this package. If you cannot find your problem here,
 please file an issue on our GitHub repository.</p>
 <p><br></p>
 <hr>
+<div class="section level4">
+<h4 id="scissor">Scissor<a class="anchor" aria-label="anchor" href="#scissor"></a>
+</h4>
 <blockquote>
-<h4 id="error-in-normalize.quantilesdataset0-error-return-code-from-pthread_create-is-22">Error
-in normalize.quantiles(dataset0) : ERROR; return code from
-pthread_create() is 22</h4>
+<p><strong>Error in normalize.quantiles(dataset0) : ERROR; return code
+from pthread_create() is 22</strong></p>
 </blockquote>
 <p>To solve this problem, you need to install
 <code>preprocessCore</code> without threading support. Try:</p>
@@ -94,7 +96,7 @@ cd preprocessCore
 R CMD INSTALL --configure-args="--disable-threading"  .</code></pre>
 <p>or</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span></span>
 <span>  <span class="st">"preprocessCore"</span>,</span>
 <span>  configure.args <span class="op">=</span> <span class="st">"--disable-threading"</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -105,11 +107,9 @@ for more details.</p>
 <p><br></p>
 <hr>
 <blockquote>
-<h4 id="error-at-alpha0.05subscript-out-of-bounds">Error at
-alpha=0.05:subscript out of bounds</h4>
-<h4 id="error-in-scissor.v5.optimized">Error in
-<code>Scissor.v5.optimized()</code>:</h4>
-<h4 id="object-fit0-not-found">! object ‘fit0’ not found</h4>
+<p><strong>Error at alpha=0.05:subscript out of bounds</strong></p>
+<p><strong>Error in <code>Scissor.v5.optimized()</code>:</strong></p>
+<p><strong>! object ‘fit0’ not found</strong></p>
 </blockquote>
 <p>This may be due to two reasons: first, a mismatch in the dimensions
 of the bulk expression data and the phenotype data; second, incorrect
@@ -136,13 +136,15 @@ capitalization and spelling:</p>
 <span><span class="co"># GSM70144 58.53      0</span></span></code></pre></div>
 <p><br></p>
 <hr>
+</div>
+<div class="section level4">
+<h4 id="package">Package<a class="anchor" aria-label="anchor" href="#package"></a>
+</h4>
 <blockquote>
-<h4 id="error-in-function_name">Error in
-<code>function_name()</code>:</h4>
-<h4 id="lazy-load-database-homeuserrx86_64-pc-linux-gnu-library4.4sigbridgerrsigbridger.-rdb-is-corrupt">!
-lazy-load database
+<p><strong>Error in <code>function_name()</code>:</strong></p>
+<p><strong>! lazy-load database
 ‘/home/user/R/x86_64-pc-linux-gnu-library/4.4/SigBridgeR/R/SigBridgeR.
-rdb’ is corrupt</h4>
+rdb’ is corrupt</strong></p>
 </blockquote>
 <p>An error occurred during installation, causing the package to be
 corrupted. Try reinstalling the package:</p>
@@ -158,14 +160,18 @@ corrupted. Try reinstalling the package:</p>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="visualization">Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a>
+</h2>
 <blockquote>
-<h4 id="error">Error:</h4>
-<h4 id="invalid-syntax-cscissor_umap-scpas_umap">! Invalid syntax:
-‘c(scissor_umap, scpas_umap)’</h4>
+<p><strong>Error:</strong></p>
+<p><strong>! Invalid syntax: ‘c(scissor_umap, scpas_umap)’</strong></p>
 </blockquote>
-<p>As far as I know, this is due to the R environment being
-contaminated, which prevents the use of <code>%&lt;-%</code>. You can
-try restarting the R environment or clean up the environment.</p>
+<p>This may be due to the R environment being contaminated, which
+prevents the use of <code>%&lt;-%</code>. You can try restarting the R
+environment or clean up the environment.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># restart R/RStudio</span></span>
 <span><span class="fu">.rs.api.restartSession</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -173,11 +179,13 @@ try restarting the R environment or clean up the environment.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/Bimap-envirAPI.html" class="external-link">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <hr>
+<div class="section level4">
+<h4 id="scpp">scPP<a class="anchor" aria-label="anchor" href="#scpp"></a>
+</h4>
 <blockquote>
-<h4 id="error-1">Error:</h4>
-<h4 id="detected-n-genes-with-zero-variance">! Detected n gene(s) with
-zero variance:</h4>
-<h4 id="ℹ-gene-names">ℹ “gene name(s)”</h4>
+<p><strong>Error:</strong></p>
+<p><strong>! Detected n gene(s) with zero variance:</strong></p>
+<p><strong>ℹ “gene name(s)”</strong></p>
 </blockquote>
 <p>This is due to the presence of genes with zero variance in the bulk
 expression data when you are using <code>scPP</code> and
@@ -187,81 +195,72 @@ You should check your data.</p>
 <p><br></p>
 <hr>
 <blockquote>
-<h4 id="fewer-than-20-of-the-genes-in-the-gene-sets-are-included-in-the-rankings.check-wether-the-gene-ids-in-the-rankings-and-genesets-match.">✖
+<p><strong>✖
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2025</mn><mi>/</mi><mn>09</mn><mi>/</mi><mn>23</mn><mn>08</mn><mo>:</mo><mn>53</mn><mo>:</mo><mn>51</mn></mrow><annotation encoding="application/x-tex">2025/09/23 08:53:51</annotation></semantics></math>
 Fewer than 20% of the genes in the gene sets are included in the
 rankings.Check wether the gene IDs in the ‘rankings’ and ‘geneSets’
-match.</h4>
-<h4 id="ℹ-20250923-085351-scpp-screening-exit.">ℹ
+match.</strong></p>
+<p><strong>ℹ
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2025</mn><mi>/</mi><mn>09</mn><mi>/</mi><mn>23</mn><mn>08</mn><mo>:</mo><mn>53</mn><mo>:</mo><mn>51</mn></mrow><annotation encoding="application/x-tex">2025/09/23 08:53:51</annotation></semantics></math>
-scPP screening exit.</h4>
+scPP screening exit.</strong></p>
 </blockquote>
 <p>This issue arises from the single-cell processing, which filtered out
-too many genes and cells. Consider Adjusting <code>min_cells</code> and
-<code>min_features</code> to a smaller value.:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">=</span> <span class="fu"><a href="../reference/SCPreProcess.html">SCPreProcess</a></span><span class="op">(</span></span>
-<span>  sc <span class="op">=</span> <span class="va">mat_exam</span>,</span>
-<span>  min_cells <span class="op">=</span> <span class="fl">200</span>,</span>
-<span>  min_features <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  quality_control.pattern <span class="op">=</span> <span class="st">"^MT-"</span>,</span>
-<span>  scale_features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat_exam</span><span class="op">)</span>,</span>
-<span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span>  resolution <span class="op">=</span> <span class="fl">0.1</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+too many genes and cells. Consider Adjusting <code>min.cells</code> and
+<code>min.features</code> to a smaller value.:</p>
 <p><br></p>
+</div>
+<div class="section level4">
+<h4 id="degas">DEGAS<a class="anchor" aria-label="anchor" href="#degas"></a>
+</h4>
 <hr>
 <blockquote>
-<h4 id="warning-in-infoenvs-partial-match-of-envs-to-envs-directories">Warning
-in info$envs : partial match of ‘envs’ to ‘envs directories’</h4>
-<h4 id="error-in-reticulateuse_condaenv">Error in
-<code>reticulate::use_condaenv()</code>:</h4>
-<h4 id="unable-to-locate-conda-environment-r-reticulate-degas.">! Unable
-to locate conda environment ‘r-reticulate-degas’.</h4>
+<p><strong>Warning in info$envs : partial match of ‘envs’ to ‘envs
+directories’</strong></p>
+<p><strong>Error in
+<code><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">reticulate::use_condaenv()</a></code>:</strong></p>
+<p><strong>! Unable to locate conda environment
+‘r-reticulate-degas’.</strong></p>
 </blockquote>
-<p>For some reason (maybe r session is contaminated),
-<code>reticulate</code> cannot find the relevant environment. One
-solution is to pass in the Python path of the environment instead of the
-environment name.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p><code>reticulate</code> cannot find the relevant environment because
+a Python backend has been registered. One solution is to pass in the
+Python path of the environment instead of the environment name.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">envs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">envs</span><span class="op">)</span> <span class="co"># goes like this</span></span>
 <span><span class="co">#                                                            name                                                  python  type</span></span>
 <span><span class="co"># /home/user/miniconda3                                       base                         /home/user/miniconda3/bin/python conda</span></span>
 <span><span class="co"># /home/user/miniconda3/envs/r-reticulate-degas r-reticulate-degas /home/user/miniconda3/envs/r-reticulate-degas/bin/python conda</span></span></code></pre></div>
-<p>For example, if I want to use the <code>r-reticulate-degas</code>
-environment, I can pass its Python location to
+<p>For example, if wanna use the <code>r-reticulate-degas</code>
+environment, pass its Python location to
 <code><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">reticulate::use_condaenv()</a></code>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">py_path</span> <span class="op">&lt;-</span> <span class="va">envs</span><span class="op">[</span><span class="va">envs</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"r-reticulate-degas"</span>, <span class="st">"python"</span><span class="op">]</span></span>
 <span><span class="co"># /home/user/miniconda3/envs/r-reticulate-degas/bin/python</span></span>
 <span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_condaenv</a></span><span class="op">(</span><span class="va">py_path</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <hr>
 <blockquote>
-<h4 id="traceback-most-recent-call-last">Traceback (most recent call
-last):</h4>
-<h4 id="file-homeuserrprojectr_codesigbridgertmptmpblankclassmtl.py-line-1-in">File
+<p><strong>Traceback (most recent call last):</strong></p>
+<p><strong>File
 “/home/user/R/Project/R_code/SigBridgeR/Tmp/tmp/BlankClassMTL.py”, line
-1, in <module></module>
-</h4>
-<h4 id="import-tensorflow-as-tf-need">import tensorflow as tf #NEED</h4>
-<h4 id="modulenotfounderror-no-module-named-tensorflow">ModuleNotFoundError:
-No module named ‘tensorflow’</h4>
-<h4 id="warning-in-filefile-r">Warning in file(file, “r”) :</h4>
-<h4 id="cannot-open-file-tmpactivations.csv-no-such-file-or-directory">cannot
-open file ‘tmp//Activations.csv’: No such file or directory</h4>
+1, in <module></module></strong></p>
+<p><strong>import tensorflow as tf #NEED</strong></p>
+<p><strong>ModuleNotFoundError: No module named
+‘tensorflow’</strong></p>
+<p><strong>Warning in file(file, “r”) :</strong></p>
+<p><strong>cannot open file ‘tmp//Activations.csv’: No such file or
+directory</strong></p>
 </blockquote>
 <p>This is due to the issue with the tensorflow package. Use the
 following method to check if the tensorflow package can be imported.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># make sure you are using the correct python, i.e. r-reticulate-degas</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>sys.executable  <span class="co"># in an environment, it should be something like /home/user/miniconda3/envs/r-reticulate-degas/bin/python3</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>tf.__version__</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># make sure you are using the correct python, i.e. r-reticulate-degas</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>sys.executable  <span class="co"># in an environment, it should be something like /home/user/miniconda3/envs/r-reticulate-degas/bin/python3</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>tf.__version__</span></code></pre></div>
 <pre class="shell"><code># make sure you've entered the Conda environment you want to check, i.e. r-reticulate-degas
 conda list tensorflow
 
@@ -275,6 +274,32 @@ conda list tensorflow
 <code>ModuleNotFoundError: No module named 'tensorflow'</code>, you need
 to install the tensorflow package, and strictly control the version of
 the package (version 2.4.1 has been tested and is feasible)</p>
+<p><br></p>
+<hr>
+</div>
+<div class="section level4">
+<h4 id="seurat">Seurat<a class="anchor" aria-label="anchor" href="#seurat"></a>
+</h4>
+<p><strong>Excessive time during running SCTransfomm</strong></p>
+<p>Output message is probably like this:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Running SCTransform on assay: Xenium</span></span>
+<span><span class="co"># vst.flavor='v2' set. Using model with fixed slope and excluding poisson genes.</span></span>
+<span><span class="co"># Calculating cell attributes from input UMI matrix: log_umi</span></span>
+<span><span class="co"># Variance stabilizing transformation of count matrix of size 248 by 36553</span></span>
+<span><span class="co"># Model formula is y ~ log_umi</span></span>
+<span><span class="co"># Get Negative Binomial regression parameters per gene</span></span>
+<span><span class="co"># Using 248 genes, 5000 cells</span></span>
+<span><span class="co"># Second step: Get residuals using fitted parameters for 248 genes</span></span>
+<span><span class="co"># Computing corrected count matrix for 248 genes</span></span>
+<span><span class="co"># Calculating gene attributes</span></span>
+<span><span class="co"># Wall clock passed: Time difference of 7.166213 secs</span></span>
+<span><span class="co"># Determine variable features</span></span>
+<span><span class="co"># ! stuck here.</span></span></code></pre></div>
+<p>This is a bug from Seurat, see <a href="https://github.com/satijalab/seurat/issues/10153" class="external-link">Seurat
+#10153</a></p>
+<p>Try update <code>Seurat</code> to latest version</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

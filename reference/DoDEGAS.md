@@ -150,6 +150,8 @@ DoDEGAS(
   - `verbose`: Logical indicating whether to print progress messages.
     Defaults to `TRUE`.
 
+  - `assay`: Name of assay to use. Defaults to "RNA".
+
 ## Value
 
 A list containing:

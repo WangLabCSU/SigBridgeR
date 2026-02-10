@@ -5,13 +5,13 @@
 supported phenotypes and an optional parameter remapping function.
 This function supports community-driven extension of analysis pipelines—ideal for
 integrating novel single cell phenotypic screening methods while
-maintaining compatibility with downstream validation and execution frameworks"><meta property="og:description" content="Registers one or more user-defined screening functions into a shared registry
+maintaining compatibility with downstream validation and execution frameworks."><meta property="og:description" content="Registers one or more user-defined screening functions into a shared registry
 (i.e., ScreenStrategy), enabling dynamic dispatch based on phenotype type
 (binary, survival, or continuous). Each method is stored with metadata including
 supported phenotypes and an optional parameter remapping function.
 This function supports community-driven extension of analysis pipelines—ideal for
 integrating novel single cell phenotypic screening methods while
-maintaining compatibility with downstream validation and execution frameworks"></head><body>
+maintaining compatibility with downstream validation and execution frameworks."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -19,7 +19,7 @@ maintaining compatibility with downstream validation and execution frameworks"><
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@ maintaining compatibility with downstream validation and execution frameworks"><
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Register a Custom Screening Method for Phenotype-Driven Analysis</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/62-RegisterScreenMethod.R" class="external-link"><code>R/62-RegisterScreenMethod.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/61-RegisterScreenMethod.R" class="external-link"><code>R/61-RegisterScreenMethod.R</code></a></small>
       <div class="d-none name"><code>RegisterScreenMethod.Rd</code></div>
     </div>
 
@@ -62,7 +62,7 @@ maintaining compatibility with downstream validation and execution frameworks"><
 supported phenotypes and an optional parameter remapping function.</p>
 <p>This function supports community-driven extension of analysis pipelines—ideal for
 integrating novel single cell phenotypic screening methods while
-maintaining compatibility with downstream validation and execution frameworks</p>
+maintaining compatibility with downstream validation and execution frameworks.</p>
     </div>
 
     <div class="section level2">
@@ -72,7 +72,8 @@ maintaining compatibility with downstream validation and execution frameworks</p
 <span>  supported_phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"binary"</span>, <span class="st">"survival"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>  parameter_mapper <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  registry <span class="op">=</span> <span class="va">ScreenStrategy</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="fu"><a href="getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="cn">TRUE</span></span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -81,7 +82,7 @@ maintaining compatibility with downstream validation and execution frameworks</p
 
 
 <dl><dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Named arguments where each value is a <strong>function</strong> implementing a screening method.
+<dd><p>Named arguments where each value is a function implementing a screening method.
 The name becomes the method identifier (e.g., <code>Scissor = DoScissor</code> registers
 <code>DoScissor</code> under the key <code>"Scissor"</code>). Unnamed arguments are auto-named
 using their expression (e.g., <code>Scissor</code> → name <code>"Scissor"</code>).</p></dd>
@@ -105,9 +106,14 @@ New methods are stored as <code>registry[["MethodName"]]</code> = metadata list.
 Default: <code>ScreenStrategy</code>.</p></dd>
 
 
+<dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
+<dd><p>Logical. If <code>FALSE</code> (default), throws an error when attempting
+to replace an existing method. Set to <code>TRUE</code> to allow updates.</p></dd>
+
+
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Logical. Whether to print a success message upon registration.
-Default: <code>TRUE</code>.</p></dd>
+Default: inherits from package option.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -132,6 +138,17 @@ Default: <code>TRUE</code>.</p></dd>
 
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other Add_Screen_method:
+<code><a href="ScreenStrategy.html">ScreenStrategy</a></code>,
+<code><a href="TemplateScreenFunc.html">TemplateScreenFunc()</a></code>,
+<code><a href="ValidateScreenFunc.html">ValidateScreenFunc()</a></code></p>
+<p>Other Registering:
+<code><a href="Register.html">Register()</a></code>,
+<code><a href="RegisterAnnoMethod.html">RegisterAnnoMethod()</a></code>,
+<code><a href="RegisterSeuratMethod.html">RegisterSeuratMethod()</a></code></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -147,13 +164,12 @@ Default: <code>TRUE</code>.</p></dd>
 <span class="r-in"><span>  <span class="co"># If `continuous` phenotype is not supported</span></span></span>
 <span class="r-in"><span>  supported_phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"survival"</span>, <span class="st">"binary"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  parameter_mapper <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">params</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="co"># If I perfer to use `quiet` instead of `verbose`</span></span></span>
+<span class="r-in"><span>    <span class="co"># If I prefer to use `quiet` instead of `verbose`</span></span></span>
 <span class="r-in"><span>    <span class="va">params</span><span class="op">$</span><span class="va">quiet</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="va">params</span><span class="op">$</span><span class="va">verbose</span></span></span>
 <span class="r-in"><span>    <span class="va">params</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

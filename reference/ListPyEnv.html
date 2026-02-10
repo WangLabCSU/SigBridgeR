@@ -10,9 +10,9 @@ then falls back to reticulate's built-in Conda interface if Conda command is una
 fails. Returns empty data frame if Conda is not available or no environments
 are found.
 Discovers virtual environments by searching common venv locations including
-user directories (`~/.virtualenvs`, `~/.venvs`) and project folders
-(`./venv`, `./.venv`). Supports custom search paths through the
-`venv_locations` parameter. Returns empty data frame if no virtual
+user directories (~/.virtualenvs, ~/.venvs) and project folders
+(./venv, ./.venv). Supports custom search paths through the
+venv_locations parameter. Returns empty data frame if no virtual
 environments are found in the specified locations."><meta property="og:description" content="Discovers and lists available Python environments of various types on the system.
 This generic function provides a unified interface to find Conda environments
 and virtual environments (venv) through S3 method dispatch.
@@ -24,9 +24,9 @@ then falls back to reticulate's built-in Conda interface if Conda command is una
 fails. Returns empty data frame if Conda is not available or no environments
 are found.
 Discovers virtual environments by searching common venv locations including
-user directories (`~/.virtualenvs`, `~/.venvs`) and project folders
-(`./venv`, `./.venv`). Supports custom search paths through the
-`venv_locations` parameter. Returns empty data frame if no virtual
+user directories (~/.virtualenvs, ~/.venvs) and project folders
+(./venv, ./.venv). Supports custom search paths through the
+venv_locations parameter. Returns empty data frame if no virtual
 environments are found in the specified locations."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -35,7 +35,7 @@ environments are found in the specified locations."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@ environments are found in the specified locations."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>List Available Python Environments</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/03-Import.R" class="external-link"><code>R/03-Import.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/02-Import.R" class="external-link"><code>R/02-Import.R</code></a></small>
       <div class="d-none name"><code>ListPyEnv.Rd</code></div>
     </div>
 
@@ -83,9 +83,9 @@ then falls back to reticulate's built-in Conda interface if Conda command is una
 fails. Returns empty data frame if Conda is not available or no environments
 are found.</p>
 <p>Discovers virtual environments by searching common venv locations including
-user directories (`~/.virtualenvs`, `~/.venvs`) and project folders
-(`./venv`, `./.venv`). Supports custom search paths through the
-`venv_locations` parameter. Returns empty data frame if no virtual
+user directories (<code>~/.virtualenvs</code>, <code>~/.venvs</code>) and project folders
+(<code>./venv</code>, <code>./.venv</code>). Supports custom search paths through the
+<code>venv_locations</code> parameter. Returns empty data frame if no virtual
 environments are found in the specified locations.</p>
     </div>
 
@@ -93,7 +93,7 @@ environments are found in the specified locations.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ListPyEnv</span><span class="op">(</span></span>
 <span>  env_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"conda"</span>, <span class="st">"venv"</span>, <span class="st">"virtualenv"</span><span class="op">)</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">30000</span>,</span>
+<span>  timeout <span class="op">=</span> <span class="fl">30000L</span>,</span>
 <span>  venv_locations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"~/.virtualenvs"</span>, <span class="st">"~/.venvs"</span>, <span class="st">"./venv"</span>, <span class="st">"./.venv"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -106,11 +106,11 @@ environments are found in the specified locations.</p>
 
 <dl><dt id="arg-env-type">env_type<a class="anchor" aria-label="anchor" href="#arg-env-type"></a></dt>
 <dd><p>Character string specifying the type of environments to list.
-One of: `"all"`, `"conda"`, `"venv"`. Defaults to `"all"`.</p></dd>
+One of: <code>"all"</code>, <code>"conda"</code>, <code>"venv"</code>. Defaults to <code>"all"</code>.</p></dd>
 
 
 <dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
-<dd><p>The maximum timeout time when using system commands, only effective when `env_type=conda`.</p></dd>
+<dd><p>The maximum timeout time when using system commands, only effective when <code>env_type=conda</code>.</p></dd>
 
 
 <dt id="arg-venv-locations">venv_locations<a class="anchor" aria-label="anchor" href="#arg-venv-locations"></a></dt>
@@ -129,21 +129,20 @@ project directories.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame with the following columns:</p><ul><li><p>`name` - Character vector of environment names</p></li>
-<li><p>`python` - Character vector of paths to Python executables</p></li>
-<li><p>`type` - Character vector indicating environment type (`"conda"` or `"venv"`)</p></li>
+    <p>A data frame with the following columns:</p><ul><li><p><code>name</code> - Character vector of environment names</p></li>
+<li><p><code>python</code> - Character vector of paths to Python executables</p></li>
+<li><p><code>type</code> - Character vector indicating environment type (<code>"conda"</code> or <code>"venv"</code>)</p></li>
 </ul><p>Returns an empty data frame with these columns if no environments are found.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The function uses S3 method dispatch to handle different environment types:</p>
-<p>- **`"all"`**: Combines results from all environment types using `rbind()`
-- **`"conda"`**: Searches for Conda environments using multiple methods:
-  - Primary: `reticulate::conda_list()` for reliable environment detection
-  - Fallback: System `conda info –envs` command for broader compatibility
-- **`"venv"`**: Searches common virtual environment locations including
-  user directories and project folders</p>
-<p>Each method includes comprehensive error handling and will return empty
+    <p>The function uses S3 method dispatch to handle different environment types:</p><ul><li><p><strong><code>"all"</code></strong>: Combines results from all environment types using <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code></p></li>
+<li><p><strong><code>"conda"</code></strong>: Searches for Conda environments using multiple methods:</p><ul><li><p>Primary: <code><a href="https://rstudio.github.io/reticulate/reference/conda-tools.html" class="external-link">reticulate::conda_list()</a></code> for reliable environment detection</p></li>
+<li><p>Fallback: System <code>conda info --envs</code> command for broader compatibility</p></li>
+</ul></li>
+<li><p><strong><code>"venv"</code></strong>: Searches common virtual environment locations including
+user directories and project folders</p></li>
+</ul><p>Each method includes comprehensive error handling and will return empty
 results with informative warnings if no environments are found or if
 errors occur during discovery.</p>
     </div>

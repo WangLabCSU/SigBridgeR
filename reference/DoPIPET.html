@@ -13,7 +13,7 @@ testing for significance assessment."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,6 +67,7 @@ testing for significance assessment.</p>
 <span>  discretize_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"kmeans"</span>, <span class="st">"median"</span>, <span class="st">"custom"</span><span class="op">)</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label_type <span class="op">=</span> <span class="st">"PIPET"</span>,</span>
+<span>  marker_finder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"limma"</span>, <span class="st">"DESeq2"</span><span class="op">)</span>,</span>
 <span>  log2FC <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  p_adjust <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  show_log2FC <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -126,6 +127,10 @@ Must be sorted in ascending order.</p></dd>
 <dd><p>Character specifying phenotype label type (e.g., "SBS1", "time"), stored in <code>scRNA_data@misc</code></p></dd>
 
 
+<dt id="arg-marker-finder">marker_finder<a class="anchor" aria-label="anchor" href="#arg-marker-finder"></a></dt>
+<dd><p>A character, the marker finder method. The default value is <code>"limma"</code>.</p></dd>
+
+
 <dt id="arg-log-fc">log2FC<a class="anchor" aria-label="anchor" href="#arg-log-fc"></a></dt>
 <dd><p>In the DESeq differential expression analysis results, the cutoff value of log2FC. The default value is <code>1L</code>.</p></dd>
 
@@ -162,6 +167,7 @@ Must be sorted in ascending order.</p></dd>
 <dd><p>Additional arguments to be passed to <code>PIPET.optimized</code>.</p><ul><li><p>seed: Random seed for reproducibility</p></li>
 <li><p>verbose: Whether to show progress messages</p></li>
 <li><p>parallel: Whether to use parallel processing, default is <code>FALSE</code>. future::plan() must be set before calling this function.</p></li>
+<li><p>assay: The assay to use, default is <code>"RNA"</code></p></li>
 </ul></dd>
 
 </dl></div>

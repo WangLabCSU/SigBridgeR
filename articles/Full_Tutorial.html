@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 
       <h1>Full Tutorial</h1>
             
-            <h4 data-toc-skip class="date">2026-01-24</h4>
+            <h4 data-toc-skip class="date">2026-02-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -203,7 +203,7 @@ panel.</p>
 <p>First load the packages, you will see a version number message
 indicating successful loading:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="co"># ✔ SigBridgeR v3.x.x loaded</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="single-cell-rna-seq-data">1.1 Single-cell RNA-seq Data<a class="anchor" aria-label="anchor" href="#single-cell-rna-seq-data"></a>
@@ -374,7 +374,7 @@ object from <code>.h5ad</code> file.</p>
 <code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu">use_pythonenv</span><span class="op">(</span><span class="st">"The_path_to_your_python"</span><span class="op">)</span> </span>
 <span><span class="co"># reticulate::use_condaenv("conda_env_name")</span></span>
 <span></span>
-<span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndataR</span><span class="fu">::</span><span class="fu">read_h5ad</span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># basically no difference </span></span></code></pre></div>
+<span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.data-intuitive.com/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># basically no difference </span></span></code></pre></div>
 <p>Then just pass it to <code>SCPreProcess</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">your_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCPreProcess.html">SCPreProcess</a></span><span class="op">(</span></span>
@@ -626,8 +626,8 @@ location of NA values in your phenotype data:</p>
 <span>    <span class="va">is_2d</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">dt</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">is_2d</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">is.data.table</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">is_2d</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/as.data.table.html" class="external-link">is.data.table</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">is_2d</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="va">dt</span> <span class="op">&lt;-</span> <span class="va">data</span></span>
 <span>    <span class="op">}</span></span>
@@ -695,7 +695,7 @@ location of NA values in your phenotype data:</p>
 <span>            <span class="va">na_positions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">na_matrix</span>, arr.ind <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span>            <span class="co"># Convert to data.table and add column names</span></span>
-<span>            <span class="va">na_positions_dt</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">na_positions</span><span class="op">)</span></span>
+<span>            <span class="va">na_positions_dt</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">na_positions</span><span class="op">)</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">na_positions_dt</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="st">"col"</span><span class="op">)</span></span>
 <span>            <span class="va">na_positions_dt</span><span class="op">$</span><span class="va">col_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span><span class="op">[</span><span class="va">na_positions_dt</span><span class="op">$</span><span class="va">col</span><span class="op">]</span></span>
 <span></span>
@@ -1707,7 +1707,7 @@ phenotype.</p>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>root.dir <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  </span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># * load the example data</span></span>
@@ -2410,7 +2410,7 @@ future use.</p>
 <code class="sourceCode R"><span><span class="fu">SeuratObject</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/SaveSeuratRds.html" class="external-link">SaveSeuratRds</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">screen_result</span>, filename <span class="op">=</span> <span class="st">"screened_result.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>or in <code>.h5ad</code> format:</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">anndataR</span><span class="fu">::</span><span class="fu">write_h5ad</span><span class="op">(</span>object<span class="op">=</span> <span class="va">screen_result</span>, path <span class="op">=</span> <span class="st">"screened_result.h5ad"</span>, compression <span class="op">=</span> <span class="st">"gzip"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.data-intuitive.com/reference/write_h5ad.html" class="external-link">write_h5ad</a></span><span class="op">(</span>object<span class="op">=</span> <span class="va">screen_result</span>, path <span class="op">=</span> <span class="st">"screened_result.h5ad"</span>, compression <span class="op">=</span> <span class="st">"gzip"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="continuous-phenotype-associated-cell-screening">4.2 Continuous phenotype associated cell screening<a class="anchor" aria-label="anchor" href="#continuous-phenotype-associated-cell-screening"></a>
@@ -2419,7 +2419,7 @@ future use.</p>
 cell screening</a>. Here, only the preprocessing of continuous
 phenotypic data is introduced.</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
@@ -2456,7 +2456,7 @@ it to a <code>named vector</code>:</p>
 cell screening</a>. Here, only the preprocessing of binary phenotypic
 data is introduced.</p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
@@ -2489,7 +2489,7 @@ cells screened as <strong>Positive</strong> will be associated with
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">mutate</span><span class="op">(</span></span>
 <span>    <span class="va">pheno</span>,</span>
-<span>    data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
 <span>        <span class="va">data</span> <span class="op">==</span> <span class="st">"Tumor"</span> <span class="op">~</span> <span class="fl">1</span>,</span>
 <span>        <span class="va">data</span> <span class="op">==</span> <span class="st">"Normal"</span> <span class="op">~</span> <span class="fl">0</span></span>
 <span>    <span class="op">)</span></span>
@@ -2558,7 +2558,7 @@ for troubleshooting, especially for the environment setup.</p>
 <span><span class="co">##  [5] xfun_0.56         cachem_1.1.0      knitr_1.51        htmltools_0.5.9  </span></span>
 <span><span class="co">##  [9] rmarkdown_2.30    lifecycle_1.0.5   cli_3.6.5         sass_0.4.10      </span></span>
 <span><span class="co">## [13] pkgdown_2.2.0     textshaping_1.0.4 jquerylib_0.1.4   systemfonts_1.3.1</span></span>
-<span><span class="co">## [17] compiler_4.5.2    tools_4.5.2       ragg_1.5.0        bslib_0.9.0      </span></span>
+<span><span class="co">## [17] compiler_4.5.2    tools_4.5.2       ragg_1.5.0        bslib_0.10.0     </span></span>
 <span><span class="co">## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        jsonlite_2.0.0   </span></span>
 <span><span class="co">## [25] rlang_1.1.7       fs_1.6.6          htmlwidgets_1.6.4</span></span></code></pre>
 <hr>

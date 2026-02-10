@@ -29,3 +29,10 @@ Storing structure - named list
   - `mapper`: A function that transforms the parameters passed to the
     `Screen` function before forwarding them to the executor; both input
     and output must be of type `list`.
+
+## See also
+
+Other Add_Screen_method:
+[`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md),
+[`TemplateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.md),
+[`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md)

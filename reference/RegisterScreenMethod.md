@@ -9,7 +9,7 @@ remapping function.
 This function supports community-driven extension of analysis
 pipelines—ideal for integrating novel single cell phenotypic screening
 methods while maintaining compatibility with downstream validation and
-execution frameworks
+execution frameworks.
 
 ## Usage
 
@@ -19,7 +19,8 @@ RegisterScreenMethod(
   supported_phenotypes = c("binary", "survival", "continuous"),
   parameter_mapper = NULL,
   registry = ScreenStrategy,
-  verbose = getFuncOption("verbose") %||% TRUE
+  overwrite = FALSE,
+  verbose = getFuncOption("verbose")
 )
 ```
 
@@ -27,7 +28,7 @@ RegisterScreenMethod(
 
 - ...:
 
-  Named arguments where each value is a **function** implementing a
+  Named arguments where each value is a function implementing a
   screening method. The name becomes the method identifier (e.g.,
   `Scissor = DoScissor` registers `DoScissor` under the key
   `"Scissor"`). Unnamed arguments are auto-named using their expression
@@ -52,10 +53,15 @@ RegisterScreenMethod(
   methods are stored as `registry[["MethodName"]]` = metadata list.
   Default: `ScreenStrategy`.
 
+- overwrite:
+
+  Logical. If `FALSE` (default), throws an error when attempting to
+  replace an existing method. Set to `TRUE` to allow updates.
+
 - verbose:
 
   Logical. Whether to print a success message upon registration.
-  Default: `TRUE`.
+  Default: inherits from package option.
 
 ## Value
 
@@ -81,6 +87,18 @@ Each registered method is stored as a list with four elements:
 
   Function: parameter transformation hook
 
+## See also
+
+Other Add_Screen_method:
+[`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md),
+[`TemplateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.md),
+[`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md)
+
+Other Registering:
+[`Register()`](https://wanglabcsu.github.io/sigbridger/reference/Register.md),
+[`RegisterAnnoMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterAnnoMethod.md),
+[`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md)
+
 ## Examples
 
 ``` r
@@ -96,7 +114,7 @@ RegisterScreenMethod(
   # If `continuous` phenotype is not supported
   supported_phenotypes = c("survival", "binary"),
   parameter_mapper = function(params) {
-    # If I perfer to use `quiet` instead of `verbose`
+    # If I prefer to use `quiet` instead of `verbose`
     params$quiet <- !params$verbose
     params
   }

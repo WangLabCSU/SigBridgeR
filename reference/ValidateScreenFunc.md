@@ -24,6 +24,13 @@ ValidateScreenFunc(func, ...)
 
 `TRUE` if all checks pass, otherwise terminates with diagnostic report
 
+## See also
+
+Other Add_Screen_method:
+[`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md),
+[`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md),
+[`TemplateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.md)
+
 ## Examples
 
 ``` r

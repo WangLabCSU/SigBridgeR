@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,10 +74,29 @@
 <p>This document introduces a guide for extending SigBridgeR with custom
 algorithms.</p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="too-long-didnt-read">Too Long; Didn’t Read<a class="anchor" aria-label="anchor" href="#too-long-didnt-read"></a>
 </h2>
-<p>It’s recommended to install these packages for checking the code</p>
+<p>(auto dispatch)</p>
+<p>Extend <code>SCPreProcess</code>: key = func</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/Register.html">Register</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="va">RunHarmony</span><span class="op">)</span></span></code></pre></div>
+<p>Extend <code>SCAnnotate</code>: key = func</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/Register.html">Register</a></span><span class="op">(</span>my <span class="op">=</span> <span class="va">my_function</span><span class="op">)</span></span></code></pre></div>
+<p>Extend <code>Screen</code>: key = func</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/TemplateScreenFunc.html">TemplateScreenFunc</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># create a file</span></span>
+<span><span class="fu"><a href="../reference/ValidateScreenFunc.html">ValidateScreenFunc</a></span><span class="op">(</span><span class="va">my_function</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/Register.html">Register</a></span><span class="op">(</span>my <span class="op">=</span> <span class="va">my_function</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="extend-screening-methods">Extend Screening Methods<a class="anchor" aria-label="anchor" href="#extend-screening-methods"></a>
+</h2>
+<div class="section level3">
+<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h3>
+<p>It’s recommended to install these packages for checking the code</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"tictoc"</span>,</span>
 <span>  <span class="st">"yonicd/tidycheckUsage"</span>,</span>
@@ -86,15 +105,17 @@ algorithms.</p>
 <span>  <span class="st">"lintr"</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="prepare-a-custom-function">Prepare a custom function<a class="anchor" aria-label="anchor" href="#prepare-a-custom-function"></a>
-</h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link">SigBridgeR</a></span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="prepare-a-custom-function">Prepare a custom function<a class="anchor" aria-label="anchor" href="#prepare-a-custom-function"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span></code></pre></div>
 <p>After the v3.2.0 update, SigBridgeR supports registering custom
 algorithms for screening phenotype-associated cell method into the
 package. Let’s do this with a detailed example:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>(Template can be obtained via <code>TemplateScreenFunc</code>, which
+will create a file and open it in the editor.)</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_screen_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>  <span class="va">matched_bulk</span>,</span>
 <span>  <span class="va">sc_data</span>,</span>
@@ -183,9 +204,9 @@ with meta.data modified</li>
 validation output resembles that of <code>rcmdcheck</code>; please
 ensure there are no errors or warnings, and as few notes as
 possible.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ValidateScreenFunc.html">ValidateScreenFunc</a></span><span class="op">(</span><span class="va">my_screen_function</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ── Screening Function Validation ──────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co"># Start at 2026/01/19 22:04:17</span></span>
 <span></span>
@@ -201,7 +222,7 @@ possible.</p>
 <span></span>
 <span><span class="co"># 0 error ✔ | 0 warning ✔ | 0 note ✔</span></span></code></pre></div>
 <p>By the way if providing a bad function</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bad_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">z</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>  <span class="va">y</span></span>
@@ -209,7 +230,7 @@ possible.</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ValidateScreenFunc.html">ValidateScreenFunc</a></span><span class="op">(</span><span class="va">bad_fun</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ── Screening Function Validation ───────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co"># Start at 2026/01/19 22:07:43</span></span>
 <span></span>
@@ -244,11 +265,11 @@ possible.</p>
 <span></span>
 <span><span class="co"># 3 errors ✖ | 0 warning ✔ | 1 note ✖</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="registering-the-function">Registering the function<a class="anchor" aria-label="anchor" href="#registering-the-function"></a>
-</h2>
+<div class="section level3">
+<h3 id="registering-the-function">Registering the function<a class="anchor" aria-label="anchor" href="#registering-the-function"></a>
+</h3>
 <p>Now we can register the function to the package:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/RegisterScreenMethod.html">RegisterScreenMethod</a></span><span class="op">(</span></span>
 <span>  my_method <span class="op">=</span> <span class="va">my_screen_function</span>,</span>
 <span>  supported_phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"binary"</span>, <span class="st">"survival"</span><span class="op">)</span>,</span>
@@ -259,7 +280,7 @@ possible.</p>
 <span>  registry <span class="op">=</span> <span class="va">ScreenStrategy</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ✔ Registered `my_method`</span></span></code></pre></div>
 <p>Details of the arguments:</p>
 <ol style="list-style-type: decimal">
@@ -284,16 +305,18 @@ must return a modified list</strong>.</li>
 <code>verbose</code>: Whether to print messages.</li>
 </ol>
 <p>Let’s check whether it has indeed been registered</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">GetExistingStrategy</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InterceptStrategy.html">InterceptStrategy</a></span><span class="op">(</span><span class="st">"ScreenStrategy"</span><span class="op">)</span></span>
+<span><span class="co"># A tibble: 22 × 4</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ScreenStrategy</span><span class="op">)</span></span>
+<span><span class="co"># [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="use-the-function">Use the function<a class="anchor" aria-label="anchor" href="#use-the-function"></a>
-</h2>
+<div class="section level3">
+<h3 id="use-the-function">Use the function<a class="anchor" aria-label="anchor" href="#use-the-function"></a>
+</h3>
 <p>Now we can use the function in the <code>Screen</code> function:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">a_seurat</span> <span class="op">&lt;-</span> <span class="fu">SeuratObject</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="fu">Matrix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/Matrix.html" class="external-link">Matrix</a></span><span class="op">(</span></span>
 <span>  <span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -317,15 +340,140 @@ must return a modified list</strong>.</li>
 <span>  screen_method <span class="op">=</span> <span class="st">"my_method"</span>,</span>
 <span>  a <span class="op">=</span> <span class="fl">123</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ✔ my_screen_function finished</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_res</span><span class="op">$</span><span class="va">scRNA_data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># [1] "Seurat"</span></span>
 <span><span class="co"># attr(,"package")</span></span>
 <span><span class="co"># [1] "SeuratObject"</span></span></code></pre></div>
 <p>If you still have questions, please use GitHub <a href="https://github.com/WangLabCSU/SigBridgeR/issues" class="external-link">Issues</a> or <a href="https://github.com/WangLabCSU/SigBridgeR/discussions" class="external-link">Discussions</a>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="extend-seurat-methods">Extend Seurat Methods<a class="anchor" aria-label="anchor" href="#extend-seurat-methods"></a>
+</h2>
+<p>In general, any Seurat function can be registered for use within
+<code>SCPreProcess</code>. However, due to the character-length
+limitation of the pipeline code string, at most <strong>52</strong>
+functions can be registered—one for each uppercase and lowercase letter
+(A–Z, a–z).</p>
+<p>By default, the registry is defined as follows:</p>
+<p><strong>Pipeline Code Table:</strong></p>
+<table class="table">
+<colgroup>
+<col width="7%">
+<col width="30%">
+<col width="62%">
+</colgroup>
+<thead><tr class="header">
+<th>Code</th>
+<th>Function</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>o</strong></td>
+<td><code>CreateSeuratObject</code></td>
+<td>
+<strong>Required.</strong> Must be the first step.</td>
+</tr>
+<tr class="even">
+<td><strong>n</strong></td>
+<td><code>NormalizeData</code></td>
+<td>Standard normalization.</td>
+</tr>
+<tr class="odd">
+<td><strong>s</strong></td>
+<td><code>ScaleData</code></td>
+<td>Scales data for PCA.</td>
+</tr>
+<tr class="even">
+<td><strong>v</strong></td>
+<td><code>FindVariableFeatures</code></td>
+<td>Selects highly variable genes.</td>
+</tr>
+<tr class="odd">
+<td><strong>p</strong></td>
+<td><code>RunPCA</code></td>
+<td>Principal Component Analysis.</td>
+</tr>
+<tr class="even">
+<td><strong>e</strong></td>
+<td><code>FindNeighbors</code></td>
+<td>Computes SNN graph.</td>
+</tr>
+<tr class="odd">
+<td><strong>c</strong></td>
+<td><code>FindClusters</code></td>
+<td>Louvain algorithm clustering.</td>
+</tr>
+<tr class="even">
+<td><strong>t</strong></td>
+<td><code>RunTSNE</code></td>
+<td>t-SNE reduction.</td>
+</tr>
+<tr class="odd">
+<td><strong>u</strong></td>
+<td><code>RunUMAP</code></td>
+<td>UMAP reduction.</td>
+</tr>
+<tr class="even">
+<td><strong>r</strong></td>
+<td><code>SCTransform</code></td>
+<td>
+<strong>SCT workflow.</strong> Replaces n, s, v.</td>
+</tr>
+</tbody>
+</table>
+<p>For example, if we need to use <code><a href="https://satijalab.org/seurat/reference/ReadXenium.html" class="external-link">Seurat::LoadXenium</a></code> to
+load Xenium data for screening, register this function first.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/RegisterSeuratMethod.html">RegisterSeuratMethod</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="va"><a href="https://satijalab.org/seurat/reference/ReadXenium.html" class="external-link">LoadXenium</a></span><span class="op">)</span></span>
+<span><span class="co"># ✔ Registered x</span></span></code></pre></div>
+<p>To check:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">SCPreProcessStrategy</span><span class="op">)</span></span>
+<span><span class="co">#  [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InterceptStrategy.html">InterceptStrategy</a></span><span class="op">(</span><span class="st">"SCPreProcessStrategy"</span><span class="op">)</span></span>
+<span><span class="co"># tibble [12 × 2]</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="extend-cell-type-annotation-methods">Extend Cell Type Annotation Methods<a class="anchor" aria-label="anchor" href="#extend-cell-type-annotation-methods"></a>
+</h2>
+<p>By default, SigBridgeR includes three built-in cell type annotation
+algorithms: <strong>SingleR</strong>, <strong>CellTypist</strong>, and
+<strong>mLLMCelltype</strong>—all of which require additional
+installation and dependencies (See <a href="https://wanglabcsu.github.io/SigBridgeR/index.html" class="external-link">README</a>).
+They can all be invoked through the unified interface function
+<code>SCAnnotate</code>.</p>
+<p>Extending cell annotation method is also very easy:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">my_method</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># placeholder</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">seurat_obj</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/RegisterAnnoMethod.html">RegisterAnnoMethod</a></span><span class="op">(</span></span>
+<span>  my <span class="op">=</span> <span class="va">my_method</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co"># ✔ Registered `my`</span></span></code></pre></div>
+<p>To check:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">SCAnnotateStrategy</span><span class="op">)</span></span>
+<span><span class="co"># [1] "my"           "mLLMCelltype" "CellTypist"   "SingleR"</span></span></code></pre></div>
+<p>Here are some recommendations for user-defined cell annotation
+functions.</p>
+<ol style="list-style-type: decimal">
+<li>The first input and the first output must both be Seurat
+objects.</li>
+<li>If multiple objects need to be returned, it is recommended to use a
+<code>list</code> format.</li>
+<li>Use <code><a href="https://rdrr.io/pkg/tidycheckUsage/man/tidycheckUsage.html" class="external-link">tidycheckUsage::tidycheckUsage()</a></code> to check the
+function’s syntax.</li>
+</ol>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

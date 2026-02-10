@@ -21,6 +21,13 @@ Functions for preprocessing bulk and single-cell RNA-seq data.
   [`AggregateDupCols()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
   [`AggregateDups()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
   : Aggregate Rows or Columns with Duplicate Names
+- [`ChooseNormalization()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseNormalization.md)
+  : Data-Driven Selection of Single-Cell Normalization Methods
+- [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.data.frame()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.Matrix()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.Seurat()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  : Integrate Single-Cell Datasets
 
 ## Result Integration & Visualization
 
@@ -34,18 +41,12 @@ Merge and visualize screening results across methods or conditions.
   : ScreenUpset - Visualize cell type intersections from screened Seurat
   object
 
-## Screening Framework
-
-Core functions for phenotype-driven single-cell screening and method
-registration.
-
-- [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
-  : Single-Cell Data Screening
-
 ## Screening Methods
 
 Built-in screening algorithms.
 
+- [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
+  : Single-Cell Data Screening
 - [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md)
   : Perform LP-SGL Screening Analysis
 - [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md)
@@ -63,8 +64,6 @@ Built-in screening algorithms.
 
 ## Seurat Object Utilities
 
-Helper functions to extend or annotate Seurat objects safely.
-
 - [`AddMetaFeature()`](https://wanglabcsu.github.io/sigbridger/reference/AddMetaFeature.md)
   : Add Gene-Level Metadata to Seurat Object (Vectorized, ...-based)
 - [`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
@@ -72,6 +71,19 @@ Helper functions to extend or annotate Seurat objects safely.
 - [`FindRobustElbow()`](https://wanglabcsu.github.io/sigbridger/reference/FindRobustElbow.md)
   : Automatically determine optimal PCA dimensions using multiple robust
   methods
+
+## Annotate Cell Types in Single-cell Datasets
+
+Built-in annotationa algorithms.
+
+- [`SCAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotate.md)
+  : Unified Interface for Single-Cell Annotation Methods
+- [`CellTypistAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.md)
+  : Annotate Cell Types Using CellTypist (Python Backend)
+- [`SingleRAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SingleRAnnotate.md)
+  : Annotate Single-Cell Data Using SingleR
+- [`mLLMCelltypeAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/mLLMCelltypeAnnotate.md)
+  : Annotate Cell Types Using Multi-LLM Consensus Approach
 
 ## Reference Data & External Resources
 
@@ -91,12 +103,30 @@ Manage Python environments for integrated R/Python workflows.
 
 ## Extension Tools
 
-Other functions for extending SigBridgeR.
-
+- [`InterceptStrategy()`](https://wanglabcsu.github.io/sigbridger/reference/InterceptStrategy.md)
+  : Inspect Registered Strategy Environments
+- [`Register()`](https://wanglabcsu.github.io/sigbridger/reference/Register.md)
+  : Unified Registration Interface for Strategy Methods
 - [`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
   : Register a Custom Screening Method for Phenotype-Driven Analysis
+- [`RegisterAnnoMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterAnnoMethod.md)
+  : Register an Annotation Method into the Strategy Registry
+- [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md)
+  : Register a Seurat Processing Strategy
 - [`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md)
   : Validate Custom Screening Function Compliance
+- [`TemplateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.md)
+  : Generate a Template Screening Function with Optional Roxygen2
+  Documentation
+
+## Registry
+
+Extended registry for SigBridgeR
+
+- [`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md)
+  : Preprocessing Strategy Registry for Single-Cell Workflows
+- [`SCAnnotateStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotateStrategy.md)
+  : Registry of Cell Type Annotation Methods
 - [`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md)
   : Registry of Phenotype-Associated Cell Screening Methods
 
@@ -108,3 +138,5 @@ Get and set global options for SigBridgeR behavior.
   : Configuration Functions for SigBridgeR Package
 - [`setFuncOption()`](https://wanglabcsu.github.io/sigbridger/reference/setFuncOption.md)
   : Configuration Functions for SigBridgeR Package
+- [`setThreads()`](https://wanglabcsu.github.io/sigbridger/reference/setThreads.md)
+  : Configure Parallel Execution Backends

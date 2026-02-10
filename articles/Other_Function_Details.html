@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 
       <h1>Auxiliary Utils</h1>
             
-            <h4 data-toc-skip class="date">2026-01-24</h4>
+            <h4 data-toc-skip class="date">2026-02-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Other_Function_Details.Rmd" class="external-link"><code>vignettes/Other_Function_Details.Rmd</code></a></small>
       <div class="d-none name"><code>Other_Function_Details.Rmd</code></div>
@@ -75,8 +75,189 @@
 <p>This document introduces several auxiliary functions of
 SigBridgeR.</p>
 <div class="section level2">
-<h2 id="add-miscellaneous-information-to-the-seurat-object">Add miscellaneous information to the Seurat object<a class="anchor" aria-label="anchor" href="#add-miscellaneous-information-to-the-seurat-object"></a>
+<h2 id="setting">Setting<a class="anchor" aria-label="anchor" href="#setting"></a>
 </h2>
+<div class="section level3">
+<h3 id="setting-and-retriving-package-options">Setting and Retriving Package Options<a class="anchor" aria-label="anchor" href="#setting-and-retriving-package-options"></a>
+</h3>
+<p>Currently, 3 package options are provided:</p>
+<ul>
+<li>
+<code>verbose</code>: Whether to print the progress of the function.
+Default is <code>TRUE</code>.</li>
+<li>
+<code>seed</code>: The random seed used in the function. Default is
+<code>123L</code>.</li>
+<li>
+<code>timeout</code>: The maximum timeout time when downloading
+data. Default is <code>180L</code>.</li>
+</ul>
+<p>These options can be modified using either the
+<code>setFuncOption</code> or <code>Options</code> function (the former
+is recommended).</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/setFuncOption.html">setFuncOption</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">321L</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>SigBridgeR.seed <span class="op">=</span> <span class="fl">321L</span><span class="op">)</span></span></code></pre></div>
+<p><code>setFuncOption</code> automatically detects the prefix, so
+parameters with a package name prefix are also compatible.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/setFuncOption.html">setFuncOption</a></span><span class="op">(</span>SigBridgeR.seed <span class="op">=</span> <span class="fl">321L</span><span class="op">)</span></span></code></pre></div>
+<p><code>getFuncOption</code> is used to retrieve the global parameters
+of SigBridgeR.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"seed"</span><span class="op">)</span></span>
+<span><span class="co"># 321</span></span>
+<span></span>
+<span><span class="co"># * Auto-detect prefix </span></span>
+<span><span class="fu"><a href="../reference/getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"SigBridgeR.seed"</span><span class="op">)</span></span>
+<span><span class="co"># 321</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="setting-threads">Setting Threads<a class="anchor" aria-label="anchor" href="#setting-threads"></a>
+</h3>
+<p>Used to control the number of threads for OpenMP and data.table. By
+default, uses half of the maximum available threads.</p>
+<p>Default:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span></span>
+<span>  n_threads <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  backend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"openmp"</span>, <span class="st">"dt"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Example Usage:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span><span class="fl">1L</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ── System Threads Config ───────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#   OpenMP version (_OPENMP)       201511</span></span>
+<span><span class="co">#   omp_get_num_procs()            192</span></span>
+<span><span class="co">#   R_DATATABLE_NUM_PROCS_PERCENT  unset (default 50)</span></span>
+<span><span class="co">#   R_DATATABLE_NUM_THREADS        unset</span></span>
+<span><span class="co">#   R_DATATABLE_THROTTLE           unset (default 1024)</span></span>
+<span><span class="co">#   omp_get_thread_limit()         2147483647</span></span>
+<span><span class="co">#   omp_get_max_threads()          192</span></span>
+<span><span class="co">#   OMP_THREAD_LIMIT               unset</span></span>
+<span><span class="co">#   OMP_NUM_THREADS                1</span></span>
+<span><span class="co">#   RestoreAfterFork               true</span></span>
+<span><span class="co">#   data.table is using 1 threads with throttle==1024. See ?setDTthreads.</span></span>
+<span></span>
+<span><span class="co"># ── Changes </span></span>
+<span><span class="co"># • "OMP_NUM_THREADS": 1 -&gt; 1</span></span>
+<span><span class="co"># • "data.table": 96 -&gt; 1</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="seurat-utilities">Seurat Utilities<a class="anchor" aria-label="anchor" href="#seurat-utilities"></a>
+</h2>
+<div class="section level3">
+<h3 id="find-the-optimal-normalization-method-for-seurat">Find the Optimal Normalization Method for Seurat<a class="anchor" aria-label="anchor" href="#find-the-optimal-normalization-method-for-seurat"></a>
+</h3>
+<p>A simple scoring function for selecting a normalization method.</p>
+<p>Evaluates 3 dimensions of preprocessing quality:</p>
+<ul>
+<li><p><strong>Variance stabilization</strong>: Decoupling of
+mean-variance relationship in normalized expression (lower correlation =
+better).</p></li>
+<li><p><strong>Biological signal retention</strong>: Preservation of
+known marker genes within highly variable genes (higher retention =
+better).</p></li>
+<li><p><strong>Dropout robustness</strong>: Removal of technical dropout
+bias from normalized values (lower correlation with dropout rate =
+better).</p></li>
+</ul>
+<p>Exmaple Usage:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sct</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu">SCTransfrom</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
+<span><span class="va">lognorm</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/ChooseNormalization.html">ChooseNormalization</a></span><span class="op">(</span></span>
+<span>  sct <span class="op">=</span> <span class="va">sct</span>,</span>
+<span>  lognorm <span class="op">=</span> <span class="va">lognorm</span>, </span>
+<span>  <span class="co"># * More can be added here</span></span>
+<span>  subset_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  known_hvgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  n_hvgs <span class="op">=</span> <span class="fl">2000L</span>,</span>
+<span>  low_expressed_thresh <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    variance_stability <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span>    marker_signal <span class="op">=</span> <span class="fl">0.35</span>,</span>
+<span>    dropout_robustness <span class="op">=</span> <span class="fl">0.25</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span> </span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ℹ Using 1088 cells</span></span>
+<span><span class="co"># ℹ Comparing 2 methods: sct and lognorm</span></span>
+<span><span class="co"># ── Method Ranking (Composite Score) </span></span>
+<span><span class="co"># Top method: log_norm</span></span>
+<span><span class="co"># [1] log_norm: 0.825</span></span>
+<span><span class="co"># [2] sctransform: 0.175</span></span></code></pre></div>
+<p>Supports simultaneously adding Seurat objects preprocessed with
+multiple methods, ensuring they are equivalent to the standard workflow
+of <code>NormalizeData</code> + <code>ScaleData</code> +
+<code>FindVariableFeatures</code>.</p>
+<div class="section level4">
+<h4 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a>
+</h4>
+<ul>
+<li>
+<code>subset_size</code>: Size of the single-cell data subset (i.e.,
+number of cells) to be evaludated.</li>
+<li>
+<code>known_hvgs</code>: list or character. Known highly variable
+genes, provided as a reference baseline.</li>
+<li>
+<code>n_hvgs</code>: Maximum number of highly variable genes to
+consider.</li>
+<li>
+<code>low_expressed_thresh</code>: Percentage of genes excluded from
+consideration, ranked by expression level.</li>
+<li>
+<code>weight</code>: Scoring weight that sum to 1.</li>
+</ul>
+</div>
+</div>
+<div class="section level3">
+<h3 id="finding-the-optimal-number-of-principle-components">Finding the Optimal Number of Principle Components<a class="anchor" aria-label="anchor" href="#finding-the-optimal-number-of-principle-components"></a>
+</h3>
+<p>Usually the number if principle components (PCs) is manually set to
+10 or 20 according to the elbow plot. However, it is not always the case
+that the PCs with the highest variance are the most informative. Here is
+a function to help you find the optimal number of PCs.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ndims</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FindRobustElbow.html">FindRobustElbow</a></span><span class="op">(</span></span>
+<span>  obj <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ndims <span class="op">=</span> <span class="fl">50</span> </span>
+<span><span class="op">)</span></span>
+<span><span class="co"># ── Method Results </span></span>
+<span><span class="co"># ℹ Method 1A (Cumulative Variance &gt; 90%): 1:40</span></span>
+<span><span class="co"># ℹ Method 1B (Variance &gt; Mean): 1:11</span></span>
+<span><span class="co"># ℹ Method 1C (Variance &gt; 2*SD): 1:4</span></span>
+<span><span class="co"># ℹ Method 2 (Second Derivative): 1:2</span></span>
+<span><span class="co"># ℹ Method 3 (Distance-based): 1:8</span></span>
+<span><span class="co"># ✔ Final Recommended Dimensions:  1:35</span></span>
+<span></span>
+<span><span class="co"># ── Summary </span></span>
+<span><span class="co"># ℹ Cumulative variance at 35 PCs: 84.8%</span></span>
+<span><span class="co"># ℹ Variance explained by PC35: 1.09%</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ndims</span><span class="op">)</span></span>
+<span><span class="co"># 35</span></span></code></pre></div>
+<p>This function will draw an elbow plot with each method and the
+recommended number of PCs. You can also use the <code>ndims</code>
+parameter to specify the maximum number of PCs to be tested. The default
+value is <code>50</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/elbow.png"</span><span class="op">)</span></span></code></pre></div>
+<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/elbow.png)" class="external-link"><img src="example_figures/elbow.png" fig-align="center" width="600" alt="elbow"></a></p>
+</div>
+<div class="section level3">
+<h3 id="add-miscellaneous-information-to-the-seurat-object">Add miscellaneous information to the Seurat object<a class="anchor" aria-label="anchor" href="#add-miscellaneous-information-to-the-seurat-object"></a>
+</h3>
 <p>SigBridgeR uses <code><a href="../reference/AddMisc.html">AddMisc()</a></code> to record what data features
 or evidence the various screening algorithms are based on during
 execution. As a substitute for the <code><a href="https://satijalab.github.io/seurat-object/reference/Misc.html" class="external-link">SeuratObject::Misc()</a></code></p>
@@ -86,7 +267,7 @@ execution. As a substitute for the <code><a href="https://satijalab.github.io/se
 object. Support for adding multiple attributes to the
 <code>SeuratObject@misc</code> slot simultaneously.</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># basic usage</span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMisc.html">AddMisc</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"QC_stats"</span> <span class="op">=</span> <span class="va">qc_df</span><span class="op">)</span></span>
 <span></span>
@@ -100,39 +281,39 @@ object. Support for adding multiple attributes to the
 <span><span class="co"># Add multiple attributes (stored as a list element) to the `SeuratObject@misc`</span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMisc.html">AddMisc</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>attr1 <span class="op">=</span> <span class="st">"value1"</span>, attr2 <span class="op">=</span> <span class="st">"value2"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="add-gene-level-metadata-to-the-seurat-object">Add Gene-level Metadata to the Seurat object<a class="anchor" aria-label="anchor" href="#add-gene-level-metadata-to-the-seurat-object"></a>
-</h2>
+<div class="section level3">
+<h3 id="add-gene-level-metadata-to-the-seurat-object">Add Gene-level Metadata to the Seurat object<a class="anchor" aria-label="anchor" href="#add-gene-level-metadata-to-the-seurat-object"></a>
+</h3>
 <p>SigBridgeR uses <code><a href="../reference/AddMetaFeature.html">AddMetaFeature()</a></code> to update the
 <code>SeuratObject@assays$RNA@meta.data</code></p>
 <p>Add a new column to the metadata</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gene_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"test"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">seurat_obj</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMetaFeature.html">AddMetaFeature</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"gene_type"</span> <span class="op">=</span> <span class="va">gene_type</span><span class="op">)</span></span></code></pre></div>
 <p>Add a data.frame to the metadata, with the column names as the
 metadata names.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>seurat_obj <span class="ot">&lt;-</span> <span class="fu">AddMetaFeature</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  seurat_obj,</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">gene_type =</span> gene_type, <span class="at">gene_name =</span> <span class="fu">rownames</span>(seurat_obj)</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>seurat_obj <span class="ot">&lt;-</span> <span class="fu">AddMetaFeature</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  seurat_obj,</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">gene_type =</span> gene_type, <span class="at">gene_name =</span> <span class="fu">rownames</span>(seurat_obj)</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>)</span></code></pre></div>
 <p>Add to different assays</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMetaFeature.html">AddMetaFeature</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"gene_type"</span> <span class="op">=</span> <span class="va">gene_type</span>, assay <span class="op">=</span> <span class="st">"RNA"</span><span class="op">)</span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMetaFeature.html">AddMetaFeature</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"gene_type"</span> <span class="op">=</span> <span class="va">gene_type</span>, assay <span class="op">=</span> <span class="st">"ATAC"</span><span class="op">)</span></span></code></pre></div>
 <p>If duplicate column names are detected, they will be suffixed with an
 underscore and a number (e.g., <code>_1</code>, <code>_2</code>) for
 disambiguation.</p>
 </div>
-<div class="section level2">
-<h2 id="integration-of-single-cell-data">Integration of Single Cell Data<a class="anchor" aria-label="anchor" href="#integration-of-single-cell-data"></a>
-</h2>
 <div class="section level3">
-<h3 id="matrix-integration">Matrix Integration<a class="anchor" aria-label="anchor" href="#matrix-integration"></a>
+<h3 id="integration-of-single-cell-data">Integration of Single Cell Data<a class="anchor" aria-label="anchor" href="#integration-of-single-cell-data"></a>
 </h3>
+<div class="section level4">
+<h4 id="matrix-integration">Matrix Integration<a class="anchor" aria-label="anchor" href="#matrix-integration"></a>
+</h4>
 <p>When passing raw matrices, the function performs a “join” operation
 based on the union of all genes. Missing values are filled with NA.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create dummy matrices</span></span>
 <span><span class="va">mat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">5</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">10</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"G"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">6</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">10</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"G"</span>, <span class="fl">5</span><span class="op">:</span><span class="fl">14</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -141,7 +322,7 @@ based on the union of all genes. Missing values are filled with NA.</p>
 <span><span class="va">integrated_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCIntegrate.html">SCIntegrate</a></span><span class="op">(</span>BatchA <span class="op">=</span> <span class="va">mat1</span>, BatchB <span class="op">=</span> <span class="va">mat2</span><span class="op">)</span></span>
 <span><span class="co"># default prefixed</span></span>
 <span><span class="va">integrated_mat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCIntegrate.html">SCIntegrate</a></span><span class="op">(</span><span class="va">mat1</span>, <span class="va">mat2</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated_mat</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span>
 <span><span class="co">#     BatchA_C1 BatchA_C2 BatchA_C3 BatchA_C4</span></span>
 <span><span class="co"># G1          3         2         4         5</span></span>
@@ -166,9 +347,9 @@ based on the union of all genes. Missing values are filled with NA.</p>
 prefixes.</p></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="seurat-integration">Seurat Integration<a class="anchor" aria-label="anchor" href="#seurat-integration"></a>
-</h3>
+<div class="section level4">
+<h4 id="seurat-integration">Seurat Integration<a class="anchor" aria-label="anchor" href="#seurat-integration"></a>
+</h4>
 <p>For Seurat objects, <code>SCIntegrate</code> automates the standard
 workflow via the pipeline parameter.</p>
 <p>The Pipeline String: Each letter in the pipeline argument triggers a
@@ -233,8 +414,10 @@ specific Seurat command:</p>
 </tr>
 </tbody>
 </table>
+<p>If more are needed, see <a href="https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html" class="external-link">A
+Guide for Custom Extensions</a></p>
 <p>Example Usage</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCIntegrate.html">SCIntegrate</a></span><span class="op">(</span></span>
 <span>  <span class="va">obj1</span>, <span class="va">obj2</span>, <span class="co"># -&gt; merge.Seurat</span></span>
 <span>  pipeline <span class="op">=</span> <span class="st">"nsvpi"</span>,</span>
@@ -243,7 +426,7 @@ specific Seurat command:</p>
 <span>  k.weight <span class="op">=</span> <span class="fl">50</span>                     <span class="co"># Passed to IntegrateLayers</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>An example using mock data</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">5</span><span class="op">)</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">20</span>,</span>
@@ -258,14 +441,14 @@ specific Seurat command:</p>
 <span><span class="va">seu1</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="va">mat1</span><span class="op">)</span></span>
 <span><span class="va">seu2</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="va">mat2</span><span class="op">)</span></span>
 <span><span class="va">integrated_seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCIntegrate.html">SCIntegrate</a></span><span class="op">(</span></span>
-<span>  <span class="va">seu1</span>,</span>
-<span>  <span class="va">seu2</span>,</span>
+<span>  Seurat1 <span class="op">=</span> <span class="va">seu1</span>, <span class="co"># Add prefixes</span></span>
+<span>  Seurat2 <span class="op">=</span> <span class="va">seu2</span>,</span>
 <span>  method <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="va"><a href="https://satijalab.org/seurat/reference/CCAIntegration.html" class="external-link">CCAIntegration</a></span>,</span>
 <span>  pipeline <span class="op">=</span> <span class="st">"nsvpi"</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  k.weight <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated_seu</span></span>
 <span><span class="co"># An object of class Seurat </span></span>
 <span><span class="co"># 30 features across 110 samples within 1 assay </span></span>
@@ -274,12 +457,214 @@ specific Seurat command:</p>
 <span><span class="co">#  2 dimensional reductions calculated: pca, integrated.dr</span></span></code></pre></div>
 </div>
 </div>
+</div>
 <div class="section level2">
-<h2 id="load-reference-data">Load reference data<a class="anchor" aria-label="anchor" href="#load-reference-data"></a>
+<h2 id="cell-type-annotation">Cell Type Annotation<a class="anchor" aria-label="anchor" href="#cell-type-annotation"></a>
+</h2>
+<p>As of version 3.3.0, three built-in cell annotation algorithms are
+included and can be applied directly to Seurat objects. Using them
+requires installing additional dependencies. See the <a href="https://wanglabcsu.github.io/SigBridgeR/index.html" class="external-link">README</a>.</p>
+<p>Basic usage:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCAnnotate.html">SCAnnotate</a></span><span class="op">(</span></span>
+<span>  sc <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CellTypist"</span>, <span class="st">"SingleR"</span>, <span class="st">"mLLMCelltype"</span><span class="op">)</span></span>
+<span>  <span class="co"># * more arguments passed to each method</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><code>SCAnnotate</code> will automatically set up the required
+dependencies for you (making it even more plug-and-play). If the
+<code>method</code> argument is not specified, it will automatically
+select the appropriate annotation method based on the provided
+arguments.</p>
+<p>To control it manually, use following functions:</p>
+<div class="section level3">
+<h3 id="celltypist-annotation">CellTypist Annotation<a class="anchor" aria-label="anchor" href="#celltypist-annotation"></a>
+</h3>
+<p>This is the direct R wrapper of celltypist.annotate. Unlike
+<code>SCAnnotate</code>, it does not prepare an environment for you.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CellTypistAnnotate.html">CellTypistAnnotate</a></span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  model <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  download <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  conda <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  python <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="../reference/getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span>, <span class="co"># TRUE</span></span>
+<span>  celltypist_tools <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>    <span class="st">"python/73-CellTypistAnnotate.py"</span>,</span>
+<span>    package <span class="op">=</span> <span class="st">"SigBridgeR"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="co"># * more arguments pass to celltypist.annotate (python)</span></span>
+<span><span class="op">)</span> </span></code></pre></div>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li>
+<code>sc</code>: A Seurat object.</li>
+<li>
+<code>model</code>: Charater/str. The model to use. If
+<code>NULL</code>, the default model will be used.</li>
+<li>
+<code>download</code>: Logical/bool. Whether to download the model.
+Defaults to <code>TRUE</code>-download all models. if model already
+exists, skip download.</li>
+<li>
+<code>force_update</code>: Logical. Whether to force update the
+model file.</li>
+<li>
+<code>conda</code>: Character/str. conda environment name. If
+<code>NULL</code>, try to use <code>python</code>.</li>
+<li>
+<code>python</code>: Character/str. The path to the python
+executable. If <code>NULL</code>, try to use <code>conda</code>.</li>
+<li>
+<code>verbose</code>: Logical/bool. Whether to print verbose
+messages. Defaults to <code>TRUE</code>.</li>
+<li>
+<code>celltypist_tools</code>: The path to the celltypist_tools.py
+file. If <code>NULL</code>, the default path will be used.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<p>A Seurat object with the cell type annotation added as metadata
+columns.</p>
+<p>Other parameters supported by <code>celltypist.annotate</code> will
+be automatically passed through and can be directly supplied to
+<code>CellTypistAnnotate</code>.</p>
+<p>helpful link: <a href="https://github.com/Teichlab/celltypist" class="external-link">https://github.com/Teichlab/celltypist</a></p>
+</div>
+<div class="section level3">
+<h3 id="mllmcelltype-annotation">mLLMCelltype Annotation<a class="anchor" aria-label="anchor" href="#mllmcelltype-annotation"></a>
+</h3>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu">mLLMCellTypeAnnotate</span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  seurat_obj_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="co"># * Context for large language models</span></span>
+<span>  tissue_name <span class="op">=</span> <span class="st">"Human Cancer"</span>, </span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"gpt-5"</span>,</span>
+<span>    <span class="st">"claude-sonnet-4-5-20250929"</span>,</span>
+<span>    <span class="st">"gemini-3-pro"</span>,</span>
+<span>    <span class="st">"qwen-max-2025-01-25"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  api_keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    anthropic <span class="op">=</span> <span class="st">"your-anthropic-key"</span>,</span>
+<span>    openai <span class="op">=</span> <span class="st">"your-openai-key"</span>,</span>
+<span>    gemini <span class="op">=</span> <span class="st">"your-google-key"</span>,</span>
+<span>    qwen <span class="op">=</span> <span class="st">"your-qwen-key"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="co"># Other arguments passed to `mLLMCelltype::annotate_cell_types` or ` mLLMCelltype::interactive_consensus_annotation`</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><p><code>sc</code> : A Seurat object with pre-computed clusters
+(stored in <code>Idents(sc)</code> or
+<code>sc$seurat_clusters</code>).</p></li>
+<li><p><code>seurat_obj_markers</code> : Optional pre-computed marker
+gene table or list (output of <code><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html" class="external-link">Seurat::FindAllMarkers()</a></code>). If
+<code>NULL</code> (default), markers are computed automatically using
+parameters passed via <code>...</code>.</p></li>
+<li><p><code>tissue_name</code> : Character. Biological context for
+annotation (e.g., tissue type, disease state). Helps LLMs interpret
+marker genes appropriately. Default:
+<code>"Human Tumor"</code>.</p></li>
+<li>
+<p><code>models</code> : Character vector of LLM model identifiers.
+Supported formats:</p>
+<ul>
+<li>OpenAI: <code>"gpt-4o"</code>, <code>"gpt-4o-mini"</code>, etc.</li>
+<li>Anthropic: <code>"claude-3-5-sonnet-20240620"</code>, etc.</li>
+<li>Google: <code>"gemini-1.5-pro"</code>, etc.</li>
+<li>Alibaba: <code>"qwen-max"</code>, <code>"qwen-plus"</code>,
+etc.</li>
+</ul>
+<p>Default:
+<code>c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")</code>.
+For single-model mode, only the first model is used.</p>
+</li>
+<li>
+<p><code>api_keys</code> : Named list of API keys with provider
+names as keys:</p>
+<ul>
+<li>
+<code>openai</code>: OpenAI API key</li>
+<li>
+<code>anthropic</code>: Anthropic API key</li>
+<li>
+<code>gemini</code>: Google Cloud API key (with Gemini enabled)</li>
+<li>
+<code>qwen</code>: Alibaba DashScope API key</li>
+</ul>
+<p>Example:
+<code>list(openai = "sk-...", anthropic = "sk-ant-...")</code>.</p>
+<p><strong>Note</strong>: Default placeholder keys
+(<code>"your-xxx-key"</code>) will fail—users must supply valid
+keys.</p>
+</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<p>A Seurat object with the cell type annotation added as metadata
+columns.</p>
+<p>helpful link: <a href="https://github.com/cafferychen777/mLLMCelltype" class="external-link">https://github.com/cafferychen777/mLLMCelltype</a></p>
+</div>
+<div class="section level3">
+<h3 id="singler-annotation">SingleR Annotation<a class="anchor" aria-label="anchor" href="#singler-annotation"></a>
+</h3>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SingleRAnnotate.html">SingleRAnnotate</a></span><span class="op">(</span></span>
+<span>  <span class="va">sc</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="../reference/getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span>, <span class="co"># TRUE</span></span>
+<span>  <span class="co"># * pass to `celldex::HumanPrimaryCellAtlasData`</span></span>
+<span>  ensembl <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cell.ont <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"nonna"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
+<span>  legacy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="co"># * pass to `SingleR::SingleR`</span></span>
+<span>  ref <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"HPCA"</span>, <span class="st">"custom"</span><span class="op">)</span>,</span>
+<span>  labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="co"># Other arguments passed to `SingleR::SingleR`</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<code>sc</code>: A Seurat object.</li>
+<li>
+<code>verbose</code>: Logical. Whether to print progress messages.
+Defaults to <code>TRUE</code>.</li>
+<li>
+<code>ensembl</code>: Logical. Whether to convert row names to
+Ensembl IDs. Genes without a valid mapping are discarded.</li>
+<li>
+<code>cell.ont</code>: Character. specifying Cell Ontology term
+handling. Use <code>"nonna"</code> to discard samples without valid
+terms, <code>"all"</code> to keep all samples (with possible
+<code>NA</code>), or <code>"none"</code> to skip.</li>
+<li>
+<code>legacy</code>: Logical. Whether to use legacy ExperimentHub
+backend. Default uses gypsum.</li>
+<li>
+<code>ref</code>: Reference data for annotation. Either
+<code>"HPCA"</code> (Human Primary Cell Atlas from <code>celldex</code>)
+or a <code>SingleCellExperiment</code> object with pre-labeled cells.
+For multiple references, a list of matrices or
+<code>SummarizedExperiment</code> objects.</li>
+<li>
+<code>labels</code>: Character vector of cell type labels for
+<code>ref</code> columns. Required for custom references; defaults to
+<code>ref$label.main</code> for <code>"HPCA"</code>. If <code>ref</code>
+is a list, <code>labels</code> must be a corresponding list.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<p>A Seurat object with the cell type annotation added as metadata
+columns.</p>
+<p>helpful link: <a href="https://github.com/SingleR-inc/SingleR" class="external-link">https://github.com/SingleR-inc/SingleR</a></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="other-functions">Other Functions<a class="anchor" aria-label="anchor" href="#other-functions"></a>
 </h2>
 <div class="section level3">
-<h3 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a>
+<h3 id="load-reference-data">Load reference data<a class="anchor" aria-label="anchor" href="#load-reference-data"></a>
 </h3>
+<p><strong>Parameters</strong></p>
 <ul>
 <li>
 <code>data_type</code>: The type of data to load. Can be either
@@ -297,7 +682,7 @@ data.</li>
 the bulk RNA expression matrix, and the clinical phenotype data are
 loaded all at once. These data are combined into a list and
 returned.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span></span>
 <span>    data_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"survival"</span><span class="op">)</span>,</span>
 <span>    path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -337,7 +722,7 @@ returned.</p>
 <p>We recommend using the <code>zeallot</code> package’s
 <code>%&lt;-%</code> function to assign values and rename them
 simultaneously.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mat_exam</span>, <span class="va">bulk</span>, <span class="va">pheno</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span>  <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span></span>
@@ -355,24 +740,24 @@ simultaneously.</p>
 using Python and require an execution environment. Here is a function to
 help you set up a Python environment. Both Windows and Unix-like systems
 are supported.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># * This is an example of setting up a Python environment using conda</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">SetupPyEnv</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>    <span class="at">env_type =</span> <span class="st">"conda"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>    <span class="at">env_name =</span> <span class="st">"test-condaenv"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"reticulate"</span>, <span class="st">"system"</span>,<span class="st">"environment"</span>), <span class="co"># choose one of them, default is "reticulate"</span></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>    <span class="at">env_file =</span> <span class="cn">NULL</span> <span class="co"># path to environment.yml file, used when method = "environment"</span></span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>    <span class="at">python_version =</span> <span class="cn">NULL</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>    <span class="at">packages =</span> <span class="fu">c</span>(</span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>        <span class="st">"pandas"</span> <span class="ot">=</span> <span class="st">"1.3"</span>,</span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>        <span class="st">"numpy"</span> <span class="ot">=</span> <span class="st">"any"</span></span>
-<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>    ),</span>
-<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>    <span class="at">recreate =</span> <span class="cn">FALSE</span>, <span class="co"># whether to remove the existing environment and recreate it</span></span>
-<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>    <span class="at">use_conda_forge =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>) </span>
-<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a></span>
-<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>reticualte<span class="sc">::</span><span class="fu">use_condaenv</span>(<span class="st">"test-condaenv"</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># * This is an example of setting up a Python environment using conda</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">SetupPyEnv</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>    <span class="at">env_type =</span> <span class="st">"conda"</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>    <span class="at">env_name =</span> <span class="st">"test-condaenv"</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"reticulate"</span>, <span class="st">"system"</span>,<span class="st">"environment"</span>), <span class="co"># choose one of them, default is "reticulate"</span></span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>    <span class="at">env_file =</span> <span class="cn">NULL</span> <span class="co"># path to environment.yml file, used when method = "environment"</span></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>    <span class="at">python_version =</span> <span class="cn">NULL</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>    <span class="at">packages =</span> <span class="fu">c</span>(</span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>        <span class="st">"pandas"</span> <span class="ot">=</span> <span class="st">"1.3"</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>        <span class="st">"numpy"</span> <span class="ot">=</span> <span class="st">"any"</span></span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a>    ),</span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>    <span class="at">recreate =</span> <span class="cn">FALSE</span>, <span class="co"># whether to remove the existing environment and recreate it</span></span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a>    <span class="at">use_conda_forge =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
+<span id="cb26-15"><a href="#cb26-15" tabindex="-1"></a>) </span>
+<span id="cb26-16"><a href="#cb26-16" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" tabindex="-1"></a>reticualte<span class="sc">::</span><span class="fu">use_condaenv</span>(<span class="st">"test-condaenv"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Or use virtualenv via reticulate</span></span>
 <span><span class="fu"><a href="../reference/SetupPyEnv.html">SetupPyEnv</a></span><span class="op">(</span></span>
 <span>    env_type <span class="op">=</span> <span class="st">"venv"</span>, </span>
@@ -388,7 +773,7 @@ are supported.</p>
 <p>You can use <code><a href="../reference/ListPyEnv.html">ListPyEnv()</a></code> to list all the Python
 environments you have set up. Both conda and virtual environments are
 supported.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Unix-like systems</span></span>
 <span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#                 name                                                  python  type</span></span>
@@ -396,7 +781,7 @@ supported.</p>
 <span><span class="co"># 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda</span></span>
 <span><span class="co"># 3          test-venv         /home/user/miniconda3/envs/test-venv/bin/python  venv</span></span></code></pre></div>
 <p>Show the conda environments only:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Unix-like systems</span></span>
 <span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span>env_type <span class="op">=</span> <span class="st">"conda"</span><span class="op">)</span></span>
 <span><span class="co">#                 name                                                  python  type</span></span>
@@ -405,79 +790,8 @@ supported.</p>
 <p>If the virtual environment isn’t installed in the default location,
 you can specify the location of the virtual environment with the
 <code>venv_locations</code> parameter.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span>env_type <span class="op">=</span> <span class="st">"venv"</span>, venv_locations <span class="op">=</span><span class="st">"~/here_is_a_dir/.virtualenvs"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="finding-the-optimal-number-of-principle-components">Finding the Optimal Number of Principle Components<a class="anchor" aria-label="anchor" href="#finding-the-optimal-number-of-principle-components"></a>
-</h2>
-<p>Usually the number if principle components (PCs) is manually set to
-10 or 20 according to the elbow plot. However, it is not always the case
-that the PCs with the highest variance are the most informative. Here is
-a function to help you find the optimal number of PCs.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ndims</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FindRobustElbow.html">FindRobustElbow</a></span><span class="op">(</span></span>
-<span>  obj <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  ndims <span class="op">=</span> <span class="fl">50</span> </span>
-<span><span class="op">)</span></span>
-<span><span class="co"># ── Method Results </span></span>
-<span><span class="co"># ℹ Method 1A (Cumulative Variance &gt; 90%): 1:40</span></span>
-<span><span class="co"># ℹ Method 1B (Variance &gt; Mean): 1:11</span></span>
-<span><span class="co"># ℹ Method 1C (Variance &gt; 2*SD): 1:4</span></span>
-<span><span class="co"># ℹ Method 2 (Second Derivative): 1:2</span></span>
-<span><span class="co"># ℹ Method 3 (Distance-based): 1:8</span></span>
-<span><span class="co"># ✔ Final Recommended Dimensions:  1:35</span></span>
-<span></span>
-<span><span class="co"># ── Summary </span></span>
-<span><span class="co"># ℹ Cumulative variance at 35 PCs: 84.8%</span></span>
-<span><span class="co"># ℹ Variance explained by PC35: 1.09%</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ndims</span><span class="op">)</span></span>
-<span><span class="co"># 35</span></span></code></pre></div>
-<p>This function will draw an elbow plot with each method and the
-recommended number of PCs. You can also use the <code>ndims</code>
-parameter to specify the maximum number of PCs to be tested. The default
-value is <code>50</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/elbow.png"</span><span class="op">)</span></span></code></pre></div>
-<p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/elbow.png)" class="external-link"><img src="example_figures/elbow.png" fig-align="center" width="600" alt="elbow"></a></p>
-</div>
-<div class="section level2">
-<h2 id="setting-and-retriving-package-options">Setting and Retriving Package Options<a class="anchor" aria-label="anchor" href="#setting-and-retriving-package-options"></a>
-</h2>
-<p>Currently, 7 package options are provided:</p>
-<ul>
-<li>
-<code>verbose</code>: Whether to print the progress of the function.
-Default is <code>TRUE</code>.</li>
-<li>
-<code>seed</code>: The random seed used in the function. Default is
-<code>123L</code>.</li>
-<li>
-<code>timeout</code>: The maximum timeout time when downloading
-data. Default is <code>180L</code>.</li>
-</ul>
-<p>These options can be modified using either the
-<code>setFuncOption</code> or <code>Options</code> function (the former
-is recommended).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/setFuncOption.html">setFuncOption</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">321L</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>SigBridgeR.seed <span class="op">=</span> <span class="fl">321L</span><span class="op">)</span></span></code></pre></div>
-<p><code>setFuncOption</code> automatically detects the prefix, so
-parameters with a package name prefix are also compatible.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/setFuncOption.html">setFuncOption</a></span><span class="op">(</span>SigBridgeR.seed <span class="op">=</span> <span class="fl">321L</span><span class="op">)</span></span></code></pre></div>
-<p><code>getFuncOption</code> is used to retrieve the global parameters
-of SigBridgeR.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"seed"</span><span class="op">)</span></span>
-<span><span class="co"># 321</span></span>
-<span></span>
-<span><span class="co"># * Auto-detect prefix </span></span>
-<span><span class="fu"><a href="../reference/getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"SigBridgeR.seed"</span><span class="op">)</span></span>
-<span><span class="co"># 321</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

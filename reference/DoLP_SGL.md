@@ -75,6 +75,8 @@ DoLP_SGL(
 
   - seed: Random seed for reproducibility (default: `123L`)
 
+  - assay: Assay to use for clustering (default: `"RNA"`)
+
 ## Value
 
 A list containing:

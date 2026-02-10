@@ -4,7 +4,7 @@
 Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:
 GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![](https://img.shields.io/badge/devel%20version-3.2.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
+[![](https://img.shields.io/badge/devel%20version-3.3.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![SigBridgeR status
 badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
 [![R CMD
@@ -28,7 +28,7 @@ of the latest features and bug fixes.
 
 1.  Install the development version from GitHub:
 
-``` r
+``` R
 if (!requireNamespace("pak")) {
   install.packages(
     "pak",
@@ -43,9 +43,9 @@ if (!requireNamespace("pak")) {
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
 
-2.  Install from r-universe:
+1.  Install from r-universe:
 
-``` r
+``` R
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
@@ -53,7 +53,7 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 
 For better performance:
 
-``` r
+``` R
 pak::pkg_install(c(
   # faster computation
   "sparseMatrixStats",
@@ -72,9 +72,9 @@ pak::pkg_install(c(
 ))
 ```
 
-For seamless integration with other file types such as `.h5ad`
+For seamless integration with other file types such as `.h5ad`:
 
-``` r
+``` R
 pak::pkg_install("anndata")
 # or
 pak::pkg_install("anndataR") # both are supported
@@ -82,7 +82,7 @@ pak::pkg_install("anndataR") # both are supported
 
 For visualization:
 
-``` r
+``` R
 pak::pkg_install(c(
   "ggplot2",
   "randomcoloR", # or RColorBrewer
@@ -93,13 +93,43 @@ pak::pkg_install(c(
 ))
 ```
 
-To reproduce the tutorial to learn more usage
+To use the built-in cell annotation methods:
 
-``` r
+``` R
+pak::pkg_install(c(
+  # SingleR
+  "SingleR-inc/SingleR",
+  "celldex",
+  # mLLMCelltype
+  "mLLMCelltype",
+  "plyr",
+  # CellTypist
+  "reticulate",
+  "AnnDataR"
+))
+```
+
+To add custom extension functions to SigBridgeR:
+
+``` R
+pak::pkg_install(c(
+  "tictoc",
+  "codetools",
+  "knitr",
+  "lintr",
+  "rstudioapi",
+  "yonicd/tidycheckUsage"
+))
+```
+
+To reproduce the tutorial to learn more usage:
+
+``` R
 pak::pkg_install(c(
   "zeallot",
   "here",
-  "org.Hs.eg.db"
+  "org.Hs.eg.db",
+  "processx"
 ))
 ```
 
@@ -107,12 +137,12 @@ pak::pkg_install(c(
 
 Get Started:
 
+- View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 - [A Quick Started
   Guide](https://wanglabcsu.github.io/sigbridger/vignettes/Quick_Start.md)
 - [Full
   Tutorial](https://wanglabcsu.github.io/sigbridger/vignettes/Full_Tutorial.md)
   for more details
-- View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 - Use `?SigBridgeR::function_name` to access the help documents in R.
 
 If you encounter problems, please check:
@@ -148,6 +178,13 @@ Functions for preprocessing bulk and single-cell RNA-seq data.
   [`AggregateDupCols()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
   [`AggregateDups()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
   : Aggregate Rows or Columns with Duplicate Names
+- [`ChooseNormalization()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseNormalization.md)
+  : Data-Driven Selection of Single-Cell Normalization Methods
+- [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.data.frame()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.Matrix()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.Seurat()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  : Integrate Single-Cell Datasets
 
 ## Result Integration & Visualization
 
@@ -161,18 +198,12 @@ Merge and visualize screening results across methods or conditions.
   : ScreenUpset - Visualize cell type intersections from screened Seurat
   object
 
-## Screening Framework
-
-Core functions for phenotype-driven single-cell screening and method
-registration.
-
-- [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
-  : Single-Cell Data Screening
-
 ## Screening Methods
 
 Built-in screening algorithms.
 
+- [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
+  : Single-Cell Data Screening
 - [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md)
   : Perform LP-SGL Screening Analysis
 - [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md)
@@ -190,8 +221,6 @@ Built-in screening algorithms.
 
 ## Seurat Object Utilities
 
-Helper functions to extend or annotate Seurat objects safely.
-
 - [`AddMetaFeature()`](https://wanglabcsu.github.io/sigbridger/reference/AddMetaFeature.md)
   : Add Gene-Level Metadata to Seurat Object (Vectorized, ...-based)
 - [`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
@@ -199,6 +228,19 @@ Helper functions to extend or annotate Seurat objects safely.
 - [`FindRobustElbow()`](https://wanglabcsu.github.io/sigbridger/reference/FindRobustElbow.md)
   : Automatically determine optimal PCA dimensions using multiple robust
   methods
+
+## Annotate Cell Types in Single-cell Datasets
+
+Built-in annotationa algorithms.
+
+- [`SCAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotate.md)
+  : Unified Interface for Single-Cell Annotation Methods
+- [`CellTypistAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.md)
+  : Annotate Cell Types Using CellTypist (Python Backend)
+- [`SingleRAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SingleRAnnotate.md)
+  : Annotate Single-Cell Data Using SingleR
+- [`mLLMCelltypeAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/mLLMCelltypeAnnotate.md)
+  : Annotate Cell Types Using Multi-LLM Consensus Approach
 
 ## Reference Data & External Resources
 
@@ -218,12 +260,30 @@ Manage Python environments for integrated R/Python workflows.
 
 ## Extension Tools
 
-Other functions for extending SigBridgeR.
-
+- [`InterceptStrategy()`](https://wanglabcsu.github.io/sigbridger/reference/InterceptStrategy.md)
+  : Inspect Registered Strategy Environments
+- [`Register()`](https://wanglabcsu.github.io/sigbridger/reference/Register.md)
+  : Unified Registration Interface for Strategy Methods
 - [`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
   : Register a Custom Screening Method for Phenotype-Driven Analysis
+- [`RegisterAnnoMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterAnnoMethod.md)
+  : Register an Annotation Method into the Strategy Registry
+- [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md)
+  : Register a Seurat Processing Strategy
 - [`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md)
   : Validate Custom Screening Function Compliance
+- [`TemplateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.md)
+  : Generate a Template Screening Function with Optional Roxygen2
+  Documentation
+
+## Registry
+
+Extended registry for SigBridgeR
+
+- [`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md)
+  : Preprocessing Strategy Registry for Single-Cell Workflows
+- [`SCAnnotateStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotateStrategy.md)
+  : Registry of Cell Type Annotation Methods
 - [`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md)
   : Registry of Phenotype-Associated Cell Screening Methods
 
@@ -235,6 +295,8 @@ Get and set global options for SigBridgeR behavior.
   : Configuration Functions for SigBridgeR Package
 - [`setFuncOption()`](https://wanglabcsu.github.io/sigbridger/reference/setFuncOption.md)
   : Configuration Functions for SigBridgeR Package
+- [`setThreads()`](https://wanglabcsu.github.io/sigbridger/reference/setThreads.md)
+  : Configure Parallel Execution Backends
 
 # Articles
 
@@ -251,4 +313,6 @@ Get and set global options for SigBridgeR behavior.
   Utils](https://wanglabcsu.github.io/sigbridger/articles/Other_Function_Details.md):
 - [Quick Start Guide for
   SigBridgeR](https://wanglabcsu.github.io/sigbridger/articles/Quick_Start.md):
+- [Application of SigBridgeR to single-cell spatial transcriptomics
+  data](https://wanglabcsu.github.io/sigbridger/articles/Spatial_Transcriptome.md):
 - [Troubleshooting](https://wanglabcsu.github.io/sigbridger/articles/Troubleshooting.md):

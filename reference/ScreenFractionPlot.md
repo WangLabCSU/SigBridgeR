@@ -19,7 +19,6 @@ ScreenFractionPlot(
   stack_width = 0.85,
   x_text_angle = 45,
   axis_linewidth = 0.8,
-  legend_position = "right",
   x_lab = NULL,
   y_lab = "Fraction of Status",
   ncol = 2, # number of columns for facet wrap
@@ -63,7 +62,8 @@ ScreenFractionPlot(
 - plot_title:
 
   Plot title (default: "Screen Fraction"). When multiple screen types,
-  can be a vector of titles or single title (will append screen type).
+  can be a vector of titles or single title (will append screen type
+  prefix).
 
 - stack_width:
 
@@ -76,10 +76,6 @@ ScreenFractionPlot(
 - axis_linewidth:
 
   Axis line thickness (default: 0.8).
-
-- legend_position:
-
-  Legend position (default: "right").
 
 - x_lab:
 

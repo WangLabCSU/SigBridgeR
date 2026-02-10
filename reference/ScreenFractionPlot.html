@@ -13,7 +13,7 @@ screen types visualization."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,6 @@ screen types visualization.</p>
 <span>  stack_width <span class="op">=</span> <span class="fl">0.85</span>,</span>
 <span>  x_text_angle <span class="op">=</span> <span class="fl">45</span>,</span>
 <span>  axis_linewidth <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  legend_position <span class="op">=</span> <span class="st">"right"</span>,</span>
 <span>  x_lab <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_lab <span class="op">=</span> <span class="st">"Fraction of Status"</span>,</span>
 <span>  ncol <span class="op">=</span> <span class="fl">2</span>, <span class="co"># number of columns for facet wrap</span></span>
@@ -113,7 +112,7 @@ Must match metadata column(s) (case-sensitive, e.g., "scissor" for Scissor resul
 
 <dt id="arg-plot-title">plot_title<a class="anchor" aria-label="anchor" href="#arg-plot-title"></a></dt>
 <dd><p>Plot title (default: "Screen Fraction"). When multiple screen types,
-can be a vector of titles or single title (will append screen type).</p></dd>
+can be a vector of titles or single title (will append screen type prefix).</p></dd>
 
 
 <dt id="arg-stack-width">stack_width<a class="anchor" aria-label="anchor" href="#arg-stack-width"></a></dt>
@@ -126,10 +125,6 @@ can be a vector of titles or single title (will append screen type).</p></dd>
 
 <dt id="arg-axis-linewidth">axis_linewidth<a class="anchor" aria-label="anchor" href="#arg-axis-linewidth"></a></dt>
 <dd><p>Axis line thickness (default: 0.8).</p></dd>
-
-
-<dt id="arg-legend-position">legend_position<a class="anchor" aria-label="anchor" href="#arg-legend-position"></a></dt>
-<dd><p>Legend position (default: "right").</p></dd>
 
 
 <dt id="arg-x-lab">x_lab<a class="anchor" aria-label="anchor" href="#arg-x-lab"></a></dt>

@@ -111,6 +111,8 @@ DoScissor(
 
   - `seed`: For reproducibility, default is `123L`
 
+  - `assay`: Assay to use for single-cell data. Defaults to \`"RNA"
+
 ## Value
 
 A list containing:

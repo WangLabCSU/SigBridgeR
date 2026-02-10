@@ -6,6 +6,7 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Optimal_Params.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Other_Function_Details.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Quick_Start.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/articles/Spatial_Transcriptome.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Troubleshooting.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/index.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/authors.html</loc></url>
@@ -13,6 +14,8 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/AddMetaFeature.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/AddMisc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/ChooseNormalization.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASEnvSet.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASFindPy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASModelDetect.html</loc></url>
@@ -29,6 +32,7 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/FilterTumorCell.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/FindRobustElbow.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/GetSlotNames.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/InterceptStrategy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ListPyEnv.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/LoadRefData.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/MakeUniqueName.html</loc></url>
@@ -37,16 +41,24 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/QCFilter.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/Register.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/RegisterAnnoMethod.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/SCAnnotate.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/SCAnnotateStrategy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/Screen.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ScreenFractionPlot.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ScreenUpset.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SetupPyEnv.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-package.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/SingleRAnnotate.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.html</loc></url>
@@ -54,6 +66,9 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/getFuncOption.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/get_names_4_ids.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/index.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/mLLMCelltypeAnnotate.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/normalize_metric.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/setFuncOption.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/setThreads.html</loc></url>
 </urlset>
 

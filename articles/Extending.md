@@ -3,7 +3,33 @@
 This document introduces a guide for extending SigBridgeR with custom
 algorithms.
 
-## Installation
+## Too Long; Didn’t Read
+
+(auto dispatch)
+
+Extend `SCPreProcess`: key = func
+
+``` r
+Register(h = Seurat::RunHarmony)
+```
+
+Extend `SCAnnotate`: key = func
+
+``` r
+Register(my = my_function)
+```
+
+Extend `Screen`: key = func
+
+``` r
+TemplateScreenFunc() # create a file
+ValidateScreenFunc(my_function)
+Register(my = my_function)
+```
+
+## Extend Screening Methods
+
+### Installation
 
 It’s recommended to install these packages for checking the code
 
@@ -17,7 +43,7 @@ pak::pkg_install(c(
 ))
 ```
 
-## Prepare a custom function
+### Prepare a custom function
 
 ``` r
 library(SigBridgeR)
@@ -26,6 +52,9 @@ library(SigBridgeR)
 After the v3.2.0 update, SigBridgeR supports registering custom
 algorithms for screening phenotype-associated cell method into the
 package. Let’s do this with a detailed example:
+
+(Template can be obtained via `TemplateScreenFunc`, which will create a
+file and open it in the editor.)
 
 ``` r
 my_screen_function <- function(
@@ -162,7 +191,7 @@ ValidateScreenFunc(bad_fun)
 # 3 errors ✖ | 0 warning ✔ | 1 note ✖
 ```
 
-## Registering the function
+### Registering the function
 
 Now we can register the function to the package:
 
@@ -200,14 +229,16 @@ Details of the arguments:
 Let’s check whether it has indeed been registered
 
 ``` r
-GetExistingStrategy()
+tbl <- InterceptStrategy("ScreenStrategy")
+# A tibble: 22 × 4
 ```
 
 ``` r
+names(ScreenStrategy)
 # [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"
 ```
 
-## Use the function
+### Use the function
 
 Now we can use the function in the `Screen` function:
 
@@ -254,3 +285,87 @@ my_res$scRNA_data |> class()
 If you still have questions, please use GitHub
 [Issues](https://github.com/WangLabCSU/SigBridgeR/issues) or
 [Discussions](https://github.com/WangLabCSU/SigBridgeR/discussions).
+
+## Extend Seurat Methods
+
+In general, any Seurat function can be registered for use within
+`SCPreProcess`. However, due to the character-length limitation of the
+pipeline code string, at most **52** functions can be registered—one for
+each uppercase and lowercase letter (A–Z, a–z).
+
+By default, the registry is defined as follows:
+
+**Pipeline Code Table:**
+
+| Code  | Function               | Description                           |
+|-------|------------------------|---------------------------------------|
+| **o** | `CreateSeuratObject`   | **Required.** Must be the first step. |
+| **n** | `NormalizeData`        | Standard normalization.               |
+| **s** | `ScaleData`            | Scales data for PCA.                  |
+| **v** | `FindVariableFeatures` | Selects highly variable genes.        |
+| **p** | `RunPCA`               | Principal Component Analysis.         |
+| **e** | `FindNeighbors`        | Computes SNN graph.                   |
+| **c** | `FindClusters`         | Louvain algorithm clustering.         |
+| **t** | `RunTSNE`              | t-SNE reduction.                      |
+| **u** | `RunUMAP`              | UMAP reduction.                       |
+| **r** | `SCTransform`          | **SCT workflow.** Replaces n, s, v.   |
+
+For example, if we need to use
+[`Seurat::LoadXenium`](https://satijalab.org/seurat/reference/ReadXenium.html)
+to load Xenium data for screening, register this function first.
+
+``` r
+RegisterSeuratMethod(x = Seurat::LoadXenium)
+# ✔ Registered x
+```
+
+To check:
+
+``` r
+names(SCPreProcessStrategy)
+#  [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"
+```
+
+``` r
+tbl <- InterceptStrategy("SCPreProcessStrategy")
+# tibble [12 × 2]
+```
+
+## Extend Cell Type Annotation Methods
+
+By default, SigBridgeR includes three built-in cell type annotation
+algorithms: **SingleR**, **CellTypist**, and **mLLMCelltype**—all of
+which require additional installation and dependencies (See
+[README](https://wanglabcsu.github.io/SigBridgeR/index.html)). They can
+all be invoked through the unified interface function `SCAnnotate`.
+
+Extending cell annotation method is also very easy:
+
+``` r
+my_method <- function(seurat_obj, ...) {
+  # placeholder
+  return(seurat_obj)
+}
+
+RegisterAnnoMethod(
+  my = my_method
+)
+# ✔ Registered `my`
+```
+
+To check:
+
+``` r
+names(SCAnnotateStrategy)
+# [1] "my"           "mLLMCelltype" "CellTypist"   "SingleR"
+```
+
+Here are some recommendations for user-defined cell annotation
+functions.
+
+1.  The first input and the first output must both be Seurat objects.
+2.  If multiple objects need to be returned, it is recommended to use a
+    `list` format.
+3.  Use
+    [`tidycheckUsage::tidycheckUsage()`](https://rdrr.io/pkg/tidycheckUsage/man/tidycheckUsage.html)
+    to check the function’s syntax.

@@ -1,9 +1,9 @@
 # Create or Use Python Environment with Required Packages
 
-Sets up a Python environment with specified packages for DEGAS screening
-methods. This function can create new environments or reuse existing
-ones, supporting both Conda and venv environment types. It ensures all
-required dependencies are properly installed and verified.
+Sets up a Python environment with specified packages. This function can
+create new environments or reuse existing ones, supporting both Conda
+and venv environment types. It ensures all required dependencies are
+properly installed and verified.
 
 Default method for unsupported environment types. Throws an informative
 error with supported environment types.
@@ -19,7 +19,7 @@ SetupPyEnv(env_type = c("conda", "venv"), ...)
 - env_type:
 
   Character string specifying the type of Python environment to create
-  or use. One of: \`"conda"\`, \`"venv"\`.
+  or use. One of: `"conda"`, `"venv"`.
 
 - ...:
 
@@ -37,12 +37,17 @@ This function provides a comprehensive solution for Python environment
 management in R projects, particularly for machine learning workflows
 requiring TensorFlow. Key features include:
 
-\- \*\*Environment Creation\*\*: Automatically creates new environments
-or reuses existing ones with the same name - \*\*Package Management\*\*:
-Installs specified Python packages with version pinning support -
-\*\*Verification\*\*: Validates environment setup and package
-installations - \*\*Flexible Methods\*\*: Supports different backend
-methods for environment creation (reticulate vs system calls)
+- **Environment Creation**: Automatically creates new environments or
+  reuses existing ones with the same name
+
+- **Package Management**: Installs specified Python packages with
+  version pinning support
+
+- **Verification**: Validates environment setup and package
+  installations
+
+- **Flexible Methods**: Supports different backend methods for
+  environment creation (reticulate vs system calls)
 
 The function uses S3 method dispatch to handle different environment
 types, allowing for extensible support of additional environment
@@ -50,8 +55,9 @@ managers in the future.
 
 ## See also
 
-\[reticulate::conda_create()\], \[reticulate::virtualenv_create()\] for
-underlying environment creation functions.
+[`reticulate::conda_create()`](https://rstudio.github.io/reticulate/reference/conda-tools.html),
+[`reticulate::virtualenv_create()`](https://rstudio.github.io/reticulate/reference/virtualenv-tools.html)
+for underlying environment creation functions.
 
 ## Examples
 

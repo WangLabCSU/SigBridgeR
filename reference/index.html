@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,6 +99,20 @@
 
         </dt>
         <dd>Aggregate Rows or Columns with Duplicate Names</dd>
+
+        <dt>
+
+          <code><a href="ChooseNormalization.html">ChooseNormalization()</a></code>
+
+        </dt>
+        <dd>Data-Driven Selection of Single-Cell Normalization Methods</dd>
+
+        <dt>
+
+          <code><a href="SCIntegrate.html">SCIntegrate()</a></code> <code><a href="SCIntegrate.html">SCIntegrate.data.frame()</a></code> <code><a href="SCIntegrate.html">SCIntegrate.Matrix()</a></code> <code><a href="SCIntegrate.html">SCIntegrate.Seurat()</a></code>
+
+        </dt>
+        <dd>Integrate Single-Cell Datasets</dd>
       </dl></div><div class="section level2">
       <h2 id="result-integration-visualization">Result Integration &amp; Visualization<a class="anchor" aria-label="anchor" href="#result-integration-visualization"></a></h2>
 
@@ -130,9 +144,9 @@
         </dt>
         <dd>ScreenUpset - Visualize cell type intersections from screened Seurat object</dd>
       </dl></div><div class="section level2">
-      <h2 id="screening-framework">Screening Framework<a class="anchor" aria-label="anchor" href="#screening-framework"></a></h2>
+      <h2 id="screening-methods">Screening Methods<a class="anchor" aria-label="anchor" href="#screening-methods"></a></h2>
 
-      <div class="section-desc"><p>Core functions for phenotype-driven single-cell screening and method registration.</p></div>
+      <div class="section-desc"><p>Built-in screening algorithms.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -145,17 +159,8 @@
 
         </dt>
         <dd>Single-Cell Data Screening</dd>
-      </dl></div><div class="section level2">
-      <h2 id="screening-methods">Screening Methods<a class="anchor" aria-label="anchor" href="#screening-methods"></a></h2>
 
-      <div class="section-desc"><p>Built-in screening algorithms.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
+        <dt>
 
           <code><a href="DoLP_SGL.html">DoLP_SGL()</a></code>
 
@@ -206,7 +211,7 @@
       </dl></div><div class="section level2">
       <h2 id="seurat-object-utilities">Seurat Object Utilities<a class="anchor" aria-label="anchor" href="#seurat-object-utilities"></a></h2>
 
-      <div class="section-desc"><p>Helper functions to extend or annotate Seurat objects safely.</p></div>
+
 
       <dl></dl></div><div class="section level2">
 
@@ -233,6 +238,43 @@
 
         </dt>
         <dd>Automatically determine optimal PCA dimensions using multiple robust methods</dd>
+      </dl></div><div class="section level2">
+      <h2 id="annotate-cell-types-in-single-cell-datasets">Annotate Cell Types in Single-cell Datasets<a class="anchor" aria-label="anchor" href="#annotate-cell-types-in-single-cell-datasets"></a></h2>
+
+      <div class="section-desc"><p>Built-in annotationa algorithms.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="SCAnnotate.html">SCAnnotate()</a></code>
+
+        </dt>
+        <dd>Unified Interface for Single-Cell Annotation Methods</dd>
+
+        <dt>
+
+          <code><a href="CellTypistAnnotate.html">CellTypistAnnotate()</a></code>
+
+        </dt>
+        <dd>Annotate Cell Types Using CellTypist (Python Backend)</dd>
+
+        <dt>
+
+          <code><a href="SingleRAnnotate.html">SingleRAnnotate()</a></code>
+
+        </dt>
+        <dd>Annotate Single-Cell Data Using SingleR</dd>
+
+        <dt>
+
+          <code><a href="mLLMCelltypeAnnotate.html">mLLMCelltypeAnnotate()</a></code>
+
+        </dt>
+        <dd>Annotate Cell Types Using Multi-LLM Consensus Approach</dd>
       </dl></div><div class="section level2">
       <h2 id="reference-data-external-resources">Reference Data &amp; External Resources<a class="anchor" aria-label="anchor" href="#reference-data-external-resources"></a></h2>
 
@@ -275,7 +317,7 @@
       </dl></div><div class="section level2">
       <h2 id="extension-tools">Extension Tools<a class="anchor" aria-label="anchor" href="#extension-tools"></a></h2>
 
-      <div class="section-desc"><p>Other functions for extending SigBridgeR.</p></div>
+
 
       <dl></dl></div><div class="section level2">
 
@@ -284,6 +326,20 @@
 
       <dl><dt>
 
+          <code><a href="InterceptStrategy.html">InterceptStrategy()</a></code>
+
+        </dt>
+        <dd>Inspect Registered Strategy Environments</dd>
+
+        <dt>
+
+          <code><a href="Register.html">Register()</a></code>
+
+        </dt>
+        <dd>Unified Registration Interface for Strategy Methods</dd>
+
+        <dt>
+
           <code><a href="RegisterScreenMethod.html">RegisterScreenMethod()</a></code>
 
         </dt>
@@ -291,10 +347,54 @@
 
         <dt>
 
+          <code><a href="RegisterAnnoMethod.html">RegisterAnnoMethod()</a></code>
+
+        </dt>
+        <dd>Register an Annotation Method into the Strategy Registry</dd>
+
+        <dt>
+
+          <code><a href="RegisterSeuratMethod.html">RegisterSeuratMethod()</a></code>
+
+        </dt>
+        <dd>Register a Seurat Processing Strategy</dd>
+
+        <dt>
+
           <code><a href="ValidateScreenFunc.html">ValidateScreenFunc()</a></code>
 
         </dt>
         <dd>Validate Custom Screening Function Compliance</dd>
+
+        <dt>
+
+          <code><a href="TemplateScreenFunc.html">TemplateScreenFunc()</a></code>
+
+        </dt>
+        <dd>Generate a Template Screening Function with Optional Roxygen2 Documentation</dd>
+      </dl></div><div class="section level2">
+      <h2 id="registry">Registry<a class="anchor" aria-label="anchor" href="#registry"></a></h2>
+
+      <div class="section-desc"><p>Extended registry for SigBridgeR</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="SCPreProcessStrategy.html">SCPreProcessStrategy</a></code>
+
+        </dt>
+        <dd>Preprocessing Strategy Registry for Single-Cell Workflows</dd>
+
+        <dt>
+
+          <code><a href="SCAnnotateStrategy.html">SCAnnotateStrategy</a></code>
+
+        </dt>
+        <dd>Registry of Cell Type Annotation Methods</dd>
 
         <dt>
 
@@ -325,6 +425,13 @@
 
         </dt>
         <dd>Configuration Functions for SigBridgeR Package</dd>
+
+        <dt>
+
+          <code><a href="setThreads.html">setThreads()</a></code>
+
+        </dt>
+        <dd>Configure Parallel Execution Backends</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
