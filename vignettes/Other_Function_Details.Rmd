@@ -53,7 +53,7 @@ getFuncOption("SigBridgeR.seed")
 
 ### Basic Usage
 
-```{r,eval=FASLE}
+```{r,eval=FALSE}
 # Auto-configure all backends (default: half cores)
 setThreads()
 
