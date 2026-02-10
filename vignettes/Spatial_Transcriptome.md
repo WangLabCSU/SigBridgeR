@@ -59,7 +59,7 @@ In theory, this workflow could be simplified using `SCPreProcess`;
 however, due to the performance issue reported in [Seurat
 \#10153](https://github.com/satijalab/seurat/issues/10153)—where
 `SCTransform` hangs or slows down significantly when called via
-`do.call` (as `SCPreProcess` does internally)—we instead use a custom
+`do.call` (as `SCPreProc ess` does internally)—we instead use a custom
 workflow here to avoid the slowdown.
 
 (It hasn’t been fixed yet. If it gets resolved, please kindly notify me
@@ -213,7 +213,9 @@ We can now run the screening. Let’s try `Scissor`.
 
 A new file named `Scissor_inputs.RData` will be created, which contains
 the input data for the Scissor algorithm. You can use the intermediate
-data for repeated runs. This is an inherent feature of the `Scissor`.
+data for repeated runs to save time when tuning parameters, avoiding the
+need to re-run the entire pipeline from scratch. This is an inherent
+feature of the `Scissor`.
 
 A new column named `Scissor` will be added to the `meta.data` of the
 Seurat object, with three possible labels: **Positive**, **Negative**,
@@ -222,7 +224,8 @@ survival prognosis**.
 
 ## Visualization of Screened Cells
 
-Finally we can visualize the results.
+Finally we can visualize the results. Here, we provide a brief
+demostration using Seurat’s built-in visualization functions.
 
 Let’s first see the spatial position of the Positive cells.
 
