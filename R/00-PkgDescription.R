@@ -22,6 +22,7 @@
 #'
 #' @author Yuxi Yang \email{15364051195@163.com} ORCID: 0009-0006-1329-1224 (creator, author)
 #'
+#'
 #' @docType package
 #' @name SigBridgeR-package
 #' @aliases SigBridgeR

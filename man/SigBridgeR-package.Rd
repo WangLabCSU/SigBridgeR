@@ -35,7 +35,7 @@ SigBridgeR is licensed under the GPL version 3.0. Please see the LICENSE file fo
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/WangLabCSU/SigBridgeR}
+  \item \url{https://wanglabcsu.github.io/sigbridger}
   \item Report bugs at \url{https://github.com/WangLabCSU/SigBridgeR/issues}
 }
 
