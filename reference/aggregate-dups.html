@@ -185,11 +185,10 @@ Useful for cleaning matrices where both feature and sample duplication may occur
 <span class="r-in"><span>              dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TP53"</span>, <span class="st">"TP53"</span>, <span class="st">"BRCA1"</span>, <span class="st">"ACTB"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                            <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S1"</span>, <span class="st">"S1"</span>, <span class="st">"S2"</span>, <span class="st">"S3"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">AggregateDups</span><span class="op">(</span><span class="va">mat</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> No duplicated column names found.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       S1 S1.1 S2 S3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> TP53   3    3 19 27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BRCA1  3    3 11 15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ACTB   4    4 12 16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       S1 S2 S3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TP53  14 19 27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BRCA1 10 11 15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ACTB  12 12 16</span>
 <span class="r-in"><span><span class="co">#&gt;       S1 S2 S3</span></span></span>
 <span class="r-in"><span><span class="co">#&gt; TP53   5  7  9</span></span></span>
 <span class="r-in"><span><span class="co">#&gt; BRCA1  3  7 11</span></span></span>

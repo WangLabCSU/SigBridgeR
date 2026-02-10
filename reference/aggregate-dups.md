@@ -127,11 +127,10 @@ mat <- matrix(1:16, nrow = 4,
               dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"),
                             c("S1", "S1", "S2", "S3")))
 AggregateDups(mat, method = "sum")
-#> ✔ No duplicated column names found.
-#>       S1 S1.1 S2 S3
-#> TP53   3    3 19 27
-#> BRCA1  3    3 11 15
-#> ACTB   4    4 12 16
+#>       S1 S2 S3
+#> TP53  14 19 27
+#> BRCA1 10 11 15
+#> ACTB  12 12 16
 #>       S1 S2 S3
 #> TP53   5  7  9
 #> BRCA1  3  7 11

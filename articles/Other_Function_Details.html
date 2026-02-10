@@ -117,34 +117,56 @@ of SigBridgeR.</p>
 <div class="section level3">
 <h3 id="setting-threads">Setting Threads<a class="anchor" aria-label="anchor" href="#setting-threads"></a>
 </h3>
-<p>Used to control the number of threads for OpenMP and data.table. By
-default, uses half of the maximum available threads.</p>
-<p>Default:</p>
+<p><code><a href="../reference/setThreads.html">setThreads()</a></code> configures thread counts for OpenMP,
+data.table, and TensorFlow backends. By default, it uses <strong>half of
+available physical cores</strong> to balance performance and system
+responsiveness.</p>
+<div class="section level4">
+<h4 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+</h4>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span></span>
-<span>  n_threads <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  backend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"openmp"</span>, <span class="st">"dt"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>Example Usage:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span><span class="fl">1L</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># ── System Threads Config ───────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#   OpenMP version (_OPENMP)       201511</span></span>
-<span><span class="co">#   omp_get_num_procs()            192</span></span>
-<span><span class="co">#   R_DATATABLE_NUM_PROCS_PERCENT  unset (default 50)</span></span>
-<span><span class="co">#   R_DATATABLE_NUM_THREADS        unset</span></span>
-<span><span class="co">#   R_DATATABLE_THROTTLE           unset (default 1024)</span></span>
-<span><span class="co">#   omp_get_thread_limit()         2147483647</span></span>
-<span><span class="co">#   omp_get_max_threads()          192</span></span>
-<span><span class="co">#   OMP_THREAD_LIMIT               unset</span></span>
-<span><span class="co">#   OMP_NUM_THREADS                1</span></span>
-<span><span class="co">#   RestoreAfterFork               true</span></span>
-<span><span class="co">#   data.table is using 1 threads with throttle==1024. See ?setDTthreads.</span></span>
+<code class="sourceCode R"><span><span class="co"># Auto-configure all backends (default: half cores)</span></span>
+<span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── Changes </span></span>
-<span><span class="co"># • "OMP_NUM_THREADS": 1 -&gt; 1</span></span>
-<span><span class="co"># • "data.table": 96 -&gt; 1</span></span></code></pre></div>
+<span><span class="co"># Set explicit thread count</span></span>
+<span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Configure specific backends only</span></span>
+<span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span>threads <span class="op">=</span> <span class="fl">4</span>, backend <span class="op">=</span> <span class="st">"dt"</span><span class="op">)</span>      <span class="co"># data.table only</span></span>
+<span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span>threads <span class="op">=</span> <span class="fl">4</span>, backend <span class="op">=</span> <span class="st">"openmp"</span><span class="op">)</span>  <span class="co"># OpenMP only</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="tensorflow-optimization">TensorFlow Optimization<a class="anchor" aria-label="anchor" href="#tensorflow-optimization"></a>
+</h4>
+<p>⚠️ <strong>Must configure BEFORE importing TensorFlow</strong>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/setThreads.html">setThreads</a></span><span class="op">(</span></span>
+<span>  threads <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  tf_config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    xla <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    inter_op <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>    intra_op <span class="op">=</span> <span class="fl">8</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">tf</span> <span class="op">&lt;-</span> <span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/import.html" class="external-link">import</a></span><span class="op">(</span><span class="st">"tensorflow"</span><span class="op">)</span>  <span class="co"># Import AFTER configuration</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="options">Options<a class="anchor" aria-label="anchor" href="#options"></a>
+</h4>
+<ul>
+<li>
+<code>verbose = FALSE</code>: suppress console output</li>
+<li>Returns invisible list of old/new values for programmatic use</li>
+<li>Additional <code><a href="https://rdrr.io/pkg/data.table/man/openmp-utils.html" class="external-link">data.table::setDTthreads()</a></code> arguments
+accepted via <code>...</code> (e.g., <code>restore = TRUE</code>)</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Tip</strong>: Default half-core allocation prevents
+oversubscription. Use full cores
+(<code>threads = availableCores()</code>) only on dedicated compute
+nodes.</p>
+</blockquote>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -167,7 +189,7 @@ bias from normalized values (lower correlation with dropout rate =
 better).</p></li>
 </ul>
 <p>Exmaple Usage:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sct</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu">SCTransfrom</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
@@ -189,7 +211,7 @@ better).</p></li>
 <span>    dropout_robustness <span class="op">=</span> <span class="fl">0.25</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span> </span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ℹ Using 1088 cells</span></span>
 <span><span class="co"># ℹ Comparing 2 methods: sct and lognorm</span></span>
 <span><span class="co"># ── Method Ranking (Composite Score) </span></span>
@@ -228,7 +250,7 @@ consideration, ranked by expression level.</li>
 10 or 20 according to the elbow plot. However, it is not always the case
 that the PCs with the highest variance are the most informative. Here is
 a function to help you find the optimal number of PCs.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ndims</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FindRobustElbow.html">FindRobustElbow</a></span><span class="op">(</span></span>
 <span>  obj <span class="op">=</span> <span class="va">seurat</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -252,7 +274,7 @@ a function to help you find the optimal number of PCs.</p>
 recommended number of PCs. You can also use the <code>ndims</code>
 parameter to specify the maximum number of PCs to be tested. The default
 value is <code>50</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/elbow.png"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/elbow.png)" class="external-link"><img src="example_figures/elbow.png" fig-align="center" width="600" alt="elbow"></a></p>
 </div>
@@ -268,7 +290,7 @@ execution. As a substitute for the <code><a href="https://satijalab.github.io/se
 object. Support for adding multiple attributes to the
 <code>SeuratObject@misc</code> slot simultaneously.</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># basic usage</span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMisc.html">AddMisc</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"QC_stats"</span> <span class="op">=</span> <span class="va">qc_df</span><span class="op">)</span></span>
 <span></span>
@@ -288,18 +310,18 @@ object. Support for adding multiple attributes to the
 <p>SigBridgeR uses <code><a href="../reference/AddMetaFeature.html">AddMetaFeature()</a></code> to update the
 <code>SeuratObject@assays$RNA@meta.data</code></p>
 <p>Add a new column to the metadata</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gene_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"test"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">seurat_obj</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMetaFeature.html">AddMetaFeature</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"gene_type"</span> <span class="op">=</span> <span class="va">gene_type</span><span class="op">)</span></span></code></pre></div>
 <p>Add a data.frame to the metadata, with the column names as the
 metadata names.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>seurat_obj <span class="ot">&lt;-</span> <span class="fu">AddMetaFeature</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  seurat_obj,</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">gene_type =</span> gene_type, <span class="at">gene_name =</span> <span class="fu">rownames</span>(seurat_obj)</span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>seurat_obj <span class="ot">&lt;-</span> <span class="fu">AddMetaFeature</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  seurat_obj,</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">gene_type =</span> gene_type, <span class="at">gene_name =</span> <span class="fu">rownames</span>(seurat_obj)</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>)</span></code></pre></div>
 <p>Add to different assays</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMetaFeature.html">AddMetaFeature</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"gene_type"</span> <span class="op">=</span> <span class="va">gene_type</span>, assay <span class="op">=</span> <span class="st">"RNA"</span><span class="op">)</span></span>
 <span><span class="va">seurat_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AddMetaFeature.html">AddMetaFeature</a></span><span class="op">(</span><span class="va">seurat_obj</span>, <span class="st">"gene_type"</span> <span class="op">=</span> <span class="va">gene_type</span>, assay <span class="op">=</span> <span class="st">"ATAC"</span><span class="op">)</span></span></code></pre></div>
 <p>If duplicate column names are detected, they will be suffixed with an
@@ -314,7 +336,7 @@ disambiguation.</p>
 </h4>
 <p>When passing raw matrices, the function performs a “join” operation
 based on the union of all genes. Missing values are filled with NA.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create dummy matrices</span></span>
 <span><span class="va">mat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">5</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">10</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"G"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">6</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">10</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"G"</span>, <span class="fl">5</span><span class="op">:</span><span class="fl">14</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -323,7 +345,7 @@ based on the union of all genes. Missing values are filled with NA.</p>
 <span><span class="va">integrated_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCIntegrate.html">SCIntegrate</a></span><span class="op">(</span>BatchA <span class="op">=</span> <span class="va">mat1</span>, BatchB <span class="op">=</span> <span class="va">mat2</span><span class="op">)</span></span>
 <span><span class="co"># default prefixed</span></span>
 <span><span class="va">integrated_mat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCIntegrate.html">SCIntegrate</a></span><span class="op">(</span><span class="va">mat1</span>, <span class="va">mat2</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated_mat</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span>
 <span><span class="co">#     BatchA_C1 BatchA_C2 BatchA_C3 BatchA_C4</span></span>
 <span><span class="co"># G1          3         2         4         5</span></span>
@@ -418,7 +440,7 @@ specific Seurat command:</p>
 <p>If more are needed, see <a href="https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html" class="external-link">A
 Guide for Custom Extensions</a></p>
 <p>Example Usage</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCIntegrate.html">SCIntegrate</a></span><span class="op">(</span></span>
 <span>  <span class="va">obj1</span>, <span class="va">obj2</span>, <span class="co"># -&gt; merge.Seurat</span></span>
 <span>  pipeline <span class="op">=</span> <span class="st">"nsvpi"</span>,</span>
@@ -427,7 +449,7 @@ Guide for Custom Extensions</a></p>
 <span>  k.weight <span class="op">=</span> <span class="fl">50</span>                     <span class="co"># Passed to IntegrateLayers</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>An example using mock data</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">5</span><span class="op">)</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">20</span>,</span>
@@ -449,7 +471,7 @@ Guide for Custom Extensions</a></p>
 <span>  dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  k.weight <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated_seu</span></span>
 <span><span class="co"># An object of class Seurat </span></span>
 <span><span class="co"># 30 features across 110 samples within 1 assay </span></span>
@@ -466,7 +488,7 @@ Guide for Custom Extensions</a></p>
 included and can be applied directly to Seurat objects. Using them
 requires installing additional dependencies. See the <a href="https://wanglabcsu.github.io/SigBridgeR/index.html" class="external-link">README</a>.</p>
 <p>Basic usage:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCAnnotate.html">SCAnnotate</a></span><span class="op">(</span></span>
 <span>  sc <span class="op">=</span> <span class="va">seurat</span>,</span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CellTypist"</span>, <span class="st">"SingleR"</span>, <span class="st">"mLLMCelltype"</span><span class="op">)</span></span>
@@ -483,7 +505,7 @@ arguments.</p>
 </h3>
 <p>This is the direct R wrapper of celltypist.annotate. Unlike
 <code>SCAnnotate</code>, it does not prepare an environment for you.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CellTypistAnnotate.html">CellTypistAnnotate</a></span><span class="op">(</span></span>
 <span>  <span class="va">sc</span>,</span>
 <span>  model <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -535,7 +557,7 @@ be automatically passed through and can be directly supplied to
 <div class="section level3">
 <h3 id="mllmcelltype-annotation">mLLMCelltype Annotation<a class="anchor" aria-label="anchor" href="#mllmcelltype-annotation"></a>
 </h3>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu">mLLMCellTypeAnnotate</span><span class="op">(</span></span>
 <span>  <span class="va">sc</span>,</span>
 <span>  seurat_obj_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -610,7 +632,7 @@ columns.</p>
 <div class="section level3">
 <h3 id="singler-annotation">SingleR Annotation<a class="anchor" aria-label="anchor" href="#singler-annotation"></a>
 </h3>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SingleRAnnotate.html">SingleRAnnotate</a></span><span class="op">(</span></span>
 <span>  <span class="va">sc</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="fu"><a href="../reference/getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span>, <span class="co"># TRUE</span></span>
@@ -666,24 +688,24 @@ columns.</p>
 using Python and require an execution environment. Here is a function to
 help you set up a Python environment. Both Windows and Unix-like systems
 are supported.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="co"># * This is an example of setting up a Python environment using conda</span></span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">SetupPyEnv</span>(</span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>    <span class="at">env_type =</span> <span class="st">"conda"</span>,</span>
-<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>    <span class="at">env_name =</span> <span class="st">"test-condaenv"</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"reticulate"</span>, <span class="st">"system"</span>,<span class="st">"environment"</span>), <span class="co"># choose one of them, default is "reticulate"</span></span>
-<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>    <span class="at">env_file =</span> <span class="cn">NULL</span> <span class="co"># path to environment.yml file, used when method = "environment"</span></span>
-<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>    <span class="at">python_version =</span> <span class="cn">NULL</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>    <span class="at">packages =</span> <span class="fu">c</span>(</span>
-<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>        <span class="st">"pandas"</span> <span class="ot">=</span> <span class="st">"1.3"</span>,</span>
-<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a>        <span class="st">"numpy"</span> <span class="ot">=</span> <span class="st">"any"</span></span>
-<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>    ),</span>
-<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>    <span class="at">recreate =</span> <span class="cn">FALSE</span>, <span class="co"># whether to remove the existing environment and recreate it</span></span>
-<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a>    <span class="at">use_conda_forge =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
-<span id="cb24-15"><a href="#cb24-15" tabindex="-1"></a>) </span>
-<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a></span>
-<span id="cb24-17"><a href="#cb24-17" tabindex="-1"></a>reticualte<span class="sc">::</span><span class="fu">use_condaenv</span>(<span class="st">"test-condaenv"</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="co"># * This is an example of setting up a Python environment using conda</span></span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="fu">SetupPyEnv</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>    <span class="at">env_type =</span> <span class="st">"conda"</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>    <span class="at">env_name =</span> <span class="st">"test-condaenv"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"reticulate"</span>, <span class="st">"system"</span>,<span class="st">"environment"</span>), <span class="co"># choose one of them, default is "reticulate"</span></span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a>    <span class="at">env_file =</span> <span class="cn">NULL</span> <span class="co"># path to environment.yml file, used when method = "environment"</span></span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>    <span class="at">python_version =</span> <span class="cn">NULL</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a>    <span class="at">packages =</span> <span class="fu">c</span>(</span>
+<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a>        <span class="st">"pandas"</span> <span class="ot">=</span> <span class="st">"1.3"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a>        <span class="st">"numpy"</span> <span class="ot">=</span> <span class="st">"any"</span></span>
+<span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a>    ),</span>
+<span id="cb23-12"><a href="#cb23-12" tabindex="-1"></a>    <span class="at">recreate =</span> <span class="cn">FALSE</span>, <span class="co"># whether to remove the existing environment and recreate it</span></span>
+<span id="cb23-13"><a href="#cb23-13" tabindex="-1"></a>    <span class="at">use_conda_forge =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
+<span id="cb23-15"><a href="#cb23-15" tabindex="-1"></a>) </span>
+<span id="cb23-16"><a href="#cb23-16" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" tabindex="-1"></a>reticualte<span class="sc">::</span><span class="fu">use_condaenv</span>(<span class="st">"test-condaenv"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Or use virtualenv via reticulate</span></span>
 <span><span class="fu"><a href="../reference/SetupPyEnv.html">SetupPyEnv</a></span><span class="op">(</span></span>
 <span>    env_type <span class="op">=</span> <span class="st">"venv"</span>, </span>
@@ -699,7 +721,7 @@ are supported.</p>
 <p>You can use <code><a href="../reference/ListPyEnv.html">ListPyEnv()</a></code> to list all the Python
 environments you have set up. Both conda and virtual environments are
 supported.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Unix-like systems</span></span>
 <span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#                 name                                                  python  type</span></span>
@@ -707,7 +729,7 @@ supported.</p>
 <span><span class="co"># 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda</span></span>
 <span><span class="co"># 3          test-venv         /home/user/miniconda3/envs/test-venv/bin/python  venv</span></span></code></pre></div>
 <p>Show the conda environments only:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * Unix-like systems</span></span>
 <span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span>env_type <span class="op">=</span> <span class="st">"conda"</span><span class="op">)</span></span>
 <span><span class="co">#                 name                                                  python  type</span></span>
@@ -716,7 +738,7 @@ supported.</p>
 <p>If the virtual environment isn’t installed in the default location,
 you can specify the location of the virtual environment with the
 <code>venv_locations</code> parameter.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span>env_type <span class="op">=</span> <span class="st">"venv"</span>, venv_locations <span class="op">=</span><span class="st">"~/here_is_a_dir/.virtualenvs"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -743,7 +765,7 @@ data.</li>
 the bulk RNA expression matrix, and the clinical phenotype data are
 loaded all at once. These data are combined into a list and
 returned.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span></span>
 <span>    data_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"survival"</span><span class="op">)</span>,</span>
 <span>    path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -783,7 +805,7 @@ returned.</p>
 <p>We recommend using the <code>zeallot</code> package’s
 <code>%&lt;-%</code> function to assign values and rename them
 simultaneously.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mat_exam</span>, <span class="va">bulk</span>, <span class="va">pheno</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span>  <span class="fu"><a href="../reference/LoadRefData.html">LoadRefData</a></span><span class="op">(</span></span>
@@ -792,6 +814,105 @@ simultaneously.</p>
 <span>    cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    timeout <span class="op">=</span> <span class="fl">60</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="aggregating-duplicate-rows-or-columns">Aggregating Duplicate Rows or Columns<a class="anchor" aria-label="anchor" href="#aggregating-duplicate-rows-or-columns"></a>
+</h3>
+<p>These functions collapse duplicated row names (e.g., gene symbols) or
+column names (e.g., sample IDs) in expression matrices and count tables
+using configurable aggregation methods.</p>
+<div class="section level4">
+<h4 id="core-functions">Core Functions<a class="anchor" aria-label="anchor" href="#core-functions"></a>
+</h4>
+<table class="table">
+<colgroup>
+<col width="52%">
+<col width="47%">
+</colgroup>
+<thead><tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code><a href="../reference/aggregate-dups.html">AggregateDupRows()</a></code></td>
+<td>Merge rows with identical names (e.g., duplicate genes)</td>
+</tr>
+<tr class="even">
+<td><code><a href="../reference/aggregate-dups.html">AggregateDupCols()</a></code></td>
+<td>Merge columns with identical names (e.g., duplicate samples)</td>
+</tr>
+<tr class="odd">
+<td><code><a href="../reference/aggregate-dups.html">AggregateDups()</a></code></td>
+<td>Convenience wrapper: merge rows &amp; columns</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="supported-methods">Supported Methods<a class="anchor" aria-label="anchor" href="#supported-methods"></a>
+</h4>
+<ul>
+<li>
+<code>"max"</code> (default), <code>"sum"</code>,
+<code>"mean"</code>, <code>"median"</code>, <code>"first"</code>
+</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="basic-usage-1">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage-1"></a>
+</h4>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Example matrix with duplicate genes (rows) and samples (columns)</span></span>
+<span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, nrow <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TP53"</span>, <span class="st">"TP53"</span>, <span class="st">"BRCA1"</span>, <span class="st">"ACTB"</span><span class="op">)</span>,</span>
+<span>                  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S1"</span>, <span class="st">"S1"</span>, <span class="st">"S2"</span>, <span class="st">"S3"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mat</span></span>
+<span><span class="co">#       S1 S1 S2 S3</span></span>
+<span><span class="co"># TP53   1  5  9 13</span></span>
+<span><span class="co"># TP53   2  6 10 14</span></span>
+<span><span class="co"># BRCA1  3  7 11 15</span></span>
+<span><span class="co"># ACTB   4  8 12 16</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Collapse duplicate genes using sum</span></span>
+<span><span class="fu"><a href="../reference/aggregate-dups.html">AggregateDupRows</a></span><span class="op">(</span><span class="va">mat</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span></span>
+<span><span class="co">#       S1 S1.1 S2 S3</span></span>
+<span><span class="co"># TP53   2    6 10 14</span></span>
+<span><span class="co"># BRCA1  3    7 11 15</span></span>
+<span><span class="co"># ACTB   4    8 12 16</span></span>
+<span></span>
+<span><span class="co"># Collapse duplicate samples using max</span></span>
+<span><span class="fu"><a href="../reference/aggregate-dups.html">AggregateDupCols</a></span><span class="op">(</span><span class="va">mat</span>, method <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span>
+<span><span class="co">#       S1 S2 S3</span></span>
+<span><span class="co"># TP53   5  9 13</span></span>
+<span><span class="co"># TP53   6 10 14</span></span>
+<span><span class="co"># BRCA1  7 11 15</span></span>
+<span><span class="co"># ACTB   8 12 16</span></span>
+<span></span>
+<span><span class="co"># Full deduplication in one step</span></span>
+<span><span class="fu"><a href="../reference/aggregate-dups.html">AggregateDups</a></span><span class="op">(</span><span class="va">mat</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span></span>
+<span><span class="co">#       S1 S2 S3</span></span>
+<span><span class="co"># TP53  14 19 27</span></span>
+<span><span class="co"># BRCA1 10 11 15</span></span>
+<span><span class="co"># ACTB  12 12 16</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h4>
+<ul>
+<li>✅ Handles <code>matrix</code>, <code>data.frame</code>, and S4
+<code>Matrix</code> classes (e.g., <code>dgCMatrix</code>)</li>
+<li>✅ Preserves original order of <em>first occurrence</em> for each
+unique name</li>
+<li>✅ Silent mode: <code>verbose = FALSE</code>
+</li>
+<li>✅ Independent row/column methods via
+<code>AggregateDups(row_method, col_method)</code>
+</li>
+</ul>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
