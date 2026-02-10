@@ -59,7 +59,7 @@ In theory, this workflow could be simplified using `SCPreProcess`;
 however, due to the performance issue reported in [Seurat
 \#10153](https://github.com/satijalab/seurat/issues/10153)—where
 `SCTransform` hangs or slows down significantly when called via
-`do.call` (as `SCPreProc ess` does internally)—we instead use a custom
+`do.call` (as `SCPreProcess` does internally)—we instead use a custom
 workflow here to avoid the slowdown.
 
 (It hasn’t been fixed yet. If it gets resolved, please kindly notify me
@@ -79,7 +79,8 @@ in the vignette.
     # SCYL3         9.479780        9.481799        8.370687        9.142107
 
 The corresponding TCGA survival data can be obtained from **UCSC Xena
-(via UCSCXenaShiny)**.
+(via UCSCXenaShiny)**. And we match the corresponding samples in both
+the bulk RNA-seq data and the survival information.
 
     library(UCSCXenaShiny)
     tcga_surv <- load_data("tcga_surv")
@@ -211,21 +212,47 @@ We can now run the screening. Let’s try `Scissor`.
     # The percentage of selected cell is: 14.533%
     # ℹ [2026/02/09 15:45:05] Scissor Ended.
 
+### data
+
+The returned structure is a `list`, where the first
+slot—`scRNA_data`—contains the Seurat object. Additional slots in the
+list store intermediate data generated during the process.
+
+A new column named `Scissor` will be added to the `meta.data` of the
+Seurat object, with three possible labels:
+
+-   **Positive** denotes cells whose abundance or activity is
+    **positively correlated** with the phenotype of
+    interest—specifically, those associated with **poor prognosis**.  
+-   **Negative** denotes cells that are **negatively correlated** with
+    the phenotype (i.e., potentially protective or associated with
+    better outcomes).  
+-   **Neutral** cells can be interpreted as **background** or
+    **non-informative** cells—those showing little to no association
+    with the phenotype.
+
+### files
+
 A new file named `Scissor_inputs.RData` will be created, which contains
 the input data for the Scissor algorithm. You can use the intermediate
 data for repeated runs to save time when tuning parameters, avoiding the
 need to re-run the entire pipeline from scratch. This is an inherent
 feature of the `Scissor`.
 
-A new column named `Scissor` will be added to the `meta.data` of the
-Seurat object, with three possible labels: **Positive**, **Negative**,
-and **Neutral**. **Positive** denotes cells associated with **poor
-survival prognosis**.
+### note
+
+Other methods (e.g., **scAB**, **scPAS**, etc.) can also be used. In
+this vignette, we only introduce and apply **Scissor**. When using
+alternative algorithms, remember to explicitly specify `assay = "SCT"`,
+as these functions typically default to `assay = "RNA"`, whereas our
+data has been processed with `SCTransform`.
 
 ## Visualization of Screened Cells
 
-Finally we can visualize the results. Here, we provide a brief
-demostration using Seurat’s built-in visualization functions.
+Finally we can visualize the results. Here, we just provide a brief
+demonstration using Seurat’s built-in visualization functions, as
+visualization preferences vary from user to user. If you need additional
+features, feel free to request them in an issue. :)
 
 Let’s first see the spatial position of the Positive cells.
 
@@ -284,3 +311,7 @@ the following:
     #              106                  406                  319                   23                    9
     #    Keratinocytes          Macrophages    Mesothelial cells Neuroendocrine cells  Smooth muscle cells
     #                7                   17                    2                   43                   54
+
+## Sessioninfo
+
+    sessionInfo()
