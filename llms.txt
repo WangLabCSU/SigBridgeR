@@ -313,6 +313,6 @@ Get and set global options for SigBridgeR behavior.
   Utils](https://wanglabcsu.github.io/sigbridger/articles/Other_Function_Details.md):
 - [Quick Start Guide for
   SigBridgeR](https://wanglabcsu.github.io/sigbridger/articles/Quick_Start.md):
-- [Application of SigBridgeR to single-cell spatial transcriptomics
-  data](https://wanglabcsu.github.io/sigbridger/articles/Spatial_Transcriptome.md):
+- [Application of SigBridgeR to Single-cell Spatial Transcriptomics
+  Data](https://wanglabcsu.github.io/sigbridger/articles/Spatial_Transcriptome.md):
 - [Troubleshooting](https://wanglabcsu.github.io/sigbridger/articles/Troubleshooting.md):

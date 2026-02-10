@@ -1,4 +1,4 @@
-# Application of SigBridgeR to single-cell spatial transcriptomics data
+# Application of SigBridgeR to Single-cell Spatial Transcriptomics Data
 
 ``` r
 library(SigBridgeR)
@@ -73,7 +73,7 @@ In theory, this workflow could be simplified using `SCPreProcess`;
 however, due to the performance issue reported in [Seurat
 \#10153](https://github.com/satijalab/seurat/issues/10153)—where
 `SCTransform` hangs or slows down significantly when called via
-`do.call` (as `SCPreProc ess` does internally)—we instead use a custom
+`do.call` (as `SCPreProcess` does internally)—we instead use a custom
 workflow here to avoid the slowdown.
 
 (It hasn’t been fixed yet. If it gets resolved, please kindly notify me
@@ -95,7 +95,8 @@ bulk <- readRDS("TCGA-PAAD.rds")
 ```
 
 The corresponding TCGA survival data can be obtained from **UCSC Xena
-(via UCSCXenaShiny)**.
+(via UCSCXenaShiny)**. And we match the corresponding samples in both
+the bulk RNA-seq data and the survival information.
 
 ``` r
 library(UCSCXenaShiny)
@@ -241,21 +242,47 @@ res <- Screen(
 # ℹ [2026/02/09 15:45:05] Scissor Ended.
 ```
 
+### data
+
+The returned structure is a `list`, where the first
+slot—`scRNA_data`—contains the Seurat object. Additional slots in the
+list store intermediate data generated during the process.
+
+A new column named `Scissor` will be added to the `meta.data` of the
+Seurat object, with three possible labels:
+
+- **Positive** denotes cells whose abundance or activity is **positively
+  correlated** with the phenotype of interest—specifically, those
+  associated with **poor prognosis**.  
+- **Negative** denotes cells that are **negatively correlated** with the
+  phenotype (i.e., potentially protective or associated with better
+  outcomes).  
+- **Neutral** cells can be interpreted as **background** or
+  **non-informative** cells—those showing little to no association with
+  the phenotype.
+
+### files
+
 A new file named `Scissor_inputs.RData` will be created, which contains
 the input data for the Scissor algorithm. You can use the intermediate
 data for repeated runs to save time when tuning parameters, avoiding the
 need to re-run the entire pipeline from scratch. This is an inherent
 feature of the `Scissor`.
 
-A new column named `Scissor` will be added to the `meta.data` of the
-Seurat object, with three possible labels: **Positive**, **Negative**,
-and **Neutral**. **Positive** denotes cells associated with **poor
-survival prognosis**.
+### note
+
+Other methods (e.g., **scAB**, **scPAS**, etc.) can also be used. In
+this vignette, we only introduce and apply **Scissor**. When using
+alternative algorithms, remember to explicitly specify `assay = "SCT"`,
+as these functions typically default to `assay = "RNA"`, whereas our
+data has been processed with `SCTransform`.
 
 ## Visualization of Screened Cells
 
-Finally we can visualize the results. Here, we provide a brief
-demostration using Seurat’s built-in visualization functions.
+Finally we can visualize the results. Here, we just provide a brief
+demonstration using Seurat’s built-in visualization functions, as
+visualization preferences vary from user to user. If you need additional
+features, feel free to request them in an issue. :)
 
 Let’s first see the spatial position of the Positive cells.
 
@@ -319,4 +346,73 @@ table(res$scRNA_data$mllmcelltype_cell_type[
 #              106                  406                  319                   23                    9
 #    Keratinocytes          Macrophages    Mesothelial cells Neuroendocrine cells  Smooth muscle cells
 #                7                   17                    2                   43                   54
+```
+
+## Sessioninfo
+
+``` r
+sessionInfo()
+#> R version 4.5.2 (2025-10-31)
+#> Platform: x86_64-pc-linux-gnu
+#> Running under: Ubuntu 24.04.3 LTS
+#> 
+#> Matrix products: default
+#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+#> 
+#> locale:
+#>  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+#>  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+#>  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+#> [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
+#> 
+#> time zone: UTC
+#> tzcode source: system (glibc)
+#> 
+#> attached base packages:
+#> [1] stats     graphics  grDevices utils     datasets  methods   base     
+#> 
+#> other attached packages:
+#> [1] Seurat_5.4.0       SeuratObject_5.3.0 sp_2.2-0           SigBridgeR_3.3.0  
+#> 
+#> loaded via a namespace (and not attached):
+#>   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3         
+#>   [4] rlang_1.1.7            magrittr_2.0.4         RcppAnnoy_0.0.23      
+#>   [7] otel_0.2.0             spatstat.geom_3.7-0    matrixStats_1.5.0     
+#>  [10] ggridges_0.5.7         compiler_4.5.2         png_0.1-8             
+#>  [13] systemfonts_1.3.1      vctrs_0.7.1            reshape2_1.4.5        
+#>  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         
+#>  [19] promises_1.5.0         rmarkdown_2.30         ragg_1.5.0            
+#>  [22] purrr_1.2.1            xfun_0.56              cachem_1.1.0          
+#>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.5           
+#>  [28] spatstat.utils_3.2-1   irlba_2.3.7            parallel_4.5.2        
+#>  [31] cluster_2.1.8.1        R6_2.6.1               ica_1.0-3             
+#>  [34] spatstat.data_3.1-9    bslib_0.10.0           stringi_1.8.7         
+#>  [37] RColorBrewer_1.1-3     reticulate_1.44.1      spatstat.univar_3.1-6 
+#>  [40] parallelly_1.46.1      lmtest_0.9-40          jquerylib_0.1.4       
+#>  [43] scattermore_1.2        Rcpp_1.1.1             knitr_1.51            
+#>  [46] tensor_1.5.1           future.apply_1.20.1    zoo_1.8-15            
+#>  [49] sctransform_0.4.3      httpuv_1.6.16          Matrix_1.7-4          
+#>  [52] splines_4.5.2          igraph_2.2.1           tidyselect_1.2.1      
+#>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.4-4 
+#>  [58] spatstat.explore_3.7-0 codetools_0.2-20       miniUI_0.1.2          
+#>  [61] listenv_0.10.0         lattice_0.22-7         tibble_3.3.1          
+#>  [64] plyr_1.8.9             shiny_1.12.1           S7_0.2.1              
+#>  [67] ROCR_1.0-12            evaluate_1.0.5         Rtsne_0.17            
+#>  [70] future_1.69.0          fastDummies_1.7.5      desc_1.4.3            
+#>  [73] survival_3.8-3         polyclip_1.10-7        fitdistrplus_1.2-6    
+#>  [76] pillar_1.11.1          KernSmooth_2.23-26     plotly_4.12.0         
+#>  [79] generics_0.1.4         RcppHNSW_0.6.0         ggplot2_4.0.2         
+#>  [82] scales_1.4.0           globals_0.19.0         xtable_1.8-4          
+#>  [85] glue_1.8.0             lazyeval_0.2.2         tools_4.5.2           
+#>  [88] data.table_1.18.2.1    RSpectra_0.16-2        RANN_2.6.2            
+#>  [91] fs_1.6.6               dotCall64_1.2          cowplot_1.2.0         
+#>  [94] grid_4.5.2             tidyr_1.3.2            nlme_3.1-168          
+#>  [97] patchwork_1.3.2        cli_3.6.5              spatstat.sparse_3.1-0 
+#> [100] textshaping_1.0.4      spam_2.11-3            viridisLite_0.4.3     
+#> [103] dplyr_1.2.0            uwot_0.2.4             gtable_0.3.6          
+#> [106] sass_0.4.10            digest_0.6.39          progressr_0.18.0      
+#> [109] ggrepel_0.9.6          htmlwidgets_1.6.4      farver_2.1.2          
+#> [112] htmltools_0.5.9        pkgdown_2.2.0          lifecycle_1.0.5       
+#> [115] httr_1.4.7             mime_0.13              MASS_7.3-65
 ```
