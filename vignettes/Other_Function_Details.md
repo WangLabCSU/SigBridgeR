@@ -547,6 +547,68 @@ A Seurat object with the cell type annotation added as metadata columns.
 
 helpful link: <https://github.com/SingleR-inc/SingleR>
 
+# Setting up Python Environment
+
+Some screening methods (e.g. [Section 3.5
+DEGAS](#35-option-e-degas-screening)) are built using Python and require
+an execution environment. Here is a function to help you set up a Python
+environment. Both Windows and Unix-like systems are supported.
+
+    # * This is an example of setting up a Python environment using conda
+    SetupPyEnv(
+        env_type = "conda",
+        env_name = "test-condaenv",
+        method = c("reticulate", "system","environment"), # choose one of them, default is "reticulate"
+        env_file = NULL # path to environment.yml file, used when method = "environment"
+        python_version = NULL,
+        packages = c(
+            "pandas" = "1.3",
+            "numpy" = "any"
+        ),
+        recreate = FALSE, # whether to remove the existing environment and recreate it
+        use_conda_forge = TRUE,
+        verbose = TRUE
+    ) 
+
+    reticualte::use_condaenv("test-condaenv")
+
+    # * Or use virtualenv via reticulate
+    SetupPyEnv(
+        env_type = "venv", 
+        env_name = "test-venv", 
+        python_version = "3.9.15",
+        packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
+        python_path = NULL,
+        recreate = FALSE,
+        verbose = TRUE
+    )
+
+    reticulate::use_virtualenv("test-venv")
+
+You can use `ListPyEnv()` to list all the Python environments you have
+set up. Both conda and virtual environments are supported.
+
+    # * Unix-like systems
+    ListPyEnv()
+    #                 name                                                  python  type
+    # 1               base                        /home/user/miniconda3/bin/python conda
+    # 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda
+    # 3          test-venv         /home/user/miniconda3/envs/test-venv/bin/python  venv
+
+Show the conda environments only:
+
+    # * Unix-like systems
+    ListPyEnv(env_type = "conda")
+    #                 name                                                  python  type
+    # 1               base                        /home/user/miniconda3/bin/python conda
+    # 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda
+
+If the virtual environment isn’t installed in the default location, you
+can specify the location of the virtual environment with the
+`venv_locations` parameter.
+
+    ListPyEnv(env_type = "venv", venv_locations ="~/here_is_a_dir/.virtualenvs")
+
 # Other Functions
 
 ## Load reference data
@@ -611,65 +673,3 @@ values and rename them simultaneously.
         cache = TRUE,
         timeout = 60
     )
-
-# Setting up Python Environment
-
-Some screening methods (e.g. [Section 3.5
-DEGAS](#35-option-e-degas-screening)) are built using Python and require
-an execution environment. Here is a function to help you set up a Python
-environment. Both Windows and Unix-like systems are supported.
-
-    # * This is an example of setting up a Python environment using conda
-    SetupPyEnv(
-        env_type = "conda",
-        env_name = "test-condaenv",
-        method = c("reticulate", "system","environment"), # choose one of them, default is "reticulate"
-        env_file = NULL # path to environment.yml file, used when method = "environment"
-        python_version = NULL,
-        packages = c(
-            "pandas" = "1.3",
-            "numpy" = "any"
-        ),
-        recreate = FALSE, # whether to remove the existing environment and recreate it
-        use_conda_forge = TRUE,
-        verbose = TRUE
-    ) 
-
-    reticualte::use_condaenv("test-condaenv")
-
-    # * Or use virtualenv via reticulate
-    SetupPyEnv(
-        env_type = "venv", 
-        env_name = "test-venv", 
-        python_version = "3.9.15",
-        packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
-        python_path = NULL,
-        recreate = FALSE,
-        verbose = TRUE
-    )
-
-    reticulate::use_virtualenv("test-venv")
-
-You can use `ListPyEnv()` to list all the Python environments you have
-set up. Both conda and virtual environments are supported.
-
-    # * Unix-like systems
-    ListPyEnv()
-    #                 name                                                  python  type
-    # 1               base                        /home/user/miniconda3/bin/python conda
-    # 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda
-    # 3          test-venv         /home/user/miniconda3/envs/test-venv/bin/python  venv
-
-Show the conda environments only:
-
-    # * Unix-like systems
-    ListPyEnv(env_type = "conda")
-    #                 name                                                  python  type
-    # 1               base                        /home/user/miniconda3/bin/python conda
-    # 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda
-
-If the virtual environment isn’t installed in the default location, you
-can specify the location of the virtual environment with the
-`venv_locations` parameter.
-
-    ListPyEnv(env_type = "venv", venv_locations ="~/here_is_a_dir/.virtualenvs")
