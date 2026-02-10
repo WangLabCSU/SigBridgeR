@@ -135,7 +135,8 @@ pak::pkg_install(c(
   "zeallot",
   "here",
   "org.Hs.eg.db",
-  "processx"
+  "processx",
+  "UCSCXenaShiny"
 ))
 ```
 
