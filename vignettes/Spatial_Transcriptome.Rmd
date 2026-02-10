@@ -235,7 +235,7 @@ A new column named `Scissor` will be added to the `meta.data` of the Seurat obje
 
 ## Visualization of Screened Cells
 
-Finally we can visualize the results.
+Finally we can visualize the results. Here, we provide a brief demostration using Seurat's built-in visualization functions.
 
 Let's first see the spatial position of the Positive cells.
 
