@@ -312,6 +312,31 @@ the following:
     #    Keratinocytes          Macrophages    Mesothelial cells Neuroendocrine cells  Smooth muscle cells
     #                7                   17                    2                   43                   54
 
+The proportion of Positive cells within each cell type can be calculated
+using the following code:
+
+    cell_total <- table(res$scRNA_data$mllmcelltype_cell_type)
+    cell_positive <- table(res$scRNA_data$mllmcelltype_cell_type[
+      res$scRNA_data$scissor == "Positive"
+    ])
+
+    ratios <- cell_positive[match(names(cell_total), names(cell_positive))] /
+      cell_total
+    ratios[is.na(ratios)] <- 0
+
+    result <- sort(round(ratios, 4), decreasing = TRUE)
+
+    result
+
+    #     Chondrocytes  Smooth muscle cells         Acinar cells           Adipocytes          Fibroblasts
+    #           0.6152               0.2126               0.1785               0.1580               0.0940
+    # Epithelial cells          Enterocytes              B cells        Gastric cells Neuroendocrine cells
+    #           0.0846               0.0525               0.0424               0.0420               0.0246
+    #      Macrophages         Goblet cells    Endothelial cells    Mesothelial cells        Keratinocytes
+    #           0.0193               0.0139               0.0127               0.0083               0.0062
+    #          T cells
+    #           0.0000
+
 ## Sessioninfo
 
     sessionInfo()
