@@ -11,7 +11,6 @@ Set Default Values for Environment Configuration.
 }
 \seealso{
 Other DEGAS: 
-\code{\link{DEGASFindPy}()},
 \code{\link{DEGASModelDetect}()},
 \code{\link{DEGASParamSet}()},
 \code{\link{DoDEGAS}()}

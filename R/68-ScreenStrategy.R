@@ -80,6 +80,12 @@ ScreenStrategy <- rlang::new_environment(
       executor = DoPIPET,
       phenotypes = c("binary", "survival", "continuous"),
       mapper = NULL
+    ),
+    SIDISH = list(
+        method_name = "SIDISH",
+        executor = DoSIDISH,
+        phenotypes = "survival",
+        mapper = NULL
     )
   )
 )

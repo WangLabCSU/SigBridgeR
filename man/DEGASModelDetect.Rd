@@ -12,7 +12,6 @@ Automatically select the DEGAS model based on single-cell labels and bulk-level 
 \seealso{
 Other DEGAS: 
 \code{\link{DEGASEnvSet}()},
-\code{\link{DEGASFindPy}()},
 \code{\link{DEGASParamSet}()},
 \code{\link{DoDEGAS}()}
 }

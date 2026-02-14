@@ -12,7 +12,6 @@ Set Default Parameter Values for DEGAS
 \seealso{
 Other DEGAS: 
 \code{\link{DEGASEnvSet}()},
-\code{\link{DEGASFindPy}()},
 \code{\link{DEGASModelDetect}()},
 \code{\link{DoDEGAS}()}
 }

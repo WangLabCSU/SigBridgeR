@@ -134,6 +134,7 @@ Other screen_method:
 \code{\link{DoDEGAS}()},
 \code{\link{DoLP_SGL}()},
 \code{\link{DoPIPET}()},
+\code{\link{DoSIDISH}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}

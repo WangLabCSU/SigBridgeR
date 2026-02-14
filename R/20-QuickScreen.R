@@ -25,6 +25,7 @@
 #' - "DEGAS": see also DoDEGAS()
 #' - "LP_SGL": see also DoLP_SGL()
 #' - "PIPET": see also DoPIPET()
+#' - "SIDISH": see also DoSIDISH()
 #' @param ... Additional method-specific parameters:
 #' \describe{
 #' \item{Scissor}{\describe{
@@ -70,6 +71,11 @@
 #' \item{degas_params}{(list) DEGAS parameters, default "list()"}
 #' \item{normality_test_method}{(character) Normality test method for DEGAS, default "jarque-bera"}
 #' }}
+#' \item{SIDISH}{\describe{
+#' \item{sidish_params}{(list) SIDISH parameters, default "list()"}
+#' \item{env_params}{(list) Environment parameters for SIDISH, default "list()"}
+#' }}
+#' 
 #' \item{LP_SGL}{\describe{
 #' \item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
 #' \item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}
@@ -134,6 +140,7 @@
 #' | DEGAS | All three types | sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method |
 #' | LP_SGL | All three types | resolution, alpha, nfold, dge_analysis |
 #' | PIPET | Binary/Continuous | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance |
+#' | SIDISH | Survival Only | sidish_params, env_params |
 #'
 #'
 #' @seealso Associated functions:
@@ -145,6 +152,7 @@
 #' \item \code{\link{DoDEGAS}}
 #' \item \code{\link{DoLP_SGL}}
 #' \item \code{\link{DoPIPET}}
+#' \item \code{\link{DoSIDISH}}
 #' }
 #'
 #'

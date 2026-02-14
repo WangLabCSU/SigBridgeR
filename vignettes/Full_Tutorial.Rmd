@@ -728,7 +728,7 @@ degas_result <- Screen(
   env_params = list(
     env.name = "r-reticulate-degas",
     env.type = "conda",
-    # Environment.yml file will be used to create the conda environment in default, so other parameters can be omitted
+    # Environment.yml file will be used to create the conda environment in default, so other parameters can be ignored
     env.method = "environment",
     # The path of the environment.yml file
     env.file = system.file(

@@ -259,7 +259,7 @@ DoDEGAS <- function(
 
   # * Check if environment exists and locate python
   if (is.null(degas_params$DEGAS.pyloc)) {
-    degas_params$DEGAS.pyloc <- DEGASFindPy(
+    degas_params$DEGAS.pyloc <- FindPy(
       env_params = env_params,
       verbose = verbose,
       !!!dots
@@ -445,7 +445,7 @@ DEGASEnvSet <- function(user_list) {
     ),
     env.recreate = FALSE,
     env.use_conda_forge = TRUE,
-    env.verbose = SigBridgeRUtils::getFuncOption("verbose")
+    env.verbose = getFuncOption("verbose")
   )
   utils::modifyList(default_env_params, user_list)
 }
@@ -492,8 +492,8 @@ DEGASParamSet <- function(user_list) {
 #' if no suitable environment exists, create a new Python environment and return its path.
 #'
 #' @keywords internal
-#' @family DEGAS
-DEGASFindPy <- function(env_params, verbose = TRUE, ...) {
+#'
+FindPy <- function(env_params, method_name = "DEGAS", verbose = TRUE, ...) {
   # * Check if environment exists
   existing_envs <- ListPyEnv(
     env_type = env_params$env.type,
@@ -503,11 +503,15 @@ DEGASFindPy <- function(env_params, verbose = TRUE, ...) {
     !env_params$env.name %chin% existing_envs$name ||
       env_params$env.recreate
   ) {
-    choice <- utils::askYesNo("Create a new conda environment for DEGAS?")
+    choice <- utils::askYesNo(paste0(
+      "Create a new conda environment for ",
+      method_name,
+      "?"
+    ))
 
     if (!isTRUE(choice)) {
       cli::cli_abort(c(
-        "x" = "Aborted. Please specify a valid environment name"
+        "x" = "Aborted."
       ))
     }
 

@@ -5,7 +5,7 @@
 \alias{ScreenStrategy}
 \title{Registry of Phenotype-Associated Cell Screening Methods}
 \format{
-An object of class \code{environment} of length 7.
+An object of class \code{environment} of length 8.
 }
 \usage{
 ScreenStrategy

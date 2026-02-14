@@ -130,6 +130,16 @@ DoLP_SGL <- function(
     seed = seed
   )
 
+  seurat_obj <- AddMisc(
+    lpsgl_res$seurat_obj,
+    label_type = label_type,
+    family = family,
+    resolution = resolution,
+    alpha = alpha,
+    nfold = nfold,
+    dge_analysis = dge_analysis
+  )
+
   # * Find Deferentially Expressed Genes if requested
   dge_res <- NULL
   default_dge_analysis <- list(
@@ -160,7 +170,7 @@ DoLP_SGL <- function(
   }
 
   if (verbose) {
-    res_table <- table(lpsgl_res$seurat_obj$LP_SGL)
+    res_table <- table(seurat_obj$LP_SGL)
     label <- tolower(paste(label_type, names(res_table)))
     names(res_table) <- label
     msg <- purrr::imap_chr(
@@ -173,7 +183,7 @@ DoLP_SGL <- function(
   }
 
   list(
-    scRNA_data = lpsgl_res$seurat_obj,
+    scRNA_data = seurat_obj,
     sgl_fit = lpsgl_res$sgl_fit,
     cvfit = lpsgl_res$cvfit,
     dge_res = dge_res

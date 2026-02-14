@@ -142,7 +142,6 @@ DoscPP <- function(
     ts_cli$cli_alert_info("Finding overall markers...")
   }
 
-  matched_bulk <- as.data.frame(matched_bulk)
   # decide which type of phenotype data is used
   if (is.vector(phenotype)) {
     # The reason why using data.frame instead of vector is to

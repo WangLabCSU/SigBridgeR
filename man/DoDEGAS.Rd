@@ -147,6 +147,7 @@ Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et al. Diagnostic Evidence GAu
 Other screen_method: 
 \code{\link{DoLP_SGL}()},
 \code{\link{DoPIPET}()},
+\code{\link{DoSIDISH}()},
 \code{\link{DoScissor}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
@@ -154,7 +155,6 @@ Other screen_method:
 
 Other DEGAS: 
 \code{\link{DEGASEnvSet}()},
-\code{\link{DEGASFindPy}()},
 \code{\link{DEGASModelDetect}()},
 \code{\link{DEGASParamSet}()}
 }

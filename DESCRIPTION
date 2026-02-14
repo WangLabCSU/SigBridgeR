@@ -26,6 +26,7 @@ Imports:
     PIPET (>= 0.1.5),
     purrr,
     rlang,
+    rSIDISH,
     scAB (>= 1.0.4),
     Scissor (>= 2.0.0),
     scPAS (>= 0.2.0),
