@@ -73,6 +73,7 @@ reference:
           - DoscPAS
           - DoscPP
           - DoDEGAS
+          - DoSIDISH
 
     - title: Seurat Object Utilities
       contents:
