@@ -42,6 +42,7 @@ Remotes:
     github::Exceret/DEGAS,
     github::Exceret/LPSGL,
     github::Exceret/PIPET,
+    github::Exceret/rSIDISH,
     github::Exceret/scAB,
     github::Exceret/Scissor,
     github::Exceret/scPAS,
