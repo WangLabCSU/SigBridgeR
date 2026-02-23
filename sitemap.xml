@@ -17,12 +17,12 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ChooseNormalization.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASEnvSet.html</loc></url>
-<url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASFindPy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASModelDetect.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASParamSet.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoScissor.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoScissorCellEval.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoScissorRelTest.html</loc></url>
@@ -30,6 +30,7 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoscPP.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/FilterTumorCell.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/FindPy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/FindRobustElbow.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/GetSlotNames.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/InterceptStrategy.html</loc></url>

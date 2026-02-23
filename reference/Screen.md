@@ -65,6 +65,8 @@ Screen(
 
   - "PIPET": see also DoPIPET()
 
+  - "SIDISH": see also DoSIDISH()
+
 - ...:
 
   Additional method-specific parameters:
@@ -242,6 +244,18 @@ Screen(
       :   (character) Normality test method for DEGAS, default
           "jarque-bera"
 
+  SIDISH
+
+  :   
+
+      sidish_params
+
+      :   (list) SIDISH parameters, default "list()"
+
+      env_params
+
+      :   (list) Environment parameters for SIDISH, default "list()"
+
   LP_SGL
 
   :   
@@ -408,6 +422,7 @@ A list containing:
 | DEGAS   | All three types      | sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method                                                                                                                                   |
 | LP_SGL  | All three types      | resolution, alpha, nfold, dge_analysis                                                                                                                                                                                        |
 | PIPET   | Binary/Continuous    | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance                                                                                                               |
+| SIDISH  | Survival Only        | sidish_params, env_params                                                                                                                                                                                                     |
 
 ## See also
 
@@ -426,3 +441,5 @@ Associated functions:
 - [`DoLP_SGL`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md)
 
 - [`DoPIPET`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md)
+
+- [`DoSIDISH`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md)

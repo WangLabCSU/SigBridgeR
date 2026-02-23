@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
 
       <h1>Find Optimal Parameters for My Screening </h1>
             
-            <h4 data-toc-skip class="date">2026-02-10</h4>
+            <h4 data-toc-skip class="date">2026-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Optimal_Params.Rmd" class="external-link"><code>vignettes/Optimal_Params.Rmd</code></a></small>
       <div class="d-none name"><code>Optimal_Params.Rmd</code></div>
@@ -73,25 +73,22 @@
 
     
     
-<div class="section level2">
-<h2 id="find-optimal-parameters-for-my-screening">Find Optimal Parameters for My Screening<a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-my-screening"></a>
-</h2>
 <blockquote>
 <p>It is recommended to read the <a href="https://wanglabcsu.github.io/SigBridgeR/articles/Quick_Start.html" class="external-link">Quick
 Start</a> or <a href="https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html" class="external-link">Full
 Tutorial</a> first, as this will help understand the workflow of
 SigBridgeR.</p>
 </blockquote>
-<div class="section level3">
-<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h3>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>With so many parameters in the screening methods, it’s often
 confusing how to select the best ones for your data. This document
 provides some tips for parameter tuning.</p>
 </div>
-<div class="section level3">
-<h3 id="find-optimal-parameters-for-scissor">Find Optimal Parameters for <code>Scissor</code><a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-scissor"></a>
-</h3>
+<div class="section level2">
+<h2 id="find-optimal-parameters-for-scissor">Find Optimal Parameters for <code>Scissor</code><a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-scissor"></a>
+</h2>
 <p>To enable scissor to search an optimal <code>alpha</code>, just
 change <code>alpha = &lt;A value&gt;</code> to
 <code>alpha = NULL</code>. In this case, alpha will iterate from 0.005
@@ -118,9 +115,10 @@ value -— as positive cells.</p>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># &lt;&lt;&lt; HERE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co"># * Output goes like this when using example data</span></span>
-<span><span class="co"># ℹ [2025/11/07 08:39:59] Scissor start...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Output goes like this when using example data</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ℹ [2025/11/07 08:39:59] Scissor start...</span></span>
 <span><span class="co"># ℹ [2025/11/07 08:39:59] Start from raw data...</span></span>
 <span><span class="co"># ℹ Using "RNA_snn" graph for network.</span></span>
 <span><span class="co"># ℹ [2025/11/07 08:39:59] Normalizing quantiles of data...</span></span>
@@ -155,9 +153,9 @@ value -— as positive cells.</p>
 <span><span class="co"># The percentage of selected cell is: 16.834%</span></span>
 <span><span class="co"># ℹ [2025/11/07 08:40:39] Scissor Ended.</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="find-optimal-parameters-for-scab">Find Optimal Parameters for <code>scAB</code><a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-scab"></a>
-</h3>
+<div class="section level2">
+<h2 id="find-optimal-parameters-for-scab">Find Optimal Parameters for <code>scAB</code><a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-scab"></a>
+</h2>
 <p>scAB has two key parameters, <code>alpha</code> and
 <code>alpha_2</code>: the former determines the overall selection
 proportion, while the latter determines the selection proportion within
@@ -165,7 +163,7 @@ each scAB subset. Simply change the values of these two parameters from
 single values to numeric sequences, and scAB will automatically iterate
 through the combinations to find the optimal pair of <code>alpha</code>
 and <code>alpha_2</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * From</span></span>
 <span><span class="co"># scAB_res &lt;- Screen(</span></span>
 <span><span class="co">#   matched_bulk = matched_bulk,</span></span>
@@ -190,13 +188,13 @@ and <code>alpha_2</code>.</p>
 <span>  alpha <span class="op">=</span> <span class="va">seq1</span>, <span class="co"># &lt;&lt;&lt; HERE</span></span>
 <span>  alpha_2 <span class="op">=</span> <span class="va">seq2</span> <span class="co"># &lt;&lt;&lt; HERE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seq1</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seq2</span><span class="op">)</span></span>
 <span><span class="co"># [1] 12</span></span></code></pre></div>
 <p>As you can see, with so many (alpha, alpha_2) pairs – each requiring
 evaluation -— the runtime can become prohibitively long. In such cases,
 parallel computing can be employed to accelerate the process.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * install `furrr` &amp; `future.mirai` first, as it is required for parallel computing</span></span>
 <span><span class="co"># * We recommend using `future.mirai`, as it is more stable and faster than `future`</span></span>
 <span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">check_installed</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"furrr"</span>, <span class="st">"future.mirai"</span><span class="op">)</span><span class="op">)</span></span>
@@ -212,9 +210,10 @@ parallel computing can be employed to accelerate the process.</p>
 <span>  alpha <span class="op">=</span> <span class="va">seq1</span>,</span>
 <span>  alpha_2 <span class="op">=</span> <span class="va">seq2</span></span>
 <span>  <span class="co"># parallel = TRUE # Auto-enabled</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co"># * Output goes like this when using example data</span></span>
-<span><span class="co"># ℹ [2025/11/07 08:43:48] Start scAB screening.</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Output goes like this when using example data</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ℹ [2025/11/07 08:43:48] Start scAB screening.</span></span>
 <span><span class="co"># ℹ  Using "RNA_snn" graph for network.</span></span>
 <span><span class="co"># ℹ [2025/11/07 08:43:53] Selecting K...</span></span>
 <span><span class="co"># • loss of 2: 0.003226</span></span>
@@ -229,12 +228,12 @@ parallel computing can be employed to accelerate the process.</p>
 <p>After identifying the optimal (alpha, alpha_2) pair, scAB will use
 this parameter pair to perform the final cell screening.</p>
 </div>
-<div class="section level3">
-<h3 id="find-optimal-parameters-for-scpas">Find Optimal Parameters for <code>scPAS</code><a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-scpas"></a>
-</h3>
+<div class="section level2">
+<h2 id="find-optimal-parameters-for-scpas">Find Optimal Parameters for <code>scPAS</code><a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-scpas"></a>
+</h2>
 <p>The iteration of alpha in scPAS is similar to that in Scissor, and
 the method to enable iteration is the same.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * From</span></span>
 <span><span class="co"># scPAS_res &lt;- Screen(</span></span>
 <span><span class="co">#   matched_bulk = matched_bulk,</span></span>
@@ -253,9 +252,10 @@ the method to enable iteration is the same.</p>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPAS"</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># &lt;&lt;&lt; HERE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co"># * Output goes like this when using example data</span></span>
-<span><span class="co"># ℹ [2025/10/20 16:43:31] Start scPAS screening.</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Output goes like this when using example data</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ℹ [2025/10/20 16:43:31] Start scPAS screening.</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:43:32] Extracting single-cell expression profiles...</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:43:32] Constructing a gene-gene similarity by single cell data...</span></span>
@@ -291,14 +291,14 @@ the method to enable iteration is the same.</p>
 <span><span class="co"># ℹ [2025/10/20 16:44:55] Qualitative identification by permutation test program with 2000 times random perturbations...</span></span>
 <span><span class="co"># ✔ [2025/10/20 16:44:57] scPAS screening done.</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="find-optimal-parameters-for-scpp">Find Optimal Parameters for <code>scPP</code><a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-scpp"></a>
-</h3>
+<div class="section level2">
+<h2 id="find-optimal-parameters-for-scpp">Find Optimal Parameters for <code>scPP</code><a class="anchor" aria-label="anchor" href="#find-optimal-parameters-for-scpp"></a>
+</h2>
 <p>scPP is based on marker genes, AUC, and enrichment scores, which
 requires tuning the <code>probs</code> parameter, as it represents the
 quantile threshold. The input <code>probs</code> must be between 0 and
 0.5.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># * From</span></span>
 <span><span class="co"># scPP_res &lt;- Screen(</span></span>
 <span><span class="co">#   matched_bulk = matched_bulk,</span></span>
@@ -318,9 +318,10 @@ quantile threshold. The input <code>probs</code> must be between 0 and
 <span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPP"</span><span class="op">)</span>,</span>
 <span>  probs <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># &lt;&lt;&lt; HERE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co"># * Output goes like this when using example data</span></span>
-<span><span class="co"># ℹ [2025/11/07 08:53:20] Start scPP screening.</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Output goes like this when using example data</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ℹ [2025/11/07 08:53:20] Start scPP screening.</span></span>
 <span><span class="co"># ℹ [2025/11/07 08:53:20] Finding overall markers...</span></span>
 <span><span class="co"># Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :</span></span>
 <span><span class="co">#   Loglik converged before variable  1 ; coefficient may be infinite.</span></span>
@@ -355,9 +356,9 @@ quantile threshold. The input <code>probs</code> must be between 0 and
 <span><span class="co"># ✔ [2025/11/07 08:54:22] Found 267 positive markers, 2 negative markers</span></span>
 <span><span class="co"># ✔ [2025/11/07 08:54:22] scPP screening done.</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
-</h3>
+<div class="section level2">
+<h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
 <pre><code><span><span class="co">## R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">## Running under: Ubuntu 24.04.3 LTS</span></span>
@@ -386,7 +387,6 @@ quantile threshold. The input <code>probs</code> must be between 0 and
 <span><span class="co">## [17] compiler_4.5.2    tools_4.5.2       ragg_1.5.0        bslib_0.10.0     </span></span>
 <span><span class="co">## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        jsonlite_2.0.0   </span></span>
 <span><span class="co">## [25] rlang_1.1.7       fs_1.6.6          htmlwidgets_1.6.4</span></span></code></pre>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

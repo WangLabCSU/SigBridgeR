@@ -1,20 +1,18 @@
 # Find Optimal Parameters for My Screening
 
-## Find Optimal Parameters for My Screening
-
 > It is recommended to read the [Quick
 > Start](https://wanglabcsu.github.io/SigBridgeR/articles/Quick_Start.html)
 > or [Full
 > Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html)
 > first, as this will help understand the workflow of SigBridgeR.
 
-### Introduction
+## Introduction
 
 With so many parameters in the screening methods, it’s often confusing
 how to select the best ones for your data. This document provides some
 tips for parameter tuning.
 
-### Find Optimal Parameters for `Scissor`
+## Find Optimal Parameters for `Scissor`
 
 To enable scissor to search an optimal `alpha`, just change
 `alpha = <A value>` to `alpha = NULL`. In this case, alpha will iterate
@@ -43,7 +41,11 @@ scissor_res <- Screen(
   screen_method = c("Scissor"),
   alpha = NULL # <<< HERE
 )
-# * Output goes like this when using example data
+```
+
+Output goes like this when using example data
+
+``` r
 # ℹ [2025/11/07 08:39:59] Scissor start...
 # ℹ [2025/11/07 08:39:59] Start from raw data...
 # ℹ Using "RNA_snn" graph for network.
@@ -80,7 +82,7 @@ scissor_res <- Screen(
 # ℹ [2025/11/07 08:40:39] Scissor Ended.
 ```
 
-### Find Optimal Parameters for `scAB`
+## Find Optimal Parameters for `scAB`
 
 scAB has two key parameters, `alpha` and `alpha_2`: the former
 determines the overall selection proportion, while the latter determines
@@ -142,7 +144,11 @@ scAB_res <- Screen(
   alpha_2 = seq2
   # parallel = TRUE # Auto-enabled
 )
-# * Output goes like this when using example data
+```
+
+Output goes like this when using example data
+
+``` r
 # ℹ [2025/11/07 08:43:48] Start scAB screening.
 # ℹ  Using "RNA_snn" graph for network.
 # ℹ [2025/11/07 08:43:53] Selecting K...
@@ -160,7 +166,7 @@ scAB_res <- Screen(
 After identifying the optimal (alpha, alpha_2) pair, scAB will use this
 parameter pair to perform the final cell screening.
 
-### Find Optimal Parameters for `scPAS`
+## Find Optimal Parameters for `scPAS`
 
 The iteration of alpha in scPAS is similar to that in Scissor, and the
 method to enable iteration is the same.
@@ -185,7 +191,11 @@ scPAS_res <- Screen(
   screen_method = c("scPAS"),
   alpha = NULL # <<< HERE
 )
-# * Output goes like this when using example data
+```
+
+Output goes like this when using example data
+
+``` r
 # ℹ [2025/10/20 16:43:31] Start scPAS screening.
 # ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.
 # ℹ [2025/10/20 16:43:32] Extracting single-cell expression profiles...
@@ -223,7 +233,7 @@ scPAS_res <- Screen(
 # ✔ [2025/10/20 16:44:57] scPAS screening done.
 ```
 
-### Find Optimal Parameters for `scPP`
+## Find Optimal Parameters for `scPP`
 
 scPP is based on marker genes, AUC, and enrichment scores, which
 requires tuning the `probs` parameter, as it represents the quantile
@@ -250,7 +260,11 @@ scPP_res <- Screen(
   screen_method = c("scPP"),
   probs = NULL # <<< HERE
 )
-# * Output goes like this when using example data
+```
+
+Output goes like this when using example data
+
+``` r
 # ℹ [2025/11/07 08:53:20] Start scPP screening.
 # ℹ [2025/11/07 08:53:20] Finding overall markers...
 # Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :
@@ -287,7 +301,7 @@ scPP_res <- Screen(
 # ✔ [2025/11/07 08:54:22] scPP screening done.
 ```
 
-### Session Info
+## Session Info
 
     ## R version 4.5.2 (2025-10-31)
     ## Platform: x86_64-pc-linux-gnu

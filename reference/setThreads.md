@@ -2,18 +2,22 @@
 
 Unified interface to configure thread counts and acceleration features
 across system-level (OpenMP/data.table) and TensorFlow backends. Uses a
-hierarchical configuration model:
+hierarchical configuration model where global `threads` serves as
+default for all backends unless explicitly overridden.
 
-- `threads`: Global thread count (default: half physical cores)
-
-- `backend`: System-level backends to configure
-
-- `tf_config`: Named list for TensorFlow-specific settings
+**Critical**: TensorFlow configuration must be set *before* importing
+TensorFlow via `reticulate::import("tensorflow")`.
 
 ## Usage
 
 ``` r
-setThreads(threads = NULL, backend = c("openmp", "dt"), tf_config = NULL, ...)
+setThreads(
+  threads = NULL,
+  backend = c("openmp", "dt"),
+  tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
+    NULL, inter_op = NULL, intra_op = c(1L, NULL)),
+  ...
+)
 ```
 
 ## Arguments
@@ -34,15 +38,16 @@ setThreads(threads = NULL, backend = c("openmp", "dt"), tf_config = NULL, ...)
 
   Named list for TensorFlow-specific configuration:
 
-  - `xla`: Logical. Enable XLA JIT compilation (default: `FALSE`)
+  - `xla_flag`: Character. XLA JIT compilation flags (default:
+    auto-optimized)
+
+  - `xla_device`: Integer. XLA device ID (default: `1L`)
 
   - `inter_op`: Integer. Inter-op parallelism threads (default:
-    auto-derived)
+    `max(2, floor(threads/4))`)
 
-  - `intra_op`: Integer. Intra-op parallelism threads (default:
-    `threads`)
-
-  **Must be set BEFORE importing TensorFlow**.
+  - `intra_op`: Integer. Intra-op parallelism threads (default: `1L`).
+    If `NULL`, inherits global `threads` by default.
 
 - ...:
 
@@ -58,28 +63,23 @@ Invisible list with old/new values per backend.
 
 ``` r
 if (FALSE) { # \dontrun{
-# Minimal: auto-configure all backends with half cores
+# Basic usage: auto-detect and configure
 setThreads()
 
-# Explicit global thread count
-setThreads(threads = 8)
+# Explicit thread count for CPU-intensive workloads
+setThreads(threads = 12L)
 
-# TensorFlow optimization (MUST run BEFORE importing TensorFlow)
+# TensorFlow-optimized configuration for deep learning
 setThreads(
-  threads = 8,
+  threads = 8L,
   tf_config = list(
-    xla = TRUE,
-    inter_op = 2,
-    intra_op = 8
+    inter_op = 2L,
+    intra_op = 8L
   )
 )
-reticulate::import("tensorflow")  # Import AFTER configuration
+library(tensorflow)  # Import AFTER setThreads()
 
-# Fine-grained control: override specific backends
-setThreads(
-  threads = 16,
-  backend = "dt",  # Only configure data.table
-  tf_config = list(inter_op = 4)  # intra_op inherits threads=16
-)
+# Configure only data.table for memory-efficient workflows
+setThreads(threads = 4, backend = "dt", verbose = FALSE)
 } # }
 ```

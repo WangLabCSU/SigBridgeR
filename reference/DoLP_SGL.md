@@ -108,6 +108,7 @@ subpopulations through LP_SGL. Briefings in Bioinformatics. 2023 Nov
 Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),

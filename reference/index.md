@@ -61,6 +61,8 @@ Built-in screening algorithms.
   : Perform scPP screening analysis
 - [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md)
   : Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration
+- [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md)
+  : Perform SIDISH Screening Analysis
 
 ## Seurat Object Utilities
 

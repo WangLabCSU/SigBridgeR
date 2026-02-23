@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">SigBridgeR</span> v3.3.0 loaded</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">SigBridgeR</span> v3.4.0 loaded</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: SeuratObject</span></span>
 <span><span class="co">#&gt; Loading required package: sp</span></span>
@@ -198,8 +198,8 @@ perform cell type annotation on the data.</p>
 </h2>
 <p>Here we demonstrate the usage of <strong>mLLMCelltype</strong>. We
 also provide support for <strong>SingleR</strong> and
-<strong>CellTypist</strong> (see <a href="https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html" class="external-link">https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html</a>
-for details and usage).</p>
+<strong>CellTypist</strong> (see <a href="https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html" class="external-link">Auxiliary
+Utils</a> for details and usage).</p>
 <p>Here we use DeepSeek v3 only as an example. Generally speaking, the
 more powerful the model and the greater the number of models used, the
 higher the prediction accuracy of mLLMCelltype.</p>
@@ -453,7 +453,7 @@ calculated using the following code:</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] Seurat_5.4.0       SeuratObject_5.3.0 sp_2.2-0           SigBridgeR_3.3.0  </span></span>
+<span><span class="co">#&gt; [1] Seurat_5.4.0       SeuratObject_5.3.0 sp_2.2-1           SigBridgeR_3.4.0  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3         </span></span>
@@ -464,20 +464,20 @@ calculated using the following code:</p>
 <span><span class="co">#&gt;  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         </span></span>
 <span><span class="co">#&gt;  [19] promises_1.5.0         rmarkdown_2.30         ragg_1.5.0            </span></span>
 <span><span class="co">#&gt;  [22] purrr_1.2.1            xfun_0.56              cachem_1.1.0          </span></span>
-<span><span class="co">#&gt;  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.5           </span></span>
+<span><span class="co">#&gt;  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.6           </span></span>
 <span><span class="co">#&gt;  [28] spatstat.utils_3.2-1   irlba_2.3.7            parallel_4.5.2        </span></span>
 <span><span class="co">#&gt;  [31] cluster_2.1.8.1        R6_2.6.1               ica_1.0-3             </span></span>
 <span><span class="co">#&gt;  [34] spatstat.data_3.1-9    bslib_0.10.0           stringi_1.8.7         </span></span>
-<span><span class="co">#&gt;  [37] RColorBrewer_1.1-3     reticulate_1.44.1      spatstat.univar_3.1-6 </span></span>
+<span><span class="co">#&gt;  [37] RColorBrewer_1.1-3     reticulate_1.45.0      spatstat.univar_3.1-6 </span></span>
 <span><span class="co">#&gt;  [40] parallelly_1.46.1      lmtest_0.9-40          jquerylib_0.1.4       </span></span>
 <span><span class="co">#&gt;  [43] scattermore_1.2        Rcpp_1.1.1             knitr_1.51            </span></span>
-<span><span class="co">#&gt;  [46] tensor_1.5.1           future.apply_1.20.1    zoo_1.8-15            </span></span>
+<span><span class="co">#&gt;  [46] tensor_1.5.1           future.apply_1.20.2    zoo_1.8-15            </span></span>
 <span><span class="co">#&gt;  [49] sctransform_0.4.3      httpuv_1.6.16          Matrix_1.7-4          </span></span>
-<span><span class="co">#&gt;  [52] splines_4.5.2          igraph_2.2.1           tidyselect_1.2.1      </span></span>
+<span><span class="co">#&gt;  [52] splines_4.5.2          igraph_2.2.2           tidyselect_1.2.1      </span></span>
 <span><span class="co">#&gt;  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.4-4 </span></span>
 <span><span class="co">#&gt;  [58] spatstat.explore_3.7-0 codetools_0.2-20       miniUI_0.1.2          </span></span>
 <span><span class="co">#&gt;  [61] listenv_0.10.0         lattice_0.22-7         tibble_3.3.1          </span></span>
-<span><span class="co">#&gt;  [64] plyr_1.8.9             shiny_1.12.1           S7_0.2.1              </span></span>
+<span><span class="co">#&gt;  [64] plyr_1.8.9             shiny_1.13.0           S7_0.2.1              </span></span>
 <span><span class="co">#&gt;  [67] ROCR_1.0-12            evaluate_1.0.5         Rtsne_0.17            </span></span>
 <span><span class="co">#&gt;  [70] future_1.69.0          fastDummies_1.7.5      desc_1.4.3            </span></span>
 <span><span class="co">#&gt;  [73] survival_3.8-3         polyclip_1.10-7        fitdistrplus_1.2-6    </span></span>
@@ -494,7 +494,7 @@ calculated using the following code:</p>
 <span><span class="co">#&gt; [106] sass_0.4.10            digest_0.6.39          progressr_0.18.0      </span></span>
 <span><span class="co">#&gt; [109] ggrepel_0.9.6          htmlwidgets_1.6.4      farver_2.1.2          </span></span>
 <span><span class="co">#&gt; [112] htmltools_0.5.9        pkgdown_2.2.0          lifecycle_1.0.5       </span></span>
-<span><span class="co">#&gt; [115] httr_1.4.7             mime_0.13              MASS_7.3-65</span></span></code></pre></div>
+<span><span class="co">#&gt; [115] httr_1.4.8             mime_0.13              MASS_7.3-65</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

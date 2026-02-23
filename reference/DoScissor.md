@@ -180,6 +180,7 @@ Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)

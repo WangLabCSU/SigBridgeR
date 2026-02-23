@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,7 @@
       <h1>Troubleshooting</h1>
                         <h4 data-toc-skip class="author">Exceret</h4>
             
-            <h4 data-toc-skip class="date">2026-02-10</h4>
+            <h4 data-toc-skip class="date">2026-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Troubleshooting.Rmd" class="external-link"><code>vignettes/Troubleshooting.Rmd</code></a></small>
       <div class="d-none name"><code>Troubleshooting.Rmd</code></div>
@@ -74,17 +74,18 @@
 
     
     
-<div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h2>
+<div class="section level3">
+<h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h3>
 <p>This vignette provides solutions to common problems you might
 encounter when using this package. If you cannot find your problem here,
 please file an issue on our GitHub repository.</p>
 <p><br></p>
 <hr>
-<div class="section level4">
-<h4 id="scissor">Scissor<a class="anchor" aria-label="anchor" href="#scissor"></a>
-</h4>
+</div>
+<div class="section level2">
+<h2 id="scissor">Scissor<a class="anchor" aria-label="anchor" href="#scissor"></a>
+</h2>
 <blockquote>
 <p><strong>Error in normalize.quantiles(dataset0) : ERROR; return code
 from pthread_create() is 22</strong></p>
@@ -138,9 +139,9 @@ capitalization and spelling:</p>
 <p><br></p>
 <hr>
 </div>
-<div class="section level4">
-<h4 id="package">Package<a class="anchor" aria-label="anchor" href="#package"></a>
-</h4>
+<div class="section level2">
+<h2 id="package">Package<a class="anchor" aria-label="anchor" href="#package"></a>
+</h2>
 <blockquote>
 <p><strong>Error in <code>function_name()</code>:</strong></p>
 <p><strong>! lazy-load database
@@ -161,7 +162,6 @@ corrupted. Try reinstalling the package:</p>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <hr>
-</div>
 </div>
 <div class="section level2">
 <h2 id="visualization">Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a>
@@ -281,7 +281,9 @@ the package (version 2.4.1 has been tested and is feasible)</p>
 <div class="section level4">
 <h4 id="seurat">Seurat<a class="anchor" aria-label="anchor" href="#seurat"></a>
 </h4>
+<blockquote>
 <p><strong>Excessive time during running SCTransfomm</strong></p>
+</blockquote>
 <p>Output message is probably like this:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Running SCTransform on assay: Xenium</span></span>
@@ -301,6 +303,32 @@ the package (version 2.4.1 has been tested and is feasible)</p>
 #10153</a></p>
 <p>Try update <code>Seurat</code> to latest version</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="other">Other<a class="anchor" aria-label="anchor" href="#other"></a>
+</h2>
+<blockquote>
+<p><strong>Why does SigBridgeR hardcode reticulate::use_python()
+internally? This contradicts the recommended practices of the R
+community</strong></p>
+</blockquote>
+<p>We are indeed aware that this practice deviates from the expectations
+of the R community. However, given that multiple algorithms embedded
+within the package require distinct Python installations and
+environments—and considering that <code>reticulate</code> binds a single
+Python environment to the entire R session without allowing runtime
+switching—each screening algorithm would otherwise necessitate a
+separate R session to operate correctly.</p>
+<p>Meanwhile, wrapping functions in subprocesses would increase
+usability and learning overhead for users, while invoking Python
+interpreters via system commands would require additional read/write
+operations to disk for R-side data, which is inefficient for large-scale
+data processing.</p>
+<p>After careful consideration, we encapsulated
+<code><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">reticulate::use_python()</a></code> within isolated functions to
+emulate subprocess-like behavior—allowing localized Python environment
+specification—while avoiding interference with the globally registered
+Python configuration in the R session.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

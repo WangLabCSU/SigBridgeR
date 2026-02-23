@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
 
       <h1>Full Tutorial</h1>
             
-            <h4 data-toc-skip class="date">2026-02-10</h4>
+            <h4 data-toc-skip class="date">2026-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -1132,7 +1132,7 @@ default is “jarque-bera”.</li>
 <span>  env_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    env.name <span class="op">=</span> <span class="st">"r-reticulate-degas"</span>,</span>
 <span>    env.type <span class="op">=</span> <span class="st">"conda"</span>,</span>
-<span>    <span class="co"># Environment.yml file will be used to create the conda environment in default, so other parameters can be omitted</span></span>
+<span>    <span class="co"># Environment.yml file will be used to create the conda environment in default, so other parameters can be ignored</span></span>
 <span>    env.method <span class="op">=</span> <span class="st">"environment"</span>,</span>
 <span>    <span class="co"># The path of the environment.yml file</span></span>
 <span>    env.file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
@@ -1357,13 +1357,162 @@ annotations in meta.data)</li>
 </ul>
 </div>
 <div class="section level4">
+<h4 id="option-h-sidish-screening">2.8 (Option H) SIDISH Screening<a class="anchor" aria-label="anchor" href="#option-h-sidish-screening"></a>
+</h4>
+<p>Parameters passed to <code>...</code> when using <code>SIDISH</code>
+method:</p>
+<ul>
+<li>
+<code>verbose</code>: Logical. Whether to print verbose output
+during execution. Default is <code>TRUE</code>.</li>
+<li>
+<code>label_type</code>: Character specifying the phenotype label
+type stored in <code>sc_data@misc</code>. Default is
+<code>"SIDISH"</code>.</li>
+<li>
+<code>assay</code>: Seurat assay name to use for expression data.
+Default is <code>"RNA"</code>.</li>
+<li>
+<code>sidish_param</code>: List of parameters for SIDISH algorithm.
+See below for details.</li>
+<li>
+<code>env_params</code>: List of parameters for environment setup.
+See below for details.</li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sidish_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">your_matched_bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">A_Seurat_object</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">your_survival_phenotype</span>,  <span class="co"># Must contain "time" and "status" columns</span></span>
+<span>  label_type <span class="op">=</span> <span class="st">"SIDISH"</span>,                <span class="co"># Labels stored in `@misc` slot to identify screening results</span></span>
+<span>  screen_method <span class="op">=</span> <span class="st">"SIDISH"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,         <span class="co"># Currently only survival phenotype is supported</span></span>
+<span>  </span>
+<span>  <span class="co"># SIDISH algorithm parameters</span></span>
+<span>  sidish_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="co"># Preprocessing parameters</span></span>
+<span>    patient_id <span class="op">=</span> <span class="st">"Sample"</span>,</span>
+<span>    celltype_name <span class="op">=</span> <span class="st">"celltype_major"</span>,</span>
+<span>    processed <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    n_genes_by_counts <span class="op">=</span> <span class="fl">5000L</span>,</span>
+<span>    pct_counts_mt <span class="op">=</span> <span class="fl">10L</span>,</span>
+<span>    batch_correction <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    survival_ <span class="op">=</span> <span class="st">"time"</span>,                 <span class="co"># Column name for survival time</span></span>
+<span>    status <span class="op">=</span> <span class="st">"status"</span>,                  <span class="co"># Column name for event status</span></span>
+<span>    </span>
+<span>    <span class="co"># Execution environment</span></span>
+<span>    device <span class="op">=</span> <span class="st">"cuda"</span>,                    <span class="co"># "cuda" for GPU acceleration, "cpu" for CPU-only</span></span>
+<span>    use_spatial_graph <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    k_neighbors <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    </span>
+<span>    <span class="co"># Phase 1: VAE training parameters</span></span>
+<span>    phase1_epochs <span class="op">=</span> <span class="fl">225L</span>,</span>
+<span>    phase1_i_epochs <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>    phase1_latent_size <span class="op">=</span> <span class="fl">32L</span>,</span>
+<span>    phase1_layer_dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">512L</span>, <span class="fl">128L</span><span class="op">)</span>,</span>
+<span>    phase1_batch_size <span class="op">=</span> <span class="fl">256L</span>,</span>
+<span>    phase1_optimizer <span class="op">=</span> <span class="st">"Adam"</span>,</span>
+<span>    phase1_lr <span class="op">=</span> <span class="fl">1e-4</span>,</span>
+<span>    phase1_lr_3 <span class="op">=</span> <span class="fl">1e-4</span>,</span>
+<span>    phase1_dropout <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>    phase1_type <span class="op">=</span> <span class="st">"Dense"</span>,              <span class="co"># "Dense" or "Normal"</span></span>
+<span>    </span>
+<span>    <span class="co"># Phase 2: Deep Cox training parameters</span></span>
+<span>    phase2_epochs <span class="op">=</span> <span class="fl">500L</span>,</span>
+<span>    phase2_hidden <span class="op">=</span> <span class="fl">128L</span>,</span>
+<span>    phase2_lr <span class="op">=</span> <span class="fl">1e-4</span>,</span>
+<span>    phase2_dropout <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>    phase2_test_size <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>    phase2_batch_size_bulk <span class="op">=</span> <span class="fl">256L</span>,</span>
+<span>    </span>
+<span>    <span class="co"># Training &amp; risk definition</span></span>
+<span>    train_iterations <span class="op">=</span> <span class="fl">5L</span>,</span>
+<span>    train_percentile <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>    train_steepness <span class="op">=</span> <span class="fl">30L</span>,</span>
+<span>    train_path <span class="op">=</span> <span class="st">"./SIDISH_res/"</span>,       <span class="co"># Path to save intermediate data</span></span>
+<span>    train_num_workers <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>    train_distribution_fit <span class="op">=</span> <span class="st">"fitted"</span>   <span class="co"># "fitted" or "default"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  </span>
+<span>  <span class="co"># Python environment parameters</span></span>
+<span>  env_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    env.name <span class="op">=</span> <span class="st">"r-reticulate-sidish-nvidia"</span>,  <span class="co"># Auto-selected based on device parameter</span></span>
+<span>    env.type <span class="op">=</span> <span class="st">"conda"</span>,</span>
+<span>    env.method <span class="op">=</span> <span class="st">"environment"</span>,</span>
+<span>    env.file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>      <span class="st">"conda/SIDISH_nvidia_environment.yml"</span>,</span>
+<span>      package <span class="op">=</span> <span class="st">"SigBridgeR"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    env.python_verion <span class="op">=</span> <span class="st">"3.12.12"</span>,</span>
+<span>    env.packages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"numpy"</span> <span class="op">=</span> <span class="st">"1.26.4"</span></span>
+<span>      <span class="co"># Additional packages defined in environment.yml</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    env.recreate <span class="op">=</span> <span class="cn">FALSE</span>,               <span class="co"># Force re-creating environment if TRUE</span></span>
+<span>    env.use_conda_forge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    env.verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  </span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>This code chunk will CREATE a conda environment called
+<strong><code>r-reticulate-sidish-nvidia</code></strong> (for GPU) or
+<strong><code>r-reticulate-sidish-cpu</code></strong> (for CPU) with
+Python 3.12.12 and install all required dependencies for SIDISH. If an
+environment with the same name already exists, it will be reused without
+recreation (unless <code>env_params = list(env.recreate = TRUE)</code>
+is specified).</p>
+<p><strong>Note</strong>: SIDISH currently <strong>only supports
+survival phenotypes</strong>
+(<code>phenotype_class = "survival"</code>). The phenotype data frame
+must contain columns named <code>"time"</code> (survival time) and
+<code>"status"</code> (event indicator).</p>
+<p>To obtain the default parameters for SIDISH, use
+<code>SigBridgeR:::SIDISHParamSet()</code> and
+<code>SigBridgeR:::SIDISHEnvSet()</code>:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get default SIDISH algorithm parameters</span></span>
+<span><span class="va">sidish_default_params</span> <span class="op">&lt;-</span> <span class="fu">SigBridgeR</span><span class="fu">:::</span><span class="fu">SIDISHParamSet</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get default environment parameters (CPU version)</span></span>
+<span><span class="va">env_default_cpu</span> <span class="op">&lt;-</span> <span class="fu">SigBridgeR</span><span class="fu">:::</span><span class="fu">SIDISHEnvSet</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, device <span class="op">=</span> <span class="st">"cpu"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get default environment parameters (GPU version)</span></span>
+<span><span class="va">env_default_gpu</span> <span class="op">&lt;-</span> <span class="fu">SigBridgeR</span><span class="fu">:::</span><span class="fu">SIDISHEnvSet</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, device <span class="op">=</span> <span class="st">"cuda"</span><span class="op">)</span></span></code></pre></div>
+<p>You can use <code>ListPyEnvs()</code> to list all Python environments
+available on your system (both conda and virtualenv):</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ListPyEnv.html">ListPyEnv</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#                 name                                                   python  type</span></span>
+<span><span class="co"># 1               base                         /home/user/miniconda3/bin/python conda</span></span>
+<span><span class="co"># 2 r-reticulate-sidish-nvidia /home/user/miniconda3/envs/r-reticulate-sidish-nvidia/bin/python conda</span></span>
+<span><span class="co"># 3 r-reticulate-sidish-cpu    /home/user/miniconda3/envs/r-reticulate-sidish-cpu/bin/python conda</span></span></code></pre></div>
+<blockquote>
+<p><strong>Important considerations</strong>: - GPU acceleration
+requires CUDA-compatible hardware. If GPU is not detected but
+<code>device = "cuda"</code> is specified, the function will abort with
+an error message. Set <code>sidish_param = list(device = "cpu")</code>
+to run on CPU. And of course the python environment must be
+recreated.</p>
+</blockquote>
+<p><strong>Return structure</strong>: A named list containing:</p>
+<ul>
+<li>
+<code>scRNA_data</code>: A Seurat object with SIDISH screening
+results integrated into the <code>@misc</code> and
+<code>@meta.data</code> slots under the specified
+<code>label_type</code>. The object contains cell-level risk scores and
+survival-related annotations generated by the SIDISH algorithm.</li>
+</ul>
+</div>
+<div class="section level4">
 <h4 id="merge-screening-results">2.9 Merge screening results<a class="anchor" aria-label="anchor" href="#merge-screening-results"></a>
 </h4>
 <p>If you have performed multiple screening methods one the same
 single-cell data, you can use the <code>MergeResult</code> to merge the
 screening results of these methods. The Seurat object or a results list
 from <code>Screen</code> is accepted.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">merged_seurat</span> <span class="op">=</span> <span class="fu"><a href="../reference/MergeResult.html">MergeResult</a></span><span class="op">(</span></span>
 <span>    <span class="va">your_scissor_result</span>, </span>
 <span>    <span class="va">your_scPAS_result</span>, </span>
@@ -1417,7 +1566,7 @@ reference.</p>
 <p>Suppose you have performed all algorithm screening on your Seurat
 object and wish to examine the distribution across different celltypes
 and patient, you may reference and use the following code:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="co"># library(Seurat)</span></span>
 <span><span class="co"># library(patchwork)</span></span>
@@ -1461,7 +1610,7 @@ and patient, you may reference and use the following code:</p>
 <p>Or suppose you have performed <code>scPAS</code> screening on your
 Seurat object and want to visualize the distribution of prediction
 confidence scores, you may reference and use the following code:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="co"># library(Seurat)</span></span>
@@ -1518,7 +1667,7 @@ cells (default: FALSE).</li>
 screening on your Seurat object, and you want to check the proportion of
 positive cells across different patients. You can refer to and use the
 following code:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
 <span>   screened_seurat <span class="op">=</span> <span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span>, </span>
 <span>   group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
@@ -1527,7 +1676,7 @@ following code:</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>If you have performed multiple screening methods and already merged
 the results, you can use the following code:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
 <span>   screened_seurat <span class="op">=</span> <span class="va">merged_seurat</span>, </span>
 <span>   group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
@@ -1566,7 +1715,7 @@ algorithms on your Seurat object, and you want to check the overlap of
 the cells selected by each algorithm. You can refer to and use the
 following code:</p>
 <p><strong>example</strong>:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gaospecial/ggVennDiagram" class="external-link">ggVennDiagram</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># # * If you have merged the results, you can use the following code instead:</span></span>
@@ -1675,7 +1824,7 @@ combination matrix. Default: “black”.</li>
 <code>...</code> : Additional arguments passed to
 <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">ggplot2::theme()</a></code> for customizing the plot appearance.</li>
 </ul>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenUpset.html">ScreenUpset</a></span><span class="op">(</span>screened_seurat <span class="op">=</span> <span class="va">merged_seurat</span><span class="op">)</span></span></code></pre></div>
 <p><strong>returning structure</strong>:</p>
 <ul>
@@ -1700,14 +1849,14 @@ https://github.com/const-ae/ggupset</a></p>
 <p>Here we use the example data LUAD to demonstrate how to use the
 functions in <code>SigBridgeR</code> to screen cells associated with
 phenotype.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set working directory</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"here"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/i_am.html" class="external-link">i_am</a></span><span class="op">(</span><span class="st">".here"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>         </span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>root.dir <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  </span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
@@ -1754,7 +1903,7 @@ dataset.</p>
 parameters as needed for your specific use case.</p>
 <p>Now we use <code><a href="../reference/SCPreProcess.html">SCPreProcess()</a></code> to pre-process the single-cell
 RNA expression matrix data.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCPreProcess.html">SCPreProcess</a></span><span class="op">(</span></span>
 <span>  sc <span class="op">=</span> <span class="va">mat_exam</span>,</span>
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1784,7 +1933,7 @@ example is from one single batch.</p>
 <p>In practice, please replace this with your actual phenotype
 classification; the approach shown here is for demonstration purposes
 only and is not recommended for real analyses.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample_info</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames_to_column</a></span><span class="op">(</span><span class="va">pheno</span>, var <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>condition <span class="op">=</span> <span class="va">status</span><span class="op">)</span></span>
 <span><span class="va">sample_info</span><span class="op">$</span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="st">"batch1"</span></span>
@@ -1853,7 +2002,7 @@ only and is not recommended for real analyses.</p>
 <span><span class="co"># ℹ   Samples: 506 -&gt; 506 (removed 0)</span></span>
 <span><span class="co"># ✔ [2025/12/23 15:19:24] BulkPreProcess completed</span></span></code></pre></div>
 <p>And we will see a PCA plot.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/bulk_preprocess_pca.png"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/bulk_preprocess_pca.png)" class="external-link"><img src="example_figures/bulk_preprocess_pca.png" fig-align="center" width="600" alt="pca"></a></p>
 <p>Thus far, we have completed all the data preprocessing. We are now
@@ -1861,7 +2010,7 @@ ready to formally employ various single-cell phenotypic screening
 algorithms.</p>
 <p>First, we use <code>scissor</code> to screen cells associated with
 survival.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
@@ -1903,7 +2052,7 @@ method, which we can use to save running time ( You can also set
 intermediate files ). Meanwhile, we set
 <code>reliability_test=TRUE</code>, which will run an additional
 reliability test.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>, <span class="co"># doesn't need to be provided Since the intermediate data is provided</span></span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
@@ -1966,7 +2115,7 @@ reliability test.</p>
 screening. Generally you only need to change the
 <code>screen_method</code>, as long as you have not specified any
 particular parameters.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scpas_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
@@ -2005,7 +2154,7 @@ corresponding parameters, e.g. change the <code>alpha</code> to
 is significant (or judged as having no significant cell subpopulations).
 See also <a href="#id_32-option-b-scpas-screening">3.2 (Option B) scPAS
 Screening</a></p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scpas_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
@@ -2054,12 +2203,12 @@ Screening</a></p>
 <p>Generally speaking, a larger alpha means looser screening. However,
 it still won’t result in the occurence of too many false-positive cells.
 You can also adjust the <code>cutoff</code> parameter as you like.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPAS</span><span class="op">)</span></span>
 <span><span class="co"># Negative  Neutral Positive </span></span>
 <span><span class="co">#        5     1085        3 </span></span></code></pre></div>
 <p>Now we use scAB, scPP, DEGAS, LP_SGL and PIPET to screen cells.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scab_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
@@ -2078,7 +2227,7 @@ You can also adjust the <code>cutoff</code> parameter as you like.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scab_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scAB</span><span class="op">)</span></span>
 <span><span class="co">#    Other Positive </span></span>
 <span><span class="co">#     1018       75 </span></span></code></pre></div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scpp_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
@@ -2101,7 +2250,7 @@ You can also adjust the <code>cutoff</code> parameter as you like.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpp_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPP</span><span class="op">)</span></span>
 <span><span class="co"># Negative  Neutral Positive </span></span>
 <span><span class="co">#       52      993       48 </span></span></code></pre></div>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># I recommend running this code in the background.</span></span>
 <span><span class="va">degas_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
@@ -2129,7 +2278,7 @@ You can also adjust the <code>cutoff</code> parameter as you like.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">degas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">DEGAS</span><span class="op">)</span></span>
 <span><span class="co">#    Other Positive </span></span>
 <span><span class="co">#     1038       55 </span></span></code></pre></div>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># I recommend running this code in the background.</span></span>
 <span><span class="va">lpsgl_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
@@ -2156,7 +2305,7 @@ to use PIPET in <a href="#id_53-binarized-phenotype-associated-cell-screening">S
 5.3</a></p>
 <p>After these algorithms have been run, the four sets of data can be
 merged since screening methods performed on the same data.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">screen_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MergeResult.html">MergeResult</a></span><span class="op">(</span></span>
 <span>    <span class="va">scissor_result</span>,</span>
 <span>    <span class="va">scpas_result</span>,</span>
@@ -2178,7 +2327,7 @@ merged since screening methods performed on the same data.</p>
 <span><span class="co"># [17] "scPAS_Pvalue"    "scPAS_FDR"       "scPAS"           "scPP_AUCup"      "scPP_AUCdown"    "scPP"            "DEGAS"           "LP_SGL"                 </span></span></code></pre></div>
 <p>Finally, we can visualize the screening results. Let’s start with a
 Venn diagram to see the situation.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gaospecial/ggVennDiagram" class="external-link">ggVennDiagram</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
@@ -2246,13 +2395,13 @@ Venn diagram to see the situation.</p>
 <span><span class="co">#   width = 10,</span></span>
 <span><span class="co">#   height = 10</span></span>
 <span><span class="co"># )</span></span></code></pre></div>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/venn.png"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/venn.png)" class="external-link"><img src="example_figures/venn.png" fig-align="center" width="600" alt="venn"></a></p>
 <p>When there are too many sets, the visualization effect of the Venn
 diagram is not very good. We can use a set plot instead. Only positive
 cells are shown in the set plot.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenUpset.html">ScreenUpset</a></span><span class="op">(</span></span>
 <span>  screened_seurat <span class="op">=</span> <span class="va">screen_result</span>,</span>
 <span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"scPP"</span>, <span class="st">"DEGAS"</span>,<span class="st">"LP_SGL"</span><span class="op">)</span>,</span>
@@ -2277,13 +2426,13 @@ cells are shown in the set plot.</p>
 <span><span class="co">#   width = 10,</span></span>
 <span><span class="co">#   height = 10</span></span>
 <span><span class="co"># )</span></span></code></pre></div>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/upset.png"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/upset.png)" class="external-link"><img src="example_figures/upset.png" fig-align="center" width="600" alt="upset"></a></p>
 <p>A bar chart showing proportions can also be used to examine the
 screening results. Since the example data does not have sample metadata,
 we have created a fictional <code>Sample</code> column.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="co"># * fictional sample column</span></span>
 <span><span class="va">screen_result</span><span class="op">$</span><span class="va">Sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/Bimap-envirAPI.html" class="external-link">sample</a></span><span class="op">(</span></span>
@@ -2312,7 +2461,7 @@ we have created a fictional <code>Sample</code> column.</p>
 <span><span class="co">#   width = 10,</span></span>
 <span><span class="co">#   height = 10</span></span>
 <span><span class="co"># )</span></span></code></pre></div>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/fraction.png"</span><span class="op">)</span></span></code></pre></div>
 <p>As you see, the <code>label_type</code>s set in function
 <code>Screen</code> are shown in the legend of each plot.</p>
@@ -2338,7 +2487,7 @@ appended with the method name as an identifier.</p>
 └── combined_plot # show 6 plots in one plot</p>
 <p>UMAP is the most commonly used type of plot in academic
 literature.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span></span>
@@ -2402,15 +2551,15 @@ literature.</p>
 <span><span class="co">#      width = 10,</span></span>
 <span><span class="co">#      height = 10</span></span>
 <span><span class="co"># )</span></span></code></pre></div>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"vignettes/example_figures/umaps.png"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="(https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps.png)" class="external-link"><img src="example_figures/umaps.png" fig-align="center" width="600" alt="umaps"></a></p>
 <p>All the analysis has been completed, and we can save the data for
 future use.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">SeuratObject</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/SaveSeuratRds.html" class="external-link">SaveSeuratRds</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">screen_result</span>, filename <span class="op">=</span> <span class="st">"screened_result.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>or in <code>.h5ad</code> format:</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.data-intuitive.com/reference/write_h5ad.html" class="external-link">write_h5ad</a></span><span class="op">(</span>object<span class="op">=</span> <span class="va">screen_result</span>, path <span class="op">=</span> <span class="st">"screened_result.h5ad"</span>, compression <span class="op">=</span> <span class="st">"gzip"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -2419,7 +2568,7 @@ future use.</p>
 <p>Generally speaking, the process is the same as described in <a href="#id_51-survival-associated-cell-screening">5.1 Survival-associated
 cell screening</a>. Here, only the preprocessing of continuous
 phenotypic data is introduced.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
@@ -2447,7 +2596,7 @@ phenotypic data is introduced.</p>
 <span><span class="co">#             178              65              91             206              63              67 </span></span></code></pre></div>
 <p>If your phenotype is a <code>data.frame</code>, try this to convert
 it to a <code>named vector</code>:</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="va">your_data.frame</span><span class="op">$</span><span class="va">continuous_numeric</span>, <span class="va">your_data.frame</span><span class="op">$</span><span class="va">sample</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -2456,7 +2605,7 @@ it to a <code>named vector</code>:</p>
 <p>This process is also the same as described in <a href="#id_51-survival-associated-cell-screening">5.1 Survival-associated
 cell screening</a>. Here, only the preprocessing of binary phenotypic
 data is introduced.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/zeallot" class="external-link">zeallot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
@@ -2487,7 +2636,7 @@ is stored in the “data” column, categorized as ‘Tumor’ and ‘Normal’,
 will assign ‘Tumor’ a value of 1 and ‘Normal’ a value of 0. In this way,
 cells screened as <strong>Positive</strong> will be associated with
 ‘Tumor’. Try this to convert it to a <code>named vector</code>:</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">mutate</span><span class="op">(</span></span>
 <span>    <span class="va">pheno</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
@@ -2500,7 +2649,7 @@ cells screened as <strong>Positive</strong> will be associated with
 <p>Previously, it was noted that PIPET cannot use patient survival data
 as the phenotype; here, we demonstrate using a binary phenotype
 instead.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pipet_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
 <span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
@@ -2532,7 +2681,7 @@ instead.</p>
 <p>View Troubleshooting<a href="https://wanglabcsu.github.io/SigBridgeR/articles/Troubleshooting.html" class="external-link">(https://github.com/WangX-Lab/SigBridgeR/wiki/Troubleshooting)</a>
 for troubleshooting, especially for the environment setup.</p>
 <p>Session information:</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>

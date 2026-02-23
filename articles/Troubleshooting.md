@@ -1,6 +1,6 @@
 # Troubleshooting
 
-## Overview
+### Overview
 
 This vignette provides solutions to common problems you might encounter
 when using this package. If you cannot find your problem here, please
@@ -10,7 +10,7 @@ file an issue on our GitHub repository.
 
 ------------------------------------------------------------------------
 
-#### Scissor
+## Scissor
 
 > **Error in normalize.quantiles(dataset0) : ERROR; return code from
 > pthread_create() is 22**
@@ -83,7 +83,7 @@ head(survival_phenotype) # case-sensitive
 
 ------------------------------------------------------------------------
 
-#### Package
+## Package
 
 > **Error in `function_name()`:**
 >
@@ -250,7 +250,7 @@ version of the package (version 2.4.1 has been tested and is feasible)
 
 #### Seurat
 
-**Excessive time during running SCTransfomm**
+> **Excessive time during running SCTransfomm**
 
 Output message is probably like this:
 
@@ -274,3 +274,27 @@ This is a bug from Seurat, see [Seurat
 \#10153](https://github.com/satijalab/seurat/issues/10153)
 
 Try update `Seurat` to latest version
+
+## Other
+
+> **Why does SigBridgeR hardcode reticulate::use_python() internally?
+> This contradicts the recommended practices of the R community**
+
+We are indeed aware that this practice deviates from the expectations of
+the R community. However, given that multiple algorithms embedded within
+the package require distinct Python installations and environments—and
+considering that `reticulate` binds a single Python environment to the
+entire R session without allowing runtime switching—each screening
+algorithm would otherwise necessitate a separate R session to operate
+correctly.
+
+Meanwhile, wrapping functions in subprocesses would increase usability
+and learning overhead for users, while invoking Python interpreters via
+system commands would require additional read/write operations to disk
+for R-side data, which is inefficient for large-scale data processing.
+
+After careful consideration, we encapsulated
+[`reticulate::use_python()`](https://rstudio.github.io/reticulate/reference/use_python.html)
+within isolated functions to emulate subprocess-like behavior—allowing
+localized Python environment specification—while avoiding interference
+with the globally registered Python configuration in the R session.

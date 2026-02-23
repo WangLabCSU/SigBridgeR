@@ -211,6 +211,7 @@ Med. 2022 Feb 1;14(1):11.
 Other screen_method:
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
@@ -218,7 +219,6 @@ Other screen_method:
 
 Other DEGAS:
 [`DEGASEnvSet()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASEnvSet.md),
-[`DEGASFindPy()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASFindPy.md),
 [`DEGASModelDetect()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASModelDetect.md),
 [`DEGASParamSet()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASParamSet.md)
 
