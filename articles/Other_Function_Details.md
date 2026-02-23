@@ -51,15 +51,12 @@ balance performance and system responsiveness.
 #### Basic Usage
 
 ``` r
-# Auto-configure all backends (default: half cores)
-setThreads()
-
 # Set explicit thread count
-setThreads(8)
+setThreads(8L)
 
 # Configure specific backends only
-setThreads(threads = 4, backend = "dt")      # data.table only
-setThreads(threads = 4, backend = "openmp")  # OpenMP only
+setThreads(threads = 4L, backend = "dt")      # data.table only
+setThreads(threads = 4L, backend = "openmp")  # OpenMP only
 ```
 
 #### TensorFlow Optimization
@@ -68,11 +65,10 @@ setThreads(threads = 4, backend = "openmp")  # OpenMP only
 
 ``` r
 setThreads(
-  threads = 8,
+  threads = 8L,
   tf_config = list(
-    xla = TRUE,
-    inter_op = 2,
-    intra_op = 8
+    inter_op = 2L,
+    intra_op = 8L
   )
 )
 tf <- reticulate::import("tensorflow")  # Import AFTER configuration
