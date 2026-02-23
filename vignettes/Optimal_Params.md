@@ -1,5 +1,3 @@
-# Find Optimal Parameters for My Screening
-
 > It is recommended to read the [Quick
 > Start](https://wanglabcsu.github.io/SigBridgeR/articles/Quick_Start.html)
 > or [Full
@@ -40,7 +38,9 @@ value -— as positive cells.
       screen_method = c("Scissor"),
       alpha = NULL # <<< HERE
     )
-    # * Output goes like this when using example data
+
+Output goes like this when using example data
+
     # ℹ [2025/11/07 08:39:59] Scissor start...
     # ℹ [2025/11/07 08:39:59] Start from raw data...
     # ℹ Using "RNA_snn" graph for network.
@@ -133,7 +133,9 @@ parallel computing can be employed to accelerate the process.
       alpha_2 = seq2
       # parallel = TRUE # Auto-enabled
     )
-    # * Output goes like this when using example data
+
+Output goes like this when using example data
+
     # ℹ [2025/11/07 08:43:48] Start scAB screening.
     # ℹ  Using "RNA_snn" graph for network.
     # ℹ [2025/11/07 08:43:53] Selecting K...
@@ -174,7 +176,9 @@ method to enable iteration is the same.
       screen_method = c("scPAS"),
       alpha = NULL # <<< HERE
     )
-    # * Output goes like this when using example data
+
+Output goes like this when using example data
+
     # ℹ [2025/10/20 16:43:31] Start scPAS screening.
     # ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.
     # ℹ [2025/10/20 16:43:32] Extracting single-cell expression profiles...
@@ -237,7 +241,9 @@ threshold. The input `probs` must be between 0 and 0.5.
       screen_method = c("scPP"),
       probs = NULL # <<< HERE
     )
-    # * Output goes like this when using example data
+
+Output goes like this when using example data
+
     # ℹ [2025/11/07 08:53:20] Start scPP screening.
     # ℹ [2025/11/07 08:53:20] Finding overall markers...
     # Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :

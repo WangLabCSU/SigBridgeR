@@ -112,8 +112,8 @@ perform cell type annotation on the data.
 ## Annotation of Single Cell Data
 
 Here we demonstrate the usage of **mLLMCelltype**. We also provide
-support for **SingleR** and **CellTypist** (see
-<https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html>
+support for **SingleR** and **CellTypist** (see [Auxiliary
+Utils](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html)
 for details and usage).
 
 Here we use DeepSeek v3 only as an example. Generally speaking, the more

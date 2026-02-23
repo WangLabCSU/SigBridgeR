@@ -908,7 +908,7 @@ Parameters pass to `...` when using `DEGAS` method
       env_params = list(
         env.name = "r-reticulate-degas",
         env.type = "conda",
-        # Environment.yml file will be used to create the conda environment in default, so other parameters can be omitted
+        # Environment.yml file will be used to create the conda environment in default, so other parameters can be ignored
         env.method = "environment",
         # The path of the environment.yml file
         env.file = system.file(
@@ -1088,6 +1088,144 @@ Parameters pass to `...` when using `PIPET` method
 -   `scRNA_data`: A Seurat object after screening (with PIPET
     annotations in meta.data)
 -   `markers`: Phenotype-specific marker genes
+
+### 2.8 (Option H) SIDISH Screening
+
+Parameters passed to `...` when using `SIDISH` method:
+
+-   `verbose`: Logical. Whether to print verbose output during
+    execution. Default is `TRUE`.
+-   `label_type`: Character specifying the phenotype label type stored
+    in `sc_data@misc`. Default is `"SIDISH"`.
+-   `assay`: Seurat assay name to use for expression data. Default is
+    `"RNA"`.
+-   `sidish_param`: List of parameters for SIDISH algorithm. See below
+    for details.
+-   `env_params`: List of parameters for environment setup. See below
+    for details.
+
+<!-- -->
+
+    sidish_result <- Screen(
+      matched_bulk = your_matched_bulk,
+      sc_data = A_Seurat_object,
+      phenotype = your_survival_phenotype,  # Must contain "time" and "status" columns
+      label_type = "SIDISH",                # Labels stored in `@misc` slot to identify screening results
+      screen_method = "SIDISH",
+      phenotype_class = "survival",         # Currently only survival phenotype is supported
+      
+      # SIDISH algorithm parameters
+      sidish_param = list(
+        # Preprocessing parameters
+        patient_id = "Sample",
+        celltype_name = "celltype_major",
+        processed = TRUE,
+        n_genes_by_counts = 5000L,
+        pct_counts_mt = 10L,
+        batch_correction = FALSE,
+        survival_ = "time",                 # Column name for survival time
+        status = "status",                  # Column name for event status
+        
+        # Execution environment
+        device = "cuda",                    # "cuda" for GPU acceleration, "cpu" for CPU-only
+        use_spatial_graph = FALSE,
+        k_neighbors = NULL,
+        
+        # Phase 1: VAE training parameters
+        phase1_epochs = 225L,
+        phase1_i_epochs = 20L,
+        phase1_latent_size = 32L,
+        phase1_layer_dims = c(512L, 128L),
+        phase1_batch_size = 256L,
+        phase1_optimizer = "Adam",
+        phase1_lr = 1e-4,
+        phase1_lr_3 = 1e-4,
+        phase1_dropout = 0L,
+        phase1_type = "Dense",              # "Dense" or "Normal"
+        
+        # Phase 2: Deep Cox training parameters
+        phase2_epochs = 500L,
+        phase2_hidden = 128L,
+        phase2_lr = 1e-4,
+        phase2_dropout = 0L,
+        phase2_test_size = 0.2,
+        phase2_batch_size_bulk = 256L,
+        
+        # Training & risk definition
+        train_iterations = 5L,
+        train_percentile = 0.95,
+        train_steepness = 30L,
+        train_path = "./SIDISH_res/",       # Path to save intermediate data
+        train_num_workers = 0L,
+        train_distribution_fit = "fitted"   # "fitted" or "default"
+      ),
+      
+      # Python environment parameters
+      env_params = list(
+        env.name = "r-reticulate-sidish-nvidia",  # Auto-selected based on device parameter
+        env.type = "conda",
+        env.method = "environment",
+        env.file = system.file(
+          "conda/SIDISH_nvidia_environment.yml",
+          package = "SigBridgeR"
+        ),
+        env.python_verion = "3.12.12",
+        env.packages = c(
+          "numpy" = "1.26.4"
+          # Additional packages defined in environment.yml
+        ),
+        env.recreate = FALSE,               # Force re-creating environment if TRUE
+        env.use_conda_forge = TRUE,
+        env.verbose = FALSE
+      ),
+      
+      verbose = TRUE
+    )
+
+This code chunk will CREATE a conda environment called
+**`r-reticulate-sidish-nvidia`** (for GPU) or
+**`r-reticulate-sidish-cpu`** (for CPU) with Python 3.12.12 and install
+all required dependencies for SIDISH. If an environment with the same
+name already exists, it will be reused without recreation (unless
+`env_params = list(env.recreate = TRUE)` is specified).
+
+**Note**: SIDISH currently **only supports survival phenotypes**
+(`phenotype_class = "survival"`). The phenotype data frame must contain
+columns named `"time"` (survival time) and `"status"` (event indicator).
+
+To obtain the default parameters for SIDISH, use
+`SigBridgeR:::SIDISHParamSet()` and `SigBridgeR:::SIDISHEnvSet()`:
+
+    # Get default SIDISH algorithm parameters
+    sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
+
+    # Get default environment parameters (CPU version)
+    env_default_cpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cpu")
+
+    # Get default environment parameters (GPU version)
+    env_default_gpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cuda")
+
+You can use `ListPyEnvs()` to list all Python environments available on
+your system (both conda and virtualenv):
+
+    ListPyEnv()
+    #                 name                                                   python  type
+    # 1               base                         /home/user/miniconda3/bin/python conda
+    # 2 r-reticulate-sidish-nvidia /home/user/miniconda3/envs/r-reticulate-sidish-nvidia/bin/python conda
+    # 3 r-reticulate-sidish-cpu    /home/user/miniconda3/envs/r-reticulate-sidish-cpu/bin/python conda
+
+> **Important considerations**: - GPU acceleration requires
+> CUDA-compatible hardware. If GPU is not detected but `device = "cuda"`
+> is specified, the function will abort with an error message. Set
+> `sidish_param = list(device = "cpu")` to run on CPU. And of course the
+> python environment must be recreated.
+
+**Return structure**: A named list containing:
+
+-   `scRNA_data`: A Seurat object with SIDISH screening results
+    integrated into the `@misc` and `@meta.data` slots under the
+    specified `label_type`. The object contains cell-level risk scores
+    and survival-related annotations generated by the SIDISH algorithm.
 
 ### 2.9 Merge screening results
 
