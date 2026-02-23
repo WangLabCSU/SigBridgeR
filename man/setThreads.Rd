@@ -4,12 +4,18 @@
 \alias{setThreads}
 \title{Configure Parallel Execution Backends}
 \usage{
-setThreads(threads = NULL, backend = c("openmp", "dt"), tf_config = NULL, ...)
+setThreads(
+  threads = NULL,
+  backend = c("openmp", "dt"),
+  tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
+    NULL, inter_op = NULL, intra_op = c(1L, NULL)),
+  ...
+)
 }
 \arguments{
 \item{threads}{Integer. Global thread count used as default for all backends.
-If \code{NULL} (default), uses \code{floor(availableCores() / 2)}.
-Applied to: OpenMP, data.table, and TensorFlow intra-op (unless overridden).}
+If \code{NULL} (default), uses \code{floor(availableCores() / 2)}. Applied to:
+OpenMP, data.table, and TensorFlow intra-op (unless overridden).}
 
 \item{backend}{Character vector. System-level backends to configure:
 \code{"openmp"} (sets \code{OMP_NUM_THREADS}), \code{"dt"} (data.table threads).
@@ -17,11 +23,11 @@ Default: \code{c("openmp", "dt")}.}
 
 \item{tf_config}{Named list for TensorFlow-specific configuration:
 \itemize{
-\item \code{xla}: Logical. Enable XLA JIT compilation (default: \code{FALSE})
-\item \code{inter_op}: Integer. Inter-op parallelism threads (default: auto-derived)
-\item \code{intra_op}: Integer. Intra-op parallelism threads (default: \code{threads})
-}
-\strong{Must be set BEFORE importing TensorFlow}.}
+\item \code{xla_flag}: Character. XLA JIT compilation flags (default: auto-optimized)
+\item \code{xla_device}: Integer. XLA device ID (default: \code{1L})
+\item \code{inter_op}: Integer. Inter-op parallelism threads (default: \code{max(2, floor(threads/4))})
+\item \code{intra_op}: Integer. Intra-op parallelism threads (default: \code{1L}). If \code{NULL}, inherits global \code{threads} by default.
+}}
 
 \item{...}{Additional arguments for \code{data.table::setDTthreads()} (e.g., \code{restore}).
 Includes \code{verbose} logical flag (default: \code{TRUE}).}
@@ -32,37 +38,31 @@ Invisible list with old/new values per backend.
 \description{
 Unified interface to configure thread counts and acceleration features across
 system-level (OpenMP/data.table) and TensorFlow backends. Uses a hierarchical
-configuration model:
-\itemize{
-\item \code{threads}: Global thread count (default: half physical cores)
-\item \code{backend}: System-level backends to configure
-\item \code{tf_config}: Named list for TensorFlow-specific settings
-}
+configuration model where global \code{threads} serves as default for all
+backends unless explicitly overridden.
+
+\strong{Critical}: TensorFlow configuration must be set \emph{before} importing
+TensorFlow via \code{reticulate::import("tensorflow")}.
 }
 \examples{
 \dontrun{
-# Minimal: auto-configure all backends with half cores
+# Basic usage: auto-detect and configure
 setThreads()
 
-# Explicit global thread count
-setThreads(threads = 8)
+# Explicit thread count for CPU-intensive workloads
+setThreads(threads = 12L)
 
-# TensorFlow optimization (MUST run BEFORE importing TensorFlow)
+# TensorFlow-optimized configuration for deep learning
 setThreads(
-  threads = 8,
+  threads = 8L,
   tf_config = list(
-    xla = TRUE,
-    inter_op = 2,
-    intra_op = 8
+    inter_op = 2L,
+    intra_op = 8L
   )
 )
-reticulate::import("tensorflow")  # Import AFTER configuration
+library(tensorflow)  # Import AFTER setThreads()
 
-# Fine-grained control: override specific backends
-setThreads(
-  threads = 16,
-  backend = "dt",  # Only configure data.table
-  tf_config = list(inter_op = 4)  # intra_op inherits threads=16
-)
+# Configure only data.table for memory-efficient workflows
+setThreads(threads = 4, backend = "dt", verbose = FALSE)
 }
 }
