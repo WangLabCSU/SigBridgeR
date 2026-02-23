@@ -79,7 +79,7 @@ DoSIDISH <- function(
       package = "rSIDISH"
     ),
     !!!sidish_param,
-    seed=seed
+    seed = seed
   )
   # A Seurat
   res <- AddMisc(res, SIDISH_params = sidish_param)
@@ -129,7 +129,7 @@ SIDISHEnvSet <- function(env_params = list(), device = c("cuda", "cpu")) {
 #' @family SIDISH
 SIDISHParamSet <- function(sidish_param = list()) {
   default <- list(
-       # Preprocessing parameters
+    # Preprocessing parameters
     patient_id = "Sample",
     celltype_name = "celltype_major",
     processed = TRUE,
@@ -139,12 +139,12 @@ SIDISHParamSet <- function(sidish_param = list()) {
     survival_ = "time",
     status = "status",
 
-      # Execution environment
+    # Execution environment
     device = "cuda", # or "cpu"
     use_spatial_graph = FALSE,
     k_neighbors = NULL,
 
-       # Phase 1: VAE training
+    # Phase 1: VAE training
     phase1_epochs = 225L,
     phase1_i_epochs = 20L,
     phase1_latent_size = 32L,
@@ -156,7 +156,7 @@ SIDISHParamSet <- function(sidish_param = list()) {
     phase1_dropout = 0L,
     phase1_type = "Dense", # or "Normal"
 
-     # Phase 2: Deep Cox training
+    # Phase 2: Deep Cox training
     phase2_epochs = 500L,
     phase2_hidden = 128L,
     phase2_lr = 1e-4,
@@ -164,7 +164,7 @@ SIDISHParamSet <- function(sidish_param = list()) {
     phase2_test_size = 0.2,
     phase2_batch_size_bulk = 256L,
 
-     # Training & risk definition
+    # Training & risk definition
     train_iterations = 5L,
     train_percentile = 0.95,
     train_steepness = 30L,

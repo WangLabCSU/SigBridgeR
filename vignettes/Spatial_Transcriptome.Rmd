@@ -121,7 +121,7 @@ We will use a single-cell phenotype-based screening algorithm to identify cell p
 
 ## Annotation of Single Cell Data
 
-Here we demonstrate the usage of **mLLMCelltype**. We also provide support for **SingleR** and **CellTypist** (see [https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html) for details and usage).
+Here we demonstrate the usage of **mLLMCelltype**. We also provide support for **SingleR** and **CellTypist** (see [Auxiliary Utils](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html) for details and usage).
 
 Here we use DeepSeek v3 only as an example. Generally speaking, the more powerful the model and the greater the number of models used, the higher the prediction accuracy of mLLMCelltype.
 

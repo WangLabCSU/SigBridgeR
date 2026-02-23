@@ -12,7 +12,7 @@ ListPyEnv <- SigBridgeRUtils::ListPyEnv
 
 # ? General global variables
 
-#' @importFrom data.table `:=` `%chin%` `.N` `.SD`
+#' @importFrom data.table `:=` `%chin%` `.N` `.SD` `.I`
 #' @importFrom dplyr `%>%`
 NULL
 
