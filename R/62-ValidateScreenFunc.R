@@ -64,6 +64,9 @@ ValidateScreenFunc <- function(
   return_check <- ValidateReturn(func = func, ...)
   cli::cli_text("\n")
 
+  dir_name_check <- ValidateDirName(func = func, ...)
+  cli::cli_text("\n")
+
   if (rlang::is_installed("tictoc")) {
     end_time <- tictoc::toc(quiet = TRUE)
     cli::cli_text(tictoc::toc.outmsg(end_time$tic, end_time$toc, "Duration"))
@@ -326,6 +329,82 @@ ValidateReturn <- function(func, ...) {
     validate_success("Return value is a list with `scRNA_data` slot")
   }
 
+  invisible()
+}
+
+#' @keywords internal
+ValidateDirName <- function(func, ...) {
+  func_body <- rlang::fn_body(func)
+
+  # 递归查找所有 dir.create 调用
+  find_dir_create_calls <- function(expr) {
+    calls <- list()
+    if (rlang::is_call(expr)) {
+      if (rlang::call_name(expr) == "dir.create") {
+        calls <- list(expr)
+      }
+      # 递归遍历子表达式
+      for (arg in rlang::call_args(expr)) {
+        calls <- c(calls, find_dir_create_calls(arg))
+      }
+    } else if (rlang::is_pairlist(expr)) {
+      for (elt in expr) {
+        calls <- c(calls, find_dir_create_calls(elt))
+      }
+    }
+    calls
+  }
+
+  dir_create_calls <- find_dir_create_calls(func_body)
+
+  if (length(dir_create_calls) == 0) {
+    return(invisible())
+  }
+
+  note <- 0L
+
+  # 检查每个 dir.create 调用的文件夹名
+  for (call in dir_create_calls) {
+    folder_arg <- rlang::call_args(call)[[1]]
+
+    # 尝试获取文件夹名
+    if (rlang::is_syntactic_literal(folder_arg)) {
+      folder_name <- as.character(folder_arg)
+    } else if (rlang::is_symbol(folder_arg)) {
+      # 如果是符号，尝试获取变量名
+      folder_name <- as.character(folder_arg)
+    } else {
+      # 对于复杂表达式，记录警告但继续
+      validate_note(
+        "Cannot statically analyze folder name from complex expression"
+      )
+      next
+    }
+
+    # "_res"
+    if (!grepl("_res", folder_name)) {
+      validate_note("Folder name does not end with '_res'")
+      validate_explain(
+        c(
+          glue::glue(
+            "{cli::symbol$bullet} Current folder name: '{folder_name}'"
+          ),
+          glue::glue(
+            "{cli::symbol$bullet} Recommended: Use '_res' suffix (e.g., '{folder_name}_res') to clearly distinguish the result (intermediate) folder from the source code"
+          )
+        )
+      )
+      note <- note + 1L
+    } else {
+      validate_success(
+        "Folder name '{folder_name}' ends with '_res'"
+      )
+    }
+  }
+
+  if (note > 0) {
+    return(list(note = note))
+  }
   invisible()
 }
 

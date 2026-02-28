@@ -236,7 +236,7 @@ Key parameters for `BulkPreProcess`:
 
 -   `data`: Expression matrix with genes as rows and samples as columns, or a list containing count_matrix and sample_info.
 -   `sample_info`: Sample information data frame (optional), ignored if data is a list. A qualified `sample_info` should contain both `sample` and `condition` columns (case-sensitive), and there are no specific requirements for the data type stored in the `condition` column.
--   `gene_symbol_conversion`: Whether to convert Ensembl version IDs and TCGA version IDs to genes with [SymbolConvert in Section 2.2.2](#222-gene-symbol-conversion), default TRUE.
+-   `gene_symbol_conversion`: Whether to convert Ensembl version IDs and TCGA version IDs to genes with [SymbolConvert in Section 1.2.2](#122-gene-symbol-conversion), default TRUE.
 -   `check`: Whether to perform detailed quality checks, default TRUE.
 -   `min_count_threshold`: Minimum count threshold for gene filtering, default 10.
 -   `min_gene_expressed`: Minimum number of samples a gene must be expressed in, default 3.
@@ -348,7 +348,7 @@ rownames(your_bulk_data) <- gene_symbols
 
 ### 1.3 Phenotype Data
 
-Bascially you can just use your phenotype data directly. If you are confused about the structure `Screen()` requires, please refer to [Section 5](#example).
+Bascially you can just use your phenotype data directly. If you are confused about the structure `Screen()` requires, please refer to [Section 4](#example).
 
 You can use this function to check NA values, which tells you the location of NA values in your phenotype data:
 
@@ -483,7 +483,7 @@ CheckNA <- function(data, max_print = 5) {
 
 ## 2. Screen Cells Associated with Phenotype
 
-The function **`Screen`** provide 5 different options for screening cells associated with phenotype, These 5 algorithms come from the repositories mentioned in [7. References](#7-references), and you can choose one of them to screen your cells.
+The function **`Screen`** provide 8 different options for screening cells associated with phenotype, These 8 algorithms come from the repositories mentioned in [6. References](#6-references), and you can choose one of them to screen your cells.
 
 Key parameters for `Screen`:
 
@@ -1383,7 +1383,7 @@ seurat <- SCPreProcess(
 )
 ```
 
-`BulkPreProcess()` is to pre-process the bulk expression data and the related clinical data.frame (containing bulk sample information) to perform PCA. Here, we want to retain the data so that the screening can reflect the most accurate situation. You can choose whether to filter or retain based on your own needs. See also [2.2 Bulk expression data](#22-bulk-expression-data) for more details.
+`BulkPreProcess()` is to pre-process the bulk expression data and the related clinical data.frame (containing bulk sample information) to perform PCA. Here, we want to retain the data so that the screening can reflect the most accurate situation. You can choose whether to filter or retain based on your own needs. See also [1.2 Bulk expression data](#12-bulk-expression-data) for more details.
 
 To facilitate the demonstration of the use of the `sample_info` parameter, we will divide the `pheno` based on its survival status into two groups, which will be stored in the `condition` column. `batch` column is used to store the batch information of the samples. The example is from one single batch. 
 
@@ -1956,19 +1956,19 @@ The `fraction_list` contains the statistical data and charts for each screening 
 
 fraction_list\
     ├── stats\
-    │   ├── scissor\
-    │   ├── scAB\
-    │   ├── scPAS\
-    │   ├── scPP   \
-    │   ├── DEGAS\
-    │   └── LP_SGL\
+    │       ├── scissor\
+    │       ├── scAB\
+    │       ├── scPAS\
+    │       ├── scPP   \
+    │       ├── DEGAS\
+    │       └── LP_SGL\
     ├── plots\
-    │   ├── scissor\
-    │   ├── scAB\
-    │   ├── scPAS\
-    │   ├── scPP\
-    │   ├── DEGAS\
-    │   └── LP_SGL\
+    │       ├── scissor\
+    │       ├── scAB\
+    │       ├── scPAS\
+    │       ├── scPP\
+    │       ├── DEGAS\
+    │       └── LP_SGL\
     └── combined_plot # show 6 plots in one plot
 
 

@@ -65,7 +65,6 @@ pak::pkg_install(c(
   "sparseMatrixStats",
   "matrixStats",
   "preprocessCore",
-  "WGCNA",
   "tidyr",
   "matrixTests",
   "KernSmooth",
@@ -76,6 +75,12 @@ pak::pkg_install(c(
   "furrr",
   "future"
 ))
+
+if (!requireNamespace("BiocManager")) {
+  install.packages("BiocManager")
+}
+# faster computation
+BiocManager::install("WGCNA")
 ```
 
 For seamless integration with other file types such as `.h5ad`:
