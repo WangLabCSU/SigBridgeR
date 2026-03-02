@@ -222,7 +222,7 @@ DoScissor <- function(
   reliability_result <- if (reliability_test$run) {
     DoScissorRelTest(
       scissor_res = infos1,
-      alpha = alpha,
+      alpha = infos1$para$alpha,
       family = family,
       cell_num = length(infos1$Scissor_pos) +
         length(infos1$Scissor_neg),
