@@ -42,7 +42,8 @@ DoSIDISH <- function(
 
   # Extract additional arguments
   dots <- list(...)
-  verbose <- dots$verbose %||% TRUE
+  verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
+  seed <- dots$seed %||% getFuncOption("seed") %||% 123L
   label_type <- label_type %||% "SIDISH"
 
   # * handling user parameters

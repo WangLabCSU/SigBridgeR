@@ -5,8 +5,15 @@ test_that("`ValidateScreenFunc` works", {
     b
     s(z)
     ~`×`
-    list(scRNA_data = 1, z = z)
+    list(scRNA = 1, z = z)
   }
 
-  ValidateScreenFunc(func)
+  expect_error(ValidateScreenFunc(func))
+
+  func2 <- \(x) {
+    z <- x + 1
+    list(scRNA = 1, z = z)
+  }
+
+  ValidateScreenFunc(func2)
 })

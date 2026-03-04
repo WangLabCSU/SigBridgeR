@@ -308,6 +308,12 @@ ValidateReturn <- function(func, ...) {
 
   if (!is_list_creation) {
     validate_error("Return value is not a list")
+
+    cli::cli_div(
+      id = "missing_return",
+      theme = list(div = list("margin-left" = 2))
+    )
+
     validate_explain_speaker(
       message = c(
         "recommended to be the first element of the return value",
@@ -316,14 +322,26 @@ ValidateReturn <- function(func, ...) {
       message_name = "scRNA_data",
       type = "error"
     )
+
+    cli::cli_end(id = "missing_return")
+
     return(list(error = 1))
   } else if (!has_scRNA_data) {
     validate_error("Return value does not have `scRNA_data` slot")
+
+    cli::cli_div(
+      id = "missing_return",
+      theme = list(div = list("margin-left" = 2))
+    )
+
     validate_explain_speaker(
-      message = "Should be of class {.cls Seurat}",
+      message = c("Should be of class {.cls Seurat}"),
       message_name = "scRNA_data",
       type = "error"
     )
+
+    cli::cli_end(id = "missing_return")
+
     return(list(error = 1))
   } else {
     validate_success("Return value is a list with `scRNA_data` slot")
