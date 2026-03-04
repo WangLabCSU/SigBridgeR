@@ -66,7 +66,7 @@ PhenoMap <- function(data, ..., .default = NA) {
     original_names <- names(data)
     dt <- data.table::setDT(list(data)) # 1 column
     names(dt) <- col
-    res <- PhenoMap(dt, ...)[[1]]
+    res <- PhenoMap(dt, ..., .default = .default)[[1]]
     names(res) <- original_names
     return(res)
   }
