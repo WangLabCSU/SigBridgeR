@@ -145,5 +145,11 @@ Other single_cell_preprocess:
 \code{\link{SCIntegrate}()},
 \code{\link{SCPreProcessStrategy}},
 \code{\link{compatible_with_3.0.2}()}
+
+Other input_preprocess: 
+\code{\link{BulkPreProcess}()},
+\code{\link{PhenoMap}()},
+\code{\link{PhenoPreProcess}()}
 }
+\concept{input_preprocess}
 \concept{single_cell_preprocess}

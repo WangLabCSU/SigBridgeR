@@ -118,4 +118,10 @@ Samples are retained if:
 \code{\link[stats]{prcomp}} for PCA analysis,
 \code{\link[stats]{cor}} for correlation analysis,
 \code{\link[SigBridgeR]{SymbolConvert}} for gene symbol conversion
+
+Other input_preprocess: 
+\code{\link{PhenoMap}()},
+\code{\link{PhenoPreProcess}()},
+\code{\link{SCPreProcess}()}
 }
+\concept{input_preprocess}

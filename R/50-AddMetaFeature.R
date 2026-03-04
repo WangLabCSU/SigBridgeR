@@ -172,7 +172,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
   assay_obj[[]] <- mf_final
   seurat_obj@assays[[assay]] <- assay_obj
 
-  invisible(seurat_obj)
+  seurat_obj
 }
 
 #' Helper: make name unique by suffixing _1, _2, ...

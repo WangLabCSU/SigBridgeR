@@ -1,0 +1,92 @@
+#' @title Map Phenotype Values Using Conditional Rules
+#'
+#' @description
+#' Efficiently transforms phenotype values based on user-defined conditional rules.
+#' Similar to \code{dplyr::case_when} but optimized for performance on large datasets.
+#'
+#' @param data A vector, data frame, or data.table containing the phenotype data to transform.
+#' @param ... Named or unnamed formulas of the form \code{condition ~ value}.
+#'   Conditions are evaluated sequentially; the first matching condition determines the output value.
+#'   Example: \code{col > 10 ~ "High", col <= 10 ~ "Low"}
+#' @param .default Value to use when no conditions match. Default: \code{NA}.
+#'
+#' @return A data.table with the transformed column. If input is a vector, returns a vector.
+#' @export
+#' @family input_preprocess
+#'
+#' @examples
+#' \dontrun{
+#' # Example 1: Discretize a continuous phenotype
+#' scores <- rnorm(100, mean = 50, sd = 10)
+#' scores <- PhenoMap(scores, scores > 60 ~ "High", scores > 40 ~ "Medium", .default = "Low")
+#'
+#' # Example 2: Transform a column in a data frame
+#' df <- data.frame(
+#'   age = c(25, 35, 45, 55, 65),
+#'   gender = c("M", "F", "M", "F", "M")
+#' )
+#' df <- PhenoMap(df, age < 30 ~ "Young", age < 50 ~ "Middle", .default = "Senior")
+#'
+#' # Example 3: Multiple conditions with complex logic
+#' df <- data.frame(value = c(5, 15, 25, 35, 45))
+#' df <- PhenoMap(
+#'   df,
+#'   value < 10 ~ "Very Low",
+#'   value < 20 ~ "Low",
+#'   value < 30 ~ "Medium",
+#'   value < 40 ~ "High",
+#'   .default = "Very High"
+#' )
+#' }
+#'
+#' @seealso \code{\link[data.table]{fcase}}, \code{\link[dplyr]{case_when}}
+PhenoMap <- function(data, ..., .default = NA) {
+  rules <- rlang::list2(...)
+
+  if (length(rules) == 0) {
+    cli::cli_abort(c(
+      "x" = "Condition is empty",
+      ">" = "Format e.g.: {.code col > 10 ~ 1, col <=10 ~ 0}"
+    ))
+  }
+
+  if (!all(vapply(X = rules, FUN = is.call, FUN.VALUE = logical(1)))) {
+    cli::cli_abort(c(
+      "x" = "Not all conditions are formula",
+      ">" = "Use e.g.: {.code col > 10 ~ 1, col <=10 ~ 0}"
+    ))
+  }
+
+  conditions <- lapply(rules, `[[`, 2)
+  values <- lapply(rules, `[[`, 3)
+
+  col <- all.vars(conditions[[1]])[1]
+
+  if (!is_2d(data)) {
+    original_names <- names(data)
+    dt <- data.table::setDT(list(data)) # 1 column
+    names(dt) <- col
+    res <- PhenoMap(dt, ...)[[1]]
+    names(res) <- original_names
+    return(res)
+  }
+
+  dt <- data.table::as.data.table(data)
+
+  args <- vector("list", length(rules) * 2)
+  args[seq(1, length(args), 2)] <- conditions
+  args[seq(2, length(args), 2)] <- values
+
+  if (!is.na(.default)) {
+    args$default <- .default
+  }
+
+  expr <- substitute(
+    DT[, COL := do.call(data.table::fcase, ARGS)],
+    list(DT = dt, COL = as.name(col), ARGS = args)
+  )
+
+  eval(expr, envir = parent.frame())
+
+  dt
+}

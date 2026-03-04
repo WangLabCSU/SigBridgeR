@@ -386,13 +386,10 @@ ValidateDirName <- function(func, ...) {
       validate_note("Folder name does not end with '_res'")
       validate_explain(
         c(
-          glue::glue(
-            "{cli::symbol$bullet} Current folder name: '{folder_name}'"
-          ),
-          glue::glue(
-            "{cli::symbol$bullet} Recommended: Use '_res' suffix (e.g., '{folder_name}_res') to clearly distinguish the result (intermediate) folder from the source code"
-          )
-        )
+          "{cli::symbol$bullet} Current folder name: '{folder_name}'",
+          "{cli::symbol$bullet} Recommended: Use '_res' suffix (e.g., '{folder_name}_res') to clearly distinguish the result (intermediate) folder from the source code"
+        ),
+        .envir = rlang::current_env()
       )
       note <- note + 1L
     } else {

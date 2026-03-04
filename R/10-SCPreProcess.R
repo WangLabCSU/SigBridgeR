@@ -92,6 +92,7 @@
 #' }
 #'
 #' @family single_cell_preprocess
+#' @family input_preprocess
 #' @export
 #'
 NULL

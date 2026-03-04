@@ -82,6 +82,7 @@
 #' \code{\link[SigBridgeR]{SymbolConvert}} for gene symbol conversion
 #'
 #' @return Filtered count matrix
+#' @family input_preprocess
 #' @export
 #'
 BulkPreProcess <- function(
