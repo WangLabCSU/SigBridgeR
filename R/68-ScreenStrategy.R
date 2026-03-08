@@ -82,10 +82,10 @@ ScreenStrategy <- rlang::new_environment(
       mapper = NULL
     ),
     SIDISH = list(
-        method_name = "SIDISH",
-        executor = DoSIDISH,
-        phenotypes = "survival",
-        mapper = NULL
+      method_name = "SIDISH",
+      executor = DoSIDISH,
+      phenotypes = "survival",
+      mapper = NULL
     )
   )
 )

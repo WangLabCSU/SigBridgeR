@@ -52,7 +52,7 @@
 #' }
 setThreads <- function(
   threads = NULL,
-  backend = c("openmp", "dt","cheapr"),
+  backend = c("openmp", "dt", "cheapr"),
   tf_config = list(
     xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",
     xla_device = NULL,
@@ -60,7 +60,8 @@ setThreads <- function(
     inter_op = NULL, # Auto-derived: max(2, floor(threads/4))
     # TF_NUM_INTRAOP_THREADS
     intra_op = c(1L, NULL) # `NULL`: Inherits global `threads` by default
-  ),verbose = getFuncOption("verbose"),
+  ),
+  verbose = getFuncOption("verbose"),
   ...
 ) {
   # ===== 1. 参数验证与默认值 =====
@@ -119,8 +120,7 @@ setThreads <- function(
 
   if ("dt" %in% backend) {
     old_dt <- data.table::getDTthreads(verbose = FALSE)
-    data.table::setDTthreads(      threads = threads,      ...
-    )
+    data.table::setDTthreads(threads = threads, ...)
 
     sys_results$dt <- list(
       name = "data.table",
@@ -138,8 +138,8 @@ setThreads <- function(
     })
   }
 
-    if ("cheapr" %in% backend) {
-      rlang::check_installed("cheapr")
+  if ("cheapr" %in% backend) {
+    rlang::check_installed("cheapr")
     old_chpr <- cheapr::get_threads()
     cheapr::set_threads(threads)
     sys_results$openmp <- list(

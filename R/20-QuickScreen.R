@@ -75,7 +75,7 @@
 #' \item{sidish_params}{(list) SIDISH parameters, default "list()"}
 #' \item{env_params}{(list) Environment parameters for SIDISH, default "list()"}
 #' }}
-#' 
+#'
 #' \item{LP_SGL}{\describe{
 #' \item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
 #' \item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}

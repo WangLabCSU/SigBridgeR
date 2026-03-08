@@ -137,7 +137,7 @@ ScreenUpset <- function(
         drop = FALSE
       ]) ==
         length(sets)
-      
+
       sum(row_matches, na.rm = TRUE)
     },
     numeric(1)

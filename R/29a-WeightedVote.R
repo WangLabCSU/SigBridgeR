@@ -79,17 +79,19 @@ WeightedVote <- function(
   weights = double(),
   ties.method = c("random", "first", "last")
 ) {
-    ties.method <- match.arg(ties.method)
+  ties.method <- match.arg(ties.method)
   voter_cols <- colnames(vote_data)
 
   if (any(names(weights) != voter_cols)) {
     cli::cli_abort(c(
-      "x" = "The weights must have the same names as `vote_data`"
+      "x" = "The `weights` must have the same names as `vote_data`",
+      ">" = "Colnames of `vote_data`: {.val {voter_cols}}",
+      ">" = "Colnames of `weights`: {.val {names(weights)}}"
     ))
   }
   w <- weights[voter_cols]
 
-  vote_mat <- if (!is.data.frame(vote_data)) {
+  vote_mat <- if (is.matrix(vote_data) || inherits(vote_data, "Matrix")) {
     as.data.frame(vote_data)
   } else {
     vote_data
@@ -116,7 +118,7 @@ WeightedVote <- function(
     Neutral = score_neu
   )
 
-  winner_idx <- max.col(score_mat, ties.method =ties.method)
+  winner_idx <- max.col(score_mat, ties.method = ties.method)
 
   winner_names <- colnames(score_mat)[winner_idx]
 

@@ -12,4 +12,13 @@ test_that("It works", {
   )
 
   res <- WeightedVote(vote_data, voter_weights)
+
+  expect_equal(length(res), nrow(vote_data))
+
+  # compatibility test with data.table
+  vote_data2 <- data.table::as.data.table(vote_data)
+  res <- WeightedVote(vote_data2, voter_weights)
+
+
+  
 })
