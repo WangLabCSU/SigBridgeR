@@ -46,7 +46,8 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 
 ### It is recommended to install the following packages:
 
-For better performance:
+<details>
+<summary>For better performance:</summary>
 
 ```r
 pak::pkg_install(c(
@@ -72,7 +73,10 @@ if (!requireNamespace("BiocManager")) {
 BiocManager::install("WGCNA)
 ```
 
-For seamless integration with single-cell RNA-seq data stored in `.h5ad`:
+</details>
+
+<details>
+<summary>For seamless integration with single-cell RNA-seq data stored in `.h5ad`:</summary>
 
 ```r
 pak::pkg_install("anndata")
@@ -80,7 +84,10 @@ pak::pkg_install("anndata")
 pak::pkg_install("anndataR") # both are supported
 ```
 
-For visualization:
+</details>
+
+<details>
+<summary>For visualization:</summary>
 
 ```r
 pak::pkg_install(c(
@@ -93,7 +100,10 @@ pak::pkg_install(c(
 ))
 ```
 
-To use the built-in cell annotation methods:
+</details>
+
+<details>
+<summary>To use the built-in cell annotation methods:</summary>
 
 ```r
 pak::pkg_install(c(
@@ -109,7 +119,10 @@ pak::pkg_install(c(
 ))
 ```
 
-To add custom extension functions to SigBridgeR:
+</details>
+
+<details>
+<summary>To add custom extension functions to SigBridgeR:</summary>
 
 ```r
 pak::pkg_install(c(
@@ -122,7 +135,10 @@ pak::pkg_install(c(
 ))
 ```
 
-To reproduce the tutorial to learn more usage:
+</details>
+
+<details>
+<summary>To reproduce the tutorial to learn more usage:</summary>
 
 ```r
 pak::pkg_install(c(
@@ -132,6 +148,9 @@ pak::pkg_install(c(
     "processx"
 ))
 ```
+
+</details>
+
 
 ## 📓 Documentation
 

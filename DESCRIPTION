@@ -76,6 +76,7 @@ Suggests:
     methods,
     mLLMCelltype,
     org.Hs.eg.db,
+    pak,
     patchwork,
     plyr,
     preprocessCore,
