@@ -21,6 +21,10 @@ MergeResult(
 The first object serves as the base for merging. When duplicate metadata
 columns are found, priority is given to the first occurrence.}
 
+\item{weights}{Named numeric vector specifying weights for voting when multiple
+screening methods produce categorical labels. Names must match screening
+method names (case-insensitive). If \code{NULL} (default), no voting is performed.}
+
 \item{ties.method}{Character. Method for resolving ties in weighted voting:
 \describe{
 \item{\code{"first"}}{Select the first category alphabetically (default)}
@@ -30,10 +34,6 @@ columns are found, priority is given to the first occurrence.}
 
 \item{verbose}{Logical. Whether to print progress messages. Default: inherits
 from \code{getOption("SigBridgeR.verbose")}.}
-
-\item{weight}{Named numeric vector specifying weights for voting when multiple
-screening methods produce categorical labels. Names must match screening
-method names (case-insensitive). If \code{NULL} (default), no voting is performed.}
 }
 \value{
 A merged Seurat object containing:

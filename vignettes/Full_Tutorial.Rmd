@@ -359,7 +359,18 @@ We provide some functions helping formatting and checking your phenotype data.
 CheckNA(your_phenotype_data, max_print = 5L)
 ```
 
+```{r, Check_NA_example, eval=FALSE}
+mat <- matrix(c(NA,1,1,NA),2, dimnames = list(c("Gene1","Gene2"),c("Sample1","Sample2")))
+CheckNA(mat)
+# ! Found 2 NA values in data
+# First 2 positions:
+#   Row 1 ("Gene1"), col 1 ("Sample1")
+#   Row 2 ("Gene2"), col 2 ("Sample2")
+```
+
 **In-place data transformation**
+
+Use it just in tidyverse-like style 
 
 ```{r,col_convert,eval=FALSE}
 # ? if a vector

@@ -180,7 +180,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
         for (i in seq_len(positions_to_show)) {
           validate_explain(
             "Row {na_positions$row[i]} ({.val {na_positions$row_name[i]}}), \
-          Col {na_positions$col[i]} ({.val {na_positions$col_name[i]}})",
+          col {na_positions$col[i]} ({.val {na_positions$col_name[i]}})",
             .envir = rlang::current_env()
           )
         }
@@ -188,7 +188,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
         for (i in seq_len(positions_to_show)) {
           validate_explain(
             "Row {na_positions$row[i]} ({.val {na_positions$row_name[i]}}), \
-          Col {na_positions$col[i]}",
+          col {na_positions$col[i]}",
             .envir = rlang::current_env()
           )
         }
@@ -204,7 +204,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
         for (i in seq_len(positions_to_show)) {
           validate_explain(
             "Row {na_positions$row[i]}, \
-            Col {na_positions$col[i]}",
+            col {na_positions$col[i]}",
             .envir = rlang::current_env()
           )
         }
