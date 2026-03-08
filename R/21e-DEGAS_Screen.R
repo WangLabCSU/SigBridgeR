@@ -119,6 +119,7 @@ DoDEGAS <- function(
   ),
   ...
 ) {
+  CheckInstalled("Exceret/DEGAS")
   # * inputs check
   chk::chk_range(select_fraction)
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))

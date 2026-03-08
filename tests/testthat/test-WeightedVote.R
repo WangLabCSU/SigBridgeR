@@ -18,7 +18,4 @@ test_that("It works", {
   # compatibility test with data.table
   vote_data2 <- data.table::as.data.table(vote_data)
   res <- WeightedVote(vote_data2, voter_weights)
-
-
-  
 })

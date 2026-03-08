@@ -99,6 +99,9 @@ BulkPreProcess <- function(
   show_plot_results = TRUE,
   ...
 ) {
+  if (check) {
+    CheckInstalled(pkg = "edgeR", where = "bioc")
+  }
   purrr::walk(
     list(
       min_count_threshold,

@@ -32,9 +32,6 @@
 #'    ...
 #' )
 #'
-#' @param path2load_scissor_cache Path to precomputed Scissor inputs (RData file).
-#'        If provided, skips recomputation (default: NULL).
-#' @param path2save_scissor_inputs Path to save intermediate files (default: "Scissor_inputs.RData").
 #' @param matched_bulk Normalized bulk expression matrix (features × samples).
 #'        Column names must match `phenotype` identifiers.
 #' @param sc_data Seurat object containing single-cell RNA-seq data.
@@ -58,6 +55,9 @@
 #' - benchmark_data: Path to benchmark data (RData file)
 #' - FDR_cutoff: FDR threshold for evaluation (default: `0.05`)
 #' - bootstrap_n: Bootstrap iterations (default: `100L`)
+#' @param path2load_scissor_cache Path to precomputed Scissor inputs (RData file).
+#'        If provided, skips recomputation (default: NULL).
+#' @param path2save_scissor_inputs Path to save intermediate files (default: "Scissor_inputs.RData").
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
@@ -110,8 +110,6 @@
 #' @family scissor
 #'
 DoScissor <- function(
-  path2load_scissor_cache = NULL,
-  path2save_scissor_inputs = "Scissor_inputs.RData",
   matched_bulk,
   sc_data,
   phenotype,
@@ -130,6 +128,8 @@ DoScissor <- function(
     FDR_cutoff = 0.05,
     bootstrap_n = 100L
   ),
+  path2load_scissor_cache = NULL,
+  path2save_scissor_inputs = "Scissor_inputs.RData",
   ...
 ) {
   # * Input validation

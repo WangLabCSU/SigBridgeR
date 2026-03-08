@@ -96,6 +96,7 @@ DoscPP <- function(
   probs = c(0.2, NULL),
   ...
 ) {
+  CheckInstalled("Exceret/scPP")
   chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
   phenotype_class <- tolower(phenotype_class)

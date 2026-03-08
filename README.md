@@ -46,24 +46,33 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 
 ### It is recommended to install the following packages:
 
+`SigBridgeR` includes the Scissor and scAB algorithms by default. In addition to these, installing the following packages allows you to use additional algorithms.
+
+```r
+methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH")
+pak::pkg_install(file.path("Exceret", methods))
+```
+
+**unnecessary but recommended**:
+
 <details>
 <summary>For better performance:</summary>
 
 ```r
 pak::pkg_install(c(
-    # faster computation
-    "sparseMatrixStats",
-    "matrixStats",
-    "preprocessCore",
-    "tidyr",
-    "matrixTests",
-    "KernSmooth",
-    "cheapr",
-    # better gene symbol conversion
-    "scCustomize",
-    # parallel computation
-    "furrr",
-    "future"
+  # faster computation
+  "sparseMatrixStats",
+  "matrixStats",
+  "preprocessCore",
+  "tidyr",
+  "matrixTests",
+  "KernSmooth",
+  "cheapr",
+  # better gene symbol conversion
+  "scCustomize",
+  # parallel computation
+  "furrr",
+  "future"
 ))
 
 if (!requireNamespace("BiocManager")) {
@@ -91,12 +100,12 @@ pak::pkg_install("anndataR") # both are supported
 
 ```r
 pak::pkg_install(c(
-    "ggplot2",
-    "randomcoloR", # or RColorBrewer
-    "ggupset", # for upset plot
-    "patchwork", # for fraction stack plot
-    "ggforce", # for pca plot
-    "ggVennDiagram" # for venn diagram
+ "ggplot2",
+ "randomcoloR", # or RColorBrewer
+ "ggupset", # for upset plot
+ "patchwork", # for fraction stack plot
+ "ggforce", # for pca plot
+ "ggVennDiagram" # for venn diagram
 ))
 ```
 
@@ -107,15 +116,15 @@ pak::pkg_install(c(
 
 ```r
 pak::pkg_install(c(
-    # SingleR
-    "SingleR-inc/SingleR",
-    "celldex",
-    # mLLMCelltype
-    "mLLMCelltype",
-    "plyr",
-    # CellTypist
-    "reticulate",
-    "AnnDataR"
+  # SingleR
+  "SingleR-inc/SingleR",
+  "celldex",
+  # mLLMCelltype
+  "mLLMCelltype",
+  "plyr",
+  # CellTypist
+  "reticulate",
+  "AnnDataR"
 ))
 ```
 
@@ -126,12 +135,12 @@ pak::pkg_install(c(
 
 ```r
 pak::pkg_install(c(
-    "tictoc",
-    "codetools",
-    "knitr",
-    "lintr",
-    "rstudioapi",
-    "yonicd/tidycheckUsage"
+  "tictoc",
+  "codetools",
+  "knitr",
+  "lintr",
+  "rstudioapi",
+  "yonicd/tidycheckUsage"
 ))
 ```
 
@@ -142,10 +151,10 @@ pak::pkg_install(c(
 
 ```r
 pak::pkg_install(c(
-    "zeallot",
-    "here",
-    "org.Hs.eg.db",
-    "processx"
+  "zeallot",
+  "here",
+  "org.Hs.eg.db",
+  "processx"
 ))
 ```
 

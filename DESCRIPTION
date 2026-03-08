@@ -8,7 +8,7 @@ Authors@R:
         person("Zeyu", "Yan", email = "3191647388@qq.com", role = "ctb") 
      )
 Description: Identifies phenotype-associated cell subpopulations by integrating phenotypic data (e.g., survival, drug sensitivity), bulk gene expression, and single-cell RNA-seq (scRNA-seq) profiles. It employs multiple algorithms to reliably connect cellular features with clinical or functional phenotypes, offering a unified pipeline for multi-modal analysis that uncovers biologically and clinically relevant cell states in heterogeneous datasets.  
-License: GPL (>= 3)
+License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 URL: https://wanglabcsu.github.io/sigbridger
 BugReports: https://github.com/WangLabCSU/SigBridgeR/issues
@@ -18,27 +18,18 @@ Imports:
     chk,
     cli,
     data.table,
-    DEGAS (>= 1.0.0),
     dplyr,
-    edgeR,
-    IDConverter (>= 0.3.5),
-    LPSGL (>= 0.0.0.9000),
     Matrix,
-    PIPET (>= 0.1.5),
     purrr,
     rlang,
-    rSIDISH,
     scAB (>= 1.0.4),
     Scissor (>= 2.0.0),
-    scPAS (>= 0.2.0),
-    ScPP (>= 0.0.0.9000),
     Seurat (>= 5.0.0),
     SeuratObject (>= 5.0.0),
     SigBridgeRUtils (>= 0.2.5)
 Depends: 
     R (>= 4.1.0)
 Remotes: 
-    bioc::edgeR,
     github::Exceret/ALRA,
     github::Exceret/DEGAS,
     github::Exceret/LPSGL,
@@ -59,6 +50,8 @@ Suggests:
     celldex,
     cheapr,
     codetools,
+    DEGAS,
+    edgeR,
     furrr,
     future,
     future.mirai,
@@ -68,9 +61,11 @@ Suggests:
     ggVennDiagram,
     glue,
     here,
+    IDConverter,
     KernSmooth,
     knitr,
     lintr,
+    LPSGL,
     matrixStats,
     matrixTests,
     methods,
@@ -78,6 +73,7 @@ Suggests:
     org.Hs.eg.db,
     pak,
     patchwork,
+    PIPET,
     plyr,
     preprocessCore,
     processx,
@@ -85,8 +81,11 @@ Suggests:
     RColorBrewer,
     reticulate,
     rmarkdown,
+    rSIDISH,
     rstudioapi,
     scCustomize,
+    scPAS,
+    ScPP,
     SingleR,
     sparseMatrixStats,
     testthat (>= 3.0.0),

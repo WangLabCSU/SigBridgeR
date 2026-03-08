@@ -34,7 +34,7 @@ test_that("it works", {
   #         Row 2, Col 1
   #         Row 1, Col 3
   expect_equal(result$count, 2)
-  expect_equal(dim(result$positions), c(2, 2)) 
+  expect_equal(dim(result$positions), c(2, 2))
 
   # Example 5: No NAs found
   clean_data <- c(1, 2, 3, 4, 5)

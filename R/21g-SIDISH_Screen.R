@@ -34,6 +34,8 @@ DoSIDISH <- function(
   env_params = list(),
   ...
 ) {
+  CheckInstalled("Exceret/rSIDISH")
+
   chk::chk_is(sc_data, "Seurat")
   # Validate phenotype_class parameter
   if (phenotype_class != "survival") {

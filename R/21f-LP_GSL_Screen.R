@@ -80,6 +80,8 @@ DoLP_SGL <- function(
   ),
   ...
 ) {
+  CheckInstalled("Exceret/LPSGL")
+
   # * Input validation
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))
   chk::chk_is(sc_data, c("Seurat"))
