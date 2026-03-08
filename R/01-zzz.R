@@ -25,3 +25,25 @@
 
   invisible()
 }
+
+# suppress R CMD CHECK NOTE about global variables when using tidyverse or data.table
+utils::globalVariables(c(
+    "PC",
+  "PC1",
+  "PC2",
+  "sd",
+  "base_key",
+  ".",
+  "suffix",
+  "max_suffix",
+  "row_id",
+  "value",
+  "col_name",
+  "condition",
+  "batch",
+"composite_score",
+"variance_stability",
+"marker_signal",
+"dropout_robustness",
+"method","DEGAS.model_type","DEGAS.architecture","DEGAS.ff_depth","DEGAS.bag_depth","DEGAS.seed","Feature","..duplicate_cols","n","Total","Fraction","sets","count","Variance"
+))

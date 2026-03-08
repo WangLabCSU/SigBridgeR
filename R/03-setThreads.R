@@ -1,7 +1,7 @@
 #' @title Configure Parallel Execution Backends
 #' @description
 #' Unified interface to configure thread counts and acceleration features across
-#' system-level (OpenMP/data.table) and TensorFlow backends. Uses a hierarchical
+#' system-level (OpenMP/data.table/cheapr) and TensorFlow backends. Uses a hierarchical
 #' configuration model where global \code{threads} serves as default for all
 #' backends unless explicitly overridden.
 #'
@@ -13,7 +13,7 @@
 #'   OpenMP, data.table, and TensorFlow intra-op (unless overridden).
 #' @param backend Character vector. System-level backends to configure:
 #'   \code{"openmp"} (sets \code{OMP_NUM_THREADS}), \code{"dt"} (data.table threads).
-#'   Default: \code{c("openmp", "dt")}.
+#'   Default: \code{c("openmp", "dt", "cheapr")}.
 #' @param tf_config Named list for TensorFlow-specific configuration:
 #'   \itemize{
 #'     \item \code{xla_flag}: Character. XLA JIT compilation flags (default: auto-optimized)
@@ -21,8 +21,9 @@
 #'     \item \code{inter_op}: Integer. Inter-op parallelism threads (default: \code{max(2, floor(threads/4))})
 #'     \item \code{intra_op}: Integer. Intra-op parallelism threads (default: \code{1L}). If \code{NULL}, inherits global \code{threads} by default.
 #'   }
+#' @param verbose Logical. Whether to print verbose output (default: inherited from function options).
 #' @param ... Additional arguments for \code{data.table::setDTthreads()} (e.g., \code{restore}).
-#'   Includes \code{verbose} logical flag (default: \code{TRUE}).
+#'
 #'
 #' @return Invisible list with old/new values per backend.
 #' @export
@@ -51,7 +52,7 @@
 #' }
 setThreads <- function(
   threads = NULL,
-  backend = c("openmp", "dt"),
+  backend = c("openmp", "dt","cheapr"),
   tf_config = list(
     xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",
     xla_device = NULL,
@@ -59,7 +60,7 @@ setThreads <- function(
     inter_op = NULL, # Auto-derived: max(2, floor(threads/4))
     # TF_NUM_INTRAOP_THREADS
     intra_op = c(1L, NULL) # `NULL`: Inherits global `threads` by default
-  ),
+  ),verbose = getFuncOption("verbose"),
   ...
 ) {
   # ===== 1. 参数验证与默认值 =====
@@ -118,16 +119,13 @@ setThreads <- function(
 
   if ("dt" %in% backend) {
     old_dt <- data.table::getDTthreads(verbose = FALSE)
-    rlang::exec(
-      data.table::setDTthreads,
-      threads = threads,
-      !!!SigBridgeRUtils::FilterArgs4Func(dots, data.table::setDTthreads)
+    data.table::setDTthreads(      threads = threads,      ...
     )
-    new_dt <- data.table::getDTthreads(verbose = verbose)
+
     sys_results$dt <- list(
       name = "data.table",
       old = old_dt,
-      new = new_dt
+      new = data.table::getDTthreads(verbose = verbose)
     )
   }
 
@@ -138,6 +136,17 @@ setThreads <- function(
         "{cli::symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
       )
     })
+  }
+
+    if ("cheapr" %in% backend) {
+      rlang::check_installed("cheapr")
+    old_chpr <- cheapr::get_threads()
+    cheapr::set_threads(threads)
+    sys_results$openmp <- list(
+      name = "cheapr",
+      old = if (old_val == "") "unset" else old_chpr,
+      new = threads
+    )
   }
 
   results <- c(results, sys_results)

@@ -167,7 +167,7 @@ AggregateDupCols <- function(
       by = .(row_id, col_name)
     ],
     median = dt_long[,
-      .(value = median(value, na.rm = TRUE)),
+      .(value = stats::median(value, na.rm = TRUE)),
       by = .(row_id, col_name)
     ],
     cli::cli_abort(

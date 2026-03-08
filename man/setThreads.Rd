@@ -6,9 +6,10 @@
 \usage{
 setThreads(
   threads = NULL,
-  backend = c("openmp", "dt"),
+  backend = c("openmp", "dt", "cheapr"),
   tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
     NULL, inter_op = NULL, intra_op = c(1L, NULL)),
+  verbose = getFuncOption("verbose"),
   ...
 )
 }
@@ -19,7 +20,7 @@ OpenMP, data.table, and TensorFlow intra-op (unless overridden).}
 
 \item{backend}{Character vector. System-level backends to configure:
 \code{"openmp"} (sets \code{OMP_NUM_THREADS}), \code{"dt"} (data.table threads).
-Default: \code{c("openmp", "dt")}.}
+Default: \code{c("openmp", "dt", "cheapr")}.}
 
 \item{tf_config}{Named list for TensorFlow-specific configuration:
 \itemize{
@@ -29,15 +30,16 @@ Default: \code{c("openmp", "dt")}.}
 \item \code{intra_op}: Integer. Intra-op parallelism threads (default: \code{1L}). If \code{NULL}, inherits global \code{threads} by default.
 }}
 
-\item{...}{Additional arguments for \code{data.table::setDTthreads()} (e.g., \code{restore}).
-Includes \code{verbose} logical flag (default: \code{TRUE}).}
+\item{verbose}{Logical. Whether to print verbose output (default: inherited from function options).}
+
+\item{...}{Additional arguments for \code{data.table::setDTthreads()} (e.g., \code{restore}).}
 }
 \value{
 Invisible list with old/new values per backend.
 }
 \description{
 Unified interface to configure thread counts and acceleration features across
-system-level (OpenMP/data.table) and TensorFlow backends. Uses a hierarchical
+system-level (OpenMP/data.table/cheapr) and TensorFlow backends. Uses a hierarchical
 configuration model where global \code{threads} serves as default for all
 backends unless explicitly overridden.
 

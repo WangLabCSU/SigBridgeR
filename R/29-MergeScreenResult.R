@@ -103,24 +103,27 @@ MergeResult <- function(
         ">" = "After intersection, only {.val {common_cells_len}} cells retained from {.val {first_seurat_cells}} cells in the first base object"
       )
     )
+
+    merged_obj <- subset(seurat_objects[[1]], cells = common_cells)
+    merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
+
+    # merge slots
+    merged_obj <- Reduce(
+      function(merged_obj, slot_type) {
+        MergeSlot(
+          slot_type = slot_type,
+          merged_obj = merged_obj,
+          seurat_objects = seurat_objects,
+          common_cells = common_cells
+        )
+      },
+      c("assays", "reductions", "graphs", "images"),
+      init = merged_obj
+    )
+  } else {
+    # all same, just use the first one as base 
+    merged_obj <- seurat_objects[[1]]
   }
-
-  merged_obj <- subset(seurat_objects[[1]], cells = common_cells)
-  merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
-
-  # merge slots
-  merged_obj <- Reduce(
-    function(merged_obj, slot_type) {
-      MergeSlot(
-        slot_type = slot_type,
-        merged_obj = merged_obj,
-        seurat_objects = seurat_objects,
-        common_cells = common_cells
-      )
-    },
-    c("assays", "reductions", "graphs", "images"),
-    init = merged_obj
-  )
 
   # merge misc
   all_keys <- unique(unlist(lapply(seurat_objects, function(obj) {
@@ -138,7 +141,7 @@ MergeResult <- function(
       }
     })
 
-    values <- values[!vapply(values, is.null, FUN.VALUE = logical(1))]
+    values <- values[!vapply(X = values, FUN = is.null, FUN.VALUE = logical(1))]
 
     misc_list[[key]] <- if (length(values) == 1) values[[1]] else values
   }

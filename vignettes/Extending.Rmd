@@ -122,6 +122,8 @@ Format requirements for custom extension functions:
    - `scRNA_data` (required): A **Seurat** object with meta.data modified
    - Other elements are optional.
 
+3. If it is necessary to save intermediate data and results as files, it is recommended to create a folder named `<method>_res` for storage.
+
 To facilitate format validation, we provide a function `ValidateScreenFunc` to check the above requirements. The validation output resembles that of `rcmdcheck`; please ensure there are no errors or warnings, and as few notes as possible.
 
 ```{r, validation,eval= FALSE}

@@ -10,5 +10,6 @@
     "positron.r.useNativePipe": false,
     "positron.r.pipe": "%>%",
     "todo-tree.tree.showBadges": true,
-    "todo-tree.tree.disableCompactFolders": true
+    "todo-tree.tree.disableCompactFolders": true,
+    "jarl.assignmentOperator": "<-"
 }
