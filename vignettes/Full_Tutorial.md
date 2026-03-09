@@ -322,7 +322,7 @@ Key parameters for `BulkPreProcess`:
     column.
 -   `gene_symbol_conversion`: Whether to convert Ensembl version IDs and
     TCGA version IDs to genes with [SymbolConvert in Section
-    2.2.2](#222-gene-symbol-conversion), default TRUE.
+    1.2.2](#122-gene-symbol-conversion), default TRUE.
 -   `check`: Whether to perform detailed quality checks, default TRUE.
 -   `min_count_threshold`: Minimum count threshold for gene filtering,
     default 10.
@@ -468,145 +468,87 @@ matching if you prefer not to use SymbolConvert’s built-in
 
 ### 1.3 Phenotype Data
 
-Bascially you can just use your phenotype data directly. If you are
+Basically you can just use your phenotype data directly. If you are
 confused about the structure `Screen()` requires, please refer to
-[Section 5](#example).
+[Section 4](#example).
 
-You can use this function to check NA values, which tells you the
-location of NA values in your phenotype data:
+We provide some functions helping formatting and checking your phenotype
+data.
 
-    # `max_print`: output how many NA location messages at one time if NA exists
-    CheckNA <- function(data, max_print = 5) {
-        # Load required packages
-        rlang::check_installed(c("dplyr", "purrr", "cli", "data.table"))
+**Checking NA and report the position**:
 
-        # Convert to data.table if it's a 2D structure but not already a data.table
-        is_2d <- !is.null(dim(data))
-        dt <- NULL
+    # `max_print`: output how many NA location messages at one time in console if NA exists
+    CheckNA(your_phenotype_data, max_print = 5L)
 
-        if (is_2d && !data.table::is.data.table(data)) {
-            dt <- data.table::as.data.table(data)
-        } else if (is_2d) {
-            dt <- data
-        }
+    mat <- matrix(c(NA,1,1,NA),2, dimnames = list(c("Gene1","Gene2"),c("Sample1","Sample2")))
+    CheckNA(mat)
+    # ! Found 2 NA values in data
+    # First 2 positions:
+    #   Row 1 ("Gene1"), col 1 ("Sample1")
+    #   Row 2 ("Gene2"), col 2 ("Sample2")
 
-        # Initialize output
-        na_info <- list()
+**In-place data transformation**
 
-        cli::cli_h1("NA Value Check (data.table optimized)")
-        cli::cli_alert_info("Checking object with dimensions: {.val {dim(data)}}")
+Use it just in tidyverse-like style
 
-        # Handle 1D data (vectors)
-        if (!is_2d) {
-            na_count <- sum(is.na(data))
-            na_positions <- which(is.na(data))
-            na_info$positions <- na_positions
-            na_info$count <- na_count
+    # ? if a vector
+    v <- 1:2000
 
-            if (na_count == 0) {
-                cli::cli_alert_success("No NA values found in the vector!")
-            }
+    v2 <- PhenoMap(v, v < 1000 ~ "0" ,v > 1000 ~ "1",.default = "here_is_1k")
+    table(v2)
+    #  0          1 here_is_1k 
+    #    999       1000          1 
 
-            cli::cli_alert_warning("Found {.val {na_count}} NA value{?s} in vector")
+    v3 <- PhenoMap(v, v < 100 ~ 0, v < 1000 ~ 1, v > 1000 ~ 2, .default = NA_real_)
+    table(v3)
+    #    0    1    2 
+    #   99  900 1000 
 
-            if (length(na_positions) > 0 && max_print > 0) {
-                positions_to_show <- na_positions[
-                    1:min(max_print, length(na_positions))
-                ]
-                cli::cli_text("Positions: {.val {positions_to_show}}")
+    # ? if a data
+    d <- mtcars 
+    d2 <- PhenoMap(d, mpg > 15 ~ 1, mpg <= 15 ~ 0) 
+    table(d2$mpg)
+    #  0  1 
+    #  6 26 
+    head(d2)
+    #      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+    #    <num> <num> <num> <num> <num> <num> <num> <num> <num> <num> <num>
+    # 1:     1     6   160   110  3.90 2.620 16.46     0     1     4     4
+    # 2:     1     6   160   110  3.90 2.875 17.02     0     1     4     4
+    # 3:     1     4   108    93  3.85 2.320 18.61     1     1     4     1
+    # 4:     1     6   258   110  3.08 3.215 19.44     1     0     3     1
+    # 5:     1     8   360   175  3.15 3.440 17.02     0     0     3     2
+    # 6:     1     6   225   105  2.76 3.460 20.22     1     0     3     1
 
-                if (length(na_positions) > max_print) {
-                    cli::cli_text(
-                        "{.val {length(na_positions) - max_print}} additional positions not shown"
-                    )
-                }
-            }
+**Direct Interface for Foolproof Data Processing**
 
-            # For named vectors
-            if (!is.null(names(data))) {
-                na_names <- names(data)[na_positions]
-                na_info$names <- na_names
+    your_phenotype_data <- PhenoPreProcess(
+      bulk = your_bulk_data,
+      phenotype = your_phenotype_data,
+      phenotype_class = "binary",
+      status == "death" ~ 1,
+      status == "alive" ~ 0,
+      selelct = c("time","status")
+    )
 
-                if (length(na_names) > 0 && max_print > 0) {
-                    names_to_show <- na_names[1:min(max_print, length(na_names))]
-                    cli::cli_text("Names: {.val {names_to_show}}")
-                }
-            }
-        } else {
-            # Handle 2D data (dataframes, matrices, data.tables)
-            # Use data.table for efficient NA counting
-            na_count <- dt[, sum(is.na(.SD))]
-            na_info$count <- na_count
+Key parameters for `PhenoPreProcess`:
 
-            if (na_count == 0) {
-                cli::cli_alert_success("No NA values found in the 2D data!")
-            }
-
-            cli::cli_alert_warning(
-                "Found {.val {na_count}} NA value{?s} in 2D data"
-            )
-
-            # Get NA positions efficiently without melt warning
-            if (max_print > 0) {
-                # Create a matrix of logical values indicating NA positions
-                na_matrix <- is.na(as.matrix(dt))
-                na_positions <- which(na_matrix, arr.ind = TRUE)
-
-                # Convert to data.table and add column names
-                na_positions_dt <- data.table::as.data.table(na_positions)
-                colnames(na_positions_dt) <- c("row", "col")
-                na_positions_dt$col_name <- colnames(dt)[na_positions_dt$col]
-
-                na_info$positions <- na_positions_dt
-
-                if (nrow(na_positions_dt) > 0) {
-                    positions_to_show <- na_positions_dt[
-                        1:min(max_print, nrow(na_positions_dt)),
-                    ]
-
-                    cli::cli_text(
-                        "First {.val {nrow(positions_to_show)}} position{?s}:"
-                    )
-
-                    for (i in 1:nrow(positions_to_show)) {
-                        cli::cli_text(
-                            "  Row {.val {positions_to_show$row[i]}}, Col {.val {positions_to_show$col_name[i]}} (index: {.val {positions_to_show$col[i]}})"
-                        )
-                    }
-
-                    if (na_count > max_print) {
-                        cli::cli_text(
-                            "{.val {na_count - max_print}} additional positions not shown"
-                        )
-                    }
-                }
-            }
-
-            # Column-wise summary using data.table
-            col_na <- dt[, lapply(.SD, function(x) sum(is.na(x)))]
-            col_na <- unlist(col_na)
-            col_na <- col_na[col_na > 0]
-
-            if (length(col_na) > 0) {
-                na_info$column_na <- col_na
-
-                cli::cli_text("Column-wise NA counts:")
-                for (col in names(col_na)) {
-                    cli::cli_text("  {.field {col}}: {.val {col_na[col]}}")
-                }
-            }
-        }
-
-        return(invisible(na_info))
-    }
+-   `bulk`: Bulk RNA-seq expression data with genes as rows and samples
+    as columns
+-   `phenotype`: Phenotype data (Named numeric vector/ data.frame)
+-   `phenotype_class`: Type of phenotype data, e.g., “binary”,
+    “survival”, “continuous”
+-   `...`: pass to `PhenoMap`
+-   `select`: Columns to select from the phenotype data when it is a
+    data.frame
 
 ------------------------------------------------------------------------
 
 ## 2. Screen Cells Associated with Phenotype
 
-The function **`Screen`** provide 5 different options for screening
-cells associated with phenotype, These 5 algorithms come from the
-repositories mentioned in [7. References](#7-references), and you can
+The function **`Screen`** provide 8 different options for screening
+cells associated with phenotype, These 8 algorithms come from the
+repositories mentioned in [6. References](#6-references), and you can
 choose one of them to screen your cells.
 
 Key parameters for `Screen`:
@@ -1628,8 +1570,8 @@ expression matrix data.
 related clinical data.frame (containing bulk sample information) to
 perform PCA. Here, we want to retain the data so that the screening can
 reflect the most accurate situation. You can choose whether to filter or
-retain based on your own needs. See also [2.2 Bulk expression
-data](#22-bulk-expression-data) for more details.
+retain based on your own needs. See also [1.2 Bulk expression
+data](#12-bulk-expression-data) for more details.
 
 To facilitate the demonstration of the use of the `sample_info`
 parameter, we will divide the `pheno` based on its survival status into

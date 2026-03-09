@@ -100,8 +100,43 @@ Format requirements for custom extension functions:
         `"survival"`, `"continuous"`.
 2.  The output must be a **list** containing at least one elements:
     -   `scRNA_data` (required): A **Seurat** object with meta.data
-        modified
-    -   Other elements are optional.
+        modified,
+        -   For columns added in the meta.data slot, it is recommended
+            to **use the method name as a prefix** to distinguish them
+            from those added by other methods.
+        -   For assigning labels to each cell, if three categories are
+            used, the labels should be `"Positive"`, `"Negative"`, and
+            `"Neutral"`, where `"Positive"` represents cells positively
+            associated with the phenotype, `"Negative"` represents those
+            negatively associated, and `"Neutral"` represents unrelated
+            cells. If two categories are used, the labels should be
+            `"Positive"` and `"Other"`, where `"Other"` represents cells
+            not positively associated with the phenotype.
+        -   The recommended format for storing `label_type` is
+            `{method}_type`, which is used to record the biological
+            context at the time of screening, e.g.,
+            `scissor_type = "relapse"`. This is to prevent parameter
+            confusion in case the same algorithm is run with different
+            labels.
+        -   If you need to store the parameters used for running the
+            algorithm, use the `Seurat@misc` slot and store them as a
+            **list** with `_para` suffix name , e.g.,
+            `scissor_para = list(alpha = 0.05, cutoff = 0.2)`.
+
+        > It is recommended to use AddMisc as
+        >
+        >     seurat <- seurat %>%
+        >       SeuratObject::AddMetaData(rep("test", ncol(seurat)), col.name = "scissor") %>%
+        >       AddMisc(
+        >         scissor_type = "relapse",
+        >         scissor_para = list(alpha = 0.05, cutoff = 0.2),
+        >         cover = FALSE 
+        >       )
+    -   Other elements are optional. Necessary intermediate data can be
+        returned.
+3.  If it is necessary to save intermediate data and results as files,
+    it is recommended to create a folder named `<method>_res` for
+    storage.
 
 To facilitate format validation, we provide a function
 `ValidateScreenFunc` to check the above requirements. The validation
