@@ -5,8 +5,6 @@
 \title{Perform Scissor Screening Analysis}
 \usage{
 DoScissor(
-   path2load_scissor_cache = NULL,
-   path2save_scissor_inputs = "Scissor_inputs.RData",
    matched_bulk,
    sc_data,
    phenotype,
@@ -25,6 +23,8 @@ DoScissor(
      FDR_cutoff = 0.05,
      bootstrap_n = 100L
    ),
+   path2load_scissor_cache = NULL,
+   path2save_scissor_inputs = "Scissor_inputs.RData",
    ...
 )
 }

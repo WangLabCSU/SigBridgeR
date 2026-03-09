@@ -8,7 +8,7 @@ Authors@R:
         person("Zeyu", "Yan", email = "3191647388@qq.com", role = "ctb") 
      )
 Description: Identifies phenotype-associated cell subpopulations by integrating phenotypic data (e.g., survival, drug sensitivity), bulk gene expression, and single-cell RNA-seq (scRNA-seq) profiles. It employs multiple algorithms to reliably connect cellular features with clinical or functional phenotypes, offering a unified pipeline for multi-modal analysis that uncovers biologically and clinically relevant cell states in heterogeneous datasets.  
-License: GPL (>= 3) + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 URL: https://wanglabcsu.github.io/sigbridger
 BugReports: https://github.com/WangLabCSU/SigBridgeR/issues
@@ -37,6 +37,7 @@ Remotes:
     github::Exceret/PIPET,
     github::Exceret/rSIDISH,
     github::Exceret/scAB,
+    github::Exceret/SCIPAC,
     github::Exceret/Scissor,
     github::Exceret/scPAS,
     github::Exceret/ScPP,
@@ -47,6 +48,7 @@ Suggests:
     ALRA,
     anndata,
     anndataR,
+    BiocManager,
     carrier,
     celldex,
     cheapr,
@@ -79,11 +81,13 @@ Suggests:
     processx,
     randomcoloR,
     RColorBrewer,
+    remotes,
     reticulate,
     rmarkdown,
     rSIDISH,
     rstudioapi,
     scCustomize,
+    SCIPAC,
     scPAS,
     ScPP,
     SingleR,

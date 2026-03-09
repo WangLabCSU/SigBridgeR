@@ -23,7 +23,7 @@ CheckInstalled <- function(
 
   # cran and bioc
   if (where == "cran") {
-    install.packages(pkg)
+    utils::install.packages(pkg)
     return(invisible(TRUE))
   }
 
