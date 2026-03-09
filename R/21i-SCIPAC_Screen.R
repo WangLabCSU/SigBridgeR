@@ -196,7 +196,9 @@ DoSCIPAC <- function(
   )
   chk::chk_chr(label_type)
   chk::chk_chr(phenotype_class)
-  if(!is.null(sc_batch_col)) chk::chk_character(sc_batch_col)
+  if (!is.null(sc_batch_col)) {
+    chk::chk_character(sc_batch_col)
+  }
   chk::chk_logical(do_pca_sc)
 
   family <- switch(
@@ -217,6 +219,7 @@ DoSCIPAC <- function(
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start SCIPAC screening"))
+    ts_cli$cli_alert_info("Find common variable geme (hvg = {.val {hvg}})")
   }
 
   sc_bulk_prec <- OverLapSCBulk(
@@ -262,7 +265,7 @@ DoSCIPAC <- function(
   )
 
   if (verbose) {
-    ts_cli$cli_alert_info("Screening")
+    ts_cli$cli_alert_info("Screening ({.val {bt_size} bootstrap})")
   }
 
   SCIPAC_res <- SCIPAC::SCIPAC(
@@ -270,10 +273,10 @@ DoSCIPAC <- function(
     y = phenotype,
     family = family,
     ct.res = cluster_res,
-    ela_net_alpha = ela_net_alpha,
-    bt_size = bt_size,
-    ncore = ncore,
-    ci_alpha = ci_alpha,
+    ela.net.alpha = ela_net_alpha,
+    bt.size = bt_size,
+    numCores = ncore,
+    CI.alpha = ci_alpha,
     nfold = nfold
   )
 
@@ -282,7 +285,8 @@ DoSCIPAC <- function(
     metadata = SCIPAC_res
   ) %>%
     AddMisc(
-      SCIPAC_params = list(
+      SCIPAC_para = list(
+        phenotype_class = phenotype_class,
         hvg = hvg,
         do_pca_sc = do_pca_sc,
         n_pc = n_pc,
@@ -292,8 +296,10 @@ DoSCIPAC <- function(
         bt_size = bt_size,
         ncore = ncore,
         ci_alpha = ci_alpha,
-        nfold = nfold
-      )
+        nfold = nfold,
+        k = cluster_res$k
+      ),
+      SCIPAC_type = label_type
     )
 
   if (verbose) {

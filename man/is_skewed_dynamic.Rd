@@ -4,7 +4,7 @@
 \alias{is_skewed_dynamic}
 \title{Is 1 Much More Than 0}
 \usage{
-is_skewed_dynamic(x, target = 0, expected_p = 0.8, n_sd = 3)
+is_skewed_dynamic(x, target = 0, expected_p = 0.8, n_sd = 4L)
 }
 \description{
 A function to check whether Y is highly skewed. The expected ideal distribution is p1 : p0 = cutoff : (1 - cutoff).

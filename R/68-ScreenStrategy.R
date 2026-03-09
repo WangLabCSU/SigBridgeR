@@ -86,6 +86,12 @@ ScreenStrategy <- rlang::new_environment(
       executor = DoSIDISH,
       phenotypes = "survival",
       mapper = NULL
+    ),
+    SCIPAC = list(
+      method_name = "SCIPAC",
+      executor = DoSCIPAC,
+      phenotypes = c("binary", "survival", "continuous"),
+      mapper = NULL
     )
   )
 )

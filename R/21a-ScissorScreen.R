@@ -211,12 +211,6 @@ DoScissor <- function(
   )
   sc_meta$scissor[rownames(sc_meta) %chin% infos1$Scissor_pos] <- "Positive"
   sc_meta$scissor[rownames(sc_meta) %chin% infos1$Scissor_neg] <- "Negative"
-  sc_data <- Seurat::AddMetaData(sc_data, metadata = sc_meta) %>%
-    SigBridgeRUtils::AddMisc(
-      scissor_type = label_type,
-      scissor_para = infos1$para,
-      cover = FALSE
-    )
 
   # * reliability test
   reliability_result <- if (reliability_test$run) {
@@ -246,6 +240,13 @@ DoScissor <- function(
   } else {
     NULL
   }
+
+  sc_data <- Seurat::AddMetaData(sc_data, metadata = sc_meta) %>%
+    SigBridgeRUtils::AddMisc(
+      scissor_type = label_type,
+      scissor_para = c(infos1$para, reliability_test = reliability_result),
+      cover = FALSE
+    )
 
   list(
     scRNA_data = sc_data,
@@ -426,17 +427,16 @@ is_skewed_dynamic <- function(
   x, # a vector
   target = 0, # background value
   expected_p = 0.8, # = cutoff
-  n_sd = 3 # n times standard deviation
+  n_sd = 4L # n times standard deviation
 ) {
-  rlang::check_installed("cheapr")
   n <- length(x)
   if (n == 0) {
     return(NA)
   }
 
   p_hat <- mean(x == target)
-  sd_expected <- cheapr::sqrt_(expected_p * (1 - expected_p) / n)
+  sd_expected <- sqrt(expected_p * (1 - expected_p) / n)
 
   # 偏离超过 n_sd 倍标准差则判定为偏态
-  cheapr::abs_(p_hat - expected_p) > n_sd * sd_expected
+  abs(p_hat - expected_p) > n_sd * sd_expected
 }

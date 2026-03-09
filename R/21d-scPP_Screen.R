@@ -240,6 +240,12 @@ DoscPP <- function(
   sc_data <- SigBridgeRUtils::AddMisc(
     sc_data,
     scPP_type = label_type,
+    scPP_para = list(
+      ref_group = ref_group,
+      Log2FC_cutoff = Log2FC_cutoff,
+      estimate_cutoff = estimate_cutoff,
+      probs = probs
+    ),
     cover = FALSE
   )
 
