@@ -25,15 +25,15 @@ of the latest features and bug fixes.
 
 ```r
 if (!requireNamespace("pak")) {
-    install.packages(
+  install.packages(
     "pak",
     repos = sprintf(
-        "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
-        .Platform$pkgType,
-        R.Version()$os,
-        R.Version()$arch
+      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
+      .Platform$pkgType,
+      R.Version()$os,
+      R.Version()$arch
     )
-    )
+  )
 }
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
@@ -49,7 +49,7 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 `SigBridgeR` includes the Scissor and scAB algorithms by default. In addition to these, installing the following packages allows you to use additional algorithms.
 
 ```r
-methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH")
+methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
 pak::pkg_install(file.path("Exceret", methods))
 ```
 
