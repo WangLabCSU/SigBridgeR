@@ -20,7 +20,6 @@ SymbolConvert <- function(
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
   ...
 ) {
-  CheckInstalled(pkg = "ShixiangWang/IDConverter", where = "github")
   genome_build <- SigBridgeRUtils::MatchArg(
     genome_build,
     c("hg38", "hg19", "mm10", "mm9")

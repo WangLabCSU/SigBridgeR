@@ -119,8 +119,11 @@ Format requirements for custom extension functions:
    - `phenotype_class` (required): One or more of `"binary"`, `"survival"`, `"continuous"`.
   
 2. The output must be a **list** containing at least one elements:
-   - `scRNA_data` (required): A **Seurat** object with meta.data modified
-   - Other elements are optional.
+   - `scRNA_data` (required): A **Seurat** object with meta.data modified,
+     - For columns added in the meta.data slot, it is recommended to **use the method name as a prefix** to distinguish them from those added by other methods.
+     - For assigning labels to each cell, if three categories are used, the labels should be `"Positive"`, `"Negative"`, and `"Neutral"`, where `"Positive"` represents cells positively associated with the phenotype, `"Negative"` represents those negatively associated, and `"Neutral"` represents unrelated cells. If two categories are used, the labels should be `"Positive"` and `"Other"`, where `"Other"` represents cells not positively associated with the phenotype.
+     - If you need to store the parameters used for running the algorithm, use the `Seurat@misc` slot and store them as a **list**, e.g., `Scissor_params = list(alpha = 0.05, cutoff = 0.2)`.
+   - Other elements are optional. Necessary intermediate data can be returned.
 
 3. If it is necessary to save intermediate data and results as files, it is recommended to create a folder named `<method>_res` for storage.
 

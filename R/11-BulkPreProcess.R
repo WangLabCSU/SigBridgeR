@@ -489,7 +489,7 @@ BulkCheck <- function(
     ))
   }
   if (any(counts_matrix != floor(counts_matrix))) {
-    cli::cli_warn("Expression matrix contains non-integre value")
+    cli::cli_warn("Expression matrix contains non-integer value")
   }
   if (min_genes_detected > n_genes) {
     cli::cli_abort(c(
@@ -505,7 +505,7 @@ BulkCheck <- function(
   }
 
   # * Handle duplicated genes and samples
-  if (any(duplicated(rownames(counts_matrix)))) {
+  if (anyDuplicated(rownames(counts_matrix)) > 0) {
     cli::cli_alert_info("Aggregate Duplicated genes in rownames")
     counts_matrix <- AggregateDupRows(
       counts_matrix,
@@ -513,7 +513,7 @@ BulkCheck <- function(
       verbose = FALSE
     )
   }
-  if (any(duplicated(colnames(counts_matrix)))) {
+  if (anyDuplicated(colnames(counts_matrix)) > 0) {
     cli::cli_alert_info("Aggregate Duplicated samples in colnames")
     counts_matrix <- AggregateDupCols(
       counts_matrix,

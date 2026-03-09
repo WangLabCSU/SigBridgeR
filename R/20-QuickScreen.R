@@ -170,7 +170,9 @@ Screen <- function(
     "scAB",
     "DEGAS",
     "LP_SGL",
-    "PIPET"
+    "PIPET",
+    "rSIDISH",
+    "SCIPAC"
   ),
   ...
 ) {

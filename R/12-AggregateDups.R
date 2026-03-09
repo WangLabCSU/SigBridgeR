@@ -65,7 +65,7 @@ AggregateDupRows <- function(
     cli::cli_abort(c("x" = "Input must have row names"))
   }
 
-  if (!any(duplicated(row_names))) {
+  if (!anyDuplicated(row_names) > 0L) {
     if (verbose) {
       cli::cli_alert_success("No duplicated row names found.")
     }

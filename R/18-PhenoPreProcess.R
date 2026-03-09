@@ -398,7 +398,7 @@ handle_case_2 <- function(
   # * survival
   chk::chk_length(select, 2)
   col_exists <- select %chin% colnames(phenotype)
-  if (any(!col_exists)) {
+  if (!all(col_exists)) {
     cli::cli_abort(c(
       "x" = "Column {.val {colnames(phenotype)[!col_exists]}} not found in `phenotype`"
     ))

@@ -4,7 +4,7 @@
 \alias{getFuncOption}
 \title{Configuration Functions for SigBridgeR Package}
 \usage{
-getFuncOption(option, default = NULL)
+getFuncOption(option = NULL, default = NULL)
 }
 \arguments{
 \item{option}{Character string specifying the option name to check}

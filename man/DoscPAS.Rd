@@ -82,6 +82,7 @@ Other screen_method:
 \code{\link{DoDEGAS}()},
 \code{\link{DoLP_SGL}()},
 \code{\link{DoPIPET}()},
+\code{\link{DoSCIPAC}()},
 \code{\link{DoSIDISH}()},
 \code{\link{DoScissor}()},
 \code{\link{DoscAB}()},

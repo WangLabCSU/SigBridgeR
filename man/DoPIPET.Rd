@@ -89,6 +89,7 @@ testing for significance assessment.
 Other screen_method: 
 \code{\link{DoDEGAS}()},
 \code{\link{DoLP_SGL}()},
+\code{\link{DoSCIPAC}()},
 \code{\link{DoSIDISH}()},
 \code{\link{DoScissor}()},
 \code{\link{DoscAB}()},
