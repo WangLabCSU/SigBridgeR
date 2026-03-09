@@ -2,7 +2,7 @@
 
 ## Data Preprocessing
 
-Functions for preprocessing bulk and single-cell RNA-seq data.
+Functions for preprocessing inputs.
 
 - [`BulkPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.md)
   : Bulk RNA-seq Data Preprocessing and Quality Control Function
@@ -21,13 +21,17 @@ Functions for preprocessing bulk and single-cell RNA-seq data.
   [`AggregateDupCols()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
   [`AggregateDups()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)
   : Aggregate Rows or Columns with Duplicate Names
-- [`ChooseNormalization()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseNormalization.md)
-  : Data-Driven Selection of Single-Cell Normalization Methods
 - [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
   [`SCIntegrate.data.frame()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
   [`SCIntegrate.Matrix()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
   [`SCIntegrate.Seurat()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
   : Integrate Single-Cell Datasets
+- [`CheckNA()`](https://wanglabcsu.github.io/sigbridger/reference/CheckNA.md)
+  : Check for Missing Values (NA) in Data
+- [`PhenoPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoPreProcess.md)
+  : Preprocess Phenotype Data
+- [`PhenoMap()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.md)
+  : Map Phenotype Values Using Conditional Rules
 
 ## Result Integration & Visualization
 
@@ -35,6 +39,8 @@ Merge and visualize screening results across methods or conditions.
 
 - [`MergeResult()`](https://wanglabcsu.github.io/sigbridger/reference/MergeResult.md)
   : Merge Multiple Screening Analysis Results
+- [`WeightedVote()`](https://wanglabcsu.github.io/sigbridger/reference/WeightedVote.md)
+  : Weighted Voting Aggregation for Multi-Voter Classification
 - [`ScreenFractionPlot()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenFractionPlot.md)
   : Visualization of Cell Screening Fractions
 - [`ScreenUpset()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenUpset.md)
@@ -63,6 +69,8 @@ Built-in screening algorithms.
   : Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration
 - [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md)
   : Perform SIDISH Screening Analysis
+- [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md)
+  : Screen Single-Cell Data Using SCIPAC Algorithm
 
 ## Seurat Object Utilities
 
@@ -73,6 +81,8 @@ Built-in screening algorithms.
 - [`FindRobustElbow()`](https://wanglabcsu.github.io/sigbridger/reference/FindRobustElbow.md)
   : Automatically determine optimal PCA dimensions using multiple robust
   methods
+- [`ChooseNormalization()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseNormalization.md)
+  : Data-Driven Selection of Single-Cell Normalization Methods
 
 ## Annotate Cell Types in Single-cell Datasets
 

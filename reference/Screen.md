@@ -14,7 +14,8 @@ Screen(
   phenotype,
   label_type = NULL,
   phenotype_class = c("binary", "survival", "continuous"),
-  screen_method = c("Scissor", "scPP", "scPAS", "scAB", "DEGAS", "LP_SGL", "PIPET"),
+  screen_method = c("Scissor", "scPP", "scPAS", "scAB", "DEGAS", "LP_SGL", "PIPET",
+    "rSIDISH", "SCIPAC"),
   ...
 )
 ```

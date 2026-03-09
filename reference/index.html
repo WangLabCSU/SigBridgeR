@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@
     <div class="section level2">
       <h2 id="data-preprocessing">Data Preprocessing<a class="anchor" aria-label="anchor" href="#data-preprocessing"></a></h2>
 
-      <div class="section-desc"><p>Functions for preprocessing bulk and single-cell RNA-seq data.</p></div>
+      <div class="section-desc"><p>Functions for preprocessing inputs.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -103,17 +103,31 @@
 
         <dt>
 
-          <code><a href="ChooseNormalization.html">ChooseNormalization()</a></code>
-
-        </dt>
-        <dd>Data-Driven Selection of Single-Cell Normalization Methods</dd>
-
-        <dt>
-
           <code><a href="SCIntegrate.html">SCIntegrate()</a></code> <code><a href="SCIntegrate.html">SCIntegrate.data.frame()</a></code> <code><a href="SCIntegrate.html">SCIntegrate.Matrix()</a></code> <code><a href="SCIntegrate.html">SCIntegrate.Seurat()</a></code>
 
         </dt>
         <dd>Integrate Single-Cell Datasets</dd>
+
+        <dt>
+
+          <code><a href="CheckNA.html">CheckNA()</a></code>
+
+        </dt>
+        <dd>Check for Missing Values (NA) in Data</dd>
+
+        <dt>
+
+          <code><a href="PhenoPreProcess.html">PhenoPreProcess()</a></code>
+
+        </dt>
+        <dd>Preprocess Phenotype Data</dd>
+
+        <dt>
+
+          <code><a href="PhenoMap.html">PhenoMap()</a></code>
+
+        </dt>
+        <dd>Map Phenotype Values Using Conditional Rules</dd>
       </dl></div><div class="section level2">
       <h2 id="result-integration-visualization">Result Integration &amp; Visualization<a class="anchor" aria-label="anchor" href="#result-integration-visualization"></a></h2>
 
@@ -130,6 +144,13 @@
 
         </dt>
         <dd>Merge Multiple Screening Analysis Results</dd>
+
+        <dt>
+
+          <code><a href="WeightedVote.html">WeightedVote()</a></code>
+
+        </dt>
+        <dd>Weighted Voting Aggregation for Multi-Voter Classification</dd>
 
         <dt>
 
@@ -216,6 +237,13 @@
 
         </dt>
         <dd>Perform SIDISH Screening Analysis</dd>
+
+        <dt>
+
+          <code><a href="DoSCIPAC.html">DoSCIPAC()</a></code>
+
+        </dt>
+        <dd>Screen Single-Cell Data Using SCIPAC Algorithm</dd>
       </dl></div><div class="section level2">
       <h2 id="seurat-object-utilities">Seurat Object Utilities<a class="anchor" aria-label="anchor" href="#seurat-object-utilities"></a></h2>
 
@@ -246,6 +274,13 @@
 
         </dt>
         <dd>Automatically determine optimal PCA dimensions using multiple robust methods</dd>
+
+        <dt>
+
+          <code><a href="ChooseNormalization.html">ChooseNormalization()</a></code>
+
+        </dt>
+        <dd>Data-Driven Selection of Single-Cell Normalization Methods</dd>
       </dl></div><div class="section level2">
       <h2 id="annotate-cell-types-in-single-cell-datasets">Annotate Cell Types in Single-cell Datasets<a class="anchor" aria-label="anchor" href="#annotate-cell-types-in-single-cell-datasets"></a></h2>
 
@@ -446,7 +481,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yuxi Yang.</p>
+  <p>Developed by Yuxi Yang, Shixiang Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">

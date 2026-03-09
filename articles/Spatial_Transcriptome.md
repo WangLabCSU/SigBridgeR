@@ -2,10 +2,13 @@
 
 ``` r
 library(SigBridgeR)
-#> ✔ SigBridgeR v3.4.0 loaded
+#> ✔ SigBridgeR v3.5.0 loaded
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
+#> 'SeuratObject' was built under R 4.5.0 but the current version is
+#> 4.5.2; it is recomended that you reinstall 'SeuratObject' as the ABI
+#> for R may have changed
 #> 
 #> Attaching package: 'SeuratObject'
 #> The following objects are masked from 'package:base':
@@ -402,18 +405,18 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_5.4.0       SeuratObject_5.3.0 sp_2.2-1           SigBridgeR_3.4.0  
+#> [1] Seurat_5.4.0       SeuratObject_5.3.0 sp_2.2-1           SigBridgeR_3.5.0  
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3         
 #>   [4] rlang_1.1.7            magrittr_2.0.4         RcppAnnoy_0.0.23      
 #>   [7] otel_0.2.0             spatstat.geom_3.7-0    matrixStats_1.5.0     
 #>  [10] ggridges_0.5.7         compiler_4.5.2         png_0.1-8             
-#>  [13] systemfonts_1.3.1      vctrs_0.7.1            reshape2_1.4.5        
+#>  [13] systemfonts_1.3.2      vctrs_0.7.1            reshape2_1.4.5        
 #>  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         
-#>  [19] promises_1.5.0         rmarkdown_2.30         ragg_1.5.0            
+#>  [19] promises_1.5.0         rmarkdown_2.30         ragg_1.5.1            
 #>  [22] purrr_1.2.1            xfun_0.56              cachem_1.1.0          
-#>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.6           
+#>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.8           
 #>  [28] spatstat.utils_3.2-1   irlba_2.3.7            parallel_4.5.2        
 #>  [31] cluster_2.1.8.1        R6_2.6.1               ica_1.0-3             
 #>  [34] spatstat.data_3.1-9    bslib_0.10.0           stringi_1.8.7         
@@ -432,16 +435,16 @@ sessionInfo()
 #>  [73] survival_3.8-3         polyclip_1.10-7        fitdistrplus_1.2-6    
 #>  [76] pillar_1.11.1          KernSmooth_2.23-26     plotly_4.12.0         
 #>  [79] generics_0.1.4         RcppHNSW_0.6.0         ggplot2_4.0.2         
-#>  [82] scales_1.4.0           globals_0.19.0         xtable_1.8-4          
+#>  [82] scales_1.4.0           globals_0.19.0         xtable_1.8-8          
 #>  [85] glue_1.8.0             lazyeval_0.2.2         tools_4.5.2           
 #>  [88] data.table_1.18.2.1    RSpectra_0.16-2        RANN_2.6.2            
-#>  [91] fs_1.6.6               dotCall64_1.2          cowplot_1.2.0         
+#>  [91] fs_1.6.7               dotCall64_1.2          cowplot_1.2.0         
 #>  [94] grid_4.5.2             tidyr_1.3.2            nlme_3.1-168          
 #>  [97] patchwork_1.3.2        cli_3.6.5              spatstat.sparse_3.1-0 
-#> [100] textshaping_1.0.4      spam_2.11-3            viridisLite_0.4.3     
+#> [100] textshaping_1.0.5      spam_2.11-3            viridisLite_0.4.3     
 #> [103] dplyr_1.2.0            uwot_0.2.4             gtable_0.3.6          
 #> [106] sass_0.4.10            digest_0.6.39          progressr_0.18.0      
-#> [109] ggrepel_0.9.6          htmlwidgets_1.6.4      farver_2.1.2          
+#> [109] ggrepel_0.9.7          htmlwidgets_1.6.4      farver_2.1.2          
 #> [112] htmltools_0.5.9        pkgdown_2.2.0          lifecycle_1.0.5       
 #> [115] httr_1.4.8             mime_0.13              MASS_7.3-65
 ```

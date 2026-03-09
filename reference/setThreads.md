@@ -1,8 +1,8 @@
 # Configure Parallel Execution Backends
 
 Unified interface to configure thread counts and acceleration features
-across system-level (OpenMP/data.table) and TensorFlow backends. Uses a
-hierarchical configuration model where global `threads` serves as
+across system-level (OpenMP/data.table/cheapr) and TensorFlow backends.
+Uses a hierarchical configuration model where global `threads` serves as
 default for all backends unless explicitly overridden.
 
 **Critical**: TensorFlow configuration must be set *before* importing
@@ -13,9 +13,10 @@ TensorFlow via `reticulate::import("tensorflow")`.
 ``` r
 setThreads(
   threads = NULL,
-  backend = c("openmp", "dt"),
+  backend = c("openmp", "dt", "cheapr"),
   tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
     NULL, inter_op = NULL, intra_op = c(1L, NULL)),
+  verbose = getFuncOption("verbose"),
   ...
 )
 ```
@@ -32,7 +33,7 @@ setThreads(
 
   Character vector. System-level backends to configure: `"openmp"` (sets
   `OMP_NUM_THREADS`), `"dt"` (data.table threads). Default:
-  `c("openmp", "dt")`.
+  `c("openmp", "dt", "cheapr")`.
 
 - tf_config:
 
@@ -49,11 +50,16 @@ setThreads(
   - `intra_op`: Integer. Intra-op parallelism threads (default: `1L`).
     If `NULL`, inherits global `threads` by default.
 
+- verbose:
+
+  Logical. Whether to print verbose output (default: inherited from
+  function options).
+
 - ...:
 
   Additional arguments for
   [`data.table::setDTthreads()`](https://rdrr.io/pkg/data.table/man/openmp-utils.html)
-  (e.g., `restore`). Includes `verbose` logical flag (default: `TRUE`).
+  (e.g., `restore`).
 
 ## Value
 

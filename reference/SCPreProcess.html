@@ -11,7 +11,7 @@ The analysis flow is fully customizable via a character string pipeline and a co
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,7 +176,11 @@ If confused about the column name, use <code>SigBridgeR:::Pattern2Colname()</cod
 <code><a href="SCAnnotate.html">SCAnnotate()</a></code>,
 <code><a href="SCIntegrate.html">SCIntegrate()</a></code>,
 <code><a href="SCPreProcessStrategy.html">SCPreProcessStrategy</a></code>,
-<code><a href="compatible_with_3.0.2.html">compatible_with_3.0.2()</a></code></p></div>
+<code><a href="compatible_with_3.0.2.html">compatible_with_3.0.2()</a></code></p>
+<p>Other input_preprocess:
+<code><a href="BulkPreProcess.html">BulkPreProcess()</a></code>,
+<code><a href="PhenoMap.html">PhenoMap()</a></code>,
+<code><a href="PhenoPreProcess.html">PhenoPreProcess()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -200,7 +204,7 @@ If confused about the column name, use <code>SigBridgeR:::Pattern2Colname()</cod
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 3. Start from AnnData with tumor filtering</span></span></span>
-<span class="r-in"><span><span class="va">adata_object</span> <span class="op">&lt;-</span> <span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.data-intuitive.com/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"data.h5ad"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">adata_object</span> <span class="op">&lt;-</span> <span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.scverse.org/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"data.h5ad"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">obj_ad</span> <span class="op">&lt;-</span> <span class="fu">SCPreProcess</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  sc <span class="op">=</span> <span class="va">adata_object</span>,</span></span>
 <span class="r-in"><span>  column2only_tumor <span class="op">=</span> <span class="st">"tissue"</span></span></span>
@@ -214,7 +218,7 @@ If confused about the column name, use <code>SigBridgeR:::Pattern2Colname()</cod
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yuxi Yang.</p>
+  <p>Developed by Yuxi Yang, Shixiang Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -189,3 +189,8 @@ analysis, [`cor`](https://rdrr.io/r/stats/cor.html) for correlation
 analysis,
 [`SymbolConvert`](https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.md)
 for gene symbol conversion
+
+Other input_preprocess:
+[`PhenoMap()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.md),
+[`PhenoPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoPreProcess.md),
+[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)

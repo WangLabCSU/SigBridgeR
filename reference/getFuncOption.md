@@ -19,7 +19,7 @@ requirements before they are set in the global options.
 ## Usage
 
 ``` r
-getFuncOption(option, default = NULL)
+getFuncOption(option = NULL, default = NULL)
 ```
 
 ## Arguments

@@ -48,8 +48,7 @@ TemplateScreenFunc(
 
   Logical. Whether to include a full roxygen2 documentation block above
   the function. Default: `FALSE`. If `TRUE`, users should run
-  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-  afterward.
+  `devtools::document()` afterward.
 
 - open:
 

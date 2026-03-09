@@ -15,6 +15,7 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/AddMisc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/CheckNA.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ChooseNormalization.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASEnvSet.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DEGASModelDetect.html</loc></url>
@@ -22,6 +23,7 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoScissor.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/DoScissorCellEval.html</loc></url>
@@ -40,6 +42,8 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/MergeResult.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/MergeSlot.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/Pattern2Colname.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/PhenoPreProcess.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/QCFilter.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/Register.html</loc></url>
@@ -61,12 +65,14 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/WeightedVote.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/complete_counts.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/getFuncOption.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/get_names_4_ids.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/index.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/is_skewed_dynamic.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/mLLMCelltypeAnnotate.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/normalize_metric.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/setFuncOption.html</loc></url>

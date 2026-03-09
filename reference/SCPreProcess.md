@@ -156,6 +156,11 @@ Other single_cell_preprocess:
 [`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md),
 [`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)
 
+Other input_preprocess:
+[`BulkPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.md),
+[`PhenoMap()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.md),
+[`PhenoPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoPreProcess.md)
+
 ## Examples
 
 ``` r

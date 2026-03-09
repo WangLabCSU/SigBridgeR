@@ -4,7 +4,7 @@
 Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:
 GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![](https://img.shields.io/badge/devel%20version-3.4.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
+[![](https://img.shields.io/badge/devel%20version-3.5.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![SigBridgeR status
 badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
 [![R CMD
@@ -28,7 +28,7 @@ of the latest features and bug fixes.
 
 1.  Install the development version from GitHub:
 
-``` R
+``` r
 if (!requireNamespace("pak")) {
   install.packages(
     "pak",
@@ -43,23 +43,33 @@ if (!requireNamespace("pak")) {
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
 
-1.  Install from r-universe:
+2.  Install from r-universe:
 
-``` R
+``` r
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
-**It is recommended to install the following packages:**
+### It is recommended to install the following packages:
+
+`SigBridgeR` includes the Scissor and scAB algorithms by default. In
+addition to these, installing the following packages allows you to use
+additional algorithms.
+
+``` r
+methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
+pak::pkg_install(file.path("Exceret", methods))
+```
+
+**unnecessary but recommended**:
 
 For better performance:
 
-``` R
+``` r
 pak::pkg_install(c(
   # faster computation
   "sparseMatrixStats",
   "matrixStats",
   "preprocessCore",
-  "WGCNA",
   "tidyr",
   "matrixTests",
   "KernSmooth",
@@ -70,11 +80,18 @@ pak::pkg_install(c(
   "furrr",
   "future"
 ))
+
+if (!requireNamespace("BiocManager")) {
+  install.packages("BiocManager")
+}
+# faster computation
+BiocManager::install("WGCNA)
 ```
 
-For seamless integration with other file types such as `.h5ad`:
+For seamless integration with single-cell RNA-seq data stored in
+`.h5ad`:
 
-``` R
+``` r
 pak::pkg_install("anndata")
 # or
 pak::pkg_install("anndataR") # both are supported
@@ -82,20 +99,20 @@ pak::pkg_install("anndataR") # both are supported
 
 For visualization:
 
-``` R
+``` r
 pak::pkg_install(c(
-  "ggplot2",
-  "randomcoloR", # or RColorBrewer
-  "ggupset", # for upset plot
-  "patchwork", # for fraction stack plot
-  "ggforce", # for pca plot
-  "ggVennDiagram" # for venn diagram
+ "ggplot2",
+ "randomcoloR", # or RColorBrewer
+ "ggupset", # for upset plot
+ "patchwork", # for fraction stack plot
+ "ggforce", # for pca plot
+ "ggVennDiagram" # for venn diagram
 ))
 ```
 
 To use the built-in cell annotation methods:
 
-``` R
+``` r
 pak::pkg_install(c(
   # SingleR
   "SingleR-inc/SingleR",
@@ -111,7 +128,7 @@ pak::pkg_install(c(
 
 To add custom extension functions to SigBridgeR:
 
-``` R
+``` r
 pak::pkg_install(c(
   "tictoc",
   "codetools",
@@ -124,7 +141,7 @@ pak::pkg_install(c(
 
 To reproduce the tutorial to learn more usage:
 
-``` R
+``` r
 pak::pkg_install(c(
   "zeallot",
   "here",
@@ -140,6 +157,8 @@ Get Started:
 - View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 - [A Quick Started
   Guide](https://wanglabcsu.github.io/sigbridger/vignettes/Quick_Start.md)
+- [Start from spatial
+  transcriptome](https://wanglabcsu.github.io/sigbridger/vignettes/Spatial_Transcriptome.md)
 - [Full
   Tutorial](https://wanglabcsu.github.io/sigbridger/vignettes/Full_Tutorial.md)
   for more details
@@ -153,4 +172,5 @@ If you encounter problems, please check:
 - the [Github issues](https://github.com/WangLabCSU/SigBridgeR/issues)
   page if you want to file bug reports or feature requests
 
-Let us know if you have ideas to make this project better!
+Let us know if you have ideas to make this project better. Pull requests
+are welcome!

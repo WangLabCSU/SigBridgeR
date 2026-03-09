@@ -9,8 +9,6 @@ that are significantly associated with phenotypic outcomes.
 
 ``` r
 DoScissor(
-   path2load_scissor_cache = NULL,
-   path2save_scissor_inputs = "Scissor_inputs.RData",
    matched_bulk,
    sc_data,
    phenotype,
@@ -29,20 +27,13 @@ DoScissor(
      FDR_cutoff = 0.05,
      bootstrap_n = 100L
    ),
+   path2load_scissor_cache = NULL,
+   path2save_scissor_inputs = "Scissor_inputs.RData",
    ...
 )
 ```
 
 ## Arguments
-
-- path2load_scissor_cache:
-
-  Path to precomputed Scissor inputs (RData file). If provided, skips
-  recomputation (default: NULL).
-
-- path2save_scissor_inputs:
-
-  Path to save intermediate files (default: "Scissor_inputs.RData").
 
 - matched_bulk:
 
@@ -101,6 +92,15 @@ DoScissor(
   - FDR_cutoff: FDR threshold for evaluation (default: `0.05`)
 
   - bootstrap_n: Bootstrap iterations (default: `100L`)
+
+- path2load_scissor_cache:
+
+  Path to precomputed Scissor inputs (RData file). If provided, skips
+  recomputation (default: NULL).
+
+- path2save_scissor_inputs:
+
+  Path to save intermediate files (default: "Scissor_inputs.RData").
 
 - ...:
 
@@ -180,6 +180,7 @@ Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
