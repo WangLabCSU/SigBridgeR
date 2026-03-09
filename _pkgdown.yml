@@ -39,7 +39,7 @@ logo:
 reference:
     - title: Data Preprocessing
       desc: >
-          Functions for preprocessing bulk and single-cell RNA-seq data.
+          Functions for preprocessing inputs.
       contents:
           - BulkPreProcess
           - SCPreProcess
@@ -50,14 +50,17 @@ reference:
           - AggregateDups
           - AggregateDupRows
           - AggregateDupCols
-          - ChooseNormalization
           - SCIntegrate
+          - CheckNA
+          - PhenoPreProcess
+          - PhenoMap
 
     - title: Result Integration & Visualization
       desc: >
           Merge and visualize screening results across methods or conditions.
       contents:
           - MergeResult
+          - WeightedVote
           - ScreenFractionPlot
           - ScreenUpset
 
@@ -74,12 +77,14 @@ reference:
           - DoscPP
           - DoDEGAS
           - DoSIDISH
+          - DoSCIPAC
 
     - title: Seurat Object Utilities
       contents:
           - AddMetaFeature
           - AddMisc
           - FindRobustElbow
+          - ChooseNormalization
 
     - title: Annotate Cell Types in Single-cell Datasets
       desc: >
