@@ -361,7 +361,7 @@ CheckNA(your_phenotype_data, max_print = 5L)
 
 ```{r, Check_NA_example, eval=FALSE}
 mat <- matrix(c(NA,1,1,NA),2, dimnames = list(c("Gene1","Gene2"),c("Sample1","Sample2")))
-CheckNA(mat)
+na_position <- CheckNA(mat)
 # ! Found 2 NA values in data
 # First 2 positions:
 #   Row 1 ("Gene1"), col 1 ("Sample1")
@@ -409,7 +409,7 @@ head(d2)
 your_phenotype_data <- PhenoPreProcess(
   bulk = your_bulk_data,
   phenotype = your_phenotype_data,
-  phenotype_class = "binary",
+  phenotype_class = "survival",
   status == "death" ~ 1,
   status == "alive" ~ 0,
   selelct = c("time","status")
