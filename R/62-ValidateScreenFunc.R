@@ -188,7 +188,7 @@ ValidateArgsSyntax <- function(func, ...) {
     return(invisible())
   }
 
-  if (rlang::check_installed("codetools")) {
+  if (rlang::is_installed("codetools")) {
     code_report <- utils::capture.output(
       codetools::checkUsage(
         func,
@@ -244,8 +244,8 @@ ValidateArgsSyntax <- function(func, ...) {
   }
 
   cli::cli_warn(
-    "Syntax check not supported due to missing dependencies:\\
-    \n  {.pkg tidycheckUsage & knitr} or {.pkg codetools}"
+    "Syntax check not supported due to missing dependencies: \
+      {.pkg yonicd/tidycheckUsage & knitr} or {.pkg codetools}"
   )
 }
 

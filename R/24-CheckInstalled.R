@@ -1,10 +1,16 @@
 #' @keywords internal
 CheckInstalled <- function(
   pkg = character(),
-  where = c("cran", "bioc", "github")
+  where = c("cran", "bioc", "github"),
+  reason = "this function",
+  abort = TRUE
 ) {
   chk::chk_chr(pkg)
-  where <- SigBridgeRUtils::MatchArg(where, c("cran", "bioc", "github"))
+  where <- if (grepl("/", pkg)) {
+    "github"
+  } else {
+    SigBridgeRUtils::MatchArg(where, c("cran", "bioc", "github"),NULL)
+  }
   pkg_name <- gsub(".*/", "", pkg)
   if (rlang::is_installed(pkg_name)) {
     return(invisible(TRUE))
@@ -13,11 +19,14 @@ CheckInstalled <- function(
   choice <- utils::menu(
     c("Yes", "Cancel"),
     title = cli::cli_fmt(cli::cli_alert_info(
-      "The following package{?s} are required for this function: {.pkg {pkg_name}}, Do you want to install?"
+      "The following package{?s} are required for {reason}: {.pkg {pkg_name}}, Do you want to install?"
     ))
   )
 
   if (choice == 2L) {
+    if (abort) {
+      cli::cli_abort(c("x" = "Installation aborted"))
+    }
     return(invisible(FALSE))
   }
 
