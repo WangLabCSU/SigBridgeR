@@ -5,63 +5,70 @@
 ### 0.1 Contents
 
 -   [Full Tutorial for SigBridgeR](#full-tutorial-for-sigbridger)
-    -   [0. Preface](#0-preface)
-        -   [0.1 Contents](#01-contents)
-        -   [0.1 Introduction to
-            SigBridgeR](#01-introduction-to-sigbridger)
-    -   [1. Load and Preprocess data](#1-load-and-preprocess-data)
-        -   [1.1 Single-cell RNA-seq Data](#11-single-cell-rna-seq-data)
+    -   [0. Preface](##0-preface)
+        -   [0.1 Contents](###01-contents)
+        -   [0.2 Introduction to
+            SigBridgeR](###02-introduction-to-sigbridger)
+    -   [1. Load and Preprocess data](##1-load-and-preprocess-data)
+        -   [1.1 Single-cell RNA-seq
+            Data](###11-single-cell-rna-seq-data)
             -   [1.1.1 (Option A) Start from Raw
-                Matrix](#111-option-a-start-from-raw-matrix)
+                Matrix](###111-option-a-start-from-raw-matrix)
             -   [1.1.2 (Option B) Start from AnnData
-                Object](#112-option-b-start-from-anndata-object)
+                Object](####112-option-b-start-from-anndata-object)
             -   [1.1.8 (Optional) Filter Out Tumor
-                Cells](#118-optional-filter-out-tumor-cells)
-        -   [1.2 Bulk expression data](#12-bulk-expression-data)
+                Cells](####118-optional-filter-out-tumor-cells)
+        -   [1.2 Bulk expression data](###12-bulk-expression-data)
             -   [1.2.1 Evaluate the quality of your bulk RNA-seq
-                data](#121-evaluate-the-quality-of-your-bulk-rna-seq-data)
+                data](####121-evaluate-the-quality-of-your-bulk-rna-seq-data)
                 -   [Quality Control Metrics
-                    Reported](#quality-control-metrics-reported)
+                    Reported](####quality-control-metrics-reported)
                 -   [Recommended Parameter
-                    Adjustments](#recommended-parameter-adjustments)
+                    Adjustments](####recommended-parameter-adjustments)
             -   [1.2.2 Gene Symbol
-                Conversion](#122-gene-symbol-conversion)
-        -   [1.3 Phenotype Data](#13-phenotype-data)
+                Conversion](###122-gene-symbol-conversion)
+        -   [1.3 Phenotype Data](##13-phenotype-data)
     -   [2. Screen Cells Associated with
-        Phenotype](#2-screen-cells-associated-with-phenotype)
+        Phenotype](##2-screen-cells-associated-with-phenotype)
         -   [2.1 (Option A) Scissor
-            Screening](#21-option-a-scissor-screening)
+            Screening](###21-option-a-scissor-screening)
         -   [2.2 (Option B) scPAS
-            Screening](#22-option-b-scpas-screening)
-        -   [2.3 (Option C) scAB Screening](#23-option-c-scab-screening)
-        -   [2.4 (Option D) scPP Screening](#24-option-d-scpp-screening)
+            Screening](###22-option-b-scpas-screening)
+        -   [2.3 (Option C) scAB
+            Screening](###23-option-c-scab-screening)
+        -   [2.4 (Option D) scPP
+            Screening](###24-option-d-scpp-screening)
         -   [2.5 (Option E) DEGAS
-            Screening](#25-option-e-degas-screening)
+            Screening](###25-option-e-degas-screening)
         -   [2.6 (Option F) LP\_SGL
-            Screening](#26-option-f-lp_sgl-screening)
+            Screening](###26-option-f-lp_sgl-screening)
         -   [2.7 (Option G) PIPET
-            Screening](#27-option-g-pipet-screening)
-        -   [2.8 Merge screening results](#28-merge-screening-results)
-    -   [3. Visualization](#3-visualization)
+            Screening](###27-option-g-pipet-screening)
+        -   [2.8 (Option H) SIDISH
+            Screening](###28-option-h-sidish-screening)
+        -   [2.9 (Option I) SCIPAC
+            Screening](###29-option-i-scipac_screening)
+        -   [2.F Merge screening results](###2f-merge-screening-results)
+    -   [3. Visualization](##3-visualization)
         -   [3.1 UMAP for screening
-            results](#31-umap-for-screening-results)
+            results](###31-umap-for-screening-results)
         -   [3.2 Stack bar plot for screening
-            results](#32-stack-bar-plot-for-screening-results)
+            results](###32-stack-bar-plot-for-screening-results)
         -   [3.3 Venn diagram for screening
-            results](#33-venn-diagram-for-screening-results)
+            results](###33-venn-diagram-for-screening-results)
         -   [3.4 Upset plot for screening
-            results](#34-upset-plot-for-screening-results)
-    -   [4. Example](#4-example)
+            results](###34-upset-plot-for-screening-results)
+    -   [4. Example](##4-example)
         -   [4.1 Survival-associated cell
-            screening](#41-survival-associated-cell-screening)
+            screening](###41-survival-associated-cell-screening)
         -   [4.2 Continuous Phenotype-associated cell
-            screening](#42-continuous-phenotype-associated-cell-screening)
+            screening](###42-continuous-phenotype-associated-cell-screening)
         -   [4.3 Binarized phenotype-associated cell
-            screening](#43-binarized-phenotype-associated-cell-screening)
-    -   [5. Troubleshooting](#5-troubleshooting)
-    -   [6. References](#6-references)
+            screening](###43-binarized-phenotype-associated-cell-screening)
+    -   [5. Troubleshooting](##5-troubleshooting)
+    -   [6. References](##6-references)
 
-### 0.1 Introduction to SigBridgeR
+### 0.2 Introduction to SigBridgeR
 
 SigBridgeR (short for **Sig**nificant cell-to-phenotype **Bridge** in
 **R**) is an R package for screening cells highly associated with
@@ -481,7 +488,7 @@ data.
     CheckNA(your_phenotype_data, max_print = 5L)
 
     mat <- matrix(c(NA,1,1,NA),2, dimnames = list(c("Gene1","Gene2"),c("Sample1","Sample2")))
-    CheckNA(mat)
+    na_position <- CheckNA(mat)
     # ! Found 2 NA values in data
     # First 2 positions:
     #   Row 1 ("Gene1"), col 1 ("Sample1")
@@ -525,7 +532,7 @@ Use it just in tidyverse-like style
     your_phenotype_data <- PhenoPreProcess(
       bulk = your_bulk_data,
       phenotype = your_phenotype_data,
-      phenotype_class = "binary",
+      phenotype_class = "survival",
       status == "death" ~ 1,
       status == "alive" ~ 0,
       selelct = c("time","status")
@@ -1169,7 +1176,60 @@ your system (both conda and virtualenv):
     specified `label_type`. The object contains cell-level risk scores
     and survival-related annotations generated by the SIDISH algorithm.
 
-### 2.9 Merge screening results
+### 2.9 (Option I) SCIPAC Screening
+
+Parameters pass to `...` when using `PIPET` method
+
+-   `hvg`: Integer. Number of highly variable genes to use for
+    preprocessing. Default is `1000L`.
+-   `do_pca_sc`: Logical. Whether to perform PCA on single-cell data and
+    apply the rotation matrix to bulk data; if FALSE, PCA is performed
+    on bulk data and applied to single-cell data. Default is `FALSE`.
+-   `n_pc`: Integer. Number of principal components to use. Default is
+    `60L`.
+-   `sc_batch_col`: Character or vector. Batch variable for single-cell
+    data. Default is `NULL`.
+-   `resolution`: Integer. Clustering resolution for cell type
+    identification. Default is `2L`.
+-   `ela_net_alpha`: Numeric. Elastic net mixing parameter (0 = ridge, 1
+    = lasso). Default is `0.4`.
+-   `bt_size`: Integer. Bootstrap sample size for stability assessment.
+    Default is `50L`.
+-   `ncore`: Integer. Number of CPU cores for parallel computation.
+    Default is `7L`.
+-   `ci_alpha`: Numeric. Significance level for confidence intervals.
+    Default is `0.05`.
+-   `nfold`: Integer. Number of folds for cross-validation for
+    regression models. Default is `10L`.
+-   `...`: Additional arguments. Supports `assay` (character), `verbose`
+    (logical), and `seed` (integer).
+
+<!-- -->
+
+    scipac_result <- Screen(
+      matched_bulk = your_matched_bulk,
+      sc_data = A_Seurat_object,
+      phenotype = your_matched_phenotype,
+      label_type = "TP53",
+      hvg = 1000L,
+      do_pca_sc = FALSE,
+      n_pc = 60L,
+      sc_batch_col = NULL,
+      resolution = 2L,
+      ela_net_alpha = 0.4,
+      bt_size = 50L,
+      ncore = 7L,
+      ci_alpha = 0.05,
+      nfold = 10L,
+    )
+
+**returning structure**: A list containing:
+
+-   `scRNA_data`: A Seurat object after screening
+-   `pca_res` : PCA rotation results
+-   `cluster_res` : Clustering results of single-cell data
+
+### 2.F Merge screening results
 
 If you have performed multiple screening methods one the same
 single-cell data, you can use the `MergeResult` to merge the screening
