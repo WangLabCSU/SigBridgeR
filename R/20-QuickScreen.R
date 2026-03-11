@@ -17,7 +17,7 @@
 #'        - `"binary"`: Binary traits (e.g., case/control)
 #'        - `"continuous"`: Continuous measurements
 #'        - `"survival"`: Survival infomation
-#' @param screen_method Screening algorithm to use, there are seven options:
+#' @param screen_method Screening algorithm to use, there are nine options:
 #' - "Scissor": see also DoScissor()
 #' - "scPP": see also DoscPP()
 #' - "scPAS": see also DoscPAS()
@@ -26,6 +26,7 @@
 #' - "LP_SGL": see also DoLP_SGL()
 #' - "PIPET": see also DoPIPET()
 #' - "SIDISH": see also DoSIDISH()
+#' - "SCIPAC": see also DoSCIPAC()
 #' @param ... Additional method-specific parameters:
 #' \describe{
 #' \item{Scissor}{\describe{
@@ -75,17 +76,22 @@
 #' \item{sidish_params}{(list) SIDISH parameters, default "list()"}
 #' \item{env_params}{(list) Environment parameters for SIDISH, default "list()"}
 #' }}
-#'
-#' \item{LP_SGL}{\describe{
-#' \item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
-#' \item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}
-#' \item{nfold}{(integer) Number of folds for cross-validation, default 5}
-#' \item{dge_analysis}{(list) Differential expression analysis settings:
-#' \itemize{
-#' \item{run: (logical) Whether to run DEG analysis, default FALSE}
-#' \item{logFC_threshold: (numeric) Log fold change threshold, default 1}
-#' \item{pval_threshold: (numeric) P-value threshold, default 0.05}
+#' \item{SCIPAC}{\describe{
+#' \item{hvg}{(integer) Number of highly variable genes to use for preprocessing. Default: 1000.}
+#' \item{do_pca_sc}{(logical) If \code{TRUE}, first do PCA on \code{sc.dat} and use the rotation matrix on \code{bulk.dat}; if \code{FALSE}, first do PCA on \code{bulk.data} and use the rotation matrix on \code{sc.dat}. Default: \code{FALSE}.}
+#' \item{n_pc}{(integer) Number of principal components to use. Default: 60.}
+#' \item{sc_batch_col}{(character or vector) Batch variable for single-cell data. If character, should be a column name in \code{sc_data} `@metadata`. If vector, should be a batch assignment vector matching cell order. Default: \code{NULL} (no batch correction).}
+#' \item{resolution}{(integer) Clustering resolution for cell type identification. Higher values produce more clusters. Default: 2.}
+#' \item{ela_net_alpha}{(numeric) Elastic net mixing parameter (0 = ridge, 1 = lasso). Default: 0.4.}
+#' \item{bt_size}{(integer) Bootstrap sample size for stability assessment. Default: 50.}
+#' \item{ncore}{(integer) Number of CPU cores for parallel computation. Default: 7.}
+#' \item{ci_alpha}{(numeric) Significance level for confidence intervals. Default: 0.05.}
+#' \item{nfold}{(integer) Number of folds for cross-validation for regression models. Default: 10.}
+#' \item{assay}{(character) Assay to use from sc_data. Default: "RNA".}
+#' \item{verbose}{(logical) Whether to print progress messages. Default: inherits from `getFuncOption("verbose")`.}
+#' \item{seed}{(integer) Random seed for reproducibility. Default: 123.}
 #' }}
+#' 
 #' \item{PIPET}{\describe{
 #' \item{group}{(character or NULL) Name of a metadata column (e.g., `"orig.ident"`) to stratify cells before screening. When `NULL` (default), screening is performed globally across all cells.}
 #' \item{discretize_method}{(character) Strategy to binarize continuous phenotypes internally before marker identification. One of:
@@ -114,8 +120,19 @@
 #' \item{verbose}{(logical) Whether to print progress messages. Default: inherits from `getFuncOption("verbose")`.}
 #' \item{parallel}{(logical) Whether to enable parallel permutations (requires `future::plan()` pre-set). Default: \code{FALSE}.}
 #' }}
-#' }
+#' 
+#' \item{LP_SGL}{\describe{
+#' \item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
+#' \item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}
+#' \item{nfold}{(integer) Number of folds for cross-validation, default 5}
+#' \item{dge_analysis}{(list) Differential expression analysis settings:
+#' \itemize{
+#' \item{run: (logical) Whether to run DEG analysis, default FALSE}
+#' \item{logFC_threshold: (numeric) Log fold change threshold, default 1}
+#' \item{pval_threshold: (numeric) P-value threshold, default 0.05}
 #' }}
+#' }}}
+#'
 #'
 #' @return A list containing:
 #' \describe{
@@ -141,6 +158,7 @@
 #' | LP_SGL | All three types | resolution, alpha, nfold, dge_analysis |
 #' | PIPET | Binary/Continuous | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance |
 #' | SIDISH | Survival Only | sidish_params, env_params |
+#' | SCIPAC | All three types | hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size, ncore, ci_alpha, nfold, assay |
 #'
 #'
 #' @seealso Associated functions:
@@ -153,6 +171,7 @@
 #' \item \code{\link{DoLP_SGL}}
 #' \item \code{\link{DoPIPET}}
 #' \item \code{\link{DoSIDISH}}
+#' \item \code{\link{DoSCIPAC}}
 #' }
 #'
 #'
