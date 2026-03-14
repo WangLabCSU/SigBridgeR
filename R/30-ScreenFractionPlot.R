@@ -140,13 +140,16 @@ ScreenFractionPlot <- function(
   }
   # Check available screen types in the Seurat object
   if (is.null(screen_type)) {
-    screen_type <- available_screens
-  } else if (
-    !all(purrr::map_vec(
-      screen_type,
-      ~ . %chin% all_screen_types # We don't use `available_screens` for the sake of compatibility to other groups
-    ))
-  ) {
+    pattern_detect <- paste0(paste(names(ScreenStrategy), collapse = "$|"), "$")
+    screen_type <- grep(
+      pattern_detect,
+      all_screen_types,
+      value = TRUE,
+      ignore.case = TRUE
+    )
+  }
+  if (!all(screen_type %chin% all_screen_types)) {
+    # We don't use `available_screens` for the sake of compatibility to other groups
     cli::cli_abort(c(
       "x" = "Screen type(s) not found in metadata.",
       ">" = "Available screen types: {.val {available_screens}}"

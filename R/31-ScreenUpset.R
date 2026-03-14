@@ -81,19 +81,24 @@ ScreenUpset <- function(
     list(x_lab, y_lab, title, bar_color, combmatrix_point_color),
     ~ chk::chk_character
   )
-  rlang::check_installed(c("ggplot2", "ggupset", "tibble"))
 
   meta_data <- screened_seurat[[]]
   all_screen_types <- colnames(meta_data)
+
   if (is.null(screen_type)) {
+    pattern_detect <- paste0(paste(names(ScreenStrategy), collapse = "$|"), "$")
     screen_type <- grep(
-      "sc[A-Za-z]+$|DEGAS$",
+      pattern_detect,
       all_screen_types,
-      value = TRUE
+      value = TRUE,
+      ignore.case = TRUE
     )
   }
   if (!all(screen_type %in% all_screen_types)) {
-    cli::cli_abort(c("x" = "Screen type(s) not found in metadata."))
+    cli::cli_abort(c(
+      "x" = "Screen type(s) not found in metadata.",
+      ">" = "{.val {screen_type[!screen_type %in% all_screen_types]}}"
+    ))
   }
 
   max_comb <- length(screen_type)
@@ -152,8 +157,10 @@ ScreenUpset <- function(
 
   # Arguments allocated to ggplot2::theme() and ggupset::theme_combmatrix()
   dots <- rlang::list2(...)
-  dots$combmatrix.panel.point.color.fill <- combmatrix_point_color
-  dots$combmatrix.label.make_space <- FALSE
+  dots$combmatrix.panel.point.color.fill <- dots$combmatrix.panel.point.color.fill %||%
+    combmatrix_point_color
+  dots$combmatrix.label.make_space <- dots$combmatrix.label.make_space %||%
+    FALSE
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
 
   theme_args <- SigBridgeRUtils::FilterArgs4Func(dots, ggplot2::theme)
