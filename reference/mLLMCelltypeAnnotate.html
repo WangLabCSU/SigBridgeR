@@ -79,8 +79,8 @@ generation, with uncertainty quantification via agreement metrics.</p>
 or user-provided markers).</p></li>
 <li><p>Queries specified LLMs with marker gene lists and tissue context.</p></li>
 <li><p>For multiple models: computes consensus annotations and uncertainty metrics
-(consensus proportion, entropy) via <code><a href="https://cafferyang.com/mLLMCelltype/reference/interactive_consensus_annotation.html" class="external-link">mLLMCelltype::interactive_consensus_annotation()</a></code>.</p></li>
-<li><p>For single model: uses direct annotation via <code><a href="https://cafferyang.com/mLLMCelltype/reference/annotate_cell_types.html" class="external-link">mLLMCelltype::annotate_cell_types()</a></code>.</p></li>
+(consensus proportion, entropy) via <code><a href="https://rdrr.io/pkg/mLLMCelltype/man/interactive_consensus_annotation.html" class="external-link">mLLMCelltype::interactive_consensus_annotation()</a></code>.</p></li>
+<li><p>For single model: uses direct annotation via <code><a href="https://rdrr.io/pkg/mLLMCelltype/man/annotate_cell_types.html" class="external-link">mLLMCelltype::annotate_cell_types()</a></code>.</p></li>
 <li><p>Adds results as metadata columns to the Seurat object.</p></li>
 </ol></div>
 
@@ -146,7 +146,7 @@ For single-model mode, only the first model is used.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to downstream functions. Parameters are routed as follows:</p><dl><dt>To <code><a href="https://cafferyang.com/mLLMCelltype/reference/annotate_cell_types.html" class="external-link">mLLMCelltype::annotate_cell_types()</a></code> and <code><a href="https://cafferyang.com/mLLMCelltype/reference/interactive_consensus_annotation.html" class="external-link">mLLMCelltype::interactive_consensus_annotation()</a></code>:</dt>
+<dd><p>Additional arguments passed to downstream functions. Parameters are routed as follows:</p><dl><dt>To <code><a href="https://rdrr.io/pkg/mLLMCelltype/man/annotate_cell_types.html" class="external-link">mLLMCelltype::annotate_cell_types()</a></code> and <code><a href="https://rdrr.io/pkg/mLLMCelltype/man/interactive_consensus_annotation.html" class="external-link">mLLMCelltype::interactive_consensus_annotation()</a></code>:</dt>
 <dd>
 <dl><dt><code>top_gene_count</code></dt>
 <dd><p>Number of top genes to use per cluster (default: 10L).</p></dd>
@@ -218,8 +218,8 @@ Lower values indicate higher confidence (less disagreement among models).</p></d
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="https://cafferyang.com/mLLMCelltype/reference/annotate_cell_types.html" class="external-link">annotate_cell_types</a></code>,
-<code><a href="https://cafferyang.com/mLLMCelltype/reference/interactive_consensus_annotation.html" class="external-link">interactive_consensus_annotation</a></code></p>
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/mLLMCelltype/man/annotate_cell_types.html" class="external-link">annotate_cell_types</a></code>,
+<code><a href="https://rdrr.io/pkg/mLLMCelltype/man/interactive_consensus_annotation.html" class="external-link">interactive_consensus_annotation</a></code></p>
 <p>Other Single_Cell_Annotation_Method:
 <code><a href="CellTypistAnnotate.html">CellTypistAnnotate()</a></code>,
 <code><a href="RegisterAnnoMethod.html">RegisterAnnoMethod()</a></code>,

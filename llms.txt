@@ -11,6 +11,8 @@ badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wan
 check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![registry status
 badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/)
+[![Ask
+DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
 
 ------------------------------------------------------------------------
 

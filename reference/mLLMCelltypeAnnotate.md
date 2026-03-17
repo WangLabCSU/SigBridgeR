@@ -16,10 +16,10 @@ Workflow:
 
 3.  For multiple models: computes consensus annotations and uncertainty
     metrics (consensus proportion, entropy) via
-    [`mLLMCelltype::interactive_consensus_annotation()`](https://cafferyang.com/mLLMCelltype/reference/interactive_consensus_annotation.html).
+    [`mLLMCelltype::interactive_consensus_annotation()`](https://rdrr.io/pkg/mLLMCelltype/man/interactive_consensus_annotation.html).
 
 4.  For single model: uses direct annotation via
-    [`mLLMCelltype::annotate_cell_types()`](https://cafferyang.com/mLLMCelltype/reference/annotate_cell_types.html).
+    [`mLLMCelltype::annotate_cell_types()`](https://rdrr.io/pkg/mLLMCelltype/man/annotate_cell_types.html).
 
 5.  Adds results as metadata columns to the Seurat object.
 
@@ -103,7 +103,7 @@ mLLMCelltypeAnnotate(
   Additional arguments passed to downstream functions. Parameters are
   routed as follows:
 
-  To [`mLLMCelltype::annotate_cell_types()`](https://cafferyang.com/mLLMCelltype/reference/annotate_cell_types.html) and [`mLLMCelltype::interactive_consensus_annotation()`](https://cafferyang.com/mLLMCelltype/reference/interactive_consensus_annotation.html):
+  To [`mLLMCelltype::annotate_cell_types()`](https://rdrr.io/pkg/mLLMCelltype/man/annotate_cell_types.html) and [`mLLMCelltype::interactive_consensus_annotation()`](https://rdrr.io/pkg/mLLMCelltype/man/interactive_consensus_annotation.html):
 
   :   
 
@@ -196,8 +196,8 @@ The input `Seurat` object with the following metadata columns added:
 
 ## See also
 
-[`annotate_cell_types`](https://cafferyang.com/mLLMCelltype/reference/annotate_cell_types.html),
-[`interactive_consensus_annotation`](https://cafferyang.com/mLLMCelltype/reference/interactive_consensus_annotation.html)
+[`annotate_cell_types`](https://rdrr.io/pkg/mLLMCelltype/man/annotate_cell_types.html),
+[`interactive_consensus_annotation`](https://rdrr.io/pkg/mLLMCelltype/man/interactive_consensus_annotation.html)
 
 Other Single_Cell_Annotation_Method:
 [`CellTypistAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.md),
