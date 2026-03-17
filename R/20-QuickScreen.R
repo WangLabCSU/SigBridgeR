@@ -91,7 +91,7 @@
 #' \item{verbose}{(logical) Whether to print progress messages. Default: inherits from `getFuncOption("verbose")`.}
 #' \item{seed}{(integer) Random seed for reproducibility. Default: 123.}
 #' }}
-#' 
+#'
 #' \item{PIPET}{\describe{
 #' \item{group}{(character or NULL) Name of a metadata column (e.g., `"orig.ident"`) to stratify cells before screening. When `NULL` (default), screening is performed globally across all cells.}
 #' \item{discretize_method}{(character) Strategy to binarize continuous phenotypes internally before marker identification. One of:
@@ -120,7 +120,7 @@
 #' \item{verbose}{(logical) Whether to print progress messages. Default: inherits from `getFuncOption("verbose")`.}
 #' \item{parallel}{(logical) Whether to enable parallel permutations (requires `future::plan()` pre-set). Default: \code{FALSE}.}
 #' }}
-#' 
+#'
 #' \item{LP_SGL}{\describe{
 #' \item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
 #' \item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}

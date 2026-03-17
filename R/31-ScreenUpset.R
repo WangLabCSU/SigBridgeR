@@ -111,8 +111,8 @@ ScreenUpset <- function(
         stats::setNames(
           combs,
           vapply(
-            combs,
-            function(comb) {
+            X = combs,
+            FUN = function(comb) {
               if (length(comb) == 1) {
                 comb
               } else {
@@ -134,8 +134,8 @@ ScreenUpset <- function(
 
   # Calculate intersection counts using vectorized operations
   counts <- vapply(
-    all_combinations,
-    function(sets) {
+    X = all_combinations,
+    FUN = function(sets) {
       # Find rows where all specified sets are positive using vectorized rowSums
       row_matches <- Matrix::rowSums(positive_matrix[,
         sets,
@@ -145,7 +145,7 @@ ScreenUpset <- function(
 
       sum(row_matches, na.rm = TRUE)
     },
-    numeric(1)
+    FUN.VALUE = numeric(1)
   )
 
   # Create result data frame

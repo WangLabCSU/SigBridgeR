@@ -9,7 +9,7 @@ CheckInstalled <- function(
   where <- if (grepl("/", pkg)) {
     "github"
   } else {
-    SigBridgeRUtils::MatchArg(where, c("cran", "bioc", "github"),NULL)
+    SigBridgeRUtils::MatchArg(where, c("cran", "bioc", "github"), NULL)
   }
   pkg_name <- gsub(".*/", "", pkg)
   if (rlang::is_installed(pkg_name)) {
