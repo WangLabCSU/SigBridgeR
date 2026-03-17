@@ -41,7 +41,6 @@ Remotes:
     github::Exceret/Scissor,
     github::Exceret/scPAS,
     github::Exceret/ScPP,
-    github::WangLabCSU/SigBridgeRUtils,
     github::ShixiangWang/IDConverter,
     github::yonicd/tidycheckUsage
 Suggests: 
