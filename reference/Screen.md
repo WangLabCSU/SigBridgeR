@@ -50,7 +50,7 @@ Screen(
 
 - screen_method:
 
-  Screening algorithm to use, there are seven options:
+  Screening algorithm to use, there are nine options:
 
   - "Scissor": see also DoScissor()
 
@@ -67,6 +67,8 @@ Screen(
   - "PIPET": see also DoPIPET()
 
   - "SIDISH": see also DoSIDISH()
+
+  - "SCIPAC": see also DoSCIPAC()
 
 - ...:
 
@@ -257,6 +259,173 @@ Screen(
 
       :   (list) Environment parameters for SIDISH, default "list()"
 
+  SCIPAC
+
+  :   
+
+      hvg
+
+      :   (integer) Number of highly variable genes to use for
+          preprocessing. Default: 1000.
+
+      do_pca_sc
+
+      :   (logical) If `TRUE`, first do PCA on `sc.dat` and use the
+          rotation matrix on `bulk.dat`; if `FALSE`, first do PCA on
+          `bulk.data` and use the rotation matrix on `sc.dat`. Default:
+          `FALSE`.
+
+      n_pc
+
+      :   (integer) Number of principal components to use. Default: 60.
+
+      sc_batch_col
+
+      :   (character or vector) Batch variable for single-cell data. If
+          character, should be a column name in `sc_data` `@metadata`.
+          If vector, should be a batch assignment vector matching cell
+          order. Default: `NULL` (no batch correction).
+
+      resolution
+
+      :   (integer) Clustering resolution for cell type identification.
+          Higher values produce more clusters. Default: 2.
+
+      ela_net_alpha
+
+      :   (numeric) Elastic net mixing parameter (0 = ridge, 1 = lasso).
+          Default: 0.4.
+
+      bt_size
+
+      :   (integer) Bootstrap sample size for stability assessment.
+          Default: 50.
+
+      ncore
+
+      :   (integer) Number of CPU cores for parallel computation.
+          Default: 7.
+
+      ci_alpha
+
+      :   (numeric) Significance level for confidence intervals.
+          Default: 0.05.
+
+      nfold
+
+      :   (integer) Number of folds for cross-validation for regression
+          models. Default: 10.
+
+      assay
+
+      :   (character) Assay to use from sc_data. Default: "RNA".
+
+      verbose
+
+      :   (logical) Whether to print progress messages. Default:
+          inherits from `getFuncOption("verbose")`.
+
+      seed
+
+      :   (integer) Random seed for reproducibility. Default: 123.
+
+  PIPET
+
+  :   
+
+      group
+
+      :   (character or NULL) Name of a metadata column (e.g.,
+          `"orig.ident"`) to stratify cells before screening. When
+          `NULL` (default), screening is performed globally across all
+          cells.
+
+      discretize_method
+
+      :   (character) Strategy to binarize continuous phenotypes
+          internally before marker identification. One of:
+
+          - `"median"` (default): Equivalent to 2-quantile split (i.e.,
+            median threshold).
+
+          - `"kmeans"`: Two-cluster k-means on the continuous phenotype.
+
+          - `"custom"`: User-defined cutoffs via `cutoff`.
+
+      cutoff
+
+      :   (numeric vector or NULL) Required only if
+          `discretize_method = "custom"`. Specifies interior breakpoints
+          on the *normalized, log2-transformed phenotype scale* (i.e.,
+          after `scale(log2(x + 1))`). Must be sorted ascending and of
+          length `n_group - 1`.
+
+      label_type
+
+      :   (character) Phenotype label type (e.g., `"PIPET_SBS1"`),
+          stored in `scRNA_data@misc`. Default: `"PIPET"`.
+
+      log2FC
+
+      :   (numeric) Absolute log2 fold-change cutoff for differential
+          expression marker selection in bulk data (via DESeq2-like
+          analysis). Default: 1.
+
+      p_adjust
+
+      :   (numeric) Adjusted p-value (FDR) cutoff for marker gene
+          selection. Default: 0.05.
+
+      show_log2FC
+
+      :   (logical) Whether to annotate markers with signed log2FC
+          direction (e.g., `CD3D_up`). Default: `TRUE`.
+
+      freq_counts
+
+      :   (integer or NULL) Minimum number of cells a gene must be
+          expressed in to be retained in scRNA-seq data preprocessing.
+          Default: `NULL` (no filtering).
+
+      normalize
+
+      :   (logical) Whether to apply log-normalization (`LogNormalize`)
+          to scRNA-seq counts prior to correlation. Default: `TRUE`.
+
+      scale
+
+      :   (logical) Whether to scale (center + unit-variance) gene
+          expression across cells before computing distances. Default:
+          `TRUE`.
+
+      nPerm
+
+      :   (integer) Number of label permutations to assess significance
+          of correlation scores. Default: 1000.
+
+      distance
+
+      :   (character) Distance or similarity metric for template
+          matching. Supported: `"cosine"` (default), `"pearson"`,
+          `"spearman"`, `"kendall"`, `"euclidean"`, `"maximum"`.
+
+      seed
+
+      :   (integer or NULL) Random seed for reproducibility in marker
+          creation and permutation tests. Default: inherits from
+          `getFuncOption("seed")`.
+
+      verbose
+
+      :   (logical) Whether to print progress messages. Default:
+          inherits from `getFuncOption("verbose")`.
+
+      parallel
+
+      :   (logical) Whether to enable parallel permutations (requires
+          [`future::plan()`](https://future.futureverse.org/reference/plan.html)
+          pre-set). Default: `FALSE`.
+
   LP_SGL
 
   :   
@@ -285,106 +454,6 @@ Screen(
             default 1
 
           - pval_threshold: (numeric) P-value threshold, default 0.05
-
-      PIPET
-
-      :   
-
-          group
-
-          :   (character or NULL) Name of a metadata column (e.g.,
-              `"orig.ident"`) to stratify cells before screening. When
-              `NULL` (default), screening is performed globally across
-              all cells.
-
-          discretize_method
-
-          :   (character) Strategy to binarize continuous phenotypes
-              internally before marker identification. One of:
-
-              - `"median"` (default): Equivalent to 2-quantile split
-                (i.e., median threshold).
-
-              - `"kmeans"`: Two-cluster k-means on the continuous
-                phenotype.
-
-              - `"custom"`: User-defined cutoffs via `cutoff`.
-
-          cutoff
-
-          :   (numeric vector or NULL) Required only if
-              `discretize_method = "custom"`. Specifies interior
-              breakpoints on the *normalized, log2-transformed phenotype
-              scale* (i.e., after `scale(log2(x + 1))`). Must be sorted
-              ascending and of length `n_group - 1`.
-
-          label_type
-
-          :   (character) Phenotype label type (e.g., `"PIPET_SBS1"`),
-              stored in `scRNA_data@misc`. Default: `"PIPET"`.
-
-          log2FC
-
-          :   (numeric) Absolute log2 fold-change cutoff for
-              differential expression marker selection in bulk data (via
-              DESeq2-like analysis). Default: 1.
-
-          p_adjust
-
-          :   (numeric) Adjusted p-value (FDR) cutoff for marker gene
-              selection. Default: 0.05.
-
-          show_log2FC
-
-          :   (logical) Whether to annotate markers with signed log2FC
-              direction (e.g., `CD3D_up`). Default: `TRUE`.
-
-          freq_counts
-
-          :   (integer or NULL) Minimum number of cells a gene must be
-              expressed in to be retained in scRNA-seq data
-              preprocessing. Default: `NULL` (no filtering).
-
-          normalize
-
-          :   (logical) Whether to apply log-normalization
-              (`LogNormalize`) to scRNA-seq counts prior to correlation.
-              Default: `TRUE`.
-
-          scale
-
-          :   (logical) Whether to scale (center + unit-variance) gene
-              expression across cells before computing distances.
-              Default: `TRUE`.
-
-          nPerm
-
-          :   (integer) Number of label permutations to assess
-              significance of correlation scores. Default: 1000.
-
-          distance
-
-          :   (character) Distance or similarity metric for template
-              matching. Supported: `"cosine"` (default), `"pearson"`,
-              `"spearman"`, `"kendall"`, `"euclidean"`, `"maximum"`.
-
-          seed
-
-          :   (integer or NULL) Random seed for reproducibility in
-              marker creation and permutation tests. Default: inherits
-              from `getFuncOption("seed")`.
-
-          verbose
-
-          :   (logical) Whether to print progress messages. Default:
-              inherits from `getFuncOption("verbose")`.
-
-          parallel
-
-          :   (logical) Whether to enable parallel permutations
-              (requires
-              [`future::plan()`](https://future.futureverse.org/reference/plan.html)
-              pre-set). Default: `FALSE`.
 
 ## Value
 
@@ -424,6 +493,7 @@ A list containing:
 | LP_SGL  | All three types      | resolution, alpha, nfold, dge_analysis                                                                                                                                                                                        |
 | PIPET   | Binary/Continuous    | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance                                                                                                               |
 | SIDISH  | Survival Only        | sidish_params, env_params                                                                                                                                                                                                     |
+| SCIPAC  | All three types      | hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size, ncore, ci_alpha, nfold, assay                                                                                                                         |
 
 ## See also
 
@@ -444,3 +514,5 @@ Associated functions:
 - [`DoPIPET`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md)
 
 - [`DoSIDISH`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md)
+
+- [`DoSCIPAC`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md)

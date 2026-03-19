@@ -102,7 +102,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 
 
 <dt id="arg-screen-method">screen_method<a class="anchor" aria-label="anchor" href="#arg-screen-method"></a></dt>
-<dd><p>Screening algorithm to use, there are seven options:</p><ul><li><p>"Scissor": see also DoScissor()</p></li>
+<dd><p>Screening algorithm to use, there are nine options:</p><ul><li><p>"Scissor": see also DoScissor()</p></li>
 <li><p>"scPP": see also DoscPP()</p></li>
 <li><p>"scPAS": see also DoscPAS()</p></li>
 <li><p>"scAB": see also DoscAB(), continuous phenotype is not supported</p></li>
@@ -110,6 +110,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <li><p>"LP_SGL": see also DoLP_SGL()</p></li>
 <li><p>"PIPET": see also DoPIPET()</p></li>
 <li><p>"SIDISH": see also DoSIDISH()</p></li>
+<li><p>"SCIPAC": see also DoSCIPAC()</p></li>
 </ul></dd>
 
 
@@ -243,22 +244,49 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 
 </dl></dd>
 
+<dt>SCIPAC</dt>
+<dd><dl><dt>hvg</dt>
+<dd><p>(integer) Number of highly variable genes to use for preprocessing. Default: 1000.</p></dd>
 
-<dt>LP_SGL</dt>
-<dd><dl><dt>resolution</dt>
-<dd><p>(numeric) Resolution parameter for Leiden clustering, default 0.6</p></dd>
+<dt>do_pca_sc</dt>
+<dd><p>(logical) If <code>TRUE</code>, first do PCA on <code>sc.dat</code> and use the rotation matrix on <code>bulk.dat</code>; if <code>FALSE</code>, first do PCA on <code>bulk.data</code> and use the rotation matrix on <code>sc.dat</code>. Default: <code>FALSE</code>.</p></dd>
 
-<dt>alpha</dt>
-<dd><p>(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5</p></dd>
+<dt>n_pc</dt>
+<dd><p>(integer) Number of principal components to use. Default: 60.</p></dd>
+
+<dt>sc_batch_col</dt>
+<dd><p>(character or vector) Batch variable for single-cell data. If character, should be a column name in <code>sc_data</code> <code>@metadata</code>. If vector, should be a batch assignment vector matching cell order. Default: <code>NULL</code> (no batch correction).</p></dd>
+
+<dt>resolution</dt>
+<dd><p>(integer) Clustering resolution for cell type identification. Higher values produce more clusters. Default: 2.</p></dd>
+
+<dt>ela_net_alpha</dt>
+<dd><p>(numeric) Elastic net mixing parameter (0 = ridge, 1 = lasso). Default: 0.4.</p></dd>
+
+<dt>bt_size</dt>
+<dd><p>(integer) Bootstrap sample size for stability assessment. Default: 50.</p></dd>
+
+<dt>ncore</dt>
+<dd><p>(integer) Number of CPU cores for parallel computation. Default: 7.</p></dd>
+
+<dt>ci_alpha</dt>
+<dd><p>(numeric) Significance level for confidence intervals. Default: 0.05.</p></dd>
 
 <dt>nfold</dt>
-<dd><p>(integer) Number of folds for cross-validation, default 5</p></dd>
+<dd><p>(integer) Number of folds for cross-validation for regression models. Default: 10.</p></dd>
 
-<dt>dge_analysis</dt>
-<dd><p>(list) Differential expression analysis settings:</p><ul><li><p>run: (logical) Whether to run DEG analysis, default FALSE</p></li>
-<li><p>logFC_threshold: (numeric) Log fold change threshold, default 1</p></li>
-<li><p>pval_threshold: (numeric) P-value threshold, default 0.05</p></li>
-</ul></dd>
+<dt>assay</dt>
+<dd><p>(character) Assay to use from sc_data. Default: "RNA".</p></dd>
+
+<dt>verbose</dt>
+<dd><p>(logical) Whether to print progress messages. Default: inherits from <code>getFuncOption("verbose")</code>.</p></dd>
+
+<dt>seed</dt>
+<dd><p>(integer) Random seed for reproducibility. Default: 123.</p></dd>
+
+
+</dl></dd>
+
 
 <dt>PIPET</dt>
 <dd><dl><dt>group</dt>
@@ -319,6 +347,23 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 </dl></dd>
 
 
+<dt>LP_SGL</dt>
+<dd><dl><dt>resolution</dt>
+<dd><p>(numeric) Resolution parameter for Leiden clustering, default 0.6</p></dd>
+
+<dt>alpha</dt>
+<dd><p>(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5</p></dd>
+
+<dt>nfold</dt>
+<dd><p>(integer) Number of folds for cross-validation, default 5</p></dd>
+
+<dt>dge_analysis</dt>
+<dd><p>(list) Differential expression analysis settings:</p><ul><li><p>run: (logical) Whether to run DEG analysis, default FALSE</p></li>
+<li><p>logFC_threshold: (numeric) Log fold change threshold, default 1</p></li>
+<li><p>pval_threshold: (numeric) P-value threshold, default 0.05</p></li>
+</ul></dd>
+
+
 </dl></dd>
 
 </dl></dd>
@@ -345,7 +390,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
     <div class="section level2">
     <h2 id="method-compatibility">Method Compatibility<a class="anchor" aria-label="anchor" href="#method-compatibility"></a></h2>
 
-<table class="table table"><tr><td>Method</td><td>Supported Phenotypes</td><td>Additional Parameters</td></tr><tr><td>Scissor</td><td>All three types</td><td>alpha, cutoff, path2load_scissor_cache, path2save_scissor_inputs, reliability_test, reliability_test.n,reliability_test.nfold, cell_evaluation,cell_evaluation.benchmark_data,cell_evaluation.FDR,cell_evaluation.bootstrap_n</td></tr><tr><td>scPP</td><td>All three types</td><td>ref_group, Log2FC_cutoff, estimate_cutoff, probs</td></tr><tr><td>scPAS</td><td>All three types</td><td>n_components ,assay, imputation,nfeature, alpha,network_class,permutation_times,FDR_threshold,independent</td></tr><tr><td>scAB</td><td>Binary/Survival</td><td>alpha, alpha_2, maxiter, tred</td></tr><tr><td>DEGAS</td><td>All three types</td><td>sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method</td></tr><tr><td>LP_SGL</td><td>All three types</td><td>resolution, alpha, nfold, dge_analysis</td></tr><tr><td>PIPET</td><td>Binary/Continuous</td><td>group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance</td></tr><tr><td>SIDISH</td><td>Survival Only</td><td>sidish_params, env_params</td></tr></table></div>
+<table class="table table"><tr><td>Method</td><td>Supported Phenotypes</td><td>Additional Parameters</td></tr><tr><td>Scissor</td><td>All three types</td><td>alpha, cutoff, path2load_scissor_cache, path2save_scissor_inputs, reliability_test, reliability_test.n,reliability_test.nfold, cell_evaluation,cell_evaluation.benchmark_data,cell_evaluation.FDR,cell_evaluation.bootstrap_n</td></tr><tr><td>scPP</td><td>All three types</td><td>ref_group, Log2FC_cutoff, estimate_cutoff, probs</td></tr><tr><td>scPAS</td><td>All three types</td><td>n_components ,assay, imputation,nfeature, alpha,network_class,permutation_times,FDR_threshold,independent</td></tr><tr><td>scAB</td><td>Binary/Survival</td><td>alpha, alpha_2, maxiter, tred</td></tr><tr><td>DEGAS</td><td>All three types</td><td>sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method</td></tr><tr><td>LP_SGL</td><td>All three types</td><td>resolution, alpha, nfold, dge_analysis</td></tr><tr><td>PIPET</td><td>Binary/Continuous</td><td>group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance</td></tr><tr><td>SIDISH</td><td>Survival Only</td><td>sidish_params, env_params</td></tr><tr><td>SCIPAC</td><td>All three types</td><td>hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size, ncore, ci_alpha, nfold, assay</td></tr></table></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Associated functions:</p><ul><li><p><code><a href="DoScissor.html">DoScissor</a></code></p></li>
@@ -356,6 +401,7 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <li><p><code><a href="DoLP_SGL.html">DoLP_SGL</a></code></p></li>
 <li><p><code><a href="DoPIPET.html">DoPIPET</a></code></p></li>
 <li><p><code><a href="DoSIDISH.html">DoSIDISH</a></code></p></li>
+<li><p><code><a href="DoSCIPAC.html">DoSCIPAC</a></code></p></li>
 </ul></div>
     </div>
 

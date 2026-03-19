@@ -13,8 +13,7 @@ check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)
 badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/)
 [![Ask
 DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
-
-------------------------------------------------------------------------
+————————————————————————
 
 ## 🌐 Overview
 
