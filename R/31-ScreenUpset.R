@@ -12,11 +12,10 @@
 #'                        Must contain columns with screening types marked as "Positive".
 #' @param screen_type Character vector of screening types to analyze.
 #'                    Default: NULL, indicating that a self-search pattern will be used.
+#' @param order_by Character vector of columns to order the intersections by.
+#'                 Default: c("freq", "degree").
 #' @param show_plot Whether to show the upset plot. Default: FALSE
 #' @param n_intersections Number of intersections to display in the plot. Default: 20.
-#' @param x_lab Label for the x-axis. Default: "Screen Set Intersections".
-#' @param y_lab Label for the y-axis. Default: "Number of Cells".
-#' @param title Plot title. Default: "Cell Counts Across Screen Set Intersections".
 #' @param bar_color Color for the bars in the plot. Default: "#4E79A7".
 #' @param combmatrix_point_color Color for points in the combination matrix. Default: "black".
 #' @param verbose Logical, whether to print a message
@@ -59,11 +58,9 @@
 ScreenUpset <- function(
   screened_seurat,
   screen_type = NULL,
+  order_by = c("freq", "degree"),
   show_plot = FALSE,
   n_intersections = 20,
-  x_lab = "Screen Set Intersections",
-  y_lab = "Number of Cells",
-  title = "Cell Counts Across Screen Set Intersections",
   bar_color = "#4E79A7",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
@@ -168,6 +165,10 @@ ScreenUpset <- function(
     dots,
     ggupset::theme_combmatrix
   )
+  scale_x_upset_args <- SigBridgeRUtils::FilterArgs4Func(
+    dots,
+    ggupset::scale_x_upset
+  )
 
   # Create UpSet plot
   upset <- ggplot2::ggplot(
@@ -176,15 +177,12 @@ ScreenUpset <- function(
   ) +
     ggplot2::geom_col(fill = bar_color, alpha = 0.9, width = 0.7) +
     ggplot2::geom_text(ggplot2::aes(label = `count`), vjust = -0.5) +
-    ggupset::scale_x_upset(
-      order_by = "degree",
+    rlang::exec(
+      ggupset::scale_x_upset,
+      order_by = order_by,
       sets = screen_type,
-      n_intersections = n_intersections
-    ) +
-    ggplot2::labs(
-      x = x_lab,
-      y = y_lab,
-      title = title
+      n_intersections = n_intersections,
+      !!!scale_x_upset_args
     ) +
     rlang::exec(ggupset::theme_combmatrix, !!!combmatrix_args) +
     ggplot2::theme_minimal() +

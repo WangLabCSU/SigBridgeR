@@ -16,6 +16,13 @@ sequencing data, bulk expression data, and sample-related phenotypic
 data, to identify the cells most closely associated with the phenotypic
 data, performing as a bridge to existing tools.
 
+<p align="center">
+
+<img src="SigBridgeR_workflow.png" />
+
+</p>
+
+
 ## 🔧 Installation
 
 Usually we recommend installing the latest release from GitHub because
