@@ -12,11 +12,9 @@ combination.
 ScreenUpset(
   screened_seurat,
   screen_type = NULL,
+  order_by = c("freq", "degree"),
   show_plot = FALSE,
   n_intersections = 20,
-  x_lab = "Screen Set Intersections",
-  y_lab = "Number of Cells",
-  title = "Cell Counts Across Screen Set Intersections",
   bar_color = "#4E79A7",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
@@ -36,6 +34,11 @@ ScreenUpset(
   Character vector of screening types to analyze. Default: NULL,
   indicating that a self-search pattern will be used.
 
+- order_by:
+
+  Character vector of columns to order the intersections by. Default:
+  c("freq", "degree").
+
 - show_plot:
 
   Whether to show the upset plot. Default: FALSE
@@ -43,18 +46,6 @@ ScreenUpset(
 - n_intersections:
 
   Number of intersections to display in the plot. Default: 20.
-
-- x_lab:
-
-  Label for the x-axis. Default: "Screen Set Intersections".
-
-- y_lab:
-
-  Label for the y-axis. Default: "Number of Cells".
-
-- title:
-
-  Plot title. Default: "Cell Counts Across Screen Set Intersections".
 
 - bar_color:
 

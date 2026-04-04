@@ -2,7 +2,7 @@
 
 ``` r
 library(SigBridgeR)
-#> ✔ SigBridgeR v3.5.0 loaded
+#> ✔ SigBridgeR v3.6.0 loaded
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
@@ -386,7 +386,7 @@ result
 sessionInfo()
 #> R version 4.5.3 (2026-03-11)
 #> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.3 LTS
+#> Running under: Ubuntu 24.04.4 LTS
 #> 
 #> Matrix products: default
 #> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
@@ -405,29 +405,29 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_5.4.0       SeuratObject_5.3.0 sp_2.2-1           SigBridgeR_3.5.0  
+#> [1] Seurat_5.4.0       SeuratObject_5.3.0 sp_2.2-1           SigBridgeR_3.6.0  
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3         
 #>   [4] rlang_1.1.7            magrittr_2.0.4         RcppAnnoy_0.0.23      
-#>   [7] otel_0.2.0             spatstat.geom_3.7-0    matrixStats_1.5.0     
+#>   [7] otel_0.2.0             spatstat.geom_3.7-3    matrixStats_1.5.0     
 #>  [10] ggridges_0.5.7         compiler_4.5.3         png_0.1-9             
-#>  [13] systemfonts_1.3.2      vctrs_0.7.1            reshape2_1.4.5        
+#>  [13] systemfonts_1.3.2      vctrs_0.7.2            reshape2_1.4.5        
 #>  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         
-#>  [19] promises_1.5.0         rmarkdown_2.30         ragg_1.5.1            
-#>  [22] purrr_1.2.1            xfun_0.56              cachem_1.1.0          
+#>  [19] promises_1.5.0         rmarkdown_2.31         ragg_1.5.2            
+#>  [22] purrr_1.2.1            xfun_0.57              cachem_1.1.0          
 #>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.8           
 #>  [28] spatstat.utils_3.2-2   irlba_2.3.7            parallel_4.5.3        
 #>  [31] cluster_2.1.8.2        R6_2.6.1               ica_1.0-3             
 #>  [34] spatstat.data_3.1-9    bslib_0.10.0           stringi_1.8.7         
-#>  [37] RColorBrewer_1.1-3     reticulate_1.45.0      spatstat.univar_3.1-6 
+#>  [37] RColorBrewer_1.1-3     reticulate_1.45.0      spatstat.univar_3.1-7 
 #>  [40] parallelly_1.46.1      lmtest_0.9-40          jquerylib_0.1.4       
 #>  [43] scattermore_1.2        Rcpp_1.1.1             knitr_1.51            
 #>  [46] tensor_1.5.1           future.apply_1.20.2    zoo_1.8-15            
-#>  [49] sctransform_0.4.3      httpuv_1.6.16          Matrix_1.7-4          
+#>  [49] sctransform_0.4.3      httpuv_1.6.17          Matrix_1.7-4          
 #>  [52] splines_4.5.3          igraph_2.2.2           tidyselect_1.2.1      
-#>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.4-4 
-#>  [58] spatstat.explore_3.7-0 codetools_0.2-20       miniUI_0.1.2          
+#>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.4-5 
+#>  [58] spatstat.explore_3.8-0 codetools_0.2-20       miniUI_0.1.2          
 #>  [61] listenv_0.10.1         lattice_0.22-9         tibble_3.3.1          
 #>  [64] plyr_1.8.9             shiny_1.13.0           S7_0.2.1              
 #>  [67] ROCR_1.0-12            evaluate_1.0.5         Rtsne_0.17            
@@ -438,12 +438,12 @@ sessionInfo()
 #>  [82] scales_1.4.0           globals_0.19.1         xtable_1.8-8          
 #>  [85] glue_1.8.0             lazyeval_0.2.2         tools_4.5.3           
 #>  [88] data.table_1.18.2.1    RSpectra_0.16-2        RANN_2.6.2            
-#>  [91] fs_1.6.7               dotCall64_1.2          cowplot_1.2.0         
+#>  [91] fs_2.0.1               dotCall64_1.2          cowplot_1.2.0         
 #>  [94] grid_4.5.3             tidyr_1.3.2            nlme_3.1-168          
 #>  [97] patchwork_1.3.2        cli_3.6.5              spatstat.sparse_3.1-0 
 #> [100] textshaping_1.0.5      spam_2.11-3            viridisLite_0.4.3     
 #> [103] dplyr_1.2.0            uwot_0.2.4             gtable_0.3.6          
-#> [106] sass_0.4.10            digest_0.6.39          progressr_0.18.0      
+#> [106] sass_0.4.10            digest_0.6.39          progressr_0.19.0      
 #> [109] ggrepel_0.9.8          htmlwidgets_1.6.4      farver_2.1.2          
 #> [112] htmltools_0.5.9        pkgdown_2.2.0          lifecycle_1.0.5       
 #> [115] httr_1.4.8             mime_0.13              MASS_7.3-65

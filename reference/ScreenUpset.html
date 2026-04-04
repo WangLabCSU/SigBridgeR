@@ -13,7 +13,7 @@ number of cells positive for each combination."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,11 +62,9 @@ number of cells positive for each combination.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ScreenUpset</span><span class="op">(</span></span>
 <span>  <span class="va">screened_seurat</span>,</span>
 <span>  screen_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  order_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"freq"</span>, <span class="st">"degree"</span><span class="op">)</span>,</span>
 <span>  show_plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  n_intersections <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  x_lab <span class="op">=</span> <span class="st">"Screen Set Intersections"</span>,</span>
-<span>  y_lab <span class="op">=</span> <span class="st">"Number of Cells"</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"Cell Counts Across Screen Set Intersections"</span>,</span>
 <span>  bar_color <span class="op">=</span> <span class="st">"#4E79A7"</span>,</span>
 <span>  combmatrix_point_color <span class="op">=</span> <span class="st">"black"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="fu">SigBridgeRUtils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SigBridgeRUtils/man/SigBridgeR_Function_Setting.html" class="external-link">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span>,</span>
@@ -88,24 +86,17 @@ Must contain columns with screening types marked as "Positive".</p></dd>
 Default: NULL, indicating that a self-search pattern will be used.</p></dd>
 
 
+<dt id="arg-order-by">order_by<a class="anchor" aria-label="anchor" href="#arg-order-by"></a></dt>
+<dd><p>Character vector of columns to order the intersections by.
+Default: c("freq", "degree").</p></dd>
+
+
 <dt id="arg-show-plot">show_plot<a class="anchor" aria-label="anchor" href="#arg-show-plot"></a></dt>
 <dd><p>Whether to show the upset plot. Default: FALSE</p></dd>
 
 
 <dt id="arg-n-intersections">n_intersections<a class="anchor" aria-label="anchor" href="#arg-n-intersections"></a></dt>
 <dd><p>Number of intersections to display in the plot. Default: 20.</p></dd>
-
-
-<dt id="arg-x-lab">x_lab<a class="anchor" aria-label="anchor" href="#arg-x-lab"></a></dt>
-<dd><p>Label for the x-axis. Default: "Screen Set Intersections".</p></dd>
-
-
-<dt id="arg-y-lab">y_lab<a class="anchor" aria-label="anchor" href="#arg-y-lab"></a></dt>
-<dd><p>Label for the y-axis. Default: "Number of Cells".</p></dd>
-
-
-<dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
-<dd><p>Plot title. Default: "Cell Counts Across Screen Set Intersections".</p></dd>
 
 
 <dt id="arg-bar-color">bar_color<a class="anchor" aria-label="anchor" href="#arg-bar-color"></a></dt>
