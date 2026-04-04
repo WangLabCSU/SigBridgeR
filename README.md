@@ -16,11 +16,11 @@ sequencing data, bulk expression data, and sample-related phenotypic
 data, to identify the cells most closely associated with the phenotypic
 data, performing as a bridge to existing tools.
 
-<p align="center">
+<!-- <p align="center">
 
 <img src="SigBridgeR_workflow.png" />
 
-</p>
+</p> -->
 
 
 ## 🔧 Installation
