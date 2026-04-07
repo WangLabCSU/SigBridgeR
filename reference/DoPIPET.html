@@ -13,7 +13,7 @@ testing for significance assessment."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,6 +64,7 @@ testing for significance assessment.</p>
 <span>  <span class="va">sc_data</span>,</span>
 <span>  <span class="va">phenotype</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"binary"</span>, <span class="st">"continuous"</span>, <span class="st">"survival"</span><span class="op">)</span>,</span>
+<span>  only_pos_marker <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  discretize_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"kmeans"</span>, <span class="st">"median"</span>, <span class="st">"custom"</span><span class="op">)</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -105,6 +106,12 @@ Column names must match <code>phenotype</code> identifiers.</p></dd>
 - <code>"binary"</code>: Case-control design (e.g., responder/non-responder)
 - <code>"continuous"</code>: Continuous outcome (e.g., age, size)
 - <code>"survival"</code>: Patient survival</p></dd>
+
+
+<dt id="arg-only-pos-marker">only_pos_marker<a class="anchor" aria-label="anchor" href="#arg-only-pos-marker"></a></dt>
+<dd><p>A logical value. If <code>TRUE</code>, only upregulated marker genes
+(those with positive log2 fold change) will be retained. If <code>FALSE</code> (default),
+both upregulated and downregulated markers are kept.</p></dd>
 
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>

@@ -14,6 +14,7 @@ DoPIPET(
   sc_data,
   phenotype,
   phenotype_class = c("binary", "continuous", "survival"),
+  only_pos_marker = FALSE,
   group = NULL,
   discretize_method = c("kmeans", "median", "custom"),
   cutoff = NULL,
@@ -52,6 +53,12 @@ DoPIPET(
   Analysis mode: - `"binary"`: Case-control design (e.g.,
   responder/non-responder) - `"continuous"`: Continuous outcome (e.g.,
   age, size) - `"survival"`: Patient survival
+
+- only_pos_marker:
+
+  A logical value. If `TRUE`, only upregulated marker genes (those with
+  positive log2 fold change) will be retained. If `FALSE` (default),
+  both upregulated and downregulated markers are kept.
 
 - group:
 
