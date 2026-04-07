@@ -36,7 +36,7 @@ Default: c("freq", "degree").}
 
 \item{verbose}{Logical, whether to print a message}
 
-\item{...}{Additional arguments passed to \code{ggplot2::theme()} for customizing the plot appearance.}
+\item{...}{Additional arguments passed to \code{ggupset::scale_x_upset()}, \code{ggupset::theme_combmatrix()}, and \code{ggplot2::theme()} for customizing the plot appearance. Argumetns are auto-filtered}
 }
 \value{
 A list containing two elements:

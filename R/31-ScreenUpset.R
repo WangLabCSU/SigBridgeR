@@ -19,7 +19,7 @@
 #' @param bar_color Color for the bars in the plot. Default: "#4E79A7".
 #' @param combmatrix_point_color Color for points in the combination matrix. Default: "black".
 #' @param verbose Logical, whether to print a message
-#' @param ... Additional arguments passed to `ggplot2::theme()` for customizing the plot appearance.
+#' @param ... Additional arguments passed to `ggupset::scale_x_upset()`, `ggupset::theme_combmatrix()`, and `ggplot2::theme()` for customizing the plot appearance. Argumetns are auto-filtered
 #'
 #' @return A list containing two elements:
 #'   - `plot`: A ggplot object displaying the UpSet plot
@@ -74,9 +74,10 @@ ScreenUpset <- function(
   }
   chk::chk_whole_number(n_intersections)
   chk::chk_flag(show_plot)
-  purrr::walk(
-    list(x_lab, y_lab, title, bar_color, combmatrix_point_color),
-    ~ chk::chk_character
+  vapply(
+    X = list(bar_color, combmatrix_point_color),
+    FUN = chk::chk_character,
+    FUN.VALUE = NULL
   )
 
   meta_data <- screened_seurat[[]]
@@ -160,16 +161,6 @@ ScreenUpset <- function(
     FALSE
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
 
-  theme_args <- SigBridgeRUtils::FilterArgs4Func(dots, ggplot2::theme)
-  combmatrix_args <- SigBridgeRUtils::FilterArgs4Func(
-    dots,
-    ggupset::theme_combmatrix
-  )
-  scale_x_upset_args <- SigBridgeRUtils::FilterArgs4Func(
-    dots,
-    ggupset::scale_x_upset
-  )
-
   # Create UpSet plot
   upset <- ggplot2::ggplot(
     intersection_data,
@@ -182,11 +173,23 @@ ScreenUpset <- function(
       order_by = order_by,
       sets = screen_type,
       n_intersections = n_intersections,
-      !!!scale_x_upset_args
+      !!!SigBridgeRUtils::FilterArgs4Func(
+        dots,
+        ggupset::scale_x_upset
+      )
     ) +
-    rlang::exec(ggupset::theme_combmatrix, !!!combmatrix_args) +
+    rlang::exec(
+      ggupset::theme_combmatrix,
+      !!!SigBridgeRUtils::FilterArgs4Func(
+        dots,
+        ggupset::theme_combmatrix
+      )
+    ) +
     ggplot2::theme_minimal() +
-    rlang::exec(ggplot2::theme, !!!theme_args)
+    rlang::exec(
+      ggplot2::theme,
+      !!!SigBridgeRUtils::FilterArgs4Func(dots, ggplot2::theme)
+    )
 
   if (show_plot) {
     methods::show(upset)
