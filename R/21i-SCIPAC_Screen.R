@@ -280,6 +280,9 @@ DoSCIPAC <- function(
     nfold = nfold
   )
 
+  colnames(SCIPAC_res) <- paste0("SCIPAC_", colnames(SCIPAC_res))
+  SCIPAC_res <- dplyr::rename(SCIPAC_res, SCIPAC = SCIPAC_sig)
+
   modified_sc_data <- SeuratObject::AddMetaData(
     object = sc_data,
     metadata = SCIPAC_res

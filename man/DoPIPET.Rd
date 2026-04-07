@@ -9,6 +9,7 @@ DoPIPET(
   sc_data,
   phenotype,
   phenotype_class = c("binary", "continuous", "survival"),
+  only_pos_marker = FALSE,
   group = NULL,
   discretize_method = c("kmeans", "median", "custom"),
   cutoff = NULL,
@@ -39,6 +40,10 @@ Column names must match \code{phenotype} identifiers.}
 - \code{"binary"}: Case-control design (e.g., responder/non-responder)
 - \code{"continuous"}: Continuous outcome (e.g., age, size)
 - \code{"survival"}: Patient survival}
+
+\item{only_pos_marker}{A logical value. If \code{TRUE}, only upregulated marker genes
+(those with positive log2 fold change) will be retained. If \code{FALSE} (default),
+both upregulated and downregulated markers are kept.}
 
 \item{group}{A character, name of one metadata column to group cells by (for example, orig.ident). The default value is \code{NULL}. In this case, screening will be performed on each group separately.}
 

@@ -16,6 +16,9 @@
 #'        - `"binary"`: Case-control design (e.g., responder/non-responder)
 #'        - `"continuous"`: Continuous outcome (e.g., age, size)
 #'        - `"survival"`: Patient survival
+#' @param only_pos_marker A logical value. If `TRUE`, only upregulated marker genes
+#'        (those with positive log2 fold change) will be retained. If `FALSE` (default),
+#'        both upregulated and downregulated markers are kept.
 #' @param group A character, name of one metadata column to group cells by (for example, orig.ident). The default value is `NULL`. In this case, screening will be performed on each group separately.
 #' @param discretize_method \code{c("median", "kmeans", "custom")}. Discretization
 #'   strategy for continuous phenotypes. Note: `"median"` is mapped internally to
@@ -49,6 +52,7 @@ DoPIPET <- function(
   sc_data,
   phenotype,
   phenotype_class = c("binary", "continuous", "survival"),
+  only_pos_marker = FALSE,
   group = NULL,
   discretize_method = c("kmeans", "median", "custom"),
   cutoff = NULL,
@@ -128,6 +132,7 @@ DoPIPET <- function(
     cutoff = cutoff
   )
 
+  # a data.frame
   markers <- if (marker_finder == "limma") {
     PIPET::Create_Markers2(
       bulk_data = matched_bulk,
@@ -150,6 +155,10 @@ DoPIPET <- function(
       verbose = verbose,
       seed = seed
     )
+  }
+
+  if (only_pos_marker) {
+    markers <- markers[markers$log2FoldChange > 0, ]
   }
 
   # Run PIPET core algorithm
