@@ -60,7 +60,7 @@ If character, should be a column name in \code{sc_data} \verb{@metadata}. If vec
 should be a batch assignment vector matching cell order. Default: \code{NULL}
 (no batch correction).}
 
-\item{resolution}{Integer. Clustering resolution for cell type identification.
+\item{resolution}{Numeric. Clustering resolution for cell type identification.
 Higher values produce more clusters. Default: \code{2L}.}
 
 \item{ela_net_alpha}{Numeric. Elastic net mixing parameter (0 = ridge, 1 = lasso).

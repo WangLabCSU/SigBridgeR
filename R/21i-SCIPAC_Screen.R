@@ -31,7 +31,7 @@
 #'   If character, should be a column name in \code{sc_data} `@metadata`. If vector,
 #'   should be a batch assignment vector matching cell order. Default: \code{NULL}
 #'   (no batch correction).
-#' @param resolution Integer. Clustering resolution for cell type identification.
+#' @param resolution Numeric. Clustering resolution for cell type identification.
 #'   Higher values produce more clusters. Default: \code{2L}.
 #' @param ela_net_alpha Numeric. Elastic net mixing parameter (0 = ridge, 1 = lasso).
 #'   Default: \code{0.4}.
