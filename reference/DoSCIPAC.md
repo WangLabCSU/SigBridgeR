@@ -96,7 +96,7 @@ DoSCIPAC(
 
 - resolution:
 
-  Integer. Clustering resolution for cell type identification. Higher
+  Numeric. Clustering resolution for cell type identification. Higher
   values produce more clusters. Default: `2L`.
 
 - ela_net_alpha:
