@@ -11,9 +11,9 @@
 #' @param threads Integer. Global thread count used as default for all backends.
 #'   If \code{NULL} (default), uses \code{floor(availableCores() / 2)}. Applied to:
 #'   OpenMP, data.table, and TensorFlow intra-op (unless overridden).
-#' @param backend Character vector. System-level backends to configure:
-#'   \code{"openmp"} (sets \code{OMP_NUM_THREADS}), \code{"dt"} (data.table threads).
-#'   Default: \code{c("openmp", "dt", "cheapr")}.
+#' @param dt Integer. Thread count for data.table (default: inherited from \code{threads}).
+#' @param cheapr Integer. Thread count for cheapr (default: inherited from \code{threads}).
+#' @param openmp Integer. Thread count for OpenMP (default: NULL).
 #' @param tf_config Named list for TensorFlow-specific configuration:
 #'   \itemize{
 #'     \item \code{xla_flag}: Character. XLA JIT compilation flags (default: auto-optimized)
@@ -45,14 +45,16 @@
 #'     intra_op = 8L
 #'   )
 #' )
-#' library(tensorflow)  # Import AFTER setThreads()
+#' # Import AFTER setThreads()
 #'
 #' # Configure only data.table for memory-efficient workflows
-#' setThreads(threads = 4, backend = "dt", verbose = FALSE)
+#' setThreads(dt = 4L , verbose = FALSE)
 #' }
 setThreads <- function(
   threads = NULL,
-  backend = c("openmp", "dt", "cheapr"),
+  dt = threads,
+  cheapr = threads,
+  openmp = NULL,
   tf_config = list(
     xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",
     xla_device = NULL,
@@ -66,7 +68,6 @@ setThreads <- function(
 ) {
   # ===== 1. 参数验证与默认值 =====
   rlang::check_installed("future")
-  backend <- tolower(backend)
 
   # 全局线程数（系统级默认值）
   threads <- threads %||% as.integer(floor(future::availableCores() / 2))
@@ -108,24 +109,40 @@ setThreads <- function(
   # ===== 3. 系统级后端配置 =====
   sys_results <- list()
 
-  if ("openmp" %in% backend) {
+  if (is.numeric(openmp)) {
     old_val <- Sys.getenv("OMP_NUM_THREADS", unset = "")
-    Sys.setenv(OMP_NUM_THREADS = as.character(threads))
+    Sys.setenv(OMP_NUM_THREADS = as.character(openmp))
     sys_results$openmp <- list(
       name = "OMP_NUM_THREADS",
-      old = if (old_val == "") "unset" else old_val,
-      new = threads
+      old = if (old_val == "") "unset (1)" else old_val,
+      new = openmp
     )
   }
 
-  if ("dt" %in% backend) {
+  if (is.numeric(dt)) {
+    rlang::check_installed("data.table")
     old_dt <- data.table::getDTthreads(verbose = FALSE)
-    data.table::setDTthreads(threads = threads, ...)
+    rlang::exec(
+      .fn = data.table::setDTthreads,
+      threads = dt,
+      !!!SigBridgeRUtils::FilterArgs4Func(list(...), data.table::setDTthreads)
+    )
 
     sys_results$dt <- list(
       name = "data.table",
       old = old_dt,
-      new = data.table::getDTthreads(verbose = verbose)
+      new = dt
+    )
+  }
+
+  if (is.numeric(cheapr)) {
+    rlang::check_installed("cheapr")
+    old_chpr <- cheapr::get_threads()
+    cheapr::set_threads(cheapr)
+    sys_results$cheapr <- list(
+      name = "cheapr",
+      old = if (old_chpr == 2L) "default (2)" else old_chpr,
+      new = cheapr
     )
   }
 
@@ -138,17 +155,6 @@ setThreads <- function(
     })
   }
 
-  if ("cheapr" %in% backend) {
-    rlang::check_installed("cheapr")
-    old_chpr <- cheapr::get_threads()
-    cheapr::set_threads(threads)
-    sys_results$openmp <- list(
-      name = "cheapr",
-      old = if (old_val == "") "unset" else old_chpr,
-      new = threads
-    )
-  }
-
   results <- c(results, sys_results)
 
   # ===== 4. TensorFlow专属配置（统一命名空间） =====
@@ -159,7 +165,7 @@ setThreads <- function(
   Sys.setenv(TF_XLA_FLAGS = tf_config$xla_flag)
   tf_results$xla_flag <- list(
     name = "TF_XLA_FLAGS",
-    old = if (old_val == "") "unset" else old_val,
+    old = if (old_xla_flag == "") "unset" else old_xla_flag,
     new = tf_config$xla_flag
   )
 
@@ -167,7 +173,7 @@ setThreads <- function(
   Sys.setenv(TF_XLA_CPU_GLOBAL_JIT = as.character(tf_config$xla_device))
   tf_results$xla_device <- list(
     name = "TF_XLA_CPU_GLOBAL_JIT",
-    old = if (old_val == "") "unset" else old_val,
+    old = if (old_xla_device == "") "unset" else old_xla_device,
     new = tf_config$xla_device
   )
 

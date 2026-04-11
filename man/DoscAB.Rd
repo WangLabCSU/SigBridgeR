@@ -12,6 +12,9 @@ DoscAB(
   phenotype_class = c("binary", "survival"),
   alpha = c(0.005, NULL),
   alpha_2 = c(0.005, NULL),
+  k_max = 20L,
+  cross_k = 5L,
+  repeat_times = 10L,
   maxiter = 2000L,
   tred = 2L,
   ...
@@ -37,6 +40,12 @@ DoscAB(
 \item{alpha}{Coefficient of phenotype regularization (default=\code{0.005}).}
 
 \item{alpha_2}{Coefficent of cell-cell similarity regularization (default=\code{0.005}).}
+
+\item{k_max}{The maximum rank value to consider in the search. Must be at least 2. Defaults to \code{20}.}
+
+\item{cross_k}{Number of folds for k-fold cross-validation. Defaults to \code{5}.}
+
+\item{repeat_times}{The number of repeated NMF runs for each candidate rank to account for random initialization variability. Defaults to \code{10}.}
 
 \item{maxiter}{Maximum number of iterations for NMF (default=2000).}
 

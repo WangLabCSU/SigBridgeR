@@ -73,7 +73,13 @@ ValidateScreenFunc <- function(
     cli::cli_text("\n")
   }
 
-  ValidateBadge(inputs_check, verbose_check, syntax_check, return_check)
+  ValidateBadge(
+    inputs_check,
+    verbose_check,
+    syntax_check,
+    return_check,
+    dir_name_check
+  )
   cli::cli_text("\n")
 
   invisible(TRUE)

@@ -6,7 +6,9 @@
 \usage{
 setThreads(
   threads = NULL,
-  backend = c("openmp", "dt", "cheapr"),
+  dt = threads,
+  cheapr = threads,
+  openmp = NULL,
   tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
     NULL, inter_op = NULL, intra_op = c(1L, NULL)),
   verbose = getFuncOption("verbose"),
@@ -18,9 +20,11 @@ setThreads(
 If \code{NULL} (default), uses \code{floor(availableCores() / 2)}. Applied to:
 OpenMP, data.table, and TensorFlow intra-op (unless overridden).}
 
-\item{backend}{Character vector. System-level backends to configure:
-\code{"openmp"} (sets \code{OMP_NUM_THREADS}), \code{"dt"} (data.table threads).
-Default: \code{c("openmp", "dt", "cheapr")}.}
+\item{dt}{Integer. Thread count for data.table (default: inherited from \code{threads}).}
+
+\item{cheapr}{Integer. Thread count for cheapr (default: inherited from \code{threads}).}
+
+\item{openmp}{Integer. Thread count for OpenMP (default: NULL).}
 
 \item{tf_config}{Named list for TensorFlow-specific configuration:
 \itemize{
@@ -62,9 +66,9 @@ setThreads(
     intra_op = 8L
   )
 )
-library(tensorflow)  # Import AFTER setThreads()
+# Import AFTER setThreads()
 
 # Configure only data.table for memory-efficient workflows
-setThreads(threads = 4, backend = "dt", verbose = FALSE)
+setThreads(dt = 4L , verbose = FALSE)
 }
 }

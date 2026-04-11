@@ -19,6 +19,9 @@
 #'        - `"survival"`: Time-to-event analysis data.frame
 #' @param alpha Coefficient of phenotype regularization (default=`0.005`).
 #' @param alpha_2 Coefficent of cell-cell similarity regularization (default=`0.005`).
+#' @param k_max The maximum rank value to consider in the search. Must be at least 2. Defaults to `20`.
+#' @param cross_k Number of folds for k-fold cross-validation. Defaults to `5`.
+#' @param repeat_times The number of repeated NMF runs for each candidate rank to account for random initialization variability. Defaults to `10`.
 #' @param maxiter Maximum number of iterations for NMF (default=2000).
 #' @param tred Z-score threshold in finding subsets (default=2).
 #' @param ... Additional arguments. Currently supports:
@@ -71,6 +74,9 @@ DoscAB <- function(
   phenotype_class = c("binary", "survival"),
   alpha = c(0.005, NULL),
   alpha_2 = c(0.005, NULL),
+  k_max = 20L,
+  cross_k = 5L,
+  repeat_times = 10L,
   maxiter = 2000L,
   tred = 2L,
   ...
@@ -136,9 +142,9 @@ DoscAB <- function(
 
   k <- scAB::select_K.optimized(
     Object = scAB_obj,
-    K_max = 20L,
-    repeat_times = 10L,
-    maxiter = 2000L, # default in scAB
+    K_max = k_max,
+    repeat_times = repeat_times,
+    maxiter = maxiter, # default in scAB
     seed = seed,
     verbose = verbose
   )
@@ -160,7 +166,7 @@ DoscAB <- function(
       Object = scAB_obj,
       method = phenotype_class,
       K = k,
-      cross_k = 5,
+      cross_k = cross_k,
       para_1_list = alpha %||% c(0.01, 0.005, 0.001),
       para_2_list = alpha_2 %||% c(0.01, 0.005, 0.001),
       seed = seed,
