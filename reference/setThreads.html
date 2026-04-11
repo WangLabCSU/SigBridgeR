@@ -67,7 +67,9 @@ TensorFlow via <code>reticulate::import("tensorflow")</code>.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">setThreads</span><span class="op">(</span></span>
 <span>  threads <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  backend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"openmp"</span>, <span class="st">"dt"</span>, <span class="st">"cheapr"</span><span class="op">)</span>,</span>
+<span>  dt <span class="op">=</span> <span class="va">threads</span>,</span>
+<span>  cheapr <span class="op">=</span> <span class="va">threads</span>,</span>
+<span>  openmp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tf_config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xla_flag <span class="op">=</span> <span class="st">"--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit"</span>, xla_device <span class="op">=</span></span>
 <span>    <span class="cn">NULL</span>, inter_op <span class="op">=</span> <span class="cn">NULL</span>, intra_op <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="fu"><a href="getFuncOption.html">getFuncOption</a></span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span>,</span>
@@ -85,10 +87,16 @@ If <code>NULL</code> (default), uses <code>floor(availableCores() / 2)</code>. A
 OpenMP, data.table, and TensorFlow intra-op (unless overridden).</p></dd>
 
 
-<dt id="arg-backend">backend<a class="anchor" aria-label="anchor" href="#arg-backend"></a></dt>
-<dd><p>Character vector. System-level backends to configure:
-<code>"openmp"</code> (sets <code>OMP_NUM_THREADS</code>), <code>"dt"</code> (data.table threads).
-Default: <code>c("openmp", "dt", "cheapr")</code>.</p></dd>
+<dt id="arg-dt">dt<a class="anchor" aria-label="anchor" href="#arg-dt"></a></dt>
+<dd><p>Integer. Thread count for data.table (default: inherited from <code>threads</code>).</p></dd>
+
+
+<dt id="arg-cheapr">cheapr<a class="anchor" aria-label="anchor" href="#arg-cheapr"></a></dt>
+<dd><p>Integer. Thread count for cheapr (default: inherited from <code>threads</code>).</p></dd>
+
+
+<dt id="arg-openmp">openmp<a class="anchor" aria-label="anchor" href="#arg-openmp"></a></dt>
+<dd><p>Integer. Thread count for OpenMP (default: NULL).</p></dd>
 
 
 <dt id="arg-tf-config">tf_config<a class="anchor" aria-label="anchor" href="#arg-tf-config"></a></dt>
@@ -129,10 +137,10 @@ Default: <code>c("openmp", "dt", "cheapr")</code>.</p></dd>
 <span class="r-in"><span>    intra_op <span class="op">=</span> <span class="fl">8L</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/tensorflow" class="external-link">tensorflow</a></span><span class="op">)</span>  <span class="co"># Import AFTER setThreads()</span></span></span>
+<span class="r-in"><span><span class="co"># Import AFTER setThreads()</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Configure only data.table for memory-efficient workflows</span></span></span>
-<span class="r-in"><span><span class="fu">setThreads</span><span class="op">(</span>threads <span class="op">=</span> <span class="fl">4</span>, backend <span class="op">=</span> <span class="st">"dt"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">setThreads</span><span class="op">(</span>dt <span class="op">=</span> <span class="fl">4L</span> , verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

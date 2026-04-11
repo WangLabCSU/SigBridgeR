@@ -13,7 +13,9 @@ TensorFlow via `reticulate::import("tensorflow")`.
 ``` r
 setThreads(
   threads = NULL,
-  backend = c("openmp", "dt", "cheapr"),
+  dt = threads,
+  cheapr = threads,
+  openmp = NULL,
   tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
     NULL, inter_op = NULL, intra_op = c(1L, NULL)),
   verbose = getFuncOption("verbose"),
@@ -29,11 +31,18 @@ setThreads(
   `NULL` (default), uses `floor(availableCores() / 2)`. Applied to:
   OpenMP, data.table, and TensorFlow intra-op (unless overridden).
 
-- backend:
+- dt:
 
-  Character vector. System-level backends to configure: `"openmp"` (sets
-  `OMP_NUM_THREADS`), `"dt"` (data.table threads). Default:
-  `c("openmp", "dt", "cheapr")`.
+  Integer. Thread count for data.table (default: inherited from
+  `threads`).
+
+- cheapr:
+
+  Integer. Thread count for cheapr (default: inherited from `threads`).
+
+- openmp:
+
+  Integer. Thread count for OpenMP (default: NULL).
 
 - tf_config:
 
@@ -83,9 +92,9 @@ setThreads(
     intra_op = 8L
   )
 )
-library(tensorflow)  # Import AFTER setThreads()
+# Import AFTER setThreads()
 
 # Configure only data.table for memory-efficient workflows
-setThreads(threads = 4, backend = "dt", verbose = FALSE)
+setThreads(dt = 4L , verbose = FALSE)
 } # }
 ```
