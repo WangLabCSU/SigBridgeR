@@ -45,8 +45,8 @@ cores** to balance performance and system responsiveness.
     setThreads(8L)
 
     # Configure specific backends only
-    setThreads(threads = 4L, backend = "dt")      # data.table only
-    setThreads(threads = 4L, backend = "openmp")  # OpenMP only
+    setThreads(dt = 4L)      # data.table only
+    setThreads(openmp = 4L)  # OpenMP only
 
 ### TensorFlow Optimization
 
