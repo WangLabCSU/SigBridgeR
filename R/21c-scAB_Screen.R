@@ -117,7 +117,7 @@ DoscAB <- function(
   assay <- dots$assay %||% "RNA"
 
   if (verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Start scAB screening."))
+    ts_cli$cli_alert_info(cli::col_green("Start scAB screening"))
   }
 
   scAB_obj <- scAB::create_scAB.v5(
@@ -133,7 +133,7 @@ DoscAB <- function(
     cli::cli_warn(
       "Found negative values in `X` after correlation, truncating to 0"
     )
-    scAB_obj$X[scAB_obj$X < 0] <- 0L
+    scAB_obj$X[scAB_obj$X < 0L] <- 0L
   }
 
   if (verbose) {
