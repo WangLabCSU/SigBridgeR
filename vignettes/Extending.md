@@ -1,0 +1,410 @@
+This document introduces a guide for extending SigBridgeR with custom
+algorithms.
+
+# Too Long; Didn’t Read
+
+(auto dispatch)
+
+Extend `SCPreProcess`: key = func
+
+    Register(h = Seurat::RunHarmony)
+
+Extend `SCAnnotate`: key = func
+
+    Register(my = my_function)
+
+Extend `Screen`: key = func
+
+    TemplateScreenFunc() # create a file
+    ValidateScreenFunc(my_function)
+    Register(my = my_function)
+
+# Extend Screening Methods
+
+## Installation
+
+It’s recommended to install these packages for checking the code
+
+    pak::pkg_install(c(
+      "tictoc",
+      "yonicd/tidycheckUsage",
+      "codetools",
+      "knitr",
+      "lintr"
+    ))
+
+## Prepare a custom function
+
+    library(SigBridgeR)
+
+After the v3.2.0 update, SigBridgeR supports registering custom
+algorithms for screening phenotype-associated cell method into the
+package. Let’s do this with a detailed example:
+
+(Template can be obtained via `TemplateScreenFunc`, which will create a
+file and open it in the editor.)
+
+    my_screen_function <- function(
+      matched_bulk,
+      sc_data,
+      phenotype,
+      label_type = NULL,
+      phenotype_class = c("binary", "survival", "continuous"),
+      ...
+    ) {
+      dots <- list(...)
+      verbose <- dots$verbose %||% TRUE
+      # do something, here we just randomly assign a label to each cell
+      modified_sc_data <- SeuratObject::AddMetaData(
+        sc_data,
+        c(
+          rep("Positive", floor(ncol(sc_data) / 2)),
+          rep("Negative", ceiling(ncol(sc_data) / 2))
+        ),
+        col.name = "my_method"
+      ) %>%
+        # record parameters
+        AddMisc(
+          my_method_label = label_type,
+          phenotype = phenotype_class
+        )
+
+      intermediate_var <- "value"
+
+      if (verbose) {
+        cli::cli_alert_success("my_screen_function finished")
+      }
+
+      list(
+        scRNA_data = modified_sc_data,
+        intermediate_var = intermediate_var
+      )
+    }
+
+Format requirements for custom extension functions:
+
+1.  The input arguments must include
+    -   `sc_data` (required): A **Seurat** object
+    -   `matched_bulk` (required): A **data.frame/matrix/Matrix**
+        (**genes × samples**) containing RNA-seq counts:
+        -   Genes must overlap with those in `sc_data`.
+        -   Samples must correspond to those in `phenotype`.
+    -   `phenotype` (required):
+        -   For survival: a **data.frame** with columns `time` and
+            `status`; rownames must match `colnames(matched_bulk)`
+        -   For binary or continuous: a **named vector**; names must
+            match `colnames(matched_bulk)`
+    -   `label_type` (required): A character used to label cell with
+        study cases.
+    -   `phenotype_class` (required): One or more of `"binary"`,
+        `"survival"`, `"continuous"`.
+2.  The output must be a **list** containing at least one elements:
+    -   `scRNA_data` (required): A **Seurat** object with meta.data
+        modified,
+        -   For columns added in the meta.data slot, it is recommended
+            to **use the method name as a prefix** to distinguish them
+            from those added by other methods.
+        -   For assigning labels to each cell, if three categories are
+            used, the labels should be `"Positive"`, `"Negative"`, and
+            `"Neutral"`, where `"Positive"` represents cells positively
+            associated with the phenotype, `"Negative"` represents those
+            negatively associated, and `"Neutral"` represents unrelated
+            cells. If two categories are used, the labels should be
+            `"Positive"` and `"Other"`, where `"Other"` represents cells
+            not positively associated with the phenotype.
+        -   The recommended format for storing `label_type` is
+            `{method}_type`, which is used to record the biological
+            context at the time of screening, e.g.,
+            `scissor_type = "relapse"`. This is to prevent parameter
+            confusion in case the same algorithm is run with different
+            labels.
+        -   If you need to store the parameters used for running the
+            algorithm, use the `Seurat@misc` slot and store them as a
+            **list** with `_para` suffix name , e.g.,
+            `scissor_para = list(alpha = 0.05, cutoff = 0.2)`.
+
+        > It is recommended to use AddMisc as
+        >
+        >     seurat <- seurat %>%
+        >       SeuratObject::AddMetaData(rep("test", ncol(seurat)), col.name = "scissor") %>%
+        >       AddMisc(
+        >         scissor_type = "relapse",
+        >         scissor_para = list(alpha = 0.05, cutoff = 0.2),
+        >         cover = FALSE 
+        >       )
+    -   Other elements are optional. Necessary intermediate data can be
+        returned.
+3.  If it is necessary to save intermediate data and results as files,
+    it is recommended to create a folder named `<method>_res` for
+    storage.
+
+To facilitate format validation, we provide a function
+`ValidateScreenFunc` to check the above requirements. The validation
+output resembles that of `rcmdcheck`; please ensure there are no errors
+or warnings, and as few notes as possible.
+
+    ValidateScreenFunc(my_screen_function)
+
+    # ── Screening Function Validation ──────────────────────────────────────────────────────────────────────
+    # Start at 2026/01/19 22:04:17
+
+    # ✔ All input arguments explicitly specified
+
+    # ✔ Verbose control supported
+
+    # ✔ Syntax check passed
+
+    # ✔ Return value is a list with `scRNA_data` slot
+
+    # Duration: 0.095 sec elapsed
+
+    # 0 error ✔ | 0 warning ✔ | 0 note ✔
+
+By the way if providing a bad function
+
+    bad_fun <- function(x) {
+      z <- x + 1
+      y
+      return(NULL)
+    }
+
+    ValidateScreenFunc(bad_fun)
+
+    # ── Screening Function Validation ───────────────────────────────────────────────────────────────────
+    # Start at 2026/01/19 22:07:43
+
+    # ❯ Missing required arguments ... ERROR
+    #   More arguments should be added:
+    #   sc_data: A fully preprocessed Seurat object
+    #   matched_bulk: Bulk RNA-seq matrix (gene * samples):
+    #                 • Samples match `phenotype` in number/order;
+    #                 • Senes overlap with `sc_data`
+    #   phenotype: Phenotype: a named vector or data.frame, names/rownames match `matched_bulk`
+    #              • For binary/continuous: named vector recommended
+    #              • For survival: data.frame with `time` (1st col) and `status` (2nd col) recommended.
+    #   label_type: Labeling phenotype-associated cell with real study identifiers
+    #   phenotype_class: Phenotype types:
+    #                    • Must be one or more of `binary`, `continuous` and `survival`
+
+    # ❯ Verbose control not supported ... NOTE
+    #   Consider adding `verbose` control to ease error tracing
+
+    # ❯ Syntax error in function ... ERROR
+
+    # | line | object | col1 | col2 |   warning_type    |                     warning                     |
+    # |:----:|:------:|:----:|:----:|:-----------------:|:-----------------------------------------------:|
+    # |  2   |   z    |  3   |  3   |   unused_local    | local variable ‘z’ assigned but may not be used |
+    # |  3   |   y    |  3   |  3   | no_global_binding |   no visible binding for global variable ‘y’    |
+
+    # ❯ Return value is not a list ... ERROR
+    # scRNA_data: recommended to be the first element of the return value
+    #             • Should be of class <Seurat>
+
+    # Duration: 0.158 sec elapsed
+
+    # 3 errors ✖ | 0 warning ✔ | 1 note ✖
+
+## Registering the function
+
+Now we can register the function to the package:
+
+    RegisterScreenMethod(
+      my_method = my_screen_function,
+      supported_phenotypes = c("binary", "survival"),
+      parameter_mapper = function(params) {
+        params$a <- params$a %||% 123
+        params
+      },
+      registry = ScreenStrategy,
+      verbose = TRUE
+    )
+
+    # ✔ Registered `my_method`
+
+Details of the arguments:
+
+1.  `my_method = me_screen_function`:
+    -   formatting as **key = func**. Key is used to name the function.
+        If no name provided, the function name will be used.
+2.  `supported_phenotypes`: The phenotype types supported by the
+    function.
+3.  `parameter_mapper`: A function that transforms the input parameter
+    list before passing it to the executor. Useful for changing
+    parameters from interface function. **Receives a named list and must
+    return a modified list**.
+4.  `registry`: The registry to register the function.
+5.  `verbose`: Whether to print messages.
+
+Let’s check whether it has indeed been registered
+
+    tbl <- InterceptStrategy("ScreenStrategy")
+    # A tibble: 22 × 4
+
+    names(ScreenStrategy)
+    # [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"
+
+## Use the function
+
+Now we can use the function in the `Screen` function:
+
+    a_seurat <- SeuratObject::CreateSeuratObject(Matrix::Matrix(
+      1:100,
+      nrow = 10,
+      dimnames = list(paste0("gene", 1:10), paste0("cell", 1:10))
+    ))
+
+    bulk <- matrix(
+      1:100,
+      nrow = 10,
+      dimnames = list(paste0("gene", 1:10), paste0("sample", 1:10))
+    )
+
+    pheno <- setNames(sample(0:1, 10, TRUE), paste0("sample", 1:10))
+
+    my_res <- Screen(
+      sc_data = a_seurat,
+      matched_bulk = bulk,
+      phenotype = pheno,
+      label_type = "Test",
+      phenotype_class = "binary",
+      screen_method = "my_method",
+      a = 123
+    )
+
+    # ✔ my_screen_function finished
+
+    my_res$scRNA_data |> class()
+
+    # [1] "Seurat"
+    # attr(,"package")
+    # [1] "SeuratObject"
+
+If you still have questions, please use GitHub
+[Issues](https://github.com/WangLabCSU/SigBridgeR/issues) or
+[Discussions](https://github.com/WangLabCSU/SigBridgeR/discussions).
+
+# Extend Seurat Methods
+
+In general, any Seurat function can be registered for use within
+`SCPreProcess`. However, due to the character-length limitation of the
+pipeline code string, at most **52** functions can be registered—one for
+each uppercase and lowercase letter (A–Z, a–z).
+
+By default, the registry is defined as follows:
+
+**Pipeline Code Table:**
+
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 30%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>o</strong></td>
+<td><code>CreateSeuratObject</code></td>
+<td><strong>Required.</strong> Must be the first step.</td>
+</tr>
+<tr class="even">
+<td><strong>n</strong></td>
+<td><code>NormalizeData</code></td>
+<td>Standard normalization.</td>
+</tr>
+<tr class="odd">
+<td><strong>s</strong></td>
+<td><code>ScaleData</code></td>
+<td>Scales data for PCA.</td>
+</tr>
+<tr class="even">
+<td><strong>v</strong></td>
+<td><code>FindVariableFeatures</code></td>
+<td>Selects highly variable genes.</td>
+</tr>
+<tr class="odd">
+<td><strong>p</strong></td>
+<td><code>RunPCA</code></td>
+<td>Principal Component Analysis.</td>
+</tr>
+<tr class="even">
+<td><strong>e</strong></td>
+<td><code>FindNeighbors</code></td>
+<td>Computes SNN graph.</td>
+</tr>
+<tr class="odd">
+<td><strong>c</strong></td>
+<td><code>FindClusters</code></td>
+<td>Louvain algorithm clustering.</td>
+</tr>
+<tr class="even">
+<td><strong>t</strong></td>
+<td><code>RunTSNE</code></td>
+<td>t-SNE reduction.</td>
+</tr>
+<tr class="odd">
+<td><strong>u</strong></td>
+<td><code>RunUMAP</code></td>
+<td>UMAP reduction.</td>
+</tr>
+<tr class="even">
+<td><strong>r</strong></td>
+<td><code>SCTransform</code></td>
+<td><strong>SCT workflow.</strong> Replaces n, s, v.</td>
+</tr>
+</tbody>
+</table>
+
+For example, if we need to use `Seurat::LoadXenium` to load Xenium data
+for screening, register this function first.
+
+    RegisterSeuratMethod(x = Seurat::LoadXenium)
+    # ✔ Registered x
+
+To check:
+
+    names(SCPreProcessStrategy)
+    #  [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"
+
+    tbl <- InterceptStrategy("SCPreProcessStrategy")
+    # tibble [12 × 2]
+
+# Extend Cell Type Annotation Methods
+
+By default, SigBridgeR includes three built-in cell type annotation
+algorithms: **SingleR**, **CellTypist**, and **mLLMCelltype**—all of
+which require additional installation and dependencies (See
+[README](https://wanglabcsu.github.io/SigBridgeR/index.html)). They can
+all be invoked through the unified interface function `SCAnnotate`.
+
+Extending cell annotation method is also very easy:
+
+    my_method <- function(seurat_obj, ...) {
+      # placeholder
+      return(seurat_obj)
+    }
+
+    RegisterAnnoMethod(
+      my = my_method
+    )
+    # ✔ Registered `my`
+
+To check:
+
+    names(SCAnnotateStrategy)
+    # [1] "my"           "mLLMCelltype" "CellTypist"   "SingleR"
+
+Here are some recommendations for user-defined cell annotation
+functions.
+
+1.  The first input and the first output must both be Seurat objects.
+2.  If multiple objects need to be returned, it is recommended to use a
+    `list` format.
+3.  Use `tidycheckUsage::tidycheckUsage()` to check the function’s
+    syntax.

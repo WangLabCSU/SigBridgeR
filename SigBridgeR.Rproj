@@ -1,8 +1,7 @@
-Version: 3.1.1
-ProjectId: 0d1fb75d-343f-4a9e-9406-b3114691357f
+Version: 1.0
 
 RestoreWorkspace: Default
-SaveWorkspace: Ask
+SaveWorkspace: Default
 AlwaysSaveHistory: Default
 
 EnableCodeIndexing: Yes
@@ -13,6 +12,9 @@ Encoding: UTF-8
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
+AutoAppendNewline: Yes
+
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
+PackageRoxygenize: rd,collate,namespace

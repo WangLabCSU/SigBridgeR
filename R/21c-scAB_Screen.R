@@ -1,0 +1,217 @@
+#' @title Perform scAB Screening Analysis
+#'
+#' @description
+#' Implements the scAB algorithm to identify phenotype-associated cell subpopulations
+#' in single-cell RNA-seq data by integrating matched bulk expression and phenotype
+#' information. Uses non-negative matrix factorization (NMF) with dual regularization
+#' for phenotype association and cell-cell similarity.
+#'
+#' @param matched_bulk Normalized bulk expression matrix (genes × samples) where:
+#'        - Columns match `phenotype` row names
+#'        - Genes match features in `sc_data`
+#' @param sc_data Seurat object containing preprocessed single-cell data:
+#' @param phenotype Data frame with clinical annotations where:
+#'        - Rows correspond to `matched_bulk` columns
+#'        - For survival: contains `time` and `status` columns
+#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time"), stored in `scRNA_data@misc`
+#' @param phenotype_class Analysis mode:
+#'        - `"binary"`: Case-control design (e.g., responder/non-responder)
+#'        - `"survival"`: Time-to-event analysis data.frame
+#' @param alpha Coefficient of phenotype regularization (default=`0.005`).
+#' @param alpha_2 Coefficent of cell-cell similarity regularization (default=`0.005`).
+#' @param k_max The maximum rank value to consider in the search. Must be at least 2. Defaults to `20`.
+#' @param cross_k Number of folds for k-fold cross-validation. Defaults to `5`.
+#' @param repeat_times The number of repeated NMF runs for each candidate rank to account for random initialization variability. Defaults to `10`.
+#' @param maxiter Maximum number of iterations for NMF (default=2000).
+#' @param tred Z-score threshold in finding subsets (default=2).
+#' @param ... Additional arguments. Currently supports:
+#'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
+#'    - `seed`: For reproducibility, default is `123L`
+#'    - `parallel`: Logical indicating whether to use parallel processing. Defaults to `FALSE`.
+#'    - Other arguments are passed to `scAB::create_scAB.v5()`
+#'    - `assay`: Character specifying the assay to use. Defaults to `"RNA"`.
+#'
+#
+#'
+#' @return A list containing:
+#' \describe{
+#'   \item{scRNA_data}{Filtered Seurat object with selected cells}
+#'   \item{scAB_result}{scAB screening result}
+#' }
+#'
+#' @references
+#' Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
+#'
+#' @section LICENSE:
+#' Licensed under the GNU General Public License version 3 (GPL-3.0).
+#' A copy of the license is available at <https://www.gnu.org/licenses/gpl-3.0.en.html>.
+#'
+#' @examples
+#' \dontrun{
+#' # Binary phenotype example
+#' result <- DoscAB(
+#'   matched_bulk = bulk_matrix,
+#'   sc_data = seurat_obj,
+#'   phenotype = clinical_df,
+#'   label_type = "disease_status",
+#'   phenotype_class = "binary",
+#'   alpha = 0.005,
+#'   alpha_2 = 0.005,
+#'   maxiter = 2000,
+#'   tred = 2
+#' )
+#' }
+#'
+#' @export
+#' @family screen_method
+#' @family scAB
+#'
+DoscAB <- function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type = "scAB",
+  phenotype_class = c("binary", "survival"),
+  alpha = c(0.005, NULL),
+  alpha_2 = c(0.005, NULL),
+  k_max = 20L,
+  cross_k = 5L,
+  repeat_times = 10L,
+  maxiter = 2000L,
+  tred = 2L,
+  ...
+) {
+  chk::chk_is(sc_data, "Seurat")
+  chk::chk_character(label_type)
+  phenotype_class <- SigBridgeRUtils::MatchArg(
+    phenotype_class,
+    c("binary", "survival"),
+    NULL
+  )
+  chk::chk_number(maxiter)
+  chk::chk_number(tred)
+  # scAB can't tolerate NA
+  chk::chk_not_any_na(matched_bulk)
+  chk::chk_not_any_na(phenotype)
+
+  # scAB is more strict than Scissor and scPAS
+  if (phenotype_class == "survival") {
+    if (!all(rownames(phenotype) == colnames(matched_bulk))) {
+      cli::cli_abort(c(
+        "x" = "Please check the rownames of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
+      ))
+    }
+  } else {
+    if (!all(names(phenotype) == colnames(matched_bulk))) {
+      cli::cli_abort(c(
+        "x" = "Please check the names of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
+      ))
+    }
+  }
+
+  dots <- rlang::list2(...)
+  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
+  seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
+  parallel <- (dots$parallel %||% FALSE) &
+    !inherits(future::plan("list")[[1]], "sequential")
+  assay <- dots$assay %||% "RNA"
+
+  if (verbose) {
+    ts_cli$cli_alert_info(cli::col_green("Start scAB screening."))
+  }
+
+  scAB_obj <- scAB::create_scAB.v5(
+    Object = sc_data,
+    bulk_dataset = matched_bulk,
+    phenotype = phenotype,
+    method = phenotype_class,
+    verbose = verbose,
+    assay = assay
+  )
+
+  if (any(scAB_obj$X < 0)) {
+    cli::cli_warn(
+      "Found negative values in `X` after correlation, truncating to 0"
+    )
+    scAB_obj$X[scAB_obj$X < 0] <- 0L
+  }
+
+  if (verbose) {
+    ts_cli$cli_alert_info("Selecting K")
+  }
+
+  k <- scAB::select_K.optimized(
+    Object = scAB_obj,
+    K_max = k_max,
+    repeat_times = repeat_times,
+    maxiter = maxiter, # default in scAB
+    seed = seed,
+    verbose = verbose
+  )
+
+  if (verbose) {
+    ts_cli$cli_alert_info(
+      "Run NMF with phenotype and cell-cell similarity regularization at K = {.val {k}}"
+    )
+  }
+
+  # Find optimal alpha and alpha_2
+  if (
+    is.null(alpha) ||
+      is.null(alpha_2) ||
+      length(alpha) > 1 ||
+      length(alpha_2) > 1
+  ) {
+    para_list <- scAB::select_alpha.optimized(
+      Object = scAB_obj,
+      method = phenotype_class,
+      K = k,
+      cross_k = cross_k,
+      para_1_list = alpha %||% c(0.01, 0.005, 0.001),
+      para_2_list = alpha_2 %||% c(0.01, 0.005, 0.001),
+      seed = seed,
+      parallel = parallel,
+      verbose = verbose
+    )
+
+    alpha <- para_list$para$alpha_1
+    alpha_2 <- para_list$para$alpha_2
+  }
+
+  scAB_result <- scAB::scAB.optimized(
+    Object = scAB_obj,
+    K = k,
+    alpha = alpha,
+    alpha_2 = alpha_2,
+    maxiter = maxiter,
+    convergence_threshold = 1e-05
+  )
+
+  if (verbose) {
+    ts_cli$cli_alert_info("Screening cells...")
+  }
+
+  sc_data <- scAB::findSubset.optimized(
+    Object = sc_data,
+    scAB_Object = scAB_result,
+    tred = tred
+  ) %>%
+    SigBridgeRUtils::AddMisc(
+      scAB_type = label_type,
+      scAB_para = list(
+        iter = scAB_result$iter,
+        loss = scAB_result$loss,
+        method = scAB_result$method,
+        tred = tred
+      ),
+      cover = FALSE
+    )
+
+  if (verbose) {
+    ts_cli$cli_alert_info(
+      cli::col_green("scAB screening done.")
+    )
+  }
+
+  list(scRNA_data = sc_data, scAB_result = scAB_result)
+}

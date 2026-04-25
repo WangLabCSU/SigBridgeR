@@ -1,18 +1,12 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # **SigBridgeR** <a href="https://wanglabcsu.github.io/SigBridgeR/"><img src="man/figures/logo_white.png" alt="sigbridger website" align="right" height="139"/></a>
 
-[![Repo
-Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)[![License:
-GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![](https://img.shields.io/badge/devel%20version-3.1.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
-[![SigBridgeR status
-badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)[![R
-CMD
-check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
-[![registry status
-badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/)
-
+[![Repo Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![License: GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
+[![](https://img.shields.io/badge/devel%20version-3.6.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
+[![SigBridgeR status badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
+[![R CMD check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
+[![registry status badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
 ------------------------------------------------------------------------
 
 ## 🌐 Overview
@@ -22,6 +16,13 @@ sequencing data, bulk expression data, and sample-related phenotypic
 data, to identify the cells most closely associated with the phenotypic
 data, performing as a bridge to existing tools.
 
+<!-- <p align="center">
+
+<img src="SigBridgeR_workflow.png" />
+
+</p> -->
+
+
 ## 🔧 Installation
 
 Usually we recommend installing the latest release from GitHub because
@@ -29,69 +30,152 @@ of the latest features and bug fixes.
 
 1.  Install the development version from GitHub:
 
-<!-- -->
+```r
+if (!requireNamespace("pak")) {
+  install.packages(
+    "pak",
+    repos = sprintf(
+      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
+      .Platform$pkgType,
+      R.Version()$os,
+      R.Version()$arch
+    )
+  )
+}
+pak::pkg_install("WangLabCSU/SigBridgeR")
+```
 
-    if (!requireNamespace("pak")) {
-      install.packages("pak")
-    }
-    pak::pkg_install("WangLabCSU/SigBridgeR")
+2.  Install from r-universe:
 
-1.  Install from r-universe:
+```r
+install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+```
 
-<!-- -->
+### It is recommended to install the following packages:
 
-    install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+`SigBridgeR` includes the Scissor and scAB algorithms by default. In addition to these, installing the following packages allows you to use additional algorithms.
 
-**It is recommended to install the following packages:**
+```r
+methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
+pak::pkg_install(file.path("Exceret", methods))
+```
 
-For better performance:
+**unnecessary but recommended**:
 
-    pak::pkg_install(c(
-      # faster computation
-      "sparseMatrixStats",
-      "matrixStats",
-      "preprocessCore",
-      "WGCNA",
-      "tidyr",
-      "matrixTests",
-      "KernSmooth",
-      # parallel computation
-      "furrr",
-      "future"
-    ))
+<details>
+<summary>For better performance:</summary>
 
-For seamless integration with other file types such as `.h5ad`
+```r
+pak::pkg_install(c(
+  # faster computation
+  "sparseMatrixStats",
+  "matrixStats",
+  "preprocessCore",
+  "tidyr",
+  "matrixTests",
+  "KernSmooth",
+  "cheapr",
+  # better gene symbol conversion
+  "scCustomize",
+  # parallel computation
+  "furrr",
+  "future"
+))
 
-    pak::pkg_install("anndata")
-    # or
-    pak::pkg_install("anndataR") # both are supported
+if (!requireNamespace("BiocManager")) {
+  install.packages("BiocManager")
+}
+# faster computation
+BiocManager::install("WGCNA)
+```
 
-For visualization:
+</details>
 
-    pak::pkg_install(c(
-      "ggplot2",
-      "randomcoloR", # or RColorBrewer
-      "ggupset", # for upset plot
-      "patchwork", # for fraction stack plot
-      "ggforce", # for pca plot
-      "ggVennDiagram" # for venn diagram
-    ))
+<details>
+<summary>For seamless integration with single-cell RNA-seq data stored in `.h5ad`:</summary>
 
-To reproduce the tutorial to learn more usage
+```r
+pak::pkg_install("anndata")
+# or
+pak::pkg_install("anndataR") # both are supported
+```
 
-    pak::pkg_install(c(
-      "zeallot",
-      "here",
-      "org.Hs.eg.db"
-    ))
+</details>
+
+<details>
+<summary>For visualization:</summary>
+
+```r
+pak::pkg_install(c(
+ "ggplot2",
+ "randomcoloR", # or RColorBrewer
+ "ggupset", # for upset plot
+ "patchwork", # for fraction stack plot
+ "ggforce", # for pca plot
+ "ggVennDiagram" # for venn diagram
+))
+```
+
+</details>
+
+<details>
+<summary>To use the built-in cell annotation methods:</summary>
+
+```r
+pak::pkg_install(c(
+  # SingleR
+  "SingleR-inc/SingleR",
+  "celldex",
+  # mLLMCelltype
+  "mLLMCelltype",
+  "plyr",
+  # CellTypist
+  "reticulate",
+  "AnnDataR"
+))
+```
+
+</details>
+
+<details>
+<summary>To add custom extension functions to SigBridgeR:</summary>
+
+```r
+pak::pkg_install(c(
+  "tictoc",
+  "codetools",
+  "knitr",
+  "lintr",
+  "rstudioapi",
+  "yonicd/tidycheckUsage"
+))
+```
+
+</details>
+
+<details>
+<summary>To reproduce the tutorial to learn more usage:</summary>
+
+```r
+pak::pkg_install(c(
+  "zeallot",
+  "here",
+  "org.Hs.eg.db",
+  "processx"
+))
+```
+
+</details>
+
 
 ## 📓 Documentation
 
 Get Started:
 
--   [A Quick Started Guide](vignettes/Quick_Start.md)
--   [Full Tutorial](vignettes/Full_Tutorial.md) for more details
 -   View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
+-   [A Quick Started Guide](vignettes/Quick_Start.md)
+-   [Start from spatial transcriptome](vignettes/Spatial_Transcriptome.md) 
+-   [Full Tutorial](vignettes/Full_Tutorial.md) for more details
 -   Use `?SigBridgeR::function_name` to access the help documents in R.
 
 If you encounter problems, please check:
@@ -100,4 +184,4 @@ If you encounter problems, please check:
 -   the [Github issues](https://github.com/WangLabCSU/SigBridgeR/issues)
     page if you want to file bug reports or feature requests
 
-Let us know if you have ideas to make this project better!
+Let us know if you have ideas to make this project better. Pull requests are welcome!

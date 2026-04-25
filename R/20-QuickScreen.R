@@ -17,13 +17,16 @@
 #'        - `"binary"`: Binary traits (e.g., case/control)
 #'        - `"continuous"`: Continuous measurements
 #'        - `"survival"`: Survival infomation
-#' @param screen_method Screening algorithm to use, there are six options:
+#' @param screen_method Screening algorithm to use, there are nine options:
 #' - "Scissor": see also DoScissor()
 #' - "scPP": see also DoscPP()
 #' - "scPAS": see also DoscPAS()
 #' - "scAB": see also DoscAB(), continuous phenotype is not supported
 #' - "DEGAS": see also DoDEGAS()
 #' - "LP_SGL": see also DoLP_SGL()
+#' - "PIPET": see also DoPIPET()
+#' - "SIDISH": see also DoSIDISH()
+#' - "SCIPAC": see also DoSCIPAC()
 #' @param ... Additional method-specific parameters:
 #' \describe{
 #' \item{Scissor}{\describe{
@@ -69,16 +72,26 @@
 #' \item{degas_params}{(list) DEGAS parameters, default "list()"}
 #' \item{normality_test_method}{(character) Normality test method for DEGAS, default "jarque-bera"}
 #' }}
-#' \item{LP_SGL}{\describe{
-#' \item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
-#' \item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}
-#' \item{nfold}{(integer) Number of folds for cross-validation, default 5}
-#' \item{dge_analysis}{(list) Differential expression analysis settings:
-#' \itemize{
-#' \item{run: (logical) Whether to run DEG analysis, default FALSE}
-#' \item{logFC_threshold: (numeric) Log fold change threshold, default 1}
-#' \item{pval_threshold: (numeric) P-value threshold, default 0.05}
+#' \item{SIDISH}{\describe{
+#' \item{sidish_params}{(list) SIDISH parameters, default "list()"}
+#' \item{env_params}{(list) Environment parameters for SIDISH, default "list()"}
 #' }}
+#' \item{SCIPAC}{\describe{
+#' \item{hvg}{(integer) Number of highly variable genes to use for preprocessing. Default: 1000.}
+#' \item{do_pca_sc}{(logical) If \code{TRUE}, first do PCA on \code{sc.dat} and use the rotation matrix on \code{bulk.dat}; if \code{FALSE}, first do PCA on \code{bulk.data} and use the rotation matrix on \code{sc.dat}. Default: \code{FALSE}.}
+#' \item{n_pc}{(integer) Number of principal components to use. Default: 60.}
+#' \item{sc_batch_col}{(character or vector) Batch variable for single-cell data. If character, should be a column name in \code{sc_data} `@metadata`. If vector, should be a batch assignment vector matching cell order. Default: \code{NULL} (no batch correction).}
+#' \item{resolution}{(integer) Clustering resolution for cell type identification. Higher values produce more clusters. Default: 2.}
+#' \item{ela_net_alpha}{(numeric) Elastic net mixing parameter (0 = ridge, 1 = lasso). Default: 0.4.}
+#' \item{bt_size}{(integer) Bootstrap sample size for stability assessment. Default: 50.}
+#' \item{ncore}{(integer) Number of CPU cores for parallel computation. Default: 7.}
+#' \item{ci_alpha}{(numeric) Significance level for confidence intervals. Default: 0.05.}
+#' \item{nfold}{(integer) Number of folds for cross-validation for regression models. Default: 10.}
+#' \item{assay}{(character) Assay to use from sc_data. Default: "RNA".}
+#' \item{verbose}{(logical) Whether to print progress messages. Default: inherits from `getFuncOption("verbose")`.}
+#' \item{seed}{(integer) Random seed for reproducibility. Default: 123.}
+#' }}
+#'
 #' \item{PIPET}{\describe{
 #' \item{group}{(character or NULL) Name of a metadata column (e.g., `"orig.ident"`) to stratify cells before screening. When `NULL` (default), screening is performed globally across all cells.}
 #' \item{discretize_method}{(character) Strategy to binarize continuous phenotypes internally before marker identification. One of:
@@ -107,8 +120,19 @@
 #' \item{verbose}{(logical) Whether to print progress messages. Default: inherits from `getFuncOption("verbose")`.}
 #' \item{parallel}{(logical) Whether to enable parallel permutations (requires `future::plan()` pre-set). Default: \code{FALSE}.}
 #' }}
-#' }
+#'
+#' \item{LP_SGL}{\describe{
+#' \item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
+#' \item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}
+#' \item{nfold}{(integer) Number of folds for cross-validation, default 5}
+#' \item{dge_analysis}{(list) Differential expression analysis settings:
+#' \itemize{
+#' \item{run: (logical) Whether to run DEG analysis, default FALSE}
+#' \item{logFC_threshold: (numeric) Log fold change threshold, default 1}
+#' \item{pval_threshold: (numeric) P-value threshold, default 0.05}
 #' }}
+#' }}}
+#'
 #'
 #' @return A list containing:
 #' \describe{
@@ -133,6 +157,8 @@
 #' | DEGAS | All three types | sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method |
 #' | LP_SGL | All three types | resolution, alpha, nfold, dge_analysis |
 #' | PIPET | Binary/Continuous | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance |
+#' | SIDISH | Survival Only | sidish_params, env_params |
+#' | SCIPAC | All three types | hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size, ncore, ci_alpha, nfold, assay |
 #'
 #'
 #' @seealso Associated functions:
@@ -144,6 +170,8 @@
 #' \item \code{\link{DoDEGAS}}
 #' \item \code{\link{DoLP_SGL}}
 #' \item \code{\link{DoPIPET}}
+#' \item \code{\link{DoSIDISH}}
+#' \item \code{\link{DoSCIPAC}}
 #' }
 #'
 #'
@@ -161,7 +189,9 @@ Screen <- function(
     "scAB",
     "DEGAS",
     "LP_SGL",
-    "PIPET"
+    "PIPET",
+    "rSIDISH",
+    "SCIPAC"
   ),
   ...
 ) {
@@ -174,133 +204,32 @@ Screen <- function(
     ))
     label_type <- screen_method
   }
-  available_phenotype_class <- c("binary", "survival", "continuous")
-  available_screen_method <- c(
-    "Scissor",
-    "scPP",
-    "scPAS",
-    "scAB",
-    "DEGAS",
-    "LP_SGL",
-    "PIPET"
-  )
-  phenotype_class <- SigBridgeRUtils::MatchArg(
-    phenotype_class,
-    available_phenotype_class,
-    NULL
-  )
+
   screen_method <- SigBridgeRUtils::MatchArg(
     screen_method,
-    available_screen_method,
+    names(ScreenStrategy),
+    NULL
+  )
+  method_config <- ScreenStrategy[[screen_method]]
+
+  phenotype_class <- SigBridgeRUtils::MatchArg(
+    phenotype_class,
+    method_config$phenotypes,
     NULL
   )
 
-  switch(
-    screen_method,
-    "Scissor" = {
-      family <- switch(
-        phenotype_class,
-        "binary" = "binomial",
-        "survival" = "cox",
-        "continuous" = "gaussian"
-      )
-
-      DoScissor(
-        sc_data = sc_data,
-        matched_bulk = matched_bulk,
-        phenotype = phenotype,
-        label_type = label_type,
-        scissor_family = family, # "gaussian", "binomial", "cox"
-        ...
-      )
-    },
-    "scPAS" = {
-      family <- switch(
-        phenotype_class,
-        "binary" = "binomial",
-        "survival" = "cox",
-        "continuous" = "gaussian",
-      )
-
-      DoscPAS(
-        sc_data = sc_data,
-        matched_bulk = matched_bulk,
-        phenotype = phenotype,
-        label_type = label_type,
-        scPAS_family = family, # "gaussian", "binomial", "cox"
-        ...
-      )
-    },
-    "scPP" = {
-      phenotype_class <- glue::glue(
-        toupper(substr(phenotype_class, 1, 1)),
-        tolower(substr(phenotype_class, 2, nchar(phenotype_class)))
-      )
-
-      DoscPP(
-        sc_data = sc_data,
-        matched_bulk = matched_bulk,
-        phenotype = phenotype,
-        label_type = label_type,
-        phenotype_class = phenotype_class, # "Binary", "Continuous", "Survival"
-        ...
-      )
-    },
-    "scAB" = {
-      if (phenotype_class == "continuous") {
-        cli::cli_abort(c(
-          "x" = "[{.fun Screen}]: {.strong scAB} does not support continuous phenotype."
-        ))
-      }
-
-      DoscAB(
-        sc_data = sc_data,
-        matched_bulk = matched_bulk,
-        phenotype = phenotype,
-        label_type = label_type,
-        phenotype_class = phenotype_class, # "Binary", "Survival"
-        ...
-      )
-    },
-    "DEGAS" = {
-      DoDEGAS(
-        sc_data = sc_data,
-        matched_bulk = matched_bulk,
-        phenotype = phenotype,
-        label_type = label_type,
-        phenotype_class = phenotype_class, # "Binary", "Survival", "Continuous"
-        ...
-      )
-    },
-    "LP_SGL" = {
-      LPSGL_family = switch(
-        phenotype_class,
-        "binary" = 'logit',
-        "survival" = 'cox',
-        "continuous" = 'linear'
-      )
-      DoLP_SGL(
-        sc_data = sc_data,
-        matched_bulk = matched_bulk,
-        phenotype = phenotype,
-        label_type = label_type,
-        LPSGL_family = LPSGL_family, # "Binary", "Survival", "Continuous"
-        ...
-      )
-    },
-    "PIPET" = {
-      if (phenotype_class == "survival") {
-        cli::cli_abort(c(
-          "x" = "[{.fun Screen}]: {.strong PIPET} does not support survival phenotype."
-        ))
-      }
-      DoPIPET(
-        matched_bulk = matched_bulk,
-        sc_data = sc_data,
-        phenotype = phenotype,
-        phenotype_class = phenotype_class,
-        ...
-      )
-    }
+  params <- rlang::list2(
+    sc_data = sc_data,
+    matched_bulk = matched_bulk,
+    phenotype = phenotype,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    ...
   )
+  # * modified params according to specific method
+  if (!is.null(method_config$mapper)) {
+    params <- method_config$mapper(params)
+  }
+
+  rlang::exec(method_config$executor, !!!params)
 }

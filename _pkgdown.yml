@@ -20,6 +20,7 @@ favicons:
 
 template:
     bootstrap: 5
+    light-switch: true
     bslib:
         bootswatch: sandstone
         code_font: { google: "JetBrains Mono" }
@@ -28,11 +29,6 @@ template:
         fg: black
         primary: "#2c5f9b"
 
-
-authors:
-    - name: Yuxi Yang
-    - email: 15364051195@163.com
-
 title: SigBridgeR
 description: >-
     SigBridgeR: SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data, bulk expression data, and sample-related phenotypic data, to identify the cells most closely associated with the phenotypic data, performing as a bridge to existing tools.
@@ -40,10 +36,108 @@ logo:
     light: man/figures/logo_white.png
     dark: man/figures/logo_black.png
 
+reference:
+    - title: Data Preprocessing
+      desc: >
+          Functions for preprocessing inputs.
+      contents:
+          - BulkPreProcess
+          - SCPreProcess
+          - QCFilter
+          - QCPatternDetect
+          - Pattern2Colname
+          - SymbolConvert
+          - AggregateDups
+          - AggregateDupRows
+          - AggregateDupCols
+          - SCIntegrate
+          - CheckNA
+          - PhenoPreProcess
+          - PhenoMap
+
+    - title: Result Integration & Visualization
+      desc: >
+          Merge and visualize screening results across methods or conditions.
+      contents:
+          - MergeResult
+          - WeightedVote
+          - ScreenFractionPlot
+          - ScreenUpset
+
+    - title: Screening Methods
+      desc: >
+          Built-in screening algorithms.
+      contents:
+          - Screen
+          - DoLP_SGL
+          - DoPIPET
+          - DoScissor
+          - DoscAB
+          - DoscPAS
+          - DoscPP
+          - DoDEGAS
+          - DoSIDISH
+          - DoSCIPAC
+
+    - title: Seurat Object Utilities
+      contents:
+          - AddMetaFeature
+          - AddMisc
+          - FindRobustElbow
+          - ChooseNormalization
+
+    - title: Annotate Cell Types in Single-cell Datasets
+      desc: >
+          Built-in annotationa algorithms.
+      contents:
+          - SCAnnotate
+          - CellTypistAnnotate
+          - SingleRAnnotate
+          - mLLMCelltypeAnnotate
+
+    - title: Reference Data & External Resources
+      desc: >
+          Load reference datasets.
+      contents:
+          - LoadRefData
+
+    - title: Python Environment Management
+      desc: >
+          Manage Python environments for integrated R/Python workflows.
+      contents:
+          - SetupPyEnv
+          - ListPyEnv
+
+    - title: Extension Tools
+      contents:
+          - InterceptStrategy
+          - Register
+          - RegisterScreenMethod
+          - RegisterAnnoMethod
+          - RegisterSeuratMethod
+          - ValidateScreenFunc
+          - TemplateScreenFunc
+
+    - title: Registry
+      desc: >
+          Extended registry for SigBridgeR
+      contents:
+          - SCPreProcessStrategy
+          - SCAnnotateStrategy
+          - ScreenStrategy
+
+    - title: Package Configuration
+      desc: >
+          Get and set global options for SigBridgeR behavior.
+      contents:
+          - getFuncOption
+          - setFuncOption
+          - setThreads
+
 # 导航栏配置
 navbar:
     structure:
-        left: [home, reference, articles]
+        left: [home, reference, articles, other_function, troubleshooting]
         right: [toggle_theme, github]
     components:
         toggle_theme: ~
@@ -66,20 +160,26 @@ navbar:
                 - text: Full Tutorial
                   icon: fa-book
                   href: articles/Full_Tutorial.html
+                - text: Sptial Workflow
+                  icon: fa-map-location
+                  href: articles/Spatial_Transcriptome.html
                 - text: -------
-                - text: Advanced
+                - text: Advanced Usage
                 - text: Find the optimal parameters
                   icon: fa-cogs
                   href: articles/Optimal_Params.html
-                - text: -------
-                - text: Other
-                - text: Other functions
-                  icon: fa-bars
-                  href: articles/Other_Function_Details.html
-                - text: Troubleshooting
-                  icon: fa-bug
-                  href: articles/Troubleshooting.html
+                - text: Extend SigBridgeR
+                  icon: fa-code-branch
+                  href: articles/Extending.html
             assets: vignettes/example_figures
+        other_function:
+            text: Auxiliary Utils
+            icon: fa-bars
+            href: articles/Other_Function_Details.html
+        troubleshooting:
+            text: Troubleshooting
+            icon: fa-bug
+            href: articles/Troubleshooting.html
         github:
             icon: fa-github
             href: https://github.com/wanglabcsu/sigbridger/

@@ -1,7 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-R/9.*
-R/99.*
 tmp
 Tmp
 LICENSE.md
@@ -17,12 +15,14 @@ docs/
 .*\.rda$
 ^example_data/
 ^vignettes/example_data/
+^vignettes/example_figures
 ^Meta/
 benchmark_data
 ^Tmp/.*
 ^SigBridgeR/Tmp/.*  
 prework
-^release/.*
-^tests/.*
+^release/
+^tests/
 ^[.]?air[.]toml$
 ^\.vscode$
+^inst/docs

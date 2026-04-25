@@ -26,7 +26,7 @@
 #'
 #' @param data Expression matrix with genes as rows and samples as columns, or a list containing count_matrix and sample_info
 #' @param sample_info Sample information data frame (optional), ignored if data is a list. A qualified `sample_info` should contain both `sample` and `condition` columns (case-sensitive), and there are no specific requirements for the data type stored in the `condition` column. `batch` column is optional, which is used for batch effect detection.
-#' @param gene_symbol_conversion Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: FALSE
+#' @param gene_symbol_conversion Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: `FALSE`
 #' @param check Whether to perform detailed quality checks, default: `TRUE`
 #' @param min_count_threshold Minimum count threshold for gene filtering. Only values greater than this threshold are considered to represent valid gene expression. Default: `10L`
 #' @param min_gene_expressed Minimum number of samples a gene must be expressed in, default: `3L`
@@ -38,6 +38,7 @@
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
+#'    - `method`: Method for duplicates aggregation, see [AggregateDups]
 #'
 #' @section Quality Metrics:
 #' The function calculates and reports several quality metrics:
@@ -81,6 +82,7 @@
 #' \code{\link[SigBridgeR]{SymbolConvert}} for gene symbol conversion
 #'
 #' @return Filtered count matrix
+#' @family input_preprocess
 #' @export
 #'
 BulkPreProcess <- function(
@@ -97,6 +99,9 @@ BulkPreProcess <- function(
   show_plot_results = TRUE,
   ...
 ) {
+  if (check) {
+    CheckInstalled(pkg = "edgeR", where = "bioc")
+  }
   purrr::walk(
     list(
       min_count_threshold,
@@ -108,7 +113,10 @@ BulkPreProcess <- function(
     ),
     ~ chk::chk_numeric
   )
-  purrr::walk(list(check, show_plot_results), ~ chk::chk_flag)
+  purrr::walk(
+    list(gene_symbol_conversion, check, show_plot_results),
+    ~ chk::chk_flag
+  )
 
   # dots arguments
   dots <- rlang::list2(...)
@@ -119,7 +127,7 @@ BulkPreProcess <- function(
   set.seed(seed)
 
   # * Handle input data format
-  if (is.list(data) && !is.data.frame(data)) {
+  if (is.list(data)) {
     if ("count_matrix" %chin% names(data)) {
       counts_matrix <- as.matrix(data$count_matrix)
       if ("sample_info" %chin% names(data) && is.null(sample_info)) {
@@ -155,7 +163,8 @@ BulkPreProcess <- function(
     n_genes = n_genes,
     min_genes_detected = min_genes_detected,
     min_count_threshold = min_count_threshold,
-    method = method
+    method = method,
+    verbose = verbose
   )
 
   if (is.null(sample_info)) {
@@ -168,7 +177,11 @@ BulkPreProcess <- function(
     sample_info <- data.frame(
       sample = colnames(counts_matrix) %||%
         glue::glue("Sample_{seq_len(n_samples)}"),
-      condition = rep("unknown", n_samples),
+      condition = if (rlang::is_installed("cheapr")) {
+        cheapr::rep_("unknown", n_samples)
+      } else {
+        rep("unknown", n_samples)
+      },
       stringsAsFactors = FALSE
     )
   } else {
@@ -189,9 +202,15 @@ BulkPreProcess <- function(
     )
   }
 
-  total_reads_per_sample <- colSums(counts_matrix, na.rm = TRUE)
-  genes_detected_per_sample <- colSums(counts_matrix > 0, na.rm = TRUE)
-  genes_with_reads <- rowSums(counts_matrix > 0, na.rm = TRUE)
+  total_reads_per_sample <- SigBridgeRUtils::colSums3(
+    counts_matrix,
+    na.rm = TRUE
+  )
+  genes_detected_per_sample <- SigBridgeRUtils::colSums3(
+    counts_matrix > 0,
+    na.rm = TRUE
+  )
+  genes_with_reads <- SigBridgeRUtils::rowSums3(counts_matrix > 0, na.rm = TRUE)
   genes_expressed_multiple <- sum(genes_with_reads >= min_gene_expressed)
 
   # Detailed Quality Checks (Conditional Execution)
@@ -206,11 +225,11 @@ BulkPreProcess <- function(
     cpm_values <- edgeR::cpm(counts_matrix, log = TRUE, prior.count = 1)
 
     # Sample correlation
-    sample_cor <- stats::cor(
-      cpm_values,
-      method = "pearson",
-      use = "pairwise.complete.obs"
-    )
+    sample_cor <- if (rlang::is_installed("WGCNA")) {
+      WGCNA::cor(cpm_values, method = "pearson", use = "pairwise.complete.obs")
+    } else {
+      stats::cor(cpm_values, method = "pearson", use = "pairwise.complete.obs")
+    }
 
     # Quick identification of low correlations
     cor_lower_tri <- sample_cor[lower.tri(sample_cor)]
@@ -253,11 +272,15 @@ BulkPreProcess <- function(
       pc12 <- pca_result$x[, c(1, 2)]
       mahal_dist <- stats::mahalanobis(
         pc12,
-        center = colMeans(pc12),
+        center = SigBridgeRUtils::colMeans3(pc12),
         cov = stats::cov(pc12)
       )
       outlier_threshold <- stats::qchisq(0.95, df = 2)
-      outliers <- which(mahal_dist > outlier_threshold)
+      outliers <- if (rlang::is_installed("cheapr")) {
+        cheapr::which_(mahal_dist > outlier_threshold)
+      } else {
+        which(mahal_dist > outlier_threshold)
+      }
     } else {
       outliers <- integer(0)
     }
@@ -309,10 +332,9 @@ BulkPreProcess <- function(
         batch_sig_prop <- mean(batch_pvalues < 0.05, na.rm = TRUE)
 
         if (verbose) {
-          ts_cli$cli_alert_success(sprintf(
-            "Batch effect detection completed: {.val {%s}}% genes affected",
-            round(batch_sig_prop * 100, 2)
-          ))
+          ts_cli$cli_alert_success(
+            "Batch effect detection completed: {.val {round(batch_sig_prop * 100, 2)}}% genes affected"
+          )
           if (batch_sig_prop > 0.3) {
             cli::cli_warn(
               "Strong batch effects detected, consider batch correction."
@@ -329,7 +351,6 @@ BulkPreProcess <- function(
           "Generating visualization plots..."
         )
       }
-      rlang::check_installed(c("ggplot2", "ggforce"))
 
       # PCA graphics::plot
       if (exists("pca_result")) {
@@ -347,40 +368,11 @@ BulkPreProcess <- function(
 
         var_labels <- pca_summary$importance[2, c(1, 2)] * 100
 
-        p_pca <- ggplot2::ggplot(
-          pca_df,
-          ggplot2::aes(x = `PC1`, y = `PC2`, color = `condition`)
-        ) +
-          ggplot2::geom_point(size = 3, alpha = 0.8) +
-          ggplot2::labs(
-            title = "Principal Component Analysis (PCA)",
-            x = paste0("PC1 (", round(var_labels[1], 2), "%)"),
-            y = paste0("PC2 (", round(var_labels[2], 2), "%)")
-          ) +
-          ggplot2::theme_minimal() +
-          ggplot2::theme(legend.position = "right") +
-          ggforce::geom_mark_ellipse(
-            ggplot2::aes(fill = condition, group = condition),
-            alpha = 0.1,
-            expand = ggplot2::unit(3, "mm"),
-            show.legend = FALSE
-          )
-
-        if ("batch" %chin% colnames(pca_df)) {
-          p_pca <- p_pca +
-            ggplot2::aes(shape = `batch`) +
-            ggplot2::scale_shape_manual(
-              values = c(
-                16,
-                17,
-                18,
-                19,
-                20
-              )[seq_len(length(unique(pca_df$batch)))]
-            )
-        }
-
-        methods::show(p_pca)
+        p_pca <- DrawPCA(
+          pca_df = pca_df,
+          var_labels = var_labels,
+          show_plot = TRUE
+        )
       }
     }
 
@@ -393,7 +385,9 @@ BulkPreProcess <- function(
 
   # * Data Filtering
   # Gene filtering
-  genes_pass_count <- rowSums(counts_matrix >= min_count_threshold) >=
+  genes_pass_count <- SigBridgeRUtils::rowSums3(
+    counts_matrix >= min_count_threshold
+  ) >=
     min_gene_expressed
 
   # Sample filtering
@@ -403,7 +397,7 @@ BulkPreProcess <- function(
 
   # Correlation filtering (if correlation was computed)
   if (check && exists("sample_cor")) {
-    sample_mean_cor <- colMeans(sample_cor, na.rm = TRUE)
+    sample_mean_cor <- SigBridgeRUtils::colMeans3(sample_cor, na.rm = TRUE)
     samples_to_keep <- samples_to_keep & sample_mean_cor >= min_correlation
   }
 
@@ -451,12 +445,100 @@ BulkPreProcess <- function(
 }
 
 #' @keywords internal
+DrawPCA <- function(
+  pca_df,
+  var_labels,
+  show_plot = TRUE,
+  ...
+) {
+  rlang::check_installed(c("ggplot2", "ggforce", "patchwork"))
+
+  p_pca <- ggplot2::ggplot(
+    pca_df,
+    ggplot2::aes(x = `PC1`, y = `PC2`, color = `condition`)
+  ) +
+    ggplot2::geom_point(size = 3, alpha = 0.8) +
+    ggplot2::labs(
+      x = paste0("PC1 (", round(var_labels[1], 2), "%)"),
+      y = paste0("PC2 (", round(var_labels[2], 2), "%)")
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      legend.position = c(0.95, 0.95), # 图例在右上角内部
+      legend.justification = c(1, 1), # 对齐到右上角
+    ) +
+    ggforce::geom_mark_ellipse(
+      ggplot2::aes(fill = condition, group = condition),
+      alpha = 0.1,
+      expand = ggplot2::unit(3, "mm"),
+      show.legend = FALSE
+    ) +
+    ggplot2::geom_hline(yintercept = 0, color = "gray70", linetype = "dashed") +
+    ggplot2::geom_vline(xintercept = 0, color = "gray70", linetype = "dashed")
+
+  if ("batch" %chin% colnames(pca_df)) {
+    n_batch <- length(unique(pca_df$batch))
+
+    chk::chk_lt(n_batch, 5)
+
+    p_pca <- p_pca +
+      ggplot2::aes(shape = `batch`) +
+      ggplot2::scale_shape_manual(
+        values = c(
+          16,
+          17,
+          18,
+          19,
+          20
+        )[seq_len(n_batch)]
+      )
+  }
+
+  pc1_range <- range(pca_df$PC1)
+  pc2_range <- range(pca_df$PC2)
+
+  # 创建密度图 - 描边颜色与填充颜色一致
+  density_x <- ggplot2::ggplot(
+    pca_df,
+    ggplot2::aes(x = PC1, fill = condition, color = condition)
+  ) +
+    ggplot2::geom_density(alpha = 0.7, bw = "nrd", adjust = 2) +
+    ggplot2::coord_cartesian(xlim = pc1_range) + # 与主图x轴范围一致
+    ggplot2::theme_void() +
+    ggplot2::theme(legend.position = "none")
+
+  density_y <- ggplot2::ggplot(
+    pca_df,
+    ggplot2::aes(x = PC2, fill = condition, color = condition)
+  ) +
+    ggplot2::geom_density(alpha = 0.7, trim = FALSE, bw = "nrd", adjust = 1) +
+    ggplot2::coord_cartesian(xlim = pc2_range) + # 与主图y轴范围一致
+    ggplot2::coord_flip() +
+    ggplot2::theme_void() +
+    ggplot2::theme(legend.position = "none")
+
+  combined_ellipse <- density_x +
+    patchwork::plot_spacer() +
+    p_pca +
+    density_y +
+    patchwork::plot_layout(ncol = 2, widths = c(4, 1), heights = c(1, 4)) +
+    patchwork::plot_annotation(title = "Principal Component Analysis (PCA)")
+
+  if (show_plot) {
+    print(combined_ellipse)
+  }
+
+  combined_ellipse
+}
+
+#' @keywords internal
 BulkCheck <- function(
   counts_matrix,
   n_genes,
   min_genes_detected,
   min_count_threshold,
-  method
+  method,
+  verbose = TRUE
 ) {
   if (any(counts_matrix < 0, na.rm = TRUE)) {
     cli::cli_abort(c(
@@ -464,9 +546,7 @@ BulkCheck <- function(
     ))
   }
   if (any(counts_matrix != floor(counts_matrix))) {
-    cli::cli_abort(c(
-      "x" = "Expression matrix must be integer (Raw count matrix), not log2 transformed"
-    ))
+    cli::cli_warn("Expression matrix contains non-integer value")
   }
   if (min_genes_detected > n_genes) {
     cli::cli_abort(c(
@@ -482,13 +562,21 @@ BulkCheck <- function(
   }
 
   # * Handle duplicated genes and samples
-  if (any(duplicated(rownames(counts_matrix)))) {
+  if (anyDuplicated(rownames(counts_matrix)) > 0) {
     cli::cli_alert_info("Aggregate Duplicated genes in rownames")
-    counts_matrix <- AggregateDupRows(counts_matrix, method = method)
+    counts_matrix <- AggregateDupRows(
+      counts_matrix,
+      method = method,
+      verbose = FALSE
+    )
   }
-  if (any(duplicated(colnames(counts_matrix)))) {
+  if (anyDuplicated(colnames(counts_matrix)) > 0) {
     cli::cli_alert_info("Aggregate Duplicated samples in colnames")
-    counts_matrix <- AggregateDupCols(counts_matrix, method = method)
+    counts_matrix <- AggregateDupCols(
+      counts_matrix,
+      method = method,
+      verbose = FALSE
+    )
   }
 
   # * Handle data type

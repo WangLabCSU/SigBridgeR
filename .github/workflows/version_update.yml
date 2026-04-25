@@ -175,17 +175,6 @@ jobs:
                   echo "README.Rmd not found, skipping..."
                   fi
 
-            - name: Update version in .Rproj file
-              if: steps.version_bump.outputs.type != 'none'
-              run: |
-                  RPROJ_FILE=$(find . -maxdepth 1 -name "*.Rproj" | head -1)
-                  if [ -f "$RPROJ_FILE" ]; then
-                    sed -i "s/^Version: [0-9]\+\.[0-9]\+\.[0-9]\+$/Version: $NEW_VERSION/" "$RPROJ_FILE"
-                    echo "Updated $RPROJ_FILE version to $NEW_VERSION"
-                  else
-                    echo "No .Rproj file found"
-                  fi
-
             - name: Pull latest changes
               if: steps.version_bump.outputs.type != 'none'
               run: |
@@ -204,11 +193,6 @@ jobs:
 
                   if [ -f README.Rmd ]; then
                   git add README.Rmd
-                  fi
-
-                  RPROJ_FILE=$(find . -maxdepth 1 -name "*.Rproj" | head -1)
-                  if [ -f "$RPROJ_FILE" ] && git diff -- "$RPROJ_FILE" | grep -q "^+Version:"; then
-                  git add "$RPROJ_FILE"
                   fi
 
                   if git diff --staged --quiet; then

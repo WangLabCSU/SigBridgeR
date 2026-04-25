@@ -10,15 +10,15 @@
 SCPreProcess(sc, ...)
 
 \method{SCPreProcess}{default}(
-  sc,
+  sc = NULL,
   ...,
   pipeline = "onsvpcetu",
   params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
     list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
     = list()),
   quality_control = list(pattern = c("^MT-")),
-  data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
-    50000L), percent.mt = 20L, percent.rp = 60L),
+  data_filter = list(nFeature_thresh = c(200L, 6000L), nCount_thresh = c(500L, 50000L),
+    percent.mt = 20L, percent.rp = 60L),
   column2only_tumor = NULL
 )
 
@@ -30,8 +30,8 @@ SCPreProcess(sc, ...)
     list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
     = list()),
   quality_control = list(pattern = c("^MT-")),
-  data_filter = list(nFeature_RNA_thresh = c(200L, 6000L), nCount_RNA_thresh = c(500L,
-    50000L), percent.mt = 20L, percent.rp = 60L),
+  data_filter = list(nFeature_thresh = c(200L, 6000L), nCount_thresh = c(500L, 50000L),
+    percent.mt = 20L, percent.rp = 60L),
   column2only_tumor = NULL
 )
 
@@ -81,7 +81,7 @@ list(
 Default: \code{list(pattern = "^MT-")}. Detected metrics (e.g., percent.mt) are added to meta.data.}
 
 \item{data_filter}{A list of thresholds for cell filtering.
-Default: \code{nFeature_RNA} (200-6000), \code{nCount_RNA} (500-50000), \code{percent.mt} (<20), \code{percent.rp} (<60).
+Default: \code{assay} ("RNA"), \code{nFeature_RNA} (200-6000), \code{nCount_RNA} (500-50000), \code{percent.mt} (<20), \code{percent.rp} (<60).
 Only metrics detected via \code{quality_control} are filtered, i.e., nFeature_RNA, nCount_RNA and percent.mt.}
 
 \item{column2only_tumor}{Optional character. Column name in metadata to filter for tumor cells
@@ -140,6 +140,16 @@ Other single_cell_preprocess:
 \code{\link{FindRobustElbow}()},
 \code{\link{Pattern2Colname}()},
 \code{\link{QCPatternDetect}()},
+\code{\link{RegisterSeuratMethod}()},
+\code{\link{SCAnnotate}()},
+\code{\link{SCIntegrate}()},
+\code{\link{SCPreProcessStrategy}},
 \code{\link{compatible_with_3.0.2}()}
+
+Other input_preprocess: 
+\code{\link{BulkPreProcess}()},
+\code{\link{PhenoMap}()},
+\code{\link{PhenoPreProcess}()}
 }
+\concept{input_preprocess}
 \concept{single_cell_preprocess}

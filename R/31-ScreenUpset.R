@@ -12,15 +12,14 @@
 #'                        Must contain columns with screening types marked as "Positive".
 #' @param screen_type Character vector of screening types to analyze.
 #'                    Default: NULL, indicating that a self-search pattern will be used.
+#' @param order_by Character vector of columns to order the intersections by.
+#'                 Default: c("freq", "degree").
 #' @param show_plot Whether to show the upset plot. Default: FALSE
 #' @param n_intersections Number of intersections to display in the plot. Default: 20.
-#' @param x_lab Label for the x-axis. Default: "Screen Set Intersections".
-#' @param y_lab Label for the y-axis. Default: "Number of Cells".
-#' @param title Plot title. Default: "Cell Counts Across Screen Set Intersections".
 #' @param bar_color Color for the bars in the plot. Default: "#4E79A7".
 #' @param combmatrix_point_color Color for points in the combination matrix. Default: "black".
 #' @param verbose Logical, whether to print a message
-#' @param ... Additional arguments passed to `ggplot2::theme()` for customizing the plot appearance.
+#' @param ... Additional arguments passed to `ggupset::scale_x_upset()`, `ggupset::theme_combmatrix()`, and `ggplot2::theme()` for customizing the plot appearance. Argumetns are auto-filtered
 #'
 #' @return A list containing two elements:
 #'   - `plot`: A ggplot object displaying the UpSet plot
@@ -59,11 +58,9 @@
 ScreenUpset <- function(
   screened_seurat,
   screen_type = NULL,
+  order_by = c("freq", "degree"),
   show_plot = FALSE,
   n_intersections = 20,
-  x_lab = "Screen Set Intersections",
-  y_lab = "Number of Cells",
-  title = "Cell Counts Across Screen Set Intersections",
   bar_color = "#4E79A7",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
@@ -77,28 +74,29 @@ ScreenUpset <- function(
   }
   chk::chk_whole_number(n_intersections)
   chk::chk_flag(show_plot)
-  purrr::walk(
-    list(x_lab, y_lab, title, bar_color, combmatrix_point_color),
-    ~ chk::chk_character
+  vapply(
+    X = list(bar_color, combmatrix_point_color),
+    FUN = chk::chk_character,
+    FUN.VALUE = NULL
   )
-  rlang::check_installed(c("ggplot2", "ggupset"))
 
   meta_data <- screened_seurat[[]]
   all_screen_types <- colnames(meta_data)
+
   if (is.null(screen_type)) {
+    pattern_detect <- paste0(paste(names(ScreenStrategy), collapse = "$|"), "$")
     screen_type <- grep(
-      "sc[A-Za-z]+$|DEGAS$",
+      pattern_detect,
       all_screen_types,
-      value = TRUE
+      value = TRUE,
+      ignore.case = TRUE
     )
   }
-  if (
-    !all(purrr::map_vec(
-      screen_type,
-      ~ . %in% all_screen_types
+  if (!all(screen_type %in% all_screen_types)) {
+    cli::cli_abort(c(
+      "x" = "Screen type(s) not found in metadata.",
+      ">" = "{.val {screen_type[!screen_type %in% all_screen_types]}}"
     ))
-  ) {
-    cli::cli_abort(c("x" = "Screen type(s) not found in metadata."))
   }
 
   max_comb <- length(screen_type)
@@ -111,8 +109,8 @@ ScreenUpset <- function(
         stats::setNames(
           combs,
           vapply(
-            combs,
-            function(comb) {
+            X = combs,
+            FUN = function(comb) {
               if (length(comb) == 1) {
                 comb
               } else {
@@ -134,17 +132,18 @@ ScreenUpset <- function(
 
   # Calculate intersection counts using vectorized operations
   counts <- vapply(
-    all_combinations,
-    function(sets) {
+    X = all_combinations,
+    FUN = function(sets) {
       # Find rows where all specified sets are positive using vectorized rowSums
       row_matches <- Matrix::rowSums(positive_matrix[,
         sets,
         drop = FALSE
       ]) ==
         length(sets)
+
       sum(row_matches, na.rm = TRUE)
     },
-    numeric(1)
+    FUN.VALUE = numeric(1)
   )
 
   # Create result data frame
@@ -156,15 +155,11 @@ ScreenUpset <- function(
 
   # Arguments allocated to ggplot2::theme() and ggupset::theme_combmatrix()
   dots <- rlang::list2(...)
-  dots$combmatrix.panel.point.color.fill <- combmatrix_point_color
-  dots$combmatrix.label.make_space <- FALSE
+  dots$combmatrix.panel.point.color.fill <- dots$combmatrix.panel.point.color.fill %||%
+    combmatrix_point_color
+  dots$combmatrix.label.make_space <- dots$combmatrix.label.make_space %||%
+    FALSE
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
-
-  theme_args <- SigBridgeRUtils::FilterArgs4Func(dots, ggplot2::theme)
-  combmatrix_args <- SigBridgeRUtils::FilterArgs4Func(
-    dots,
-    ggupset::theme_combmatrix
-  )
 
   # Create UpSet plot
   upset <- ggplot2::ggplot(
@@ -173,19 +168,28 @@ ScreenUpset <- function(
   ) +
     ggplot2::geom_col(fill = bar_color, alpha = 0.9, width = 0.7) +
     ggplot2::geom_text(ggplot2::aes(label = `count`), vjust = -0.5) +
-    ggupset::scale_x_upset(
-      order_by = "degree",
+    rlang::exec(
+      ggupset::scale_x_upset,
+      order_by = order_by,
       sets = screen_type,
-      n_intersections = n_intersections
+      n_intersections = n_intersections,
+      !!!SigBridgeRUtils::FilterArgs4Func(
+        dots,
+        ggupset::scale_x_upset
+      )
     ) +
-    ggplot2::labs(
-      x = x_lab,
-      y = y_lab,
-      title = title
+    rlang::exec(
+      ggupset::theme_combmatrix,
+      !!!SigBridgeRUtils::FilterArgs4Func(
+        dots,
+        ggupset::theme_combmatrix
+      )
     ) +
-    rlang::exec(ggupset::theme_combmatrix, !!!combmatrix_args) +
     ggplot2::theme_minimal() +
-    rlang::exec(ggplot2::theme, !!!theme_args)
+    rlang::exec(
+      ggplot2::theme,
+      !!!SigBridgeRUtils::FilterArgs4Func(dots, ggplot2::theme)
+    )
 
   if (show_plot) {
     methods::show(upset)

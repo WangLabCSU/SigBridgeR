@@ -4,8 +4,6 @@
 .httr-oauth
 .DS_Store
 .quarto
-R/9*
-9*.R
 tmp
 *.RData
 inst/doc
@@ -18,3 +16,5 @@ figures/**
 release
 src/** 
 .nfs0000003180000a930000073f
+
+

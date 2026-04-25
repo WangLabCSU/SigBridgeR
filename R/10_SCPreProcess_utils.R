@@ -19,102 +19,22 @@ compatible_with_3.0.2 <- function(..., params) {
   params
 }
 
-#' @keywords internal
-#' @family single_cell_preprocess
-sc_processing_strategies <- list(
-  o = function(object, params) {
-    rlang::exec(
-      SeuratObject::CreateSeuratObject,
-      counts = object,
-      !!!params
-    )
-  },
-  n = function(object, params) {
-    rlang::exec(
-      Seurat::NormalizeData,
-      object = object,
-      !!!params
-    )
-  },
-  v = function(object, params) {
-    rlang::exec(
-      Seurat::FindVariableFeatures,
-      object = object,
-
-      !!!params
-    )
-  },
-  s = function(object, params) {
-    rlang::exec(
-      Seurat::ScaleData,
-      object = object,
-
-      !!!params
-    )
-  },
-  p = function(object, params) {
-    rlang::exec(
-      Seurat::RunPCA,
-      object = object,
-
-      !!!params
-    )
-  },
-  c = function(object, params) {
-    rlang::exec(
-      Seurat::FindClusters,
-      object = object,
-
-      !!!params
-    )
-  },
-  e = function(object, params) {
-    rlang::exec(
-      Seurat::FindNeighbors,
-      object = object,
-      !!!params
-    )
-  },
-  t = function(object, params) {
-    rlang::exec(
-      Seurat::RunTSNE,
-      object = object,
-      !!!params
-    )
-  },
-  u = function(object, params) {
-    rlang::exec(
-      Seurat::RunUMAP,
-      object = object,
-      !!!params
-    )
-  },
-  r = function(object, params) {
-    rlang::exec(
-      Seurat::SCTransform,
-      object = object,
-      !!!params
-    )
-  },
-  i = function(object, params) {
-    rlang::exec(
-      Seurat::IntegrateLayers,
-      object = object,
-      !!!params
-    )
-  }
-)
-
 
 #' @keywords internal
 #' @family single_cell_preprocess
 has_pattern <- function(qc_list) {
+  if (!is.list(qc_list)) {
+    return(FALSE)
+  }
   !is.null(qc_list) && !is.null(qc_list$pattern) && length(qc_list$pattern) > 0
 }
 
 #' @keywords internal
 #' @family single_cell_preprocess
 is_filtering <- function(filter_list) {
+  if (!is.list(filter_list)) {
+    return(FALSE)
+  }
   !is.null(filter_list)
 }
 

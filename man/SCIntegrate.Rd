@@ -2,7 +2,7 @@
 % Please edit documentation in R/14-SCIntegrate.R
 \name{SCIntegrate}
 \alias{SCIntegrate}
-\alias{SCIntegrate.matrix}
+\alias{SCIntegrate.data.frame}
 \alias{SCIntegrate.Matrix}
 \alias{SCIntegrate.Seurat}
 \title{Integrate Single-Cell Datasets}
@@ -17,7 +17,7 @@ SCIntegrate(
   project = "Integrated Seurat"
 )
 
-SCIntegrate.matrix(..., .quos = NULL)
+SCIntegrate.data.frame(..., .quos = NULL)
 
 SCIntegrate.Matrix(..., .quos = NULL)
 
@@ -69,16 +69,6 @@ processed layers according to \code{pipeline}.
 Unified interface for integrating heterogeneous single-cell datasets.
 Supports \code{Seurat} objects and matrices (via gene-wise aggregation and column concatenation).
 }
-\section{Matrix Method Details}{
-
-\itemize{
-\item Duplicate genes (e.g., due to symbol aliasing) are resolved via
-\code{\link{AggregateDups}} (default: sum).
-\item Dataset identifiers are auto-inferred from argument names or
-object names (e.g., \code{SCIntegrate(matA, B = matB)} → prefixes \code{"matA"}, \code{"B"}).
-}
-}
-
 \examples{
 \dontrun{
 # Matrix integration
@@ -100,12 +90,18 @@ seu2 <- CreateSeuratObject(mat2)
 integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsfpi")
 }
 
-\dontrun{
-mat1 <- matrix(rpois(100, 5), nrow = 20, dimnames = list(paste0("G", 1:20), paste0("C", 1:5)))
-mat2 <- matrix(rpois(120, 6), nrow = 20, dimnames = list(paste0("G", 1:20), paste0("C", 1:6)))
-integrated_mat <- SCIntegrate(mat1, mat2)
-dim(integrated_mat)  # 20 genes × 11 cells
-head(colnames(integrated_mat))
 }
+\seealso{
+Other single_cell_preprocess: 
+\code{\link{FilterTumorCell}()},
+\code{\link{FindRobustElbow}()},
+\code{\link{Pattern2Colname}()},
+\code{\link{QCPatternDetect}()},
+\code{\link{RegisterSeuratMethod}()},
+\code{\link{SCAnnotate}()},
+\code{\link{SCPreProcess}()},
+\code{\link{SCPreProcessStrategy}},
+\code{\link{compatible_with_3.0.2}()}
 }
+\concept{single_cell_preprocess}
 \keyword{internal}

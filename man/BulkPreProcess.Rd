@@ -24,7 +24,7 @@ BulkPreProcess(
 
 \item{sample_info}{Sample information data frame (optional), ignored if data is a list. A qualified \code{sample_info} should contain both \code{sample} and \code{condition} columns (case-sensitive), and there are no specific requirements for the data type stored in the \code{condition} column. \code{batch} column is optional, which is used for batch effect detection.}
 
-\item{gene_symbol_conversion}{Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: FALSE}
+\item{gene_symbol_conversion}{Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: \code{FALSE}}
 
 \item{check}{Whether to perform detailed quality checks, default: \code{TRUE}}
 
@@ -46,6 +46,7 @@ BulkPreProcess(
 \itemize{
 \item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
 \item \code{seed}: For reproducibility, default is \code{123L}
+\item \code{method}: Method for duplicates aggregation, see \link{AggregateDups}
 }}
 }
 \value{
@@ -117,4 +118,10 @@ Samples are retained if:
 \code{\link[stats]{prcomp}} for PCA analysis,
 \code{\link[stats]{cor}} for correlation analysis,
 \code{\link[SigBridgeR]{SymbolConvert}} for gene symbol conversion
+
+Other input_preprocess: 
+\code{\link{PhenoMap}()},
+\code{\link{PhenoPreProcess}()},
+\code{\link{SCPreProcess}()}
 }
+\concept{input_preprocess}

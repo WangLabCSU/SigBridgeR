@@ -15,7 +15,6 @@ ScreenFractionPlot(
   stack_width = 0.85,
   x_text_angle = 45,
   axis_linewidth = 0.8,
-  legend_position = "right",
   x_lab = NULL,
   y_lab = "Fraction of Status",
   ncol = 2, # number of columns for facet wrap
@@ -42,15 +41,13 @@ Must match metadata column(s) (case-sensitive, e.g., "scissor" for Scissor resul
 \item{show_plot}{Logical to immediately display plot (default: TRUE).}
 
 \item{plot_title}{Plot title (default: "Screen Fraction"). When multiple screen types,
-can be a vector of titles or single title (will append screen type).}
+can be a vector of titles or single title (will append screen type prefix).}
 
 \item{stack_width}{Bar width (default: 0.85).}
 
 \item{x_text_angle}{X-axis label angle (default: 45).}
 
 \item{axis_linewidth}{Axis line thickness (default: 0.8).}
-
-\item{legend_position}{Legend position (default: "right").}
 
 \item{x_lab}{X-axis label (default: NULL).}
 

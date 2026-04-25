@@ -7,11 +7,9 @@
 ScreenUpset(
   screened_seurat,
   screen_type = NULL,
+  order_by = c("freq", "degree"),
   show_plot = FALSE,
   n_intersections = 20,
-  x_lab = "Screen Set Intersections",
-  y_lab = "Number of Cells",
-  title = "Cell Counts Across Screen Set Intersections",
   bar_color = "#4E79A7",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
@@ -25,15 +23,12 @@ Must contain columns with screening types marked as "Positive".}
 \item{screen_type}{Character vector of screening types to analyze.
 Default: NULL, indicating that a self-search pattern will be used.}
 
+\item{order_by}{Character vector of columns to order the intersections by.
+Default: c("freq", "degree").}
+
 \item{show_plot}{Whether to show the upset plot. Default: FALSE}
 
 \item{n_intersections}{Number of intersections to display in the plot. Default: 20.}
-
-\item{x_lab}{Label for the x-axis. Default: "Screen Set Intersections".}
-
-\item{y_lab}{Label for the y-axis. Default: "Number of Cells".}
-
-\item{title}{Plot title. Default: "Cell Counts Across Screen Set Intersections".}
 
 \item{bar_color}{Color for the bars in the plot. Default: "#4E79A7".}
 
@@ -41,7 +36,7 @@ Default: NULL, indicating that a self-search pattern will be used.}
 
 \item{verbose}{Logical, whether to print a message}
 
-\item{...}{Additional arguments passed to \code{ggplot2::theme()} for customizing the plot appearance.}
+\item{...}{Additional arguments passed to \code{ggupset::scale_x_upset()}, \code{ggupset::theme_combmatrix()}, and \code{ggplot2::theme()} for customizing the plot appearance. Argumetns are auto-filtered}
 }
 \value{
 A list containing two elements:

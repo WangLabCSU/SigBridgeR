@@ -7,8 +7,8 @@
 -   [Full Tutorial for SigBridgeR](#full-tutorial-for-sigbridger)
     -   [0. Preface](#0-preface)
         -   [0.1 Contents](#01-contents)
-        -   [0.1 Introduction to
-            SigBridgeR](#01-introduction-to-sigbridger)
+        -   [0.2 Introduction to
+            SigBridgeR](#02-introduction-to-sigbridger)
     -   [1. Load and Preprocess data](#1-load-and-preprocess-data)
         -   [1.1 Single-cell RNA-seq Data](#11-single-cell-rna-seq-data)
             -   [1.1.1 (Option A) Start from Raw
@@ -17,7 +17,7 @@
                 Object](#112-option-b-start-from-anndata-object)
             -   [1.1.8 (Optional) Filter Out Tumor
                 Cells](#118-optional-filter-out-tumor-cells)
-        -   [1.2 Bulk expression data](#12-bulk-expression-data)
+        -   [1.2 Bulk expression data](###12-bulk-expression-data)
             -   [1.2.1 Evaluate the quality of your bulk RNA-seq
                 data](#121-evaluate-the-quality-of-your-bulk-rna-seq-data)
                 -   [Quality Control Metrics
@@ -41,7 +41,11 @@
             Screening](#26-option-f-lp_sgl-screening)
         -   [2.7 (Option G) PIPET
             Screening](#27-option-g-pipet-screening)
-        -   [2.8 Merge screening results](#28-merge-screening-results)
+        -   [2.8 (Option H) SIDISH
+            Screening](#28-option-h-sidish-screening)
+        -   [2.9 (Option I) SCIPAC
+            Screening](#29-option-i-scipac_screening)
+        -   [2.F Merge screening results](#2f-merge-screening-results)
     -   [3. Visualization](#3-visualization)
         -   [3.1 UMAP for screening
             results](#31-umap-for-screening-results)
@@ -61,7 +65,7 @@
     -   [5. Troubleshooting](#5-troubleshooting)
     -   [6. References](#6-references)
 
-### 0.1 Introduction to SigBridgeR
+### 0.2 Introduction to SigBridgeR
 
 SigBridgeR (short for **Sig**nificant cell-to-phenotype **Bridge** in
 **R**) is an R package for screening cells highly associated with
@@ -322,7 +326,7 @@ Key parameters for `BulkPreProcess`:
     column.
 -   `gene_symbol_conversion`: Whether to convert Ensembl version IDs and
     TCGA version IDs to genes with [SymbolConvert in Section
-    2.2.2](#222-gene-symbol-conversion), default TRUE.
+    1.2.2](#122-gene-symbol-conversion), default TRUE.
 -   `check`: Whether to perform detailed quality checks, default TRUE.
 -   `min_count_threshold`: Minimum count threshold for gene filtering,
     default 10.
@@ -468,145 +472,87 @@ matching if you prefer not to use SymbolConvert’s built-in
 
 ### 1.3 Phenotype Data
 
-Bascially you can just use your phenotype data directly. If you are
+Basically you can just use your phenotype data directly. If you are
 confused about the structure `Screen()` requires, please refer to
-[Section 5](#example).
+[Section 4](#example).
 
-You can use this function to check NA values, which tells you the
-location of NA values in your phenotype data:
+We provide some functions helping formatting and checking your phenotype
+data.
 
-    # `max_print`: output how many NA location messages at one time if NA exists
-    CheckNA <- function(data, max_print = 5) {
-        # Load required packages
-        rlang::check_installed(c("dplyr", "purrr", "cli", "data.table"))
+**Checking NA and report the position**:
 
-        # Convert to data.table if it's a 2D structure but not already a data.table
-        is_2d <- !is.null(dim(data))
-        dt <- NULL
+    # `max_print`: output how many NA location messages at one time in console if NA exists
+    CheckNA(your_phenotype_data, max_print = 5L)
 
-        if (is_2d && !data.table::is.data.table(data)) {
-            dt <- data.table::as.data.table(data)
-        } else if (is_2d) {
-            dt <- data
-        }
+    mat <- matrix(c(NA,1,1,NA),2, dimnames = list(c("Gene1","Gene2"),c("Sample1","Sample2")))
+    na_position <- CheckNA(mat)
+    # ! Found 2 NA values in data
+    # First 2 positions:
+    #   Row 1 ("Gene1"), col 1 ("Sample1")
+    #   Row 2 ("Gene2"), col 2 ("Sample2")
 
-        # Initialize output
-        na_info <- list()
+**In-place data transformation**
 
-        cli::cli_h1("NA Value Check (data.table optimized)")
-        cli::cli_alert_info("Checking object with dimensions: {.val {dim(data)}}")
+Use it just in tidyverse-like style
 
-        # Handle 1D data (vectors)
-        if (!is_2d) {
-            na_count <- sum(is.na(data))
-            na_positions <- which(is.na(data))
-            na_info$positions <- na_positions
-            na_info$count <- na_count
+    # ? if a vector
+    v <- 1:2000
 
-            if (na_count == 0) {
-                cli::cli_alert_success("No NA values found in the vector!")
-            }
+    v2 <- PhenoMap(v, v < 1000 ~ "0" ,v > 1000 ~ "1",.default = "here_is_1k")
+    table(v2)
+    #  0          1 here_is_1k 
+    #    999       1000          1 
 
-            cli::cli_alert_warning("Found {.val {na_count}} NA value{?s} in vector")
+    v3 <- PhenoMap(v, v < 100 ~ 0, v < 1000 ~ 1, v > 1000 ~ 2, .default = NA_real_)
+    table(v3)
+    #    0    1    2 
+    #   99  900 1000 
 
-            if (length(na_positions) > 0 && max_print > 0) {
-                positions_to_show <- na_positions[
-                    1:min(max_print, length(na_positions))
-                ]
-                cli::cli_text("Positions: {.val {positions_to_show}}")
+    # ? if a data
+    d <- mtcars 
+    d2 <- PhenoMap(d, mpg > 15 ~ 1, mpg <= 15 ~ 0) 
+    table(d2$mpg)
+    #  0  1 
+    #  6 26 
+    head(d2)
+    #      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+    #    <num> <num> <num> <num> <num> <num> <num> <num> <num> <num> <num>
+    # 1:     1     6   160   110  3.90 2.620 16.46     0     1     4     4
+    # 2:     1     6   160   110  3.90 2.875 17.02     0     1     4     4
+    # 3:     1     4   108    93  3.85 2.320 18.61     1     1     4     1
+    # 4:     1     6   258   110  3.08 3.215 19.44     1     0     3     1
+    # 5:     1     8   360   175  3.15 3.440 17.02     0     0     3     2
+    # 6:     1     6   225   105  2.76 3.460 20.22     1     0     3     1
 
-                if (length(na_positions) > max_print) {
-                    cli::cli_text(
-                        "{.val {length(na_positions) - max_print}} additional positions not shown"
-                    )
-                }
-            }
+**Direct Interface for Foolproof Data Processing**
 
-            # For named vectors
-            if (!is.null(names(data))) {
-                na_names <- names(data)[na_positions]
-                na_info$names <- na_names
+    your_phenotype_data <- PhenoPreProcess(
+      bulk = your_bulk_data,
+      phenotype = your_phenotype_data,
+      phenotype_class = "survival",
+      status == "death" ~ 1,
+      status == "alive" ~ 0,
+      selelct = c("time","status")
+    )
 
-                if (length(na_names) > 0 && max_print > 0) {
-                    names_to_show <- na_names[1:min(max_print, length(na_names))]
-                    cli::cli_text("Names: {.val {names_to_show}}")
-                }
-            }
-        } else {
-            # Handle 2D data (dataframes, matrices, data.tables)
-            # Use data.table for efficient NA counting
-            na_count <- dt[, sum(is.na(.SD))]
-            na_info$count <- na_count
+Key parameters for `PhenoPreProcess`:
 
-            if (na_count == 0) {
-                cli::cli_alert_success("No NA values found in the 2D data!")
-            }
-
-            cli::cli_alert_warning(
-                "Found {.val {na_count}} NA value{?s} in 2D data"
-            )
-
-            # Get NA positions efficiently without melt warning
-            if (max_print > 0) {
-                # Create a matrix of logical values indicating NA positions
-                na_matrix <- is.na(as.matrix(dt))
-                na_positions <- which(na_matrix, arr.ind = TRUE)
-
-                # Convert to data.table and add column names
-                na_positions_dt <- data.table::as.data.table(na_positions)
-                colnames(na_positions_dt) <- c("row", "col")
-                na_positions_dt$col_name <- colnames(dt)[na_positions_dt$col]
-
-                na_info$positions <- na_positions_dt
-
-                if (nrow(na_positions_dt) > 0) {
-                    positions_to_show <- na_positions_dt[
-                        1:min(max_print, nrow(na_positions_dt)),
-                    ]
-
-                    cli::cli_text(
-                        "First {.val {nrow(positions_to_show)}} position{?s}:"
-                    )
-
-                    for (i in 1:nrow(positions_to_show)) {
-                        cli::cli_text(
-                            "  Row {.val {positions_to_show$row[i]}}, Col {.val {positions_to_show$col_name[i]}} (index: {.val {positions_to_show$col[i]}})"
-                        )
-                    }
-
-                    if (na_count > max_print) {
-                        cli::cli_text(
-                            "{.val {na_count - max_print}} additional positions not shown"
-                        )
-                    }
-                }
-            }
-
-            # Column-wise summary using data.table
-            col_na <- dt[, lapply(.SD, function(x) sum(is.na(x)))]
-            col_na <- unlist(col_na)
-            col_na <- col_na[col_na > 0]
-
-            if (length(col_na) > 0) {
-                na_info$column_na <- col_na
-
-                cli::cli_text("Column-wise NA counts:")
-                for (col in names(col_na)) {
-                    cli::cli_text("  {.field {col}}: {.val {col_na[col]}}")
-                }
-            }
-        }
-
-        return(invisible(na_info))
-    }
+-   `bulk`: Bulk RNA-seq expression data with genes as rows and samples
+    as columns
+-   `phenotype`: Phenotype data (Named numeric vector/ data.frame)
+-   `phenotype_class`: Type of phenotype data, e.g., “binary”,
+    “survival”, “continuous”
+-   `...`: pass to `PhenoMap`
+-   `select`: Columns to select from the phenotype data when it is a
+    data.frame
 
 ------------------------------------------------------------------------
 
 ## 2. Screen Cells Associated with Phenotype
 
-The function **`Screen`** provide 5 different options for screening
-cells associated with phenotype, These 5 algorithms come from the
-repositories mentioned in [7. References](#7-references), and you can
+The function **`Screen`** provide 8 different options for screening
+cells associated with phenotype, These 8 algorithms come from the
+repositories mentioned in [6. References](#6-references), and you can
 choose one of them to screen your cells.
 
 Key parameters for `Screen`:
@@ -908,7 +854,7 @@ Parameters pass to `...` when using `DEGAS` method
       env_params = list(
         env.name = "r-reticulate-degas",
         env.type = "conda",
-        # Environment.yml file will be used to create the conda environment in default, so other parameters can be omitted
+        # Environment.yml file will be used to create the conda environment in default, so other parameters can be ignored
         env.method = "environment",
         # The path of the environment.yml file
         env.file = system.file(
@@ -1089,7 +1035,198 @@ Parameters pass to `...` when using `PIPET` method
     annotations in meta.data)
 -   `markers`: Phenotype-specific marker genes
 
-### 2.9 Merge screening results
+### 2.8 (Option H) SIDISH Screening
+
+Parameters passed to `...` when using `SIDISH` method:
+
+-   `verbose`: Logical. Whether to print verbose output during
+    execution. Default is `TRUE`.
+-   `label_type`: Character specifying the phenotype label type stored
+    in `sc_data@misc`. Default is `"SIDISH"`.
+-   `assay`: Seurat assay name to use for expression data. Default is
+    `"RNA"`.
+-   `sidish_param`: List of parameters for SIDISH algorithm. See below
+    for details.
+-   `env_params`: List of parameters for environment setup. See below
+    for details.
+
+<!-- -->
+
+    sidish_result <- Screen(
+      matched_bulk = your_matched_bulk,
+      sc_data = A_Seurat_object,
+      phenotype = your_survival_phenotype,  # Must contain "time" and "status" columns
+      label_type = "SIDISH",                # Labels stored in `@misc` slot to identify screening results
+      screen_method = "SIDISH",
+      phenotype_class = "survival",         # Currently only survival phenotype is supported
+      
+      # SIDISH algorithm parameters
+      sidish_param = list(
+        # Preprocessing parameters
+        patient_id = "Sample",
+        celltype_name = "celltype_major",
+        processed = TRUE,
+        n_genes_by_counts = 5000L,
+        pct_counts_mt = 10L,
+        batch_correction = FALSE,
+        survival_ = "time",                 # Column name for survival time
+        status = "status",                  # Column name for event status
+        
+        # Execution environment
+        device = "cuda",                    # "cuda" for GPU acceleration, "cpu" for CPU-only
+        use_spatial_graph = FALSE,
+        k_neighbors = NULL,
+        
+        # Phase 1: VAE training parameters
+        phase1_epochs = 225L,
+        phase1_i_epochs = 20L,
+        phase1_latent_size = 32L,
+        phase1_layer_dims = c(512L, 128L),
+        phase1_batch_size = 256L,
+        phase1_optimizer = "Adam",
+        phase1_lr = 1e-4,
+        phase1_lr_3 = 1e-4,
+        phase1_dropout = 0L,
+        phase1_type = "Dense",              # "Dense" or "Normal"
+        
+        # Phase 2: Deep Cox training parameters
+        phase2_epochs = 500L,
+        phase2_hidden = 128L,
+        phase2_lr = 1e-4,
+        phase2_dropout = 0L,
+        phase2_test_size = 0.2,
+        phase2_batch_size_bulk = 256L,
+        
+        # Training & risk definition
+        train_iterations = 5L,
+        train_percentile = 0.95,
+        train_steepness = 30L,
+        train_path = "./SIDISH_res/",       # Path to save intermediate data
+        train_num_workers = 0L,
+        train_distribution_fit = "fitted"   # "fitted" or "default"
+      ),
+      
+      # Python environment parameters
+      env_params = list(
+        env.name = "r-reticulate-sidish-nvidia",  # Auto-selected based on device parameter
+        env.type = "conda",
+        env.method = "environment",
+        env.file = system.file(
+          "conda/SIDISH_nvidia_environment.yml",
+          package = "SigBridgeR"
+        ),
+        env.python_verion = "3.12.12",
+        env.packages = c(
+          "numpy" = "1.26.4"
+          # Additional packages defined in environment.yml
+        ),
+        env.recreate = FALSE,               # Force re-creating environment if TRUE
+        env.use_conda_forge = TRUE,
+        env.verbose = FALSE
+      ),
+      
+      verbose = TRUE
+    )
+
+This code chunk will CREATE a conda environment called
+**`r-reticulate-sidish-nvidia`** (for GPU) or
+**`r-reticulate-sidish-cpu`** (for CPU) with Python 3.12.12 and install
+all required dependencies for SIDISH. If an environment with the same
+name already exists, it will be reused without recreation (unless
+`env_params = list(env.recreate = TRUE)` is specified).
+
+**Note**: SIDISH currently **only supports survival phenotypes**
+(`phenotype_class = "survival"`). The phenotype data frame must contain
+columns named `"time"` (survival time) and `"status"` (event indicator).
+
+To obtain the default parameters for SIDISH, use
+`SigBridgeR:::SIDISHParamSet()` and `SigBridgeR:::SIDISHEnvSet()`:
+
+    # Get default SIDISH algorithm parameters
+    sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
+
+    # Get default environment parameters (CPU version)
+    env_default_cpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cpu")
+
+    # Get default environment parameters (GPU version)
+    env_default_gpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cuda")
+
+You can use `ListPyEnvs()` to list all Python environments available on
+your system (both conda and virtualenv):
+
+    ListPyEnv()
+    #                 name                                                   python  type
+    # 1               base                         /home/user/miniconda3/bin/python conda
+    # 2 r-reticulate-sidish-nvidia /home/user/miniconda3/envs/r-reticulate-sidish-nvidia/bin/python conda
+    # 3 r-reticulate-sidish-cpu    /home/user/miniconda3/envs/r-reticulate-sidish-cpu/bin/python conda
+
+> **Important considerations**: - GPU acceleration requires
+> CUDA-compatible hardware. If GPU is not detected but `device = "cuda"`
+> is specified, the function will abort with an error message. Set
+> `sidish_param = list(device = "cpu")` to run on CPU. And of course the
+> python environment must be recreated.
+
+**Return structure**: A named list containing:
+
+-   `scRNA_data`: A Seurat object with SIDISH screening results
+    integrated into the `@misc` and `@meta.data` slots under the
+    specified `label_type`. The object contains cell-level risk scores
+    and survival-related annotations generated by the SIDISH algorithm.
+
+### 2.9 (Option I) SCIPAC Screening
+
+Parameters pass to `...` when using `PIPET` method
+
+-   `hvg`: Integer. Number of highly variable genes to use for
+    preprocessing. Default is `1000L`.
+-   `do_pca_sc`: Logical. Whether to perform PCA on single-cell data and
+    apply the rotation matrix to bulk data; if FALSE, PCA is performed
+    on bulk data and applied to single-cell data. Default is `FALSE`.
+-   `n_pc`: Integer. Number of principal components to use. Default is
+    `60L`.
+-   `sc_batch_col`: Character or vector. Batch variable for single-cell
+    data. Default is `NULL`.
+-   `resolution`: Integer. Clustering resolution for cell type
+    identification. Default is `2L`.
+-   `ela_net_alpha`: Numeric. Elastic net mixing parameter (0 = ridge, 1
+    = lasso). Default is `0.4`.
+-   `bt_size`: Integer. Bootstrap sample size for stability assessment.
+    Default is `50L`.
+-   `ncore`: Integer. Number of CPU cores for parallel computation.
+    Default is `7L`.
+-   `ci_alpha`: Numeric. Significance level for confidence intervals.
+    Default is `0.05`.
+-   `nfold`: Integer. Number of folds for cross-validation for
+    regression models. Default is `10L`.
+-   `...`: Additional arguments. Supports `assay` (character), `verbose`
+    (logical), and `seed` (integer).
+
+<!-- -->
+
+    scipac_result <- Screen(
+      matched_bulk = your_matched_bulk,
+      sc_data = A_Seurat_object,
+      phenotype = your_matched_phenotype,
+      label_type = "TP53",
+      hvg = 1000L,
+      do_pca_sc = FALSE,
+      n_pc = 60L,
+      sc_batch_col = NULL,
+      resolution = 2L,
+      ela_net_alpha = 0.4,
+      bt_size = 50L,
+      ncore = 7L,
+      ci_alpha = 0.05,
+      nfold = 10L,
+    )
+
+**returning structure**: A list containing:
+
+-   `scRNA_data`: A Seurat object after screening
+-   `pca_res` : PCA rotation results
+-   `cluster_res` : Clustering results of single-cell data
+
+### 2.F Merge screening results
 
 If you have performed multiple screening methods one the same
 single-cell data, you can use the `MergeResult` to merge the screening
@@ -1429,16 +1566,25 @@ functions in `SigBridgeR` to screen cells associated with phenotype.
     c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "survival")
 
     dim(mat_exam)
-     #[1] 33694  1093
+    #[1] 33694  1093
+    mat_exam[1:6, 1:2]
+    #          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT
+    # A1BG                            0                        0
+    # A1BG.AS1                        0                        0
+    # A1CF                            0                        2
+    # A2M                             0                        0
+    # A2M.AS1                         0                        0
+    # A2ML1                           0                        0
+
     dim(bulk) 
     # [1] 4071  506
-    bulk[1:6,1:6]
+    bulk[1:6,1:6] # already log2 transformed
     #         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
     # HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
     # RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
     # HMGCLL1       2.7476       5.8513       3.8334       3.6447       2.9188       4.8820
-    # LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882 # nolint
-    # GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311 # nolint: line_length_linter.
+    # LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882 
+    # GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311 
     # LRRTM3        1.7458       2.0092       0.0000       1.4468       0.0000       0.0000
     nrow(pheno)
     # [1] 506
@@ -1452,7 +1598,7 @@ functions in `SigBridgeR` to screen cells associated with phenotype.
     # TCGA-44-2655 43.50      0
 
 This single-cell RNA data is from humans. We set many parameters to
-`FALSE` or `0` in order to maximize the flexibility of downstream
+`NULL` or `0` in order to maximize the flexibility of downstream
 analyses and capture a broader range of biological signals, so as to
 avoid insignificant results caused by too small a dataset.
 
@@ -1467,22 +1613,22 @@ expression matrix data.
       params = list(
         o = list(
           min.cells = 0,
-          min.features = 0,
+          min.features = 0
         ),
         s = list(
-          scale.features = rownames(mat_exam),
+          features = rownames(mat_exam)
         )  
       ),
-      quality_control = FALSE,
-      data_filter = FALSE
+      quality_control = list(),
+      data_filter = list()
     )
 
 `BulkPreProcess()` is to pre-process the bulk expression data and the
 related clinical data.frame (containing bulk sample information) to
 perform PCA. Here, we want to retain the data so that the screening can
 reflect the most accurate situation. You can choose whether to filter or
-retain based on your own needs. See also [2.2 Bulk expression
-data](#22-bulk-expression-data) for more details.
+retain based on your own needs. See also [1.2 Bulk expression
+data](#12-bulk-expression-data) for more details.
 
 To facilitate the demonstration of the use of the `sample_info`
 parameter, we will divide the `pheno` based on its survival status into

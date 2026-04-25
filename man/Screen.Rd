@@ -10,7 +10,8 @@ Screen(
   phenotype,
   label_type = NULL,
   phenotype_class = c("binary", "survival", "continuous"),
-  screen_method = c("Scissor", "scPP", "scPAS", "scAB", "DEGAS", "LP_SGL", "PIPET"),
+  screen_method = c("Scissor", "scPP", "scPAS", "scAB", "DEGAS", "LP_SGL", "PIPET",
+    "rSIDISH", "SCIPAC"),
   ...
 )
 }
@@ -31,7 +32,7 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 - \code{"continuous"}: Continuous measurements
 - \code{"survival"}: Survival infomation}
 
-\item{screen_method}{Screening algorithm to use, there are six options:
+\item{screen_method}{Screening algorithm to use, there are nine options:
 \itemize{
 \item "Scissor": see also DoScissor()
 \item "scPP": see also DoscPP()
@@ -39,6 +40,9 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item "scAB": see also DoscAB(), continuous phenotype is not supported
 \item "DEGAS": see also DoDEGAS()
 \item "LP_SGL": see also DoLP_SGL()
+\item "PIPET": see also DoPIPET()
+\item "SIDISH": see also DoSIDISH()
+\item "SCIPAC": see also DoSCIPAC()
 }}
 
 \item{...}{Additional method-specific parameters:
@@ -86,16 +90,26 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item{degas_params}{(list) DEGAS parameters, default "list()"}
 \item{normality_test_method}{(character) Normality test method for DEGAS, default "jarque-bera"}
 }}
-\item{LP_SGL}{\describe{
-\item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
-\item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}
-\item{nfold}{(integer) Number of folds for cross-validation, default 5}
-\item{dge_analysis}{(list) Differential expression analysis settings:
-\itemize{
-\item{run: (logical) Whether to run DEG analysis, default FALSE}
-\item{logFC_threshold: (numeric) Log fold change threshold, default 1}
-\item{pval_threshold: (numeric) P-value threshold, default 0.05}
+\item{SIDISH}{\describe{
+\item{sidish_params}{(list) SIDISH parameters, default "list()"}
+\item{env_params}{(list) Environment parameters for SIDISH, default "list()"}
 }}
+\item{SCIPAC}{\describe{
+\item{hvg}{(integer) Number of highly variable genes to use for preprocessing. Default: 1000.}
+\item{do_pca_sc}{(logical) If \code{TRUE}, first do PCA on \code{sc.dat} and use the rotation matrix on \code{bulk.dat}; if \code{FALSE}, first do PCA on \code{bulk.data} and use the rotation matrix on \code{sc.dat}. Default: \code{FALSE}.}
+\item{n_pc}{(integer) Number of principal components to use. Default: 60.}
+\item{sc_batch_col}{(character or vector) Batch variable for single-cell data. If character, should be a column name in \code{sc_data} \verb{@metadata}. If vector, should be a batch assignment vector matching cell order. Default: \code{NULL} (no batch correction).}
+\item{resolution}{(integer) Clustering resolution for cell type identification. Higher values produce more clusters. Default: 2.}
+\item{ela_net_alpha}{(numeric) Elastic net mixing parameter (0 = ridge, 1 = lasso). Default: 0.4.}
+\item{bt_size}{(integer) Bootstrap sample size for stability assessment. Default: 50.}
+\item{ncore}{(integer) Number of CPU cores for parallel computation. Default: 7.}
+\item{ci_alpha}{(numeric) Significance level for confidence intervals. Default: 0.05.}
+\item{nfold}{(integer) Number of folds for cross-validation for regression models. Default: 10.}
+\item{assay}{(character) Assay to use from sc_data. Default: "RNA".}
+\item{verbose}{(logical) Whether to print progress messages. Default: inherits from \code{getFuncOption("verbose")}.}
+\item{seed}{(integer) Random seed for reproducibility. Default: 123.}
+}}
+
 \item{PIPET}{\describe{
 \item{group}{(character or NULL) Name of a metadata column (e.g., \code{"orig.ident"}) to stratify cells before screening. When \code{NULL} (default), screening is performed globally across all cells.}
 \item{discretize_method}{(character) Strategy to binarize continuous phenotypes internally before marker identification. One of:
@@ -124,8 +138,18 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item{verbose}{(logical) Whether to print progress messages. Default: inherits from \code{getFuncOption("verbose")}.}
 \item{parallel}{(logical) Whether to enable parallel permutations (requires \code{future::plan()} pre-set). Default: \code{FALSE}.}
 }}
-}
-}}}
+
+\item{LP_SGL}{\describe{
+\item{resolution}{(numeric) Resolution parameter for Leiden clustering, default 0.6}
+\item{alpha}{(numeric) Alpha parameter for SGL balancing L1 and L2 penalties, default 0.5}
+\item{nfold}{(integer) Number of folds for cross-validation, default 5}
+\item{dge_analysis}{(list) Differential expression analysis settings:
+\itemize{
+\item{run: (logical) Whether to run DEG analysis, default FALSE}
+\item{logFC_threshold: (numeric) Log fold change threshold, default 1}
+\item{pval_threshold: (numeric) P-value threshold, default 0.05}
+}}
+}}}}
 }
 \value{
 A list containing:
@@ -159,6 +183,8 @@ before analysis.
    DEGAS \tab All three types \tab sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method \cr
    LP_SGL \tab All three types \tab resolution, alpha, nfold, dge_analysis \cr
    PIPET \tab Binary/Continuous \tab group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance \cr
+   SIDISH \tab Survival Only \tab sidish_params, env_params \cr
+   SCIPAC \tab All three types \tab hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size, ncore, ci_alpha, nfold, assay \cr
 }
 }
 
@@ -172,5 +198,7 @@ Associated functions:
 \item \code{\link{DoDEGAS}}
 \item \code{\link{DoLP_SGL}}
 \item \code{\link{DoPIPET}}
+\item \code{\link{DoSIDISH}}
+\item \code{\link{DoSCIPAC}}
 }
 }
