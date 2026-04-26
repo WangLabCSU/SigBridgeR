@@ -11,7 +11,7 @@ DoSIDISH(
   label_type = NULL,
   phenotype_class = "survival",
   assay = "RNA",
-  sidish_param = list(),
+  sidish_params = list(),
   env_params = list(),
   ...
 )
@@ -32,9 +32,72 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 
 \item{assay}{Seurat assay name, default: \code{"RNA"}.}
 
-\item{sidish_param}{Parameters adjusting SIDISH. Use \code{SigBridgeR:::SIDISHParamSet()} to see all available parameters and fetch default values.}
+\item{sidish_params}{List of SIDISH algorithm parameters including:
+\strong{Preprocessing parameters:}
+\itemize{
+\item \code{patient_id}: column name for patient identifier in metadata (default: \code{"Sample"})
+\item \code{celltype_name}: column name for cell type annotation in metadata (default: \code{"celltype_major"})
+\item \code{processed}: whether input data is already preprocessed (default: \code{TRUE})
+\item \code{n_genes_by_counts}: minimum number of genes expressed per cell filter threshold (default: \code{5000})
+\item \code{pct_counts_mt}: maximum percentage of mitochondrial genes filter threshold (default: \code{10})
+\item \code{batch_correction}: whether to perform batch correction (default: \code{FALSE})
+\item \code{survival_}: column name for survival time in phenotype data (default: \code{"time"})
+\item \code{status}: column name for event status in phenotype data (default: \code{"status"})
+}
 
-\item{env_params}{Parameters adjusting python environment. Use \code{SigBridgeR:::SIDISHEnvSet()}to see all available parameters and fetch default values.}
+\strong{Execution environment:}
+\itemize{
+\item \code{device}: computation device, \code{"cuda"} for GPU acceleration or \code{"cpu"} for CPU-only (default: \code{"cuda"})
+\item \code{use_spatial_graph}: whether to use spatial graph information (default: \code{FALSE})
+\item \code{k_neighbors}: number of neighbors for graph construction (default: \code{NULL}, auto-detected)
+}
+
+\strong{Phase 1: VAE training parameters:}
+\itemize{
+\item \code{phase1_epochs}: total epochs for VAE training (default: \code{225})
+\item \code{phase1_i_epochs}: interval epochs for VAE intermediate evaluation (default: \code{20})
+\item \code{phase1_latent_size}: dimensionality of latent space (default: \code{32})
+\item \code{phase1_layer_dims}: hidden layer dimensions as integer vector (default: \code{c(512, 128)})
+\item \code{phase1_batch_size}: batch size for VAE training (default: \code{256})
+\item \code{phase1_optimizer}: optimizer algorithm (default: \code{"Adam"})
+\item \code{phase1_lr}: learning rate for VAE encoder/decoder (default: \code{1e-4})
+\item \code{phase1_lr_3}: learning rate for additional VAE component (default: \code{1e-4})
+\item \code{phase1_dropout}: dropout rate for VAE layers (default: \code{0})
+\item \code{phase1_type}: VAE layer type, \code{"Dense"} or \code{"Normal"} (default: \code{"Dense"})
+}
+
+\strong{Phase 2: Deep Cox training parameters:}
+\itemize{
+\item \code{phase2_epochs}: total epochs for Cox model training (default: \code{500})
+\item \code{phase2_hidden}: number of hidden units in Cox model (default: \code{128})
+\item \code{phase2_lr}: learning rate for Cox model (default: \code{1e-4})
+\item \code{phase2_dropout}: dropout rate for Cox model (default: \code{0})
+\item \code{phase2_test_size}: proportion of data held out for testing (default: \code{0.2})
+\item \code{phase2_batch_size_bulk}: batch size for bulk data in Cox training (default: \code{256})
+}
+
+\strong{Training & risk definition parameters:}
+\itemize{
+\item \code{train_iterations}: number of risk score iteration rounds (default: \code{5})
+\item \code{train_percentile}: percentile threshold for high-risk cell selection (default: \code{0.95})
+\item \code{train_steepness}: steepness parameter for risk score transformation (default: \code{30})
+\item \code{train_path}: directory path for saving intermediate results (default: \code{"./SIDISH_res/"})
+\item \code{train_num_workers}: number of data loading workers (default: \code{0})
+\item \code{train_distribution_fit}: distribution fitting method, \code{"fitted"} or \code{"default"} (default: \code{"fitted"})
+}}
+
+\item{env_params}{List of environment parameters for Python setup including:
+\itemize{
+\item \code{env.name}: conda/environment name (default: \code{"r-reticulate-sidish-nvidia"} for CUDA or \code{"r-reticulate-sidish-cpu"} for CPU)
+\item \code{env.type}: environment type, \code{"conda"}, \code{"environment"}, or \code{"venv"} (default: \code{"conda"})
+\item \code{env.method}: environment setup method, \code{"system"} or \code{"conda"} (default: \code{"environment"})
+\item \code{env.file}: path to environment YAML file (default: \code{system.file("conda/SIDISH_nvidia_environment.yml", package = "SigBridgeR")} or CPU variant)
+\item \code{env.python_version}: Python version (default: \code{"3.12.12"})
+\item \code{env.packages}: named vector of Python packages and versions (default: \code{c("numpy" = "1.26.4")}, more packages included via env.file)
+\item \code{env.recreate}: whether to recreate the environment if it already exists (default: \code{FALSE})
+\item \code{env.use_conda_forge}: whether to use the conda-forge channel (conda only, default: \code{TRUE})
+\item \code{env.verbose}: verbose output during environment setup (default: value from \code{getFuncOption("verbose")})
+}}
 
 \item{...}{Additional arguments passed to the function. Common parameters include:
 \describe{
