@@ -69,11 +69,10 @@
 <h2 id="id_-overview">🌐 Overview<a class="anchor" aria-label="anchor" href="#id_-overview"></a>
 </h2>
 <p>SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data, bulk expression data, and sample-related phenotypic data, to identify the cells most closely associated with the phenotypic data, performing as a bridge to existing tools.</p>
-<!-- <p align="center">
+<p align="center">
+</p>
+<p><img src="SigBridgeR_workflow.png"></p>
 
-<img src="SigBridgeR_workflow.png" />
-
-</p> -->
 </div>
 <div class="section level2">
 <h2 id="id_-installation">🔧 Installation<a class="anchor" aria-label="anchor" href="#id_-installation"></a>
@@ -204,6 +203,39 @@ To reproduce the tutorial to learn more usage:
 <li>the <a href="https://github.com/WangLabCSU/SigBridgeR/issues" class="external-link">Github issues</a> page if you want to file bug reports or feature requests</li>
 </ul>
 <p>Let us know if you have ideas to make this project better. Pull requests are welcome!</p>
+<!-- ## 📚 Citation
+
+```r
+citation("SigBridgeR")
+To cite package ‘SigBridgeR’ in publications use:
+
+  Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R
+  package version 3.6.1, commit 7136cd81401da9ef95b752405c57323df865bed2, <https://github.com/WangLabCSU/SigBridgeR>.
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
+Subpopulations via scRNA-seq and Bulk Data},
+    author = {Yuxi Yang and Shixiang Wang},
+    year = {2026},
+    note = {R package version 3.6.1, commit 7136cd81401da9ef95b752405c57323df865bed2},
+    url = {https://github.com/WangLabCSU/SigBridgeR},
+  }
+```
+
+```text
+
+``` -->
+</div>
+<div class="section level2">
+<h2 id="id_️-similar-projects">🗺️ Similar Projects<a class="anchor" aria-label="anchor" href="#id_%EF%B8%8F-similar-projects"></a>
+</h2>
+<p><a href="https://github.com/cliffren/scSurvival" class="external-link">scSurvival</a>: Single-cell expression matrix (log-normalized + HVG-selected) + survival data (optional clinical covariates and batch labels) -&gt; Survival-associated cell subpopulations</p>
+<p><a href="https://github.com/fanzhanglab/pyCellPhenoX" class="external-link">CellPhenoX</a>: Single-cell multi-omics data + bulk-level clinical variables, covariates (optional interaction effect terms) -&gt; interpretable score per cell</p>
+<p><a href="https://github.com/XiaomeiLi1/scPrognosis" class="external-link">scPrognosis</a>: scRNA-seq count matrix (imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq expression matrix (with matched survival time and event status) -&gt; breast cancer prognostic gene signatures and Cox PH risk prediction model</p>
+<p><a href="https://github.com/cellsemantics/SCellBOW" class="external-link">SCellBOW</a>: source scRNA-seq expression matrix + target scRNA-seq expression matrix + (optional) bulk RNA-seq expression matrix with paired survival data -&gt; cell embeddings, cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived risk scores with survival probability curves for individual cell subpopulations.</p>
+<p><a href="https://github.com/BrianLlll/scPER" class="external-link">scPER</a>: Single-cell RNA-seq data + bulk RNA-seq data + celltype annotation (optional batch labels) -&gt; phenotype-associated cell populations</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

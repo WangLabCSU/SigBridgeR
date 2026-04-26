@@ -57,7 +57,7 @@
 <span>  label_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"RNA"</span>,</span>
-<span>  sidish_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  sidish_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  env_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -94,12 +94,55 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <dd><p>Seurat assay name, default: <code>"RNA"</code>.</p></dd>
 
 
-<dt id="arg-sidish-param">sidish_param<a class="anchor" aria-label="anchor" href="#arg-sidish-param"></a></dt>
-<dd><p>Parameters adjusting SIDISH. Use <code>SigBridgeR:::SIDISHParamSet()</code> to see all available parameters and fetch default values.</p></dd>
+<dt id="arg-sidish-params">sidish_params<a class="anchor" aria-label="anchor" href="#arg-sidish-params"></a></dt>
+<dd><p>List of SIDISH algorithm parameters including:
+<strong>Preprocessing parameters:</strong></p><ul><li><p><code>patient_id</code>: column name for patient identifier in metadata (default: <code>"Sample"</code>)</p></li>
+<li><p><code>celltype_name</code>: column name for cell type annotation in metadata (default: <code>"celltype_major"</code>)</p></li>
+<li><p><code>processed</code>: whether input data is already preprocessed (default: <code>TRUE</code>)</p></li>
+<li><p><code>n_genes_by_counts</code>: minimum number of genes expressed per cell filter threshold (default: <code>5000</code>)</p></li>
+<li><p><code>pct_counts_mt</code>: maximum percentage of mitochondrial genes filter threshold (default: <code>10</code>)</p></li>
+<li><p><code>batch_correction</code>: whether to perform batch correction (default: <code>FALSE</code>)</p></li>
+<li><p><code>survival_</code>: column name for survival time in phenotype data (default: <code>"time"</code>)</p></li>
+<li><p><code>status</code>: column name for event status in phenotype data (default: <code>"status"</code>)</p></li>
+</ul><p><strong>Execution environment:</strong></p><ul><li><p><code>device</code>: computation device, <code>"cuda"</code> for GPU acceleration or <code>"cpu"</code> for CPU-only (default: <code>"cuda"</code>)</p></li>
+<li><p><code>use_spatial_graph</code>: whether to use spatial graph information (default: <code>FALSE</code>)</p></li>
+<li><p><code>k_neighbors</code>: number of neighbors for graph construction (default: <code>NULL</code>, auto-detected)</p></li>
+</ul><p><strong>Phase 1: VAE training parameters:</strong></p><ul><li><p><code>phase1_epochs</code>: total epochs for VAE training (default: <code>225</code>)</p></li>
+<li><p><code>phase1_i_epochs</code>: interval epochs for VAE intermediate evaluation (default: <code>20</code>)</p></li>
+<li><p><code>phase1_latent_size</code>: dimensionality of latent space (default: <code>32</code>)</p></li>
+<li><p><code>phase1_layer_dims</code>: hidden layer dimensions as integer vector (default: <code>c(512, 128)</code>)</p></li>
+<li><p><code>phase1_batch_size</code>: batch size for VAE training (default: <code>256</code>)</p></li>
+<li><p><code>phase1_optimizer</code>: optimizer algorithm (default: <code>"Adam"</code>)</p></li>
+<li><p><code>phase1_lr</code>: learning rate for VAE encoder/decoder (default: <code>1e-4</code>)</p></li>
+<li><p><code>phase1_lr_3</code>: learning rate for additional VAE component (default: <code>1e-4</code>)</p></li>
+<li><p><code>phase1_dropout</code>: dropout rate for VAE layers (default: <code>0</code>)</p></li>
+<li><p><code>phase1_type</code>: VAE layer type, <code>"Dense"</code> or <code>"Normal"</code> (default: <code>"Dense"</code>)</p></li>
+</ul><p><strong>Phase 2: Deep Cox training parameters:</strong></p><ul><li><p><code>phase2_epochs</code>: total epochs for Cox model training (default: <code>500</code>)</p></li>
+<li><p><code>phase2_hidden</code>: number of hidden units in Cox model (default: <code>128</code>)</p></li>
+<li><p><code>phase2_lr</code>: learning rate for Cox model (default: <code>1e-4</code>)</p></li>
+<li><p><code>phase2_dropout</code>: dropout rate for Cox model (default: <code>0</code>)</p></li>
+<li><p><code>phase2_test_size</code>: proportion of data held out for testing (default: <code>0.2</code>)</p></li>
+<li><p><code>phase2_batch_size_bulk</code>: batch size for bulk data in Cox training (default: <code>256</code>)</p></li>
+</ul><p><strong>Training &amp; risk definition parameters:</strong></p><ul><li><p><code>train_iterations</code>: number of risk score iteration rounds (default: <code>5</code>)</p></li>
+<li><p><code>train_percentile</code>: percentile threshold for high-risk cell selection (default: <code>0.95</code>)</p></li>
+<li><p><code>train_steepness</code>: steepness parameter for risk score transformation (default: <code>30</code>)</p></li>
+<li><p><code>train_path</code>: directory path for saving intermediate results (default: <code>"./SIDISH_res/"</code>)</p></li>
+<li><p><code>train_num_workers</code>: number of data loading workers (default: <code>0</code>)</p></li>
+<li><p><code>train_distribution_fit</code>: distribution fitting method, <code>"fitted"</code> or <code>"default"</code> (default: <code>"fitted"</code>)</p></li>
+</ul></dd>
 
 
 <dt id="arg-env-params">env_params<a class="anchor" aria-label="anchor" href="#arg-env-params"></a></dt>
-<dd><p>Parameters adjusting python environment. Use <code>SigBridgeR:::SIDISHEnvSet()</code>to see all available parameters and fetch default values.</p></dd>
+<dd><p>List of environment parameters for Python setup including:</p><ul><li><p><code>env.name</code>: conda/environment name (default: <code>"r-reticulate-sidish-nvidia"</code> for CUDA or <code>"r-reticulate-sidish-cpu"</code> for CPU)</p></li>
+<li><p><code>env.type</code>: environment type, <code>"conda"</code>, <code>"environment"</code>, or <code>"venv"</code> (default: <code>"conda"</code>)</p></li>
+<li><p><code>env.method</code>: environment setup method, <code>"system"</code> or <code>"conda"</code> (default: <code>"environment"</code>)</p></li>
+<li><p><code>env.file</code>: path to environment YAML file (default: <code>system.file("conda/SIDISH_nvidia_environment.yml", package = "SigBridgeR")</code> or CPU variant)</p></li>
+<li><p><code>env.python_version</code>: Python version (default: <code>"3.12.12"</code>)</p></li>
+<li><p><code>env.packages</code>: named vector of Python packages and versions (default: <code>c("numpy" = "1.26.4")</code>, more packages included via env.file)</p></li>
+<li><p><code>env.recreate</code>: whether to recreate the environment if it already exists (default: <code>FALSE</code>)</p></li>
+<li><p><code>env.use_conda_forge</code>: whether to use the conda-forge channel (conda only, default: <code>TRUE</code>)</p></li>
+<li><p><code>env.verbose</code>: verbose output during environment setup (default: value from <code>getFuncOption("verbose")</code>)</p></li>
+</ul></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
