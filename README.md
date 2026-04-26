@@ -16,11 +16,11 @@ sequencing data, bulk expression data, and sample-related phenotypic
 data, to identify the cells most closely associated with the phenotypic
 data, performing as a bridge to existing tools.
 
-<!-- <p align="center">
+<p align="center">
 
 <img src="SigBridgeR_workflow.png" />
 
-</p> -->
+</p>
 
 
 ## 🔧 Installation
@@ -185,3 +185,41 @@ If you encounter problems, please check:
     page if you want to file bug reports or feature requests
 
 Let us know if you have ideas to make this project better. Pull requests are welcome!
+
+<!-- ## 📚 Citation
+
+```r
+citation("SigBridgeR")
+To cite package ‘SigBridgeR’ in publications use:
+
+  Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R
+  package version 3.6.1, commit 7136cd81401da9ef95b752405c57323df865bed2, <https://github.com/WangLabCSU/SigBridgeR>.
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
+Subpopulations via scRNA-seq and Bulk Data},
+    author = {Yuxi Yang and Shixiang Wang},
+    year = {2026},
+    note = {R package version 3.6.1, commit 7136cd81401da9ef95b752405c57323df865bed2},
+    url = {https://github.com/WangLabCSU/SigBridgeR},
+  }
+```
+
+```text
+
+``` -->
+
+
+## 🗺️ Similar Projects
+
+[scSurvival](https://github.com/cliffren/scSurvival): Single-cell expression matrix (log-normalized + HVG-selected) + survival data (optional clinical covariates and batch labels) -> Survival-associated cell subpopulations
+
+[CellPhenoX](https://github.com/fanzhanglab/pyCellPhenoX): Single-cell multi-omics data + bulk-level clinical variables, covariates (optional interaction effect terms) -> interpretable score per cell
+
+[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq count matrix (imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq expression matrix (with matched survival time and event status) -> breast cancer prognostic gene signatures and Cox PH risk prediction model
+
+[SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq expression matrix + target scRNA-seq expression matrix + (optional) bulk RNA-seq expression matrix with paired survival data -> cell embeddings, cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived risk scores with survival probability curves for individual cell subpopulations.
+
+[scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data + bulk RNA-seq data + celltype annotation (optional batch labels) -> phenotype-associated cell populations
