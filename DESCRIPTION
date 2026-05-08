@@ -1,6 +1,6 @@
 Package: SigBridgeR
 Title: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data
-Version: 3.6.1
+Version: 3.6.2
 Authors@R: 
     c(
         person("Yuxi", "Yang", email = "15364051195@163.com", role = c("cre", "aut"), comment = c(ORCID = "0009-0006-1329-1224")),
