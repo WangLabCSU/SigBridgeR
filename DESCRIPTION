@@ -63,6 +63,7 @@ Suggests:
     ggVennDiagram,
     glue,
     here,
+    jsonlite,
     KernSmooth,
     knitr,
     lintr,
