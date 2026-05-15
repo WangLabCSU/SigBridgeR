@@ -46,7 +46,7 @@ fileDownload <- function(
   }
 
   rlang::check_installed("curl")
-  getExportedValue("curl", "curl_download")(
+  curl::curl_download(
     url = url,
     destfile = destfile,
     quiet = quiet,

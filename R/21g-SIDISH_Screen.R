@@ -8,7 +8,6 @@
 #' @param label_type Character specifying phenotype label type
 #' @param phenotype_class Type of phenotypic outcome (must be consistent with input data):
 #'        - `"survival"`: Survival infomation
-#' @param assay Seurat assay name, default: `"RNA"`.
 #' @param sidish_params List of SIDISH algorithm parameters including:
 #'   **Preprocessing parameters:**
 #'   - `patient_id`: column name for patient identifier in metadata (default: `"Sample"`)
@@ -78,9 +77,8 @@ DoSIDISH <- function(
   matched_bulk,
   sc_data,
   phenotype,
-  label_type = NULL,
+  label_type = "SIDISH",
   phenotype_class = "survival",
-  assay = "RNA",
   sidish_params = list(),
   env_params = list(),
   ...
@@ -97,7 +95,7 @@ DoSIDISH <- function(
   dots <- list(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
   seed <- dots$seed %||% getFuncOption("seed") %||% 123L
-  label_type <- label_type %||% "SIDISH"
+  assay <- dots$assay %||% "RNA"
 
   # * handling user parameters
   sidish_params <- SIDISHParamSet(sidish_params = sidish_params)
@@ -136,7 +134,7 @@ DoSIDISH <- function(
     seed = seed
   )
   # A Seurat
-  res <- AddMisc(res, sidish_paramss = sidish_params)
+  res <- AddMisc(res, SIDISH_paramss = sidish_params, SIDISH_type = label_type)
 
   # Return result in expected format
   list(

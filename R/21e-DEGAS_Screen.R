@@ -107,7 +107,7 @@ DoDEGAS <- function(
   label_type = "DEGAS",
   phenotype_class = c("binary", "continuous", "survival"),
   # A directory for intermediate files
-  tmp_dir = "tmp",
+  tmp_dir = "DEGAS_res",
   # DEGAS environment
   env_params = list(),
   # DEGAS parameters

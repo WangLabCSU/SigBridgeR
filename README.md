@@ -45,10 +45,16 @@ if (!requireNamespace("pak")) {
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
 
-2.  Install from r-universe:
+<!-- 2.  Install from r-universe:
 
 ```r
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+``` -->
+
+2.  Install with all dependencies:
+
+```r
+pak::pkg_install("WangLabCSU/SigBridgeR", dependencies = TRUE)
 ```
 
 ### It is recommended to install the following packages:
@@ -56,9 +62,21 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 `SigBridgeR` includes the Scissor and scAB algorithms by default. In addition to these, installing the following packages allows you to use additional algorithms.
 
 ```r
-methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
+methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC", "rTiRank")
 pak::pkg_install(file.path("Exceret", methods))
 ```
+
+<!-- **Community-Maintained Algorithms**：
+
+These algorithms are maintained by the community.
+
+```r
+
+```
+ -->
+
+
+---
 
 **unnecessary but recommended**:
 
@@ -214,12 +232,14 @@ Subpopulations via scRNA-seq and Bulk Data},
 
 ## 🗺️ Similar Projects
 
-[scSurvival](https://github.com/cliffren/scSurvival): Single-cell expression matrix (log-normalized + HVG-selected) + survival data (optional clinical covariates and batch labels) -> Survival-associated cell subpopulations
+[scSurvival](https://github.com/cliffren/scSurvival): Single-cell data (log-normalized + HVG-selected) + survival data (optional clinical covariates and batch labels) -> Survival-associated cell subpopulations
 
 [CellPhenoX](https://github.com/fanzhanglab/pyCellPhenoX): Single-cell multi-omics data + bulk-level clinical variables, covariates (optional interaction effect terms) -> interpretable score per cell
 
-[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq count matrix (imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq expression matrix (with matched survival time and event status) -> breast cancer prognostic gene signatures and Cox PH risk prediction model
+[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq data (imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq expression matrix (with matched survival time and event status) -> breast cancer prognostic gene signatures and Cox PH risk prediction model
 
-[SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq expression matrix + target scRNA-seq expression matrix + (optional) bulk RNA-seq expression matrix with paired survival data -> cell embeddings, cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived risk scores with survival probability curves for individual cell subpopulations.
+[SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq data + target scRNA-seq data + (optional) bulk RNA-seq data with paired survival data -> cell embeddings, cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived risk scores with survival probability curves for individual cell subpopulations.
 
 [scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data + bulk RNA-seq data + celltype annotation (optional batch labels) -> phenotype-associated cell populations
+
+[scSurv](https://github.com/3254c/scSurv): scRNA-seq data + bulk RNA-seq expression matrix (with matched survival time and event status) -> per-cell hazard scores and prognostic gene sets

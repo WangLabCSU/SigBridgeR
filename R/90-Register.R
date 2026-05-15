@@ -95,7 +95,7 @@ Register <- function(
 
     if (identical(registry, "auto")) {
       dots <- rlang::list2(...)
-      is_func <- purrr::map_lgl(dots, is.function)
+      is_func <- purrr::map_lgl(dots, base::is.function)
       for (i in seq_len(sum(is_func))) {
         registry <- detect_registry(
           method_name = names(dots)[i],

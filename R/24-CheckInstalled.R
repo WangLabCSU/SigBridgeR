@@ -18,14 +18,16 @@ CheckInstalled <- function(
 
   choice <- utils::menu(
     c("Yes", "Cancel"),
-    title = cli::cli_fmt(cli::cli_alert_info(
-      "The following package{?s} are required for {reason}: {.pkg {pkg_name}}, Do you want to install?"
+    title = cli::cli_fmt(cli::cli_inform(
+      "{cli::symbol$menu} The following package are required for {reason}: {.pkg {pkg_name}}, Do you want to install?"
     ))
   )
 
   if (choice == 2L) {
     if (abort) {
-      cli::cli_abort(c("x" = "Installation aborted"))
+      cli::cli_abort(c(
+        "x" = "Installation aborted by user, processing canceled"
+      ))
     }
     return(invisible(FALSE))
   }

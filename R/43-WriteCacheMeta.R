@@ -78,7 +78,7 @@ WriteCacheMeta <- function(
 
   cache_meta <- list(
     general = rlang::list2(
-      file = file,
+      file = file.path(getwd(), file),
       os = get_os_info(),
       time = get_time(),
       !!!get_r_info(),
@@ -141,7 +141,7 @@ get_time <- function() {
 #' @keywords internal
 get_pkg_version <- function() {
   tryCatch(
-    as.character(packageVersion("yourPackageName")),
+    as.character(packageVersion("SigBridgeR")),
     error = function(e) {
       # devtools::load_all() 会将工作目录切换至包根目录
       read.dcf("DESCRIPTION")[, "Version"]

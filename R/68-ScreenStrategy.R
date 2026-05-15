@@ -92,6 +92,12 @@ ScreenStrategy <- rlang::new_environment(
       executor = DoSCIPAC,
       phenotypes = c("binary", "survival", "continuous"),
       mapper = NULL
+    ),
+    TiRank = list(
+      method_name = "TiRank",
+      executor = DoTiRank,
+      phenotypes = c("binary", "survival", "continuous"),
+      mapper = NULL
     )
   )
 )
