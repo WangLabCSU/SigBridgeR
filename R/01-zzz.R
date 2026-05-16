@@ -59,5 +59,9 @@ utils::globalVariables(c(
   "Fraction",
   "sets",
   "count",
-  "Variance"
+  "Variance",
+  "Rank_Label",
+  "Rank_Score",
+  "Reject",
+  "TiRank"
 ))

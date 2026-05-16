@@ -25,7 +25,7 @@ validate_error <- function(message, ...) {
 #' @keywords internal
 validate_note <- function(message, ...) {
   cli::cli_inform(
-    cli::col_white(paste(
+    cli::col_blue(paste(
       cli::symbol$pointer,
       message,
       "... NOTE"

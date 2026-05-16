@@ -395,13 +395,13 @@ ValidateDirName <- function(func, ...) {
     if (rlang::is_syntactic_literal(folder_arg)) {
       folder_name <- as.character(folder_arg)
     } else if (rlang::is_symbol(folder_arg)) {
+      # cli::cli_inform("folder_arg: {folder_arg}") # * for debug
+
       # 如果是符号，尝试获取变量名
-      folder_name <- as.character(folder_arg)
+      folder_name <- get_var_value(var_name = as.character(folder_arg), func = func)
     } else {
       # 对于复杂表达式，记录警告但继续
-      validate_note(
-        "Cannot statically analyze folder name from complex expression"
-      )
+      cli::cli_warn("Failed to get folder name for dir.create call")
       next
     }
 

@@ -2,12 +2,10 @@
 % Please edit documentation in R/43-WriteCacheMeta.R
 \name{WriteCacheMeta}
 \alias{WriteCacheMeta}
-\title{Write Cache Metadata
-
-Writes metadata for SigBridgeR cache identification to a JSON file.}
+\title{Write Cache Metadata}
 \usage{
 WriteCacheMeta(
-  file,
+  file = "cache_config.json",
   screen_method,
   phenotype_class = c("binary", "survival", "continuous"),
   label_type = screen_method,
@@ -38,8 +36,6 @@ WriteCacheMeta(
 Invisible. Returns the metadata list that was written to the file.
 }
 \description{
-Write Cache Metadata
-
 Writes metadata for SigBridgeR cache identification to a JSON file.
 }
 \details{
@@ -64,5 +60,10 @@ WriteCacheMeta(
   additional_description = "Test run"
 )
 }
-
 }
+\seealso{
+Other cache_config: 
+\code{\link{CheckCache}()},
+\code{\link{ChooseCache}()}
+}
+\concept{cache_config}

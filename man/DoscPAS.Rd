@@ -85,6 +85,7 @@ Other screen_method:
 \code{\link{DoSCIPAC}()},
 \code{\link{DoSIDISH}()},
 \code{\link{DoScissor}()},
+\code{\link{DoTiRank}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPP}()}
 }

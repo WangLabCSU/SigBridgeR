@@ -136,6 +136,7 @@ Other screen_method:
 \code{\link{DoPIPET}()},
 \code{\link{DoSCIPAC}()},
 \code{\link{DoSIDISH}()},
+\code{\link{DoTiRank}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}

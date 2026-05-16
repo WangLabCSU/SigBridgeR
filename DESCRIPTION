@@ -24,7 +24,7 @@ Imports:
     purrr,
     rlang,
     scAB (>= 1.0.4),
-    Scissor (>= 2.0.0),
+    Scissor (>= 2.0.1),
     Seurat (>= 5.0.0),
     SeuratObject (>= 5.0.0),
     SigBridgeRUtils (>= 0.2.5)
@@ -53,6 +53,7 @@ Suggests:
     celldex,
     cheapr,
     codetools,
+    curl,
     DEGAS,
     edgeR,
     furrr,

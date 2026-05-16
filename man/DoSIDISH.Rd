@@ -8,9 +8,8 @@ DoSIDISH(
   matched_bulk,
   sc_data,
   phenotype,
-  label_type = NULL,
+  label_type = "SIDISH",
   phenotype_class = "survival",
-  assay = "RNA",
   sidish_params = list(),
   env_params = list(),
   ...
@@ -29,8 +28,6 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 
 \item{phenotype_class}{Type of phenotypic outcome (must be consistent with input data):
 - \code{"survival"}: Survival infomation}
-
-\item{assay}{Seurat assay name, default: \code{"RNA"}.}
 
 \item{sidish_params}{List of SIDISH algorithm parameters including:
 \strong{Preprocessing parameters:}
@@ -120,6 +117,7 @@ Other screen_method:
 \code{\link{DoPIPET}()},
 \code{\link{DoSCIPAC}()},
 \code{\link{DoScissor}()},
+\code{\link{DoTiRank}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}

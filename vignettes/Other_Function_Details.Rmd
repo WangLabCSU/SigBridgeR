@@ -42,7 +42,7 @@ setFuncOption(SigBridgeR.seed = 321L)
 getFuncOption("seed")
 # 321
 
-# * Auto-detect prefix 
+# * Auto-detect prefix
 getFuncOption("SigBridgeR.seed")
 # 321
 ```
@@ -58,8 +58,8 @@ getFuncOption("SigBridgeR.seed")
 setThreads(8L)
 
 # Configure specific backends only
-setThreads(dt = 4L)      # data.table only
-setThreads(openmp = 4L)  # OpenMP only
+setThreads(dt = 4L) # data.table only
+setThreads(openmp = 4L) # OpenMP only
 ```
 
 ### TensorFlow Optimization
@@ -73,7 +73,7 @@ setThreads(
     intra_op = 8L
   )
 )
-tf <- reticulate::import("tensorflow")  # Import AFTER configuration
+tf <- reticulate::import("tensorflow") # Import AFTER configuration
 ```
 
 ### Options
@@ -105,12 +105,12 @@ obj <- Seurat::CreateSeuratObject(counts)
 
 sct <- Seurat::SCTransfrom(obj)
 lognorm <- Seurat::NormalizeData(obj) %>%
-    Seurat::ScaleData() %>%
-    Seurat::FindVariableFeatures()
+  Seurat::ScaleData() %>%
+  Seurat::FindVariableFeatures()
 
 ChooseNormalization(
   sct = sct,
-  lognorm = lognorm, 
+  lognorm = lognorm,
   # * More can be added here
   subset_size = integer(),
   known_hvgs = list(),
@@ -121,13 +121,13 @@ ChooseNormalization(
     marker_signal = 0.35,
     dropout_robustness = 0.25
   )
-) 
+)
 ```
 
 ```{r,,eval=FALSE}
 # ℹ Using 1088 cells
 # ℹ Comparing 2 methods: sct and lognorm
-# ── Method Ranking (Composite Score) 
+# ── Method Ranking (Composite Score)
 # Top method: log_norm
 # [1] log_norm: 0.825
 # [2] sctransform: 0.175
@@ -153,9 +153,9 @@ Usually the number if principle components (PCs) is manually set to 10 or 20 acc
 ndims <- FindRobustElbow(
   obj = seurat,
   verbose = TRUE,
-  ndims = 50 
+  ndims = 50
 )
-# ── Method Results 
+# ── Method Results
 # ℹ Method 1A (Cumulative Variance > 90%): 1:40
 # ℹ Method 1B (Variance > Mean): 1:11
 # ℹ Method 1C (Variance > 2*SD): 1:4
@@ -163,7 +163,7 @@ ndims <- FindRobustElbow(
 # ℹ Method 3 (Distance-based): 1:8
 # ✔ Final Recommended Dimensions:  1:35
 
-# ── Summary 
+# ── Summary
 # ℹ Cumulative variance at 35 PCs: 84.8%
 # ℹ Variance explained by PC35: 1.09%
 
@@ -192,7 +192,7 @@ seurat_obj <- AddMisc(seurat_obj, "QC_stats" = qc_df)
 
 # Auto-incrementing example when `cover` set to FALSE
 seurat_obj <- AddMisc(seurat_obj, markers = markers1)
-seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover=FALSE)
+seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover = FALSE)
 
 # Add multiple attributes to the `SeuratObject@misc` slot simultaneously
 seurat_obj <- AddMisc(seurat_obj, markers1 = markers1, markers2 = markers2)
@@ -225,7 +225,11 @@ Add to different assays
 
 ```{r,add_meta_feature_example_3,eval=FALSE}
 seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "RNA")
-seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "ATAC")
+seurat_obj <- AddMetaFeature(
+  seurat_obj,
+  "gene_type" = gene_type,
+  assay = "ATAC"
+)
 ```
 
 If duplicate column names are detected, they will be suffixed with an underscore and a number (e.g., `_1`, `_2`) for disambiguation.
@@ -240,8 +244,16 @@ When passing raw matrices, the function performs a "join" operation based on the
 
 ```{r,matrix_integration_example,eval=FALSE}
 # Create dummy matrices
-mat1 <- matrix(rpois(50, 5), nrow = 10, dimnames = list(paste0("G", 1:10), paste0("C", 1:5)))
-mat2 <- matrix(rpois(60, 6), nrow = 10, dimnames = list(paste0("G", 5:14), paste0("C", 1:6)))
+mat1 <- matrix(
+  rpois(50, 5),
+  nrow = 10,
+  dimnames = list(paste0("G", 1:10), paste0("C", 1:5))
+)
+mat2 <- matrix(
+  rpois(60, 6),
+  nrow = 10,
+  dimnames = list(paste0("G", 5:14), paste0("C", 1:6))
+)
 
 # Integrate matrices with custom prefixes
 integrated_mat <- SCIntegrate(BatchA = mat1, BatchB = mat2)
@@ -299,11 +311,12 @@ Example Usage
 
 ```{r,seurat_integration_example,eval=FALSE}
 integrated <- SCIntegrate(
-  obj1, obj2, # -> merge.Seurat
+  obj1,
+  obj2, # -> merge.Seurat
   pipeline = "nsvpi",
   method = Seurat::RPCAIntegration, # Change integration method
-  dims = 1:30,                      # Passed to RunPCA and IntegrateLayers
-  k.weight = 50                     # Passed to IntegrateLayers
+  dims = 1:30, # Passed to RunPCA and IntegrateLayers
+  k.weight = 50 # Passed to IntegrateLayers
 )
 ```
 
@@ -335,8 +348,8 @@ integrated_seu <- SCIntegrate(
 
 ```{r,head_integrated_seu,eval=FALSE}
 integrated_seu
-# An object of class Seurat 
-# 30 features across 110 samples within 1 assay 
+# An object of class Seurat
+# 30 features across 110 samples within 1 assay
 # Active assay: RNA (30 features, 10 variable features)
 #  5 layers present: counts.1, counts.2, data.1, data.2, scale.data
 #  2 dimensional reductions calculated: pca, integrated.dr
@@ -377,7 +390,7 @@ seurat <- CellTypistAnnotate(
     package = "SigBridgeR"
   ),
   # * more arguments pass to celltypist.annotate (python)
-) 
+)
 ```
 
 **Parameters**:
@@ -406,7 +419,7 @@ seurat <- mLLMCellTypeAnnotate(
   sc,
   seurat_obj_markers = NULL,
   # * Context for large language models
-  tissue_name = "Human Cancer", 
+  tissue_name = "Human Cancer",
   models = c(
     "gpt-5",
     "claude-sonnet-4-5-20250929",
@@ -513,13 +526,13 @@ reticualte::use_condaenv("test-condaenv")
 ```{r,setup_python_env_example_2,eval=FALSE}
 # * Or use virtualenv via reticulate
 SetupPyEnv(
-    env_type = "venv", 
-    env_name = "test-venv", 
-    python_version = "3.9.15",
-    packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
-    python_path = NULL,
-    recreate = FALSE,
-    verbose = TRUE
+  env_type = "venv",
+  env_name = "test-venv",
+  python_version = "3.9.15",
+  packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
+  python_path = NULL,
+  recreate = FALSE,
+  verbose = TRUE
 )
 
 reticulate::use_virtualenv("test-venv")
@@ -549,7 +562,7 @@ ListPyEnv(env_type = "conda")
 If the virtual environment isn't installed in the default location, you can specify the location of the virtual environment with the `venv_locations` parameter.
 
 ```{r,list_py_env_example_3,eval=FALSE}
-ListPyEnv(env_type = "venv", venv_locations ="~/here_is_a_dir/.virtualenvs")
+ListPyEnv(env_type = "venv", venv_locations = "~/here_is_a_dir/.virtualenvs")
 ```
 
 # Other Functions
@@ -567,14 +580,14 @@ When loading the example data, the single-cell RNA expression matrix, the bulk R
 
 ```{r,load_ref_data_example,eval=FALSE}
 mydata <- LoadRefData(
-    data_type = c("survival"),
-    path = tempdir(),
-    cache = TRUE,
-    timeout = 60
+  data_type = c("survival"),
+  path = tempdir(),
+  cache = TRUE,
+  timeout = 60
 )
 
 # * mat_exam (matrix_example)
-mydata[[1]][1:6,1:6]
+mydata[[1]][1:6, 1:6]
 #          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT SMC01.T_AAACCTGTCCCTTGCA SMC01.T_AAACGGGAGGGAAACA SMC01.T_AAACGGGGTATAGGTA SMC01.T_AAAGATGAGGCCGAAT
 # A1BG                            0                        0                        0                        0                        0                        0
 # A1BG.AS1                        0                        0                        0                        0                        0                        0
@@ -584,7 +597,7 @@ mydata[[1]][1:6,1:6]
 # A2ML1                           0                        0                        0                        0                        0                        0
 
 # * bulk_survival
-mydata[[2]][1:6,1:6]
+mydata[[2]][1:6, 1:6]
 #         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
 # HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
 # RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
@@ -609,12 +622,13 @@ We recommend using the `zeallot` package's `%<-%` function to assign values and 
 ```{r,load_ref_data_example_2,eval=FALSE}
 library(zeallot)
 
-c(mat_exam, bulk, pheno) %<-%  LoadRefData(
+c(mat_exam, bulk, pheno) %<-%
+  LoadRefData(
     data_type = c("survival"),
     path = tempdir(),
     cache = TRUE,
     timeout = 60
-)
+  )
 ```
 
 ## Aggregating Duplicate Rows or Columns
@@ -635,9 +649,11 @@ These functions collapse duplicated row names (e.g., gene symbols) or column nam
 
 ```{r,eval=FALSE}
 # Example matrix with duplicate genes (rows) and samples (columns)
-mat <- matrix(1:16, nrow = 4,
-  dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"),
-                  c("S1", "S1", "S2", "S3")))
+mat <- matrix(
+  1:16,
+  nrow = 4,
+  dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"), c("S1", "S1", "S2", "S3"))
+)
 
 mat
 #       S1 S1 S2 S3
@@ -645,7 +661,6 @@ mat
 # TP53   2  6 10 14
 # BRCA1  3  7 11 15
 # ACTB   4  8 12 16
-
 
 # Collapse duplicate genes using sum
 AggregateDupRows(mat, method = "sum")
@@ -676,3 +691,38 @@ AggregateDups(mat, method = "sum")
 - ✅ Preserves original order of *first occurrence* for each unique name
 - ✅ Silent mode: `verbose = FALSE`
 - ✅ Independent row/column methods via `AggregateDups(row_method, col_method)`
+
+## Standalone
+
+### get_var_value
+
+`get_var_value` is a **standalone script** that statically traces
+variable assignments inside an R function (both from function parameters
+and the function body) and computes the variable's value by recursively
+resolving the dependency chain.
+
+#### Example
+
+```{r,get_var_value_example,eval=FALSE}
+g <- function(a = 1, b = 2) {
+  c <<- a * 2 + b * 3
+  d = c^2
+  e <- d - 1
+  e
+}
+get_var_value("e", g) # returns 63
+
+h <- function(a = "A", ...) {
+  a <- 1
+  return(a)
+  a <- 2
+  a
+}
+get_var_value("a", h) # returns 1
+```
+
+To copy `get_var_value` into your own package, run:
+
+```{r,usethis_use_standalone_example,eval=FALSE}
+usethis::use_standalone("WangLabCSU/SigBridgeR", "standalone-get_var_value.R")
+```

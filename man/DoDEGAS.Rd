@@ -13,7 +13,7 @@ DoDEGAS(
   sc_data.pheno_colname = NULL,
   label_type = "DEGAS",
   phenotype_class = c("binary", "continuous", "survival"),
-  tmp_dir = "tmp",
+  tmp_dir = "DEGAS_res",
   env_params = list(),
   degas_params = list(),
   normality_test_method = c("jarque-bera", "d'agostino", "kolmogorov-smirnov"),
@@ -150,6 +150,7 @@ Other screen_method:
 \code{\link{DoSCIPAC}()},
 \code{\link{DoSIDISH}()},
 \code{\link{DoScissor}()},
+\code{\link{DoTiRank}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}

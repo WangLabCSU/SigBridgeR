@@ -1,27 +1,124 @@
-#' @title Screen Function Template
+#' @title Perform TiRank Screening Analysis
+#'
+#' @description
+#' Integrates single-cell and bulk RNA-seq data using the TiRank deep learning
+#' framework to identify phenotype-associated cells. TiRank employs a
+#' rank-based approach with neural network models to score and classify cells
+#' based on their association with the phenotype of interest.
 #'
 #' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression
 #'        data (genes x samples). Column names must match names/IDs in `phenotype`.
-#' @param sc_data A matrix/Matrix (genes x cells) or a Seurat object containing scRNA-seq data to be screened.
+#' @param sc_data A matrix/Matrix (genes x cells) or a Seurat object containing
+#'        scRNA-seq data to be screened.
 #' @param phenotype Phenotype data, either:
 #'        - Named vector (names match `matched_bulk` columns), or
-#'        - Patient survival Data frame with row names matching `matched_bulk` columns, colnames named "time" and "status"
-#' @param label_type Character specifying phenotype label type
+#'        - Patient survival data frame with row names matching `matched_bulk`
+#'          columns, colnames named "time" and "status"
+#' @param label_type Character specifying phenotype label type (default: `"TiRank"`).
 #' @param phenotype_class Type of phenotypic outcome (must be consistent with input data):
 #'        - `"binary"`: Binary traits (e.g., case/control)
 #'        - `"continuous"`: Continuous measurements
-#'        - `"survival"`: Survival infomation
+#'        - `"survival"`: Survival information
+#' @param tirank_params List of TiRank algorithm parameters:
+#'   \describe{
+#'     \strong{Data preprocessing:}
+#'     \item{validation_proportion}{Proportion of bulk data held out for validation (default: `0.15`).}
+#'     \item{sampling_thresh}{Threshold for resampling strategy (default: `0.5`).}
+#'     \item{sampling_mode}{Resampling method: `"smote"`, `"downsample"`, `"upsample"`, or `"tomeklinks"`.}
+#'     \item{top_var_genes}{Number of top variable genes to select (default: `2000L`).}
+#'     \item{top_gene_pairs}{Number of top gene pairs for ranking (default: `1000L`).}
+#'     \item{p_value_threshold}{P-value threshold for feature selection (default: `0.05`).}
+#'     \item{max_cutoff}{Upper cutoff for correlation filtering (default: `0.8`).}
+#'     \item{min_cutoff}{Lower cutoff for correlation filtering (default: `-0.8`).}
+#'     \strong{Neural network architecture:}
+#'     \item{nhead}{Number of attention heads (default: `2L`).}
+#'     \item{nhid1}{Size of first hidden layer (default: `96L`).}
+#'     \item{nhid2}{Size of second hidden layer (default: `8L`).}
+#'     \item{n_output}{Output dimension of encoder (default: `32L`).}
+#'     \item{nlayers}{Number of encoder layers (default: `3L`).}
+#'     \item{n_pred}{Number of prediction heads (default: `2L`).}
+#'     \item{dropout}{Dropout rate for regularization (default: `0.5`).}
+#'     \item{encoder_type}{Encoder architecture: `"MLP"`, `"Transformer"`, or `"DenseNet"`.}
+#'     \item{infer_mode}{Inference mode: `"SC"` (single-cell) or `"ST"` (spatial transcriptomics).}
+#'     \strong{Training:}
+#'     \item{n_trials}{Number of repeated training trials (default: `5L`).}
+#'     \item{do_reject}{Whether to apply rejection criteria to uncertain predictions (default: `TRUE`).}
+#'     \item{tolerance}{Tolerance threshold for rejection (default: `0.05`).}
+#'   }
+#' @param save_path Directory path for saving intermediate and final results
+#'        (default: `"./TiRank_res"`).
+#' @param load_cache Optional path to cached data for re-running analysis
+#'        without recomputing expensive steps (default: `NULL`).
 #' @param ... Additional arguments passed to the function. Common parameters include:
 #'   \describe{
 #'     \item{verbose}{Logical. Whether to print verbose output (default: TRUE).}
+#'     \item{seed}{Integer. Random seed for reproducibility.}
+#'     \item{assay}{Character. Name of assay to use from Seurat object (default: `"RNA"`).}
 #'   }
 #'
 #' @return A named list containing:
 #'   \describe{
-#'     \item{scRNA_data}{Modified single-cell data object with integrated screening results.}
+#'     \item{scRNA_data}{Modified single-cell data object with integrated screening
+#'       results added as metadata, including \code{TiRank_Reject}, \code{TiRank_Rank_Score},
+#'       and \code{TiRank} (Positive/Neutral/Negative) columns, plus \code{TiRank_para}
+#'       and \code{TiRank_type} stored in misc slot.}
+#'     \item{cell_cell_distance}{Computed cell-cell similarity/distance matrix.}
 #'   }
 #'
+#' @details
+#' The TiRank screening workflow consists of the following steps:
+#' \enumerate{
+#'   \item \strong{Data preprocessing:} Normalizes bulk expression data and validates
+#'         compatibility with phenotype information.
+#'   \item \strong{Expression transfer:} Transfers the single-cell expression profile
+#'         into the TiRank-compatible format.
+#'   \item \strong{Validation set generation:} Splits bulk data into training and
+#'         validation sets according to \code{validation_proportion}.
+#'   \item \strong{Resampling:} Applies the specified sampling strategy to address
+#'         class imbalance in bulk data.
+#'   \item \strong{Cell-cell similarity:} Computes cell-cell distance or similarity
+#'         matrix from single-cell data.
+#'   \item \strong{Model training:} Trains a TiRank neural network (MLP, Transformer,
+#'         or DenseNet encoder) using bulk expression and phenotype.
+#'   \item \strong{Screening:} Applies the trained model to score each cell, producing
+#'         rank-based predictions with rejection handling.
+#'   \item \strong{Label assignment:} Classifies cells as \code{"Positive"},
+#'         \code{"Neutral"}, or \code{"Negative"} based on rank scores.
+#' }
+#'
+#' @family TiRank
+#' @family screen_method
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Binary classification example
+#' result <- DoTiRank(
+#'   matched_bulk = bulk_matrix,
+#'   sc_data = seurat_obj,
+#'   phenotype = bulk_phenotype,
+#'   phenotype_class = "binary",
+#'   save_path = "./TiRank_res"
+#' )
+#'
+#' # Survival analysis example
+#' result <- DoTiRank(
+#'   matched_bulk = bulk_matrix,
+#'   sc_data = seurat_obj,
+#'   phenotype = survival_data,
+#'   phenotype_class = "survival",
+#'   tirank_params = list(
+#'     encoder_type = "Transformer",
+#'     n_trials = 3L
+#'   ),
+#'   save_path = "./TiRank_survival_res"
+#' )
+#'
+#' # Access results
+#' modified_seurat <- result$scRNA_data
+#' head(modified_seurat[[]])
+#' }
+#'
 DoTiRank <- function(
   matched_bulk,
   sc_data,
@@ -78,6 +175,7 @@ DoTiRank <- function(
   }
 
   if (is.null(load_cache)) {
+    chk::chk_not_null(save_path)
     bulkExp <- rTiRank::normalize_data(matched_bulk)
     bulkClinical <- as.data.frame(phenotype)
     check_res <- rTiRank::check_bulk(
@@ -119,11 +217,12 @@ DoTiRank <- function(
     }
 
     cell_cell_distance <- rTiRank::compute_similarity(
-      seurat = seurat,
+      seurat = sc_data,
       calculate_distance = FALSE,
       parallel = FALSE,
       save_path = save_path
     )
+    rm(cell_cell_distance)
   } else if (verbose) {
     ts_cli$cli_alert_info("Load existing data")
   }
@@ -133,7 +232,7 @@ DoTiRank <- function(
   }
 
   rTiRank::run_tirank_model(
-    seurat = seurat,
+    seurat = sc_data,
     bulk_exp_train = as.data.frame(sampling_res$bulk_exp_resampled),
     bulk_clinical_train = sampling_res$bulk_clinical_resampled,
     bulk_exp_val = val_res$bulk_exp_val,
@@ -171,10 +270,29 @@ DoTiRank <- function(
   )
 
   # TODO: fix this read
-  meta <- data.table::fread()
+  meta <- data.table::fread(file.path(
+    save_path,
+    "3_Analysis/spot_predict_score.csv"
+  ))
+  meta_to_add <- meta[,
+    TiRank := data.table::fcase(
+      Rank_Label == "Background" , "Neutral"  ,
+      Rank_Label == "Rank-"      , "Negative" ,
+      Rank_Label == "Rank+"      , "Positive"
+    )
+  ][,
+    .(Reject, Rank_Score, TiRank)
+  ]
+
+  data.table::setnames(
+    meta_to_add,
+    old = names(meta_to_add)[1:2],
+    new = paste0("TiRank_", names(meta_to_add)[1:2])
+  )
 
   modified_sc_data <- Seurat::AddMetaData(
     sc_data,
+    meta_to_add
   ) %>%
     AddMisc(
       TiRank_para = tirank_params,
