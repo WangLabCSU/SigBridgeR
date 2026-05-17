@@ -64,9 +64,13 @@ PhenoMap <- function(data, ..., .default = NA) {
 
   if (!is_2d(data)) {
     original_names <- names(data)
-    dt <- data.table::setDT(list(data)) # 1 column
-    names(dt) <- col
-    res <- PhenoMap(dt, ..., .default = .default)[[1]]
+    res <- dplyr::case_when(
+      ...,
+      .default = .default,
+      .unmatched = "default",
+      .ptype = NULL,
+      .size = NULL
+    )
     names(res) <- original_names
     return(res)
   }

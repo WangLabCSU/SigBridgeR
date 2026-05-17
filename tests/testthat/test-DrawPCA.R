@@ -38,7 +38,7 @@ test_that("DrawPCA works", {
   #   7.
   #   测试函数
   DrawPCA(
-    pca_data = pca_df,
+    pca_df = pca_df,
     var_labels = var_labels,
     show_plot = TRUE
   )
