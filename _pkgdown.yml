@@ -78,6 +78,7 @@ reference:
           - DoDEGAS
           - DoSIDISH
           - DoSCIPAC
+          - DoTiRank
 
     - title: Seurat Object Utilities
       contents:
@@ -100,6 +101,7 @@ reference:
           Load reference datasets.
       contents:
           - LoadRefData
+          - get_var_value
 
     - title: Python Environment Management
       desc: >
@@ -125,6 +127,13 @@ reference:
           - SCPreProcessStrategy
           - SCAnnotateStrategy
           - ScreenStrategy
+
+    - title: Cache Management
+      desc: >
+          Manage cache files for SigBridgeR
+      contents:
+          - WriteCacheMeta
+          - CheckCache
 
     - title: Package Configuration
       desc: >
