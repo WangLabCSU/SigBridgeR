@@ -160,6 +160,9 @@ DoTiRank <- function(
   seed <- dots$seed %||% getFuncOption("seed")
   assay <- dots$assay %||% "RNA"
 
+  set.seed(seed)
+  rTiRank::setup_seed(seed)
+
   mode <- switch(
     phenotype_class,
     "binary" = "Classification",
@@ -269,7 +272,6 @@ DoTiRank <- function(
     )
   )
 
-  # TODO: fix this read
   meta <- data.table::fread(file.path(
     save_path,
     "3_Analysis/spot_predict_score.csv"
@@ -290,9 +292,9 @@ DoTiRank <- function(
     new = paste0("TiRank_", names(meta_to_add)[1:2])
   )
 
-  modified_sc_data <- Seurat::AddMetaData(
-    sc_data,
-    meta_to_add
+  modified_sc_data <- SeuratObject::AddMetaData(
+    object = sc_data,
+    metadata = as.data.frame(meta_to_add)
   ) %>%
     AddMisc(
       TiRank_para = tirank_params,

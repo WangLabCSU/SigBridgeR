@@ -1,7 +1,7 @@
 # ---
 # repo: WangLabCSU/SigBridgeR
 # file: standalone-get_var_value.R
-# last-updated: 2026-05-15
+# last-updated: 2026-05-17
 # license: https://unlicense.org
 # imports: [rlang]
 # ---
@@ -83,11 +83,25 @@
     child <- expr[[i]]
     .gvv_extract(child, def_env)
     # Stop processing siblings if a terminating call or break was hit.
-    # Only check when the function-position is a plain symbol (not a call
-    # like stats::dist — that would give length > 1 via as.character).
+    # Two cases: plain symbol (return/stop/abort/cli_abort)
+    # or namespace-qualified (rlang::abort / cli::cli_abort).
     if (is.call(child) && !is.call(child[[1L]])) {
       child_op <- as.character(child[[1L]])
-      if (child_op %in% c("return", "stop")) break
+      if (child_op %in% c("return", "stop", "abort", "cli_abort")) break
+    } else if (is.call(child) && is.call(child[[1L]])) {
+      ns_call <- child[[1L]]
+      if (
+        length(ns_call) >= 3L &&
+          as.character(ns_call[[1L]]) == "::" &&
+          paste0(
+            as.character(ns_call[[2L]]),
+            "::",
+            as.character(ns_call[[3L]])
+          ) %in%
+            c("rlang::abort", "cli::cli_abort")
+      ) {
+        break
+      }
     }
     if (isTRUE(def_env$.loop_break)) break
   }
@@ -191,16 +205,29 @@
     return(invisible())
   }
 
-  # Function position is itself a call (e.g. stats::dist(x), (f)(x)).
-  # No assignments can exist inside — skip entirely.
+  # Function position is itself a call — namespace-qualified (pkg::fun)
+  # or anonymous ((function(x) ...)(y)).
   if (is.call(expr[[1L]])) {
+    ns_call <- expr[[1L]]
+    # Check for terminating calls via namespace: rlang::abort, cli::cli_abort
+    if (
+      length(ns_call) >= 3L &&
+        as.character(ns_call[[1L]]) == "::"
+    ) {
+      pkg <- as.character(ns_call[[2L]])
+      fun <- as.character(ns_call[[3L]])
+      if (paste0(pkg, "::", fun) %in% c("rlang::abort", "cli::cli_abort")) {
+        return(invisible())
+      }
+    }
+    # Other namespace calls — no assignments inside
     return(invisible())
   }
 
   op <- as.character(expr[[1L]])
 
   # --- Control-transfer statements ---
-  if (op %in% c("return", "stop")) {
+  if (op %in% c("return", "stop", "abort", "cli_abort")) {
     return(invisible())
   }
   if (op == "break") {
@@ -324,7 +351,7 @@
 get_var_value <- function(var_name, func, .env = rlang::current_env()) {
   # 1. Build definition environment from function formals
   def_env <- .gvv_init_def_env(formals(func))
-  def_env[[".gvv_env"]] <- .env  # store for .gvv_eval_safe
+  def_env[[".gvv_env"]] <- .env # store for .gvv_eval_safe
 
   # 2. Walk the function body and record all assignments
   .gvv_extract(rlang::fn_body(func), def_env)

@@ -204,31 +204,9 @@ If you encounter problems, please check:
 
 Let us know if you have ideas to make this project better. Pull requests are welcome!
 
-<!-- ## 📚 Citation
+## 📚 Citation
 
-```r
-citation("SigBridgeR")
-To cite package ‘SigBridgeR’ in publications use:
-
-  Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R
-  package version 3.6.1, commit 7136cd81401da9ef95b752405c57323df865bed2, <https://github.com/WangLabCSU/SigBridgeR>.
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
-Subpopulations via scRNA-seq and Bulk Data},
-    author = {Yuxi Yang and Shixiang Wang},
-    year = {2026},
-    note = {R package version 3.6.1, commit 7136cd81401da9ef95b752405c57323df865bed2},
-    url = {https://github.com/WangLabCSU/SigBridgeR},
-  }
-```
-
-```text
-
-``` -->
-
+This package is currently under development. Please cite the [preprint](https://www.biorxiv.org/content/10.64898/2026.05.08.723458v1) if you use it in your research.
 
 ## 🗺️ Similar Projects
 
@@ -243,3 +221,5 @@ Subpopulations via scRNA-seq and Bulk Data},
 [scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data + bulk RNA-seq data + celltype annotation (optional batch labels) -> phenotype-associated cell populations
 
 [scSurv](https://github.com/3254c/scSurv): scRNA-seq data + bulk RNA-seq expression matrix (with matched survival time and event status) -> per-cell hazard scores and prognostic gene sets
+
+[beyondcell](https://github.com/cnio-bu/beyondcell):  the expression matrix + a collection of drug signatures ->  drug-related commonalities between cells/spots

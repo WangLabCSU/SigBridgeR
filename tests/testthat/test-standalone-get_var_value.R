@@ -122,23 +122,54 @@ test_that("compatible with pkg", {
     matrix(c(12, 9, 12, 7, 20, 13, 8, 11, 28), 3, 3)
   )
 
-  # Deterministic function call from stats (without stats:: prefix)
-  v <- runif(100L)
-  a_func <- function(x = v) {
+  # dplyr::case_when with formula resolution (deterministic input)
+  a_func <- function(x = 1:100) {
     y = dplyr::case_when(
-      x > 0.5 ~ 1,
-      x <= 0.5 ~ 0
+      x > 50 ~ 1L,
+      x <= 50 ~ 0L
     )
     y
   }
-  # Reset seed just before get_var_value so the internal eval of runif(100)
-  # (triggered during formals resolution) generates the same sequence.
+  actual <- get_var_value("y", a_func)
+  expected <- dplyr::case_when(1:100 > 50 ~ 1L, 1:100 <= 50 ~ 0L)
+  expect_equal(actual, expected)
+})
 
-  expect_equal(
-    get_var_value("y", a_func),
-    dplyr::case_when(
-      v > 0.5 ~ 1,
-      v <= 0.5 ~ 0
-    )
-  )
+test_that("compatible with return & exit", {
+  f <- function(x = 1) {
+    x <- x + 1
+    return(x)
+    x <- x * 2
+    x
+  }
+  f_res <- get_var_value("x", f)
+
+  expect_equal(f_res, 2)
+
+  g <- function(x = 1) {
+    x <- x + 1
+    stop("stop here")
+    x <- x * 2
+    x
+  }
+  g_res <- get_var_value("x", g)
+  expect_equal(g_res, 2)
+
+  g2 <- function(x = 1) {
+    x <- x + 1
+    rlang::abort("stop here")
+    x <- x * 2
+    x
+  }
+  g_res2 <- get_var_value("x", g2)
+  expect_equal(g_res2, 2)
+
+  g3 <- function(x = 1) {
+    x <- x + 1
+    cli::cli_abort("stop here")
+    x <- x * 2
+    x
+  }
+  g_res3 <- get_var_value("x", g3)
+  expect_equal(g_res, 2)
 })
