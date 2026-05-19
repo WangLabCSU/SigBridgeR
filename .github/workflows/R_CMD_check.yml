@@ -120,14 +120,14 @@ jobs:
 
             - name: Install OpenSSL (macOS)
               if: runner.os == 'macOS'
-              run: brew install openssl
+              run: brew install openssl@3
 
             - name: Set OpenSSL env (macOS)
               if: runner.os == 'macOS'
               run: |
-                  echo "PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig" >> $GITHUB_ENV
-                  echo "LDFLAGS=-L$(brew --prefix openssl)/lib" >> $GITHUB_ENV
-                  echo "CPPFLAGS=-I$(brew --prefix openssl)/include" >> $GITHUB_ENV
+                  echo "PKG_CONFIG_PATH=$(brew --prefix openssl@3)/lib/pkgconfig" >> $GITHUB_ENV
+                  echo "LDFLAGS=-L$(brew --prefix openssl@3)/lib" >> $GITHUB_ENV
+                  echo "CPPFLAGS=-I$(brew --prefix openssl@3)/include" >> $GITHUB_ENV
 
             - name: Installing R dependencies
               uses: r-lib/actions/setup-r-dependencies@v2
