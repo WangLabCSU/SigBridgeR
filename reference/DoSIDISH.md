@@ -9,9 +9,8 @@ DoSIDISH(
   matched_bulk,
   sc_data,
   phenotype,
-  label_type = NULL,
+  label_type = "SIDISH",
   phenotype_class = "survival",
-  assay = "RNA",
   sidish_params = list(),
   env_params = list(),
   ...
@@ -42,10 +41,6 @@ DoSIDISH(
 
   Type of phenotypic outcome (must be consistent with input data): -
   `"survival"`: Survival infomation
-
-- assay:
-
-  Seurat assay name, default: `"RNA"`.
 
 - sidish_params:
 
@@ -208,6 +203,7 @@ Other screen_method:
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
+[`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md),
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)

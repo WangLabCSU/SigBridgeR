@@ -82,6 +82,7 @@ First load the packages, you will see a version number message
 indicating successful loading:
 
 ``` r
+
 library(SigBridgeR)
 # ✔ SigBridgeR v3.x.x loaded
 ```
@@ -115,6 +116,7 @@ When starting from a raw count matrix (data.frame, matrix or dgCMatrix),
 the `params` list.
 
 ``` r
+
 your_seurat <- SCPreProcess(
   sc = your_matrix,
   ...,
@@ -197,7 +199,8 @@ file.
 First, import the data
 
 ``` r
-reticulate::use_pythonenv("The_path_to_your_python") 
+
+reticulate::use_pythonenv("The_path_to_your_python")
 # reticulate::use_condaenv("conda_env_name")
 
 anndata_obj <- anndata::read_h5ad("path_to_your_file.h5ad") # Or other file formats, make sure the matrix is in obj$X.
@@ -206,15 +209,17 @@ anndata_obj <- anndata::read_h5ad("path_to_your_file.h5ad") # Or other file form
 Or use `anndataR` to read in your file:
 
 ``` r
-reticulate::use_pythonenv("The_path_to_your_python") 
+
+reticulate::use_pythonenv("The_path_to_your_python")
 # reticulate::use_condaenv("conda_env_name")
 
-anndata_obj <- anndataR::read_h5ad("path_to_your_file.h5ad") # basically no difference 
+anndata_obj <- anndataR::read_h5ad("path_to_your_file.h5ad") # basically no difference
 ```
 
 Then just pass it to `SCPreProcess`:
 
 ``` r
+
 your_seurat <- SCPreProcess(
   anndata_obj,
   pipeline = "onsvpcetu", # Standard pipeline
@@ -246,6 +251,7 @@ its structure and filter out tumor cells using the specified metadata
 column:
 
 ``` r
+
 your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
 ```
 
@@ -261,9 +267,13 @@ your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
 > ``` r
 > # For glioblastoma (GBM)
 > seurat_obj$is_tumor <- ifelse(
->  grepl("GBM|glioblastoma|astrocytoma_grade_IV", seurat_obj$Celltype, ignore.case = TRUE),
->  "Tumor",  # or "Tumour" 
->  "Normal"  # or "Non-Tumor" 
+>  >  grep
+>     l("GBM|glioblastoma|astrocytoma_grade_IV
+>    ", seurat_obj$Celltyp
+>    e, ignore.case = TR
+>   UE),
+>  >  "Tumor,  # or "Tumou" 
+>  >  "Norma"  # or "Non-Tumo" 
 > )
 > ```
 
@@ -309,20 +319,21 @@ want to perform comprehensive preprocessing and quality control. You can
 refer to and use the following code:
 
 ``` r
+
 # Example usage of BulkPreProcess
 filtered_counts <- BulkPreProcess(
-   data = your_count_matrix,
-   sample_info = your_sample_info,
-   gene_symbol_conversion = TRUE,
-   check = TRUE,
-   min_count_threshold = 10,
-   min_samples_expressed = 3,
-   min_total_reads = 1e6,
-   min_genes_detected = 10000,
-   min_correlation = 0.8,
-   n_top_genes = 500,
-   show_plot_results = TRUE,
-   verbose = TRUE
+  data = your_count_matrix,
+  sample_info = your_sample_info,
+  gene_symbol_conversion = TRUE,
+  check = TRUE,
+  min_count_threshold = 10,
+  min_samples_expressed = 3,
+  min_total_reads = 1e6,
+  min_genes_detected = 10000,
+  min_correlation = 0.8,
+  n_top_genes = 500,
+  show_plot_results = TRUE,
+  verbose = TRUE
 )
 ```
 
@@ -409,8 +420,13 @@ using the [IDConverter](https://github.com/ShixiangWang/IDConverter)
 package.
 
 ``` r
+
 # genes * samples
-your_bulk_data <- read.csv("path_to_your_file.csv", header = TRUE, row.names = 1)
+your_bulk_data <- read.csv(
+  "path_to_your_file.csv",
+  header = TRUE,
+  row.names = 1
+)
 
 your_bulk_data <- SymbolConvert(your_bulk_data)
 ```
@@ -420,18 +436,25 @@ matching if you prefer not to use SymbolConvert’s built-in
 `IDConverter`.
 
 ``` r
+
 library(org.Hs.eg.db)
 
-your_bulk_data <- read.csv("path_to_your_file.csv", header = TRUE, row.names = 1)
+your_bulk_data <- read.csv(
+  "path_to_your_file.csv",
+  header = TRUE,
+  row.names = 1
+)
 
 your_bulk_data <- BulkPreProcess(your_bulk_data, gene_symbol_conversion = FALSE)
 
 ensembl_ids <- sub("\\..*", "", rownames(your_bulk_data))
-gene_symbols <- mapIds(org.Hs.eg.db, 
-                      keys = ensembl_ids,
-                      column = "SYMBOL",
-                      keytype = "ENSEMBL",
-                      multiVals = "first")
+gene_symbols <- mapIds(
+  org.Hs.eg.db,
+  keys = ensembl_ids,
+  column = "SYMBOL",
+  keytype = "ENSEMBL",
+  multiVals = "first"
+)
 
 rownames(your_bulk_data) <- gene_symbols
 ```
@@ -441,7 +464,7 @@ rownames(your_bulk_data) <- gene_symbols
 Basically you can just use your phenotype data directly. If you are
 confused about the structure
 [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
-requires, please refer to [Section 4](#example).
+requires, please refer to [Section 4 Example](#example).
 
 We provide some functions helping formatting and checking your phenotype
 data.
@@ -449,12 +472,18 @@ data.
 **Checking NA and report the position**:
 
 ``` r
+
 # `max_print`: output how many NA location messages at one time in console if NA exists
 CheckNA(your_phenotype_data, max_print = 5L)
 ```
 
 ``` r
-mat <- matrix(c(NA,1,1,NA),2, dimnames = list(c("Gene1","Gene2"),c("Sample1","Sample2")))
+
+mat <- matrix(
+  c(NA, 1, 1, NA),
+  2,
+  dimnames = list(c("Gene1", "Gene2"), c("Sample1", "Sample2"))
+)
 na_position <- CheckNA(mat)
 # ! Found 2 NA values in data
 # First 2 positions:
@@ -464,28 +493,34 @@ na_position <- CheckNA(mat)
 
 **In-place data transformation**
 
-Use it just in tidyverse-like style
+Use it just in tidyverse-like style. The difference between `PhenoMap`
+and the dplyr workflow is that `PhenoMap` is slightly faster when
+processing two-dimensional `data.frame` data, and it preserves the
+`names` attribute when processing one-dimensional vectors. Apart from
+these two points, there is no other difference — it is simply a
+syntactic sugar we provide.
 
 ``` r
+
 # ? if a vector
 v <- 1:2000
 
-v2 <- PhenoMap(v, v < 1000 ~ "0" ,v > 1000 ~ "1",.default = "here_is_1k")
+v2 <- PhenoMap(v, v < 1000 ~ "0", v > 1000 ~ "1", .default = "here_is_1k")
 table(v2)
-#  0          1 here_is_1k 
-#    999       1000          1 
+#  0          1 here_is_1k
+#    999       1000          1
 
 v3 <- PhenoMap(v, v < 100 ~ 0, v < 1000 ~ 1, v > 1000 ~ 2, .default = NA_real_)
 table(v3)
-#    0    1    2 
-#   99  900 1000 
+#    0    1    2
+#   99  900 1000
 
 # ? if a data
-d <- mtcars 
-d2 <- PhenoMap(d, mpg > 15 ~ 1, mpg <= 15 ~ 0) 
+d <- mtcars
+d2 <- PhenoMap(d, mpg > 15 ~ 1, mpg <= 15 ~ 0)
 table(d2$mpg)
-#  0  1 
-#  6 26 
+#  0  1
+#  6 26
 head(d2)
 #      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 #    <num> <num> <num> <num> <num> <num> <num> <num> <num> <num> <num>
@@ -500,13 +535,14 @@ head(d2)
 **Direct Interface for Foolproof Data Processing**
 
 ``` r
+
 your_phenotype_data <- PhenoPreProcess(
   bulk = your_bulk_data,
   phenotype = your_phenotype_data,
   phenotype_class = "survival",
   status == "death" ~ 1,
   status == "alive" ~ 0,
-  selelct = c("time","status")
+  selelct = c("time", "status")
 )
 ```
 
@@ -584,12 +620,13 @@ Parameters pass to `...` when using `Scissor` method:
 **Usage**:
 
 ``` r
+
 scissor_result = Screen(
   matched_bulk = matched_bulk,
   sc_data = sc_dataset, # A Seurat object after preprocessing
   phenotype = matched_phenotype_data,
   label_type = "TP53", # The filtering labels are stored in the `@misc`, you can change it to your own label
-  phenotype_class = "binary",  
+  phenotype_class = "binary",
   screen_method = c("Scissor"),
   path2save_scissor_inputs = "Tmp/Scissor_inputs.RData" # Intermediate data
 )
@@ -599,10 +636,11 @@ You can use the intermediate data for repeated runs. This is an inherent
 feature of the `Scissor`.
 
 ``` r
+
 scissor_result = Screen(
-  sc_data = sc_dataset, 
-  label_type = "TP53", 
-  phenotype_class = "binary", 
+  sc_data = sc_dataset,
+  label_type = "TP53",
+  phenotype_class = "binary",
   screen_method = c("Scissor"),
   path2load_scissor_cahe = "Tmp/Scissor_inputs.RData" # Intermediate data
 )
@@ -612,14 +650,15 @@ If only the parameters `alpha` and `cutoff` are adjusted, this method
 can also be applied.
 
 ``` r
+
 # When `alpha = NULL`, an alpha iteration will continue until phenotype-associated cells are screened out or no cells are screened out even after exceeding the `cutoff`.
 scissor_result = Screen(
-  sc_data = sc_dataset, 
-  label_type = "TP53", 
-  phenotype_class = "binary", 
+  sc_data = sc_dataset,
+  label_type = "TP53",
+  phenotype_class = "binary",
   screen_method = c("Scissor"),
   path2load_scissor_cahce = "Tmp/Scissor_inputs.RData", # Intermediate data
-  alpha = NULL, 
+  alpha = NULL,
   cutoff = 0.2
 )
 ```
@@ -639,17 +678,18 @@ obtain some supporting information for each Scissor selected cell.
 First, prepare a benchmark dataset yourself for cell evalutaion.
 
 ``` r
+
 scissor_result = Screen(
-  sc_data = sc_dataset, 
-  label_type = "TP53", 
-  phenotype_class = "binary", 
+  sc_data = sc_dataset,
+  label_type = "TP53",
+  phenotype_class = "binary",
   screen_method = c("Scissor"),
   path2load_scissor_cahce = "Tmp/Scissor_inputs.RData", # Intermediate data
   reliability_test = TRUE,
   cell_evaluation = TRUE,
   cell_evaluation.benchmark_data = "path_to_benchmark_data.RData",
-  alpha = NULL, 
-  cutoff = 0.05 
+  alpha = NULL,
+  cutoff = 0.05
 )
 ```
 
@@ -697,6 +737,7 @@ from the `scPAS`’s documentation):
 **usage**:
 
 ``` r
+
 scpas_result = Screen(
   matched_bulk = matched_bulk,
   sc_data = A_Seurat_object,
@@ -740,6 +781,7 @@ from the `scAB`’s documentation):
 **usage**:
 
 ``` r
+
 scab_result = Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -762,6 +804,7 @@ lengths, which may lead to long runtimes. In such cases, we recommend
 enabling parallel computation.
 
 ``` r
+
 setFuncOption(parallel = TRUE, parallel.type = 'multisession', workers = 4L)
 ```
 
@@ -789,12 +832,13 @@ Parameters pass to `...` when using `scPP` method :
 **usage**:
 
 ``` r
+
 # This will take several hours
 scpp_result = Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
   phenotype = your_matched_phenotype,
-  label_type = "TP53", # The filtering labels are stored in the `@misc` 
+  label_type = "TP53", # The filtering labels are stored in the `@misc`
   screen_method = "scpp",
   phenotype_class = "binary",
   ref_group = 0,
@@ -831,6 +875,7 @@ Parameters pass to `...` when using `DEGAS` method
   “jarque-bera”.
 
 ``` r
+
 degas_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -859,7 +904,7 @@ degas_result <- Screen(
     env.recreate = FALSE,
     # Use conda-forge channel for env creating
     env.use_conda_forge = TRUE,
-    # Message output when creating the env 
+    # Message output when creating the env
     env.verbose = FALSE
   ),
   # DEGAS parameters
@@ -917,6 +962,7 @@ To obtain the default parameters for DEGAS, you can use
 `SigBridgeR:::DEGASParamSet()`
 
 ``` r
+
 degas_param <- SigBridgeR:::DEGASParamSet(list())
 
 env_param <- SigBridgeR:::DEGASEnvSet(list())
@@ -928,6 +974,7 @@ systems are supported. More information can be found in
 <https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html>
 
 ``` r
+
 # * On Unix-like system it goes like this
 ListPyEnv()
 #                 name                                                   python  type
@@ -963,6 +1010,7 @@ Parameters pass to `...` when using `LP_SGL` method
   - `pval_threshold`: P-value threshold (default: `0.05`)
 
 ``` r
+
 lpsgl_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -1009,6 +1057,7 @@ Parameters pass to `...` when using `PIPET` method
 **Usage**:
 
 ``` r
+
 pipet_result = Screen(
     matched_bulk = matched_bulk,
     sc_data = sc_dataset, # A Seurat object after preprocessing
@@ -1047,14 +1096,15 @@ Parameters passed to `...` when using `SIDISH` method:
   details.
 
 ``` r
+
 sidish_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
-  phenotype = your_survival_phenotype,  # Must contain "time" and "status" columns
-  label_type = "SIDISH",                # Labels stored in `@misc` slot to identify screening results
+  phenotype = your_survival_phenotype, # Must contain "time" and "status" columns
+  label_type = "SIDISH", # Labels stored in `@misc` slot to identify screening results
   screen_method = "SIDISH",
-  phenotype_class = "survival",         # Currently only survival phenotype is supported
-  
+  phenotype_class = "survival", # Currently only survival phenotype is supported
+
   # SIDISH algorithm parameters
   sidish_param = list(
     # Preprocessing parameters
@@ -1064,14 +1114,14 @@ sidish_result <- Screen(
     n_genes_by_counts = 5000L,
     pct_counts_mt = 10L,
     batch_correction = FALSE,
-    survival_ = "time",                 # Column name for survival time
-    status = "status",                  # Column name for event status
-    
+    survival_ = "time", # Column name for survival time
+    status = "status", # Column name for event status
+
     # Execution environment
-    device = "cuda",                    # "cuda" for GPU acceleration, "cpu" for CPU-only
+    device = "cuda", # "cuda" for GPU acceleration, "cpu" for CPU-only
     use_spatial_graph = FALSE,
     k_neighbors = NULL,
-    
+
     # Phase 1: VAE training parameters
     phase1_epochs = 225L,
     phase1_i_epochs = 20L,
@@ -1082,8 +1132,8 @@ sidish_result <- Screen(
     phase1_lr = 1e-4,
     phase1_lr_3 = 1e-4,
     phase1_dropout = 0L,
-    phase1_type = "Dense",              # "Dense" or "Normal"
-    
+    phase1_type = "Dense", # "Dense" or "Normal"
+
     # Phase 2: Deep Cox training parameters
     phase2_epochs = 500L,
     phase2_hidden = 128L,
@@ -1091,19 +1141,19 @@ sidish_result <- Screen(
     phase2_dropout = 0L,
     phase2_test_size = 0.2,
     phase2_batch_size_bulk = 256L,
-    
+
     # Training & risk definition
     train_iterations = 5L,
     train_percentile = 0.95,
     train_steepness = 30L,
-    train_path = "./SIDISH_res/",       # Path to save intermediate data
+    train_path = "./SIDISH_res/", # Path to save intermediate data
     train_num_workers = 0L,
-    train_distribution_fit = "fitted"   # "fitted" or "default"
+    train_distribution_fit = "fitted" # "fitted" or "default"
   ),
-  
+
   # Python environment parameters
   env_params = list(
-    env.name = "r-reticulate-sidish-nvidia",  # Auto-selected based on device parameter
+    env.name = "r-reticulate-sidish-nvidia", # Auto-selected based on device parameter
     env.type = "conda",
     env.method = "environment",
     env.file = system.file(
@@ -1115,11 +1165,11 @@ sidish_result <- Screen(
       "numpy" = "1.26.4"
       # Additional packages defined in environment.yml
     ),
-    env.recreate = FALSE,               # Force re-creating environment if TRUE
+    env.recreate = FALSE, # Force re-creating environment if TRUE
     env.use_conda_forge = TRUE,
     env.verbose = FALSE
   ),
-  
+
   verbose = TRUE
 )
 ```
@@ -1139,6 +1189,7 @@ To obtain the default parameters for SIDISH, use
 `SigBridgeR:::SIDISHParamSet()` and `SigBridgeR:::SIDISHEnvSet()`:
 
 ``` r
+
 # Get default SIDISH algorithm parameters
 sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
 
@@ -1153,6 +1204,7 @@ You can use `ListPyEnvs()` to list all Python environments available on
 your system (both conda and virtualenv):
 
 ``` r
+
 ListPyEnv()
 #                 name                                                   python  type
 # 1               base                         /home/user/miniconda3/bin/python conda
@@ -1202,6 +1254,7 @@ Parameters pass to `...` when using `PIPET` method
   (logical), and `seed` (integer).
 
 ``` r
+
 scipac_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -1234,28 +1287,29 @@ results of these methods. The Seurat object or a results list from
 `Screen` is accepted.
 
 ``` r
+
 merged_seurat = MergeResult(
-    your_scissor_result, 
-    your_scPAS_result, 
-    your_scAB_result, 
-    your_scPP_result,
-    your_DEGAS_result
-    # # * Add more if you want
-    # ,your_LP_SGL_result,
-    # your_PIPET_result
+  your_scissor_result,
+  your_scPAS_result,
+  your_scAB_result,
+  your_scPP_result,
+  your_DEGAS_result
+  # # * Add more if you want
+  # ,your_LP_SGL_result,
+  # your_PIPET_result
 )
 
-# * mixed input form is alse supported 
+# * mixed input form is alse supported
 
 merged_seurat = MergeResult(
-    your_scissor_result$scRNA_data, 
-    your_scPAS_result$scRNA_data, 
-    your_scAB_result, 
-    your_scPP_result,
-    your_DEGAS_result
-    # # * Add more if you want
-    # ,your_LP_SGL_result$scRNA_data,
-    # your_PIPET_result
+  your_scissor_result$scRNA_data,
+  your_scPAS_result$scRNA_data,
+  your_scAB_result,
+  your_scPP_result,
+  your_DEGAS_result
+  # # * Add more if you want
+  # ,your_LP_SGL_result$scRNA_data,
+  # your_PIPET_result
 )
 ```
 
@@ -1290,43 +1344,44 @@ and wish to examine the distribution across different celltypes and
 patient, you may reference and use the following code:
 
 ``` r
+
 library(zeallot)
 # library(Seurat)
 # library(patchwork)
 # library(purrr)
 
 c(
-    celltype_umap,
-    patient_umap,
-    scissor_umap,
-    scab_umap,
-    scpas_umap,
-    scpp_umap,
-    degas_umap,
-    # * Add more if you want
+  celltype_umap,
+  patient_umap,
+  scissor_umap,
+  scab_umap,
+  scpas_umap,
+  scpp_umap,
+  degas_umap,
+  # * Add more if you want
 ) %<-%
-    purrr::map(
-        # make sure these column names exist
-        c("celltype", "patient", "scissor", "scAB", "scPAS", "scPP", "DEGAS"), 
-        ~ Seurat::DimPlot(
-            your_seurat_obj,
-            group.by = .x,
-            pt.size = 0.05,
-            reduction = "umap"
-        ) +
-            ggplot2::ggtitle(.x)
-    )
+  purrr::map(
+    # make sure these column names exist
+    c("celltype", "patient", "scissor", "scAB", "scPAS", "scPP", "DEGAS"),
+    ~ Seurat::DimPlot(
+      your_seurat_obj,
+      group.by = .x,
+      pt.size = 0.05,
+      reduction = "umap"
+    ) +
+      ggplot2::ggtitle(.x)
+  )
 
 # * Show
 umaps = celltype_umap +
-    patient_umap +
-    scissor_umap +
-    scab_umap +
-    scpas_umap +
-    scpp_umap +
-    degas_umap +
-    # * Add more if you want
-    patchwork::plot_layout(ncol = 3)
+  patient_umap +
+  scissor_umap +
+  scab_umap +
+  scpas_umap +
+  scpp_umap +
+  degas_umap +
+  # * Add more if you want
+  patchwork::plot_layout(ncol = 3)
 
 umaps
 ```
@@ -1338,21 +1393,22 @@ and want to visualize the distribution of prediction confidence scores,
 you may reference and use the following code:
 
 ``` r
+
 library(zeallot)
 library(patchwork)
 # library(Seurat)
 # library(purrr)
 
 c(scPAS_Pvalue_umap, scPAS_NRS_umap) %<-%
-    purrr::map(
-        c("scPAS_Pvalue", "scPAS_NRS"),
-        ~ Seurat::FeaturePlot(
-            object = your_seurat_obj,
-            features = .x,
-        ) +
-            ggplot2::ggtitle(.x) +
-            theme(legend.position = "right")
-    )
+  purrr::map(
+    c("scPAS_Pvalue", "scPAS_NRS"),
+    ~ Seurat::FeaturePlot(
+      object = your_seurat_obj,
+      features = .x,
+    ) +
+      ggplot2::ggtitle(.x) +
+      theme(legend.position = "right")
+  )
 
 # * Show
 scPAS_Pvalue_umap | scPAS_NRS_umap
@@ -1391,11 +1447,12 @@ cells across different patients. You can refer to and use the following
 code:
 
 ``` r
+
 plot <- ScreenFractionPlot(
-   screened_seurat = scpas_result$scRNA_data, 
-   group_by = "patient", # grouping basis for the x-axis
-   screen_type = "scPAS",
-   plot_title = "scPAS Screening Results"
+  screened_seurat = scpas_result$scRNA_data,
+  group_by = "patient", # grouping basis for the x-axis
+  screen_type = "scPAS",
+  plot_title = "scPAS Screening Results"
 )
 ```
 
@@ -1403,11 +1460,12 @@ If you have performed multiple screening methods and already merged the
 results, you can use the following code:
 
 ``` r
+
 plot <- ScreenFractionPlot(
-   screened_seurat = merged_seurat, 
-   group_by = "patient", # grouping basis for the x-axis
-   screen_type = c("scPAS", "scAB", "scPP"), # multiple screening results
-   plot_title = "Screening Results" #  A screen_type prefix will be added to the current plot title
+  screened_seurat = merged_seurat,
+  group_by = "patient", # grouping basis for the x-axis
+  screen_type = c("scPAS", "scAB", "scPP"), # multiple screening results
+  plot_title = "Screening Results" #  A screen_type prefix will be added to the current plot title
 )
 ```
 
@@ -1440,6 +1498,7 @@ selected by each algorithm. You can refer to and use the following code:
 **example**:
 
 ``` r
+
 library(ggVennDiagram)
 
 # # * If you have merged the results, you can use the following code instead:
@@ -1453,60 +1512,60 @@ library(ggVennDiagram)
 
 # * get the cell vectors
 scissor_pos <- colnames(scissor_result$scRNA_data)[
-    which(scissor_result$scRNA_data$scissor == "Positive")
+  which(scissor_result$scRNA_data$scissor == "Positive")
 ]
 scab_pos <- colnames(scab_result$scRNA_data)[
-    which(scab_result$scRNA_data$scAB == "Positive")
+  which(scab_result$scRNA_data$scAB == "Positive")
 ]
 scpas_pos <- colnames(scpas_result$scRNA_data)[
-    which(scpas_result$scRNA_data$scPAS == "Positive")
+  which(scpas_result$scRNA_data$scPAS == "Positive")
 ]
 scpp_pos <- colnames(scissor_result$scRNA_data)[
-    which(scpp_result$scRNA_data$scPP == "Positive")
+  which(scpp_result$scRNA_data$scPP == "Positive")
 ]
 degas_pos <- colnames(degas_result$scRNA_data)[
-    which(degas_result$scRNA_data$DEGAS == "Positive")
+  which(degas_result$scRNA_data$DEGAS == "Positive")
 ]
 
 
-all_cells <- colnames(your_seurat_obj) 
+all_cells <- colnames(your_seurat_obj)
 
 # * create a list of cell vectors
 pos_venn = list(
-    scissor = scissor_pos,
-    scpas = scpas_pos,
-    scab = scab_pos,
-    scpp = scpp_pos,
-    degas = degas_pos,
-    all_cells = all_cells
-    # * you can add more groups here
+  scissor = scissor_pos,
+  scpas = scpas_pos,
+  scab = scab_pos,
+  scpp = scpp_pos,
+  degas = degas_pos,
+  all_cells = all_cells
+  # * you can add more groups here
 )
 
 set.seed(123)
 
 venn_plot = ggVennDiagram::ggVennDiagram(
-    x = pos_venn,
-    # * the labels of each group to be shown on the diagram
-    category.names = c(
-        "Scissor",
-        "scPAS",
-        "scAB",
-        "scPP",
-        "DEGAS",
-        "All cells"
-    ),
-    # * the colors of each group
-    set_color = c(
-        "#a33333ff",
-        "#37ae00ff", 
-        "#2a2a94ff",
-        "#9c8200ff",
-        "#bb14adff",
-        "#008383ff"
-    )
+  x = pos_venn,
+  # * the labels of each group to be shown on the diagram
+  category.names = c(
+    "Scissor",
+    "scPAS",
+    "scAB",
+    "scPP",
+    "DEGAS",
+    "All cells"
+  ),
+  # * the colors of each group
+  set_color = c(
+    "#a33333ff",
+    "#37ae00ff",
+    "#2a2a94ff",
+    "#9c8200ff",
+    "#bb14adff",
+    "#008383ff"
+  )
 ) +
-    ggplot2::scale_fill_gradient(low = "white", high = "#ffb6b6ff") +
-    ggplot2::ggtitle("Screening Venn Diagram")
+  ggplot2::scale_fill_gradient(low = "white", high = "#ffb6b6ff") +
+  ggplot2::ggtitle("Screening Venn Diagram")
 ```
 
 **helpful link**:
@@ -1542,6 +1601,7 @@ Key parameters for `ScreenUpset`:
   for customizing the plot appearance.
 
 ``` r
+
 upset <- ScreenUpset(screened_seurat = merged_seurat)
 ```
 
@@ -1566,15 +1626,17 @@ Here we use the example data LUAD to demonstrate how to use the
 functions in `SigBridgeR` to screen cells associated with phenotype.
 
 ``` r
+
 # Set working directory
 if (requireNamespace("here", quietly = TRUE)) {
   here::i_am(".here")
-  setwd(here::here())         
-  knitr::opts_knit$set(root.dir = here::here())  
+  setwd(here::here())
+  knitr::opts_knit$set(root.dir = here::here())
 }
 ```
 
 ``` r
+
 library(SigBridgeR)
 library(zeallot)
 
@@ -1592,15 +1654,15 @@ mat_exam[1:6, 1:2]
 # A2M.AS1                         0                        0
 # A2ML1                           0                        0
 
-dim(bulk) 
+dim(bulk)
 # [1] 4071  506
-bulk[1:6,1:6] # already log2 transformed
+bulk[1:6, 1:6] # already log2 transformed
 #         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
 # HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
 # RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
 # HMGCLL1       2.7476       5.8513       3.8334       3.6447       2.9188       4.8820
-# LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882 
-# GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311 
+# LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882
+# GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311
 # LRRTM3        1.7458       2.0092       0.0000       1.4468       0.0000       0.0000
 nrow(pheno)
 # [1] 506
@@ -1627,6 +1689,7 @@ Now we use
 to pre-process the single-cell RNA expression matrix data.
 
 ``` r
+
 seurat <- SCPreProcess(
   sc = mat_exam,
   params = list(
@@ -1636,7 +1699,7 @@ seurat <- SCPreProcess(
     ),
     s = list(
       features = rownames(mat_exam)
-    )  
+    )
   ),
   quality_control = list(),
   data_filter = list()
@@ -1662,6 +1725,7 @@ classification; the approach shown here is for demonstration purposes
 only and is not recommended for real analyses.
 
 ``` r
+
 sample_info <- tibble::rownames_to_column(pheno, var = "sample") %>%
   dplyr::rename(condition = status)
 sample_info$batch <- "batch1"
@@ -1705,7 +1769,6 @@ colnames(counts_mat) <- sample_info$sample
 rownames(counts_mat) <- gene_ids
 
 
-
 filtered_counts_mat <- BulkPreProcess(
   data = counts_mat,
   sample_info = sample_info,
@@ -1734,6 +1797,7 @@ filtered_counts_mat <- BulkPreProcess(
 And we will see a PCA plot.
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/bulk_preprocess_pca.png")
 ```
 
@@ -1745,14 +1809,15 @@ to formally employ various single-cell phenotypic screening algorithms.
 First, we use `scissor` to screen cells associated with survival.
 
 ``` r
+
 scissor_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    label_type = "survival",
-    phenotype_class = "survival",
-    screen_method = "Scissor",
-    alpha = 0.05
+  matched_bulk = bulk,
+  sc_data = seurat,
+  phenotype = pheno,
+  label_type = "survival",
+  phenotype_class = "survival",
+  screen_method = "Scissor",
+  alpha = 0.05
 )
 
 # ℹ [2025/09/08 17:03:20] Scissor start...
@@ -1764,8 +1829,8 @@ scissor_result <- Screen(
 # ----------------------------------------------------------------------------------------------------
 # Five-number summary of correlations:
 
-#         0%        25%        50%        75%       100% 
-# -0.2342323  0.0594385  0.1118708  0.1642065  0.5250605 
+#         0%        25%        50%        75%       100%
+# -0.2342323  0.0594385  0.1118708  0.1642065  0.5250605
 # ----------------------------------------------------------------------------------------------------
 # ℹ [2025/09/08 17:03:21] Perform cox regression on the given clinical outcomes:
 # ✔ Statistics data saved to `Scissor_inputs.RData`.
@@ -1777,8 +1842,8 @@ scissor_result <- Screen(
 # The percentage of selected cell is: 30.924%
 
 table(scissor_result$scRNA_data$scissor)
-# Negative  Neutral Positive 
-#       73      755      265 
+# Negative  Neutral Positive
+#       73      755      265
 ```
 
 You will see an additional “Scissor_inputs.RData” in the working
@@ -1789,16 +1854,17 @@ files ). Meanwhile, we set `reliability_test=TRUE`, which will run an
 additional reliability test.
 
 ``` r
+
 scissor_result <- Screen(
-    matched_bulk = bulk, # doesn't need to be provided Since the intermediate data is provided
-    sc_data = seurat,
-    phenotype = pheno_ok, # doesn't need to be provided Since the intermediate data is provided
-    label_type = "survival",
-    phenotype_class = "survival",
-    screen_method = "Scissor",
-    alpha = 0.05,
-    path2load_scissor_cache = "Scissor_inputs.RData",
-    reliability_test = TRUE
+  matched_bulk = bulk, # doesn't need to be provided Since the intermediate data is provided
+  sc_data = seurat,
+  phenotype = pheno_ok, # doesn't need to be provided Since the intermediate data is provided
+  label_type = "survival",
+  phenotype_class = "survival",
+  screen_method = "Scissor",
+  alpha = 0.05,
+  path2load_scissor_cache = "Scissor_inputs.RData",
+  reliability_test = TRUE
 )
 # ℹ [2025/09/08 16:07:48] Scissor start...
 # ℹ [2025/09/08 16:07:48] Loading data from `Scissor_inputs.RData`...
@@ -1835,7 +1901,9 @@ scissor_result$reliability_result$p
 scissor_result$reliability_result$c_index_test_real
 #  [1] 0.6038544 0.5022222 0.6050725 0.6279391 0.5064935 0.6033520 0.6769231 0.6453089 0.4968421 0.6315789
 
-scissor_result$reliability_result$c_index_test_back %>% unlist() %>% matrix(nrow = 10)
+scissor_result$reliability_result$c_index_test_back %>%
+  unlist() %>%
+  matrix(nrow = 10)
 #            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]      [,8]      [,9]     [,10]
 #  [1,] 0.5594714 0.4943820 0.5379747 0.5583658 0.5527728 0.6146435 0.5130597 0.5701275 0.4691943 0.5177305
 #  [2,] 0.5735608 0.4726891 0.4146341 0.5020661 0.5354331 0.6840149 0.5540275 0.4990758 0.5324484 0.5497382
@@ -1854,14 +1922,15 @@ screening. Generally you only need to change the `screen_method`, as
 long as you have not specified any particular parameters.
 
 ``` r
+
 scpas_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    label_type = "survival",
-    phenotype_class = "survival",
-    screen_method = "scPAS",
-    alpha = 0.05
+  matched_bulk = bulk,
+  sc_data = seurat,
+  phenotype = pheno,
+  label_type = "survival",
+  phenotype_class = "survival",
+  screen_method = "scPAS",
+  alpha = 0.05
 )
 # ℹ [2025/10/20 16:24:27] Start scPAS screening.
 # ℹ [2025/10/20 16:24:29] Quantile normalization of bulk data.
@@ -1871,9 +1940,9 @@ scpas_result <- Screen(
 # Computing SNN
 # ℹ [2025/10/20 16:24:30] Optimizing the network-regularized sparse regression model...
 # ℹ [2025/10/20 16:24:30] Perform cox regression on the given phenotypes...
-# 
+#
 # ── At alpha = 0.05 ──
-# 
+#
 # lambda = 0.776168989003421
 # scPAS identified 59 risk+ features and 61 risk- features.
 # The percentage of selected feature is: 13.73%
@@ -1883,8 +1952,8 @@ scpas_result <- Screen(
 
 table(scpas_result$scRNA_data$scPAS)
 
-# Negative  Neutral Positive 
-#       5     1085        3 
+# Negative  Neutral Positive
+#       5     1085        3
 ```
 
 As you can see, due to differences in data and algorithms, not every
@@ -1895,15 +1964,16 @@ having no significant cell subpopulations). See also [3.2 (Option B)
 scPAS Screening](#id_32-option-b-scpas-screening)
 
 ``` r
+
 scpas_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    label_type = "survival",
-    phenotype_class = "survival",
-    screen_method = "scPAS",
-    alpha = NULL,
-    cutoff = 0.2 
+  matched_bulk = bulk,
+  sc_data = seurat,
+  phenotype = pheno,
+  label_type = "survival",
+  phenotype_class = "survival",
+  screen_method = "scPAS",
+  alpha = NULL,
+  cutoff = 0.2
 )
 # ℹ [2025/10/20 16:43:31] Start scPAS screening.
 # ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.
@@ -1913,27 +1983,27 @@ scpas_result <- Screen(
 # Computing SNN
 # ℹ [2025/10/20 16:43:33] Optimizing the network-regularized sparse regression model...
 # ℹ [2025/10/20 16:43:33] Perform cox regression on the given phenotypes...
-# 
+#
 # ── At alpha = 0.001 ──
-# 
+#
 # lambda = 7.61825638357188
 # scPAS identified 315 risk+ features and 366 risk- features.
 # The percentage of selected feature is: 77.918%
-# 
+#
 # ── At alpha = 0.005 ──
-# 
+#
 # lambda = 3.68743152046651
 # scPAS identified 193 risk+ features and 231 risk- features.
 # The percentage of selected feature is: 48.513%
-# 
+#
 # ── At alpha = 0.01 ──
-# 
+#
 # lambda = 2.55333682907113
 # scPAS identified 137 risk+ features and 158 risk- features.
 # The percentage of selected feature is: 33.753%
-# 
+#
 # ── At alpha = 0.05 ──
-# 
+#
 # lambda = 0.776168989003421
 # scPAS identified 59 risk+ features and 61 risk- features.
 # The percentage of selected feature is: 13.73%
@@ -1947,21 +2017,23 @@ still won’t result in the occurence of too many false-positive cells.
 You can also adjust the `cutoff` parameter as you like.
 
 ``` r
+
 table(scpas_result$scRNA_data$scPAS)
-# Negative  Neutral Positive 
-#        5     1085        3 
+# Negative  Neutral Positive
+#        5     1085        3
 ```
 
 Now we use scAB, scPP, DEGAS, LP_SGL and PIPET to screen cells.
 
 ``` r
+
 scab_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    label_type = "survival",
-    phenotype_class = "survival",
-    screen_method = "scAB"
+  matched_bulk = bulk,
+  sc_data = seurat,
+  phenotype = pheno,
+  label_type = "survival",
+  phenotype_class = "survival",
+  screen_method = "scAB"
 )
 # ℹ [2025/09/08 17:04:51] Start scAB screening.
 # ℹ  Using "RNA_snn" graph for network.
@@ -1971,18 +2043,19 @@ scab_result <- Screen(
 # ℹ [2025/09/08 17:06:19] scAB screening done.
 
 table(scab_result$scRNA_data$scAB)
-#    Other Positive 
-#     1018       75 
+#    Other Positive
+#     1018       75
 ```
 
 ``` r
+
 scpp_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    label_type = "survival",
-    phenotype_class = "survival",
-    screen_method = "scPP"
+  matched_bulk = bulk,
+  sc_data = seurat,
+  phenotype = pheno,
+  label_type = "survival",
+  phenotype_class = "survival",
+  screen_method = "scPP"
 )
 # ℹ [2025/09/08 17:00:28] Start scPP screening.
 # ℹ [2025/09/08 17:00:28] Finding markers...
@@ -1996,19 +2069,20 @@ scpp_result <- Screen(
 # ✔ [2025/09/08 17:00:54] scPP screening done.
 
 table(scpp_result$scRNA_data$scPP)
-# Negative  Neutral Positive 
-#       52      993       48 
+# Negative  Neutral Positive
+#       52      993       48
 ```
 
 ``` r
+
 # I recommend running this code in the background.
 degas_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    label_type = "This_is_a_DEGAS_test",
-    phenotype_class = "survival",
-    screen_method = "DEGAS"
+  matched_bulk = bulk,
+  sc_data = seurat,
+  phenotype = pheno,
+  label_type = "This_is_a_DEGAS_test",
+  phenotype_class = "survival",
+  screen_method = "DEGAS"
 )
 # ℹ [2025/10/09 18:41:00] Starting DEGAS Screen
 # ℹ [2025/10/09 18:41:01] Setting up Environment...
@@ -2026,19 +2100,20 @@ degas_result <- Screen(
 # ℹ [2025/10/10 17:35:04] DEGAS Screen done.
 
 table(degas_result$scRNA_data$DEGAS)
-#    Other Positive 
-#     1038       55 
+#    Other Positive
+#     1038       55
 ```
 
 ``` r
+
 # I recommend running this code in the background.
 lpsgl_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    label_type = "LP_SGL",
-    phenotype_class = "survival",
-    screen_method = "LP_SGL"
+  matched_bulk = bulk,
+  sc_data = seurat,
+  phenotype = pheno,
+  label_type = "LP_SGL",
+  phenotype_class = "survival",
+  screen_method = "LP_SGL"
 )
 # ℹ [2025/11/22 21:14:29] Starting LP-SGL screening analysis
 # ℹ [2025/11/22 21:14:29] Fetch graph from Seurat object
@@ -2050,8 +2125,8 @@ lpsgl_result <- Screen(
 # ℹ [2025/11/22 21:17:31] LP-SGL screening completed
 
 table(lpsgl_result$scRNA_data$LP_SGL)
-# Negative  Neutral Positive 
-#       77      778      233 
+# Negative  Neutral Positive
+#       77      778      233
 ```
 
 Note that PIPET does not support survival phenotype. We will show how to
@@ -2062,13 +2137,14 @@ After these algorithms have been run, the four sets of data can be
 merged since screening methods performed on the same data.
 
 ``` r
+
 screen_result <- MergeResult(
-    scissor_result,
-    scpas_result,
-    scab_result,
-    scpp_result,
-    degas_result,
-    lpsgl_result
+  scissor_result,
+  scpas_result,
+  scab_result,
+  scpp_result,
+  degas_result,
+  lpsgl_result
 )
 # ✔ Successfully merged 6 objects.
 
@@ -2079,14 +2155,15 @@ class(screen_result)
 
 colnames(screen_result[[]])
 #  [1] "orig.ident"      "nCount_RNA"      "nFeature_RNA"    "test_col"        "percent.rp"      "percent.mt"      "RNA_snn_res.0.1" "seurat_clusters"
-#  [9] "scissor"         "scAB"            "scAB_Subset1"    "Subset1_loading" "scAB_Subset2"    "Subset2_loading" "scPAS_RS"        "scPAS_NRS"      
-# [17] "scPAS_Pvalue"    "scPAS_FDR"       "scPAS"           "scPP_AUCup"      "scPP_AUCdown"    "scPP"            "DEGAS"           "LP_SGL"                 
+#  [9] "scissor"         "scAB"            "scAB_Subset1"    "Subset1_loading" "scAB_Subset2"    "Subset2_loading" "scPAS_RS"        "scPAS_NRS"
+# [17] "scPAS_Pvalue"    "scPAS_FDR"       "scPAS"           "scPP_AUCup"      "scPP_AUCdown"    "scPP"            "DEGAS"           "LP_SGL"
 ```
 
 Finally, we can visualize the screening results. Let’s start with a Venn
 diagram to see the situation.
 
 ``` r
+
 library(ggVennDiagram)
 library(zeallot)
 
@@ -2157,6 +2234,7 @@ venn
 ```
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/venn.png")
 ```
 
@@ -2167,9 +2245,10 @@ diagram is not very good. We can use a set plot instead. Only positive
 cells are shown in the set plot.
 
 ``` r
+
 upset <- ScreenUpset(
   screened_seurat = screen_result,
-  screen_type = c("scissor", "scPAS", "scAB", "scPP", "DEGAS","LP_SGL"),
+  screen_type = c("scissor", "scPAS", "scAB", "scPP", "DEGAS", "LP_SGL"),
   n_intersections = 40
 )
 
@@ -2194,6 +2273,7 @@ head(upset$stats)
 ```
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/upset.png")
 ```
 
@@ -2204,6 +2284,7 @@ screening results. Since the example data does not have sample metadata,
 we have created a fictional `Sample` column.
 
 ``` r
+
 set.seed(123)
 # * fictional sample column
 screen_result$Sample <- sample(
@@ -2235,6 +2316,7 @@ fraction_list <- ScreenFractionPlot(
 ```
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/fraction.png")
 ```
 
@@ -2267,6 +2349,7 @@ fraction_list
 UMAP is the most commonly used type of plot in academic literature.
 
 ``` r
+
 library(patchwork)
 library(zeallot)
 
@@ -2333,6 +2416,7 @@ umaps
 ```
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/umaps.png")
 ```
 
@@ -2342,13 +2426,22 @@ All the analysis has been completed, and we can save the data for future
 use.
 
 ``` r
-SeuratObject::SaveSeuratRds(object = screen_result, filename = "screened_result.rds")
+
+SeuratObject::SaveSeuratRds(
+  object = screen_result,
+  filename = "screened_result.rds"
+)
 ```
 
 or in `.h5ad` format:
 
 ``` r
-anndataR::write_h5ad(object= screen_result, path = "screened_result.h5ad", compression = "gzip")
+
+anndataR::write_h5ad(
+  object = screen_result,
+  path = "screened_result.h5ad",
+  compression = "gzip"
+)
 ```
 
 #### 4.2 Continuous phenotype associated cell screening
@@ -2359,6 +2452,7 @@ screening](#id_51-survival-associated-cell-screening). Here, only the
 preprocessing of continuous phenotypic data is introduced.
 
 ``` r
+
 library(SigBridgeR)
 library(zeallot)
 library(Seurat)
@@ -2369,9 +2463,9 @@ c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "continuous")
 
 dim(mat_exam)
 # [1] 33694  1093
-dim(bulk) 
+dim(bulk)
 # [1] 4106  289
-bulk[1:6,1:6]
+bulk[1:6, 1:6]
 #        TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01 TCGA-AD-6963-01
 # HIF3A           2.3437          2.0858          6.0759          1.9506          5.4777          4.4634
 # CAMK4           4.9331          2.3709          4.1387          1.1557          4.1746          3.2363
@@ -2382,14 +2476,15 @@ bulk[1:6,1:6]
 
 # * A named vector
 head(pheno)
-# TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01 TCGA-AD-6963-01 
-#             178              65              91             206              63              67 
+# TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01 TCGA-AD-6963-01
+#             178              65              91             206              63              67
 ```
 
 If your phenotype is a `data.frame`, try this to convert it to a
 `named vector`:
 
 ``` r
+
 pheno <- setNames(your_data.frame$continuous_numeric, your_data.frame$sample)
 ```
 
@@ -2400,6 +2495,7 @@ cell screening](#id_51-survival-associated-cell-screening). Here, only
 the preprocessing of binary phenotypic data is introduced.
 
 ``` r
+
 library(SigBridgeR)
 library(zeallot)
 library(Seurat)
@@ -2410,9 +2506,9 @@ c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "binary")
 
 dim(mat_exam)
 #[1] 33694  1093
-dim(bulk) 
+dim(bulk)
 # [1] 4106  434
-bulk[1:6,1:6]
+bulk[1:6, 1:6]
 #        TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01
 # HIF3A           3.7172          2.3437          2.0858          6.0759          1.9506          5.4777
 # CAMK4           3.0698          4.9331          2.3709          4.1387          1.1557          4.1746
@@ -2423,8 +2519,8 @@ bulk[1:6,1:6]
 
 # * A named vector
 head(pheno)
-# TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01 
-#               1               1               1               1               1               1 
+# TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01
+#               1               1               1               1               1               1
 ```
 
 If your phenotype is a `data.frame`, your binary variable is stored in
@@ -2434,12 +2530,13 @@ screened as **Positive** will be associated with ‘Tumor’. Try this to
 convert it to a `named vector`:
 
 ``` r
+
 pheno <- mutate(
-    pheno,
-    data = dplyr::case_when(
-        data == "Tumor" ~ 1,
-        data == "Normal" ~ 0
-    )
+  pheno,
+  data = dplyr::case_when(
+    data == "Tumor" ~ 1,
+    data == "Normal" ~ 0
+  )
 )
 pheno <- setNames(pheno$data, pheno$Sample)
 ```
@@ -2450,13 +2547,14 @@ Previously, it was noted that PIPET cannot use patient survival data as
 the phenotype; here, we demonstrate using a binary phenotype instead.
 
 ``` r
+
 pipet_result <- Screen(
-    matched_bulk = bulk,
-    sc_data = seurat,
-    phenotype = pheno,
-    phenotype_class = "binary",
-    screen_method = "PIPET",
-    label_type = "PIPET"
+  matched_bulk = bulk,
+  sc_data = seurat,
+  phenotype = pheno,
+  phenotype_class = "binary",
+  screen_method = "PIPET",
+  label_type = "PIPET"
 )
 #ℹ [2025/12/26 06:18:28] Starting PIPET screen
 #ℹ [2025/12/26 06:18:28] Creating marker genes from bulk data...
@@ -2470,8 +2568,8 @@ pipet_result <- Screen(
 #✔ [2025/12/26 06:19:49] PIPET screening done.
 
 table(pipet_result$scRNA_data$PIPET)
-# Negative  Neutral Positive 
-#     165      708      220 
+# Negative  Neutral Positive
+#     165      708      220
 ```
 
 ------------------------------------------------------------------------
@@ -2485,6 +2583,7 @@ for troubleshooting, especially for the environment setup.
 Session information:
 
 ``` r
+
 sessionInfo()
 ```
 
@@ -2513,7 +2612,7 @@ sessionInfo()
     ##  [5] xfun_0.57         cachem_1.1.0      knitr_1.51        htmltools_0.5.9  
     ##  [9] rmarkdown_2.31    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      
     ## [13] pkgdown_2.2.0     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2
-    ## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.10.0     
+    ## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.11.0     
     ## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        jsonlite_2.0.0   
     ## [25] rlang_1.2.0       fs_2.1.0          htmlwidgets_1.6.4
 

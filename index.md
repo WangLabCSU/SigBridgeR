@@ -4,7 +4,7 @@
 Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:
 GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![](https://img.shields.io/badge/devel%20version-3.6.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
+[![](https://img.shields.io/badge/devel%20version-3.7.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![SigBridgeR status
 badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
 [![R CMD
@@ -32,6 +32,7 @@ of the latest features and bug fixes.
 1.  Install the development version from GitHub:
 
 ``` r
+
 if (!requireNamespace("pak")) {
   install.packages(
     "pak",
@@ -46,10 +47,11 @@ if (!requireNamespace("pak")) {
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
 
-2.  Install from r-universe:
+2.  Install with all dependencies:
 
 ``` r
-install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+
+pak::pkg_install("WangLabCSU/SigBridgeR", dependencies = TRUE)
 ```
 
 ### It is recommended to install the following packages:
@@ -59,9 +61,12 @@ addition to these, installing the following packages allows you to use
 additional algorithms.
 
 ``` r
-methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
+
+methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC", "rTiRank")
 pak::pkg_install(file.path("Exceret", methods))
 ```
+
+------------------------------------------------------------------------
 
 **unnecessary but recommended**:
 
@@ -95,6 +100,7 @@ For seamless integration with single-cell RNA-seq data stored in
 `.h5ad`:
 
 ``` r
+
 pak::pkg_install("anndata")
 # or
 pak::pkg_install("anndataR") # both are supported
@@ -103,6 +109,7 @@ pak::pkg_install("anndataR") # both are supported
 For visualization:
 
 ``` r
+
 pak::pkg_install(c(
  "ggplot2",
  "randomcoloR", # or RColorBrewer
@@ -116,6 +123,7 @@ pak::pkg_install(c(
 To use the built-in cell annotation methods:
 
 ``` r
+
 pak::pkg_install(c(
   # SingleR
   "SingleR-inc/SingleR",
@@ -132,6 +140,7 @@ pak::pkg_install(c(
 To add custom extension functions to SigBridgeR:
 
 ``` r
+
 pak::pkg_install(c(
   "tictoc",
   "codetools",
@@ -145,6 +154,7 @@ pak::pkg_install(c(
 To reproduce the tutorial to learn more usage:
 
 ``` r
+
 pak::pkg_install(c(
   "zeallot",
   "here",
@@ -178,30 +188,42 @@ If you encounter problems, please check:
 Let us know if you have ideas to make this project better. Pull requests
 are welcome!
 
+## 📚 Citation
+
+This package is currently under development. Please cite the
+[preprint](https://www.biorxiv.org/content/10.64898/2026.05.08.723458v1)
+if you use it in your research.
+
 ## 🗺️ Similar Projects
 
-[scSurvival](https://github.com/cliffren/scSurvival): Single-cell
-expression matrix (log-normalized + HVG-selected) + survival data
-(optional clinical covariates and batch labels) -\> Survival-associated
-cell subpopulations
+[scSurvival](https://github.com/cliffren/scSurvival): Single-cell data
+(log-normalized + HVG-selected) + survival data (optional clinical
+covariates and batch labels) -\> Survival-associated cell subpopulations
 
 [CellPhenoX](https://github.com/fanzhanglab/pyCellPhenoX): Single-cell
 multi-omics data + bulk-level clinical variables, covariates (optional
 interaction effect terms) -\> interpretable score per cell
 
-[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq
-count matrix (imputed by MAGIC + filtered for low coverage/expression) +
-bulk RNA-seq expression matrix (with matched survival time and event
-status) -\> breast cancer prognostic gene signatures and Cox PH risk
-prediction model
+[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq data
+(imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq
+expression matrix (with matched survival time and event status) -\>
+breast cancer prognostic gene signatures and Cox PH risk prediction
+model
 
 [SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq
-expression matrix + target scRNA-seq expression matrix + (optional) bulk
-RNA-seq expression matrix with paired survival data -\> cell embeddings,
-cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived
-risk scores with survival probability curves for individual cell
-subpopulations.
+data + target scRNA-seq data + (optional) bulk RNA-seq data with paired
+survival data -\> cell embeddings, cluster assignments, UMAP
+visualizations, and phenotype‑algebra‑derived risk scores with survival
+probability curves for individual cell subpopulations.
 
 [scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data +
 bulk RNA-seq data + celltype annotation (optional batch labels) -\>
 phenotype-associated cell populations
+
+[scSurv](https://github.com/3254c/scSurv): scRNA-seq data + bulk RNA-seq
+expression matrix (with matched survival time and event status) -\>
+per-cell hazard scores and prognostic gene sets
+
+[beyondcell](https://github.com/cnio-bu/beyondcell): the expression
+matrix + a collection of drug signatures -\> drug-related commonalities
+between cells/spots

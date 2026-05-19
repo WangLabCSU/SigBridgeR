@@ -22,6 +22,7 @@ bottom) percentage of cells —- corresponding to the specified cutoff
 value -— as positive cells.
 
 ``` r
+
 # * From
 # scissor_res <- Screen(
 #   matched_bulk = matched_bulk,
@@ -46,6 +47,7 @@ scissor_res <- Screen(
 Output goes like this when using example data
 
 ``` r
+
 # ℹ [2025/11/07 08:39:59] Scissor start...
 # ℹ [2025/11/07 08:39:59] Start from raw data...
 # ℹ Using "RNA_snn" graph for network.
@@ -92,6 +94,7 @@ and scAB will automatically iterate through the combinations to find the
 optimal pair of `alpha` and `alpha_2`.
 
 ``` r
+
 # * From
 # scAB_res <- Screen(
 #   matched_bulk = matched_bulk,
@@ -119,6 +122,7 @@ scAB_res <- Screen(
 ```
 
 ``` r
+
 length(seq1) * length(seq2)
 # [1] 12
 ```
@@ -128,6 +132,7 @@ evaluation -— the runtime can become prohibitively long. In such cases,
 parallel computing can be employed to accelerate the process.
 
 ``` r
+
 # * install `furrr` & `future.mirai` first, as it is required for parallel computing
 # * We recommend using `future.mirai`, as it is more stable and faster than `future`
 rlang::check_installed(c("furrr", "future.mirai"))
@@ -149,6 +154,7 @@ scAB_res <- Screen(
 Output goes like this when using example data
 
 ``` r
+
 # ℹ [2025/11/07 08:43:48] Start scAB screening.
 # ℹ  Using "RNA_snn" graph for network.
 # ℹ [2025/11/07 08:43:53] Selecting K...
@@ -172,6 +178,7 @@ The iteration of alpha in scPAS is similar to that in Scissor, and the
 method to enable iteration is the same.
 
 ``` r
+
 # * From
 # scPAS_res <- Screen(
 #   matched_bulk = matched_bulk,
@@ -196,6 +203,7 @@ scPAS_res <- Screen(
 Output goes like this when using example data
 
 ``` r
+
 # ℹ [2025/10/20 16:43:31] Start scPAS screening.
 # ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.
 # ℹ [2025/10/20 16:43:32] Extracting single-cell expression profiles...
@@ -240,6 +248,7 @@ requires tuning the `probs` parameter, as it represents the quantile
 threshold. The input `probs` must be between 0 and 0.5.
 
 ``` r
+
 # * From
 # scPP_res <- Screen(
 #   matched_bulk = matched_bulk,
@@ -265,6 +274,7 @@ scPP_res <- Screen(
 Output goes like this when using example data
 
 ``` r
+
 # ℹ [2025/11/07 08:53:20] Start scPP screening.
 # ℹ [2025/11/07 08:53:20] Finding overall markers...
 # Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :
@@ -328,6 +338,6 @@ Output goes like this when using example data
     ##  [5] xfun_0.57         cachem_1.1.0      knitr_1.51        htmltools_0.5.9  
     ##  [9] rmarkdown_2.31    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      
     ## [13] pkgdown_2.2.0     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2
-    ## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.10.0     
+    ## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.11.0     
     ## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        jsonlite_2.0.0   
     ## [25] rlang_1.2.0       fs_2.1.0          htmlwidgets_1.6.4

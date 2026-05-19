@@ -71,6 +71,8 @@ Built-in screening algorithms.
   : Perform SIDISH Screening Analysis
 - [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md)
   : Screen Single-Cell Data Using SCIPAC Algorithm
+- [`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md)
+  : Perform TiRank Screening Analysis
 
 ## Seurat Object Utilities
 
@@ -103,6 +105,8 @@ Load reference datasets.
 
 - [`LoadRefData()`](https://wanglabcsu.github.io/sigbridger/reference/LoadRefData.md)
   : Download & Load Reference Data
+- [`get_var_value()`](https://wanglabcsu.github.io/sigbridger/reference/get_var_value.md)
+  : Trace and compute the value of a variable defined inside a function
 
 ## Python Environment Management
 
@@ -141,6 +145,15 @@ Extended registry for SigBridgeR
   : Registry of Cell Type Annotation Methods
 - [`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md)
   : Registry of Phenotype-Associated Cell Screening Methods
+
+## Cache Management
+
+Manage cache files for SigBridgeR
+
+- [`WriteCacheMeta()`](https://wanglabcsu.github.io/sigbridger/reference/WriteCacheMeta.md)
+  : Write Cache Metadata
+- [`CheckCache()`](https://wanglabcsu.github.io/sigbridger/reference/CheckCache.md)
+  : Check Cache Configuration Consistency
 
 ## Package Configuration
 

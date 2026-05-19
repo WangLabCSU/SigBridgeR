@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data • SigBridgeR</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data">
@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,9 +64,9 @@
 <strong>SigBridgeR</strong> <a href="https://wanglabcsu.github.io/SigBridgeR/" class="external-link"><img src="reference/figures/logo_white.png" alt="sigbridger website" align="right" height="139"></a>
 <a class="anchor" aria-label="anchor" href="#sigbridger-"></a>
 </h1></div>
-<p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Repo Status"></a> <a href="https://cran.r-project.org/web/licenses/GPL3" class="external-link"><img src="https://img.shields.io/badge/license-GPL3-blue.svg" alt="License: GPL3"></a> <a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link"><img src="https://img.shields.io/badge/devel%20version-3.6.1-blue.svg"></a> <a href="https://wanglabcsu.r-universe.dev/SigBridgeR" class="external-link"><img src="https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version" alt="SigBridgeR status badge"></a> <a href="https://github.com/WangLabCSU/SigBridgeR/actions" class="external-link"><img src="https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg" alt="R CMD check"></a> <a href="https://wanglabcsu.r-universe.dev/" class="external-link"><img src="https://wanglabcsu.r-universe.dev/badges/:registry" alt="registry status badge"></a> <a href="https://deepwiki.com/WangLabCSU/SigBridgeR" class="external-link"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a> ————————————————————————</p>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Repo Status"></a> <a href="https://cran.r-project.org/web/licenses/GPL3" class="external-link"><img src="https://img.shields.io/badge/license-GPL3-blue.svg" alt="License: GPL3"></a> <a href="https://github.com/WangLabCSU/SigBridgeR" class="external-link"><img src="https://img.shields.io/badge/devel%20version-3.7.0-blue.svg"></a> <a href="https://wanglabcsu.r-universe.dev/SigBridgeR" class="external-link"><img src="https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version" alt="SigBridgeR status badge"></a> <a href="https://github.com/WangLabCSU/SigBridgeR/actions" class="external-link"><img src="https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg" alt="R CMD check"></a> <a href="https://wanglabcsu.r-universe.dev/" class="external-link"><img src="https://wanglabcsu.r-universe.dev/badges/:registry" alt="registry status badge"></a> <a href="https://deepwiki.com/WangLabCSU/SigBridgeR" class="external-link"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a> ————————————————————————</p>
 <div class="section level2">
-<h2 id="id_-overview">🌐 Overview<a class="anchor" aria-label="anchor" href="#id_-overview"></a>
+<h2 id="globe_with_meridians-overview">🌐 Overview<a class="anchor" aria-label="anchor" href="#globe_with_meridians-overview"></a>
 </h2>
 <p>SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data, bulk expression data, and sample-related phenotypic data, to identify the cells most closely associated with the phenotypic data, performing as a bridge to existing tools.</p>
 <p align="center">
@@ -75,7 +75,7 @@
 
 </div>
 <div class="section level2">
-<h2 id="id_-installation">🔧 Installation<a class="anchor" aria-label="anchor" href="#id_-installation"></a>
+<h2 id="wrench-installation">🔧 Installation<a class="anchor" aria-label="anchor" href="#wrench-installation"></a>
 </h2>
 <p>Usually we recommend installing the latest release from GitHub because of the latest features and bug fixes.</p>
 <ol style="list-style-type: decimal">
@@ -94,18 +94,32 @@
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span><span class="op">)</span></span></code></pre></div>
+<!-- 2.  Install from r-universe:
+
+```r
+install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+``` -->
 <ol start="2" style="list-style-type: decimal">
-<li>Install from r-universe:</li>
+<li>Install with all dependencies:</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"SigBridgeR"</span>, repos <span class="op">=</span> <span class="st">"https://wanglabcsu.r-universe.dev"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"WangLabCSU/SigBridgeR"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="it-is-recommended-to-install-the-following-packages">It is recommended to install the following packages:<a class="anchor" aria-label="anchor" href="#it-is-recommended-to-install-the-following-packages"></a>
 </h3>
 <p><code>SigBridgeR</code> includes the Scissor and scAB algorithms by default. In addition to these, installing the following packages allows you to use additional algorithms.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">methods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPAS"</span>, <span class="st">"scPP"</span>, <span class="st">"DEGAS"</span>, <span class="st">"LPSGL"</span>, <span class="st">"PIPET"</span>, <span class="st">"rSIDISH"</span>, <span class="st">"SCIPAC"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">methods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPAS"</span>, <span class="st">"scPP"</span>, <span class="st">"DEGAS"</span>, <span class="st">"LPSGL"</span>, <span class="st">"PIPET"</span>, <span class="st">"rSIDISH"</span>, <span class="st">"SCIPAC"</span>, <span class="st">"rTiRank"</span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"Exceret"</span>, <span class="va">methods</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<!-- **Community-Maintained Algorithms**：
+
+These algorithms are maintained by the community.
+
+```r
+
+```
+ -->
+<hr>
 <p><strong>unnecessary but recommended</strong>:</p>
 <details><summary>
 For better performance:
@@ -185,7 +199,7 @@ To reproduce the tutorial to learn more usage:
 </div>
 </div>
 <div class="section level2">
-<h2 id="id_-documentation">📓 Documentation<a class="anchor" aria-label="anchor" href="#id_-documentation"></a>
+<h2 id="notebook-documentation">📓 Documentation<a class="anchor" aria-label="anchor" href="#notebook-documentation"></a>
 </h2>
 <p>Get Started:</p>
 <ul>
@@ -203,39 +217,22 @@ To reproduce the tutorial to learn more usage:
 <li>the <a href="https://github.com/WangLabCSU/SigBridgeR/issues" class="external-link">Github issues</a> page if you want to file bug reports or feature requests</li>
 </ul>
 <p>Let us know if you have ideas to make this project better. Pull requests are welcome!</p>
-<!-- ## 📚 Citation
-
-```r
-citation("SigBridgeR")
-To cite package ‘SigBridgeR’ in publications use:
-
-  Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R
-  package version 3.6.1, commit 7136cd81401da9ef95b752405c57323df865bed2, <https://github.com/WangLabCSU/SigBridgeR>.
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
-Subpopulations via scRNA-seq and Bulk Data},
-    author = {Yuxi Yang and Shixiang Wang},
-    year = {2026},
-    note = {R package version 3.6.1, commit 7136cd81401da9ef95b752405c57323df865bed2},
-    url = {https://github.com/WangLabCSU/SigBridgeR},
-  }
-```
-
-```text
-
-``` -->
 </div>
 <div class="section level2">
-<h2 id="id_️-similar-projects">🗺️ Similar Projects<a class="anchor" aria-label="anchor" href="#id_%EF%B8%8F-similar-projects"></a>
+<h2 id="books-citation">📚 Citation<a class="anchor" aria-label="anchor" href="#books-citation"></a>
 </h2>
-<p><a href="https://github.com/cliffren/scSurvival" class="external-link">scSurvival</a>: Single-cell expression matrix (log-normalized + HVG-selected) + survival data (optional clinical covariates and batch labels) -&gt; Survival-associated cell subpopulations</p>
+<p>This package is currently under development. Please cite the <a href="https://www.biorxiv.org/content/10.64898/2026.05.08.723458v1" class="external-link">preprint</a> if you use it in your research.</p>
+</div>
+<div class="section level2">
+<h2 id="world_map-similar-projects">🗺️ Similar Projects<a class="anchor" aria-label="anchor" href="#world_map-similar-projects"></a>
+</h2>
+<p><a href="https://github.com/cliffren/scSurvival" class="external-link">scSurvival</a>: Single-cell data (log-normalized + HVG-selected) + survival data (optional clinical covariates and batch labels) -&gt; Survival-associated cell subpopulations</p>
 <p><a href="https://github.com/fanzhanglab/pyCellPhenoX" class="external-link">CellPhenoX</a>: Single-cell multi-omics data + bulk-level clinical variables, covariates (optional interaction effect terms) -&gt; interpretable score per cell</p>
-<p><a href="https://github.com/XiaomeiLi1/scPrognosis" class="external-link">scPrognosis</a>: scRNA-seq count matrix (imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq expression matrix (with matched survival time and event status) -&gt; breast cancer prognostic gene signatures and Cox PH risk prediction model</p>
-<p><a href="https://github.com/cellsemantics/SCellBOW" class="external-link">SCellBOW</a>: source scRNA-seq expression matrix + target scRNA-seq expression matrix + (optional) bulk RNA-seq expression matrix with paired survival data -&gt; cell embeddings, cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived risk scores with survival probability curves for individual cell subpopulations.</p>
+<p><a href="https://github.com/XiaomeiLi1/scPrognosis" class="external-link">scPrognosis</a>: scRNA-seq data (imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq expression matrix (with matched survival time and event status) -&gt; breast cancer prognostic gene signatures and Cox PH risk prediction model</p>
+<p><a href="https://github.com/cellsemantics/SCellBOW" class="external-link">SCellBOW</a>: source scRNA-seq data + target scRNA-seq data + (optional) bulk RNA-seq data with paired survival data -&gt; cell embeddings, cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived risk scores with survival probability curves for individual cell subpopulations.</p>
 <p><a href="https://github.com/BrianLlll/scPER" class="external-link">scPER</a>: Single-cell RNA-seq data + bulk RNA-seq data + celltype annotation (optional batch labels) -&gt; phenotype-associated cell populations</p>
+<p><a href="https://github.com/3254c/scSurv" class="external-link">scSurv</a>: scRNA-seq data + bulk RNA-seq expression matrix (with matched survival time and event status) -&gt; per-cell hazard scores and prognostic gene sets</p>
+<p><a href="https://github.com/cnio-bu/beyondcell" class="external-link">beyondcell</a>: the expression matrix + a collection of drug signatures -&gt; drug-related commonalities between cells/spots</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

@@ -482,18 +482,18 @@ A list containing:
 
 ## Method Compatibility
 
-|         |                      |                                                                                                                                                                                                                               |
-|---------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Method  | Supported Phenotypes | Additional Parameters                                                                                                                                                                                                         |
-| Scissor | All three types      | alpha, cutoff, path2load_scissor_cache, path2save_scissor_inputs, reliability_test, reliability_test.n,reliability_test.nfold, cell_evaluation,cell_evaluation.benchmark_data,cell_evaluation.FDR,cell_evaluation.bootstrap_n |
-| scPP    | All three types      | ref_group, Log2FC_cutoff, estimate_cutoff, probs                                                                                                                                                                              |
-| scPAS   | All three types      | n_components ,assay, imputation,nfeature, alpha,network_class,permutation_times,FDR_threshold,independent                                                                                                                     |
-| scAB    | Binary/Survival      | alpha, alpha_2, maxiter, tred                                                                                                                                                                                                 |
-| DEGAS   | All three types      | sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method                                                                                                                                   |
-| LP_SGL  | All three types      | resolution, alpha, nfold, dge_analysis                                                                                                                                                                                        |
-| PIPET   | Binary/Continuous    | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance                                                                                                               |
-| SIDISH  | Survival Only        | sidish_params, env_params                                                                                                                                                                                                     |
-| SCIPAC  | All three types      | hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size, ncore, ci_alpha, nfold, assay                                                                                                                         |
+|  |  |  |
+|----|----|----|
+| Method | Supported Phenotypes | Additional Parameters |
+| Scissor | All three types | alpha, cutoff, path2load_scissor_cache, path2save_scissor_inputs, reliability_test, reliability_test.n,reliability_test.nfold, cell_evaluation,cell_evaluation.benchmark_data,cell_evaluation.FDR,cell_evaluation.bootstrap_n |
+| scPP | All three types | ref_group, Log2FC_cutoff, estimate_cutoff, probs |
+| scPAS | All three types | n_components ,assay, imputation,nfeature, alpha,network_class,permutation_times,FDR_threshold,independent |
+| scAB | Binary/Survival | alpha, alpha_2, maxiter, tred |
+| DEGAS | All three types | sc_data.pheno_colname,select_fraction,tmp_dir,env_params,degas_params,normality_test_method |
+| LP_SGL | All three types | resolution, alpha, nfold, dge_analysis |
+| PIPET | Binary/Continuous | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance |
+| SIDISH | Survival Only | sidish_params, env_params |
+| SCIPAC | All three types | hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size, ncore, ci_alpha, nfold, assay |
 
 ## See also
 

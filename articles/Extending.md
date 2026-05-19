@@ -10,18 +10,21 @@ algorithms.
 Extend `SCPreProcess`: key = func
 
 ``` r
+
 Register(h = Seurat::RunHarmony)
 ```
 
 Extend `SCAnnotate`: key = func
 
 ``` r
+
 Register(my = my_function)
 ```
 
 Extend `Screen`: key = func
 
 ``` r
+
 TemplateScreenFunc() # create a file
 ValidateScreenFunc(my_function)
 Register(my = my_function)
@@ -34,6 +37,7 @@ Register(my = my_function)
 It’s recommended to install these packages for checking the code
 
 ``` r
+
 pak::pkg_install(c(
   "tictoc",
   "yonicd/tidycheckUsage",
@@ -46,6 +50,7 @@ pak::pkg_install(c(
 ### Prepare a custom function
 
 ``` r
+
 library(SigBridgeR)
 ```
 
@@ -57,6 +62,7 @@ package. Let’s do this with a detailed example:
 file and open it in the editor.)
 
 ``` r
+
 my_screen_function <- function(
   matched_bulk,
   sc_data,
@@ -115,7 +121,6 @@ Format requirements for custom extension functions:
 2.  The output must be a **list** containing at least one elements:
     - `scRNA_data` (required): A **Seurat** object with meta.data
       modified,
-
       - For columns added in the meta.data slot, it is recommended to
         **use the method name as a prefix** to distinguish them from
         those added by other methods.
@@ -136,19 +141,6 @@ Format requirements for custom extension functions:
         algorithm, use the `Seurat@misc` slot and store them as a
         **list** with `_para` suffix name , e.g.,
         `scissor_para = list(alpha = 0.05, cutoff = 0.2)`.
-
-      > It is recommended to use AddMisc as
-      >
-      > ``` r
-      > seurat <- seurat %>%
-      >   SeuratObject::AddMetaData(rep("test", ncol(seurat)), col.name = "scissor") %>%
-      >   AddMisc(
-      >     scissor_type = "relapse",
-      >     scissor_para = list(alpha = 0.05, cutoff = 0.2),
-      >     cover = FALSE 
-      >   )
-      > ```
-
     - Other elements are optional. Necessary intermediate data can be
       returned.
 3.  If it is necessary to save intermediate data and results as files,
@@ -161,10 +153,12 @@ output resembles that of `rcmdcheck`; please ensure there are no errors
 or warnings, and as few notes as possible.
 
 ``` r
+
 ValidateScreenFunc(my_screen_function)
 ```
 
 ``` r
+
 # ── Screening Function Validation ──────────────────────────────────────────────────────────────────────
 # Start at 2026/01/19 22:04:17
 
@@ -184,9 +178,11 @@ ValidateScreenFunc(my_screen_function)
 By the way if providing a bad function
 
 ``` r
-bad_fun <- function(x) {
+
+bad_fun <- function(x, save_path = "./analysis") {
   z <- x + 1
   y
+  dir.create(save_path)
   return(NULL)
 }
 
@@ -194,6 +190,7 @@ ValidateScreenFunc(bad_fun)
 ```
 
 ``` r
+
 # ── Screening Function Validation ───────────────────────────────────────────────────────────────────
 # Start at 2026/01/19 22:07:43
 
@@ -234,6 +231,7 @@ ValidateScreenFunc(bad_fun)
 Now we can register the function to the package:
 
 ``` r
+
 RegisterScreenMethod(
   my_method = my_screen_function,
   supported_phenotypes = c("binary", "survival"),
@@ -247,6 +245,7 @@ RegisterScreenMethod(
 ```
 
 ``` r
+
 # ✔ Registered `my_method`
 ```
 
@@ -267,11 +266,13 @@ Details of the arguments:
 Let’s check whether it has indeed been registered
 
 ``` r
+
 tbl <- InterceptStrategy("ScreenStrategy")
 # A tibble: 22 × 4
 ```
 
 ``` r
+
 names(ScreenStrategy)
 # [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"
 ```
@@ -281,6 +282,7 @@ names(ScreenStrategy)
 Now we can use the function in the `Screen` function:
 
 ``` r
+
 a_seurat <- SeuratObject::CreateSeuratObject(Matrix::Matrix(
   1:100,
   nrow = 10,
@@ -307,14 +309,17 @@ my_res <- Screen(
 ```
 
 ``` r
+
 # ✔ my_screen_function finished
 ```
 
 ``` r
+
 my_res$scRNA_data |> class()
 ```
 
 ``` r
+
 # [1] "Seurat"
 # attr(,"package")
 # [1] "SeuratObject"
@@ -353,6 +358,7 @@ For example, if we need to use
 to load Xenium data for screening, register this function first.
 
 ``` r
+
 RegisterSeuratMethod(x = Seurat::LoadXenium)
 # ✔ Registered x
 ```
@@ -360,11 +366,13 @@ RegisterSeuratMethod(x = Seurat::LoadXenium)
 To check:
 
 ``` r
+
 names(SCPreProcessStrategy)
 #  [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"
 ```
 
 ``` r
+
 tbl <- InterceptStrategy("SCPreProcessStrategy")
 # tibble [12 × 2]
 ```
@@ -380,6 +388,7 @@ all be invoked through the unified interface function `SCAnnotate`.
 Extending cell annotation method is also very easy:
 
 ``` r
+
 my_method <- function(seurat_obj, ...) {
   # placeholder
   return(seurat_obj)
@@ -394,6 +403,7 @@ RegisterAnnoMethod(
 To check:
 
 ``` r
+
 names(SCAnnotateStrategy)
 # [1] "my"           "mLLMCelltype" "CellTypist"   "SingleR"
 ```

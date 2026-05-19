@@ -18,6 +18,7 @@ These options can be modified using either the `setFuncOption` or
 `Options` function (the former is recommended).
 
 ``` r
+
 setFuncOption(seed = 321L)
 
 options(SigBridgeR.seed = 321L)
@@ -27,16 +28,18 @@ options(SigBridgeR.seed = 321L)
 package name prefix are also compatible.
 
 ``` r
+
 setFuncOption(SigBridgeR.seed = 321L)
 ```
 
 `getFuncOption` is used to retrieve the global parameters of SigBridgeR.
 
 ``` r
+
 getFuncOption("seed")
 # 321
 
-# * Auto-detect prefix 
+# * Auto-detect prefix
 getFuncOption("SigBridgeR.seed")
 # 321
 ```
@@ -51,12 +54,13 @@ balance performance and system responsiveness.
 #### Basic Usage
 
 ``` r
+
 # Set explicit thread count
 setThreads(8L)
 
 # Configure specific backends only
-setThreads(dt = 4L)      # data.table only
-setThreads(openmp = 4L)  # OpenMP only
+setThreads(dt = 4L) # data.table only
+setThreads(openmp = 4L) # OpenMP only
 ```
 
 #### TensorFlow Optimization
@@ -64,6 +68,7 @@ setThreads(openmp = 4L)  # OpenMP only
 ⚠️ **Must configure BEFORE importing TensorFlow**:
 
 ``` r
+
 setThreads(
   threads = 8L,
   tf_config = list(
@@ -71,7 +76,7 @@ setThreads(
     intra_op = 8L
   )
 )
-tf <- reticulate::import("tensorflow")  # Import AFTER configuration
+tf <- reticulate::import("tensorflow") # Import AFTER configuration
 ```
 
 #### Options
@@ -106,16 +111,17 @@ Evaluates 3 dimensions of preprocessing quality:
 Exmaple Usage:
 
 ``` r
+
 obj <- Seurat::CreateSeuratObject(counts)
 
 sct <- Seurat::SCTransfrom(obj)
 lognorm <- Seurat::NormalizeData(obj) %>%
-    Seurat::ScaleData() %>%
-    Seurat::FindVariableFeatures()
+  Seurat::ScaleData() %>%
+  Seurat::FindVariableFeatures()
 
 ChooseNormalization(
   sct = sct,
-  lognorm = lognorm, 
+  lognorm = lognorm,
   # * More can be added here
   subset_size = integer(),
   known_hvgs = list(),
@@ -126,13 +132,14 @@ ChooseNormalization(
     marker_signal = 0.35,
     dropout_robustness = 0.25
   )
-) 
+)
 ```
 
 ``` r
+
 # ℹ Using 1088 cells
 # ℹ Comparing 2 methods: sct and lognorm
-# ── Method Ranking (Composite Score) 
+# ── Method Ranking (Composite Score)
 # Top method: log_norm
 # [1] log_norm: 0.825
 # [2] sctransform: 0.175
@@ -161,12 +168,13 @@ that the PCs with the highest variance are the most informative. Here is
 a function to help you find the optimal number of PCs.
 
 ``` r
+
 ndims <- FindRobustElbow(
   obj = seurat,
   verbose = TRUE,
-  ndims = 50 
+  ndims = 50
 )
-# ── Method Results 
+# ── Method Results
 # ℹ Method 1A (Cumulative Variance > 90%): 1:40
 # ℹ Method 1B (Variance > Mean): 1:11
 # ℹ Method 1C (Variance > 2*SD): 1:4
@@ -174,7 +182,7 @@ ndims <- FindRobustElbow(
 # ℹ Method 3 (Distance-based): 1:8
 # ✔ Final Recommended Dimensions:  1:35
 
-# ── Summary 
+# ── Summary
 # ℹ Cumulative variance at 35 PCs: 84.8%
 # ℹ Variance explained by PC35: 1.09%
 
@@ -188,6 +196,7 @@ specify the maximum number of PCs to be tested. The default value is
 `50`.
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/elbow.png")
 ```
 
@@ -207,12 +216,13 @@ algorithms are based on during execution. As a substitute for the
   simultaneously.
 
 ``` r
+
 # basic usage
 seurat_obj <- AddMisc(seurat_obj, "QC_stats" = qc_df)
 
 # Auto-incrementing example when `cover` set to FALSE
 seurat_obj <- AddMisc(seurat_obj, markers = markers1)
-seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover=FALSE)
+seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover = FALSE)
 
 # Add multiple attributes to the `SeuratObject@misc` slot simultaneously
 seurat_obj <- AddMisc(seurat_obj, markers1 = markers1, markers2 = markers2)
@@ -230,6 +240,7 @@ to update the `SeuratObject@assays$RNA@meta.data`
 Add a new column to the metadata
 
 ``` r
+
 gene_type <- rep("test", nrow(seurat_obj))
 
 seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type)
@@ -248,8 +259,13 @@ seurat_obj <- AddMetaFeature(
 Add to different assays
 
 ``` r
+
 seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "RNA")
-seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "ATAC")
+seurat_obj <- AddMetaFeature(
+  seurat_obj,
+  "gene_type" = gene_type,
+  assay = "ATAC"
+)
 ```
 
 If duplicate column names are detected, they will be suffixed with an
@@ -263,9 +279,18 @@ When passing raw matrices, the function performs a “join” operation
 based on the union of all genes. Missing values are filled with NA.
 
 ``` r
+
 # Create dummy matrices
-mat1 <- matrix(rpois(50, 5), nrow = 10, dimnames = list(paste0("G", 1:10), paste0("C", 1:5)))
-mat2 <- matrix(rpois(60, 6), nrow = 10, dimnames = list(paste0("G", 5:14), paste0("C", 1:6)))
+mat1 <- matrix(
+  rpois(50, 5),
+  nrow = 10,
+  dimnames = list(paste0("G", 1:10), paste0("C", 1:5))
+)
+mat2 <- matrix(
+  rpois(60, 6),
+  nrow = 10,
+  dimnames = list(paste0("G", 5:14), paste0("C", 1:6))
+)
 
 # Integrate matrices with custom prefixes
 integrated_mat <- SCIntegrate(BatchA = mat1, BatchB = mat2)
@@ -274,6 +299,7 @@ integrated_mat2 <- SCIntegrate(mat1, mat2)
 ```
 
 ``` r
+
 integrated_mat[1:6, 1:4]
 #     BatchA_C1 BatchA_C2 BatchA_C3 BatchA_C4
 # G1          3         2         4         5
@@ -326,18 +352,21 @@ Extensions](https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html)
 Example Usage
 
 ``` r
+
 integrated <- SCIntegrate(
-  obj1, obj2, # -> merge.Seurat
+  obj1,
+  obj2, # -> merge.Seurat
   pipeline = "nsvpi",
   method = Seurat::RPCAIntegration, # Change integration method
-  dims = 1:30,                      # Passed to RunPCA and IntegrateLayers
-  k.weight = 50                     # Passed to IntegrateLayers
+  dims = 1:30, # Passed to RunPCA and IntegrateLayers
+  k.weight = 50 # Passed to IntegrateLayers
 )
 ```
 
 An example using mock data
 
 ``` r
+
 mat1 <- matrix(
   rpois(1000, 5),
   nrow = 20,
@@ -362,9 +391,10 @@ integrated_seu <- SCIntegrate(
 ```
 
 ``` r
+
 integrated_seu
-# An object of class Seurat 
-# 30 features across 110 samples within 1 assay 
+# An object of class Seurat
+# 30 features across 110 samples within 1 assay
 # Active assay: RNA (30 features, 10 variable features)
 #  5 layers present: counts.1, counts.2, data.1, data.2, scale.data
 #  2 dimensional reductions calculated: pca, integrated.dr
@@ -380,6 +410,7 @@ requires installing additional dependencies. See the
 Basic usage:
 
 ``` r
+
 seurat <- SCAnnotate(
   sc = seurat,
   method = c("CellTypist", "SingleR", "mLLMCelltype")
@@ -400,6 +431,7 @@ This is the direct R wrapper of celltypist.annotate. Unlike
 `SCAnnotate`, it does not prepare an environment for you.
 
 ``` r
+
 seurat <- CellTypistAnnotate(
   sc,
   model = NULL,
@@ -412,7 +444,7 @@ seurat <- CellTypistAnnotate(
     package = "SigBridgeR"
   ),
   # * more arguments pass to celltypist.annotate (python)
-) 
+)
 ```
 
 **Parameters**:
@@ -445,11 +477,12 @@ helpful link: <https://github.com/Teichlab/celltypist>
 ### mLLMCelltype Annotation
 
 ``` r
+
 seurat <- mLLMCellTypeAnnotate(
   sc,
   seurat_obj_markers = NULL,
   # * Context for large language models
-  tissue_name = "Human Cancer", 
+  tissue_name = "Human Cancer",
   models = c(
     "gpt-5",
     "claude-sonnet-4-5-20250929",
@@ -514,6 +547,7 @@ helpful link: <https://github.com/cafferychen777/mLLMCelltype>
 ### SingleR Annotation
 
 ``` r
+
 seurat <- SingleRAnnotate(
   sc,
   verbose = getFuncOption("verbose"), # TRUE
@@ -582,15 +616,16 @@ reticualte::use_condaenv("test-condaenv")
 ```
 
 ``` r
+
 # * Or use virtualenv via reticulate
 SetupPyEnv(
-    env_type = "venv", 
-    env_name = "test-venv", 
-    python_version = "3.9.15",
-    packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
-    python_path = NULL,
-    recreate = FALSE,
-    verbose = TRUE
+  env_type = "venv",
+  env_name = "test-venv",
+  python_version = "3.9.15",
+  packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
+  python_path = NULL,
+  recreate = FALSE,
+  verbose = TRUE
 )
 
 reticulate::use_virtualenv("test-venv")
@@ -602,6 +637,7 @@ to list all the Python environments you have set up. Both conda and
 virtual environments are supported.
 
 ``` r
+
 # * Unix-like systems
 ListPyEnv()
 #                 name                                                  python  type
@@ -613,6 +649,7 @@ ListPyEnv()
 Show the conda environments only:
 
 ``` r
+
 # * Unix-like systems
 ListPyEnv(env_type = "conda")
 #                 name                                                  python  type
@@ -625,7 +662,8 @@ can specify the location of the virtual environment with the
 `venv_locations` parameter.
 
 ``` r
-ListPyEnv(env_type = "venv", venv_locations ="~/here_is_a_dir/.virtualenvs")
+
+ListPyEnv(env_type = "venv", venv_locations = "~/here_is_a_dir/.virtualenvs")
 ```
 
 ## Other Functions
@@ -645,15 +683,16 @@ the bulk RNA expression matrix, and the clinical phenotype data are
 loaded all at once. These data are combined into a list and returned.
 
 ``` r
+
 mydata <- LoadRefData(
-    data_type = c("survival"),
-    path = tempdir(),
-    cache = TRUE,
-    timeout = 60
+  data_type = c("survival"),
+  path = tempdir(),
+  cache = TRUE,
+  timeout = 60
 )
 
 # * mat_exam (matrix_example)
-mydata[[1]][1:6,1:6]
+mydata[[1]][1:6, 1:6]
 #          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT SMC01.T_AAACCTGTCCCTTGCA SMC01.T_AAACGGGAGGGAAACA SMC01.T_AAACGGGGTATAGGTA SMC01.T_AAAGATGAGGCCGAAT
 # A1BG                            0                        0                        0                        0                        0                        0
 # A1BG.AS1                        0                        0                        0                        0                        0                        0
@@ -663,7 +702,7 @@ mydata[[1]][1:6,1:6]
 # A2ML1                           0                        0                        0                        0                        0                        0
 
 # * bulk_survival
-mydata[[2]][1:6,1:6]
+mydata[[2]][1:6, 1:6]
 #         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
 # HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
 # RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
@@ -687,14 +726,16 @@ We recommend using the `zeallot` package’s `%<-%` function to assign
 values and rename them simultaneously.
 
 ``` r
+
 library(zeallot)
 
-c(mat_exam, bulk, pheno) %<-%  LoadRefData(
+c(mat_exam, bulk, pheno) %<-%
+  LoadRefData(
     data_type = c("survival"),
     path = tempdir(),
     cache = TRUE,
     timeout = 60
-)
+  )
 ```
 
 ### Aggregating Duplicate Rows or Columns
@@ -705,11 +746,11 @@ using configurable aggregation methods.
 
 #### Core Functions
 
-| Function                                                                                    | Purpose                                                      |
-|---------------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| [`AggregateDupRows()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md) | Merge rows with identical names (e.g., duplicate genes)      |
+| Function | Purpose |
+|----|----|
+| [`AggregateDupRows()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md) | Merge rows with identical names (e.g., duplicate genes) |
 | [`AggregateDupCols()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md) | Merge columns with identical names (e.g., duplicate samples) |
-| [`AggregateDups()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md)    | Convenience wrapper: merge rows & columns                    |
+| [`AggregateDups()`](https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.md) | Convenience wrapper: merge rows & columns |
 
 #### Supported Methods
 
@@ -718,10 +759,13 @@ using configurable aggregation methods.
 #### Basic Usage
 
 ``` r
+
 # Example matrix with duplicate genes (rows) and samples (columns)
-mat <- matrix(1:16, nrow = 4,
-  dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"),
-                  c("S1", "S1", "S2", "S3")))
+mat <- matrix(
+  1:16,
+  nrow = 4,
+  dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"), c("S1", "S1", "S2", "S3"))
+)
 
 mat
 #       S1 S1 S2 S3
@@ -729,7 +773,6 @@ mat
 # TP53   2  6 10 14
 # BRCA1  3  7 11 15
 # ACTB   4  8 12 16
-
 
 # Collapse duplicate genes using sum
 AggregateDupRows(mat, method = "sum")
@@ -762,3 +805,40 @@ AggregateDups(mat, method = "sum")
 - ✅ Silent mode: `verbose = FALSE`
 - ✅ Independent row/column methods via
   `AggregateDups(row_method, col_method)`
+
+### Standalone
+
+#### get_var_value
+
+`get_var_value` is a **standalone script** that statically traces
+variable assignments inside an R function (both from function parameters
+and the function body) and computes the variable’s value by recursively
+resolving the dependency chain.
+
+##### Example
+
+``` r
+
+g <- function(a = 1, b = 2) {
+  c <<- a * 2 + b * 3
+  d = c^2
+  e <- d - 1
+  e
+}
+get_var_value("e", g) # returns 63
+
+h <- function(a = "A", ...) {
+  a <- 1
+  return(a)
+  a <- 2
+  a
+}
+get_var_value("a", h) # returns 1
+```
+
+To copy `get_var_value` into your own package, run:
+
+``` r
+
+usethis::use_standalone("WangLabCSU/SigBridgeR", "standalone-get_var_value.R")
+```

@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Full Tutorial • SigBridgeR</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Full Tutorial">
@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
 
       <h1>Full Tutorial</h1>
             
-            <h4 data-toc-skip class="date">2026-04-26</h4>
+            <h4 data-toc-skip class="date">2026-05-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -370,16 +370,16 @@ metadata column.</p></li>
 object from <code>.h5ad</code> file.</p>
 <p>First, import the data</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu">use_pythonenv</span><span class="op">(</span><span class="st">"The_path_to_your_python"</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu">use_pythonenv</span><span class="op">(</span><span class="st">"The_path_to_your_python"</span><span class="op">)</span></span>
 <span><span class="co"># reticulate::use_condaenv("conda_env_name")</span></span>
 <span></span>
 <span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndata</span><span class="fu">::</span><span class="fu"><a href="https://anndata.dynverse.org/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># Or other file formats, make sure the matrix is in obj$X.</span></span></code></pre></div>
 <p>Or use <code>anndataR</code> to read in your file:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu">use_pythonenv</span><span class="op">(</span><span class="st">"The_path_to_your_python"</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu">use_pythonenv</span><span class="op">(</span><span class="st">"The_path_to_your_python"</span><span class="op">)</span></span>
 <span><span class="co"># reticulate::use_condaenv("conda_env_name")</span></span>
 <span></span>
-<span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.scverse.org/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># basically no difference </span></span></code></pre></div>
+<span><span class="va">anndata_obj</span> <span class="op">&lt;-</span> <span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.scverse.org/reference/read_h5ad.html" class="external-link">read_h5ad</a></span><span class="op">(</span><span class="st">"path_to_your_file.h5ad"</span><span class="op">)</span> <span class="co"># basically no difference</span></span></code></pre></div>
 <p>Then just pass it to <code>SCPreProcess</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">your_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCPreProcess.html">SCPreProcess</a></span><span class="op">(</span></span>
@@ -417,13 +417,16 @@ vary across tissues. instead:</p>
 is_tumor) to explicitly label cells:“Tumo(u)r”/“Normal”</p></li>
 <li><p>Code Example:</p></li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># For glioblastoma (GBM)</span></span>
-<span><span class="va">seurat_obj</span><span class="op">$</span><span class="va">is_tumor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
-<span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"GBM|glioblastoma|astrocytoma_grade_IV"</span>, <span class="va">seurat_obj</span><span class="op">$</span><span class="va">Celltype</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span> <span class="st">"Tumor"</span>,  <span class="co"># or "Tumour" </span></span>
-<span> <span class="st">"Normal"</span>  <span class="co"># or "Non-Tumor" </span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># For glioblastoma (GBM)</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>seurat_obj<span class="sc">$</span>is_tumor <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a> <span class="sc">&gt;</span>  grep</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="fu">l</span>(<span class="st">"GBM|glioblastoma|astrocytoma_grade_IV</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="st">   "</span>, seurat_obj<span class="sc">$</span>Celltyp</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>   e, <span class="at">ignore.case =</span> TR</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  UE),</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a> <span class="sc">&gt;</span>  <span class="st">"Tumor,  # or "</span>Tumou<span class="st">" </span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="st"> &gt;  "</span>Norma<span class="st">"  # or "</span>Non<span class="sc">-</span>Tumo<span class="st">" </span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="st">)</span></span></code></pre></div>
 </blockquote>
 </div>
 </div>
@@ -486,18 +489,18 @@ can refer to and use the following code:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example usage of BulkPreProcess</span></span>
 <span><span class="va">filtered_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BulkPreProcess.html">BulkPreProcess</a></span><span class="op">(</span></span>
-<span>   data <span class="op">=</span> <span class="va">your_count_matrix</span>,</span>
-<span>   sample_info <span class="op">=</span> <span class="va">your_sample_info</span>,</span>
-<span>   gene_symbol_conversion <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>   check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>   min_count_threshold <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>   min_samples_expressed <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>   min_total_reads <span class="op">=</span> <span class="fl">1e6</span>,</span>
-<span>   min_genes_detected <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>   min_correlation <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>   n_top_genes <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>   show_plot_results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>   verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  data <span class="op">=</span> <span class="va">your_count_matrix</span>,</span>
+<span>  sample_info <span class="op">=</span> <span class="va">your_sample_info</span>,</span>
+<span>  gene_symbol_conversion <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  min_count_threshold <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  min_samples_expressed <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  min_total_reads <span class="op">=</span> <span class="fl">1e6</span>,</span>
+<span>  min_genes_detected <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  min_correlation <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  n_top_genes <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  show_plot_results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The function returns a filtered bulk count matrix after applying
 quality control steps and does not perform log2 transformation on the
@@ -590,7 +593,11 @@ standardized gene symbols by using the <a href="https://github.com/ShixiangWang/
 package.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># genes * samples</span></span>
-<span><span class="va">your_bulk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"path_to_your_file.csv"</span>, header <span class="op">=</span> <span class="cn">TRUE</span>, row.names <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">your_bulk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
+<span>  <span class="st">"path_to_your_file.csv"</span>,</span>
+<span>  header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">your_bulk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SymbolConvert.html">SymbolConvert</a></span><span class="op">(</span><span class="va">your_bulk_data</span><span class="op">)</span></span></code></pre></div>
 <p>You can also use other package like <code>org.Hs.eg.db</code> for
@@ -599,16 +606,22 @@ gene symbol matching if you prefer not to use SymbolConvert’s built-in
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">org.Hs.eg.db</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">your_bulk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"path_to_your_file.csv"</span>, header <span class="op">=</span> <span class="cn">TRUE</span>, row.names <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">your_bulk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
+<span>  <span class="st">"path_to_your_file.csv"</span>,</span>
+<span>  header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">your_bulk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BulkPreProcess.html">BulkPreProcess</a></span><span class="op">(</span><span class="va">your_bulk_data</span>, gene_symbol_conversion <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ensembl_ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"\\..*"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">your_bulk_data</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">gene_symbols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/AnnotationDb-class.html" class="external-link">mapIds</a></span><span class="op">(</span><span class="va">org.Hs.eg.db</span>, </span>
-<span>                      keys <span class="op">=</span> <span class="va">ensembl_ids</span>,</span>
-<span>                      column <span class="op">=</span> <span class="st">"SYMBOL"</span>,</span>
-<span>                      keytype <span class="op">=</span> <span class="st">"ENSEMBL"</span>,</span>
-<span>                      multiVals <span class="op">=</span> <span class="st">"first"</span><span class="op">)</span></span>
+<span><span class="va">gene_symbols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/AnnotationDb-class.html" class="external-link">mapIds</a></span><span class="op">(</span></span>
+<span>  <span class="va">org.Hs.eg.db</span>,</span>
+<span>  keys <span class="op">=</span> <span class="va">ensembl_ids</span>,</span>
+<span>  column <span class="op">=</span> <span class="st">"SYMBOL"</span>,</span>
+<span>  keytype <span class="op">=</span> <span class="st">"ENSEMBL"</span>,</span>
+<span>  multiVals <span class="op">=</span> <span class="st">"first"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">your_bulk_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">gene_symbols</span></span></code></pre></div>
 </div>
@@ -618,7 +631,7 @@ gene symbol matching if you prefer not to use SymbolConvert’s built-in
 </h4>
 <p>Basically you can just use your phenotype data directly. If you are
 confused about the structure <code><a href="../reference/Screen.html">Screen()</a></code> requires, please
-refer to <a href="#example">Section 4</a>.</p>
+refer to <a href="#example">Section 4 Example</a>.</p>
 <p>We provide some functions helping formatting and checking your
 phenotype data.</p>
 <p><strong>Checking NA and report the position</strong>:</p>
@@ -626,34 +639,44 @@ phenotype data.</p>
 <code class="sourceCode R"><span><span class="co"># `max_print`: output how many NA location messages at one time in console if NA exists</span></span>
 <span><span class="fu"><a href="../reference/CheckNA.html">CheckNA</a></span><span class="op">(</span><span class="va">your_phenotype_data</span>, max_print <span class="op">=</span> <span class="fl">5L</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="cn">NA</span><span class="op">)</span>,<span class="fl">2</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gene1"</span>,<span class="st">"Gene2"</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sample1"</span>,<span class="st">"Sample2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  <span class="fl">2</span>,</span>
+<span>  dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gene1"</span>, <span class="st">"Gene2"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sample1"</span>, <span class="st">"Sample2"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">na_position</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CheckNA.html">CheckNA</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span></span>
 <span><span class="co"># ! Found 2 NA values in data</span></span>
 <span><span class="co"># First 2 positions:</span></span>
 <span><span class="co">#   Row 1 ("Gene1"), col 1 ("Sample1")</span></span>
 <span><span class="co">#   Row 2 ("Gene2"), col 2 ("Sample2")</span></span></code></pre></div>
 <p><strong>In-place data transformation</strong></p>
-<p>Use it just in tidyverse-like style</p>
+<p>Use it just in tidyverse-like style. The difference between
+<code>PhenoMap</code> and the dplyr workflow is that
+<code>PhenoMap</code> is slightly faster when processing two-dimensional
+<code>data.frame</code> data, and it preserves the <code>names</code>
+attribute when processing one-dimensional vectors. Apart from these two
+points, there is no other difference — it is simply a syntactic sugar we
+provide.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ? if a vector</span></span>
 <span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2000</span></span>
 <span></span>
-<span><span class="va">v2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span><span class="va">v</span>, <span class="va">v</span> <span class="op">&lt;</span> <span class="fl">1000</span> <span class="op">~</span> <span class="st">"0"</span> ,<span class="va">v</span> <span class="op">&gt;</span> <span class="fl">1000</span> <span class="op">~</span> <span class="st">"1"</span>,.default <span class="op">=</span> <span class="st">"here_is_1k"</span><span class="op">)</span></span>
+<span><span class="va">v2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span><span class="va">v</span>, <span class="va">v</span> <span class="op">&lt;</span> <span class="fl">1000</span> <span class="op">~</span> <span class="st">"0"</span>, <span class="va">v</span> <span class="op">&gt;</span> <span class="fl">1000</span> <span class="op">~</span> <span class="st">"1"</span>, .default <span class="op">=</span> <span class="st">"here_is_1k"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">v2</span><span class="op">)</span></span>
-<span><span class="co">#  0          1 here_is_1k </span></span>
-<span><span class="co">#    999       1000          1 </span></span>
+<span><span class="co">#  0          1 here_is_1k</span></span>
+<span><span class="co">#    999       1000          1</span></span>
 <span></span>
 <span><span class="va">v3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span><span class="va">v</span>, <span class="va">v</span> <span class="op">&lt;</span> <span class="fl">100</span> <span class="op">~</span> <span class="fl">0</span>, <span class="va">v</span> <span class="op">&lt;</span> <span class="fl">1000</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">v</span> <span class="op">&gt;</span> <span class="fl">1000</span> <span class="op">~</span> <span class="fl">2</span>, .default <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">v3</span><span class="op">)</span></span>
-<span><span class="co">#    0    1    2 </span></span>
-<span><span class="co">#   99  900 1000 </span></span>
+<span><span class="co">#    0    1    2</span></span>
+<span><span class="co">#   99  900 1000</span></span>
 <span></span>
 <span><span class="co"># ? if a data</span></span>
-<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> </span>
-<span><span class="va">d2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">15</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">mpg</span> <span class="op">&lt;=</span> <span class="fl">15</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span> </span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">mtcars</span></span>
+<span><span class="va">d2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">15</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">mpg</span> <span class="op">&lt;=</span> <span class="fl">15</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">d2</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span></span>
-<span><span class="co">#  0  1 </span></span>
-<span><span class="co">#  6 26 </span></span>
+<span><span class="co">#  0  1</span></span>
+<span><span class="co">#  6 26</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d2</span><span class="op">)</span></span>
 <span><span class="co">#      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
 <span><span class="co">#    &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;</span></span>
@@ -671,7 +694,7 @@ phenotype data.</p>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>  <span class="va">status</span> <span class="op">==</span> <span class="st">"death"</span> <span class="op">~</span> <span class="fl">1</span>,</span>
 <span>  <span class="va">status</span> <span class="op">==</span> <span class="st">"alive"</span> <span class="op">~</span> <span class="fl">0</span>,</span>
-<span>  selelct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"time"</span>,<span class="st">"status"</span><span class="op">)</span></span>
+<span>  selelct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"time"</span>, <span class="st">"status"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Key parameters for <code>PhenoPreProcess</code>:</p>
 <ul>
@@ -789,7 +812,7 @@ iterations for cell evaluation (default: 100).</li>
 <span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>, <span class="co"># A Seurat object after preprocessing</span></span>
 <span>  phenotype <span class="op">=</span> <span class="va">matched_phenotype_data</span>,</span>
 <span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, <span class="co"># The filtering labels are stored in the `@misc`, you can change it to your own label</span></span>
-<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,  </span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span><span class="op">)</span>,</span>
 <span>  path2save_scissor_inputs <span class="op">=</span> <span class="st">"Tmp/Scissor_inputs.RData"</span> <span class="co"># Intermediate data</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -797,9 +820,9 @@ iterations for cell evaluation (default: 100).</li>
 inherent feature of the <code>Scissor</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>, </span>
-<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, </span>
-<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>, </span>
+<span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span><span class="op">)</span>,</span>
 <span>  path2load_scissor_cahe <span class="op">=</span> <span class="st">"Tmp/Scissor_inputs.RData"</span> <span class="co"># Intermediate data</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -808,12 +831,12 @@ adjusted, this method can also be applied.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># When `alpha = NULL`, an alpha iteration will continue until phenotype-associated cells are screened out or no cells are screened out even after exceeding the `cutoff`.</span></span>
 <span><span class="va">scissor_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>, </span>
-<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, </span>
-<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>, </span>
+<span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span><span class="op">)</span>,</span>
 <span>  path2load_scissor_cahce <span class="op">=</span> <span class="st">"Tmp/Scissor_inputs.RData"</span>, <span class="co"># Intermediate data</span></span>
-<span>  alpha <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>  alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="fl">0.2</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><strong>Returning structure</strong>: A list containing:</p>
@@ -835,16 +858,16 @@ information for each Scissor selected cell. First, prepare a benchmark
 dataset yourself for cell evalutaion.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>, </span>
-<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, </span>
-<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>, </span>
+<span>  sc_data <span class="op">=</span> <span class="va">sc_dataset</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span>
 <span>  screen_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scissor"</span><span class="op">)</span>,</span>
 <span>  path2load_scissor_cahce <span class="op">=</span> <span class="st">"Tmp/Scissor_inputs.RData"</span>, <span class="co"># Intermediate data</span></span>
 <span>  reliability_test <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cell_evaluation <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cell_evaluation.benchmark_data <span class="op">=</span> <span class="st">"path_to_benchmark_data.RData"</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="cn">NULL</span>, </span>
-<span>  cutoff <span class="op">=</span> <span class="fl">0.05</span> </span>
+<span>  alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cutoff <span class="op">=</span> <span class="fl">0.05</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>helpful documentation:</p>
 <p><a href="https://sunduanchen.github.io/Scissor/vignettes/Scissor_Tutorial.html#cell-level-evaluations" class="external-link">Scissor-Cell
@@ -1023,7 +1046,7 @@ searching vector is also supported.</li>
 <span>  matched_bulk <span class="op">=</span> <span class="va">your_matched_bulk</span>,</span>
 <span>  sc_data <span class="op">=</span> <span class="va">A_Seurat_object</span>,</span>
 <span>  phenotype <span class="op">=</span> <span class="va">your_matched_phenotype</span>,</span>
-<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, <span class="co"># The filtering labels are stored in the `@misc` </span></span>
+<span>  label_type <span class="op">=</span> <span class="st">"TP53"</span>, <span class="co"># The filtering labels are stored in the `@misc`</span></span>
 <span>  screen_method <span class="op">=</span> <span class="st">"scpp"</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span>
 <span>  ref_group <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -1097,7 +1120,7 @@ default is “jarque-bera”.</li>
 <span>    env.recreate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    <span class="co"># Use conda-forge channel for env creating</span></span>
 <span>    env.use_conda_forge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    <span class="co"># Message output when creating the env </span></span>
+<span>    <span class="co"># Message output when creating the env</span></span>
 <span>    env.verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  <span class="co"># DEGAS parameters</span></span>
@@ -1332,11 +1355,11 @@ See below for details.</li>
 <code class="sourceCode R"><span><span class="va">sidish_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>  matched_bulk <span class="op">=</span> <span class="va">your_matched_bulk</span>,</span>
 <span>  sc_data <span class="op">=</span> <span class="va">A_Seurat_object</span>,</span>
-<span>  phenotype <span class="op">=</span> <span class="va">your_survival_phenotype</span>,  <span class="co"># Must contain "time" and "status" columns</span></span>
-<span>  label_type <span class="op">=</span> <span class="st">"SIDISH"</span>,                <span class="co"># Labels stored in `@misc` slot to identify screening results</span></span>
+<span>  phenotype <span class="op">=</span> <span class="va">your_survival_phenotype</span>, <span class="co"># Must contain "time" and "status" columns</span></span>
+<span>  label_type <span class="op">=</span> <span class="st">"SIDISH"</span>, <span class="co"># Labels stored in `@misc` slot to identify screening results</span></span>
 <span>  screen_method <span class="op">=</span> <span class="st">"SIDISH"</span>,</span>
-<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,         <span class="co"># Currently only survival phenotype is supported</span></span>
-<span>  </span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>, <span class="co"># Currently only survival phenotype is supported</span></span>
+<span></span>
 <span>  <span class="co"># SIDISH algorithm parameters</span></span>
 <span>  sidish_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="co"># Preprocessing parameters</span></span>
@@ -1346,14 +1369,14 @@ See below for details.</li>
 <span>    n_genes_by_counts <span class="op">=</span> <span class="fl">5000L</span>,</span>
 <span>    pct_counts_mt <span class="op">=</span> <span class="fl">10L</span>,</span>
 <span>    batch_correction <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    survival_ <span class="op">=</span> <span class="st">"time"</span>,                 <span class="co"># Column name for survival time</span></span>
-<span>    status <span class="op">=</span> <span class="st">"status"</span>,                  <span class="co"># Column name for event status</span></span>
-<span>    </span>
+<span>    survival_ <span class="op">=</span> <span class="st">"time"</span>, <span class="co"># Column name for survival time</span></span>
+<span>    status <span class="op">=</span> <span class="st">"status"</span>, <span class="co"># Column name for event status</span></span>
+<span></span>
 <span>    <span class="co"># Execution environment</span></span>
-<span>    device <span class="op">=</span> <span class="st">"cuda"</span>,                    <span class="co"># "cuda" for GPU acceleration, "cpu" for CPU-only</span></span>
+<span>    device <span class="op">=</span> <span class="st">"cuda"</span>, <span class="co"># "cuda" for GPU acceleration, "cpu" for CPU-only</span></span>
 <span>    use_spatial_graph <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    k_neighbors <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    </span>
+<span></span>
 <span>    <span class="co"># Phase 1: VAE training parameters</span></span>
 <span>    phase1_epochs <span class="op">=</span> <span class="fl">225L</span>,</span>
 <span>    phase1_i_epochs <span class="op">=</span> <span class="fl">20L</span>,</span>
@@ -1364,8 +1387,8 @@ See below for details.</li>
 <span>    phase1_lr <span class="op">=</span> <span class="fl">1e-4</span>,</span>
 <span>    phase1_lr_3 <span class="op">=</span> <span class="fl">1e-4</span>,</span>
 <span>    phase1_dropout <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>    phase1_type <span class="op">=</span> <span class="st">"Dense"</span>,              <span class="co"># "Dense" or "Normal"</span></span>
-<span>    </span>
+<span>    phase1_type <span class="op">=</span> <span class="st">"Dense"</span>, <span class="co"># "Dense" or "Normal"</span></span>
+<span></span>
 <span>    <span class="co"># Phase 2: Deep Cox training parameters</span></span>
 <span>    phase2_epochs <span class="op">=</span> <span class="fl">500L</span>,</span>
 <span>    phase2_hidden <span class="op">=</span> <span class="fl">128L</span>,</span>
@@ -1373,19 +1396,19 @@ See below for details.</li>
 <span>    phase2_dropout <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>    phase2_test_size <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>    phase2_batch_size_bulk <span class="op">=</span> <span class="fl">256L</span>,</span>
-<span>    </span>
+<span></span>
 <span>    <span class="co"># Training &amp; risk definition</span></span>
 <span>    train_iterations <span class="op">=</span> <span class="fl">5L</span>,</span>
 <span>    train_percentile <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>    train_steepness <span class="op">=</span> <span class="fl">30L</span>,</span>
-<span>    train_path <span class="op">=</span> <span class="st">"./SIDISH_res/"</span>,       <span class="co"># Path to save intermediate data</span></span>
+<span>    train_path <span class="op">=</span> <span class="st">"./SIDISH_res/"</span>, <span class="co"># Path to save intermediate data</span></span>
 <span>    train_num_workers <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>    train_distribution_fit <span class="op">=</span> <span class="st">"fitted"</span>   <span class="co"># "fitted" or "default"</span></span>
+<span>    train_distribution_fit <span class="op">=</span> <span class="st">"fitted"</span> <span class="co"># "fitted" or "default"</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Python environment parameters</span></span>
 <span>  env_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    env.name <span class="op">=</span> <span class="st">"r-reticulate-sidish-nvidia"</span>,  <span class="co"># Auto-selected based on device parameter</span></span>
+<span>    env.name <span class="op">=</span> <span class="st">"r-reticulate-sidish-nvidia"</span>, <span class="co"># Auto-selected based on device parameter</span></span>
 <span>    env.type <span class="op">=</span> <span class="st">"conda"</span>,</span>
 <span>    env.method <span class="op">=</span> <span class="st">"environment"</span>,</span>
 <span>    env.file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
@@ -1397,11 +1420,11 @@ See below for details.</li>
 <span>      <span class="st">"numpy"</span> <span class="op">=</span> <span class="st">"1.26.4"</span></span>
 <span>      <span class="co"># Additional packages defined in environment.yml</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    env.recreate <span class="op">=</span> <span class="cn">FALSE</span>,               <span class="co"># Force re-creating environment if TRUE</span></span>
+<span>    env.recreate <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># Force re-creating environment if TRUE</span></span>
 <span>    env.use_conda_forge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    env.verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  </span>
+<span></span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>This code chunk will CREATE a conda environment called
@@ -1534,27 +1557,27 @@ screening results of these methods. The Seurat object or a results list
 from <code>Screen</code> is accepted.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">merged_seurat</span> <span class="op">=</span> <span class="fu"><a href="../reference/MergeResult.html">MergeResult</a></span><span class="op">(</span></span>
-<span>    <span class="va">your_scissor_result</span>, </span>
-<span>    <span class="va">your_scPAS_result</span>, </span>
-<span>    <span class="va">your_scAB_result</span>, </span>
-<span>    <span class="va">your_scPP_result</span>,</span>
-<span>    <span class="va">your_DEGAS_result</span></span>
-<span>    <span class="co"># # * Add more if you want</span></span>
-<span>    <span class="co"># ,your_LP_SGL_result,</span></span>
-<span>    <span class="co"># your_PIPET_result</span></span>
+<span>  <span class="va">your_scissor_result</span>,</span>
+<span>  <span class="va">your_scPAS_result</span>,</span>
+<span>  <span class="va">your_scAB_result</span>,</span>
+<span>  <span class="va">your_scPP_result</span>,</span>
+<span>  <span class="va">your_DEGAS_result</span></span>
+<span>  <span class="co"># # * Add more if you want</span></span>
+<span>  <span class="co"># ,your_LP_SGL_result,</span></span>
+<span>  <span class="co"># your_PIPET_result</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># * mixed input form is alse supported </span></span>
+<span><span class="co"># * mixed input form is alse supported</span></span>
 <span></span>
 <span><span class="va">merged_seurat</span> <span class="op">=</span> <span class="fu"><a href="../reference/MergeResult.html">MergeResult</a></span><span class="op">(</span></span>
-<span>    <span class="va">your_scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span>, </span>
-<span>    <span class="va">your_scPAS_result</span><span class="op">$</span><span class="va">scRNA_data</span>, </span>
-<span>    <span class="va">your_scAB_result</span>, </span>
-<span>    <span class="va">your_scPP_result</span>,</span>
-<span>    <span class="va">your_DEGAS_result</span></span>
-<span>    <span class="co"># # * Add more if you want</span></span>
-<span>    <span class="co"># ,your_LP_SGL_result$scRNA_data,</span></span>
-<span>    <span class="co"># your_PIPET_result</span></span>
+<span>  <span class="va">your_scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span>,</span>
+<span>  <span class="va">your_scPAS_result</span><span class="op">$</span><span class="va">scRNA_data</span>,</span>
+<span>  <span class="va">your_scAB_result</span>,</span>
+<span>  <span class="va">your_scPP_result</span>,</span>
+<span>  <span class="va">your_DEGAS_result</span></span>
+<span>  <span class="co"># # * Add more if you want</span></span>
+<span>  <span class="co"># ,your_LP_SGL_result$scRNA_data,</span></span>
+<span>  <span class="co"># your_PIPET_result</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>This function merges all slots from the input Seurat objects. Note
 that intermediate data (e.g.,
@@ -1593,37 +1616,37 @@ and patient, you may reference and use the following code:</p>
 <span><span class="co"># library(purrr)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">celltype_umap</span>,</span>
-<span>    <span class="va">patient_umap</span>,</span>
-<span>    <span class="va">scissor_umap</span>,</span>
-<span>    <span class="va">scab_umap</span>,</span>
-<span>    <span class="va">scpas_umap</span>,</span>
-<span>    <span class="va">scpp_umap</span>,</span>
-<span>    <span class="va">degas_umap</span>,</span>
-<span>    <span class="co"># * Add more if you want</span></span>
+<span>  <span class="va">celltype_umap</span>,</span>
+<span>  <span class="va">patient_umap</span>,</span>
+<span>  <span class="va">scissor_umap</span>,</span>
+<span>  <span class="va">scab_umap</span>,</span>
+<span>  <span class="va">scpas_umap</span>,</span>
+<span>  <span class="va">scpp_umap</span>,</span>
+<span>  <span class="va">degas_umap</span>,</span>
+<span>  <span class="co"># * Add more if you want</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span></span>
-<span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
-<span>        <span class="co"># make sure these column names exist</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"celltype"</span>, <span class="st">"patient"</span>, <span class="st">"scissor"</span>, <span class="st">"scAB"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span>, <span class="st">"DEGAS"</span><span class="op">)</span>, </span>
-<span>        <span class="op">~</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span></span>
-<span>            <span class="va">your_seurat_obj</span>,</span>
-<span>            group.by <span class="op">=</span> <span class="va">.x</span>,</span>
-<span>            pt.size <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>            reduction <span class="op">=</span> <span class="st">"umap"</span></span>
-<span>        <span class="op">)</span> <span class="op">+</span></span>
-<span>            <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
+<span>    <span class="co"># make sure these column names exist</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"celltype"</span>, <span class="st">"patient"</span>, <span class="st">"scissor"</span>, <span class="st">"scAB"</span>, <span class="st">"scPAS"</span>, <span class="st">"scPP"</span>, <span class="st">"DEGAS"</span><span class="op">)</span>,</span>
+<span>    <span class="op">~</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span></span>
+<span>      <span class="va">your_seurat_obj</span>,</span>
+<span>      group.by <span class="op">=</span> <span class="va">.x</span>,</span>
+<span>      pt.size <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>      reduction <span class="op">=</span> <span class="st">"umap"</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># * Show</span></span>
 <span><span class="va">umaps</span> <span class="op">=</span> <span class="va">celltype_umap</span> <span class="op">+</span></span>
-<span>    <span class="va">patient_umap</span> <span class="op">+</span></span>
-<span>    <span class="va">scissor_umap</span> <span class="op">+</span></span>
-<span>    <span class="va">scab_umap</span> <span class="op">+</span></span>
-<span>    <span class="va">scpas_umap</span> <span class="op">+</span></span>
-<span>    <span class="va">scpp_umap</span> <span class="op">+</span></span>
-<span>    <span class="va">degas_umap</span> <span class="op">+</span></span>
-<span>    <span class="co"># * Add more if you want</span></span>
-<span>    <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="va">patient_umap</span> <span class="op">+</span></span>
+<span>  <span class="va">scissor_umap</span> <span class="op">+</span></span>
+<span>  <span class="va">scab_umap</span> <span class="op">+</span></span>
+<span>  <span class="va">scpas_umap</span> <span class="op">+</span></span>
+<span>  <span class="va">scpp_umap</span> <span class="op">+</span></span>
+<span>  <span class="va">degas_umap</span> <span class="op">+</span></span>
+<span>  <span class="co"># * Add more if you want</span></span>
+<span>  <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">umaps</span></span></code></pre></div>
 <p>This will generate seven UMAP plots separately.</p>
@@ -1637,15 +1660,15 @@ confidence scores, you may reference and use the following code:</p>
 <span><span class="co"># library(purrr)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">scPAS_Pvalue_umap</span>, <span class="va">scPAS_NRS_umap</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span></span>
-<span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPAS_Pvalue"</span>, <span class="st">"scPAS_NRS"</span><span class="op">)</span>,</span>
-<span>        <span class="op">~</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html" class="external-link">FeaturePlot</a></span><span class="op">(</span></span>
-<span>            object <span class="op">=</span> <span class="va">your_seurat_obj</span>,</span>
-<span>            features <span class="op">=</span> <span class="va">.x</span>,</span>
-<span>        <span class="op">)</span> <span class="op">+</span></span>
-<span>            <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="op">+</span></span>
-<span>            <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPAS_Pvalue"</span>, <span class="st">"scPAS_NRS"</span><span class="op">)</span>,</span>
+<span>    <span class="op">~</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html" class="external-link">FeaturePlot</a></span><span class="op">(</span></span>
+<span>      object <span class="op">=</span> <span class="va">your_seurat_obj</span>,</span>
+<span>      features <span class="op">=</span> <span class="va">.x</span>,</span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># * Show</span></span>
 <span><span class="va">scPAS_Pvalue_umap</span> <span class="op">|</span> <span class="va">scPAS_NRS_umap</span></span></code></pre></div>
@@ -1689,19 +1712,19 @@ positive cells across different patients. You can refer to and use the
 following code:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
-<span>   screened_seurat <span class="op">=</span> <span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span>, </span>
-<span>   group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
-<span>   screen_type <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
-<span>   plot_title <span class="op">=</span> <span class="st">"scPAS Screening Results"</span></span>
+<span>  screened_seurat <span class="op">=</span> <span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span>,</span>
+<span>  group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
+<span>  screen_type <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
+<span>  plot_title <span class="op">=</span> <span class="st">"scPAS Screening Results"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>If you have performed multiple screening methods and already merged
 the results, you can use the following code:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenFractionPlot.html">ScreenFractionPlot</a></span><span class="op">(</span></span>
-<span>   screened_seurat <span class="op">=</span> <span class="va">merged_seurat</span>, </span>
-<span>   group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
-<span>   screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"scPP"</span><span class="op">)</span>, <span class="co"># multiple screening results</span></span>
-<span>   plot_title <span class="op">=</span> <span class="st">"Screening Results"</span> <span class="co">#  A screen_type prefix will be added to the current plot title</span></span>
+<span>  screened_seurat <span class="op">=</span> <span class="va">merged_seurat</span>,</span>
+<span>  group_by <span class="op">=</span> <span class="st">"patient"</span>, <span class="co"># grouping basis for the x-axis</span></span>
+<span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"scPP"</span><span class="op">)</span>, <span class="co"># multiple screening results</span></span>
+<span>  plot_title <span class="op">=</span> <span class="st">"Screening Results"</span> <span class="co">#  A screen_type prefix will be added to the current plot title</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The order of the groups is determined by the proportion of
 <strong>Positive</strong> cells within each group.</p>
@@ -1749,60 +1772,60 @@ following code:</p>
 <span></span>
 <span><span class="co"># * get the cell vectors</span></span>
 <span><span class="va">scissor_pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">)</span><span class="op">[</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scissor</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scissor</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
 <span><span class="op">]</span></span>
 <span><span class="va">scab_pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scab_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">)</span><span class="op">[</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scab_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scAB</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scab_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scAB</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
 <span><span class="op">]</span></span>
 <span><span class="va">scpas_pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">)</span><span class="op">[</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPAS</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPAS</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
 <span><span class="op">]</span></span>
 <span><span class="va">scpp_pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">)</span><span class="op">[</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scpp_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPP</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">scpp_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPP</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
 <span><span class="op">]</span></span>
 <span><span class="va">degas_pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">degas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">)</span><span class="op">[</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">degas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">DEGAS</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">degas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">DEGAS</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span></span>
 <span><span class="op">]</span></span>
 <span></span>
 <span></span>
-<span><span class="va">all_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">your_seurat_obj</span><span class="op">)</span> </span>
+<span><span class="va">all_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">your_seurat_obj</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># * create a list of cell vectors</span></span>
 <span><span class="va">pos_venn</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    scissor <span class="op">=</span> <span class="va">scissor_pos</span>,</span>
-<span>    scpas <span class="op">=</span> <span class="va">scpas_pos</span>,</span>
-<span>    scab <span class="op">=</span> <span class="va">scab_pos</span>,</span>
-<span>    scpp <span class="op">=</span> <span class="va">scpp_pos</span>,</span>
-<span>    degas <span class="op">=</span> <span class="va">degas_pos</span>,</span>
-<span>    all_cells <span class="op">=</span> <span class="va">all_cells</span></span>
-<span>    <span class="co"># * you can add more groups here</span></span>
+<span>  scissor <span class="op">=</span> <span class="va">scissor_pos</span>,</span>
+<span>  scpas <span class="op">=</span> <span class="va">scpas_pos</span>,</span>
+<span>  scab <span class="op">=</span> <span class="va">scab_pos</span>,</span>
+<span>  scpp <span class="op">=</span> <span class="va">scpp_pos</span>,</span>
+<span>  degas <span class="op">=</span> <span class="va">degas_pos</span>,</span>
+<span>  all_cells <span class="op">=</span> <span class="va">all_cells</span></span>
+<span>  <span class="co"># * you can add more groups here</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">venn_plot</span> <span class="op">=</span> <span class="fu">ggVennDiagram</span><span class="fu">::</span><span class="fu"><a href="https://gaospecial.github.io/ggVennDiagram/reference/ggVennDiagram.html" class="external-link">ggVennDiagram</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="va">pos_venn</span>,</span>
-<span>    <span class="co"># * the labels of each group to be shown on the diagram</span></span>
-<span>    category.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="st">"Scissor"</span>,</span>
-<span>        <span class="st">"scPAS"</span>,</span>
-<span>        <span class="st">"scAB"</span>,</span>
-<span>        <span class="st">"scPP"</span>,</span>
-<span>        <span class="st">"DEGAS"</span>,</span>
-<span>        <span class="st">"All cells"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    <span class="co"># * the colors of each group</span></span>
-<span>    set_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="st">"#a33333ff"</span>,</span>
-<span>        <span class="st">"#37ae00ff"</span>, </span>
-<span>        <span class="st">"#2a2a94ff"</span>,</span>
-<span>        <span class="st">"#9c8200ff"</span>,</span>
-<span>        <span class="st">"#bb14adff"</span>,</span>
-<span>        <span class="st">"#008383ff"</span></span>
-<span>    <span class="op">)</span></span>
+<span>  x <span class="op">=</span> <span class="va">pos_venn</span>,</span>
+<span>  <span class="co"># * the labels of each group to be shown on the diagram</span></span>
+<span>  category.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Scissor"</span>,</span>
+<span>    <span class="st">"scPAS"</span>,</span>
+<span>    <span class="st">"scAB"</span>,</span>
+<span>    <span class="st">"scPP"</span>,</span>
+<span>    <span class="st">"DEGAS"</span>,</span>
+<span>    <span class="st">"All cells"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="co"># * the colors of each group</span></span>
+<span>  set_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"#a33333ff"</span>,</span>
+<span>    <span class="st">"#37ae00ff"</span>,</span>
+<span>    <span class="st">"#2a2a94ff"</span>,</span>
+<span>    <span class="st">"#9c8200ff"</span>,</span>
+<span>    <span class="st">"#bb14adff"</span>,</span>
+<span>    <span class="st">"#008383ff"</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"white"</span>, high <span class="op">=</span> <span class="st">"#ffb6b6ff"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Screening Venn Diagram"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"white"</span>, high <span class="op">=</span> <span class="st">"#ffb6b6ff"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Screening Venn Diagram"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>helpful link</strong>:</p>
 <p><a href="https://gaospecial.github.io/ggVennDiagram/" class="external-link">ggVennDiagram -
 https://gaospecial.github.io/ggVennDiagram/</a></p>
@@ -1873,8 +1896,8 @@ phenotype.</p>
 <code class="sourceCode R"><span><span class="co"># Set working directory</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"here"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/i_am.html" class="external-link">i_am</a></span><span class="op">(</span><span class="st">".here"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>         </span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>root.dir <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>root.dir <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wanglabcsu.github.io/sigbridger">SigBridgeR</a></span><span class="op">)</span></span>
@@ -1894,15 +1917,15 @@ phenotype.</p>
 <span><span class="co"># A2M.AS1                         0                        0</span></span>
 <span><span class="co"># A2ML1                           0                        0</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">bulk</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">bulk</span><span class="op">)</span></span>
 <span><span class="co"># [1] 4071  506</span></span>
-<span><span class="va">bulk</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span> <span class="co"># already log2 transformed</span></span>
+<span><span class="va">bulk</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span> <span class="co"># already log2 transformed</span></span>
 <span><span class="co">#         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655</span></span>
 <span><span class="co"># HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335</span></span>
 <span><span class="co"># RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257</span></span>
 <span><span class="co"># HMGCLL1       2.7476       5.8513       3.8334       3.6447       2.9188       4.8820</span></span>
-<span><span class="co"># LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882 </span></span>
-<span><span class="co"># GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311 </span></span>
+<span><span class="co"># LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882</span></span>
+<span><span class="co"># GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311</span></span>
 <span><span class="co"># LRRTM3        1.7458       2.0092       0.0000       1.4468       0.0000       0.0000</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span>
 <span><span class="co"># [1] 506</span></span>
@@ -1933,7 +1956,7 @@ RNA expression matrix data.</p>
 <span>    <span class="op">)</span>,</span>
 <span>    s <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat_exam</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>  </span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  quality_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  data_filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -1997,7 +2020,6 @@ only and is not recommended for real analyses.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">counts_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">gene_ids</span></span>
 <span></span>
 <span></span>
-<span></span>
 <span><span class="va">filtered_counts_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BulkPreProcess.html">BulkPreProcess</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">counts_mat</span>,</span>
 <span>  sample_info <span class="op">=</span> <span class="va">sample_info</span>,</span>
@@ -2032,13 +2054,13 @@ algorithms.</p>
 survival.</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"Scissor"</span>,</span>
-<span>    alpha <span class="op">=</span> <span class="fl">0.05</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"Scissor"</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.05</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># ℹ [2025/09/08 17:03:20] Scissor start...</span></span>
@@ -2050,8 +2072,8 @@ survival.</p>
 <span><span class="co"># ----------------------------------------------------------------------------------------------------</span></span>
 <span><span class="co"># Five-number summary of correlations:</span></span>
 <span></span>
-<span><span class="co">#         0%        25%        50%        75%       100% </span></span>
-<span><span class="co"># -0.2342323  0.0594385  0.1118708  0.1642065  0.5250605 </span></span>
+<span><span class="co">#         0%        25%        50%        75%       100%</span></span>
+<span><span class="co"># -0.2342323  0.0594385  0.1118708  0.1642065  0.5250605</span></span>
 <span><span class="co"># ----------------------------------------------------------------------------------------------------</span></span>
 <span><span class="co"># ℹ [2025/09/08 17:03:21] Perform cox regression on the given clinical outcomes:</span></span>
 <span><span class="co"># ✔ Statistics data saved to `Scissor_inputs.RData`.</span></span>
@@ -2063,8 +2085,8 @@ survival.</p>
 <span><span class="co"># The percentage of selected cell is: 30.924%</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scissor_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scissor</span><span class="op">)</span></span>
-<span><span class="co"># Negative  Neutral Positive </span></span>
-<span><span class="co">#       73      755      265 </span></span></code></pre></div>
+<span><span class="co"># Negative  Neutral Positive</span></span>
+<span><span class="co">#       73      755      265</span></span></code></pre></div>
 <p>You will see an additional “Scissor_inputs.RData” in the working
 directory. This is the intermediate data generated by the Scissor
 method, which we can use to save running time ( You can also set
@@ -2074,15 +2096,15 @@ intermediate files ). Meanwhile, we set
 reliability test.</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scissor_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>, <span class="co"># doesn't need to be provided Since the intermediate data is provided</span></span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno_ok</span>, <span class="co"># doesn't need to be provided Since the intermediate data is provided</span></span>
-<span>    label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"Scissor"</span>,</span>
-<span>    alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>    path2load_scissor_cache <span class="op">=</span> <span class="st">"Scissor_inputs.RData"</span>,</span>
-<span>    reliability_test <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>, <span class="co"># doesn't need to be provided Since the intermediate data is provided</span></span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno_ok</span>, <span class="co"># doesn't need to be provided Since the intermediate data is provided</span></span>
+<span>  label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"Scissor"</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  path2load_scissor_cache <span class="op">=</span> <span class="st">"Scissor_inputs.RData"</span>,</span>
+<span>  reliability_test <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># ℹ [2025/09/08 16:07:48] Scissor start...</span></span>
 <span><span class="co"># ℹ [2025/09/08 16:07:48] Loading data from `Scissor_inputs.RData`...</span></span>
@@ -2119,7 +2141,9 @@ reliability test.</p>
 <span><span class="va">scissor_result</span><span class="op">$</span><span class="va">reliability_result</span><span class="op">$</span><span class="va">c_index_test_real</span></span>
 <span><span class="co">#  [1] 0.6038544 0.5022222 0.6050725 0.6279391 0.5064935 0.6033520 0.6769231 0.6453089 0.4968421 0.6315789</span></span>
 <span></span>
-<span><span class="va">scissor_result</span><span class="op">$</span><span class="va">reliability_result</span><span class="op">$</span><span class="va">c_index_test_back</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">scissor_result</span><span class="op">$</span><span class="va">reliability_result</span><span class="op">$</span><span class="va">c_index_test_back</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]      [,8]      [,9]     [,10]</span></span>
 <span><span class="co">#  [1,] 0.5594714 0.4943820 0.5379747 0.5583658 0.5527728 0.6146435 0.5130597 0.5701275 0.4691943 0.5177305</span></span>
 <span><span class="co">#  [2,] 0.5735608 0.4726891 0.4146341 0.5020661 0.5354331 0.6840149 0.5540275 0.4990758 0.5324484 0.5497382</span></span>
@@ -2137,13 +2161,13 @@ screening. Generally you only need to change the
 particular parameters.</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scpas_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
-<span>    alpha <span class="op">=</span> <span class="fl">0.05</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.05</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:24:27] Start scPAS screening.</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:24:29] Quantile normalization of bulk data.</span></span>
@@ -2153,9 +2177,9 @@ particular parameters.</p>
 <span><span class="co"># Computing SNN</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:24:30] Optimizing the network-regularized sparse regression model...</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:24:30] Perform cox regression on the given phenotypes...</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># ── At alpha = 0.05 ──</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># lambda = 0.776168989003421</span></span>
 <span><span class="co"># scPAS identified 59 risk+ features and 61 risk- features.</span></span>
 <span><span class="co"># The percentage of selected feature is: 13.73%</span></span>
@@ -2165,8 +2189,8 @@ particular parameters.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPAS</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Negative  Neutral Positive </span></span>
-<span><span class="co">#       5     1085        3 </span></span></code></pre></div>
+<span><span class="co"># Negative  Neutral Positive</span></span>
+<span><span class="co">#       5     1085        3</span></span></code></pre></div>
 <p>As you can see, due to differences in data and algorithms, not every
 screening algorithm is able to screen out cells. You can adjust the
 corresponding parameters, e.g. change the <code>alpha</code> to
@@ -2176,14 +2200,14 @@ See also <a href="#id_32-option-b-scpas-screening">3.2 (Option B) scPAS
 Screening</a></p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scpas_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
-<span>    alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    cutoff <span class="op">=</span> <span class="fl">0.2</span> </span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"scPAS"</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cutoff <span class="op">=</span> <span class="fl">0.2</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:43:31] Start scPAS screening.</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.</span></span>
@@ -2193,27 +2217,27 @@ Screening</a></p>
 <span><span class="co"># Computing SNN</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:43:33] Optimizing the network-regularized sparse regression model...</span></span>
 <span><span class="co"># ℹ [2025/10/20 16:43:33] Perform cox regression on the given phenotypes...</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># ── At alpha = 0.001 ──</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># lambda = 7.61825638357188</span></span>
 <span><span class="co"># scPAS identified 315 risk+ features and 366 risk- features.</span></span>
 <span><span class="co"># The percentage of selected feature is: 77.918%</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># ── At alpha = 0.005 ──</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># lambda = 3.68743152046651</span></span>
 <span><span class="co"># scPAS identified 193 risk+ features and 231 risk- features.</span></span>
 <span><span class="co"># The percentage of selected feature is: 48.513%</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># ── At alpha = 0.01 ──</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># lambda = 2.55333682907113</span></span>
 <span><span class="co"># scPAS identified 137 risk+ features and 158 risk- features.</span></span>
 <span><span class="co"># The percentage of selected feature is: 33.753%</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># ── At alpha = 0.05 ──</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># lambda = 0.776168989003421</span></span>
 <span><span class="co"># scPAS identified 59 risk+ features and 61 risk- features.</span></span>
 <span><span class="co"># The percentage of selected feature is: 13.73%</span></span>
@@ -2225,17 +2249,17 @@ it still won’t result in the occurence of too many false-positive cells.
 You can also adjust the <code>cutoff</code> parameter as you like.</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPAS</span><span class="op">)</span></span>
-<span><span class="co"># Negative  Neutral Positive </span></span>
-<span><span class="co">#        5     1085        3 </span></span></code></pre></div>
+<span><span class="co"># Negative  Neutral Positive</span></span>
+<span><span class="co">#        5     1085        3</span></span></code></pre></div>
 <p>Now we use scAB, scPP, DEGAS, LP_SGL and PIPET to screen cells.</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scab_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"scAB"</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"scAB"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># ℹ [2025/09/08 17:04:51] Start scAB screening.</span></span>
 <span><span class="co"># ℹ  Using "RNA_snn" graph for network.</span></span>
@@ -2245,16 +2269,16 @@ You can also adjust the <code>cutoff</code> parameter as you like.</p>
 <span><span class="co"># ℹ [2025/09/08 17:06:19] scAB screening done.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scab_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scAB</span><span class="op">)</span></span>
-<span><span class="co">#    Other Positive </span></span>
-<span><span class="co">#     1018       75 </span></span></code></pre></div>
+<span><span class="co">#    Other Positive</span></span>
+<span><span class="co">#     1018       75</span></span></code></pre></div>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scpp_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"scPP"</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"scPP"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># ℹ [2025/09/08 17:00:28] Start scPP screening.</span></span>
 <span><span class="co"># ℹ [2025/09/08 17:00:28] Finding markers...</span></span>
@@ -2268,17 +2292,17 @@ You can also adjust the <code>cutoff</code> parameter as you like.</p>
 <span><span class="co"># ✔ [2025/09/08 17:00:54] scPP screening done.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">scpp_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">scPP</span><span class="op">)</span></span>
-<span><span class="co"># Negative  Neutral Positive </span></span>
-<span><span class="co">#       52      993       48 </span></span></code></pre></div>
+<span><span class="co"># Negative  Neutral Positive</span></span>
+<span><span class="co">#       52      993       48</span></span></code></pre></div>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># I recommend running this code in the background.</span></span>
 <span><span class="va">degas_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"This_is_a_DEGAS_test"</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"DEGAS"</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"This_is_a_DEGAS_test"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"DEGAS"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># ℹ [2025/10/09 18:41:00] Starting DEGAS Screen</span></span>
 <span><span class="co"># ℹ [2025/10/09 18:41:01] Setting up Environment...</span></span>
@@ -2296,17 +2320,17 @@ You can also adjust the <code>cutoff</code> parameter as you like.</p>
 <span><span class="co"># ℹ [2025/10/10 17:35:04] DEGAS Screen done.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">degas_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">DEGAS</span><span class="op">)</span></span>
-<span><span class="co">#    Other Positive </span></span>
-<span><span class="co">#     1038       55 </span></span></code></pre></div>
+<span><span class="co">#    Other Positive</span></span>
+<span><span class="co">#     1038       55</span></span></code></pre></div>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># I recommend running this code in the background.</span></span>
 <span><span class="va">lpsgl_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"LP_SGL"</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"LP_SGL"</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"LP_SGL"</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"LP_SGL"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># ℹ [2025/11/22 21:14:29] Starting LP-SGL screening analysis</span></span>
 <span><span class="co"># ℹ [2025/11/22 21:14:29] Fetch graph from Seurat object</span></span>
@@ -2318,8 +2342,8 @@ You can also adjust the <code>cutoff</code> parameter as you like.</p>
 <span><span class="co"># ℹ [2025/11/22 21:17:31] LP-SGL screening completed</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">lpsgl_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">LP_SGL</span><span class="op">)</span></span>
-<span><span class="co"># Negative  Neutral Positive </span></span>
-<span><span class="co">#       77      778      233 </span></span></code></pre></div>
+<span><span class="co"># Negative  Neutral Positive</span></span>
+<span><span class="co">#       77      778      233</span></span></code></pre></div>
 <p>Note that PIPET does not support survival phenotype. We will show how
 to use PIPET in <a href="#id_53-binarized-phenotype-associated-cell-screening">Section
 5.3</a></p>
@@ -2327,12 +2351,12 @@ to use PIPET in <a href="#id_53-binarized-phenotype-associated-cell-screening">S
 merged since screening methods performed on the same data.</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">screen_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MergeResult.html">MergeResult</a></span><span class="op">(</span></span>
-<span>    <span class="va">scissor_result</span>,</span>
-<span>    <span class="va">scpas_result</span>,</span>
-<span>    <span class="va">scab_result</span>,</span>
-<span>    <span class="va">scpp_result</span>,</span>
-<span>    <span class="va">degas_result</span>,</span>
-<span>    <span class="va">lpsgl_result</span></span>
+<span>  <span class="va">scissor_result</span>,</span>
+<span>  <span class="va">scpas_result</span>,</span>
+<span>  <span class="va">scab_result</span>,</span>
+<span>  <span class="va">scpp_result</span>,</span>
+<span>  <span class="va">degas_result</span>,</span>
+<span>  <span class="va">lpsgl_result</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># ✔ Successfully merged 6 objects.</span></span>
 <span></span>
@@ -2343,8 +2367,8 @@ merged since screening methods performed on the same data.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">screen_result</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#  [1] "orig.ident"      "nCount_RNA"      "nFeature_RNA"    "test_col"        "percent.rp"      "percent.mt"      "RNA_snn_res.0.1" "seurat_clusters"</span></span>
-<span><span class="co">#  [9] "scissor"         "scAB"            "scAB_Subset1"    "Subset1_loading" "scAB_Subset2"    "Subset2_loading" "scPAS_RS"        "scPAS_NRS"      </span></span>
-<span><span class="co"># [17] "scPAS_Pvalue"    "scPAS_FDR"       "scPAS"           "scPP_AUCup"      "scPP_AUCdown"    "scPP"            "DEGAS"           "LP_SGL"                 </span></span></code></pre></div>
+<span><span class="co">#  [9] "scissor"         "scAB"            "scAB_Subset1"    "Subset1_loading" "scAB_Subset2"    "Subset2_loading" "scPAS_RS"        "scPAS_NRS"</span></span>
+<span><span class="co"># [17] "scPAS_Pvalue"    "scPAS_FDR"       "scPAS"           "scPP_AUCup"      "scPP_AUCdown"    "scPP"            "DEGAS"           "LP_SGL"</span></span></code></pre></div>
 <p>Finally, we can visualize the screening results. Let’s start with a
 Venn diagram to see the situation.</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
@@ -2424,7 +2448,7 @@ cells are shown in the set plot.</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ScreenUpset.html">ScreenUpset</a></span><span class="op">(</span></span>
 <span>  screened_seurat <span class="op">=</span> <span class="va">screen_result</span>,</span>
-<span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"scPP"</span>, <span class="st">"DEGAS"</span>,<span class="st">"LP_SGL"</span><span class="op">)</span>,</span>
+<span>  screen_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scissor"</span>, <span class="st">"scPAS"</span>, <span class="st">"scAB"</span>, <span class="st">"scPP"</span>, <span class="st">"DEGAS"</span>, <span class="st">"LP_SGL"</span><span class="op">)</span>,</span>
 <span>  n_intersections <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -2577,10 +2601,17 @@ literature.</p>
 <p>All the analysis has been completed, and we can save the data for
 future use.</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">SeuratObject</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/SaveSeuratRds.html" class="external-link">SaveSeuratRds</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">screen_result</span>, filename <span class="op">=</span> <span class="st">"screened_result.rds"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">SeuratObject</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/SaveSeuratRds.html" class="external-link">SaveSeuratRds</a></span><span class="op">(</span></span>
+<span>  object <span class="op">=</span> <span class="va">screen_result</span>,</span>
+<span>  filename <span class="op">=</span> <span class="st">"screened_result.rds"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>or in <code>.h5ad</code> format:</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.scverse.org/reference/write_h5ad.html" class="external-link">write_h5ad</a></span><span class="op">(</span>object<span class="op">=</span> <span class="va">screen_result</span>, path <span class="op">=</span> <span class="st">"screened_result.h5ad"</span>, compression <span class="op">=</span> <span class="st">"gzip"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">anndataR</span><span class="fu">::</span><span class="fu"><a href="https://anndataR.scverse.org/reference/write_h5ad.html" class="external-link">write_h5ad</a></span><span class="op">(</span></span>
+<span>  object <span class="op">=</span> <span class="va">screen_result</span>,</span>
+<span>  path <span class="op">=</span> <span class="st">"screened_result.h5ad"</span>,</span>
+<span>  compression <span class="op">=</span> <span class="st">"gzip"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="continuous-phenotype-associated-cell-screening">4.2 Continuous phenotype associated cell screening<a class="anchor" aria-label="anchor" href="#continuous-phenotype-associated-cell-screening"></a>
@@ -2599,9 +2630,9 @@ phenotypic data is introduced.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">mat_exam</span><span class="op">)</span></span>
 <span><span class="co"># [1] 33694  1093</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">bulk</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">bulk</span><span class="op">)</span></span>
 <span><span class="co"># [1] 4106  289</span></span>
-<span><span class="va">bulk</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span>
+<span><span class="va">bulk</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span>
 <span><span class="co">#        TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01 TCGA-AD-6963-01</span></span>
 <span><span class="co"># HIF3A           2.3437          2.0858          6.0759          1.9506          5.4777          4.4634</span></span>
 <span><span class="co"># CAMK4           4.9331          2.3709          4.1387          1.1557          4.1746          3.2363</span></span>
@@ -2612,8 +2643,8 @@ phenotypic data is introduced.</p>
 <span></span>
 <span><span class="co"># * A named vector</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span>
-<span><span class="co"># TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01 TCGA-AD-6963-01 </span></span>
-<span><span class="co">#             178              65              91             206              63              67 </span></span></code></pre></div>
+<span><span class="co"># TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01 TCGA-AD-6963-01</span></span>
+<span><span class="co">#             178              65              91             206              63              67</span></span></code></pre></div>
 <p>If your phenotype is a <code>data.frame</code>, try this to convert
 it to a <code>named vector</code>:</p>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
@@ -2636,9 +2667,9 @@ data is introduced.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">mat_exam</span><span class="op">)</span></span>
 <span><span class="co">#[1] 33694  1093</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">bulk</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">bulk</span><span class="op">)</span></span>
 <span><span class="co"># [1] 4106  434</span></span>
-<span><span class="va">bulk</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span>
+<span><span class="va">bulk</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span>
 <span><span class="co">#        TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01</span></span>
 <span><span class="co"># HIF3A           3.7172          2.3437          2.0858          6.0759          1.9506          5.4777</span></span>
 <span><span class="co"># CAMK4           3.0698          4.9331          2.3709          4.1387          1.1557          4.1746</span></span>
@@ -2649,8 +2680,8 @@ data is introduced.</p>
 <span></span>
 <span><span class="co"># * A named vector</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span>
-<span><span class="co"># TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01 </span></span>
-<span><span class="co">#               1               1               1               1               1               1 </span></span></code></pre></div>
+<span><span class="co"># TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01</span></span>
+<span><span class="co">#               1               1               1               1               1               1</span></span></code></pre></div>
 <p>If your phenotype is a <code>data.frame</code>, your binary variable
 is stored in the “data” column, categorized as ‘Tumor’ and ‘Normal’, we
 will assign ‘Tumor’ a value of 1 and ‘Normal’ a value of 0. In this way,
@@ -2658,11 +2689,11 @@ cells screened as <strong>Positive</strong> will be associated with
 ‘Tumor’. Try this to convert it to a <code>named vector</code>:</p>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">mutate</span><span class="op">(</span></span>
-<span>    <span class="va">pheno</span>,</span>
-<span>    data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
-<span>        <span class="va">data</span> <span class="op">==</span> <span class="st">"Tumor"</span> <span class="op">~</span> <span class="fl">1</span>,</span>
-<span>        <span class="va">data</span> <span class="op">==</span> <span class="st">"Normal"</span> <span class="op">~</span> <span class="fl">0</span></span>
-<span>    <span class="op">)</span></span>
+<span>  <span class="va">pheno</span>,</span>
+<span>  data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">data</span> <span class="op">==</span> <span class="st">"Tumor"</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>    <span class="va">data</span> <span class="op">==</span> <span class="st">"Normal"</span> <span class="op">~</span> <span class="fl">0</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">$</span><span class="va">data</span>, <span class="va">pheno</span><span class="op">$</span><span class="va">Sample</span><span class="op">)</span></span></code></pre></div>
 <p><strong>A PIPET use case</strong></p>
@@ -2671,12 +2702,12 @@ as the phenotype; here, we demonstrate using a binary phenotype
 instead.</p>
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pipet_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
-<span>    matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
-<span>    sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
-<span>    phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
-<span>    phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span>
-<span>    screen_method <span class="op">=</span> <span class="st">"PIPET"</span>,</span>
-<span>    label_type <span class="op">=</span> <span class="st">"PIPET"</span></span>
+<span>  matched_bulk <span class="op">=</span> <span class="va">bulk</span>,</span>
+<span>  sc_data <span class="op">=</span> <span class="va">seurat</span>,</span>
+<span>  phenotype <span class="op">=</span> <span class="va">pheno</span>,</span>
+<span>  phenotype_class <span class="op">=</span> <span class="st">"binary"</span>,</span>
+<span>  screen_method <span class="op">=</span> <span class="st">"PIPET"</span>,</span>
+<span>  label_type <span class="op">=</span> <span class="st">"PIPET"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#ℹ [2025/12/26 06:18:28] Starting PIPET screen</span></span>
 <span><span class="co">#ℹ [2025/12/26 06:18:28] Creating marker genes from bulk data...</span></span>
@@ -2690,8 +2721,8 @@ instead.</p>
 <span><span class="co">#✔ [2025/12/26 06:19:49] PIPET screening done.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">pipet_result</span><span class="op">$</span><span class="va">scRNA_data</span><span class="op">$</span><span class="va">PIPET</span><span class="op">)</span></span>
-<span><span class="co"># Negative  Neutral Positive </span></span>
-<span><span class="co">#     165      708      220 </span></span></code></pre></div>
+<span><span class="co"># Negative  Neutral Positive</span></span>
+<span><span class="co">#     165      708      220</span></span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -2728,7 +2759,7 @@ for troubleshooting, especially for the environment setup.</p>
 <span><span class="co">##  [5] xfun_0.57         cachem_1.1.0      knitr_1.51        htmltools_0.5.9  </span></span>
 <span><span class="co">##  [9] rmarkdown_2.31    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      </span></span>
 <span><span class="co">## [13] pkgdown_2.2.0     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2</span></span>
-<span><span class="co">## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.10.0     </span></span>
+<span><span class="co">## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.11.0     </span></span>
 <span><span class="co">## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        jsonlite_2.0.0   </span></span>
 <span><span class="co">## [25] rlang_1.2.0       fs_2.1.0          htmlwidgets_1.6.4</span></span></code></pre>
 <hr>

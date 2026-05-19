@@ -96,6 +96,7 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
   Keys match the pipeline characters (e.g., `params$n` for
   `NormalizeData`). Default structure:
 
+
       list(
         o = list(project = "SC_Screen_Proj", min.cells = 400L), # do not pass `counts`
         n = list(),             # NormalizeData args

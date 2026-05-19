@@ -10,7 +10,7 @@ ScreenStrategy
 
 ## Format
 
-An object of class `environment` of length 9.
+An object of class `environment` of length 10.
 
 ## Details
 

@@ -16,7 +16,7 @@ DoDEGAS(
   sc_data.pheno_colname = NULL,
   label_type = "DEGAS",
   phenotype_class = c("binary", "continuous", "survival"),
-  tmp_dir = "tmp",
+  tmp_dir = "DEGAS_res",
   env_params = list(),
   degas_params = list(),
   normality_test_method = c("jarque-bera", "d'agostino", "kolmogorov-smirnov"),
@@ -214,6 +214,7 @@ Other screen_method:
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
+[`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md),
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)

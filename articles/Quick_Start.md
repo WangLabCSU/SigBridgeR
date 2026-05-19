@@ -3,6 +3,7 @@
 ## Preparation
 
 ``` r
+
 if (!requireNamespace("remotes")) {
   install.packages("remotes")
 }
@@ -19,6 +20,7 @@ library(Seurat)
 We will start with a simple example.
 
 ``` r
+
 if (requireNamespace("here", quietly = TRUE)) {
   setwd(here::here())
   knitr::opts_knit$set(root.dir = here::here())
@@ -26,6 +28,7 @@ if (requireNamespace("here", quietly = TRUE)) {
 ```
 
 ``` r
+
 library(zeallot) # %<-%
 c(mat_exam, bulk_bi, pheno_bi) %<-% LoadRefData(data_type = "binary")
 ```
@@ -36,6 +39,7 @@ associated with `bulk_bi`. When using a binary or continuous phenotype,
 the reference phenotype data is a **named vector**.
 
 ``` r
+
 head(pheno_bi)
 # TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01
 #               1               1               1               1               1               1
@@ -45,6 +49,7 @@ By the way, when using patients’ survival data as phenotype, the
 reference data is a **data.frame**.
 
 ``` r
+
 pheno_sur <- LoadRefData(data_type = "survival")[[3]]
 head(pheno_sur)
 #               time status
@@ -63,6 +68,7 @@ biological signals, so as to avoid insignificant results caused by too
 small a dataset.
 
 ``` r
+
 seurat_obj <- SCPreProcess(
   mat_exam,
   params = list(
@@ -79,6 +85,7 @@ Then we can use these data to screen out phenotype-assoicated cells.
 Let’s start by trying **Scissor**.
 
 ``` r
+
 scissor_res <- Screen(
   bulk_bi,
   seurat_obj,
@@ -92,6 +99,7 @@ scissor_res <- Screen(
 Other screening methods are also available.
 
 ``` r
+
 scpas_res <- Screen(
   bulk_bi,
   seurat_obj,
@@ -105,6 +113,7 @@ scpas_res <- Screen(
 Since the screening is performed on the same data, we merge them.
 
 ``` r
+
 merged_seurat <- MergeResult(
   scissor_res,
   scpas_res
@@ -118,6 +127,7 @@ Finally, we visualize the screening results.
 - stacked bar plot:
 
 ``` r
+
 fraction <- ScreenFractionPlot(
   merged_seurat,
   group_by = "seurat_clusters",
@@ -129,6 +139,7 @@ fraction <- ScreenFractionPlot(
 ```
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/fraction_q.png")
 ```
 
@@ -137,6 +148,7 @@ knitr::include_graphics("vignettes/example_figures/fraction_q.png")
 - Venn diagram:
 
 ``` r
+
 c(scissor_pos, scpas_pos) %<-%
   purrr::map(
     c("scissor", "scPAS"),
@@ -176,6 +188,7 @@ venn_plot <- ggVennDiagram::ggVennDiagram(
 ```
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/venn_q.png")
 ```
 
@@ -184,6 +197,7 @@ knitr::include_graphics("vignettes/example_figures/venn_q.png")
 - Set plot:
 
 ``` r
+
 upset <- ScreenUpset(
   merged_seurat,
   screen_type = c("scissor", "scPAS")
@@ -191,6 +205,7 @@ upset <- ScreenUpset(
 ```
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/upset_q.png")
 ```
 
@@ -199,6 +214,7 @@ knitr::include_graphics("vignettes/example_figures/upset_q.png")
 - 2D UMAP:
 
 ``` r
+
 library(patchwork)
 library(randomcoloR)
 
@@ -248,6 +264,7 @@ umaps
 ```
 
 ``` r
+
 knitr::include_graphics("vignettes/example_figures/umaps_q.png")
 ```
 
@@ -259,6 +276,7 @@ Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html).
 Session information:
 
 ``` r
+
 sessionInfo()
 ```
 
@@ -287,6 +305,6 @@ sessionInfo()
     ##  [5] xfun_0.57         cachem_1.1.0      knitr_1.51        htmltools_0.5.9  
     ##  [9] rmarkdown_2.31    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      
     ## [13] pkgdown_2.2.0     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2
-    ## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.10.0     
+    ## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.11.0     
     ## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        jsonlite_2.0.0   
     ## [25] rlang_1.2.0       fs_2.1.0          htmlwidgets_1.6.4

@@ -1,8 +1,9 @@
 # Application of SigBridgeR to Single-cell Spatial Transcriptomics Data
 
 ``` r
+
 library(SigBridgeR)
-#> ✔ SigBridgeR v3.6.1 loaded
+#> ✔ SigBridgeR v3.7.0 loaded
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
@@ -21,6 +22,7 @@ We will use `GSE274103` from NCBI GEO as an example. The file
 organization process is not described in detail here.
 
 ``` r
+
 data_dir <- "GSE274103"
 
 samples <- c(
@@ -86,6 +88,7 @@ copyright restrictions, it is provided solely for illustrative purposes
 in the vignette.
 
 ``` r
+
 bulk <- readRDS("TCGA-PAAD.rds")
 #        TCGA-2J-AAB1-01 TCGA-2J-AAB4-01 TCGA-2J-AAB6-01 TCGA-2J-AAB8-01
 # TSPAN6       10.336507       10.992938       10.143383        9.415742
@@ -99,6 +102,7 @@ The corresponding TCGA survival data can be obtained from **UCSC Xena
 the bulk RNA-seq data and the survival information.
 
 ``` r
+
 library(UCSCXenaShiny)
 tcga_surv <- load_data("tcga_surv")
 
@@ -139,6 +143,7 @@ powerful the model and the greater the number of models used, the higher
 the prediction accuracy of mLLMCelltype.
 
 ``` r
+
 spatials <- Seurat::PrepSCTFindMarkers(spatials)
 
 spatials <- SCAnnotate(
@@ -153,6 +158,7 @@ spatials <- SCAnnotate(
 ```
 
 ``` r
+
 # ℹ [2026/02/09 11:26:14] [mLLMCelltype] Start annotating cell types
 # ℹ [2026/02/09 11:26:14] Find marker genes for each clusters
 # Calculating cluster 0
@@ -188,10 +194,12 @@ spatials <- SCAnnotate(
 ```
 
 ``` r
+
 table(spatials$mllmcelltype_cell_type)
 ```
 
 ``` r
+
 #     Acinar cells           Adipocytes              B cells         Chondrocytes    Endothelial cells
 #              594                  633                 2314                  920                 2122
 #      Enterocytes     Epithelial cells          Fibroblasts        Gastric cells         Goblet cells
@@ -207,6 +215,7 @@ table(spatials$mllmcelltype_cell_type)
 We can now run the screening. Let’s try `Scissor`.
 
 ``` r
+
 res <- Screen(
   matched_bulk = bulk,
   sc_data = spatials,
@@ -220,6 +229,7 @@ res <- Screen(
 ```
 
 ``` r
+
 # ℹ `label_type` not specified or not of length 1, using "Scissor"
 # ℹ [2026/02/09 15:40:19] Scissor start...
 # ℹ [2026/02/09 15:40:19] Start from raw data...
@@ -287,6 +297,7 @@ features, feel free to request them in an issue. :)
 Let’s first see the spatial position of the Positive cells.
 
 ``` r
+
 positive_cell <- colnames(res$scRNA_data)[
   res$scRNA_data$scissor == "Positive"
 ]
@@ -314,6 +325,7 @@ p <- Seurat::SpatialDimPlot(
 To visualize the cellular composition of Positive cells:
 
 ``` r
+
 p2 <- Seurat::SpatialDimPlot(
   spatials,
   group.by = "mllmcelltype_cell_type",
@@ -334,12 +346,14 @@ To statistically assess the composition of Positive cells, you can do
 the following:
 
 ``` r
+
 table(res$scRNA_data$mllmcelltype_cell_type[
   res$scRNA_data$scissor == "Positive"
 ])
 ```
 
 ``` r
+
 #     Acinar cells           Adipocytes              B cells         Chondrocytes    Endothelial cells
 #              106                  100                   98                  566                   27
 #      Enterocytes     Epithelial cells          Fibroblasts        Gastric cells         Goblet cells
@@ -352,6 +366,7 @@ The proportion of Positive cells within each cell type can be calculated
 using the following code:
 
 ``` r
+
 cell_total <- table(res$scRNA_data$mllmcelltype_cell_type)
 cell_positive <- table(res$scRNA_data$mllmcelltype_cell_type[
   res$scRNA_data$scissor == "Positive"
@@ -367,6 +382,7 @@ result
 ```
 
 ``` r
+
 #     Chondrocytes  Smooth muscle cells         Acinar cells           Adipocytes          Fibroblasts
 #           0.6152               0.2126               0.1785               0.1580               0.0940
 # Epithelial cells          Enterocytes              B cells        Gastric cells Neuroendocrine cells
@@ -380,6 +396,7 @@ result
 ## Sessioninfo
 
 ``` r
+
 sessionInfo()
 #> R version 4.6.0 (2026-04-24)
 #> Platform: x86_64-pc-linux-gnu
@@ -402,7 +419,7 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_5.5.0       SeuratObject_5.4.0 sp_2.2-1           SigBridgeR_3.6.1  
+#> [1] Seurat_5.5.0       SeuratObject_5.4.0 sp_2.2-1           SigBridgeR_3.7.0  
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3         
@@ -414,15 +431,15 @@ sessionInfo()
 #>  [19] promises_1.5.0         rmarkdown_2.31         ragg_1.5.2            
 #>  [22] purrr_1.2.2            xfun_0.57              cachem_1.1.0          
 #>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.8           
-#>  [28] spatstat.utils_3.2-2   irlba_2.3.7            parallel_4.6.0        
+#>  [28] spatstat.utils_3.2-3   irlba_2.3.7            parallel_4.6.0        
 #>  [31] cluster_2.1.8.2        R6_2.6.1               ica_1.0-3             
-#>  [34] spatstat.data_3.1-9    bslib_0.10.0           stringi_1.8.7         
-#>  [37] RColorBrewer_1.1-3     reticulate_1.46.0      spatstat.univar_3.1-7 
+#>  [34] spatstat.data_3.1-9    bslib_0.11.0           stringi_1.8.7         
+#>  [37] RColorBrewer_1.1-3     reticulate_1.46.0      spatstat.univar_3.2-0 
 #>  [40] parallelly_1.47.0      lmtest_0.9-40          jquerylib_0.1.4       
-#>  [43] scattermore_1.2        Rcpp_1.1.1-1           knitr_1.51            
+#>  [43] scattermore_1.2        Rcpp_1.1.1-1.1         knitr_1.51            
 #>  [46] tensor_1.5.1           future.apply_1.20.2    zoo_1.8-15            
 #>  [49] sctransform_0.4.3      httpuv_1.6.17          Matrix_1.7-5          
-#>  [52] splines_4.6.0          igraph_2.3.0           tidyselect_1.2.1      
+#>  [52] splines_4.6.0          igraph_2.3.1           tidyselect_1.2.1      
 #>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.4-5 
 #>  [58] spatstat.explore_3.8-0 codetools_0.2-20       miniUI_0.1.2          
 #>  [61] listenv_0.10.1         lattice_0.22-9         tibble_3.3.1          
@@ -434,7 +451,7 @@ sessionInfo()
 #>  [79] generics_0.1.4         RcppHNSW_0.6.0         ggplot2_4.0.3         
 #>  [82] scales_1.4.0           globals_0.19.1         xtable_1.8-8          
 #>  [85] glue_1.8.1             lazyeval_0.2.3         tools_4.6.0           
-#>  [88] data.table_1.18.2.1    RSpectra_0.16-2        RANN_2.6.2            
+#>  [88] data.table_1.18.4      RSpectra_0.16-2        RANN_2.6.2            
 #>  [91] fs_2.1.0               dotCall64_1.2          cowplot_1.2.0         
 #>  [94] grid_4.6.0             tidyr_1.3.2            nlme_3.1-169          
 #>  [97] patchwork_1.3.2        cli_3.6.6              spatstat.sparse_3.1-0 

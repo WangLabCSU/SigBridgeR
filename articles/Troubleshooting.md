@@ -28,6 +28,7 @@ R CMD INSTALL --configure-args="--disable-threading"  .
 or
 
 ``` r
+
 BiocManager::install(
   "preprocessCore",
   configure.args = "--disable-threading",
@@ -58,6 +59,7 @@ match.
 To check dimension mismatch：
 
 ``` r
+
 ncol(your_bulk_data) == nrow(your_phenotype_data) # should be TRUE
 
 all(unique(colnames(your_bulk_data)) == unique(rownames(your_bulk_data))) # should be TRUE
@@ -69,6 +71,7 @@ Survival phenotype column names should be formatted as `time` and
 `status`, ensuring correct capitalization and spelling:
 
 ``` r
+
 head(survival_phenotype) # case-sensitive
 #           time status
 # GSM70130 34.80      0
@@ -95,6 +98,7 @@ An error occurred during installation, causing the package to be
 corrupted. Try reinstalling the package:
 
 ``` r
+
 # I reccomend restarting R/RStudio before reinstalling
 remove.packages("SigBridgeR")
 
@@ -121,11 +125,13 @@ the use of `%<-%`. You can try restarting the R environment or clean up
 the environment.
 
 ``` r
+
 # restart R/RStudio
 .rs.api.restartSession()
 ```
 
 ``` r
+
 rm(list = ls(all.names = TRUE))
 ```
 
@@ -150,11 +156,19 @@ nearly identical across different samples. You should check your data.
 
 ------------------------------------------------------------------------
 
-> **✖ $$2025/09/2308:53:51$$ Fewer than 20% of the genes in the gene
-> sets are included in the rankings.Check wether the gene IDs in the
-> ‘rankings’ and ‘geneSets’ match.**
+> **✖
+> ``` math
+> 2025/09/23 08:53:51
+> ```
+> Fewer than 20% of the genes in the gene sets are included in the
+> rankings.Check wether the gene IDs in the ‘rankings’ and ‘geneSets’
+> match.**
 >
-> **ℹ $$2025/09/2308:53:51$$ scPP screening exit.**
+> **ℹ
+> ``` math
+> 2025/09/23 08:53:51
+> ```
+> scPP screening exit.**
 
 This issue arises from the single-cell processing, which filtered out
 too many genes and cells. Consider Adjusting `min.cells` and
@@ -179,6 +193,7 @@ backend has been registered. One solution is to pass in the Python path
 of the environment instead of the environment name.
 
 ``` r
+
 envs <- ListPyEnv()
 head(envs) # goes like this
 #                                                            name                                                  python  type
@@ -191,6 +206,7 @@ Python location to
 [`reticulate::use_condaenv()`](https://rstudio.github.io/reticulate/reference/use_python.html).
 
 ``` r
+
 py_path <- envs[envs$name == "r-reticulate-degas", "python"]
 # /home/user/miniconda3/envs/r-reticulate-degas/bin/python
 reticulate::use_condaenv(py_path)
@@ -255,6 +271,7 @@ version of the package (version 2.4.1 has been tested and is feasible)
 Output message is probably like this:
 
 ``` r
+
 # Running SCTransform on assay: Xenium
 # vst.flavor='v2' set. Using model with fixed slope and excluding poisson genes.
 # Calculating cell attributes from input UMI matrix: log_umi
