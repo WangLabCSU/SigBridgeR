@@ -8,6 +8,7 @@ setThreads(
   threads = NULL,
   dt = threads,
   cheapr = threads,
+  qs2 = NULL,
   openmp = NULL,
   tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
     NULL, inter_op = NULL, intra_op = c(1L, NULL)),
@@ -23,6 +24,8 @@ OpenMP, data.table, and TensorFlow intra-op (unless overridden).}
 \item{dt}{Integer. Thread count for data.table (default: inherited from \code{threads}).}
 
 \item{cheapr}{Integer. Thread count for cheapr (default: inherited from \code{threads}).}
+
+\item{qs2}{Integer. Thread count for qs2 (default: NULL).}
 
 \item{openmp}{Integer. Thread count for OpenMP (default: NULL).}
 
