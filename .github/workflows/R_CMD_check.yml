@@ -157,19 +157,7 @@ jobs:
                   extra-packages: |
                       any::rcmdcheck
                       any::remotes
-                      github::Exceret/ScPP
-                      github::ShixiangWang/IDConverter
-                      github::Exceret/scAB
-                      github::Exceret/Scissor
-                      github::Exceret/scPAS
-                      github::Exceret/SigBridgeRUtils
-                      github::Exceret/DEGAS
-                      github::Exceret/PIPET
-                      github::Exceret/LPSGL
-                      github::Exceret/rSIDISH
-                      github::Exceret/scPP
-                      github::Exceret/rTiRank
-                  dependencies: '"all"'
+                  dependencies: '"hard"'
                   needs: check
 
             - name: Running R CMD check
