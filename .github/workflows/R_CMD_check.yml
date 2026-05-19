@@ -105,6 +105,17 @@ jobs:
                     echo "Run examples: ${{ inputs.run_examples }}"
                     echo "Run tests: ${{ inputs.run_tests }}"
                   fi
+                  
+            - name: Install OpenSSL (macOS)
+              if: runner.os == 'macOS'
+              run: brew install openssl
+
+            - name: Set OpenSSL env (macOS)
+              if: runner.os == 'macOS'
+              run: |
+                  echo "PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig" >> $GITHUB_ENV
+                  echo "LDFLAGS=-L$(brew --prefix openssl)/lib" >> $GITHUB_ENV
+                  echo "CPPFLAGS=-I$(brew --prefix openssl)/include" >> $GITHUB_ENV
 
             - name: Checking out the repository
               uses: actions/checkout@v4
@@ -133,6 +144,9 @@ jobs:
                       github::Exceret/DEGAS
                       github::Exceret/PIPET
                       github::Exceret/LPSGL
+                      github::Exceret/rSIDISH
+                      github::Exceret/scPP
+                      github::Exceret/rTiRank
                   dependencies: '"all"'
                   needs: check
 
