@@ -6,23 +6,6 @@
 #' automatically. In \code{"load"} mode, an existing cache directory is
 #' identified.
 #'
-#' The input \code{path} is interpreted at three possible levels:
-#' \describe{
-#'   \item{\strong{Cache layer}}{e.g. \code{survival_2025_12_01/}}{
-#'     A directory that already contains \code{cache_config.json}. \cr
-#'     \emph{Load:} returned as-is. \cr
-#'     \emph{Save:} aborts with "recursive caching" error.}
-#'   \item{\strong{Root layer}}{e.g. \code{Scissor_res/}}{
-#'     A directory whose basename equals \code{\{method\}_res}. \cr
-#'     \emph{Load:} \code{\link{ChooseCache}} selects the cache subdirectory. \cr
-#'     \emph{Save:} a new cache subdirectory is created inside.}
-#'   \item{\strong{Parent layer}}{e.g. \code{.} or any arbitrary path}}{
-#'     Contains or will contain the root directory. \cr
-#'     \emph{Load:} finds \code{\{method\}_res} underneath, then selects. \cr
-#'     \emph{Save:} finds or creates \code{\{method\}_res}, then creates a new
-#'     cache subdirectory.}
-#' }
-#'
 #' @param path Character string. User-specified path.
 #' @param screen_method Character string. Screening method name. Must match
 #'   a key in \code{\link{ScreenStrategy}}.
@@ -175,7 +158,7 @@ load_impl <- function(path, layer, root_dir_name) {
 #' @keywords internal
 generate_cache_name <- function(phenotype_class, timestamp = NULL) {
   if (is.null(timestamp)) {
-    timestamp <- format(Sys.time(), "%Y%m%d%H%M")
+    timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
   }
   paste(phenotype_class, timestamp, sep = "_")
 }

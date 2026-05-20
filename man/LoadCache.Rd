@@ -36,6 +36,7 @@ feature_df <- LoadCache("Scissor_res/survival_2025_01_01/feature_table.csv")
 }
 \seealso{
 Other cache_config: 
+\code{\link{CacheSetHere}()},
 \code{\link{CheckCache}()},
 \code{\link{ChooseCache}()},
 \code{\link{WriteCache}()},

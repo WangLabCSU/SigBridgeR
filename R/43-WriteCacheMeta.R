@@ -161,3 +161,23 @@ get_cache_file_name <- function(
     sep = "_"
   )
 }
+
+#' @keywords internal
+fetch_method_args2meta <- function() {
+  parent_env <- parent.frame()
+
+  parent_func <- sys.function(sys.parent())
+
+  param_names <- rlang::fn_fmls_names(parent_func)
+
+  args <- mget(param_names, envir = parent_env, inherits = FALSE)
+
+  # 移除你不需要的参数
+  args$matched_bulk <- NULL
+  args$sc_data <- NULL
+  args$phenotype <- NULL
+  args$label_type <- NULL
+  args$phenotype_class <- NULL
+
+  args
+}

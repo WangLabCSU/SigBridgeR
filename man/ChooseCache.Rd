@@ -29,6 +29,7 @@ cache_path <- ChooseCache("./Scissor_res")
 }
 \seealso{
 Other cache_config: 
+\code{\link{CacheSetHere}()},
 \code{\link{CheckCache}()},
 \code{\link{LoadCache}()},
 \code{\link{WriteCache}()},

@@ -63,6 +63,7 @@ WriteCacheMeta(
 }
 \seealso{
 Other cache_config: 
+\code{\link{CacheSetHere}()},
 \code{\link{CheckCache}()},
 \code{\link{ChooseCache}()},
 \code{\link{LoadCache}()},

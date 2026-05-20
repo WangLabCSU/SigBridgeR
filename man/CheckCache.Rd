@@ -41,6 +41,7 @@ provided screen method, phenotype class, label type, and parameters.
 }
 \seealso{
 Other cache_config: 
+\code{\link{CacheSetHere}()},
 \code{\link{ChooseCache}()},
 \code{\link{LoadCache}()},
 \code{\link{WriteCache}()},
