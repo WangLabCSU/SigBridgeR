@@ -36,4 +36,3 @@ Other cache_config:
 \code{\link{WriteCacheMeta}()}
 }
 \concept{cache_config}
-\keyword{internal}

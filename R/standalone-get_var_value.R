@@ -347,7 +347,7 @@
 #' }
 #' get_var_value("x", j)   # returns 16
 #'
-#' @export
+#' @noRd
 get_var_value <- function(var_name, func, .env = rlang::current_env()) {
   # 1. Build definition environment from function formals
   def_env <- .gvv_init_def_env(formals(func))

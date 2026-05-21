@@ -43,7 +43,7 @@ CheckCache <- function(
     ))
   }
   # * a list, NULL value became a NULL list
-  cache_meta <- make_null_list_NULL(jsonlite::read_json(meta_json))
+  cache_meta <- make_null_list_NULL(jsonlite::read_json(meta_json)$config)
 
   inputs_meta <- list(
     config = list(

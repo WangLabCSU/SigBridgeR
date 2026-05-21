@@ -38,7 +38,10 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 
 \item{phenotype_class}{Type of phenotype: "binary" (classification), "continuous", or "survival"}
 
-\item{tmp_dir}{Temporary directory for intermediate files (default: \code{"tmp"})}
+\item{tmp_dir}{(Soft-deprecated) Temporary directory for DEGAS intermediate
+files (default: \code{"DEGAS_res"}). Acts as fallback for \code{load_cache} and
+\code{save_cache} when not specified via \code{...}. Prefer using
+\code{load_cache} / \code{save_cache} in \code{...} instead. See \code{\link[=CacheSetHere]{CacheSetHere()}}.}
 
 \item{env_params}{List of environment parameters for Python setup including:
 \itemize{
@@ -77,6 +80,10 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 \itemize{
 \item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
 \item \code{assay}: Name of assay to use. Defaults to "RNA".
+\item \code{load_cache}: Cache directory path for loading a precomputed DEGAS model.
+Supports root-level, cache-level, or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.
+\item \code{save_cache}: Cache directory path for saving the trained DEGAS model.
+Supports root-level or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.
 }}
 }
 \value{

@@ -200,6 +200,15 @@ DoScissor <- function(
       phenotype_class = phenotype_class_cache,
       mode = "load"
     )
+
+    CheckCache(
+      path = load_cache_dir,
+      screen_method = "Scissor",
+      phenotype_class = phenotype_class_cache,
+      label_type = label_type,
+      params = fetch_method_args2meta(),
+    )
+
     file.path(load_cache_dir, "Scissor_inputs.RData")
   } else {
     NULL
@@ -271,17 +280,12 @@ DoScissor <- function(
   }
 
   if (!is.null(save_cache)) {
-    args <- fetch_method_args2meta()
     WriteCacheMeta(
       file = file.path(save_cache_dir, "cache_config.json"),
       screen_method = "Scissor",
       phenotype_class = phenotype_class_cache,
       label_type = label_type,
-      params = rlang::list2(
-        !!!infos1$para,
-        reliability_test = args$reliability_test,
-        cell_evaluation = args$cell_evaluation
-      ),
+      params = fetch_method_args2meta(),
       additional_description = dots$additional_description
     )
   }

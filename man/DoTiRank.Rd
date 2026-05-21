@@ -67,17 +67,24 @@ columns, colnames named "time" and "status"}
 \item{tolerance}{Tolerance threshold for rejection (default: \code{0.05}).}
 }}
 
-\item{save_path}{Directory path for saving intermediate and final results
-(default: \code{"./TiRank_res"}).}
+\item{save_path}{(Soft-deprecated) Directory path for saving intermediate and
+final results (default: \code{"./TiRank_res"}). Acts as fallback for
+\code{load_cache} and \code{save_cache} when not specified via \code{...}.
+Prefer using \code{load_cache} / \code{save_cache} in \code{...} instead.
+See \code{\link[=CacheSetHere]{CacheSetHere()}}.}
 
-\item{load_cache}{Optional path to cached data for re-running analysis
-without recomputing expensive steps (default: \code{NULL}).}
+\item{load_cache}{(Soft-deprecated) Optional path to cached data (default: \code{NULL}).
+Prefer using \code{load_cache} in \code{...} instead.}
 
 \item{...}{Additional arguments passed to the function. Common parameters include:
 \describe{
 \item{verbose}{Logical. Whether to print verbose output (default: TRUE).}
 \item{seed}{Integer. Random seed for reproducibility.}
 \item{assay}{Character. Name of assay to use from Seurat object (default: \code{"RNA"}).}
+\item{load_cache}{Cache directory path for loading cached data. Supports
+root-level, cache-level, or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.}
+\item{save_cache}{Cache directory path for saving results. Supports
+root-level or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.}
 }}
 }
 \value{

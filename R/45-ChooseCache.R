@@ -14,22 +14,22 @@
 #' \dontrun{
 #' cache_path <- ChooseCache("./Scissor_res")
 #' }
-#' @keywords internal
+#' @export
 #' @family cache_config
 ChooseCache <- function(directory, ...) {
   rlang::check_dots_empty()
 
   expected_dir_name <- paste0(names(ScreenStrategy), "_res")
   if (!basename(directory) %in% expected_dir_name) {
-    cli::cli_abort(c("x" = "{.path directory} is not a cache directory"))
+    cli::cli_abort(c("x" = "{.path {directory}} is not a cache directory"))
   }
 
   if (!dir.exists(directory)) {
-    cli::cli_abort(c("x" = "{.path directory} not exists"))
+    cli::cli_abort(c("x" = "{.path {directory}} not exists"))
   }
   cache_dirs <- list.dirs(directory, recursive = FALSE)
   if (length(cache_dirs) == 0) {
-    cli::cli_abort(c("x" = "no cache found in {.path directory}"))
+    cli::cli_abort(c("x" = "no cache found in {.path {directory}}"))
   } else if (length(cache_dirs) == 1) {
     return(cache_dirs[[1]])
   }

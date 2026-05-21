@@ -21,7 +21,7 @@
 #' @return Character string. The absolute path to the cache layer directory.
 #'
 #' @family cache_config
-#' @keywords internal
+#' @export
 #'
 #' @examples
 #' \dontrun{

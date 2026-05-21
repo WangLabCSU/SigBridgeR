@@ -30,6 +30,10 @@
 #'    - `parallel`: Logical indicating whether to use parallel processing. Defaults to `FALSE`.
 #'    - Other arguments are passed to `scAB::create_scAB.v5()`
 #'    - `assay`: Character specifying the assay to use. Defaults to `"RNA"`.
+#'    - `load_cache`: Cache directory path for loading precomputed scAB objects.
+#'      Supports root-level, cache-level, or parent-level paths. See [CacheSetHere()].
+#'    - `save_cache`: Cache directory path for saving scAB intermediate results.
+#'      Supports root-level or parent-level paths. See [CacheSetHere()].
 #'
 #
 #'
@@ -115,39 +119,110 @@ DoscAB <- function(
   parallel <- (dots$parallel %||% FALSE) &
     !inherits(future::plan("list")[[1]], "sequential")
   assay <- dots$assay %||% "RNA"
+  load_cache <- dots$load_cache
+  save_cache <- dots$save_cache
 
-  if (verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Start scAB screening"))
-  }
-
-  scAB_obj <- scAB::create_scAB.v5(
-    Object = sc_data,
-    bulk_dataset = matched_bulk,
-    phenotype = phenotype,
-    method = phenotype_class,
-    verbose = verbose,
+  # -- build cache params ----------------------------------------------------
+  cache_params <- list(
+    alpha = alpha,
+    alpha_2 = alpha_2,
+    k_max = k_max,
+    cross_k = cross_k,
+    repeat_times = repeat_times,
+    maxiter = maxiter,
+    tred = tred,
+    seed = seed,
     assay = assay
   )
 
-  if (any(scAB_obj$X < 0)) {
-    cli::cli_warn(
-      "Found negative values in `X` after correlation, truncating to 0"
+  # -- load mode: restore cached scAB_obj and k ------------------------------
+  if (!is.null(load_cache)) {
+    cache_dir <- CacheSetHere(
+      path = load_cache,
+      screen_method = "scAB",
+      phenotype_class = phenotype_class,
+      mode = "load"
     )
-    scAB_obj$X[scAB_obj$X < 0L] <- 0L
-  }
+    CheckCache(
+      path = cache_dir,
+      screen_method = "scAB",
+      phenotype_class = phenotype_class,
+      label_type = label_type,
+      params = cache_params
+    )
 
-  if (verbose) {
-    ts_cli$cli_alert_info("Selecting K")
-  }
+    scAB_obj <- LoadCache(file = file.path(cache_dir, "scAB_obj.qs2"))
+    k <- LoadCache(file = file.path(cache_dir, "k.qs2"))
 
-  k <- scAB::select_K.optimized(
-    Object = scAB_obj,
-    K_max = k_max,
-    repeat_times = repeat_times,
-    maxiter = maxiter, # default in scAB
-    seed = seed,
-    verbose = verbose
-  )
+    if (verbose) {
+      ts_cli$cli_alert_info(
+        cli::col_green("Loaded scAB cache from {.path {cache_dir}}")
+      )
+    }
+  } else {
+    # -- normal flow: create scAB_obj and select k --------------------------
+    if (verbose) {
+      ts_cli$cli_alert_info(cli::col_green("Start scAB screening"))
+    }
+
+    scAB_obj <- scAB::create_scAB.v5(
+      Object = sc_data,
+      bulk_dataset = matched_bulk,
+      phenotype = phenotype,
+      method = phenotype_class,
+      verbose = verbose,
+      assay = assay
+    )
+
+    if (any(scAB_obj$X < 0)) {
+      cli::cli_warn(
+        "Found negative values in `X` after correlation, truncating to 0"
+      )
+      scAB_obj$X[scAB_obj$X < 0L] <- 0L
+    }
+
+    if (verbose) {
+      ts_cli$cli_alert_info("Selecting K")
+    }
+
+    k <- scAB::select_K.optimized(
+      Object = scAB_obj,
+      K_max = k_max,
+      repeat_times = repeat_times,
+      maxiter = maxiter, # default in scAB
+      seed = seed,
+      verbose = verbose
+    )
+
+    # -- save mode: persist scAB_obj and k to cache --------------------------
+    if (!is.null(save_cache)) {
+      cache_dir <- CacheSetHere(
+        path = save_cache,
+        screen_method = "scAB",
+        phenotype_class = phenotype_class,
+        mode = "save"
+      )
+      WriteCache(
+        x = scAB_obj,
+        file = file.path(cache_dir, "scAB_obj.qs2"),
+        format = "qs2"
+      )
+      WriteCache(
+        x = k,
+        file = file.path(cache_dir, "k.qs2"),
+        format = "qs2"
+      )
+      WriteCacheMeta(
+        file = file.path(cache_dir, "cache_config.json"),
+        screen_method = "scAB",
+        phenotype_class = phenotype_class,
+        label_type = label_type,
+        params = cache_params,
+        verbose = FALSE,
+        additional_description = dots$additional_description
+      )
+    }
+  }
 
   if (verbose) {
     ts_cli$cli_alert_info(
@@ -188,28 +263,31 @@ DoscAB <- function(
   )
 
   if (verbose) {
-    ts_cli$cli_alert_info("Screening cells...")
+    ts_cli$cli_alert_info("Screening cells")
   }
 
   sc_data <- scAB::findSubset.optimized(
     Object = sc_data,
     scAB_Object = scAB_result,
     tred = tred
-  ) %>%
-    SigBridgeRUtils::AddMisc(
-      scAB_type = label_type,
-      scAB_para = list(
+  )
+  sc_data <- SigBridgeRUtils::AddMisc(
+    seurat_obj = sc_data,
+    scAB_type = label_type,
+    scAB_para = c(
+      list(
         iter = scAB_result$iter,
         loss = scAB_result$loss,
-        method = scAB_result$method,
-        tred = tred
+        method = scAB_result$method
       ),
-      cover = FALSE
-    )
+      cache_params
+    ),
+    cover = FALSE
+  )
 
   if (verbose) {
     ts_cli$cli_alert_info(
-      cli::col_green("scAB screening done.")
+      cli::col_green("scAB screening done")
     )
   }
 

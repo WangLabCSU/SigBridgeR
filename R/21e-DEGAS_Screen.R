@@ -14,7 +14,10 @@
 #' @param sc_data.pheno_colname Column name for single-cell phenotype in metadata (if available), default: `NULL`
 #' @param label_type Label type for DEGAS results (default: "`DEGAS"`)
 #' @param phenotype_class Type of phenotype: "binary" (classification), "continuous", or "survival"
-#' @param tmp_dir Temporary directory for intermediate files (default: `"tmp"`)
+#' @param tmp_dir (Soft-deprecated) Temporary directory for DEGAS intermediate
+#'   files (default: `"DEGAS_res"`). Acts as fallback for \code{load_cache} and
+#'   \code{save_cache} when not specified via \code{...}. Prefer using
+#'   \code{load_cache} / \code{save_cache} in \code{...} instead. See [CacheSetHere()].
 #' @param env_params List of environment parameters for Python setup including:
 #'   - env.name: environment name (default: `"r-reticulate-degas"`)
 #'   - env.type: environment type "conda", "environment", or "venv" (default: `"environment"`)
@@ -44,6 +47,10 @@
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `assay`: Name of assay to use. Defaults to "RNA".
+#'    - `load_cache`: Cache directory path for loading a precomputed DEGAS model.
+#'      Supports root-level, cache-level, or parent-level paths. See [CacheSetHere()].
+#'    - `save_cache`: Cache directory path for saving the trained DEGAS model.
+#'      Supports root-level or parent-level paths. See [CacheSetHere()].
 #'
 #' @return A list containing:
 #'   - scRNA_data: Seurat object with DEGAS labels added to metadata
@@ -147,6 +154,8 @@ DoDEGAS <- function(
     SigBridgeRUtils::getFuncOption("verbose") %||%
     TRUE
   assay <- dots$assay %||% "RNA"
+  load_cache <- dots$load_cache %||% tmp_dir
+  save_cache <- dots$save_cache %||% tmp_dir
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("Starting DEGAS Screen"))
@@ -201,58 +210,16 @@ DoDEGAS <- function(
     )
   )
 
-  # formatting phenotype
-  pheno_df <- if (!is.null(phenotype)) {
-    switch(
-      phenotype_class,
-      "binary" = DEGAS::Vec2sparse(
-        phenotype,
-        col_prefix = label_type
-      ),
-      "continuous" = DEGAS::Vec2sparse(
-        phenotype,
-        col_prefix = label_type
-      ),
-      "survival" = as.matrix(phenotype),
-    )
-  } else {
-    NULL
-  }
-
-  # Check if single-cell level phenotype is specified
-  meta_data <- sc_data[[]]
-  sc_pheno <-
-    if (
-      !is.null(sc_data.pheno_colname) &&
-        sc_data.pheno_colname %chin% colnames(meta_data)
-    ) {
-      DEGAS::Vec2sparse(meta_data[[sc_data.pheno_colname]])
-    } else {
-      if (!is.null(sc_data.pheno_colname)) {
-        cli::cli_warn(
-          "Single-cell phenotype specified but not found in meta.data, using {.val NULL}"
-        )
-      }
-      NULL
-    }
-
-  # anndata-like data formats
-  sc_mat <- if (inherits(sc_data, "Seurat")) {
-    SeuratObject::LayerData(sc_data, layer = "data", assay = assay)
-  } else {
-    sc_data
-  }
-  cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
-
-  if (length(cm_genes) == 0) {
-    cli::cli_abort(c(
-      "x" = "No common genes found between single cell data and bulk data",
-      ">" = "Please check the inputs"
-    ))
-  }
-
-  t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
-  t_matched_bulk <- Matrix::t(matched_bulk[cm_genes, ])
+  # -- build cache params ----------------------------------------------------
+  cache_params <- list(
+    select_fraction = select_fraction,
+    min_thresh = min_thresh,
+    sc_data.pheno_colname = sc_data.pheno_colname,
+    phenotype_class = phenotype_class,
+    label_type = label_type,
+    degas_params = degas_params,
+    assay = assay
+  )
 
   if (verbose) {
     ts_cli$cli_alert_info("Setting up Environment...")
@@ -273,36 +240,143 @@ DoDEGAS <- function(
     required = TRUE
   )
 
-  if (verbose) {
-    ts_cli$cli_alert_info("Training DEGAS model...")
+  # -- load mode: restore cached ccModel1 ------------------------------------
+  if (!is.null(load_cache)) {
+    cache_dir <- CacheSetHere(
+      path = load_cache,
+      screen_method = "DEGAS",
+      phenotype_class = phenotype_class,
+      mode = "load"
+    )
+    CheckCache(
+      path = cache_dir,
+      screen_method = "DEGAS",
+      phenotype_class = phenotype_class,
+      label_type = label_type,
+      params = cache_params
+    )
+
+    ccModel1 <- LoadCache(file = file.path(cache_dir, "ccModel1.qs2"))
+    names(ccModel1) <- glue::glue(
+      "ccModel_{seq_len(degas_params$DEGAS.bag_depth)}"
+    )
+
+    if (verbose) {
+      ts_cli$cli_alert_info(
+        cli::col_green("Loaded DEGAS cache from {.path {cache_dir}}")
+      )
+    }
+  } else {
+    # -- train DEGAS model --------------------------------------------------
+    if (verbose) {
+      ts_cli$cli_alert_info("Training DEGAS model...")
+    }
+
+    # DEGAS needs some global variables to be set up
+    list2env(degas_params, envir = .GlobalEnv)
+    on.exit({
+      # Clean up global variables
+      rm(list = names(degas_params), envir = .GlobalEnv)
+      gc(verbose = FALSE)
+    })
+
+    # formatting phenotype
+    pheno_df <- if (!is.null(phenotype)) {
+      switch(
+        phenotype_class,
+        "binary" = DEGAS::Vec2sparse(
+          phenotype,
+          col_prefix = label_type
+        ),
+        "continuous" = DEGAS::Vec2sparse(
+          phenotype,
+          col_prefix = label_type
+        ),
+        "survival" = as.matrix(phenotype),
+      )
+    } else {
+      NULL
+    }
+
+    # Check if single-cell level phenotype is specified
+    meta_data <- sc_data[[]]
+    sc_pheno <-
+      if (
+        !is.null(sc_data.pheno_colname) &&
+          sc_data.pheno_colname %chin% colnames(meta_data)
+      ) {
+        DEGAS::Vec2sparse(meta_data[[sc_data.pheno_colname]])
+      } else {
+        if (!is.null(sc_data.pheno_colname)) {
+          cli::cli_warn(
+            "Single-cell phenotype specified but not found in meta.data, using {.val NULL}"
+          )
+        }
+        NULL
+      }
+
+    # anndata-like data formats
+    sc_mat <- if (inherits(sc_data, "Seurat")) {
+      SeuratObject::LayerData(sc_data, layer = "data", assay = assay)
+    } else {
+      sc_data
+    }
+    cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
+
+    if (length(cm_genes) == 0) {
+      cli::cli_abort(c(
+        "x" = "No common genes found between single cell data and bulk data",
+        ">" = "Please check the inputs"
+      ))
+    }
+
+    t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
+    t_matched_bulk <- Matrix::t(matched_bulk[cm_genes, ])
+    # Train DEGAS model
+    ccModel1 <- DEGAS::runCCMTLBag.optimized(
+      scExp = t_sc_mat,
+      scLab = sc_pheno,
+      patExp = t_matched_bulk,
+      patLab = pheno_df,
+      tmpDir = tmp_dir,
+      model_type = DEGAS.model_type,
+      architecture = DEGAS.architecture,
+      FFdepth = DEGAS.ff_depth,
+      Bagdepth = DEGAS.bag_depth,
+      DEGAS.seed = DEGAS.seed,
+      verbose = verbose
+    )
+    names(ccModel1) <- glue::glue(
+      "ccModel_{seq_len(degas_params$DEGAS.bag_depth)}"
+    )
+
+    # -- save mode: persist ccModel1 to cache --------------------------------
+    if (!is.null(save_cache)) {
+      cache_dir <- CacheSetHere(
+        path = save_cache,
+        screen_method = "DEGAS",
+        phenotype_class = phenotype_class,
+        mode = "save"
+      )
+      WriteCache(
+        x = ccModel1,
+        file = file.path(cache_dir, "ccModel1.qs2"),
+        format = "qs2"
+      )
+      WriteCacheMeta(
+        file = file.path(cache_dir, "cache_config.json"),
+        screen_method = "DEGAS",
+        phenotype_class = phenotype_class,
+        label_type = label_type,
+        params = cache_params,
+        verbose = FALSE,
+        additional_description = dots$additional_description
+      )
+    }
   }
 
-  # DEGAS needs some global variables to be set up
-  list2env(degas_params, envir = .GlobalEnv)
-  on.exit({
-    # Clean up global variables
-    rm(list = names(degas_params), envir = .GlobalEnv)
-    gc(verbose = FALSE)
-  })
-
-  # Train DEGAS model
-  ccModel1 <- DEGAS::runCCMTLBag.optimized(
-    scExp = t_sc_mat,
-    scLab = sc_pheno,
-    patExp = t_matched_bulk,
-    patLab = pheno_df,
-    tmpDir = tmp_dir,
-    model_type = DEGAS.model_type,
-    architecture = DEGAS.architecture,
-    FFdepth = DEGAS.ff_depth,
-    Bagdepth = DEGAS.bag_depth,
-    DEGAS.seed = DEGAS.seed,
-    verbose = verbose
-  )
-  names(ccModel1) <- glue::glue("ccModel_{seq_len(DEGAS.bag_depth)}")
-
   if (verbose) {
-    ts_cli$cli_alert_info("Predicting and Labeling")
+    ts_cli$cli_alert_info("Predicting and labeling")
   }
 
   # Predict with DEGAS model
@@ -373,12 +447,13 @@ DoDEGAS <- function(
   sc_data <- Seurat::AddMetaData(
     object = sc_data,
     metadata = meta2add
-  ) %>%
-    SigBridgeRUtils::AddMisc(
-      DEGAS_type = label_type,
-      DEGAS_para = degas_params,
-      cover = FALSE
-    )
+  )
+  sc_data <- SigBridgeRUtils::AddMisc(
+    seurat_obj = sc_data,
+    DEGAS_type = label_type,
+    DEGAS_para = degas_params,
+    cover = FALSE
+  )
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("DEGAS Screen done."))
   }
@@ -532,7 +607,7 @@ FindPy <- function(env_params, method_name = "DEGAS", verbose = TRUE, ...) {
           method = env_params$env.method
         )
       },
-      ...
+      !!!SigBridgeRUtils::FilterArgs4Func(list(...), SetupPyEnv)
     )
   } else if (verbose) {
     ts_cli$cli_alert_info(

@@ -58,6 +58,10 @@ DoscAB(
 \item \code{parallel}: Logical indicating whether to use parallel processing. Defaults to \code{FALSE}.
 \item Other arguments are passed to \code{scAB::create_scAB.v5()}
 \item \code{assay}: Character specifying the assay to use. Defaults to \code{"RNA"}.
+\item \code{load_cache}: Cache directory path for loading precomputed scAB objects.
+Supports root-level, cache-level, or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.
+\item \code{save_cache}: Cache directory path for saving scAB intermediate results.
+Supports root-level or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.
 }}
 }
 \value{

@@ -45,15 +45,22 @@
 #'     \item{do_reject}{Whether to apply rejection criteria to uncertain predictions (default: `TRUE`).}
 #'     \item{tolerance}{Tolerance threshold for rejection (default: `0.05`).}
 #'   }
-#' @param save_path Directory path for saving intermediate and final results
-#'        (default: `"./TiRank_res"`).
-#' @param load_cache Optional path to cached data for re-running analysis
-#'        without recomputing expensive steps (default: `NULL`).
+#' @param save_path (Soft-deprecated) Directory path for saving intermediate and
+#'        final results (default: `"./TiRank_res"`). Acts as fallback for
+#'        \code{load_cache} and \code{save_cache} when not specified via \code{...}.
+#'        Prefer using \code{load_cache} / \code{save_cache} in \code{...} instead.
+#'        See [CacheSetHere()].
+#' @param load_cache (Soft-deprecated) Optional path to cached data (default: \code{NULL}).
+#'        Prefer using \code{load_cache} in \code{...} instead.
 #' @param ... Additional arguments passed to the function. Common parameters include:
 #'   \describe{
 #'     \item{verbose}{Logical. Whether to print verbose output (default: TRUE).}
 #'     \item{seed}{Integer. Random seed for reproducibility.}
 #'     \item{assay}{Character. Name of assay to use from Seurat object (default: `"RNA"`).}
+#'     \item{load_cache}{Cache directory path for loading cached data. Supports
+#'       root-level, cache-level, or parent-level paths. See [CacheSetHere()].}
+#'     \item{save_cache}{Cache directory path for saving results. Supports
+#'       root-level or parent-level paths. See [CacheSetHere()].}
 #'   }
 #'
 #' @return A named list containing:
@@ -159,6 +166,8 @@ DoTiRank <- function(
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$seed %||% getFuncOption("seed")
   assay <- dots$assay %||% "RNA"
+  load_cache <- dots$load_cache %||% load_cache # compatible with last version
+  save_cache <- dots$save_cache %||% save_path
 
   set.seed(seed)
   rTiRank::setup_seed(seed)
@@ -177,14 +186,93 @@ DoTiRank <- function(
     ts_cli$cli_alert_info(cli::col_green("Starting TiRank Screen"))
   }
 
-  if (is.null(load_cache)) {
-    chk::chk_not_null(save_path)
+  # -- build cache params ----------------------------------------------------
+  cache_params <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    tirank_params = tirank_params,
+    seed = seed,
+    assay = assay
+  )
+
+  # -- cache load / normal flow ----------------------------------------------
+  if (!is.null(load_cache)) {
+    cache_dir <- CacheSetHere(
+      path = load_cache,
+      screen_method = "TiRank",
+      phenotype_class = phenotype_class,
+      mode = "load"
+    )
+
+    CheckCache(
+      path = cache_dir,
+      screen_method = "TiRank",
+      phenotype_class = phenotype_class,
+      label_type = label_type,
+      params = cache_params
+    )
+
+    if (verbose) {
+      ts_cli$cli_alert_info(
+        cli::col_green("Loaded TiRank cache from {.path {cache_dir}}")
+      )
+    }
+
+    rTiRank::run_tirank_model(
+      seurat = NULL,
+      bulk_exp_train = NULL,
+      bulk_clinical_train = NULL,
+      bulk_exp_val = NULL,
+      bulk_clinical_val = NULL,
+      load_cache = cache_dir,
+      save_dir = cache_dir,
+      device = "cuda",
+      gpextractor_params = list(
+        top_var_genes = tirank_params$top_var_genes,
+        top_gene_pairs = tirank_params$top_gene_pairs,
+        p_value_threshold = tirank_params$p_value_threshold,
+        max_cutoff = tirank_params$max_cutoff,
+        min_cutoff = tirank_params$min_cutoff
+      ),
+      model_params = list(
+        batch_size = tirank_params$batch_size,
+        nhead = tirank_params$nhead,
+        nhid1 = tirank_params$nhid1,
+        nhid2 = tirank_params$nhid2,
+        n_output = tirank_params$n_output,
+        nlayers = tirank_params$nlayers,
+        n_pred = tirank_params$n_pred,
+        dropout = tirank_params$dropout,
+        mode = mode,
+        encoder_type = tirank_params$encoder_type,
+        infer_mode = tirank_params$infer_mode,
+        n_trials = tirank_params$n_trials,
+        do_reject = tirank_params$do_reject,
+        tolerance = tirank_params$tolerance,
+        reject_mode = tirank_params$reject_mode
+      ),
+      sc_response_file = system.file(
+        "python/Example/sc_pipeline.py",
+        package = "rTiRank"
+      )
+    )
+  } else {
+    # -- save mode: persist cache metadata ------------------------------------
+    chk::chk_not_null(save_cache)
+
+    cache_dir <- CacheSetHere(
+      path = save_cache,
+      screen_method = "TiRank",
+      phenotype_class = phenotype_class,
+      mode = "save"
+    )
+
     bulkExp <- rTiRank::normalize_data(matched_bulk)
     bulkClinical <- as.data.frame(phenotype)
     check_res <- rTiRank::check_bulk(
-      bulkExp,
-      bulkClinical,
-      save_path = save_path
+      bulk_exp = bulkExp,
+      bulk_clinical = bulkClinical,
+      save_path = save_cache
     )
     if (verbose) {
       ts_cli$cli_alert_info("Transfer expression profile")
@@ -197,8 +285,8 @@ DoTiRank <- function(
     }
 
     val_res <- rTiRank::generate_val(
-      check_res$bulk_exp,
-      check_res$bulk_clinical,
+      bulk_exp = check_res$bulk_exp,
+      bulk_clinical = check_res$bulk_clinical,
       validation_proportion = tirank_params$validation_proportion,
       mode = mode,
       seed = seed,
@@ -209,8 +297,8 @@ DoTiRank <- function(
     }
 
     sampling_res <- rTiRank::perform_sampling_on_RNAseq(
-      val_res$bulk_exp_train,
-      val_res$bulk_clinical_train,
+      bulk_exp_train = val_res$bulk_exp_train,
+      bulk_clinical_train = val_res$bulk_clinical_train,
       mode = tirank_params$sampling_mode,
       threshold = tirank_params$sampling_thresh
     )
@@ -226,51 +314,61 @@ DoTiRank <- function(
       save_path = save_path
     )
     rm(cell_cell_distance)
-  } else if (verbose) {
-    ts_cli$cli_alert_info("Load existing data")
-  }
+    gc(verbose = FALSE)
 
-  if (verbose) {
-    ts_cli$cli_alert_info("Training model")
-  }
+    if (verbose) {
+      ts_cli$cli_alert_info("Training model")
+    }
 
-  rTiRank::run_tirank_model(
-    seurat = sc_data,
-    bulk_exp_train = as.data.frame(sampling_res$bulk_exp_resampled),
-    bulk_clinical_train = sampling_res$bulk_clinical_resampled,
-    bulk_exp_val = val_res$bulk_exp_val,
-    bulk_clinical_val = val_res$bulk_clinical_val,
-    save_dir = save_path,
-    device = "cuda",
-    gpextractor_params = list(
-      top_var_genes = tirank_params$top_var_genes,
-      top_gene_pairs = tirank_params$top_gene_pairs,
-      p_value_threshold = tirank_params$p_value_threshold,
-      max_cutoff = tirank_params$max_cutoff,
-      min_cutoff = tirank_params$min_cutoff
-    ),
-    model_params = list(
-      batch_size = tirank_params$batch_size,
-      nhead = tirank_params$nhead,
-      nhid1 = tirank_params$nhid1,
-      nhid2 = tirank_params$nhid2,
-      n_output = tirank_params$n_output,
-      nlayers = tirank_params$nlayers,
-      n_pred = tirank_params$n_pred,
-      dropout = tirank_params$dropout,
-      mode = mode,
-      encoder_type = tirank_params$encoder_type,
-      infer_mode = tirank_params$infer_mode,
-      n_trials = tirank_params$n_trials,
-      do_reject = tirank_params$do_reject,
-      tolerance = tirank_params$tolerance,
-      reject_mode = tirank_params$reject_mode
-    ),
-    sc_response_file = system.file(
-      "python/Example/sc_pipeline.py",
-      package = "rTiRank"
+    rTiRank::run_tirank_model(
+      seurat = sc_data,
+      bulk_exp_train = as.data.frame(sampling_res$bulk_exp_resampled),
+      bulk_clinical_train = sampling_res$bulk_clinical_resampled,
+      bulk_exp_val = val_res$bulk_exp_val,
+      bulk_clinical_val = val_res$bulk_clinical_val,
+      load_cache = NULL,
+      save_dir = save_cache,
+      device = "cuda",
+      gpextractor_params = list(
+        top_var_genes = tirank_params$top_var_genes,
+        top_gene_pairs = tirank_params$top_gene_pairs,
+        p_value_threshold = tirank_params$p_value_threshold,
+        max_cutoff = tirank_params$max_cutoff,
+        min_cutoff = tirank_params$min_cutoff
+      ),
+      model_params = list(
+        batch_size = tirank_params$batch_size,
+        nhead = tirank_params$nhead,
+        nhid1 = tirank_params$nhid1,
+        nhid2 = tirank_params$nhid2,
+        n_output = tirank_params$n_output,
+        nlayers = tirank_params$nlayers,
+        n_pred = tirank_params$n_pred,
+        dropout = tirank_params$dropout,
+        mode = mode,
+        encoder_type = tirank_params$encoder_type,
+        infer_mode = tirank_params$infer_mode,
+        n_trials = tirank_params$n_trials,
+        do_reject = tirank_params$do_reject,
+        tolerance = tirank_params$tolerance,
+        reject_mode = tirank_params$reject_mode
+      ),
+      sc_response_file = system.file(
+        "python/Example/sc_pipeline.py",
+        package = "rTiRank"
+      )
     )
-  )
+
+    WriteCacheMeta(
+      file = file.path(cache_dir, "cache_config.json"),
+      screen_method = "TiRank",
+      phenotype_class = phenotype_class,
+      label_type = label_type,
+      params = cache_params,
+      verbose = FALSE,
+      additional_description = dots$additional_description
+    )
+  }
 
   meta <- data.table::fread(file.path(
     save_path,
@@ -295,11 +393,12 @@ DoTiRank <- function(
   modified_sc_data <- SeuratObject::AddMetaData(
     object = sc_data,
     metadata = as.data.frame(meta_to_add)
-  ) %>%
-    AddMisc(
-      TiRank_para = tirank_params,
-      TiRank_type = label_type
-    )
+  )
+  modified_sc_data <- AddMisc(
+    seurat_obj = modified_sc_data,
+    TiRank_para = tirank_params,
+    TiRank_type = label_type
+  )
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("TiRank screening Done"))
