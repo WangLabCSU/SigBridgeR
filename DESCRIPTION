@@ -81,6 +81,7 @@ Suggests:
     plyr,
     preprocessCore,
     processx,
+    qs2,
     randomcoloR,
     RColorBrewer,
     remotes,

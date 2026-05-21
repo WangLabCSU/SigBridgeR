@@ -23,8 +23,6 @@ DoScissor(
      FDR_cutoff = 0.05,
      bootstrap_n = 100L
    ),
-   path2load_scissor_cache = NULL,
-   path2save_scissor_inputs = "Scissor_inputs.RData",
    ...
 )
 }
