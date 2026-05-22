@@ -71,9 +71,10 @@ pak::pkg_install(file.path("Exceret", methods))
 These algorithms are maintained by the community.
 
 ```r
-
+# short description
+pak::pkg_install("<your-name>/<your_repo>")
 ```
- -->
+-->
 
 
 ---

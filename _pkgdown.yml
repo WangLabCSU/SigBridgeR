@@ -101,7 +101,6 @@ reference:
           Load reference datasets.
       contents:
           - LoadRefData
-          - get_var_value
 
     - title: Python Environment Management
       desc: >
@@ -134,6 +133,10 @@ reference:
       contents:
           - WriteCacheMeta
           - CheckCache
+          - ChooseCahce
+          - WriteCache
+          - LoadCache
+          - CacheSetHere
 
     - title: Package Configuration
       desc: >

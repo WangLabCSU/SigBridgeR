@@ -190,6 +190,7 @@ func_body <- function(func_doc = character(), func_name = character()) {
   phenotype_class = c(\"binary\", \"survival\", \"continuous\"),
   ...
 ) {
+  CheckInstalled(\"<your-name>/<your-repo>\")
   # Validate phenotype_class parameter
   phenotype_class <- match.arg(phenotype_class)
   

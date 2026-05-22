@@ -398,7 +398,10 @@ ValidateDirName <- function(func, ...) {
       # cli::cli_inform("folder_arg: {folder_arg}") # * for debug
 
       # 如果是符号，尝试获取变量名
-      folder_name <- get_var_value(var_name = as.character(folder_arg), func = func)
+      folder_name <- get_var_value(
+        var_name = as.character(folder_arg),
+        func = func
+      )
     } else {
       # 对于复杂表达式，记录警告但继续
       cli::cli_warn("Failed to get folder name for dir.create call")
@@ -407,11 +410,24 @@ ValidateDirName <- function(func, ...) {
 
     # "_res"
     if (!grepl("_res", folder_name)) {
+      # suggested folder name
+      suggested_folder_name <- get_fn_name(func = func)
+      suggested_folder_name <- if (
+        startsWith(x = tolower(suggested_folder_name), prefix = "do")
+      ) {
+        paste0(
+          substr(suggested_folder_name, 3, nchar(suggested_folder_name)),
+          "_res"
+        )
+      } else {
+        paste0(suggested_folder_name, "_res")
+      }
+
       validate_note("Folder name does not end with '_res'")
       validate_explain(
         c(
           "{cli::symbol$bullet} Current folder name: '{folder_name}'",
-          "{cli::symbol$bullet} Recommended: Use '_res' suffix (e.g., '{folder_name}_res') to clearly distinguish the result (intermediate) folder from the source code"
+          "{cli::symbol$bullet} Recommended: Use '_res' suffix (e.g., '{suggested_folder_name}') to clearly distinguish the result (intermediate) folder from the source code"
         ),
         .envir = rlang::current_env()
       )
