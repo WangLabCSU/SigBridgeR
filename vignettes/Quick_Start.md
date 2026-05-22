@@ -95,7 +95,7 @@ Since the screening is performed on the same data, we merge them.
 
 Finally, we visualize the screening results.
 
--   stacked bar plot:
+- stacked bar plot:
 
 <!-- -->
 
@@ -113,7 +113,7 @@ Finally, we visualize the screening results.
 [<img src="example_figures/fraction_q.png" data-fig-align="center"
 width="600" alt="fraction_q" />](https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/fraction_q.png)
 
--   Venn diagram:
+- Venn diagram:
 
 <!-- -->
 
@@ -159,7 +159,7 @@ width="600" alt="fraction_q" />](https://github.com/WangLabCSU/SigBridgeR/blob/m
 [<img src="example_figures/venn_q.png" data-fig-align="center"
 width="400" alt="venn_q" />]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/venn_q.png))
 
--   Set plot:
+- Set plot:
 
 <!-- -->
 
@@ -173,7 +173,7 @@ width="400" alt="venn_q" />]((https://github.com/WangLabCSU/SigBridgeR/blob/main
 [<img src="example_figures/upset_q.png" data-fig-align="center"
 width="400" alt="upset_q" />]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/upset_q.png))
 
--   2D UMAP:
+- 2D UMAP:
 
 <!-- -->
 

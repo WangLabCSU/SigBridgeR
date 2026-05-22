@@ -221,15 +221,15 @@ list store intermediate data generated during the process.
 A new column named `Scissor` will be added to the `meta.data` of the
 Seurat object, with three possible labels:
 
--   **Positive** denotes cells whose abundance or activity is
-    **positively correlated** with the phenotype of
-    interest—specifically, those associated with **poor prognosis**.  
--   **Negative** denotes cells that are **negatively correlated** with
-    the phenotype (i.e., potentially protective or associated with
-    better outcomes).  
--   **Neutral** cells can be interpreted as **background** or
-    **non-informative** cells—those showing little to no association
-    with the phenotype.
+- **Positive** denotes cells whose abundance or activity is **positively
+  correlated** with the phenotype of interest—specifically, those
+  associated with **poor prognosis**.  
+- **Negative** denotes cells that are **negatively correlated** with the
+  phenotype (i.e., potentially protective or associated with better
+  outcomes).  
+- **Neutral** cells can be interpreted as **background** or
+  **non-informative** cells—those showing little to no association with
+  the phenotype.
 
 ### files
 

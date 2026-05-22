@@ -3,11 +3,11 @@ algorithms.
 
 # Too Long; Didn’t Read
 
-(auto dispatch)
+**Temporarily add custom functions to SigBridgeR**:
 
 Extend `SCPreProcess`: key = func
 
-    Register(h = Seurat::RunHarmony)
+    Register(h = Seurat::RunHarmony) # (auto dispatch)
 
 Extend `SCAnnotate`: key = func
 
@@ -18,6 +18,12 @@ Extend `Screen`: key = func
     TemplateScreenFunc() # create a file
     ValidateScreenFunc(my_function)
     Register(my = my_function)
+
+**Long-term contribution**
+
+See
+[CONTRIBUTING.md](https://github.com/WangLabCSU/SigBridgeR/blob/main/CONTRIBUTING.md)
+to learn more about how to contribute to SigBridgeR.
 
 # Extend Screening Methods
 
@@ -41,8 +47,17 @@ After the v3.2.0 update, SigBridgeR supports registering custom
 algorithms for screening phenotype-associated cell method into the
 package. Let’s do this with a detailed example:
 
-(Template can be obtained via `TemplateScreenFunc`, which will create a
-file and open it in the editor.)
+In order to conveniently organize and manage the dependencies and code
+of your own algorithm, you need to create an independent R package.
+
+    usethis::create_package("my_screen_pkg")
+    # codeing
+    devtools::document()
+    devtools::check()
+
+After completing the R package development for your own algorithm, use
+`TemplateScreenFunc` to obtain the template, and use the package to
+write the workflow.
 
     my_screen_function <- function(
       matched_bulk,
@@ -52,6 +67,7 @@ file and open it in the editor.)
       phenotype_class = c("binary", "survival", "continuous"),
       ...
     ) {
+      CheckInstalled("<your-name>/<your-repo>")
       dots <- list(...)
       verbose <- dots$verbose %||% TRUE
       # do something, here we just randomly assign a label to each cell
@@ -84,56 +100,45 @@ file and open it in the editor.)
 Format requirements for custom extension functions:
 
 1.  The input arguments must include
-    -   `sc_data` (required): A **Seurat** object
-    -   `matched_bulk` (required): A **data.frame/matrix/Matrix**
-        (**genes × samples**) containing RNA-seq counts:
-        -   Genes must overlap with those in `sc_data`.
-        -   Samples must correspond to those in `phenotype`.
-    -   `phenotype` (required):
-        -   For survival: a **data.frame** with columns `time` and
-            `status`; rownames must match `colnames(matched_bulk)`
-        -   For binary or continuous: a **named vector**; names must
-            match `colnames(matched_bulk)`
-    -   `label_type` (required): A character used to label cell with
-        study cases.
-    -   `phenotype_class` (required): One or more of `"binary"`,
-        `"survival"`, `"continuous"`.
+    - `sc_data` (required): A **Seurat** object
+    - `matched_bulk` (required): A **data.frame/matrix/Matrix** (**genes
+      × samples**) containing RNA-seq counts:
+      - Genes must overlap with those in `sc_data`.
+      - Samples must correspond to those in `phenotype`.
+    - `phenotype` (required):
+      - For survival: a **data.frame** with columns `time` and `status`;
+        rownames must match `colnames(matched_bulk)`
+      - For binary or continuous: a **named vector**; names must match
+        `colnames(matched_bulk)`
+    - `label_type` (required): A character used to label cell with study
+      cases.
+    - `phenotype_class` (required): One or more of `"binary"`,
+      `"survival"`, `"continuous"`.
 2.  The output must be a **list** containing at least one elements:
-    -   `scRNA_data` (required): A **Seurat** object with meta.data
-        modified,
-        -   For columns added in the meta.data slot, it is recommended
-            to **use the method name as a prefix** to distinguish them
-            from those added by other methods.
-        -   For assigning labels to each cell, if three categories are
-            used, the labels should be `"Positive"`, `"Negative"`, and
-            `"Neutral"`, where `"Positive"` represents cells positively
-            associated with the phenotype, `"Negative"` represents those
-            negatively associated, and `"Neutral"` represents unrelated
-            cells. If two categories are used, the labels should be
-            `"Positive"` and `"Other"`, where `"Other"` represents cells
-            not positively associated with the phenotype.
-        -   The recommended format for storing `label_type` is
-            `{method}_type`, which is used to record the biological
-            context at the time of screening, e.g.,
-            `scissor_type = "relapse"`. This is to prevent parameter
-            confusion in case the same algorithm is run with different
-            labels.
-        -   If you need to store the parameters used for running the
-            algorithm, use the `Seurat@misc` slot and store them as a
-            **list** with `_para` suffix name , e.g.,
-            `scissor_para = list(alpha = 0.05, cutoff = 0.2)`.
-
-        > It is recommended to use AddMisc as
-        >
-        >     seurat <- seurat %>%
-        >       SeuratObject::AddMetaData(rep("test", ncol(seurat)), col.name = "scissor") %>%
-        >       AddMisc(
-        >         scissor_type = "relapse",
-        >         scissor_para = list(alpha = 0.05, cutoff = 0.2),
-        >         cover = FALSE 
-        >       )
-    -   Other elements are optional. Necessary intermediate data can be
-        returned.
+    - `scRNA_data` (required): A **Seurat** object with meta.data
+      modified,
+      - For columns added in the meta.data slot, it is recommended to
+        **use the method name as a prefix** to distinguish them from
+        those added by other methods.
+      - For assigning labels to each cell, if three categories are used,
+        the labels should be `"Positive"`, `"Negative"`, and
+        `"Neutral"`, where `"Positive"` represents cells positively
+        associated with the phenotype, `"Negative"` represents those
+        negatively associated, and `"Neutral"` represents unrelated
+        cells. If two categories are used, the labels should be
+        `"Positive"` and `"Other"`, where `"Other"` represents cells not
+        positively associated with the phenotype.
+      - The recommended format for storing `label_type` is
+        `{method}_type`, which is used to record the biological context
+        at the time of screening, e.g., `scissor_type = "relapse"`. This
+        is to prevent parameter confusion in case the same algorithm is
+        run with different labels.
+      - If you need to store the parameters used for running the
+        algorithm, use the `Seurat@misc` slot and store them as a
+        **list** with `_para` suffix name , e.g.,
+        `scissor_para = list(alpha = 0.05, cutoff = 0.2)`.
+    - Other elements are optional. Necessary intermediate data can be
+      returned.
 3.  If it is necessary to save intermediate data and results as files,
     it is recommended to create a folder named `<method>_res` for
     storage.
@@ -162,9 +167,10 @@ or warnings, and as few notes as possible.
 
 By the way if providing a bad function
 
-    bad_fun <- function(x) {
+    bad_fun <- function(x, save_path = "./analysis") {
       z <- x + 1
       y
+      dir.create(save_path)
       return(NULL)
     }
 
@@ -206,6 +212,8 @@ By the way if providing a bad function
 
 ## Registering the function
 
+### Temporarily add it to the package
+
 Now we can register the function to the package:
 
     RegisterScreenMethod(
@@ -224,8 +232,8 @@ Now we can register the function to the package:
 Details of the arguments:
 
 1.  `my_method = me_screen_function`:
-    -   formatting as **key = func**. Key is used to name the function.
-        If no name provided, the function name will be used.
+    - formatting as **key = func**. Key is used to name the function. If
+      no name provided, the function name will be used.
 2.  `supported_phenotypes`: The phenotype types supported by the
     function.
 3.  `parameter_mapper`: A function that transforms the input parameter
@@ -242,6 +250,29 @@ Let’s check whether it has indeed been registered
 
     names(ScreenStrategy)
     # [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"
+
+### Long-term support in SigBridgeR
+
+After completing the steps described in [Prepare a custom
+function](#prepare-a-custom-function), directly modify
+[68-ScreenStrategy.R](https://github.com/WangLabCSU/SigBridgeR/blob/main/R/68-ScreenStrategy.R),
+and fill in the function name you just wrote into `ScreenStrategy`,
+like:
+
+    ###
+    MyMethod = list(
+      method_name = "MyMethod",
+      executor = DoMyMethod,
+      phenotypes = c("binary", "survival", "continuous"),
+      mapper = NULL # optional
+    )
+    ###
+
+Then just create a pull request.
+
+See
+[CONTRIBUTING.md](https://github.com/WangLabCSU/SigBridgeR/blob/main/CONTRIBUTING.md)
+to learn more about the further workflow to contribute to SigBridgeR.
 
 ## Use the function
 
@@ -301,59 +332,59 @@ By default, the registry is defined as follows:
 <col style="width: 62%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Code</th>
 <th>Function</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>o</strong></td>
 <td><code>CreateSeuratObject</code></td>
 <td><strong>Required.</strong> Must be the first step.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>n</strong></td>
 <td><code>NormalizeData</code></td>
 <td>Standard normalization.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>s</strong></td>
 <td><code>ScaleData</code></td>
 <td>Scales data for PCA.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>v</strong></td>
 <td><code>FindVariableFeatures</code></td>
 <td>Selects highly variable genes.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>p</strong></td>
 <td><code>RunPCA</code></td>
 <td>Principal Component Analysis.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>e</strong></td>
 <td><code>FindNeighbors</code></td>
 <td>Computes SNN graph.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>c</strong></td>
 <td><code>FindClusters</code></td>
 <td>Louvain algorithm clustering.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>t</strong></td>
 <td><code>RunTSNE</code></td>
 <td>t-SNE reduction.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>u</strong></td>
 <td><code>RunUMAP</code></td>
 <td>UMAP reduction.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>r</strong></td>
 <td><code>SCTransform</code></td>
 <td><strong>SCT workflow.</strong> Replaces n, s, v.</td>
