@@ -5,13 +5,13 @@ algorithms.
 
 ## Too Long; Didn’t Read
 
-(auto dispatch)
+**Temporarily add custom functions to SigBridgeR**:
 
 Extend `SCPreProcess`: key = func
 
 ``` r
 
-Register(h = Seurat::RunHarmony)
+Register(h = Seurat::RunHarmony) # (auto dispatch)
 ```
 
 Extend `SCAnnotate`: key = func
@@ -29,6 +29,12 @@ TemplateScreenFunc() # create a file
 ValidateScreenFunc(my_function)
 Register(my = my_function)
 ```
+
+**Long-term contribution**
+
+See
+[CONTRIBUTING.md](https://github.com/WangLabCSU/SigBridgeR/blob/main/CONTRIBUTING.md)
+to learn more about how to contribute to SigBridgeR.
 
 ## Extend Screening Methods
 
@@ -58,8 +64,20 @@ After the v3.2.0 update, SigBridgeR supports registering custom
 algorithms for screening phenotype-associated cell method into the
 package. Let’s do this with a detailed example:
 
-(Template can be obtained via `TemplateScreenFunc`, which will create a
-file and open it in the editor.)
+In order to conveniently organize and manage the dependencies and code
+of your own algorithm, you need to create an independent R package.
+
+``` r
+
+usethis::create_package("my_screen_pkg")
+# codeing
+devtools::document()
+devtools::check()
+```
+
+After completing the R package development for your own algorithm, use
+`TemplateScreenFunc` to obtain the template, and use the package to
+write the workflow.
 
 ``` r
 
@@ -71,6 +89,7 @@ my_screen_function <- function(
   phenotype_class = c("binary", "survival", "continuous"),
   ...
 ) {
+  CheckInstalled("<your-name>/<your-repo>")
   dots <- list(...)
   verbose <- dots$verbose %||% TRUE
   # do something, here we just randomly assign a label to each cell
@@ -228,6 +247,8 @@ ValidateScreenFunc(bad_fun)
 
 ### Registering the function
 
+#### Temporarily add it to the package
+
 Now we can register the function to the package:
 
 ``` r
@@ -276,6 +297,32 @@ tbl <- InterceptStrategy("ScreenStrategy")
 names(ScreenStrategy)
 # [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"
 ```
+
+#### Long-term support in SigBridgeR
+
+After completing the steps described in [Prepare a custom
+function](#prepare-a-custom-function), directly modify
+[68-ScreenStrategy.R](https://github.com/WangLabCSU/SigBridgeR/blob/main/R/68-ScreenStrategy.R),
+and fill in the function name you just wrote into `ScreenStrategy`,
+like:
+
+``` r
+
+###
+MyMethod = list(
+  method_name = "MyMethod",
+  executor = DoMyMethod,
+  phenotypes = c("binary", "survival", "continuous"),
+  mapper = NULL # optional
+)
+###
+```
+
+Then just create a pull request.
+
+See
+[CONTRIBUTING.md](https://github.com/WangLabCSU/SigBridgeR/blob/main/CONTRIBUTING.md)
+to learn more about the further workflow to contribute to SigBridgeR.
 
 ### Use the function
 

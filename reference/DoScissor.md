@@ -27,8 +27,6 @@ DoScissor(
      FDR_cutoff = 0.05,
      bootstrap_n = 100L
    ),
-   path2load_scissor_cache = NULL,
-   path2save_scissor_inputs = "Scissor_inputs.RData",
    ...
 )
 ```
@@ -93,15 +91,6 @@ DoScissor(
 
   - bootstrap_n: Bootstrap iterations (default: `100L`)
 
-- path2load_scissor_cache:
-
-  Path to precomputed Scissor inputs (RData file). If provided, skips
-  recomputation (default: NULL).
-
-- path2save_scissor_inputs:
-
-  Path to save intermediate files (default: "Scissor_inputs.RData").
-
 - ...:
 
   Additional arguments. Currently supports:
@@ -111,7 +100,18 @@ DoScissor(
 
   - `seed`: For reproducibility, default is `123L`
 
-  - `assay`: Assay to use for single-cell data. Defaults to \`"RNA"
+  - `assay`: Assay to use for single-cell data. Defaults to `"RNA"`
+
+  - `load_cache`: Cache directory path for loading precomputed Scissor
+    inputs. Supports root-level, cache-level, or parent-level paths. See
+    [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
+
+  - `save_cache`: Cache directory path for saving Scissor inputs.
+    Supports root-level or parent-level paths. See
+    [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
+
+  - `path2load_scissor_cache` / `path2save_scissor_inputs`: Deprecated
+    names, kept for backward compatibility.
 
 ## Value
 

@@ -101,6 +101,15 @@ DoscAB(
 
   - `assay`: Character specifying the assay to use. Defaults to `"RNA"`.
 
+  - `load_cache`: Cache directory path for loading precomputed scAB
+    objects. Supports root-level, cache-level, or parent-level paths.
+    See
+    [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
+
+  - `save_cache`: Cache directory path for saving scAB intermediate
+    results. Supports root-level or parent-level paths. See
+    [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
+
 ## Value
 
 A list containing:

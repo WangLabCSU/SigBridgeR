@@ -74,7 +74,11 @@ DoDEGAS(
 
 - tmp_dir:
 
-  Temporary directory for intermediate files (default: `"tmp"`)
+  (Soft-deprecated) Temporary directory for DEGAS intermediate files
+  (default: `"DEGAS_res"`). Acts as fallback for `load_cache` and
+  `save_cache` when not specified via `...`. Prefer using `load_cache` /
+  `save_cache` in `...` instead. See
+  [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
 
 - env_params:
 
@@ -151,6 +155,14 @@ DoDEGAS(
     Defaults to `TRUE`.
 
   - `assay`: Name of assay to use. Defaults to "RNA".
+
+  - `load_cache`: Cache directory path for loading a precomputed DEGAS
+    model. Supports root-level, cache-level, or parent-level paths. See
+    [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
+
+  - `save_cache`: Cache directory path for saving the trained DEGAS
+    model. Supports root-level or parent-level paths. See
+    [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
 
 ## Value
 

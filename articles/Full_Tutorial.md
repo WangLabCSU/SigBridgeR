@@ -589,12 +589,14 @@ Key parameters for `Screen`:
 
 Parameters pass to `...` when using `Scissor` method:
 
-- `path2save_scissor_inputs`: A character value specifying the path to
-  save intermediate data, you can also set
-  `path2load_scissor_cache = NULL` to suppress the saving of
-  intermediate files. Default: `Scissor_inputs.RData`
-- `path2load_scissor_cahce`: A character value specifying the path to
-  load intermediate data
+- `path2save_scissor_inputs`: deprecated, use `save_path` instead
+- `save_path`: A character value specifying the path to save
+  intermediate data, you can also set `NULL` to suppress the saving of
+  intermediate files. Default:
+  `Scissor_res/<cache_stamp>/Scissor_inputs.RData`
+- `path2load_scissor_cahce`: deprecated, use `load_path` instead
+- `load_path`: A character value specifying the path to load
+  intermediate data, e.g. `"Scissor_res/<cache_stamp>`. Default: `NULL`
 - `alpha`: Parameter used to balance the effect of the l1 norm and the
   network-based penalties. It can be a number or a searching vector. If
   alpha = NULL, a default searching vector is used. The range of alpha

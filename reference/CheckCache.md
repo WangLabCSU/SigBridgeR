@@ -56,5 +56,8 @@ displaying the differences.
 ## See also
 
 Other cache_config:
+[`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md),
 [`ChooseCache()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseCache.md),
+[`LoadCache()`](https://wanglabcsu.github.io/sigbridger/reference/LoadCache.md),
+[`WriteCache()`](https://wanglabcsu.github.io/sigbridger/reference/WriteCache.md),
 [`WriteCacheMeta()`](https://wanglabcsu.github.io/sigbridger/reference/WriteCacheMeta.md)

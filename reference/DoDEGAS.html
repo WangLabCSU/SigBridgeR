@@ -11,7 +11,7 @@ a bootstrap aggregated multi-task learning approach."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,7 +111,10 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 
 
 <dt id="arg-tmp-dir">tmp_dir<a class="anchor" aria-label="anchor" href="#arg-tmp-dir"></a></dt>
-<dd><p>Temporary directory for intermediate files (default: <code>"tmp"</code>)</p></dd>
+<dd><p>(Soft-deprecated) Temporary directory for DEGAS intermediate
+files (default: <code>"DEGAS_res"</code>). Acts as fallback for <code>load_cache</code> and
+<code>save_cache</code> when not specified via <code>...</code>. Prefer using
+<code>load_cache</code> / <code>save_cache</code> in <code>...</code> instead. See <code><a href="CacheSetHere.html">CacheSetHere()</a></code>.</p></dd>
 
 
 <dt id="arg-env-params">env_params<a class="anchor" aria-label="anchor" href="#arg-env-params"></a></dt>
@@ -152,6 +155,10 @@ For survival: matrix with two columns (time and event status). Can be NULL, matr
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments. Currently supports:</p><ul><li><p><code>verbose</code>: Logical indicating whether to print progress messages. Defaults to <code>TRUE</code>.</p></li>
 <li><p><code>assay</code>: Name of assay to use. Defaults to "RNA".</p></li>
+<li><p><code>load_cache</code>: Cache directory path for loading a precomputed DEGAS model.
+Supports root-level, cache-level, or parent-level paths. See <code><a href="CacheSetHere.html">CacheSetHere()</a></code>.</p></li>
+<li><p><code>save_cache</code>: Cache directory path for saving the trained DEGAS model.
+Supports root-level or parent-level paths. See <code><a href="CacheSetHere.html">CacheSetHere()</a></code>.</p></li>
 </ul></dd>
 
 </dl></div>

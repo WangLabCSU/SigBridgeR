@@ -1,6 +1,8 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://wanglabcsu.github.io/sigbridger/404.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/CONTRIBUTING.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/LICENSE.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/PULL_REQUEST_TEMPLATE.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Extending.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Full_Tutorial.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/articles/Optimal_Params.html</loc></url>
@@ -14,6 +16,7 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/AddMetaFeature.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/AddMisc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/CheckCache.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/CheckNA.html</loc></url>
@@ -40,6 +43,7 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/GetSlotNames.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/InterceptStrategy.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ListPyEnv.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/LoadCache.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/LoadRefData.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/MakeUniqueName.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/MergeResult.html</loc></url>
@@ -69,13 +73,13 @@
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/WeightedVote.html</loc></url>
+<url><loc>https://wanglabcsu.github.io/sigbridger/reference/WriteCache.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/WriteCacheMeta.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/aggregate-dups.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/complete_counts.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/getFuncOption.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/get_names_4_ids.html</loc></url>
-<url><loc>https://wanglabcsu.github.io/sigbridger/reference/get_var_value.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/index.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/is_skewed_dynamic.html</loc></url>
 <url><loc>https://wanglabcsu.github.io/sigbridger/reference/mLLMCelltypeAnnotate.html</loc></url>

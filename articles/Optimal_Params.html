@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
 
       <h1>Find Optimal Parameters for My Screening </h1>
             
-            <h4 data-toc-skip class="date">2026-05-19</h4>
+            <h4 data-toc-skip class="date">2026-05-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Optimal_Params.Rmd" class="external-link"><code>vignettes/Optimal_Params.Rmd</code></a></small>
       <div class="d-none name"><code>Optimal_Params.Rmd</code></div>
@@ -195,11 +195,11 @@ and <code>alpha_2</code>.</p>
 evaluation -— the runtime can become prohibitively long. In such cases,
 parallel computing can be employed to accelerate the process.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># * install `furrr` &amp; `future.mirai` first, as it is required for parallel computing</span></span>
+<code class="sourceCode R"><span><span class="co"># * install `furrr` first, as it is required for parallel computing</span></span>
 <span><span class="co"># * We recommend using `future.mirai`, as it is more stable and faster than `future`</span></span>
 <span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">check_installed</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"furrr"</span>, <span class="st">"future.mirai"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.mirai</span><span class="fu">::</span><span class="va"><a href="https://future.mirai.futureverse.org/reference/mirai_multisession.html" class="external-link">mirai_multisession</a></span><span class="op">)</span></span>
+<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.mirai</span><span class="fu">::</span><span class="va"><a href="https://future.mirai.futureverse.org/reference/mirai_multisession.html" class="external-link">mirai_multisession</a></span>, workers <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">scAB_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Screen.html">Screen</a></span><span class="op">(</span></span>
 <span>  matched_bulk <span class="op">=</span> <span class="va">matched_bulk</span>,</span>

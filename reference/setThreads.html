@@ -17,7 +17,7 @@ TensorFlow via reticulate::import("tensorflow").'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,6 +69,7 @@ TensorFlow via <code>reticulate::import("tensorflow")</code>.</p>
 <span>  threads <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dt <span class="op">=</span> <span class="va">threads</span>,</span>
 <span>  cheapr <span class="op">=</span> <span class="va">threads</span>,</span>
+<span>  qs2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  openmp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tf_config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xla_flag <span class="op">=</span> <span class="st">"--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit"</span>, xla_device <span class="op">=</span></span>
 <span>    <span class="cn">NULL</span>, inter_op <span class="op">=</span> <span class="cn">NULL</span>, intra_op <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -93,6 +94,10 @@ OpenMP, data.table, and TensorFlow intra-op (unless overridden).</p></dd>
 
 <dt id="arg-cheapr">cheapr<a class="anchor" aria-label="anchor" href="#arg-cheapr"></a></dt>
 <dd><p>Integer. Thread count for cheapr (default: inherited from <code>threads</code>).</p></dd>
+
+
+<dt id="arg-qs-">qs2<a class="anchor" aria-label="anchor" href="#arg-qs-"></a></dt>
+<dd><p>Integer. Thread count for qs2 (default: NULL).</p></dd>
 
 
 <dt id="arg-openmp">openmp<a class="anchor" aria-label="anchor" href="#arg-openmp"></a></dt>

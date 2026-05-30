@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
 
       <h1>Full Tutorial</h1>
             
-            <h4 data-toc-skip class="date">2026-05-19</h4>
+            <h4 data-toc-skip class="date">2026-05-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/Full_Tutorial.Rmd" class="external-link"><code>vignettes/Full_Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Full_Tutorial.Rmd</code></div>
@@ -761,14 +761,23 @@ below</li>
 method:</p>
 <ul>
 <li>
-<code>path2save_scissor_inputs</code>: A character value specifying
-the path to save intermediate data, you can also set
-<code>path2load_scissor_cache = NULL</code> to suppress the saving of
-intermediate files. Default: <code>Scissor_inputs.RData</code>
+<code>path2save_scissor_inputs</code>: deprecated, use
+<code>save_path</code> instead</li>
+<li>
+<code>save_path</code>: A character value specifying the path to
+save intermediate data, you can also set <code>NULL</code> to suppress
+the saving of intermediate files. Default:
+<code>Scissor_res/&lt;cache_stamp&gt;/Scissor_inputs.RData</code>
 </li>
 <li>
-<code>path2load_scissor_cahce</code>: A character value specifying
-the path to load intermediate data</li>
+<code>path2load_scissor_cahce</code>: deprecated, use
+<code>load_path</code> instead</li>
+<li>
+<code>load_path</code>: A character value specifying the path to
+load intermediate data,
+e.g. <code>"Scissor_res/&lt;cache_stamp&gt;</code>. Default:
+<code>NULL</code>
+</li>
 <li>
 <code>alpha</code>: Parameter used to balance the effect of the l1
 norm and the network-based penalties. It can be a number or a searching

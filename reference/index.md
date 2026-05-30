@@ -105,8 +105,6 @@ Load reference datasets.
 
 - [`LoadRefData()`](https://wanglabcsu.github.io/sigbridger/reference/LoadRefData.md)
   : Download & Load Reference Data
-- [`get_var_value()`](https://wanglabcsu.github.io/sigbridger/reference/get_var_value.md)
-  : Trace and compute the value of a variable defined inside a function
 
 ## Python Environment Management
 
@@ -154,6 +152,14 @@ Manage cache files for SigBridgeR
   : Write Cache Metadata
 - [`CheckCache()`](https://wanglabcsu.github.io/sigbridger/reference/CheckCache.md)
   : Check Cache Configuration Consistency
+- [`ChooseCache()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseCache.md)
+  : Choose a Cache Directory
+- [`WriteCache()`](https://wanglabcsu.github.io/sigbridger/reference/WriteCache.md)
+  : Write an R Object to Cache
+- [`LoadCache()`](https://wanglabcsu.github.io/sigbridger/reference/LoadCache.md)
+  : Load a Cached R Object
+- [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md)
+  : Resolve and Set Up Cache Directory
 
 ## Package Configuration
 

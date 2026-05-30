@@ -144,13 +144,16 @@ DoTiRank(
 
 - save_path:
 
-  Directory path for saving intermediate and final results (default:
-  `"./TiRank_res"`).
+  (Soft-deprecated) Directory path for saving intermediate and final
+  results (default: `"./TiRank_res"`). Acts as fallback for `load_cache`
+  and `save_cache` when not specified via `...`. Prefer using
+  `load_cache` / `save_cache` in `...` instead. See
+  [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
 
 - load_cache:
 
-  Optional path to cached data for re-running analysis without
-  recomputing expensive steps (default: `NULL`).
+  (Soft-deprecated) Optional path to cached data (default: `NULL`).
+  Prefer using `load_cache` in `...` instead.
 
 - ...:
 
@@ -169,6 +172,18 @@ DoTiRank(
 
   :   Character. Name of assay to use from Seurat object (default:
       `"RNA"`).
+
+  load_cache
+
+  :   Cache directory path for loading cached data. Supports root-level,
+      cache-level, or parent-level paths. See
+      [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
+
+  save_cache
+
+  :   Cache directory path for saving results. Supports root-level or
+      parent-level paths. See
+      [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
 
 ## Value
 

@@ -13,7 +13,7 @@ associated with phenotypic outcomes."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,8 +78,6 @@ associated with phenotypic outcomes.</p>
 <span>     FDR_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>     bootstrap_n <span class="op">=</span> <span class="fl">100L</span></span>
 <span>   <span class="op">)</span>,</span>
-<span>   path2load_scissor_cache <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>   path2save_scissor_inputs <span class="op">=</span> <span class="st">"Scissor_inputs.RData"</span>,</span>
 <span>   <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -138,19 +136,16 @@ Higher values increase specificity.</p></dd>
 </ul></dd>
 
 
-<dt id="arg-path-load-scissor-cache">path2load_scissor_cache<a class="anchor" aria-label="anchor" href="#arg-path-load-scissor-cache"></a></dt>
-<dd><p>Path to precomputed Scissor inputs (RData file).
-If provided, skips recomputation (default: NULL).</p></dd>
-
-
-<dt id="arg-path-save-scissor-inputs">path2save_scissor_inputs<a class="anchor" aria-label="anchor" href="#arg-path-save-scissor-inputs"></a></dt>
-<dd><p>Path to save intermediate files (default: "Scissor_inputs.RData").</p></dd>
-
-
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments. Currently supports:</p><ul><li><p><code>verbose</code>: Logical indicating whether to print progress messages. Defaults to <code>TRUE</code>.</p></li>
 <li><p><code>seed</code>: For reproducibility, default is <code>123L</code></p></li>
-<li><p><code>assay</code>: Assay to use for single-cell data. Defaults to `"RNA"</p></li>
+<li><p><code>assay</code>: Assay to use for single-cell data. Defaults to <code>"RNA"</code></p></li>
+<li><p><code>load_cache</code>: Cache directory path for loading precomputed Scissor inputs.
+Supports root-level, cache-level, or parent-level paths. See <code><a href="CacheSetHere.html">CacheSetHere()</a></code>.</p></li>
+<li><p><code>save_cache</code>: Cache directory path for saving Scissor inputs. Supports
+root-level or parent-level paths. See <code><a href="CacheSetHere.html">CacheSetHere()</a></code>.</p></li>
+<li><p><code>path2load_scissor_cache</code> / <code>path2save_scissor_inputs</code>: Deprecated names,
+kept for backward compatibility.</p></li>
 </ul></dd>
 
 </dl></div>

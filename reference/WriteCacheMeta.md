@@ -86,8 +86,11 @@ cache identification and should not be modified.
 ## See also
 
 Other cache_config:
+[`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md),
 [`CheckCache()`](https://wanglabcsu.github.io/sigbridger/reference/CheckCache.md),
-[`ChooseCache()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseCache.md)
+[`ChooseCache()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseCache.md),
+[`LoadCache()`](https://wanglabcsu.github.io/sigbridger/reference/LoadCache.md),
+[`WriteCache()`](https://wanglabcsu.github.io/sigbridger/reference/WriteCache.md)
 
 ## Examples
 
