@@ -117,11 +117,11 @@ As you can see, with so many (alpha, alpha\_2) pairs – each requiring
 evaluation -— the runtime can become prohibitively long. In such cases,
 parallel computing can be employed to accelerate the process.
 
-    # * install `furrr` & `future.mirai` first, as it is required for parallel computing
+    # * install `furrr` first, as it is required for parallel computing
     # * We recommend using `future.mirai`, as it is more stable and faster than `future`
     rlang::check_installed(c("furrr", "future.mirai"))
 
-    future::plan(future.mirai::mirai_multisession)
+    future::plan(future.mirai::mirai_multisession, workers = 2L)
 
     scAB_res <- Screen(
       matched_bulk = matched_bulk,
