@@ -133,7 +133,7 @@ reference:
       contents:
           - WriteCacheMeta
           - CheckCache
-          - ChooseCahce
+          - ChooseCache
           - WriteCache
           - LoadCache
           - CacheSetHere
