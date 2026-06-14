@@ -51,7 +51,7 @@
 #'   - `train_path`: directory path for saving intermediate results (default: `"./SIDISH_res/"`)
 #'   - `train_num_workers`: number of data loading workers (default: `0`)
 #'   - `train_distribution_fit`: distribution fitting method, `"fitted"` or `"default"` (default: `"fitted"`)
-#' @param env_params List of environment parameters for Python setup including:
+#' @param env_params `r lifecycle::badge("deprecated")` List of environment parameters for Python setup including:
 #'   - `env.name`: conda/environment name (default: `"r-reticulate-sidish-nvidia"` for CUDA or `"r-reticulate-sidish-cpu"` for CPU)
 #'   - `env.type`: environment type, `"conda"`, `"environment"`, or `"venv"` (default: `"conda"`)
 #'   - `env.method`: environment setup method, `"system"` or `"conda"` (default: `"environment"`)
@@ -80,7 +80,6 @@ DoSIDISH <- function(
   label_type = "SIDISH",
   phenotype_class = "survival",
   sidish_params = list(),
-  env_params = list(),
   ...
 ) {
   CheckInstalled("Exceret/rSIDISH")
@@ -96,27 +95,19 @@ DoSIDISH <- function(
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
   seed <- dots$seed %||% getFuncOption("seed") %||% 123L
   assay <- dots$assay %||% "RNA"
+  env_params <- dots$env_params
+
+  if (is.list(env_params)) {
+    rlang::check_installed("lifecycle")
+    lifecycle::deprecate_warn(
+      "3.8.1",
+      "DoSIDISH(env_params)",
+      details = "After the R-side binding of SIDISH is updated to version >=0.0.2, user-provided environment is no longer required."
+    )
+  }
 
   # * handling user parameters
   sidish_params <- SIDISHParamSet(sidish_params = sidish_params)
-  env_params <- SIDISHEnvSet(
-    env_params = env_params,
-    device = sidish_params$device
-  )
-
-  if (!rSIDISH::detect_gpu(verbose = FALSE) && sidish_params$device == "cuda") {
-    cli::cli_abort(c(
-      "x" = "GPU not detected, please set {.pkg sidish_params = list(device = 'cpu')}"
-    ))
-  }
-
-  python <- FindPy(
-    env_params = env_params,
-    method_name = "SIDISH",
-    verbose = verbose
-  )
-
-  reticulate::use_python(python)
 
   res <- rSIDISH::sidish(
     matched_bulk = matched_bulk,
@@ -142,9 +133,20 @@ DoSIDISH <- function(
   )
 }
 
+#' SIDISH Env Setting
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
 #' @keywords internal
 #' @family SIDISH
 SIDISHEnvSet <- function(env_params = list(), device = c("cuda", "cpu")) {
+  rlang::check_installed("lifecycle")
+  lifecycle::deprecate_warn(
+    "3.8.1",
+    "SIDISHEnvSet()",
+    details = "After the R-side binding of SIDISH is updated to version >=0.0.2, user-provided environment is no longer required. This function has been deprecated and is retained for reference only"
+  )
   default <- list(
     env.name = if (device == "cuda") {
       "r-reticulate-sidish-nvidia"
