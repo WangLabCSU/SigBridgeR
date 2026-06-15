@@ -51,19 +51,11 @@
 #'   - `train_path`: directory path for saving intermediate results (default: `"./SIDISH_res/"`)
 #'   - `train_num_workers`: number of data loading workers (default: `0`)
 #'   - `train_distribution_fit`: distribution fitting method, `"fitted"` or `"default"` (default: `"fitted"`)
-#' @param env_params `r lifecycle::badge("deprecated")` List of environment parameters for Python setup including:
-#'   - `env.name`: conda/environment name (default: `"r-reticulate-sidish-nvidia"` for CUDA or `"r-reticulate-sidish-cpu"` for CPU)
-#'   - `env.type`: environment type, `"conda"`, `"environment"`, or `"venv"` (default: `"conda"`)
-#'   - `env.method`: environment setup method, `"system"` or `"conda"` (default: `"environment"`)
-#'   - `env.file`: path to environment YAML file (default: `system.file("conda/SIDISH_nvidia_environment.yml", package = "SigBridgeR")` or CPU variant)
-#'   - `env.python_version`: Python version (default: `"3.12.12"`)
-#'   - `env.packages`: named vector of Python packages and versions (default: `c("numpy" = "1.26.4")`, more packages included via env.file)
-#'   - `env.recreate`: whether to recreate the environment if it already exists (default: `FALSE`)
-#'   - `env.use_conda_forge`: whether to use the conda-forge channel (conda only, default: `TRUE`)
-#'   - `env.verbose`: verbose output during environment setup (default: value from `getFuncOption("verbose")`)
 #' @param ... Additional arguments passed to the function. Common parameters include:
 #'   \describe{
 #'     \item{verbose}{Logical. Whether to print verbose output (default: `TRUE`).}
+#'     \item{seed}{Integer. Random seed for reproducibility (default: `123L`).}
+#'     \item{assay}{Character. Assay to use for screening (default: `"RNA"`).
 #'   }
 #'
 #' @return A named list containing:

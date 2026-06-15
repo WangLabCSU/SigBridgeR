@@ -86,19 +86,6 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \describe{
 \item{verbose}{Logical. Whether to print verbose output (default: \code{TRUE}).}
 }}
-
-\item{env_params}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} List of environment parameters for Python setup including:
-\itemize{
-\item \code{env.name}: conda/environment name (default: \code{"r-reticulate-sidish-nvidia"} for CUDA or \code{"r-reticulate-sidish-cpu"} for CPU)
-\item \code{env.type}: environment type, \code{"conda"}, \code{"environment"}, or \code{"venv"} (default: \code{"conda"})
-\item \code{env.method}: environment setup method, \code{"system"} or \code{"conda"} (default: \code{"environment"})
-\item \code{env.file}: path to environment YAML file (default: \code{system.file("conda/SIDISH_nvidia_environment.yml", package = "SigBridgeR")} or CPU variant)
-\item \code{env.python_version}: Python version (default: \code{"3.12.12"})
-\item \code{env.packages}: named vector of Python packages and versions (default: \code{c("numpy" = "1.26.4")}, more packages included via env.file)
-\item \code{env.recreate}: whether to recreate the environment if it already exists (default: \code{FALSE})
-\item \code{env.use_conda_forge}: whether to use the conda-forge channel (conda only, default: \code{TRUE})
-\item \code{env.verbose}: verbose output during environment setup (default: value from \code{getFuncOption("verbose")})
-}}
 }
 \value{
 A named list containing:
