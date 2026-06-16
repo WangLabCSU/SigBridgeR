@@ -3,7 +3,7 @@
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v3.8.0 loaded
+#> ✔ SigBridgeR v3.8.1 loaded
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
@@ -419,7 +419,7 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_5.5.0       SeuratObject_5.4.0 sp_2.2-1           SigBridgeR_3.8.0  
+#> [1] Seurat_5.5.0       SeuratObject_5.4.0 sp_2.2-1           SigBridgeR_3.8.1  
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3         
@@ -429,7 +429,7 @@ sessionInfo()
 #>  [13] systemfonts_1.3.2      vctrs_0.7.3            reshape2_1.4.5        
 #>  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         
 #>  [19] promises_1.5.0         rmarkdown_2.31         ragg_1.5.2            
-#>  [22] purrr_1.2.2            xfun_0.57              cachem_1.1.0          
+#>  [22] purrr_1.2.2            xfun_0.58              cachem_1.1.0          
 #>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.8           
 #>  [28] spatstat.utils_3.2-3   irlba_2.3.7            parallel_4.6.0        
 #>  [31] cluster_2.1.8.2        R6_2.6.1               ica_1.0-3             
@@ -439,7 +439,7 @@ sessionInfo()
 #>  [43] scattermore_1.2        Rcpp_1.1.1-1.1         knitr_1.51            
 #>  [46] tensor_1.5.1           future.apply_1.20.2    zoo_1.8-15            
 #>  [49] sctransform_0.4.3      httpuv_1.6.17          Matrix_1.7-5          
-#>  [52] splines_4.6.0          igraph_2.3.1           tidyselect_1.2.1      
+#>  [52] splines_4.6.0          igraph_2.3.2           tidyselect_1.2.1      
 #>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.5-0 
 #>  [58] spatstat.explore_3.8-1 codetools_0.2-20       miniUI_0.1.2          
 #>  [61] listenv_0.10.1         lattice_0.22-9         tibble_3.3.1          
@@ -455,7 +455,7 @@ sessionInfo()
 #>  [91] fs_2.1.0               dotCall64_1.2          cowplot_1.2.0         
 #>  [94] grid_4.6.0             tidyr_1.3.2            nlme_3.1-169          
 #>  [97] patchwork_1.3.2        cli_3.6.6              spatstat.sparse_3.2-0 
-#> [100] textshaping_1.0.5      spam_2.11-3            viridisLite_0.4.3     
+#> [100] textshaping_1.0.5      spam_2.11-4            viridisLite_0.4.3     
 #> [103] dplyr_1.2.1            uwot_0.2.4             gtable_0.3.6          
 #> [106] sass_0.4.10            digest_0.6.39          progressr_0.19.0      
 #> [109] ggrepel_0.9.8          htmlwidgets_1.6.4      farver_2.1.2          

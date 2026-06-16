@@ -12,7 +12,6 @@ DoSIDISH(
   label_type = "SIDISH",
   phenotype_class = "survival",
   sidish_params = list(),
-  env_params = list(),
   ...
 )
 ```
@@ -145,39 +144,6 @@ DoSIDISH(
   - `train_distribution_fit`: distribution fitting method, `"fitted"` or
     `"default"` (default: `"fitted"`)
 
-- env_params:
-
-  List of environment parameters for Python setup including:
-
-  - `env.name`: conda/environment name (default:
-    `"r-reticulate-sidish-nvidia"` for CUDA or
-    `"r-reticulate-sidish-cpu"` for CPU)
-
-  - `env.type`: environment type, `"conda"`, `"environment"`, or
-    `"venv"` (default: `"conda"`)
-
-  - `env.method`: environment setup method, `"system"` or `"conda"`
-    (default: `"environment"`)
-
-  - `env.file`: path to environment YAML file (default:
-    `system.file("conda/SIDISH_nvidia_environment.yml", package = "SigBridgeR")`
-    or CPU variant)
-
-  - `env.python_version`: Python version (default: `"3.12.12"`)
-
-  - `env.packages`: named vector of Python packages and versions
-    (default: `c("numpy" = "1.26.4")`, more packages included via
-    env.file)
-
-  - `env.recreate`: whether to recreate the environment if it already
-    exists (default: `FALSE`)
-
-  - `env.use_conda_forge`: whether to use the conda-forge channel (conda
-    only, default: `TRUE`)
-
-  - `env.verbose`: verbose output during environment setup (default:
-    value from `getFuncOption("verbose")`)
-
 - ...:
 
   Additional arguments passed to the function. Common parameters
@@ -207,3 +173,6 @@ Other screen_method:
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)
+
+Other SIDISH:
+[`SIDISHEnvSet()`](https://wanglabcsu.github.io/sigbridger/reference/SIDISHEnvSet.md)

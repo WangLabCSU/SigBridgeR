@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,6 @@
 <span>  label_type <span class="op">=</span> <span class="st">"SIDISH"</span>,</span>
 <span>  phenotype_class <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>  sidish_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  env_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -127,19 +126,6 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 </ul></dd>
 
 
-<dt id="arg-env-params">env_params<a class="anchor" aria-label="anchor" href="#arg-env-params"></a></dt>
-<dd><p>List of environment parameters for Python setup including:</p><ul><li><p><code>env.name</code>: conda/environment name (default: <code>"r-reticulate-sidish-nvidia"</code> for CUDA or <code>"r-reticulate-sidish-cpu"</code> for CPU)</p></li>
-<li><p><code>env.type</code>: environment type, <code>"conda"</code>, <code>"environment"</code>, or <code>"venv"</code> (default: <code>"conda"</code>)</p></li>
-<li><p><code>env.method</code>: environment setup method, <code>"system"</code> or <code>"conda"</code> (default: <code>"environment"</code>)</p></li>
-<li><p><code>env.file</code>: path to environment YAML file (default: <code>system.file("conda/SIDISH_nvidia_environment.yml", package = "SigBridgeR")</code> or CPU variant)</p></li>
-<li><p><code>env.python_version</code>: Python version (default: <code>"3.12.12"</code>)</p></li>
-<li><p><code>env.packages</code>: named vector of Python packages and versions (default: <code>c("numpy" = "1.26.4")</code>, more packages included via env.file)</p></li>
-<li><p><code>env.recreate</code>: whether to recreate the environment if it already exists (default: <code>FALSE</code>)</p></li>
-<li><p><code>env.use_conda_forge</code>: whether to use the conda-forge channel (conda only, default: <code>TRUE</code>)</p></li>
-<li><p><code>env.verbose</code>: verbose output during environment setup (default: value from <code>getFuncOption("verbose")</code>)</p></li>
-</ul></dd>
-
-
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to the function. Common parameters include:</p><dl><dt>verbose</dt>
 <dd><p>Logical. Whether to print verbose output (default: <code>TRUE</code>).</p></dd>
@@ -166,7 +152,9 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 <code><a href="DoTiRank.html">DoTiRank()</a></code>,
 <code><a href="DoscAB.html">DoscAB()</a></code>,
 <code><a href="DoscPAS.html">DoscPAS()</a></code>,
-<code><a href="DoscPP.html">DoscPP()</a></code></p></div>
+<code><a href="DoscPP.html">DoscPP()</a></code></p>
+<p>Other SIDISH:
+<code><a href="SIDISHEnvSet.html">SIDISHEnvSet()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

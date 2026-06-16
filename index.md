@@ -4,13 +4,10 @@
 Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:
 GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![](https://img.shields.io/badge/devel%20version-3.8.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
-[![SigBridgeR status
-badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
+[![Devel
+Version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![R CMD
 check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
-[![registry status
-badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/)
 [![Ask
 DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
 ————————————————————————
@@ -168,6 +165,7 @@ pak::pkg_install(c(
 Get Started:
 
 - View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
+- View [Deepwiki](https://deepwiki.com/WangLabCSU/SigBridgeR)
 - [A Quick Started
   Guide](https://wanglabcsu.github.io/sigbridger/vignettes/Quick_Start.md)
 - [Start from spatial
