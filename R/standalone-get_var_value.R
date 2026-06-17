@@ -5,6 +5,10 @@
 # license: https://unlicense.org
 # imports: [rlang]
 # ---
+#
+# This file provides a tool to retrieve the value of a variable in a function.
+#
+# nocov start
 
 # ---- Helper: initialise definition environment from formals ----------------
 #' @keywords internal
