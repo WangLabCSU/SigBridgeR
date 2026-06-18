@@ -5,6 +5,7 @@
 [![Devel Version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)  
 [![R CMD check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
+[![zh-CN](https://img.shields.io/badge/lang-zh--CN-orange.svg)](inst/docs/translation/README.zh-CN.md)
 <!-- [![Registry status badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) -->
 <!-- [![SigBridgeR status badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) -->
 ------------------------------------------------------------------------
@@ -191,7 +192,7 @@ pak::pkg_install(c(
 
 Get Started:
 
--   View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
+-   View [Github Webpage (recommended)](https://wanglabcsu.github.io/SigBridgeR/)
 -   View [Deepwiki](https://deepwiki.com/WangLabCSU/SigBridgeR)
 -   [A Quick Started Guide](vignettes/Quick_Start.md)
 -   [Start from spatial transcriptome](vignettes/Spatial_Transcriptome.md) 
