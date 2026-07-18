@@ -101,7 +101,8 @@ def filter_args_4_func(input_dict: dict[str, Any], func: Callable) -> dict[str, 
     return {k: v for k, v in input_dict.items() if k in func_params}
 
 
-def main() -> [pd.DataFrame]:
+# pyrefly: ignore [invalid-annotation]
+def main() -> [pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     # * recept them from R script
     adata: AnnData = globals().get("adata")
     model: str = globals().get("model")

@@ -15,7 +15,7 @@ permissions:
 jobs:
     pkgdown:
         runs-on: ubuntu-latest
-        concurrency: 
+        concurrency:
             group: ${{ github.workflow }}-${{ github.ref }}
             cancel-in-progress: true
         env:
@@ -56,4 +56,3 @@ jobs:
                   clean: false
                   branch: gh-pages
                   folder: docs
-                  enable_jekyll: false

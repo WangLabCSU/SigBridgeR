@@ -26,3 +26,4 @@ prework
 ^[.]?air[.]toml$
 ^\.vscode$
 ^inst/docs
+^README\.Rmd$
