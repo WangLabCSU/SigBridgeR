@@ -85,6 +85,8 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item{...}{Additional arguments passed to the function. Common parameters include:
 \describe{
 \item{verbose}{Logical. Whether to print verbose output (default: \code{TRUE}).}
+\item{seed}{Integer. Random seed for reproducibility (default: \code{123L}).}
+\item{assay}{Character. Assay to use for screening (default: \code{"RNA"}).}
 }}
 }
 \value{
