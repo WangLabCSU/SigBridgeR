@@ -1,16 +1,4 @@
-# **SigBridgeR** [![sigbridger website](reference/figures/logo_white.png)](https://wanglabcsu.github.io/SigBridgeR/)
-
-[![Repo
-Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![License:
-GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![Devel
-Version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)  
-[![R CMD
-check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
-[![Ask
-DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
-————————————————————————
+# SigBridgeR
 
 ## 🌐 Overview
 
@@ -44,11 +32,11 @@ if (!requireNamespace("pak")) {
 pak::pkg_install("WangLabCSU/SigBridgeR")
 ```
 
-2.  Install with all dependencies:
+2.  Install from r-universe:
 
 ``` r
 
-pak::pkg_install("WangLabCSU/SigBridgeR", dependencies = TRUE)
+install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
 ### It is recommended to install the following packages:
@@ -59,17 +47,16 @@ additional algorithms.
 
 ``` r
 
-methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC", "rTiRank")
+methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
 pak::pkg_install(file.path("Exceret", methods))
 ```
-
-------------------------------------------------------------------------
 
 **unnecessary but recommended**:
 
 For better performance:
 
 ``` r
+
 pak::pkg_install(c(
   # faster computation
   "sparseMatrixStats",
@@ -90,7 +77,7 @@ if (!requireNamespace("BiocManager")) {
   install.packages("BiocManager")
 }
 # faster computation
-BiocManager::install("WGCNA)
+BiocManager::install("WGCNA")
 ```
 
 For seamless integration with single-cell RNA-seq data stored in
@@ -165,7 +152,6 @@ pak::pkg_install(c(
 Get Started:
 
 - View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
-- View [Deepwiki](https://deepwiki.com/WangLabCSU/SigBridgeR)
 - [A Quick Started
   Guide](https://wanglabcsu.github.io/sigbridger/vignettes/Quick_Start.md)
 - [Start from spatial
@@ -186,45 +172,33 @@ If you encounter problems, please check:
 Let us know if you have ideas to make this project better. Pull requests
 are welcome!
 
-## 📚 Citation
-
-This package is currently under development. Please cite the
-[preprint](https://www.biorxiv.org/content/10.64898/2026.05.08.723458v1)
-if you use it in your research.
-
 ## 🗺️ Similar Projects
 
-[scSurvival](https://github.com/cliffren/scSurvival): Single-cell data
-(log-normalized + HVG-selected) + survival data (optional clinical
-covariates and batch labels) -\> Survival-associated cell subpopulations
+[scSurvival](https://github.com/cliffren/scSurvival): Single-cell
+expression matrix (log-normalized + HVG-selected) + survival data
+(optional clinical covariates and batch labels) -\> Survival-associated
+cell subpopulations
 
 [CellPhenoX](https://github.com/fanzhanglab/pyCellPhenoX): Single-cell
 multi-omics data + bulk-level clinical variables, covariates (optional
 interaction effect terms) -\> interpretable score per cell
 
-[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq data
-(imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq
-expression matrix (with matched survival time and event status) -\>
-breast cancer prognostic gene signatures and Cox PH risk prediction
-model
+[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq
+count matrix (imputed by MAGIC + filtered for low coverage/expression) +
+bulk RNA-seq expression matrix (with matched survival time and event
+status) -\> breast cancer prognostic gene signatures and Cox PH risk
+prediction model
 
 [SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq
-data + target scRNA-seq data + (optional) bulk RNA-seq data with paired
-survival data -\> cell embeddings, cluster assignments, UMAP
-visualizations, and phenotype‑algebra‑derived risk scores with survival
-probability curves for individual cell subpopulations.
+expression matrix + target scRNA-seq expression matrix + (optional) bulk
+RNA-seq expression matrix with paired survival data -\> cell embeddings,
+cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived
+risk scores with survival probability curves for individual cell
+subpopulations.
 
 [scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data +
 bulk RNA-seq data + celltype annotation (optional batch labels) -\>
 phenotype-associated cell populations
-
-[scSurv](https://github.com/3254c/scSurv): scRNA-seq data + bulk RNA-seq
-expression matrix (with matched survival time and event status) -\>
-per-cell hazard scores and prognostic gene sets
-
-[beyondcell](https://github.com/cnio-bu/beyondcell): the expression
-matrix + a collection of drug signatures -\> drug-related commonalities
-between cells/spots
 
 # Package index
 

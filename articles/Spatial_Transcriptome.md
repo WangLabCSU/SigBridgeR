@@ -7,6 +7,9 @@ library(SigBridgeR)
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
+#> 'SeuratObject' was built under R 4.6.0 but the current version is
+#> 4.6.1; it is recomended that you reinstall 'SeuratObject' as the ABI
+#> for R may have changed
 #> 
 #> Attaching package: 'SeuratObject'
 #> The following objects are masked from 'package:base':
@@ -398,7 +401,7 @@ result
 ``` r
 
 sessionInfo()
-#> R version 4.6.0 (2026-04-24)
+#> R version 4.6.1 (2026-06-24)
 #> Platform: x86_64-pc-linux-gnu
 #> Running under: Ubuntu 24.04.4 LTS
 #> 
@@ -419,46 +422,46 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_5.5.0       SeuratObject_5.4.0 sp_2.2-1           SigBridgeR_3.8.1  
+#> [1] Seurat_5.5.1       SeuratObject_5.4.0 sp_2.2-1           SigBridgeR_3.8.1  
 #> 
 #> loaded via a namespace (and not attached):
-#>   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3         
-#>   [4] rlang_1.2.0            magrittr_2.0.5         RcppAnnoy_0.0.23      
+#>   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3.1       
+#>   [4] rlang_1.3.0            magrittr_2.0.5         RcppAnnoy_0.0.23      
 #>   [7] otel_0.2.0             spatstat.geom_3.8-1    matrixStats_1.5.0     
-#>  [10] ggridges_0.5.7         compiler_4.6.0         png_0.1-9             
+#>  [10] ggridges_0.5.7         compiler_4.6.1         png_0.1-9             
 #>  [13] systemfonts_1.3.2      vctrs_0.7.3            reshape2_1.4.5        
 #>  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         
 #>  [19] promises_1.5.0         rmarkdown_2.31         ragg_1.5.2            
-#>  [22] purrr_1.2.2            xfun_0.58              cachem_1.1.0          
+#>  [22] purrr_1.2.2            xfun_0.60              cachem_1.1.0          
 #>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.8           
-#>  [28] spatstat.utils_3.2-3   irlba_2.3.7            parallel_4.6.0        
+#>  [28] spatstat.utils_3.2-4   irlba_2.3.7            parallel_4.6.1        
 #>  [31] cluster_2.1.8.2        R6_2.6.1               ica_1.0-3             
 #>  [34] spatstat.data_3.1-9    bslib_0.11.0           stringi_1.8.7         
 #>  [37] RColorBrewer_1.1-3     reticulate_1.46.0      spatstat.univar_3.2-0 
-#>  [40] parallelly_1.47.0      lmtest_0.9-40          jquerylib_0.1.4       
-#>  [43] scattermore_1.2        Rcpp_1.1.1-1.1         knitr_1.51            
+#>  [40] parallelly_1.48.0      lmtest_0.9-40          jquerylib_0.1.4       
+#>  [43] scattermore_1.2        Rcpp_1.1.2             knitr_1.51            
 #>  [46] tensor_1.5.1           future.apply_1.20.2    zoo_1.8-15            
 #>  [49] sctransform_0.4.3      httpuv_1.6.17          Matrix_1.7-5          
-#>  [52] splines_4.6.0          igraph_2.3.2           tidyselect_1.2.1      
+#>  [52] splines_4.6.1          igraph_2.3.3           tidyselect_1.2.1      
 #>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.5-0 
 #>  [58] spatstat.explore_3.8-1 codetools_0.2-20       miniUI_0.1.2          
-#>  [61] listenv_0.10.1         lattice_0.22-9         tibble_3.3.1          
-#>  [64] plyr_1.8.9             shiny_1.13.0           S7_0.2.2              
+#>  [61] listenv_1.0.0          lattice_0.22-9         tibble_3.3.1          
+#>  [64] plyr_1.8.9             shiny_1.14.0           S7_0.2.2              
 #>  [67] ROCR_1.0-12            evaluate_1.0.5         Rtsne_0.17            
 #>  [70] future_1.70.0          fastDummies_1.7.6      desc_1.4.3            
 #>  [73] survival_3.8-6         polyclip_1.10-7        fitdistrplus_1.2-6    
 #>  [76] pillar_1.11.1          KernSmooth_2.23-26     plotly_4.12.0         
 #>  [79] generics_0.1.4         RcppHNSW_0.7.0         ggplot2_4.0.3         
 #>  [82] scales_1.4.0           globals_0.19.1         xtable_1.8-8          
-#>  [85] glue_1.8.1             lazyeval_0.2.3         tools_4.6.0           
+#>  [85] glue_1.8.1             lazyeval_0.2.3         tools_4.6.1           
 #>  [88] data.table_1.18.4      RSpectra_0.16-2        RANN_2.6.2            
 #>  [91] fs_2.1.0               dotCall64_1.2          cowplot_1.2.0         
-#>  [94] grid_4.6.0             tidyr_1.3.2            nlme_3.1-169          
+#>  [94] grid_4.6.1             tidyr_1.3.2            nlme_3.1-169          
 #>  [97] patchwork_1.3.2        cli_3.6.6              spatstat.sparse_3.2-0 
 #> [100] textshaping_1.0.5      spam_2.11-4            viridisLite_0.4.3     
 #> [103] dplyr_1.2.1            uwot_0.2.4             gtable_0.3.6          
-#> [106] sass_0.4.10            digest_0.6.39          progressr_0.19.0      
+#> [106] sass_0.4.10            digest_0.6.39          progressr_1.0.0       
 #> [109] ggrepel_0.9.8          htmlwidgets_1.6.4      farver_2.1.2          
-#> [112] htmltools_0.5.9        pkgdown_2.2.0          lifecycle_1.0.5       
+#> [112] htmltools_0.5.9        pkgdown_2.2.1          lifecycle_1.0.5       
 #> [115] httr_1.4.8             mime_0.13              MASS_7.3-65
 ```

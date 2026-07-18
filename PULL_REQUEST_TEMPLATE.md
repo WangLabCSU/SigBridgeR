@@ -26,9 +26,7 @@ Other (please describe):
 
 I have run `devtools::test()` and all tests pass.
 
-I have run
-[`lintr::lint_package()`](https://lintr.r-lib.org/reference/lint.html)
-and addressed any linting issues.
+I have run `lintr::lint_package()` and addressed any linting issues.
 
 I have updated documentation via `devtools::document()` if needed.
 

@@ -183,10 +183,9 @@ Samples are retained if:
 
 ## See also
 
-[`cpm`](https://rdrr.io/pkg/edgeR/man/cpm.html) for counts per million
-calculation, [`prcomp`](https://rdrr.io/r/stats/prcomp.html) for PCA
-analysis, [`cor`](https://rdrr.io/r/stats/cor.html) for correlation
-analysis,
+`cpm` for counts per million calculation,
+[`prcomp`](https://rdrr.io/r/stats/prcomp.html) for PCA analysis,
+[`cor`](https://rdrr.io/r/stats/cor.html) for correlation analysis,
 [`SymbolConvert`](https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.md)
 for gene symbol conversion
 

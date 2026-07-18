@@ -153,6 +153,14 @@ DoSIDISH(
 
   :   Logical. Whether to print verbose output (default: `TRUE`).
 
+  seed
+
+  :   Integer. Random seed for reproducibility (default: `123L`).
+
+  assay
+
+  :   Character. Assay to use for screening (default: `"RNA"`).
+
 ## Value
 
 A named list containing:

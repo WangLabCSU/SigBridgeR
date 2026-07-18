@@ -139,13 +139,11 @@ A named list containing:
 
 - `pca_res`:
 
-  PCA rotation results from
-  [`SCIPAC::sc.bulk.pca()`](https://rdrr.io/pkg/SCIPAC/man/sc.bulk.pca.html)
+  PCA rotation results from `SCIPAC::sc.bulk.pca()`
 
 - `cluster_res`:
 
-  Clustering results from
-  [`SCIPAC::seurat.ct()`](https://rdrr.io/pkg/SCIPAC/man/seurat.ct.html)
+  Clustering results from `SCIPAC::seurat.ct()`
 
 ## Workflow
 
@@ -186,9 +184,7 @@ A named list containing:
 
 ## See also
 
-[`SCIPAC`](https://rdrr.io/pkg/SCIPAC/man/SCIPAC.html),
-[`sc.bulk.pca`](https://rdrr.io/pkg/SCIPAC/man/sc.bulk.pca.html),
-[`seurat.ct`](https://rdrr.io/pkg/SCIPAC/man/seurat.ct.html),
+`SCIPAC`, `sc.bulk.pca`, `seurat.ct`,
 [`RegisterScreenMethod`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
 
 Other screen_method:

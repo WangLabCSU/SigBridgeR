@@ -61,10 +61,8 @@ ScreenUpset(
 
 - ...:
 
-  Additional arguments passed to
-  [`ggupset::scale_x_upset()`](https://rdrr.io/pkg/ggupset/man/scale_x_upset.html),
-  [`ggupset::theme_combmatrix()`](https://rdrr.io/pkg/ggupset/man/theme_combmatrix.html),
-  and
+  Additional arguments passed to `ggupset::scale_x_upset()`,
+  `ggupset::theme_combmatrix()`, and
   [`ggplot2::theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
   for customizing the plot appearance. Argumetns are auto-filtered
 

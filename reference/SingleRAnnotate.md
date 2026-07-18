@@ -67,12 +67,10 @@ SingleRAnnotate(
 
   A numeric matrix of (usually normalized and log-transformed)
   expression values from a reference dataset, or a SummarizedExperiment
-  object containing such a matrix; see
-  [`SingleR::trainSingleR`](https://rdrr.io/pkg/SingleR/man/trainSingleR.html)
-  for details. Alternatively, a list or List of SummarizedExperiment
-  objects or numeric matrices containing multiple references. Row names
-  may be different across entries but only the intersection will be
-  used,
+  object containing such a matrix; see `SingleR::trainSingleR` for
+  details. Alternatively, a list or List of SummarizedExperiment objects
+  or numeric matrices containing multiple references. Row names may be
+  different across entries but only the intersection will be used,
 
 - labels:
 
@@ -87,9 +85,8 @@ SingleRAnnotate(
 
 - ...:
 
-  Additional arguments passed to
-  [`SingleR::SingleR()`](https://rdrr.io/pkg/SingleR/man/SingleR.html)
-  (e.g., `assay.type.ref`, `genes`).
+  Additional arguments passed to `SingleR::SingleR()` (e.g.,
+  `assay.type.ref`, `genes`).
 
 ## Value
 

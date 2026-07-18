@@ -45,14 +45,10 @@
       Screening](#id_29-option-i-scipac_screening)
     - [2.F Merge screening results](#id_2f-merge-screening-results)
   - [3. Visualization](#id_3-visualization)
-    - [3.1 UMAP for screening
-      results](#id_31-umap-for-screening-results)
-    - [3.2 Stack bar plot for screening
-      results](#id_32-stack-bar-plot-for-screening-results)
-    - [3.3 Venn diagram for screening
-      results](#id_33-venn-diagram-for-screening-results)
-    - [3.4 Upset plot for screening
-      results](#id_34-upset-plot-for-screening-results)
+    - [3.1 UMAP](#id_31-umap)
+    - [3.2 Stack bar plot](#id_32-stack-bar-plot)
+    - [3.3 Venn diagram](#id_33-venn-diagram)
+    - [3.4 Upset plot](#id_34-upset-plot)
   - [4. Example](#id_4-example)
     - [4.1 Survival-associated cell
       screening](#id_41-survival-associated-cell-screening)
@@ -240,8 +236,7 @@ For the structure of `anndata`, you can refer to
 
 For more quality control, please use
 [scCustmoize](https://samuel-marsh.github.io/scCustomize/index.html),
-like
-[`scCustomize::Add_Cell_QC_Metrics()`](https://samuel-marsh.github.io/scCustomize/reference/Add_Cell_QC_Metrics.html).
+like `scCustomize::Add_Cell_QC_Metrics()`.
 
 ##### 1.1.8 (Optional) Filter Out Tumor Cells
 
@@ -623,7 +618,7 @@ Parameters pass to `...` when using `Scissor` method:
 
 ``` r
 
-scissor_result = Screen(
+scissor_result <- Screen(
   matched_bulk = matched_bulk,
   sc_data = sc_dataset, # A Seurat object after preprocessing
   phenotype = matched_phenotype_data,
@@ -639,7 +634,7 @@ feature of the `Scissor`.
 
 ``` r
 
-scissor_result = Screen(
+scissor_result <- Screen(
   sc_data = sc_dataset,
   label_type = "TP53",
   phenotype_class = "binary",
@@ -654,7 +649,7 @@ can also be applied.
 ``` r
 
 # When `alpha = NULL`, an alpha iteration will continue until phenotype-associated cells are screened out or no cells are screened out even after exceeding the `cutoff`.
-scissor_result = Screen(
+scissor_result <- Screen(
   sc_data = sc_dataset,
   label_type = "TP53",
   phenotype_class = "binary",
@@ -681,7 +676,7 @@ First, prepare a benchmark dataset yourself for cell evalutaion.
 
 ``` r
 
-scissor_result = Screen(
+scissor_result <- Screen(
   sc_data = sc_dataset,
   label_type = "TP53",
   phenotype_class = "binary",
@@ -740,7 +735,7 @@ from the `scPAS`’s documentation):
 
 ``` r
 
-scpas_result = Screen(
+scpas_result <- Screen(
   matched_bulk = matched_bulk,
   sc_data = A_Seurat_object,
   phenotype = phenotype,
@@ -784,7 +779,7 @@ from the `scAB`’s documentation):
 
 ``` r
 
-scab_result = Screen(
+scab_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
   phenotype = your_matched_phenotype,
@@ -836,7 +831,7 @@ Parameters pass to `...` when using `scPP` method :
 ``` r
 
 # This will take several hours
-scpp_result = Screen(
+scpp_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
   phenotype = your_matched_phenotype,
@@ -1290,7 +1285,7 @@ results of these methods. The Seurat object or a results list from
 
 ``` r
 
-merged_seurat = MergeResult(
+merged_seurat <- MergeResult(
   your_scissor_result,
   your_scPAS_result,
   your_scAB_result,
@@ -1303,7 +1298,7 @@ merged_seurat = MergeResult(
 
 # * mixed input form is alse supported
 
-merged_seurat = MergeResult(
+merged_seurat <- MergeResult(
   your_scissor_result$scRNA_data,
   your_scPAS_result$scRNA_data,
   your_scAB_result,
@@ -1337,7 +1332,7 @@ visualization, `SigBridgeR` hardly provides visualization (except for
 fraction plot and upset plot, because we provide some statistic results
 for them). We only provide the source code for reference.
 
-#### 3.1 UMAP for screening results
+#### 3.1 UMAP
 
 **example**:
 
@@ -1375,7 +1370,7 @@ c(
   )
 
 # * Show
-umaps = celltype_umap +
+umaps <- celltype_umap +
   patient_umap +
   scissor_umap +
   scab_umap +
@@ -1427,7 +1422,7 @@ https://satijalab.org/seurat/reference/DimPlot.html](https://satijalab.org/seura
 [Seurat::FeaturePlot -
 https://satijalab.org/seurat/reference/FeaturePlot.html](https://satijalab.org/seurat/reference/FeaturePlot.html)
 
-#### 3.2 Stack bar plot for screening results
+#### 3.2 Stack bar plot
 
 Key parameters for `ScreenFractionPlot`:
 
@@ -1490,7 +1485,7 @@ If multiple screen_types are specified
 - `combined_plot`: A ggplot2 object containing all the plots (2\*2
   grid).
 
-#### 3.3 Venn diagram for screening results
+#### 3.3 Venn diagram
 
 `ggVennDiagram` is used to generate a Venn diagram for the screening
 results. Suppose you have performed some of the screening algorithms on
@@ -1533,7 +1528,7 @@ degas_pos <- colnames(degas_result$scRNA_data)[
 all_cells <- colnames(your_seurat_obj)
 
 # * create a list of cell vectors
-pos_venn = list(
+pos_venn <- list(
   scissor = scissor_pos,
   scpas = scpas_pos,
   scab = scab_pos,
@@ -1545,7 +1540,7 @@ pos_venn = list(
 
 set.seed(123)
 
-venn_plot = ggVennDiagram::ggVennDiagram(
+venn_plot <- ggVennDiagram::ggVennDiagram(
   x = pos_venn,
   # * the labels of each group to be shown on the diagram
   category.names = c(
@@ -1575,7 +1570,7 @@ venn_plot = ggVennDiagram::ggVennDiagram(
 [ggVennDiagram -
 https://gaospecial.github.io/ggVennDiagram/](https://gaospecial.github.io/ggVennDiagram/)
 
-#### 3.4 Upset plot for screening results
+#### 3.4 Upset plot
 
 If too many screening meyhods are selected, the number of intersections
 among cells screened by different methods will also increase. In this
@@ -2589,7 +2584,7 @@ Session information:
 sessionInfo()
 ```
 
-    ## R version 4.6.0 (2026-04-24)
+    ## R version 4.6.1 (2026-06-24)
     ## Platform: x86_64-pc-linux-gnu
     ## Running under: Ubuntu 24.04.4 LTS
     ## 
@@ -2611,12 +2606,12 @@ sessionInfo()
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] digest_0.6.39     desc_1.4.3        R6_2.6.1          fastmap_1.2.0    
-    ##  [5] xfun_0.58         cachem_1.1.0      knitr_1.51        htmltools_0.5.9  
+    ##  [5] xfun_0.60         cachem_1.1.0      knitr_1.51        htmltools_0.5.9  
     ##  [9] rmarkdown_2.31    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      
-    ## [13] pkgdown_2.2.0     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2
-    ## [17] compiler_4.6.0    tools_4.6.0       ragg_1.5.2        bslib_0.11.0     
+    ## [13] pkgdown_2.2.1     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2
+    ## [17] compiler_4.6.1    tools_4.6.1       ragg_1.5.2        bslib_0.11.0     
     ## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        jsonlite_2.0.0   
-    ## [25] rlang_1.2.0       fs_2.1.0          htmlwidgets_1.6.4
+    ## [25] rlang_1.3.0       fs_2.1.0          htmlwidgets_1.6.4
 
 ------------------------------------------------------------------------
 
@@ -2652,3 +2647,15 @@ sessionInfo()
 >     predicting relevant subpopulations in single-cell data using
 >     phenotypic information from bulk data. Briefings in
 >     Bioinformatics. 2024 May 23;25(4):bbae260.
+>
+> 8.  Jolasun, Y. et al. SIDISH integrates single-cell and bulk
+>     transcriptomics to identify high-risk cells and guide precision
+>     therapeutics through in silico perturbation. Nat Commun 16, 11271
+>     (2025).
+>
+> 9.  Gan, D., Zhu, Y., Lu, X. & Li, J. SCIPAC: Quantitative estimation
+>     of cell-phenotype associations. Genome Biol 25, 119 (2024).
+>
+> 10. Lin, Y. et al. TiRank prioritizes phenotypic niches in tumor
+>     microenvironment for clinical biomarker discovery. Genome Med 18,
+>     23 (2026).

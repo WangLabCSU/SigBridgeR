@@ -461,6 +461,5 @@ functions.
 1.  The first input and the first output must both be Seurat objects.
 2.  If multiple objects need to be returned, it is recommended to use a
     `list` format.
-3.  Use
-    [`tidycheckUsage::tidycheckUsage()`](https://rdrr.io/pkg/tidycheckUsage/man/tidycheckUsage.html)
-    to check the function’s syntax.
+3.  Use `tidycheckUsage::tidycheckUsage()` to check the function’s
+    syntax.
