@@ -28,7 +28,6 @@ knitr::opts_chunk$set(
 <!-- [![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) -->
 <!-- badges: end -->
 
-------
 
 ## 🌐 Overview
 
@@ -107,7 +106,7 @@ if (!requireNamespace("BiocManager")) {
   install.packages("BiocManager")
 }
 # faster computation
-BiocManager::install("WGCNA)
+BiocManager::install("WGCNA")
 ```
 
 </details>

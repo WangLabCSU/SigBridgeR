@@ -141,7 +141,6 @@ navbar:
             - search
             - github
             - lightswitch
-            - toggle_theme
     components:
         toggle_theme: ~
         home:

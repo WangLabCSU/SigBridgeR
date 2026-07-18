@@ -14,8 +14,6 @@
 <!-- [![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) -->
 <!-- badges: end -->
 
-------------------------------------------------------------------------
-
 ## 🌐 Overview
 
 SigBridgeR integrates multiple algorithms, using single-cell RNA
@@ -98,7 +96,7 @@ if (!requireNamespace("BiocManager")) {
   install.packages("BiocManager")
 }
 # faster computation
-BiocManager::install("WGCNA)
+BiocManager::install("WGCNA")
 ```
 
 </details>

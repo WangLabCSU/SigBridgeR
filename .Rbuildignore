@@ -91,3 +91,7 @@ CONTRICUTING.md
 ^vignettes/articles$
 ^index_files$
 SigBridgeR_workflow.png
+
+
+# flir files
+^flir$
