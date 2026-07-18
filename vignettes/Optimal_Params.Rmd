@@ -289,6 +289,15 @@ Output goes like this when using example data
 # ✔ [2025/11/07 08:54:22] scPP screening done.
 ```
 
+<!-- ## Find Optimal Parameters for `DEGAS` -->
+
+<!-- ## Find Optimal Parameters for `SCIPAC` -->
+
+<!-- ## Find Optimal Parameters for `SIDISH` -->
+
+<!-- ## Find Optimal Parameters for `TiRank` -->
+
+
 ## Session Info
 
 ```{r,sessionInfo,echo=FALSE}

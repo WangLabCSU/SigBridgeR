@@ -1,17 +1,22 @@
 # ---
 # repo: WangLabCSU/SigBridgeR
 # file: standalone-get_var_value.R
-# last-updated: 2026-05-17
+# last-updated: 2026-07-18
 # license: https://unlicense.org
 # imports: [rlang]
 # ---
 #
 # This file provides a tool to retrieve the value of a variable in a function.
 #
+# ## Changelog:
+#
+# 2026-07-18:
+# * Changed internal label to noRd
+#
 # nocov start
 
 # ---- Helper: initialise definition environment from formals ----------------
-#' @keywords internal
+#' @noRd
 .gvv_init_def_env <- function(fmls) {
   def_env <- new.env(parent = emptyenv())
   for (nm in names(fmls)) {
@@ -33,7 +38,7 @@
 # Scans `expr` for symbols that exist in `def_env` and replaces them with
 # their stored definition, walking the chain until literals or unresolvable
 # symbols remain.
-#' @keywords internal
+#' @noRd
 .gvv_resolve <- function(expr, def_env, visited = character(), depth = 0L) {
   if (is.symbol(expr)) {
     name <- as.character(expr)
@@ -72,7 +77,7 @@
 # ---- Helper: evaluate a fully-resolved expression safely ------------------
 # Uses the evaluation environment stored inside `def_env` (key `.gvv_env`).
 # Falls back to `baseenv()` when not set.
-#' @keywords internal
+#' @noRd
 .gvv_eval_safe <- function(expr, def_env) {
   eval_env <- def_env[[".gvv_env"]] %||% baseenv()
   tryCatch(eval(expr, envir = eval_env), error = function(e) NULL)
@@ -81,7 +86,7 @@
 # ---- Helper: extract assignments from a `{` block -------------------------
 # Processes statements sequentially; stops at `return()` / `stop()` or
 # at `break` (signalled via the `.loop_break` flag in def_env).
-#' @keywords internal
+#' @noRd
 .gvv_extract_block <- function(expr, def_env) {
   for (i in seq_along(expr)[-1L]) {
     child <- expr[[i]]
@@ -112,7 +117,7 @@
 }
 
 # ---- Loop: `for (var in seq) body` ----------------------------------------
-#' @keywords internal
+#' @noRd
 .gvv_extract_for <- function(expr, def_env) {
   loop_var <- as.character(expr[[2L]])
   seq_expr <- .gvv_resolve(expr[[3L]], def_env)
@@ -137,7 +142,7 @@
 }
 
 # ---- Loop: `while (cond) body` --------------------------------------------
-#' @keywords internal
+#' @noRd
 .gvv_extract_while <- function(expr, def_env) {
   cond_expr <- expr[[2L]]
   body_expr <- expr[[3L]]
@@ -161,7 +166,7 @@
 }
 
 # ---- Loop: `repeat body` --------------------------------------------------
-#' @keywords internal
+#' @noRd
 .gvv_extract_repeat <- function(expr, def_env) {
   body_expr <- expr[[2L]]
 
@@ -182,7 +187,7 @@
 # ---- Branch: `if (cond) then else else` -----------------------------------
 # Evaluates the condition statically when possible; otherwise falls back
 # to processing both branches.
-#' @keywords internal
+#' @noRd
 .gvv_extract_if <- function(expr, def_env) {
   cond_resolved <- .gvv_resolve(expr[[2L]], def_env)
   cond_value <- .gvv_eval_safe(cond_resolved, def_env)
@@ -203,7 +208,7 @@
 # Walks the expression tree and records every assignment in `def_env`.
 # Dispatches to specialised handlers for control-flow constructs so that
 # iterative / conditional assignments are applied correctly.
-#' @keywords internal
+#' @noRd
 .gvv_extract <- function(expr, def_env) {
   if (!is.recursive(expr) || !is.call(expr)) {
     return(invisible())

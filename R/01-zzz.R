@@ -26,6 +26,8 @@
   invisible()
 }
 
+`%||%` <- function(x, y) if (is.null(x)) y else x
+
 # suppress R CMD CHECK NOTE about global variables when using tidyverse or data.table
 utils::globalVariables(c(
   "PC",

@@ -55,7 +55,7 @@
 #'   \describe{
 #'     \item{verbose}{Logical. Whether to print verbose output (default: `TRUE`).}
 #'     \item{seed}{Integer. Random seed for reproducibility (default: `123L`).}
-#'     \item{assay}{Character. Assay to use for screening (default: `"RNA"`).
+#'     \item{assay}{Character. Assay to use for screening (default: `"RNA"`).}
 #'   }
 #'
 #' @return A named list containing:

@@ -43,8 +43,8 @@ on:
     status:
     watch:
         types: [started]
-#  schedule:
-#    - cron: '30 2 * * *'
+    schedule:
+        - cron: "30 2 * * *"
 
 jobs:
     send-event:

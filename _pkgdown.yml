@@ -1,23 +1,5 @@
 url: https://wanglabcsu.github.io/sigbridger/
 
-favicons:
-    - href: favicon.ico
-    - href: favicon-16x16.png
-      sizes: 16x16
-      type: image/png
-    - href: favicon-32x32.png
-      sizes: 32x32
-      type: image/png
-    - href: apple-touch-icon.png
-      sizes: 180x180
-      type: image/png
-    - href: android-chrome-192x192.png
-      sizes: 192x192
-      type: image/png
-    - href: android-chrome-512x512.png
-      sizes: 512x512
-      type: image/png
-
 template:
     bootstrap: 5
     light-switch: true
@@ -149,8 +131,17 @@ reference:
 # 导航栏配置
 navbar:
     structure:
-        left: [home, reference, articles, other_function, troubleshooting]
-        right: [toggle_theme, github]
+        left:
+            - intro
+            - reference
+            - articles
+            - tutorials
+            - news
+        right:
+            - search
+            - github
+            - lightswitch
+            - toggle_theme
     components:
         toggle_theme: ~
         home:
@@ -192,6 +183,8 @@ navbar:
             text: Troubleshooting
             icon: fa-bug
             href: articles/Troubleshooting.html
+            search:
+        search: []
         github:
             icon: fa-github
             href: https://github.com/wanglabcsu/sigbridger/

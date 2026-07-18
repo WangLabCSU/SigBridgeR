@@ -19,7 +19,7 @@ docs/
 ^Meta/
 benchmark_data
 ^Tmp/.*
-^SigBridgeR/Tmp/.*  
+^SigBridgeR/Tmp/.*
 prework
 ^release/
 ^tests/
@@ -27,3 +27,67 @@ prework
 ^\.vscode$
 ^inst/docs
 CONTRICUTING.md
+
+# ---- Global rbuildignore patterns ----
+
+# R build artifacts
+^\.Rhistory$
+^\.Rdata$
+^\.Rcheck$
+^\.Rapp\.Rproj$
+^\.Rapp\.Rproj\.user$
+^\.Rapp\.history$
+
+# Git
+^\.git$
+^\.gitignore$
+^\.gitattributes$
+
+# IDE / dev tools
+^\.codebuddy$
+^\.fresh$
+^\.lintr$
+^\.positai$
+^\.claude$
+
+# CI/CD
+^\.github$
+^codecov\.yml$
+
+# Documentation build artifacts
+^docs$
+^pkgdown$
+^_pkgdown\.yml$
+^_pkgdown\.yaml$
+^pkgdown\.yaml$
+^pkgdown\.yml$
+^README\.Rmd$
+^cran-comments\.md$
+
+# CRAN / development
+^CRAN-SUBMISSION$
+^revdep$
+^codemeta\.json$
+^CITATION\.cff$
+
+# Other common files
+^\.imgbotconfig$
+^CODE_OF_CONDUCT\.md$
+^CONTRIBUTING\.md$
+^Rplots\.pdf$
+^jarl\.toml$
+^index\.qmd$
+^index\.html$
+^index\.md$
+/.quarto/
+[.]quarto_ipynb$
+[.]markdown$
+^vignettes/\.quarto$
+^vignettes/_quarto\.yaml$
+^vignettes/_quarto\.yml$
+^\.quarto$
+^vignettes/articles/\.quarto$
+^vignettes/articles/*_files$
+^vignettes/articles$
+^index_files$
+SigBridgeR_workflow.png
