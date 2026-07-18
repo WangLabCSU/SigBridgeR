@@ -8,11 +8,9 @@ DoSIDISH(
   matched_bulk,
   sc_data,
   phenotype,
-  label_type = NULL,
+  label_type = "SIDISH",
   phenotype_class = "survival",
-  assay = "RNA",
   sidish_params = list(),
-  env_params = list(),
   ...
 )
 }
@@ -29,8 +27,6 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 
 \item{phenotype_class}{Type of phenotypic outcome (must be consistent with input data):
 - \code{"survival"}: Survival infomation}
-
-\item{assay}{Seurat assay name, default: \code{"RNA"}.}
 
 \item{sidish_params}{List of SIDISH algorithm parameters including:
 \strong{Preprocessing parameters:}
@@ -86,19 +82,6 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item \code{train_distribution_fit}: distribution fitting method, \code{"fitted"} or \code{"default"} (default: \code{"fitted"})
 }}
 
-\item{env_params}{List of environment parameters for Python setup including:
-\itemize{
-\item \code{env.name}: conda/environment name (default: \code{"r-reticulate-sidish-nvidia"} for CUDA or \code{"r-reticulate-sidish-cpu"} for CPU)
-\item \code{env.type}: environment type, \code{"conda"}, \code{"environment"}, or \code{"venv"} (default: \code{"conda"})
-\item \code{env.method}: environment setup method, \code{"system"} or \code{"conda"} (default: \code{"environment"})
-\item \code{env.file}: path to environment YAML file (default: \code{system.file("conda/SIDISH_nvidia_environment.yml", package = "SigBridgeR")} or CPU variant)
-\item \code{env.python_version}: Python version (default: \code{"3.12.12"})
-\item \code{env.packages}: named vector of Python packages and versions (default: \code{c("numpy" = "1.26.4")}, more packages included via env.file)
-\item \code{env.recreate}: whether to recreate the environment if it already exists (default: \code{FALSE})
-\item \code{env.use_conda_forge}: whether to use the conda-forge channel (conda only, default: \code{TRUE})
-\item \code{env.verbose}: verbose output during environment setup (default: value from \code{getFuncOption("verbose")})
-}}
-
 \item{...}{Additional arguments passed to the function. Common parameters include:
 \describe{
 \item{verbose}{Logical. Whether to print verbose output (default: \code{TRUE}).}
@@ -120,9 +103,13 @@ Other screen_method:
 \code{\link{DoPIPET}()},
 \code{\link{DoSCIPAC}()},
 \code{\link{DoScissor}()},
+\code{\link{DoTiRank}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}
+
+Other SIDISH: 
+\code{\link{SIDISHEnvSet}()}
 }
 \concept{SIDISH}
 \concept{screen_method}

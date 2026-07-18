@@ -223,10 +223,10 @@ DoscPP <- function(
   }
 
   if (verbose) {
-    ts_cli$cli_alert_info("Screening...")
+    ts_cli$cli_alert_info("Screening")
   }
 
-  # *Start screen
+  # * Start screen
   scPP_result <- ScPP::ScPP.optimized(
     sc_dataset = sc_data,
     geneList = gene_list,

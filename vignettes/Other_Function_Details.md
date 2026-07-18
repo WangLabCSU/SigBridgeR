@@ -6,11 +6,11 @@ This document introduces several auxiliary functions of SigBridgeR.
 
 Currently, 3 package options are provided:
 
--   `verbose`: Whether to print the progress of the function. Default is
-    `TRUE`.
--   `seed`: The random seed used in the function. Default is `123L`.
--   `timeout`: The maximum timeout time when downloading data. Default
-    is `180L`.
+- `verbose`: Whether to print the progress of the function. Default is
+  `TRUE`.
+- `seed`: The random seed used in the function. Default is `123L`.
+- `timeout`: The maximum timeout time when downloading data. Default is
+  `180L`.
 
 These options can be modified using either the `setFuncOption` or
 `Options` function (the former is recommended).
@@ -29,7 +29,7 @@ package name prefix are also compatible.
     getFuncOption("seed")
     # 321
 
-    # * Auto-detect prefix 
+    # * Auto-detect prefix
     getFuncOption("SigBridgeR.seed")
     # 321
 
@@ -45,8 +45,8 @@ cores** to balance performance and system responsiveness.
     setThreads(8L)
 
     # Configure specific backends only
-    setThreads(dt = 4L)      # data.table only
-    setThreads(openmp = 4L)  # OpenMP only
+    setThreads(dt = 4L) # data.table only
+    setThreads(openmp = 4L) # OpenMP only
 
 ### TensorFlow Optimization
 
@@ -59,14 +59,14 @@ cores** to balance performance and system responsiveness.
         intra_op = 8L
       )
     )
-    tf <- reticulate::import("tensorflow")  # Import AFTER configuration
+    tf <- reticulate::import("tensorflow") # Import AFTER configuration
 
 ### Options
 
--   `verbose = FALSE`: suppress console output
--   Returns invisible list of old/new values for programmatic use
--   Additional `data.table::setDTthreads()` arguments accepted via `...`
-    (e.g., `restore = TRUE`)
+- `verbose = FALSE`: suppress console output
+- Returns invisible list of old/new values for programmatic use
+- Additional `data.table::setDTthreads()` arguments accepted via `...`
+  (e.g., `restore = TRUE`)
 
 > 💡 **Tip**: Default half-core allocation prevents oversubscription.
 > Use full cores (`threads = availableCores()`) only on dedicated
@@ -80,14 +80,14 @@ A simple scoring function for selecting a normalization method.
 
 Evaluates 3 dimensions of preprocessing quality:
 
--   **Variance stabilization**: Decoupling of mean-variance relationship
-    in normalized expression (lower correlation = better).
+- **Variance stabilization**: Decoupling of mean-variance relationship
+  in normalized expression (lower correlation = better).
 
--   **Biological signal retention**: Preservation of known marker genes
-    within highly variable genes (higher retention = better).
+- **Biological signal retention**: Preservation of known marker genes
+  within highly variable genes (higher retention = better).
 
--   **Dropout robustness**: Removal of technical dropout bias from
-    normalized values (lower correlation with dropout rate = better).
+- **Dropout robustness**: Removal of technical dropout bias from
+  normalized values (lower correlation with dropout rate = better).
 
 Exmaple Usage:
 
@@ -95,12 +95,12 @@ Exmaple Usage:
 
     sct <- Seurat::SCTransfrom(obj)
     lognorm <- Seurat::NormalizeData(obj) %>%
-        Seurat::ScaleData() %>%
-        Seurat::FindVariableFeatures()
+      Seurat::ScaleData() %>%
+      Seurat::FindVariableFeatures()
 
     ChooseNormalization(
       sct = sct,
-      lognorm = lognorm, 
+      lognorm = lognorm,
       # * More can be added here
       subset_size = integer(),
       known_hvgs = list(),
@@ -111,11 +111,11 @@ Exmaple Usage:
         marker_signal = 0.35,
         dropout_robustness = 0.25
       )
-    ) 
+    )
 
     # ℹ Using 1088 cells
     # ℹ Comparing 2 methods: sct and lognorm
-    # ── Method Ranking (Composite Score) 
+    # ── Method Ranking (Composite Score)
     # Top method: log_norm
     # [1] log_norm: 0.825
     # [2] sctransform: 0.175
@@ -126,14 +126,14 @@ methods, ensuring they are equivalent to the standard workflow of
 
 ### Parameters
 
--   `subset_size`: Size of the single-cell data subset (i.e., number of
-    cells) to be evaludated.
--   `known_hvgs`: list or character. Known highly variable genes,
-    provided as a reference baseline.
--   `n_hvgs`: Maximum number of highly variable genes to consider.
--   `low_expressed_thresh`: Percentage of genes excluded from
-    consideration, ranked by expression level.
--   `weight`: Scoring weight that sum to 1.
+- `subset_size`: Size of the single-cell data subset (i.e., number of
+  cells) to be evaludated.
+- `known_hvgs`: list or character. Known highly variable genes, provided
+  as a reference baseline.
+- `n_hvgs`: Maximum number of highly variable genes to consider.
+- `low_expressed_thresh`: Percentage of genes excluded from
+  consideration, ranked by expression level.
+- `weight`: Scoring weight that sum to 1.
 
 ## Finding the Optimal Number of Principle Components
 
@@ -145,9 +145,9 @@ a function to help you find the optimal number of PCs.
     ndims <- FindRobustElbow(
       obj = seurat,
       verbose = TRUE,
-      ndims = 50 
+      ndims = 50
     )
-    # ── Method Results 
+    # ── Method Results
     # ℹ Method 1A (Cumulative Variance > 90%): 1:40
     # ℹ Method 1B (Variance > Mean): 1:11
     # ℹ Method 1C (Variance > 2*SD): 1:4
@@ -155,7 +155,7 @@ a function to help you find the optimal number of PCs.
     # ℹ Method 3 (Distance-based): 1:8
     # ✔ Final Recommended Dimensions:  1:35
 
-    # ── Summary 
+    # ── Summary
     # ℹ Cumulative variance at 35 PCs: 84.8%
     # ℹ Variance explained by PC35: 1.09%
 
@@ -178,9 +178,9 @@ SigBridgeR uses `AddMisc()` to record what data features or evidence the
 various screening algorithms are based on during execution. As a
 substitute for the `SeuratObject::Misc()`
 
--   `AddMisc()` : Add miscellaneous information to the Seurat object.
-    Support for adding multiple attributes to the `SeuratObject@misc`
-    slot simultaneously.
+- `AddMisc()` : Add miscellaneous information to the Seurat object.
+  Support for adding multiple attributes to the `SeuratObject@misc` slot
+  simultaneously.
 
 <!-- -->
 
@@ -189,7 +189,7 @@ substitute for the `SeuratObject::Misc()`
 
     # Auto-incrementing example when `cover` set to FALSE
     seurat_obj <- AddMisc(seurat_obj, markers = markers1)
-    seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover=FALSE)
+    seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover = FALSE)
 
     # Add multiple attributes to the `SeuratObject@misc` slot simultaneously
     seurat_obj <- AddMisc(seurat_obj, markers1 = markers1, markers2 = markers2)
@@ -219,7 +219,11 @@ names.
 Add to different assays
 
     seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "RNA")
-    seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "ATAC")
+    seurat_obj <- AddMetaFeature(
+      seurat_obj,
+      "gene_type" = gene_type,
+      assay = "ATAC"
+    )
 
 If duplicate column names are detected, they will be suffixed with an
 underscore and a number (e.g., `_1`, `_2`) for disambiguation.
@@ -232,8 +236,16 @@ When passing raw matrices, the function performs a “join” operation
 based on the union of all genes. Missing values are filled with NA.
 
     # Create dummy matrices
-    mat1 <- matrix(rpois(50, 5), nrow = 10, dimnames = list(paste0("G", 1:10), paste0("C", 1:5)))
-    mat2 <- matrix(rpois(60, 6), nrow = 10, dimnames = list(paste0("G", 5:14), paste0("C", 1:6)))
+    mat1 <- matrix(
+      rpois(50, 5),
+      nrow = 10,
+      dimnames = list(paste0("G", 1:10), paste0("C", 1:5))
+    )
+    mat2 <- matrix(
+      rpois(60, 6),
+      nrow = 10,
+      dimnames = list(paste0("G", 5:14), paste0("C", 1:6))
+    )
 
     # Integrate matrices with custom prefixes
     integrated_mat <- SCIntegrate(BatchA = mat1, BatchB = mat2)
@@ -259,10 +271,10 @@ based on the union of all genes. Missing values are filled with NA.
 
 Key Features:
 
--   Duplicate Resolution: Automatically calls `AggregateDups` to handle
-    redundant gene symbols.
+- Duplicate Resolution: Automatically calls `AggregateDups` to handle
+  redundant gene symbols.
 
--   Auto-Naming: Uses argument names (like BatchA) as cell ID prefixes.
+- Auto-Naming: Uses argument names (like BatchA) as cell ID prefixes.
 
 ### Seurat Integration
 
@@ -274,59 +286,59 @@ specific Seurat command:
 
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Code</th>
 <th>Function</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>o</strong></td>
 <td><code>CreateSeuratObject</code></td>
 <td>(do not use it in this function)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>n</strong></td>
 <td><code>NormalizeData</code></td>
 <td>Standard normalization.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>s</strong></td>
 <td><code>ScaleData</code></td>
 <td>Scales data for PCA.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>v</strong></td>
 <td><code>FindVariableFeatures</code></td>
 <td>Selects highly variable genes.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>p</strong></td>
 <td><code>RunPCA</code></td>
 <td>Principal Component Analysis.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>e</strong></td>
 <td><code>FindNeighbors</code></td>
 <td>Computes SNN graph.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>c</strong></td>
 <td><code>FindClusters</code></td>
 <td>Louvain algorithm clustering.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>t</strong></td>
 <td><code>RunTSNE</code></td>
 <td>t-SNE reduction.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>u</strong></td>
 <td><code>RunUMAP</code></td>
 <td>UMAP reduction.</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>r</strong></td>
 <td><code>SCTransform</code></td>
 <td><strong>SCT workflow.</strong> Replaces n, s, v.</td>
@@ -340,11 +352,12 @@ Extensions](https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html)
 Example Usage
 
     integrated <- SCIntegrate(
-      obj1, obj2, # -> merge.Seurat
+      obj1,
+      obj2, # -> merge.Seurat
       pipeline = "nsvpi",
       method = Seurat::RPCAIntegration, # Change integration method
-      dims = 1:30,                      # Passed to RunPCA and IntegrateLayers
-      k.weight = 50                     # Passed to IntegrateLayers
+      dims = 1:30, # Passed to RunPCA and IntegrateLayers
+      k.weight = 50 # Passed to IntegrateLayers
     )
 
 An example using mock data
@@ -372,8 +385,8 @@ An example using mock data
     )
 
     integrated_seu
-    # An object of class Seurat 
-    # 30 features across 110 samples within 1 assay 
+    # An object of class Seurat
+    # 30 features across 110 samples within 1 assay
     # Active assay: RNA (30 features, 10 variable features)
     #  5 layers present: counts.1, counts.2, data.1, data.2, scale.data
     #  2 dimensional reductions calculated: pca, integrated.dr
@@ -417,24 +430,24 @@ This is the direct R wrapper of celltypist.annotate. Unlike
         package = "SigBridgeR"
       ),
       # * more arguments pass to celltypist.annotate (python)
-    ) 
+    )
 
 **Parameters**:
 
--   `sc`: A Seurat object.
--   `model`: Charater/str. The model to use. If `NULL`, the default
-    model will be used.
--   `download`: Logical/bool. Whether to download the model. Defaults to
-    `TRUE`-download all models. if model already exists, skip download.
--   `force_update`: Logical. Whether to force update the model file.
--   `conda`: Character/str. conda environment name. If `NULL`, try to
-    use `python`.
--   `python`: Character/str. The path to the python executable. If
-    `NULL`, try to use `conda`.
--   `verbose`: Logical/bool. Whether to print verbose messages. Defaults
-    to `TRUE`.
--   `celltypist_tools`: The path to the celltypist\_tools.py file. If
-    `NULL`, the default path will be used.
+- `sc`: A Seurat object.
+- `model`: Charater/str. The model to use. If `NULL`, the default model
+  will be used.
+- `download`: Logical/bool. Whether to download the model. Defaults to
+  `TRUE`-download all models. if model already exists, skip download.
+- `force_update`: Logical. Whether to force update the model file.
+- `conda`: Character/str. conda environment name. If `NULL`, try to use
+  `python`.
+- `python`: Character/str. The path to the python executable. If `NULL`,
+  try to use `conda`.
+- `verbose`: Logical/bool. Whether to print verbose messages. Defaults
+  to `TRUE`.
+- `celltypist_tools`: The path to the celltypist\_tools.py file. If
+  `NULL`, the default path will be used.
 
 **Returns**:
 
@@ -452,7 +465,7 @@ helpful link: <https://github.com/Teichlab/celltypist>
       sc,
       seurat_obj_markers = NULL,
       # * Context for large language models
-      tissue_name = "Human Cancer", 
+      tissue_name = "Human Cancer",
       models = c(
         "gpt-5",
         "claude-sonnet-4-5-20250929",
@@ -470,41 +483,40 @@ helpful link: <https://github.com/Teichlab/celltypist>
 
 **Parameters**
 
--   `sc` : A Seurat object with pre-computed clusters (stored in
-    `Idents(sc)` or `sc$seurat_clusters`).
+- `sc` : A Seurat object with pre-computed clusters (stored in
+  `Idents(sc)` or `sc$seurat_clusters`).
 
--   `seurat_obj_markers` : Optional pre-computed marker gene table or
-    list (output of `Seurat::FindAllMarkers()`). If `NULL` (default),
-    markers are computed automatically using parameters passed via
-    `...`.
+- `seurat_obj_markers` : Optional pre-computed marker gene table or list
+  (output of `Seurat::FindAllMarkers()`). If `NULL` (default), markers
+  are computed automatically using parameters passed via `...`.
 
--   `tissue_name` : Character. Biological context for annotation (e.g.,
-    tissue type, disease state). Helps LLMs interpret marker genes
-    appropriately. Default: `"Human Tumor"`.
+- `tissue_name` : Character. Biological context for annotation (e.g.,
+  tissue type, disease state). Helps LLMs interpret marker genes
+  appropriately. Default: `"Human Tumor"`.
 
--   `models` : Character vector of LLM model identifiers. Supported
-    formats:
+- `models` : Character vector of LLM model identifiers. Supported
+  formats:
 
-    -   OpenAI: `"gpt-4o"`, `"gpt-4o-mini"`, etc.
-    -   Anthropic: `"claude-3-5-sonnet-20240620"`, etc.
-    -   Google: `"gemini-1.5-pro"`, etc.
-    -   Alibaba: `"qwen-max"`, `"qwen-plus"`, etc.
+  - OpenAI: `"gpt-4o"`, `"gpt-4o-mini"`, etc.
+  - Anthropic: `"claude-3-5-sonnet-20240620"`, etc.
+  - Google: `"gemini-1.5-pro"`, etc.
+  - Alibaba: `"qwen-max"`, `"qwen-plus"`, etc.
 
-    Default:
-    `c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")`.
-    For single-model mode, only the first model is used.
+  Default:
+  `c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")`.
+  For single-model mode, only the first model is used.
 
--   `api_keys` : Named list of API keys with provider names as keys:
+- `api_keys` : Named list of API keys with provider names as keys:
 
-    -   `openai`: OpenAI API key
-    -   `anthropic`: Anthropic API key
-    -   `gemini`: Google Cloud API key (with Gemini enabled)
-    -   `qwen`: Alibaba DashScope API key
+  - `openai`: OpenAI API key
+  - `anthropic`: Anthropic API key
+  - `gemini`: Google Cloud API key (with Gemini enabled)
+  - `qwen`: Alibaba DashScope API key
 
-    Example: `list(openai = "sk-...", anthropic = "sk-ant-...")`.
+  Example: `list(openai = "sk-...", anthropic = "sk-ant-...")`.
 
-    **Note**: Default placeholder keys (`"your-xxx-key"`) will
-    fail—users must supply valid keys.
+  **Note**: Default placeholder keys (`"your-xxx-key"`) will fail—users
+  must supply valid keys.
 
 **Returns**:
 
@@ -529,23 +541,23 @@ helpful link: <https://github.com/cafferychen777/mLLMCelltype>
 
 **Parameters**
 
--   `sc`: A Seurat object.
--   `verbose`: Logical. Whether to print progress messages. Defaults to
-    `TRUE`.
--   `ensembl`: Logical. Whether to convert row names to Ensembl IDs.
-    Genes without a valid mapping are discarded.
--   `cell.ont`: Character. specifying Cell Ontology term handling. Use
-    `"nonna"` to discard samples without valid terms, `"all"` to keep
-    all samples (with possible `NA`), or `"none"` to skip.
--   `legacy`: Logical. Whether to use legacy ExperimentHub backend.
-    Default uses gypsum.
--   `ref`: Reference data for annotation. Either `"HPCA"` (Human Primary
-    Cell Atlas from `celldex`) or a `SingleCellExperiment` object with
-    pre-labeled cells. For multiple references, a list of matrices or
-    `SummarizedExperiment` objects.
--   `labels`: Character vector of cell type labels for `ref` columns.
-    Required for custom references; defaults to `ref$label.main` for
-    `"HPCA"`. If `ref` is a list, `labels` must be a corresponding list.
+- `sc`: A Seurat object.
+- `verbose`: Logical. Whether to print progress messages. Defaults to
+  `TRUE`.
+- `ensembl`: Logical. Whether to convert row names to Ensembl IDs. Genes
+  without a valid mapping are discarded.
+- `cell.ont`: Character. specifying Cell Ontology term handling. Use
+  `"nonna"` to discard samples without valid terms, `"all"` to keep all
+  samples (with possible `NA`), or `"none"` to skip.
+- `legacy`: Logical. Whether to use legacy ExperimentHub backend.
+  Default uses gypsum.
+- `ref`: Reference data for annotation. Either `"HPCA"` (Human Primary
+  Cell Atlas from `celldex`) or a `SingleCellExperiment` object with
+  pre-labeled cells. For multiple references, a list of matrices or
+  `SummarizedExperiment` objects.
+- `labels`: Character vector of cell type labels for `ref` columns.
+  Required for custom references; defaults to `ref$label.main` for
+  `"HPCA"`. If `ref` is a list, `labels` must be a corresponding list.
 
 **Returns**:
 
@@ -580,13 +592,13 @@ environment. Both Windows and Unix-like systems are supported.
 
     # * Or use virtualenv via reticulate
     SetupPyEnv(
-        env_type = "venv", 
-        env_name = "test-venv", 
-        python_version = "3.9.15",
-        packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
-        python_path = NULL,
-        recreate = FALSE,
-        verbose = TRUE
+      env_type = "venv",
+      env_name = "test-venv",
+      python_version = "3.9.15",
+      packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
+      python_path = NULL,
+      recreate = FALSE,
+      verbose = TRUE
     )
 
     reticulate::use_virtualenv("test-venv")
@@ -613,7 +625,7 @@ If the virtual environment isn’t installed in the default location, you
 can specify the location of the virtual environment with the
 `venv_locations` parameter.
 
-    ListPyEnv(env_type = "venv", venv_locations ="~/here_is_a_dir/.virtualenvs")
+    ListPyEnv(env_type = "venv", venv_locations = "~/here_is_a_dir/.virtualenvs")
 
 # Other Functions
 
@@ -621,25 +633,25 @@ can specify the location of the virtual environment with the
 
 **Parameters**
 
--   `data_type`: The type of data to load. Can be either “continuous”,
-    “survival” or “binary”, case-insensitive.
--   `path`: The path to the data directory.
--   `cache`: Whether to cache the data. Defaults to `TRUE`.
--   `timeout`: The maximum timeout time when downloading data.
+- `data_type`: The type of data to load. Can be either “continuous”,
+  “survival” or “binary”, case-insensitive.
+- `path`: The path to the data directory.
+- `cache`: Whether to cache the data. Defaults to `TRUE`.
+- `timeout`: The maximum timeout time when downloading data.
 
 When loading the example data, the single-cell RNA expression matrix,
 the bulk RNA expression matrix, and the clinical phenotype data are
 loaded all at once. These data are combined into a list and returned.
 
     mydata <- LoadRefData(
-        data_type = c("survival"),
-        path = tempdir(),
-        cache = TRUE,
-        timeout = 60
+      data_type = c("survival"),
+      path = tempdir(),
+      cache = TRUE,
+      timeout = 60
     )
 
     # * mat_exam (matrix_example)
-    mydata[[1]][1:6,1:6]
+    mydata[[1]][1:6, 1:6]
     #          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT SMC01.T_AAACCTGTCCCTTGCA SMC01.T_AAACGGGAGGGAAACA SMC01.T_AAACGGGGTATAGGTA SMC01.T_AAAGATGAGGCCGAAT
     # A1BG                            0                        0                        0                        0                        0                        0
     # A1BG.AS1                        0                        0                        0                        0                        0                        0
@@ -649,7 +661,7 @@ loaded all at once. These data are combined into a list and returned.
     # A2ML1                           0                        0                        0                        0                        0                        0
 
     # * bulk_survival
-    mydata[[2]][1:6,1:6]
+    mydata[[2]][1:6, 1:6]
     #         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
     # HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
     # RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
@@ -673,12 +685,13 @@ values and rename them simultaneously.
 
     library(zeallot)
 
-    c(mat_exam, bulk, pheno) %<-%  LoadRefData(
+    c(mat_exam, bulk, pheno) %<-%
+      LoadRefData(
         data_type = c("survival"),
         path = tempdir(),
         cache = TRUE,
         timeout = 60
-    )
+      )
 
 ## Aggregating Duplicate Rows or Columns
 
@@ -694,21 +707,21 @@ using configurable aggregation methods.
 <col style="width: 47%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Function</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>AggregateDupRows()</code></td>
 <td>Merge rows with identical names (e.g., duplicate genes)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>AggregateDupCols()</code></td>
 <td>Merge columns with identical names (e.g., duplicate samples)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>AggregateDups()</code></td>
 <td>Convenience wrapper: merge rows &amp; columns</td>
 </tr>
@@ -717,14 +730,16 @@ using configurable aggregation methods.
 
 ### Supported Methods
 
--   `"max"` (default), `"sum"`, `"mean"`, `"median"`, `"first"`
+- `"max"` (default), `"sum"`, `"mean"`, `"median"`, `"first"`
 
 ### Basic Usage
 
     # Example matrix with duplicate genes (rows) and samples (columns)
-    mat <- matrix(1:16, nrow = 4,
-      dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"),
-                      c("S1", "S1", "S2", "S3")))
+    mat <- matrix(
+      1:16,
+      nrow = 4,
+      dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"), c("S1", "S1", "S2", "S3"))
+    )
 
     mat
     #       S1 S1 S2 S3
@@ -732,7 +747,6 @@ using configurable aggregation methods.
     # TP53   2  6 10 14
     # BRCA1  3  7 11 15
     # ACTB   4  8 12 16
-
 
     # Collapse duplicate genes using sum
     AggregateDupRows(mat, method = "sum")
@@ -758,10 +772,40 @@ using configurable aggregation methods.
 
 ### Features
 
--   ✅ Handles `matrix`, `data.frame`, and S4 `Matrix` classes (e.g.,
-    `dgCMatrix`)
--   ✅ Preserves original order of *first occurrence* for each unique
-    name
--   ✅ Silent mode: `verbose = FALSE`
--   ✅ Independent row/column methods via
-    `AggregateDups(row_method, col_method)`
+- ✅ Handles `matrix`, `data.frame`, and S4 `Matrix` classes (e.g.,
+  `dgCMatrix`)
+- ✅ Preserves original order of *first occurrence* for each unique name
+- ✅ Silent mode: `verbose = FALSE`
+- ✅ Independent row/column methods via
+  `AggregateDups(row_method, col_method)`
+
+## Standalone
+
+### get\_var\_value
+
+`get_var_value` is a **standalone script** that statically traces
+variable assignments inside an R function (both from function parameters
+and the function body) and computes the variable’s value by recursively
+resolving the dependency chain.
+
+#### Example
+
+    g <- function(a = 1, b = 2) {
+      c <<- a * 2 + b * 3
+      d = c^2
+      e <- d - 1
+      e
+    }
+    get_var_value("e", g) # returns 63
+
+    h <- function(a = "A", ...) {
+      a <- 1
+      return(a)
+      a <- 2
+      a
+    }
+    get_var_value("a", h) # returns 1
+
+To copy `get_var_value` into your own package, run:
+
+    usethis::use_standalone("WangLabCSU/SigBridgeR", "standalone-get_var_value.R")

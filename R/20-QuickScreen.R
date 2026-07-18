@@ -8,7 +8,7 @@
 #'
 #' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression
 #'        data (genes x samples). Column names must match names/IDs in `phenotype`.
-#' @param sc_data A matrix/Matrix (genes x cells) or a Seurat object containing scRNA-seq data to be screened.
+#' @param sc_data A Seurat object containing scRNA-seq data to be screened.
 #' @param phenotype Phenotype data, either:
 #'        - Named vector (names match `matched_bulk` columns), or
 #'        - Patient survival Data frame with row names matching `matched_bulk` columns, colnames named "time" and "status"

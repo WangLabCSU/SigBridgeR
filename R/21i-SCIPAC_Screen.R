@@ -287,24 +287,25 @@ DoSCIPAC <- function(
   modified_sc_data <- SeuratObject::AddMetaData(
     object = sc_data,
     metadata = SCIPAC_res
-  ) %>%
-    AddMisc(
-      SCIPAC_para = list(
-        phenotype_class = phenotype_class,
-        hvg = hvg,
-        do_pca_sc = do_pca_sc,
-        n_pc = n_pc,
-        sc_batch_col = sc_batch_col,
-        resolution = resolution,
-        ela_net_alpha = ela_net_alpha,
-        bt_size = bt_size,
-        ncore = ncore,
-        ci_alpha = ci_alpha,
-        nfold = nfold,
-        k = cluster_res$k
-      ),
-      SCIPAC_type = label_type
-    )
+  )
+  modified_sc_data <- AddMisc(
+    seurat_obj = modified_sc_data,
+    SCIPAC_para = list(
+      phenotype_class = phenotype_class,
+      hvg = hvg,
+      do_pca_sc = do_pca_sc,
+      n_pc = n_pc,
+      sc_batch_col = sc_batch_col,
+      resolution = resolution,
+      ela_net_alpha = ela_net_alpha,
+      bt_size = bt_size,
+      ncore = ncore,
+      ci_alpha = ci_alpha,
+      nfold = nfold,
+      k = cluster_res$k
+    ),
+    SCIPAC_type = label_type
+  )
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("SCIPAC screening done"))

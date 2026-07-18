@@ -122,7 +122,7 @@ DoPIPET <- function(
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("Starting PIPET screen"))
-    ts_cli$cli_alert_info("Creating marker genes from bulk data...")
+    ts_cli$cli_alert_info("Creating markers from bulk data")
   }
 
   phenotype_df <- PIPET::AdaptPheno(
@@ -163,7 +163,7 @@ DoPIPET <- function(
 
   # Run PIPET core algorithm
   if (verbose) {
-    ts_cli$cli_alert_info("Running PIPET correlation analysis...")
+    ts_cli$cli_alert_info("Running PIPET correlation analysis")
   }
 
   pipet_result <- PIPET::PIPET(
@@ -193,29 +193,30 @@ DoPIPET <- function(
   sc_data <- Seurat::AddMetaData(
     sc_data,
     metadata = pipet_result
-  ) %>%
-    AddMisc(
-      PIPET_type = label_type,
-      PIPET_params = list(
-        phenotype_class = phenotype_class,
-        group = group,
-        discretize_method = if (length(discretize_method) > 1) {
-          discretize_method[1]
-        } else {
-          discretize_method
-        },
-        cutoff = cutoff,
-        log2FC = log2FC,
-        p_adjust = p_adjust,
-        show_log2FC = show_log2FC,
-        freq_counts = freq_counts,
-        normalize = normalize,
-        scale = scale,
-        nPerm = nPerm,
-        distance = if (length(distance) > 1) distance[1] else distance
-      ),
-      cover = FALSE
-    )
+  )
+  sc_data <- AddMisc(
+    seurat_obj = sc_data,
+    PIPET_type = label_type,
+    PIPET_params = list(
+      phenotype_class = phenotype_class,
+      group = group,
+      discretize_method = if (length(discretize_method) > 1) {
+        discretize_method[1]
+      } else {
+        discretize_method
+      },
+      cutoff = cutoff,
+      log2FC = log2FC,
+      p_adjust = p_adjust,
+      show_log2FC = show_log2FC,
+      freq_counts = freq_counts,
+      normalize = normalize,
+      scale = scale,
+      nPerm = nPerm,
+      distance = if (length(distance) > 1) distance[1] else distance
+    ),
+    cover = FALSE
+  )
 
   if (verbose) {
     ts_cli$cli_alert_success(cli::col_green("PIPET screening done."))

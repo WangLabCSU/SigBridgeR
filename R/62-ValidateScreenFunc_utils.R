@@ -25,7 +25,7 @@ validate_error <- function(message, ...) {
 #' @keywords internal
 validate_note <- function(message, ...) {
   cli::cli_inform(
-    cli::col_white(paste(
+    cli::col_blue(paste(
       cli::symbol$pointer,
       message,
       "... NOTE"
@@ -80,4 +80,18 @@ validate_explain_speaker <- function(
 #' @keywords internal
 validate_success <- function(text, ...) {
   cli::cli_alert_success(cli::col_grey(text), ...)
+}
+
+# ---- Helper: get function name from a function object ----
+
+#' @keywords internal
+get_fn_name <- function(func) {
+  expr <- substitute(func)
+  if (is.symbol(expr)) {
+    resolved <- do.call(substitute, list(expr, env = parent.frame()))
+    if (is.symbol(resolved)) {
+      expr <- resolved
+    }
+  }
+  deparse(expr)
 }

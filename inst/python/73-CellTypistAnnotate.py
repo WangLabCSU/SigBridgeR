@@ -1,17 +1,17 @@
-# ----------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
 # ! Don't run this script directly, use `R/73-CellTypistAnnotate.R` instead
-# ----------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
 
-from anndata import AnnData
-import celltypist
-from celltypist import models
 from datetime import datetime
 from typing import Literal, Optional, Callable, Any
 import inspect
 import os
-import pandas as pd
 from pathlib import Path
 import re
+import pandas as pd
+from anndata import AnnData
+import celltypist
+from celltypist import models
 
 
 def get_dirname(path_str: str) -> str:
@@ -101,8 +101,18 @@ def filter_args_4_func(input_dict: dict[str, Any], func: Callable) -> dict[str, 
     return {k: v for k, v in input_dict.items() if k in func_params}
 
 
-# pyrefly: ignore [invalid-annotation]
-def main() -> [pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def main() -> pd.DataFrame:
+    """Main Processing of Celltypist Annotation
+
+    Raises:
+        ValueError: None
+
+    Returns:
+        A tuple with:
+            predictions.predicted_labels,
+            predictions.decision_matrix,
+            predictions.probability_matrix,
+    """
     # * recept them from R script
     adata: AnnData = globals().get("adata")
     model: str = globals().get("model")
@@ -110,7 +120,7 @@ def main() -> [pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     download: bool = globals().get("download")
     force_update: bool = globals().get("force_update")
 
-    if type(model) is not str:
+    if not isinstance(model, str):
         raise ValueError(
             f"Unknown type of model {type(model)}, expected <class 'str'>)"
         )
@@ -152,3 +162,4 @@ def main() -> [pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
 
 predicted_labels, decision_matrix, probability_matrix = main()
+# * pass to R session

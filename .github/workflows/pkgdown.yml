@@ -39,7 +39,6 @@ jobs:
                       github::Exceret/scAB
                       github::Exceret/Scissor
                       github::Exceret/scPAS
-                      github::Exceret/SigBridgeRUtils
                       github::Exceret/DEGAS
                       github::Exceret/LPSGL
                       github::Exceret/PIPET

@@ -1,6 +1,6 @@
 Package: SigBridgeR
 Title: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data
-Version: 3.6.2
+Version: 3.8.1
 Authors@R: 
     c(
         person("Yuxi", "Yang", email = "15364051195@163.com", role = c("cre", "aut"), comment = c(ORCID = "0009-0006-1329-1224")),
@@ -22,9 +22,9 @@ Imports:
     IDConverter,
     Matrix,
     purrr,
-    rlang,
+    rlang (>= 1.0.0),
     scAB (>= 1.0.4),
-    Scissor (>= 2.0.0),
+    Scissor (>= 2.0.1),
     Seurat (>= 5.0.0),
     SeuratObject (>= 5.0.0),
     SigBridgeRUtils (>= 0.2.5)
@@ -35,6 +35,7 @@ Remotes:
     github::Exceret/DEGAS,
     github::Exceret/LPSGL,
     github::Exceret/PIPET,
+    github::Exceret/rTiRank,
     github::Exceret/rSIDISH,
     github::Exceret/scAB,
     github::Exceret/SCIPAC,
@@ -52,6 +53,7 @@ Suggests:
     celldex,
     cheapr,
     codetools,
+    curl,
     DEGAS,
     edgeR,
     furrr,
@@ -63,8 +65,10 @@ Suggests:
     ggVennDiagram,
     glue,
     here,
+    jsonlite,
     KernSmooth,
     knitr,
+    lifecycle,
     lintr,
     LPSGL,
     matrixStats,
@@ -78,13 +82,15 @@ Suggests:
     plyr,
     preprocessCore,
     processx,
+    qs2,
     randomcoloR,
     RColorBrewer,
     remotes,
     reticulate,
     rmarkdown,
-    rSIDISH,
+    rSIDISH (>= 0.0.2),
     rstudioapi,
+    rTiRank,
     scCustomize,
     SCIPAC,
     scPAS,

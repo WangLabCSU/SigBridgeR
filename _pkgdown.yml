@@ -78,6 +78,7 @@ reference:
           - DoDEGAS
           - DoSIDISH
           - DoSCIPAC
+          - DoTiRank
 
     - title: Seurat Object Utilities
       contents:
@@ -125,6 +126,17 @@ reference:
           - SCPreProcessStrategy
           - SCAnnotateStrategy
           - ScreenStrategy
+
+    - title: Cache Management
+      desc: >
+          Manage cache files for SigBridgeR
+      contents:
+          - WriteCacheMeta
+          - CheckCache
+          - ChooseCache
+          - WriteCache
+          - LoadCache
+          - CacheSetHere
 
     - title: Package Configuration
       desc: >

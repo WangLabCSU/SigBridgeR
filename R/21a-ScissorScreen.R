@@ -27,8 +27,6 @@
 #'      FDR_cutoff = 0.05,
 #'      bootstrap_n = 100L
 #'    ),
-#'    path2load_scissor_cache = NULL,
-#'    path2save_scissor_inputs = "Scissor_inputs.RData",
 #'    ...
 #' )
 #'
@@ -55,13 +53,16 @@
 #' - benchmark_data: Path to benchmark data (RData file)
 #' - FDR_cutoff: FDR threshold for evaluation (default: `0.05`)
 #' - bootstrap_n: Bootstrap iterations (default: `100L`)
-#' @param path2load_scissor_cache Path to precomputed Scissor inputs (RData file).
-#'        If provided, skips recomputation (default: NULL).
-#' @param path2save_scissor_inputs Path to save intermediate files (default: "Scissor_inputs.RData").
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
-#'    - `assay`: Assay to use for single-cell data. Defaults to `"RNA"
+#'    - `assay`: Assay to use for single-cell data. Defaults to `"RNA"`
+#'    - `load_cache`: Cache directory path for loading precomputed Scissor inputs.
+#'      Supports root-level, cache-level, or parent-level paths. See [CacheSetHere()].
+#'    - `save_cache`: Cache directory path for saving Scissor inputs. Supports
+#'      root-level or parent-level paths. See [CacheSetHere()].
+#'    - `path2load_scissor_cache` / `path2save_scissor_inputs`: Deprecated names,
+#'      kept for backward compatibility.
 #'
 #' @return A list containing:
 #' \describe{
@@ -128,8 +129,6 @@ DoScissor <- function(
     FDR_cutoff = 0.05,
     bootstrap_n = 100L
   ),
-  path2load_scissor_cache = NULL,
-  path2save_scissor_inputs = "Scissor_inputs.RData",
   ...
 ) {
   # * Input validation
@@ -150,6 +149,8 @@ DoScissor <- function(
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
   assay <- dots$assay %||% "RNA"
+  load_cache <- dots$load_cache %||% dirname(dots$path2load_scissor_cache) # compatible with old version
+  save_cache <- dots$save_cache %||% dirname(dots$path2save_scissor_inputs)
 
   # * default setting for `reliability_test` & `cell_evaluation`
   default_reliability_test <- list(
@@ -182,11 +183,46 @@ DoScissor <- function(
     label_type_scissor <- glue::glue("{label_type}_{seq_len(n)}")
   }
 
-  if (!is.null(path2save_scissor_inputs)) {
-    path <- dirname(path2save_scissor_inputs)
-    if (!dir.exists(path)) {
-      dir.create(path, recursive = TRUE)
-    }
+  # -- resolve cache paths using the caching system ------------------------
+  phenotype_class_cache <- switch(
+    family,
+    binomial = "binary",
+    cox = "survival",
+    gaussian = "continuous"
+  )
+
+  load_file <- if (!is.null(load_cache)) {
+    load_cache_dir <- CacheSetHere(
+      path = load_cache,
+      screen_method = "Scissor",
+      phenotype_class = phenotype_class_cache,
+      mode = "load"
+    )
+
+    CheckCache(
+      path = load_cache_dir,
+      screen_method = "Scissor",
+      phenotype_class = phenotype_class_cache,
+      label_type = label_type,
+      params = fetch_method_args2meta(),
+    )
+
+    file.path(load_cache_dir, "Scissor_inputs.RData")
+  } else {
+    NULL
+  }
+
+  if (!is.null(save_cache)) {
+    save_cache_dir <- CacheSetHere(
+      path = save_cache,
+      screen_method = "Scissor",
+      phenotype_class = phenotype_class_cache,
+      mode = "save"
+    )
+
+    save_file <- file.path(save_cache_dir, "Scissor_inputs.RData")
+  } else {
+    save_file <- NULL
   }
 
   infos1 <- Scissor::Scissor.v5.optimized(
@@ -197,8 +233,8 @@ DoScissor <- function(
     alpha = alpha,
     cutoff = cutoff,
     family = family,
-    Save_file = path2save_scissor_inputs,
-    Load_file = path2load_scissor_cache,
+    Save_file = save_file,
+    Load_file = load_file,
     verbose = verbose,
     seed = seed,
     assay = assay
@@ -241,12 +277,24 @@ DoScissor <- function(
     NULL
   }
 
-  sc_data <- Seurat::AddMetaData(sc_data, metadata = sc_meta) %>%
-    SigBridgeRUtils::AddMisc(
-      scissor_type = label_type,
-      scissor_para = c(infos1$para, reliability_test = reliability_result),
-      cover = FALSE
+  if (!is.null(save_cache)) {
+    WriteCacheMeta(
+      file = file.path(save_cache_dir, "cache_config.json"),
+      screen_method = "Scissor",
+      phenotype_class = phenotype_class_cache,
+      label_type = label_type,
+      params = fetch_method_args2meta(),
+      additional_description = dots$additional_description
     )
+  }
+
+  sc_data <- SeuratObject::AddMetaData(object = sc_data, metadata = sc_meta)
+  sc_data <- AddMisc(
+    seurat_obj = sc_data,
+    scissor_type = label_type,
+    scissor_para = c(infos1$para, reliability_test = reliability_result),
+    cover = FALSE
+  )
 
   list(
     scRNA_data = sc_data,

@@ -23,8 +23,6 @@ DoScissor(
      FDR_cutoff = 0.05,
      bootstrap_n = 100L
    ),
-   path2load_scissor_cache = NULL,
-   path2save_scissor_inputs = "Scissor_inputs.RData",
    ...
 )
 }
@@ -65,16 +63,17 @@ Higher values increase specificity.}
 \item bootstrap_n: Bootstrap iterations (default: \code{100L})
 }}
 
-\item{path2load_scissor_cache}{Path to precomputed Scissor inputs (RData file).
-If provided, skips recomputation (default: NULL).}
-
-\item{path2save_scissor_inputs}{Path to save intermediate files (default: "Scissor_inputs.RData").}
-
 \item{...}{Additional arguments. Currently supports:
 \itemize{
 \item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
 \item \code{seed}: For reproducibility, default is \code{123L}
-\item \code{assay}: Assay to use for single-cell data. Defaults to `"RNA"
+\item \code{assay}: Assay to use for single-cell data. Defaults to \code{"RNA"}
+\item \code{load_cache}: Cache directory path for loading precomputed Scissor inputs.
+Supports root-level, cache-level, or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.
+\item \code{save_cache}: Cache directory path for saving Scissor inputs. Supports
+root-level or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.
+\item \code{path2load_scissor_cache} / \code{path2save_scissor_inputs}: Deprecated names,
+kept for backward compatibility.
 }}
 }
 \value{
@@ -136,6 +135,7 @@ Other screen_method:
 \code{\link{DoPIPET}()},
 \code{\link{DoSCIPAC}()},
 \code{\link{DoSIDISH}()},
+\code{\link{DoTiRank}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}

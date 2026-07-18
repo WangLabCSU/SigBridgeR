@@ -46,14 +46,14 @@ PhenoMap <- function(data, ..., .default = NA) {
   if (length(rules) == 0) {
     cli::cli_abort(c(
       "x" = "Condition is empty",
-      ">" = "Format e.g.: {.code col > 10 ~ 1, col <=10 ~ 0}"
+      ">" = "Format e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}"
     ))
   }
 
   if (!all(vapply(X = rules, FUN = is.call, FUN.VALUE = logical(1)))) {
     cli::cli_abort(c(
       "x" = "Not all conditions are formula",
-      ">" = "Use e.g.: {.code col > 10 ~ 1, col <=10 ~ 0}"
+      ">" = "Use e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}"
     ))
   }
 
@@ -64,9 +64,13 @@ PhenoMap <- function(data, ..., .default = NA) {
 
   if (!is_2d(data)) {
     original_names <- names(data)
-    dt <- data.table::setDT(list(data)) # 1 column
-    names(dt) <- col
-    res <- PhenoMap(dt, ..., .default = .default)[[1]]
+    res <- dplyr::case_when(
+      ...,
+      .default = .default,
+      .unmatched = "default",
+      .ptype = NULL,
+      .size = NULL
+    )
     names(res) <- original_names
     return(res)
   }

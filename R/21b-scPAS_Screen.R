@@ -135,8 +135,12 @@ DoscPAS <- function(
     FDR.threshold = FDR_threshold,
     seed = seed,
     verbose = verbose
-  ) %>%
-    SigBridgeRUtils::AddMisc(scPAS_type = label_type, cover = FALSE)
+  )
+  scPAS_result <- SigBridgeRUtils::AddMisc(
+    seurat_obj = scPAS_result,
+    scPAS_type = label_type,
+    cover = FALSE
+  )
 
   detailed_info <- dplyr::select(
     scPAS_result[[]],

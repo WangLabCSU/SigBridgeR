@@ -13,6 +13,7 @@
 #'   OpenMP, data.table, and TensorFlow intra-op (unless overridden).
 #' @param dt Integer. Thread count for data.table (default: inherited from \code{threads}).
 #' @param cheapr Integer. Thread count for cheapr (default: inherited from \code{threads}).
+#' @param qs2 Integer. Thread count for qs2 (default: NULL).
 #' @param openmp Integer. Thread count for OpenMP (default: NULL).
 #' @param tf_config Named list for TensorFlow-specific configuration:
 #'   \itemize{
@@ -54,6 +55,7 @@ setThreads <- function(
   threads = NULL,
   dt = threads,
   cheapr = threads,
+  qs2 = NULL,
   openmp = NULL,
   tf_config = list(
     xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",
@@ -119,8 +121,18 @@ setThreads <- function(
     )
   }
 
+  if (is.numeric(qs2)) {
+    rlang::check_installed("qs2")
+    old_qs2 <- qs2::qopt("nthreads")
+    qs2::qopt(parameter = "nthreads", value = qs2)
+    sys_results$qs2 <- list(
+      name = "qs2",
+      old = old_qs2,
+      new = qs2
+    )
+  }
+
   if (is.numeric(dt)) {
-    rlang::check_installed("data.table")
     old_dt <- data.table::getDTthreads(verbose = FALSE)
     rlang::exec(
       .fn = data.table::setDTthreads,
