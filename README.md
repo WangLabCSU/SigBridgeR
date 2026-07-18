@@ -7,11 +7,11 @@
 [![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![Devel_version](https://img.shields.io/badge/devel%20version-3.6.2-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
-[![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
+[![Devel_version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
 <!-- [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) -->
+<!-- [![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) -->
 <!-- badges: end -->
 
 ------------------------------------------------------------------------
@@ -204,20 +204,11 @@ pak::pkg_install(c(
 
 Get Started:
 
-<<<<<<< HEAD
--   View [Github Webpage (recommended)](https://wanglabcsu.github.io/SigBridgeR/)
--   View [Deepwiki](https://deepwiki.com/WangLabCSU/SigBridgeR)
--   [A Quick Started Guide](vignettes/Quick_Start.md)
--   [Start from spatial transcriptome](vignettes/Spatial_Transcriptome.md) 
--   [Full Tutorial](vignettes/Full_Tutorial.md) for more details
--   Use `?SigBridgeR::function_name` to access the help documents in R.
-=======
 - View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 - [A Quick Started Guide](vignettes/Quick_Start.md)
 - [Start from spatial transcriptome](vignettes/Spatial_Transcriptome.md)
 - [Full Tutorial](vignettes/Full_Tutorial.md) for more details
 - Use `?SigBridgeR::function_name` to access the help documents in R.
->>>>>>> refs/remotes/origin/main
 
 If you encounter problems, please check:
 

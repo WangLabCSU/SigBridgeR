@@ -183,7 +183,6 @@ navbar:
             text: Troubleshooting
             icon: fa-bug
             href: articles/Troubleshooting.html
-            search:
         search: []
         github:
             icon: fa-github
