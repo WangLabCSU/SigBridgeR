@@ -70,7 +70,7 @@ Other single_cell_preprocess:
 \code{\link{SCAnnotate}()},
 \code{\link{SCIntegrate}()},
 \code{\link{SCPreProcess}()},
-\code{\link{SCPreProcessStrategy}},
+\code{\link{SCPreProcessStrategyEnv}},
 \code{\link{compatible_with_3.0.2}()}
 }
 \concept{Registering}

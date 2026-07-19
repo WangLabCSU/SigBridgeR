@@ -100,7 +100,7 @@ annotated <- CellTypistAnnotate(
 \seealso{
 Other Single_Cell_Annotation_Method: 
 \code{\link{RegisterAnnoMethod}()},
-\code{\link{SCAnnotateStrategy}},
+\code{\link{SCAnnotateStrategyEnv}},
 \code{\link{SingleRAnnotate}()},
 \code{\link{mLLMCelltypeAnnotate}()}
 }

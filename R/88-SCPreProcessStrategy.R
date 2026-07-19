@@ -35,7 +35,7 @@
 #'
 #' @family single_cell_preprocess
 #' @export
-SCPreProcessStrategy <- rlang::new_environment(
+SCPreProcessStrategyEnv <- rlang::new_environment(
   list(
     o = function(...) {
       SeuratObject::CreateSeuratObject(...)

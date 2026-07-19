@@ -23,6 +23,7 @@ Imports:
     Matrix,
     purrr,
     rlang (>= 1.0.0),
+    S7,
     scAB (>= 1.0.4),
     Scissor (>= 2.0.1),
     Seurat (>= 5.0.0),

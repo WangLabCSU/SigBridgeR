@@ -64,7 +64,7 @@ Other Registering:
 
 Other Single_Cell_Annotation_Method: 
 \code{\link{CellTypistAnnotate}()},
-\code{\link{SCAnnotateStrategy}},
+\code{\link{SCAnnotateStrategyEnv}},
 \code{\link{SingleRAnnotate}()},
 \code{\link{mLLMCelltypeAnnotate}()}
 }

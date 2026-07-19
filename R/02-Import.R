@@ -14,6 +14,7 @@ ListPyEnv <- SigBridgeRUtils::ListPyEnv
 
 #' @importFrom data.table `:=` `%chin%` `.N` `.SD` `.I`
 #' @importFrom dplyr `%>%` `.data`
+#' @import S7
 NULL
 
 #' @keywords internal

@@ -11,7 +11,7 @@
 #'     - `executor`: function implementation of the method
 #'
 #' @export
-SCAnnotateStrategy <- rlang::new_environment(
+SCAnnotateStrategyEnv <- rlang::new_environment(
   list(
     CellTypist = list(
       method_name = "CellTypist",

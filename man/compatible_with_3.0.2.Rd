@@ -19,7 +19,7 @@ Other single_cell_preprocess:
 \code{\link{SCAnnotate}()},
 \code{\link{SCIntegrate}()},
 \code{\link{SCPreProcess}()},
-\code{\link{SCPreProcessStrategy}}
+\code{\link{SCPreProcessStrategyEnv}}
 }
 \concept{single_cell_preprocess}
 \keyword{internal}

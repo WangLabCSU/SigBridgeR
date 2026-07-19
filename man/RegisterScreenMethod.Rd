@@ -83,7 +83,7 @@ RegisterScreenMethod(
 }
 \seealso{
 Other Add_Screen_method: 
-\code{\link{ScreenStrategy}},
+\code{\link{ScreenStrategyEnv}},
 \code{\link{TemplateScreenFunc}()},
 \code{\link{ValidateScreenFunc}()}
 
