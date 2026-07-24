@@ -99,6 +99,13 @@ BulkPreProcess <- function(
   show_plot_results = TRUE,
   ...
 ) {
+  lifecycle::deprecate_stop(
+    "3.8.2",
+    "BulkPreProcess()",
+    details = "A bug in the function needs to be fixed.\
+    Please process bulk RNA-seq data into TPM with other functions."
+  )
+
   if (check) {
     CheckInstalled(pkg = "edgeR", where = "bioc")
   }
