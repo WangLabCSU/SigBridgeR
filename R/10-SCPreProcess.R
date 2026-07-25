@@ -99,13 +99,11 @@ NULL
 
 #' @rdname SCPreProcess
 #' @export
-SCPreProcess <- function(sc, ...) {
-  UseMethod("SCPreProcess")
-}
+SCPreProcess <- new_generic(name = "", dispatch_args = "sc")
 
 #' @rdname SCPreProcess
 #' @export
-SCPreProcess.default <- function(
+method(generic = SCPreProcess, class = class_any) <- function(
   sc = NULL,
   ...,
   pipeline = "onsvpcetu",
@@ -168,10 +166,9 @@ SCPreProcess.default <- function(
   purrr::walk(params, ~ chk::chk_list)
 
   # * dots arguments, to be compatible last version
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
 
-  params <- compatible_with_3.0.2(..., params = params) # backward compatibility
   params <- handle_usr_params(params) # combine with default params
 
   # * handling pipeline
@@ -189,12 +186,12 @@ SCPreProcess.default <- function(
       cli::cli_warn(
         "[{.fun SCPreProcess}]: The parameter `params$o$counts` is not NULL, `sc` will be ignored."
       )
-      rlang::exec(
+      exec(
         SeuratObject::CreateSeuratObject,
         !!!params$o
       )
     } else {
-      rlang::exec(
+      exec(
         SeuratObject::CreateSeuratObject,
         counts = sc,
         !!!params$o
@@ -213,7 +210,7 @@ SCPreProcess.default <- function(
       )
     }
 
-    sc_seurat <- rlang::exec(
+    sc_seurat <- exec(
       SCPreProcessStrategy[[letter]],
       sc,
       !!!params[[letter]]
@@ -258,7 +255,7 @@ SCPreProcess.default <- function(
     #     ">" = "Use {.fun RegisterSeuratMethod} to add custom function"
     #   ))
     # }
-    sc_seurat <- rlang::exec(step_fun, sc_seurat, !!!params[[letter]])
+    sc_seurat <- exec(step_fun, sc_seurat, !!!params[[letter]])
   }
 
   FilterTumorCell(
@@ -272,7 +269,7 @@ SCPreProcess.default <- function(
 
 #' @rdname SCPreProcess
 #' @export
-SCPreProcess.R6 <- function(
+method(generic = SCPreProcess, class = class_R6) <- function(
   sc,
   ...,
   pipeline = "onsvpcetu",
@@ -337,10 +334,9 @@ SCPreProcess.R6 <- function(
   purrr::walk(params, ~ chk::chk_list)
 
   # * dots arguments, to be compatible last version
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
 
-  params <- compatible_with_3.0.2(..., params = params) # backward compatibility
   params <- handle_usr_params(params) # combine with default params
 
   # * handling pipeline
@@ -414,7 +410,7 @@ SCPreProcess.R6 <- function(
       )
     }
 
-    seurat <- rlang::exec(
+    seurat <- exec(
       SeuratObject::CreateSeuratObject,
       counts = count_mat,
       !!!params$o
@@ -424,12 +420,8 @@ SCPreProcess.R6 <- function(
       seurat <- AddMetaFeature(seurat, sc$var)
     }
     seurat
-  } else {
-    cli::cli_abort(c(
-      "x" = "{.arg sc} must be an anndata or anndataR object",
-      ">" = "Current input is of class {.cls {class(sc)}}"
-    ))
   }
+
   rm(sc)
   gc(verbose = FALSE)
 
@@ -466,7 +458,7 @@ SCPreProcess.R6 <- function(
   for (step in 2:length(steps_to_run)) {
     # step_fun: a function
     step_fun <- execution_queue[[step]]
-    sc_seurat <- rlang::exec(
+    sc_seurat <- exec(
       step_fun,
       sc_seurat,
       # steps_to_run[[step]]: a letter
@@ -485,12 +477,12 @@ SCPreProcess.R6 <- function(
 #' @rdname SCPreProcess
 #' @export
 #'
-SCPreProcess.Seurat <- function(
+method(generic = SCPreProcess, class = class_seurat) <- function(
   sc,
   column2only_tumor = NULL,
   ...
 ) {
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
 
   if (verbose) {
@@ -802,13 +794,13 @@ QCFilter <- function(
 
   # filter expr is a string of the form
   # which is used to subset the Seurat object
-  nfeat_condition <- rlang::expr(
+  nfeat_condition <- expr(
     !!as.symbol(paste0("nFeature_", thresh$assay)) >
       !!thresh$nFeature_thresh[1] &
       !!as.symbol(paste0("nFeature_", thresh$assay)) <
         !!thresh$nFeature_thresh[2]
   )
-  ncount_condition <- rlang::expr(
+  ncount_condition <- expr(
     !!as.symbol(paste0("nCount_", thresh$assay)) > !!thresh$nCount_thresh[1] &
       !!as.symbol(paste0("nCount_", thresh$assay)) < !!thresh$nCount_thresh[2]
   )
@@ -835,7 +827,7 @@ QCFilter <- function(
       FUN = function(col) {
         x <- meta[[col]]
         has_vals <- any(!is.na(x) & x >= 0, na.rm = TRUE)
-        non_0_var <- if (rlang::is_installed("cheapr")) {
+        non_0_var <- if (is_installed("cheapr")) {
           cheapr::var_(x, na.rm = TRUE) > 0
         } else {
           stats::var(x, na.rm = TRUE) > 0
@@ -857,7 +849,7 @@ QCFilter <- function(
         )
         return(NULL)
       }
-      rlang::expr(!!dplyr::sym(col) < !!thresh[[col]])
+      expr(!!dplyr::sym(col) < !!thresh[[col]])
     }) %>%
       purrr::compact()
   }
@@ -874,11 +866,11 @@ QCFilter <- function(
 
   full_expr <- purrr::reduce(
     all_conds,
-    .f = function(x, y) rlang::expr(!!x & !!y)
+    .f = function(x, y) expr(!!x & !!y)
   )
 
   # Evaluate safely
-  logical_vec <- base::with(data = meta, expr = rlang::eval_tidy(full_expr))
+  logical_vec <- base::with(data = meta, expr = eval_tidy(full_expr))
 
   if (!is.logical(logical_vec) || length(logical_vec) != nrow(meta)) {
     cli::cli_abort(c(

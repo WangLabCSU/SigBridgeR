@@ -19,5 +19,28 @@ Algorithm <- new_class(
 
 ScreenMethod <- new_class(
   name = "ScreenMethod",
+  parent = Algorithm,
+  validator = \(self) {
+    param_names <- fn_fmls_names(self$executor)
+    expected_args <- c(
+      "matched_bulk",
+      "sc_data",
+      "phenotype",
+      "label_type",
+      "phenotype_class"
+    )
+    if (!all(expected_args %in% param_names)) {
+      missing_args <- setdiff(expected_args, param_names)
+      return(
+        cli::cli_fmt(cli::cli_alert_danger(
+          "Missing arguments in function: {.arg {missing_args}}"
+        ))
+      )
+    }
+  }
+)
+
+AnnotationMethod <- new_class(
+  name = "AnnotationMethod",
   parent = Algorithm
 )

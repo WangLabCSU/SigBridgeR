@@ -16,7 +16,7 @@ class_seurat <- new_property(
     cls_value <- class(value)
     if (cls_value != "Seurat") {
       cli::cli_fmt(cli::cli_inform(
-        "epxected a {.cls Seurat} object, got {.cls cls_value}"
+        "epxected a {.cls Seurat} object, got {.cls {cls_value}}"
       ))
     }
   },
@@ -25,20 +25,11 @@ class_seurat <- new_property(
   )))
 )
 
-class_InMemoryAnnData <- new_property(class = class_any, validator = \(seld) {
+class_R6 <- new_property(class = class_any, validator = \(self) {
   cls_value <- class(value)
-  if (!"InMemoryAnnData" %in% cls_value) {
+  if (!"R6" %in% cls_value) {
     cli::cli_fmt(cli::cli_inform(
-      "epxected a {.cls InMemoryAnnData} object, got {.cls cls_value}"
-    ))
-  }
-})
-
-class_AnnDataR6 <- new_property(class = class_any, validator = \(seld) {
-  cls_value <- class(value)
-  if (!"AnnDataR6" %in% cls_value) {
-    cli::cli_fmt(cli::cli_inform(
-      "epxected a {.cls AnnDataR6} object, got {.cls cls_value}"
+      "epxected a {.cls R6} object, got {.cls {cls_value}}"
     ))
   }
 })

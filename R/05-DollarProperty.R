@@ -1,6 +1,6 @@
 #' Retrieve a property from SigBridgeR object
 #'
-#' @param object An object
+#' @param object An object inheriting from SigBridgeRBase
 #' @param name The name of the parameter as a character. Partial matching is not performed.
 #'
 #' @name Property-visitor

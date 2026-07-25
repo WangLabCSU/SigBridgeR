@@ -37,10 +37,10 @@ BulkInput <- new_class(
   },
   validator = function(self) {
     if (is.null(rownames(self@data))) {
-      "@data must have rownames (gene names)"
+      return("@data must have rownames (gene names)")
     }
     if (is.null(rownames(self@data))) {
-      "@data must have colnames (sample names)"
+      return("@data must have colnames (sample names)")
     }
   }
 )
@@ -76,13 +76,15 @@ PhenotypeInput.survival <- new_class(
   },
   validator = \(self) {
     if (is.null(rownames(self@data))) {
-      "@data must have rownames (sample names)"
+      return("@data must have rownames (sample names)")
     }
     if (is.null(colnames(self@data))) {
-      "@data must have colnames (phenotype names)"
+      return("@data must have colnames (phenotype names)")
     }
     if (anyNA(self@data) || any(is.null(self@data))) {
-      cli::cli_fmt(cli::cli_inform("@data contains {.val NA} or {.val NULL}"))
+      return(cli::cli_fmt(cli::cli_inform(
+        "@data contains {.val NA} or {.val NULL}"
+      )))
     }
   }
 )
@@ -103,7 +105,7 @@ PhenotypeInput.binary <- new_class(
       "@data must have names (sample names)"
     }
     if (length(table(self@data)) != 2) {
-      "data must have two unique values"
+      "@data must have two unique values"
     }
     if (anyNA(self@data)) {
       cli::cli_fmt(cli::cli_inform("@data contains {.val NA}"))

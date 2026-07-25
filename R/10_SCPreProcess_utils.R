@@ -1,25 +1,3 @@
-#' @title Compatible With Last Version
-#' @family single_cell_preprocess
-#' @keywords internal
-compatible_with_3.0.2 <- function(..., params) {
-  on.exit(gc(verbose = FALSE))
-  dots <- rlang::list2(...)
-
-  params$o$min.cells <- params$o$min.cells %||% dots$min_cells
-  params$o$min.features <- params$o$min.cells %||% dots$min_features
-  params$o$meta.data <- params$o$meta.data %||% dots$meta_data
-  params$n$normalization.method <- params$n$normalization.method %||%
-    dots$normalization_method
-  params$n$scale.factor <- params$n$scale.factor %||% dots$scale_factor
-  params$s$scale.features <- params$s$scale.features %||% dots$scale_features
-  params$v$selection.method <- params$v$selection.method %||%
-    dots$selection_method
-  params$c$resolution <- params$c$resolution %||% dots$resolution
-
-  params
-}
-
-
 #' @keywords internal
 #' @family single_cell_preprocess
 has_pattern <- function(qc_list) {
