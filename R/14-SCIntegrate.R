@@ -69,11 +69,11 @@ SCIntegrate <- function(
   project = "Integrated Seurat"
 ) {
   # ! don't use S3 method
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   if (length(dots) == 0) {
     cli::cli_abort(c("[{.fun SCIntegrate}]: No arguments provided."))
   }
-  .quos <- rlang::enquos(...)
+  .quos <- enquos(...)
   if (
     is.data.frame(dots[[1]]) ||
       data.table::is.data.table(dots[[1]]) ||
@@ -98,17 +98,17 @@ SCIntegrate <- function(
   }
 
   cls <- c("Seurat", "matrix", "Matrix", "data.table", "tibble", "data.frame")
-  cli::cli_abort(c(
-    "x" = "[{.fun SCIntegrate}]: No implementation for class {.cls {class(dots[[1]])}}",
-    ">" = "Available classes: {.cls {cls}}"
-  ))
+  Abort(
+    "[{.fun SCIntegrate}]: No implementation for class {.cls {class(dots[[1]])}}",
+    "Available classes: {.cls {cls}}"
+  )
 }
 
 #' @rdname SCIntegrate
 #' @keywords internal
 SCIntegrate.data.frame <- function(..., .quos = NULL) {
-  dots <- rlang::list2(...)
-  .quos <- .quos %||% rlang::enquos(...)
+  dots <- list2(...)
+  .quos <- .quos %||% enquos(...)
   is_mat <- vapply(
     dots,
     \(x) !is.matrix(x) & !inherits(x, "Matrix"),
@@ -116,7 +116,7 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
   )
   # * remove dups
   mats <- purrr::map(dots[is_mat], \(x) {
-    rlang::exec(
+    exec(
       AggregateDups,
       x = x,
       verbose = FALSE,
@@ -157,12 +157,12 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
 #' @keywords internal
 #' @rdname SCIntegrate
 SCIntegrate.Matrix <- function(..., .quos = NULL) {
-  dots <- rlang::list2(...)
-  .quos <- .quos %||% rlang::enquos(...)
+  dots <- list2(...)
+  .quos <- .quos %||% enquos(...)
 
   is_mat <- vapply(dots, \(x) inherits(x, "Matrix") | is.matrix(x), logical(1))
   mats <- purrr::map(dots[is_mat], \(x) {
-    rlang::exec(
+    exec(
       AggregateDups,
       x = x,
       verbose = FALSE,
@@ -201,7 +201,7 @@ SCIntegrate.Matrix <- function(..., .quos = NULL) {
     mat_list[[i]] <- expanded_mat
   }
 
-  rlang::exec(Matrix::cbind2, !!!mat_list)
+  exec(Matrix::cbind2, !!!mat_list)
 }
 
 #' @rdname SCIntegrate
@@ -219,8 +219,8 @@ SCIntegrate.Seurat <- function(
   chk::chk_character(pipeline)
   chk::chk_length(pipeline)
   # * parameters
-  dots <- rlang::list2(...)
-  .quos <- .quos %||% rlang::enquos(...)
+  dots <- list2(...)
+  .quos <- .quos %||% enquos(...)
   method <- dots$method %||% Seurat::HarmonyIntegration
   verbose <- dots$verbose %||%
     SigBridgeRUtils::getFuncOption("verbose") %||%
@@ -267,7 +267,7 @@ SCIntegrate.Seurat <- function(
   # step: a letter
   for (step in steps_to_run) {
     step_fun <- SCPreProcessStrategy[[step]] # a function
-    merged <- rlang::exec(
+    merged <- exec(
       step_fun,
       merged,
       # steps_to_run[[step]] -- a letter
@@ -316,11 +316,11 @@ SCIntegrate.Seurat <- function(
 #' # [1] "mat1" "c"
 #' }
 get_names_4_ids <- function(..., .quoses = NULL) {
-  dots <- rlang::list2(...)
+  dots <- list2(...)
 
   # 如果提供了预计算的 quosures 就用它，否则当场捕获
   if (is.null(.quoses)) {
-    quoses <- rlang::enquos(..., .named = TRUE)
+    quoses <- enquos(..., .named = TRUE)
   } else {
     quoses <- .quoses
   }
@@ -332,7 +332,7 @@ get_names_4_ids <- function(..., .quoses = NULL) {
   unnamed <- which(var_names == "")
 
   if (length(unnamed) > 0) {
-    var_names[unnamed] <- purrr::map_chr(quoses[unnamed], rlang::as_label)
+    var_names[unnamed] <- purrr::map_chr(quoses[unnamed], as_label)
   }
 
   var_names

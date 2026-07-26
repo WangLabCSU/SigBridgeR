@@ -22,7 +22,10 @@
 #' @family cache_config
 #' @export
 #'
-CheckCache <- function(
+CheckCache <- new_generic("CheckCache", dispatch_args = "cache_config")
+
+method(generic = CheckCache, class = ScreenMethodConfig) <- function(
+  cache_config,
   path,
   screen_method,
   phenotype_class = c("binary", "survival", "continuous"),
@@ -30,8 +33,8 @@ CheckCache <- function(
   params,
   ...
 ) {
-  rlang::check_dots_empty0()
-  rlang::check_installed("jsonlite")
+  check_dots_empty()
+  check_installed("jsonlite")
   if (!endsWith(path, "cache_config.json") && dir.exists(path)) {
     meta_json <- file.path(path, "cache_config.json")
   } else if (endsWith(path, "cache_config.json")) {

@@ -71,12 +71,24 @@
 #' }
 #' @export
 #' @family single_cell_preprocess
-SCAnnotate <- function(
+SCAnnotate <- function(sc, ...) {
+  UseMethod("SCAnnotate")
+}
+
+SCAnnotate.default <- function(sc, ...) {
+  cls_sc <- class(sc)
+  Abort(
+    "Unsupported class of sc",
+    "Expected a {.cls Seurat}, but got a {.cls {cls_sc}}"
+  )
+}
+
+SCAnnotate.Seurat <- function(
   sc,
   method = c("CellTypist", "SingleR", "mLLMCelltype"),
   ...
 ) {
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$verbose %||% getFuncOption("seed")
 
@@ -91,9 +103,9 @@ SCAnnotate <- function(
       name_only = TRUE
     )
     if (length(method) != 1) {
-      cli::cli_abort(c(
+      Abort(
         "x" = "Cannot auto-find a suitable method, please specify a method"
-      ))
+      )
     } else if (verbose) {
       cli::cli_alert_info(
         "Multiple methods detected, auto-using {.pkg {method}}"
@@ -128,19 +140,19 @@ SCAnnotate <- function(
       ...
     )
   } else if (method %chin% c("CellTypist", "CellTypistAnnotate")) {
-    dots <- rlang::list2(...)
+    dots <- list2(...)
 
     if (is.null(dots$conda) && is.null(dots$python)) {
       existing_envs <- ListPyEnv(verbose = FALSE)
-      if (!"r-reticulate-celltypist" %in% existing_envs$name) {
+      if (!"r-reticulate-celltypist" %chin% existing_envs$name) {
         choice <- utils::askYesNo(
           "Create a new conda environment for CellTypist?"
         )
 
         if (!isTRUE(choice)) {
-          cli::cli_abort(c(
-            "x" = "Aborted. Please specify a conda environment or python interpreter"
-          ))
+          Abort(
+            "Aborted. Please specify a conda environment or python interpreter"
+          )
         }
 
         default_args <- list(
@@ -158,7 +170,7 @@ SCAnnotate <- function(
           env.verbose = SigBridgeRUtils::getFuncOption("verbose")
         )
 
-        rlang::exec(
+        exec(
           SetupPyEnv,
           utils::modifyList(
             default_args,
@@ -193,7 +205,7 @@ SCAnnotate <- function(
     # * default args
     dots$majority_voting <- dots$majority_voting %||% TRUE
 
-    rlang::exec(
+    exec(
       anno_func,
       sc = sc,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, anno_func),

@@ -6,7 +6,7 @@ fileDownload <- function(
   quiet = !SigBridgeRUtils::getFuncOption("verbose"),
   mode = "wb"
 ) {
-  rlang::check_installed("processx")
+  check_installed("processx")
   download_res <- processx::run(
     "wget",
     c(
@@ -45,7 +45,7 @@ fileDownload <- function(
     )
   }
 
-  rlang::check_installed("curl")
+  check_installed("curl")
   curl::curl_download(
     url = url,
     destfile = destfile,

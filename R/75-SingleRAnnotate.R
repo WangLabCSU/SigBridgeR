@@ -68,7 +68,7 @@
 #' )
 #' }
 #' @export
-SingleRAnnotate = function(
+SingleRAnnotate <- function(
   sc,
   verbose = getFuncOption("verbose"),
   # * pass to `celldex::HumanPrimaryCellAtlasData`
@@ -80,6 +80,9 @@ SingleRAnnotate = function(
   labels = NULL,
   ...
 ) {
+  CheckInstalled("dviraran/SingleR")
+  CheckInstalled("celldex", where = "bioc")
+
   orginally_seurat <- inherits(sc, "Seurat")
   sce_obj <- if (orginally_seurat) {
     Seurat::as.SingleCellExperiment(sc)

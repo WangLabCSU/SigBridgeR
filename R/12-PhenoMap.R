@@ -41,7 +41,8 @@
 #'
 #' @seealso \code{\link[data.table]{fcase}}, \code{\link[dplyr]{case_when}}
 PhenoMap <- function(data, ..., .default = NA) {
-  rules <- rlang::list2(...)
+  check_installed("dplyr")
+  rules <- list2(...)
 
   if (length(rules) == 0) {
     cli::cli_abort(c(
@@ -93,4 +94,8 @@ PhenoMap <- function(data, ..., .default = NA) {
   eval(expr, envir = parent.frame())
 
   dt
+}
+
+is_2d <- function(data) {
+  if (length(dim(data)) == 2L) TRUE else FALSE
 }

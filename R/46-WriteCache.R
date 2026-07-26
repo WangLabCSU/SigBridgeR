@@ -38,7 +38,9 @@
 #' # Write a small data.frame as CSV
 #' WriteCache(small_df, "Scissor_res/survival_2025_01_01/feature_table.csv")
 #' }
-WriteCache <- function(
+WriteCache <- new_generic("WriteCache", dispatch_args = "cache")
+
+method(generic = WriteCache, class = ) <- function(
   x,
   file,
   format = c("auto", "qs2", "rds", "csv"),

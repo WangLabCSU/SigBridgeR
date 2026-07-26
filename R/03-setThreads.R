@@ -69,7 +69,7 @@ setThreads <- function(
   ...
 ) {
   # ===== 1. 参数验证与默认值 =====
-  rlang::check_installed("future")
+  check_installed("future")
 
   # 全局线程数（系统级默认值）
   threads <- threads %||% as.integer(floor(future::availableCores() / 2))
@@ -104,7 +104,7 @@ setThreads <- function(
 
   tf_config$intra_op <- tf_config$intra_op %||% threads
 
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
   results <- list()
 
@@ -122,7 +122,7 @@ setThreads <- function(
   }
 
   if (is.numeric(qs2)) {
-    rlang::check_installed("qs2")
+    check_installed("qs2")
     old_qs2 <- qs2::qopt("nthreads")
     qs2::qopt(parameter = "nthreads", value = qs2)
     sys_results$qs2 <- list(
@@ -134,7 +134,7 @@ setThreads <- function(
 
   if (is.numeric(dt)) {
     old_dt <- data.table::getDTthreads(verbose = FALSE)
-    rlang::exec(
+    exec(
       .fn = data.table::setDTthreads,
       threads = dt,
       !!!SigBridgeRUtils::FilterArgs4Func(list(...), data.table::setDTthreads)
@@ -148,7 +148,7 @@ setThreads <- function(
   }
 
   if (is.numeric(cheapr)) {
-    rlang::check_installed("cheapr")
+    check_installed("cheapr")
     old_chpr <- cheapr::get_threads()
     cheapr::set_threads(cheapr)
     sys_results$cheapr <- list(

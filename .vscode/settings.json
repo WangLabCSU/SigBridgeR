@@ -7,8 +7,8 @@
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "quarto.quarto"
     },
-    "positron.r.useNativePipe": false,
-    "positron.r.pipe": "%>%",
+    "positron.r.useNativePipe": true,
+    "positron.r.pipe": "|>",
     "todo-tree.tree.showBadges": true,
     "todo-tree.tree.disableCompactFolders": true,
     "jarl.assignmentOperator": "<-"

@@ -28,9 +28,7 @@ SymbolConvert <- function(
   if (is.null(row_names)) {
     cli::cli_abort(c("x" = "Row names are missing in the data"))
   }
-  options(
-    IDConverter.datapath = system.file("extdata", package = "IDConverter")
-  )
+
   gene_symbols <- IDConverter::convert_hm_genes(
     row_names,
     genome_build = genome_build
@@ -55,7 +53,7 @@ SymbolConvert <- function(
     ts_cli$cli_alert_info("Updating gene symbols to latest version")
   }
 
-  gene_symbols <- if (rlang::is_installed("scCustomize")) {
+  gene_symbols <- if (is_installed("scCustomize")) {
     if (grepl("hg|HG", genome_build)) {
       scCustomize::Updated_HGNC_Symbols(
         gene_symbols,

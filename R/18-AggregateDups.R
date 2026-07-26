@@ -112,6 +112,8 @@ AggregateDupCols <- function(
     return(x)
   }
 
+  idx <- row_id <- col_name <- NULL # ease NOTE
+
   if (!is.data.frame(x)) {
     uniq_samples <- unique(col_names)
     col_groups <- split(seq_along(col_names), col_names)[uniq_samples]

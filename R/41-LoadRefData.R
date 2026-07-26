@@ -41,7 +41,7 @@ LoadRefData <- function(
   }
   chk::chk_whole_number(timeout)
 
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
 
   local_file <- file.path(path, glue::glue("{data_type}_ref_data.rds"))
@@ -87,7 +87,7 @@ LoadRefData <- function(
         cli::cli_alert_info(glue::glue("Trying {source_name}..."))
       }
 
-      success <- rlang::try_fetch(
+      success <- try_fetch(
         {
           fileDownload(
             url = data_url,
@@ -117,11 +117,11 @@ LoadRefData <- function(
           # If this was the last source, show final error
           if (i == length(available_urls)) {
             options(timeout = old_timeout)
-            cli::cli_abort(c(
-              "x" = cli::col_red("All download attempts failed."),
-              "i" = "Please check your internet connection or try again later.",
-              "i" = "Error from last attempt: {e$message}"
-            ))
+            Abort(
+              cli::col_red("All download attempts failed."),
+              "Please check your internet connection or try again later.",
+              "Error from last attempt: {e$message}"
+            )
           }
           FALSE
         }
@@ -133,7 +133,7 @@ LoadRefData <- function(
     cli::cli_alert_info("Found cached data.")
   }
 
-  data <- rlang::try_fetch(
+  data <- try_fetch(
     readRDS(local_file),
     error = function(e) {
       if (file.exists(local_file)) {

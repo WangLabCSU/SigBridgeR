@@ -12,7 +12,7 @@ CheckInstalled <- function(
     SigBridgeRUtils::MatchArg(where, c("cran", "bioc", "github"), NULL)
   }
   pkg_name <- gsub(".*/", "", pkg)
-  if (rlang::is_installed(pkg_name)) {
+  if (is_installed(pkg_name)) {
     return(invisible(TRUE))
   }
 
@@ -25,9 +25,7 @@ CheckInstalled <- function(
 
   if (choice == 2L) {
     if (abort) {
-      cli::cli_abort(c(
-        "x" = "Installation aborted by user, processing canceled"
-      ))
+      Abort("Installation aborted by user, processing canceled")
     }
     return(invisible(FALSE))
   }
@@ -39,21 +37,13 @@ CheckInstalled <- function(
   }
 
   if (where == "bioc") {
-    rlang::check_installed("BiocManager")
+    check_installed("BiocManager")
     BiocManager::install(pkg)
     return(invisible(TRUE))
   }
 
   # github
-  if (rlang::is_installed("pak")) {
-    pak::pkg_install(pkg)
-    return(invisible(TRUE))
-  }
-  if (rlang::is_installed("remotes")) {
-    remotes::install_github(pkg)
-    return(invisible(TRUE))
-  }
-  cli::cli_abort(c(
-    "x" = "Package {.pkg pak}, {.pkg BiocManager} or {.pkg remotes} is required for installation!"
-  ))
+  check_installed("pak")
+  pak::pkg_install(pkg)
+  invisible(TRUE)
 }

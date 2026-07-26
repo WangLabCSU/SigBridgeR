@@ -39,7 +39,13 @@
 #' }
 #' @family cache_config
 #' @export
-WriteCacheMeta <- function(
+WriteCacheMeta <- new_generic(
+  name = "WriteCacheMeta",
+  dispatch_args = "cache_config"
+)
+
+method(generic = WriteCacheMeta, class = ScreenMethodConfig) <- function(
+  cache_config,
   file = "cache_config.json",
   screen_method,
   phenotype_class = c("binary", "survival", "continuous"),
@@ -101,7 +107,11 @@ WriteCacheMeta <- function(
 
   dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
 
-  json_content <- jsonlite::toJSON(cache_meta, auto_unbox = TRUE, pretty = TRUE)
+  json_content <- jsonlite::toJSON(
+    cache_meta,
+    auto_unbox = TRUE,
+    pretty = TRUE
+  )
 
   con <- file(file, open = "wt", encoding = "UTF-8")
   on.exit(close(con), add = TRUE)

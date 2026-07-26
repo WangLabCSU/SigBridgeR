@@ -313,7 +313,6 @@ DoTiRank <- function(
       parallel = FALSE,
       save_path = save_path
     )
-    rm(cell_cell_distance)
     gc(verbose = FALSE)
 
     if (verbose) {

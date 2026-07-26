@@ -15,7 +15,8 @@
   op_pkg <- list(
     SigBridgeR.verbose = TRUE,
     SigBridgeR.seed = 123L,
-    SigBridgeR.timeout = 180L
+    SigBridgeR.timeout = 180L,
+    IDConverter.datapath = system.file("extdata", package = "IDConverter")
   )
 
   toset <- !(names(op_pkg) %chin% names(op))
@@ -24,7 +25,7 @@
   }
   S7::methods_register()
 
-  assign(x = "ScreenStrategy")
+  # assign(x = "ScreenStrategy")
 
   msg <- cli::cli_fmt(cli::cli_alert_success(
     "{.pkg {pkgname}} v{pkg_version} loaded"

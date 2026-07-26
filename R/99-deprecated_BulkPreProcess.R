@@ -1,3 +1,69 @@
+BulkCheck <- function(
+  counts_matrix,
+  n_genes,
+  min_genes_detected,
+  min_count_threshold,
+  method,
+  verbose = TRUE
+) {
+  if (any(counts_matrix < 0, na.rm = TRUE)) {
+    cli::cli_abort(c(
+      "x" = "Expression matrix cannot contain negative values"
+    ))
+  }
+  if (any(counts_matrix != floor(counts_matrix))) {
+    cli::cli_warn("Expression matrix contains non-integer value")
+  }
+  if (min_genes_detected > n_genes) {
+    cli::cli_abort(c(
+      "x" = "{.arg min_genes_detected} must be less than the number of genes in the data",
+      ">" = "Current number of genes: {.val {n_genes}}"
+    ))
+  }
+  if (min_count_threshold > max(counts_matrix)) {
+    cli::cli_abort(c(
+      "x" = "{.arg min_count_threshold} must be less than the maximum count in the data",
+      ">" = "Current maximum count: {.val {max(counts_matrix)}}"
+    ))
+  }
+
+  # * Handle duplicated genes and samples
+  if (anyDuplicated(rownames(counts_matrix)) > 0) {
+    cli::cli_alert_info("Aggregate Duplicated genes in rownames")
+    counts_matrix <- AggregateDupRows(
+      counts_matrix,
+      method = method,
+      verbose = FALSE
+    )
+  }
+  if (anyDuplicated(colnames(counts_matrix)) > 0) {
+    cli::cli_alert_info("Aggregate Duplicated samples in colnames")
+    counts_matrix <- AggregateDupCols(
+      counts_matrix,
+      method = method,
+      verbose = FALSE
+    )
+  }
+
+  # * Handle data type
+  if (!is.numeric(counts_matrix)) {
+    cli::cli_warn(
+      "Expression matrix must be numeric, converted to numeric now."
+    )
+    # Attempt to convert to numeric
+    counts_matrix <- as.numeric(counts_matrix)
+    # Check if conversion introduced NAs
+    new_nas <- sum(is.na(counts_matrix))
+    if (new_nas > 0) {
+      cli::cli_warn(
+        "Numeric conversion introduced {.val {new_nas}} NA values (will be imputed)"
+      )
+    }
+  }
+
+  counts_matrix
+}
+
 # * ---- Preprocess bulk expression data ----
 
 #' @title Bulk RNA-seq Data Preprocessing and Quality Control Function
@@ -84,8 +150,30 @@
 #' @return Filtered count matrix
 #' @family input_preprocess
 #' @export
-#'
-BulkPreProcess <- function(
+#' @name BulkPreProcess
+BulkPreProcess <- new_generic(
+  name = "BulkPreProcess",
+  dispatch_args = "data",
+  fun = function(data, ...) {
+    lifecycle::deprecate_warn(
+      "4.0.0",
+      "BulkPreProcess()",
+      details = "BulkPreProcess() will be deprecated because of ambiguous functionality."
+    )
+    S7_dispatch()
+  }
+)
+
+#' @rdname BulkPreProcess
+#' @export
+method(BulkPreProcess, class_any) <- function(data, ...) {
+  cls_data <- class(Data)
+  cli::cli_abort(c("x" = "Unsupported data class {..cls {cls_data}}"))
+}
+
+#' @rdname BulkPreProcess
+#' @export
+method(BulkPreProcess, class = class_datalike2d) <- function(
   data,
   sample_info = NULL,
   gene_symbol_conversion = FALSE,
@@ -119,7 +207,7 @@ BulkPreProcess <- function(
   )
 
   # dots arguments
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
   method <- dots$method # Duplicate handling method
@@ -177,7 +265,7 @@ BulkPreProcess <- function(
     sample_info <- data.frame(
       sample = colnames(counts_matrix) %||%
         glue::glue("Sample_{seq_len(n_samples)}"),
-      condition = if (rlang::is_installed("cheapr")) {
+      condition = if (is_installed("cheapr")) {
         cheapr::rep_("unknown", n_samples)
       } else {
         rep("unknown", n_samples)
@@ -225,7 +313,7 @@ BulkPreProcess <- function(
     cpm_values <- edgeR::cpm(counts_matrix, log = TRUE, prior.count = 1)
 
     # Sample correlation
-    sample_cor <- if (rlang::is_installed("WGCNA")) {
+    sample_cor <- if (is_installed("WGCNA")) {
       WGCNA::cor(cpm_values, method = "pearson", use = "pairwise.complete.obs")
     } else {
       stats::cor(cpm_values, method = "pearson", use = "pairwise.complete.obs")
@@ -276,7 +364,7 @@ BulkPreProcess <- function(
         cov = stats::cov(pc12)
       )
       outlier_threshold <- stats::qchisq(0.95, df = 2)
-      outliers <- if (rlang::is_installed("cheapr")) {
+      outliers <- if (is_installed("cheapr")) {
         cheapr::which_(mahal_dist > outlier_threshold)
       } else {
         which(mahal_dist > outlier_threshold)
@@ -442,158 +530,4 @@ BulkPreProcess <- function(
   }
 
   filtered_counts
-}
-
-#' @keywords internal
-DrawPCA <- function(
-  pca_df,
-  var_labels,
-  show_plot = TRUE,
-  ...
-) {
-  rlang::check_installed(c("ggplot2", "ggforce", "patchwork"))
-
-  p_pca <- ggplot2::ggplot(
-    pca_df,
-    ggplot2::aes(x = `PC1`, y = `PC2`, color = `condition`)
-  ) +
-    ggplot2::geom_point(size = 3, alpha = 0.8) +
-    ggplot2::labs(
-      x = paste0("PC1 (", round(var_labels[1], 2), "%)"),
-      y = paste0("PC2 (", round(var_labels[2], 2), "%)")
-    ) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      legend.position = c(0.95, 0.95), # 图例在右上角内部
-      legend.justification = c(1, 1), # 对齐到右上角
-    ) +
-    ggforce::geom_mark_ellipse(
-      ggplot2::aes(fill = condition, group = condition),
-      alpha = 0.1,
-      expand = ggplot2::unit(3, "mm"),
-      show.legend = FALSE
-    ) +
-    ggplot2::geom_hline(yintercept = 0, color = "gray70", linetype = "dashed") +
-    ggplot2::geom_vline(xintercept = 0, color = "gray70", linetype = "dashed")
-
-  if ("batch" %chin% colnames(pca_df)) {
-    n_batch <- length(unique(pca_df$batch))
-
-    chk::chk_lt(n_batch, 5)
-
-    p_pca <- p_pca +
-      ggplot2::aes(shape = `batch`) +
-      ggplot2::scale_shape_manual(
-        values = c(
-          16,
-          17,
-          18,
-          19,
-          20
-        )[seq_len(n_batch)]
-      )
-  }
-
-  pc1_range <- range(pca_df$PC1)
-  pc2_range <- range(pca_df$PC2)
-
-  # 创建密度图 - 描边颜色与填充颜色一致
-  density_x <- ggplot2::ggplot(
-    pca_df,
-    ggplot2::aes(x = PC1, fill = condition, color = condition)
-  ) +
-    ggplot2::geom_density(alpha = 0.7, bw = "nrd", adjust = 2) +
-    ggplot2::coord_cartesian(xlim = pc1_range) + # 与主图x轴范围一致
-    ggplot2::theme_void() +
-    ggplot2::theme(legend.position = "none")
-
-  density_y <- ggplot2::ggplot(
-    pca_df,
-    ggplot2::aes(x = PC2, fill = condition, color = condition)
-  ) +
-    ggplot2::geom_density(alpha = 0.7, trim = FALSE, bw = "nrd", adjust = 1) +
-    ggplot2::coord_cartesian(xlim = pc2_range) + # 与主图y轴范围一致
-    ggplot2::coord_flip() +
-    ggplot2::theme_void() +
-    ggplot2::theme(legend.position = "none")
-
-  combined_ellipse <- density_x +
-    patchwork::plot_spacer() +
-    p_pca +
-    density_y +
-    patchwork::plot_layout(ncol = 2, widths = c(4, 1), heights = c(1, 4)) +
-    patchwork::plot_annotation(title = "Principal Component Analysis (PCA)")
-
-  if (show_plot) {
-    print(combined_ellipse)
-  }
-
-  combined_ellipse
-}
-
-#' @keywords internal
-BulkCheck <- function(
-  counts_matrix,
-  n_genes,
-  min_genes_detected,
-  min_count_threshold,
-  method,
-  verbose = TRUE
-) {
-  if (any(counts_matrix < 0, na.rm = TRUE)) {
-    cli::cli_abort(c(
-      "x" = "Expression matrix cannot contain negative values"
-    ))
-  }
-  if (any(counts_matrix != floor(counts_matrix))) {
-    cli::cli_warn("Expression matrix contains non-integer value")
-  }
-  if (min_genes_detected > n_genes) {
-    cli::cli_abort(c(
-      "x" = "{.arg min_genes_detected} must be less than the number of genes in the data",
-      ">" = "Current number of genes: {.val {n_genes}}"
-    ))
-  }
-  if (min_count_threshold > max(counts_matrix)) {
-    cli::cli_abort(c(
-      "x" = "{.arg min_count_threshold} must be less than the maximum count in the data",
-      ">" = "Current maximum count: {.val {max(counts_matrix)}}"
-    ))
-  }
-
-  # * Handle duplicated genes and samples
-  if (anyDuplicated(rownames(counts_matrix)) > 0) {
-    cli::cli_alert_info("Aggregate Duplicated genes in rownames")
-    counts_matrix <- AggregateDupRows(
-      counts_matrix,
-      method = method,
-      verbose = FALSE
-    )
-  }
-  if (anyDuplicated(colnames(counts_matrix)) > 0) {
-    cli::cli_alert_info("Aggregate Duplicated samples in colnames")
-    counts_matrix <- AggregateDupCols(
-      counts_matrix,
-      method = method,
-      verbose = FALSE
-    )
-  }
-
-  # * Handle data type
-  if (!is.numeric(counts_matrix)) {
-    cli::cli_warn(
-      "Expression matrix must be numeric, converted to numeric now."
-    )
-    # Attempt to convert to numeric
-    counts_matrix <- as.numeric(counts_matrix)
-    # Check if conversion introduced NAs
-    new_nas <- sum(is.na(counts_matrix))
-    if (new_nas > 0) {
-      cli::cli_warn(
-        "Numeric conversion introduced {.val {new_nas}} NA values (will be imputed)"
-      )
-    }
-  }
-
-  counts_matrix
 }

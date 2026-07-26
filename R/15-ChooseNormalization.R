@@ -134,7 +134,7 @@ ChooseNormalization <- function(
     dropout_robustness = 0.25
   )
 ) {
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   is_seurat <- vapply(
     X = dots,
     FUN = \(x) inherits(x, "Seurat"),
@@ -184,7 +184,7 @@ ChooseNormalization <- function(
   # * ===== 2. Extract metrics for each method =====
   metrics <- purrr::imap(
     method_objects,
-    ~ rlang::exec(
+    ~ exec(
       ExtractMetrics,
       obj = .x,
       assay = assay,
@@ -267,7 +267,7 @@ ChooseNormalization <- function(
     }
   }
 
-  rlang::list2(metrics = metrics, recommendation = best_method)
+  list2(metrics = metrics, recommendation = best_method)
 }
 
 #' @keywords internal
@@ -353,7 +353,7 @@ ExtractMetrics <- function(
   n_hvgs = 2000,
   ...
 ) {
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   # 1. Variance-mean correlation on normalized data
   assay_data <- SeuratObject::LayerData(
     object = obj,
@@ -367,7 +367,7 @@ ExtractMetrics <- function(
   valid <- means > stats::quantile(means, low_expressed_thresh, na.rm = TRUE) &
     vars > 0
   var_mean_cor <- if (sum(valid) > 100) {
-    if (rlang::is_installed(c("cheapr", "WGCNA"))) {
+    if (is_installed(c("cheapr", "WGCNA"))) {
       WGCNA::cor(
         cheapr::log10_(means[valid] + 1),
         cheapr::log10_(vars[valid] + 1e-6),
@@ -387,7 +387,7 @@ ExtractMetrics <- function(
   # 2. Marker gene retention in HVGs
   if (!is.null(ground_truth_markers)) {
     all_markers <- unique(unlist(ground_truth_markers))
-    hvgs_detected <- rlang::exec(
+    hvgs_detected <- exec(
       Seurat::VariableFeatures,
       object = obj,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
@@ -399,7 +399,7 @@ ExtractMetrics <- function(
     }
   } else {
     marker_retention <- NA
-    n_hvgs_detected <- length(rlang::exec(
+    n_hvgs_detected <- length(exec(
       Seurat::VariableFeatures,
       object = obj,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
@@ -417,7 +417,7 @@ ExtractMetrics <- function(
 
   # Correlation between dropout rate and normalized expression
   # Lower = better (successful normalization removes technical dropout bias)
-  dropout_residual <- if (!rlang::is_installed("WGCNA")) {
+  dropout_residual <- if (!is_installed("WGCNA")) {
     stats::cor(
       dropout_rate,
       means,
@@ -433,7 +433,7 @@ ExtractMetrics <- function(
     )
   }
 
-  rlang::list2(
+  list(
     method = method_name,
     variance_mean_cor = var_mean_cor,
     marker_retention = marker_retention,
@@ -448,7 +448,7 @@ ExtractMetrics <- function(
 #' Min-max normalizati
 #' @keywords internal
 normalize_metric <- function(x, invert = FALSE) {
-  sd1 <- if (rlang::is_installed("cheapr")) {
+  sd1 <- if (is_installed("cheapr")) {
     cheapr::sd_(x, na.rm = TRUE)
   } else {
     stats::sd(x, na.rm = TRUE)
@@ -464,6 +464,7 @@ normalize_metric <- function(x, invert = FALSE) {
 
 #' @keywords internal
 ChooseNormalizationViz <- function(metrics_df) {
+  check_installed(c("ggplot2", "patchwork"))
   # 1. Variance-mean correlation comparison
   vm_plot <- ggplot2::ggplot(
     metrics_df,

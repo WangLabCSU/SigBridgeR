@@ -31,9 +31,10 @@ FindRobustElbow <- function(
 ) {
   # Input validation
   if (!"pca" %chin% names(obj)) {
-    cli::cli_abort(c(
-      "x" = "PCA has not been computed on this Seurat object. Please run {.code RunPCA()} first."
-    ))
+    Abort(
+      "PCA has not been computed on this Seurat object.",
+      "Please run {.code RunPCA()} first."
+    )
   }
 
   # Extract PCA standard deviations
@@ -167,8 +168,8 @@ FindRobustElbow <- function(
     )
 
     # Create comprehensive visualization
-    if (interactive()) {
-      rlang::check_installed("ggplot2")
+    if (is_interactive()) {
+      check_installed("ggplot2")
       plot_data <- data.table::data.table(
         PC = seq_len(ndims),
         Variance = pct_variance,

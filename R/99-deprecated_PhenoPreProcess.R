@@ -123,14 +123,20 @@ PhenoPreProcess <- function(
   select = NULL,
   verbose = getFuncOption("verbose")
 ) {
-  rlang::check_installed("tibble")
+  lifecycle::deprecate_warn(
+    "4.0.0",
+    "PhenoPreProcess()",
+    "PhenoMap()",
+    details = "PhenoPreProcess() will be deprecated because of ambiguous functionality."
+  )
+  check_installed("tibble")
   if (!is.null(select)) {
     chk::chk_character(select)
   }
 
   is_phenotype_2d <- is_2d(phenotype)
 
-  dots <- rlang::list2(...)
+  dots <- list2(...)
   if (length(dots) > 0) {
     phenotype <- PhenoMap(phenotype, ...)
 
@@ -283,11 +289,6 @@ handle_phenotype_select <- function(
 }
 
 #' @keywords internal
-is_2d <- function(data) {
-  if (length(dim(data)) == 2L) TRUE else FALSE
-}
-
-#' @keywords internal
 col_count <- function(data, col) {
   length(table(data[[col]]))
 }
@@ -390,7 +391,7 @@ handle_case_2 <- function(
     )
     return(handle_case_1(
       phenotype_class = phenotype_class,
-      phenotype = phenotype_class,
+      phenotype = phenotype,
       sample_names = sample_names,
     ))
   }
@@ -456,7 +457,7 @@ handle_case_4 <- function(
     )
     return(handle_case_3(
       phenotype_class = phenotype_class,
-      phenotype = phenotype_class,
+      phenotype = phenotype,
       sample_names = sample_names,
     ))
   }

@@ -32,7 +32,7 @@
 #'
 #' @return Invisibly returns \code{TRUE} on successful registration (via the underlying registrar).
 #' @export
-#' @family Registering
+#' @name Register
 #'
 #' @examples
 #' \dontrun{
@@ -66,8 +66,16 @@
 #'   \code{\link{SCPreProcessStrategy}}
 #'   \code{\link{SCAnnotateStrategy}}
 #'   \code{\link{ScreenStrategy}}
-Register <- function(
-  ...,
+Register <- new_generic(
+  name = "Register",
+  dispatch_args = c("func", "name")
+)
+
+#' @rdname Register
+#' @export
+method(generic = Register, class = ScreenMethod) <- function(
+  func,
+  name,
   registry = c(
     "auto",
     "ScreenStrategy",

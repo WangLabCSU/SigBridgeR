@@ -111,7 +111,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
       if (na_count > max_print) {
         validate_explain(
           "{.pkg {na_count - max_print}} additional positions not shown",
-          .envir = rlang::current_env()
+          .envir = current_env()
         )
       }
     }
@@ -125,7 +125,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
         names_to_show <- na_names[seq_len(min(max_print, na_count))]
         validate_explain(
           "with names: {.val {names_to_show}}",
-          .envir = rlang::current_env()
+          .envir = current_env()
         )
       }
     }
@@ -181,7 +181,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
           validate_explain(
             "Row {na_positions$row[i]} ({.val {na_positions$row_name[i]}}), \
           col {na_positions$col[i]} ({.val {na_positions$col_name[i]}})",
-            .envir = rlang::current_env()
+            .envir = current_env()
           )
         }
       } else if (has_row_names) {
@@ -189,7 +189,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
           validate_explain(
             "Row {na_positions$row[i]} ({.val {na_positions$row_name[i]}}), \
           col {na_positions$col[i]}",
-            .envir = rlang::current_env()
+            .envir = current_env()
           )
         }
       } else if (has_col_names) {
@@ -197,7 +197,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
           validate_explain(
             "Row {na_positions$row[i]}, \
             Col {na_positions$col[i]} ({.val {na_positions$col_name[i]}})",
-            .envir = rlang::current_env()
+            .envir = current_env()
           )
         }
       } else {
@@ -205,7 +205,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
           validate_explain(
             "Row {na_positions$row[i]}, \
             col {na_positions$col[i]}",
-            .envir = rlang::current_env()
+            .envir = current_env()
           )
         }
       }
@@ -213,7 +213,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
       if (na_count > max_print) {
         validate_explain(
           "{.pkg {na_count - max_print}} additional positions not shown",
-          .envir = rlang::current_env()
+          .envir = current_env()
         )
       }
     }

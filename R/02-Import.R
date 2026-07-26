@@ -10,12 +10,6 @@ SetupPyEnv <- SigBridgeRUtils::SetupPyEnv
 #' @export
 ListPyEnv <- SigBridgeRUtils::ListPyEnv
 
-# ? General global variables
-
-#' @importFrom data.table `:=` `%chin%` `.N` `.SD` `.I`
-#' @import S7
-#' @import rlang
-NULL
 
 #' @keywords internal
 ts_cli <- SigBridgeRUtils::CreateTimeStampCliEnv()

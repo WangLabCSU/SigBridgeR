@@ -18,8 +18,8 @@ Imports:
     chk,
     cli,
     data.table,
-    dplyr,
     IDConverter,
+    lifecycle,
     Matrix,
     purrr,
     rlang (>= 1.0.0),
@@ -56,6 +56,7 @@ Suggests:
     codetools,
     curl,
     DEGAS,
+    dplyr,
     edgeR,
     furrr,
     future,
@@ -69,7 +70,6 @@ Suggests:
     jsonlite,
     KernSmooth,
     knitr,
-    lifecycle,
     lintr,
     LPSGL,
     matrixStats,
@@ -108,3 +108,6 @@ Suggests:
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
