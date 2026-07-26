@@ -1,5 +1,5 @@
-MethodCache <- new_class(
-  name = "MethodCache",
+ScreenMethodCache <- new_class(
+  name = "ScreenMethodCache",
   parent = SigBridgeRBase,
   properties = list(
     cache_path = property_chr,

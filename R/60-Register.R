@@ -68,20 +68,23 @@
 #'   \code{\link{ScreenStrategy}}
 Register <- new_generic(
   name = "Register",
-  dispatch_args = c("func", "name")
+  dispatch_args = c("method", "name")
 )
+
+method(generic = Register, class = class_any) <- function(method, name, ...) {
+  cls_method <- class(method)
+  expected_cls <- c("ScreenMethod", "AnnotationMethod")
+  Abort(
+    "Unsupported class: {.cls {cls_method}}",
+    "Expected {.cls {expected_cls}}"
+  )
+}
 
 #' @rdname Register
 #' @export
 method(generic = Register, class = ScreenMethod) <- function(
   func,
   name,
-  registry = c(
-    "auto",
-    "ScreenStrategy",
-    "SCPreProcessStrategy",
-    "SCAnnotateStrategy"
-  ),
   verbose = getFuncOption("verbose")
 ) {
   registry <- unlist(registry)
@@ -171,41 +174,20 @@ method(generic = Register, class = ScreenMethod) <- function(
   # invisbly TRUE
 }
 
-#' @keywords internal
-detect_registry <- function(method_name, func, dots, verbose = FALSE) {
-  # Priority 1: Check for ScreenStrategy-specific params
-  if (
-    "supported_phenotypes" %chin%
-      names(dots) ||
-      "parameter_mapper" %chin% names(dots) ||
-      any(
-        c(
-          "sc_data",
-          "matched_bulk",
-          "phenotype",
-          "label_type",
-          "phenotype_class"
-        ) %chin%
-          methods::formalArgs(func)
-      )
-  ) {
-    if (verbose) {
-      cli::cli_alert_info("Auto-detected registry: {.pkg ScreenStrategy}")
-    }
-    return("ScreenStrategy")
-  }
+#' @rdname Register
+#' @export
+method(generic = Register, class = AnnotationMethod) <- function(
+  func,
+  name,
+  verbose = getFuncOption("verbose")
+) {}
 
-  # Priority 2: Check for single-character keys (SeuratStrategy signature)
-  if (nchar(method_name) == 1) {
-    if (verbose) {
-      cli::cli_alert_info("Auto-detected registry: {.pkg SCPreProcessStrategy}")
-    }
-    return("SCPreProcessStrategy")
-  }
-
-  # Priority 3: Default to annotation strategy (most permissive)
-  if (verbose) {
-    cli::cli_alert_info("Auto-detected registry: {.pkg SCAnnotateStrategy}")
-  }
-  "SCAnnotateStrategy"
+#' @rdname Register
+#' @export
+method(generic = Register, class = class_function) <- function(
+  func,
+  name,
+  verbose = getFuncOption("verbose")
+) {
+  # Seurat
 }

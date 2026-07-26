@@ -44,6 +44,18 @@ WriteCacheMeta <- new_generic(
   dispatch_args = "cache_config"
 )
 
+method(generic = WriteCacheMeta, class = class_any) <- function(
+  cache_config,
+  ...
+) {
+  cls_cache <- class(cache_config)
+  expected_cls <- c("ScreenMethodConfig", "ScreenMethodCache")
+  Abort(
+    "cache_config must be a class of {.cls {expected_cls}}",
+    "Current class is {.cls {cls_cache}}"
+  )
+}
+
 method(generic = WriteCacheMeta, class = ScreenMethodConfig) <- function(
   cache_config,
   file = "cache_config.json",
@@ -124,7 +136,9 @@ method(generic = WriteCacheMeta, class = ScreenMethodConfig) <- function(
   invisible(cache_meta)
 }
 
-#' @keywords internal
+method(generic = WriteCacheMeta, class = ScreenMethodCache) <- function() {}
+
+
 get_os_info <- function() {
   sys_info <- Sys.info()
   os_info <- trimws(paste(sys_info["sysname"], sys_info["release"]))
@@ -134,7 +148,7 @@ get_os_info <- function() {
   os_info
 }
 
-#' @keywords internal
+
 get_r_info <- function() {
   list(
     r_version = R.version.string,
@@ -143,12 +157,12 @@ get_r_info <- function() {
   )
 }
 
-#' @keywords internal
+
 get_time <- function() {
   format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 }
 
-#' @keywords internal
+
 get_pkg_version <- function() {
   tryCatch(
     as.character(utils::packageVersion("SigBridgeR")),
@@ -159,7 +173,7 @@ get_pkg_version <- function() {
   )
 }
 
-#' @keywords internal
+
 get_cache_file_name <- function(
   screen_method,
   phenotype_class
@@ -172,7 +186,7 @@ get_cache_file_name <- function(
   )
 }
 
-#' @keywords internal
+
 fetch_method_args2meta <- function() {
   parent_env <- parent.frame()
 

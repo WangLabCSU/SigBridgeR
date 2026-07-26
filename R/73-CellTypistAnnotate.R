@@ -83,7 +83,7 @@ CellTypistAnnotate <- function(
   ),
   ...
 ) {
-  rlang::check_installed(c("anndataR", "reticulate"))
+  check_installed(c("anndataR", "reticulate"))
   chk::chk_is(sc, "Seurat")
   if (!is.null(model)) {
     chk::chk_character(model)
@@ -126,7 +126,7 @@ CellTypistAnnotate <- function(
     }
   }
 
-  dots <- rlang::list2(...)
+  dots <- list2(...)
 
   # * initiate
   py <- reticulate::py
@@ -142,7 +142,7 @@ CellTypistAnnotate <- function(
   py$verbose <- reticulate::r_to_py(verbose) # A boolean
   py$force_update <- reticulate::r_to_py(force_update) # A boolean
   if (length(dots) > 0) {
-    var_names <- get_names_4_ids(..., .quoses = rlang::enquos(...))
+    var_names <- get_names_4_ids(..., .quoses = enquos(...))
     for (var_name in var_names) {
       py[[var_name]] <- reticulate::r_to_py(dots[[var_name]])
     }
@@ -161,7 +161,7 @@ CellTypistAnnotate <- function(
     "celltypist_",
     colnames(predicted_labels)
   )
-  Seurat::AddMetaData(object = sc, metadata = predicted_labels) %>%
+  Seurat::AddMetaData(object = sc, metadata = predicted_labels) |>
     AddMisc(
       celltypist = list(
         decision_matrix = decision_matrix,

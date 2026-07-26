@@ -134,12 +134,12 @@ SingleRAnnotate <- function(
     return(prediction_sce)
   }
 
-  sc %>%
-    Seurat::AddMetaData(prediction_sce$labels, col.name = "SingleR_labels") %>%
+  sc |>
+    Seurat::AddMetaData(prediction_sce$labels, col.name = "SingleR_labels") |>
     Seurat::AddMetaData(
       prediction_sce$delta.next,
       col.name = "SingleR_delta_next"
-    ) %>%
+    ) |>
     Seurat::AddMetaData(
       prediction_sce$pruned.labels,
       col.name = "SingleR_pruned_labels"

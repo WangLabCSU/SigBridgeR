@@ -13,16 +13,19 @@
 #' @export
 SCAnnotateStrategyEnv <- rlang::new_environment(
   list(
-    CellTypist = list(
+    CellTypist = AnnotationMethod(
       method_name = "CellTypist",
-      executor = CellTypistAnnotate
+      method_version = "1.7.1",
+      executor = CellTypistAnnotate,
     ),
-    mLLMCelltype = list(
+    mLLMCelltype = AnnotationMethod(
       method_name = "mLLMCelltype",
+      method_version = packageVersion("mLLMCelltype"),
       executor = mLLMCelltypeAnnotate
     ),
-    SingleR = list(
+    SingleR = AnnotationMethod(
       method_name = "SingleR",
+      method_version = packageVersion("mLLMCelltype"),
       executor = SingleRAnnotate
     )
   )

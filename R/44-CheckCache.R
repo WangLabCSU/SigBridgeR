@@ -79,7 +79,17 @@ method(generic = CheckCache, class = ScreenMethodConfig) <- function(
   ))
 }
 
-#' @keywords internal
+
+method(generic = CheckCache, class = ScreenMethodCache) <- function(
+  cache_config,
+  path,
+  screen_method,
+  phenotype_class = c("binary", "survival", "continuous"),
+  label_type = screen_method,
+  params,
+  ...
+) {}
+
 make_null_list_NULL <- function(x) {
   if (!is.list(x)) {
     return(x)
@@ -92,7 +102,7 @@ make_null_list_NULL <- function(x) {
   lapply(x, make_null_list_NULL)
 }
 
-#' @keywords internal
+
 find_diff_in_2_lists <- function(x, y) {
   if (identical(x, y)) {
     return(TRUE)
