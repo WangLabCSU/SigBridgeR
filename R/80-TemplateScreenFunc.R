@@ -39,28 +39,27 @@
 #' TemplateScreenFunc(filename = "current", func_name = "QuickFilter")
 #' }
 TemplateScreenFunc <- function(
-  filename = "my_screen.R",
+  filename = NULL,
   func_name = "my_screen",
   append = TRUE,
   documentation = FALSE,
-  open = TRUE,
+  open = is_interactive(),
   ...
 ) {
+  filename <- filename %||% "my_screen.R"
   chk::chk_character(filename)
   chk::chk_length(filename) # 1
+  chk::chk_not_null(filename)
 
-  if (is.null(filename)) {
-    filename <- "my_screen.R"
-    cli::cli_alert_info("Using default filename: {.file {filename}}")
-  } else if (tolower(trimws(filename)) == "current") {
+  if (tolower(trimws(filename)) == "current") {
     # * Check rstudioapi availability
     rlang::check_installed("rstudioapi")
 
     if (!rstudioapi::isAvailable()) {
-      cli::cli_abort(c(
-        "x" = "{.pkg rstudioapi} is not available. This function requires RStudio or Positron session when specified filename as `current`.",
-        ">" = "Please specify a filename directly instead of `current`"
-      ))
+      Abort(
+        "{.pkg rstudioapi} is not available. This function requires RStudio or Positron session when specified filename as `current`.",
+        "Please specify a filename directly instead of `current`"
+      )
     }
 
     # Get current script path
@@ -70,7 +69,7 @@ TemplateScreenFunc <- function(
   } else {
     # * Validate filename is character and has .R extension
     if (!grepl("\\.R$", filename, ignore.case = TRUE)) {
-      cli::cli_abort(
+      Abort(
         "`filename` must have a {.path .R} extension (case-insensitive)."
       )
     }
@@ -78,7 +77,7 @@ TemplateScreenFunc <- function(
 
   # * validate function name
   if (!grepl("^[a-zA-Z][a-zA-Z0-9._]*$", func_name)) {
-    cli::cli_abort(
+    Abort(
       "Invalid `func_name`: {.val {func_name}}"
     )
   }
@@ -89,20 +88,15 @@ TemplateScreenFunc <- function(
 
   # * Interactive confirmation for overwriting non-empty files
   if (!append && file_not_empty) {
-    cli::cli_inform("Overwrite existing content? [y/N]: ", .width = "auto")
+    response <- utils::askYesNo("Overwrite existing content? ")
 
-    response <- readline(prompt = "")
-    if (tolower(response) != "y" && tolower(response) != "yes") {
-      cli::cli_inform("Operation cancelled by user.")
-      return(NULL)
+    if (!isTRUE(response)) {
+      Abort("Operation cancelled by user.")
     }
   }
 
-  # * Build roxygen2 documentation if requested
-  func_doc <- roxygen2_doc(documentation = documentation)
-
-  # * Build template function body
-  template_body <- func_body(func_doc = func_doc, func_name = func_name)
+  # * Build template function body from template file
+  template_body <- build_template_body(func_name, documentation)
 
   write_mode <- if (append && file_exists) "a" else "w"
   con <- file(filename, open = write_mode)
@@ -138,76 +132,28 @@ TemplateScreenFunc <- function(
   invisible(filename)
 }
 
-#' @keywords internal
-roxygen2_doc <- function(documentation = FALSE) {
+# Reads the template file and constructs the output with optional documentation.
+# @param func_name Character. The function name to substitute into the template.
+# @param documentation Logical. Whether to include roxygen2 documentation.
+# @return Character vector of lines.
+# @keywords internal
+build_template_body <- function(func_name, documentation) {
+  template_path <- system.file(
+    "template",
+    "template_screen_fun.R",
+    package = "SigBridgeR",
+    mustWork = TRUE
+  )
+
+  lines <- readLines(template_path, warn = FALSE)
+
+  # Substitute function name placeholder
+  lines <- gsub("FUNC_NAME", func_name, lines, fixed = TRUE)
+
   if (!documentation) {
-    return("")
+    # Remove roxygen2 documentation lines (lines starting with #')
+    lines <- lines[!grepl("^#'", lines)]
   }
 
-  paste(
-    "#' @title Screen Function Template",
-    "#'",
-    "#' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression",
-    "#'        data (genes x samples). Column names must match names/IDs in `phenotype`.",
-    "#' @param sc_data A matrix/Matrix (genes x cells) or a Seurat object containing scRNA-seq data to be screened.",
-    "#' @param phenotype Phenotype data, either:",
-    "#'        - Named vector (names match `matched_bulk` columns), or",
-    "#'        - Patient survival Data frame with row names matching `matched_bulk` columns, colnames named \"time\" and \"status\"",
-    "#' @param label_type Character specifying phenotype label type",
-    "#' @param phenotype_class Type of phenotypic outcome (must be consistent with input data):",
-    "#'        - `\"binary\"`: Binary traits (e.g., case/control)",
-    "#'        - `\"continuous\"`: Continuous measurements",
-    "#'        - `\"survival\"`: Survival infomation",
-    "#' @param ... Additional arguments passed to the function. Common parameters include:",
-    "#'   \\describe{",
-    "#'     \\item{verbose}{Logical. Whether to print verbose output (default: TRUE).}",
-    "#'   }",
-    "#'",
-    "#' @return A named list containing:",
-    "#'   \\describe{",
-    "#'     \\item{scRNA_data}{Modified single-cell data object with integrated screening results.}",
-    "#'   }",
-    "#'",
-    "#' @export",
-    sep = "\n",
-    collapse = "\n"
-  )
-}
-
-#' @keywords internal
-func_body <- function(func_doc = character(), func_name = character()) {
-  paste(
-    sprintf(
-      "%s\n%s <- function(",
-      func_doc,
-      func_name
-    ),
-    "
-  matched_bulk,
-  sc_data,
-  phenotype,
-  label_type = NULL,
-  phenotype_class = c(\"binary\", \"survival\", \"continuous\"),
-  ...
-) {
-  CheckInstalled(\"<your-name>/<your-repo>\")
-  # Validate phenotype_class parameter
-  phenotype_class <- match.arg(phenotype_class)
-  
-  # Extract additional arguments
-  dots <- list(...)
-  verbose <- dots$verbose %||% TRUE
-  
-  # TODO: Implement your screening logic here
-  # Placeholder for modified scRNA data (replace with actual processing)
-  modified_sc_data <- sc_data
-  
-  # Return result in expected format
-  list(
-    scRNA_data = modified_sc_data
-  )
-}",
-    .sep = "\n",
-    collapse = "\n"
-  )
+  lines
 }

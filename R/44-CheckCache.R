@@ -24,101 +24,64 @@
 #'
 CheckCache <- new_generic("CheckCache", dispatch_args = "cache_config")
 
-method(generic = CheckCache, class = ScreenMethodConfig) <- function(
+method(
+  generic = CheckCache,
+  class = ScreenMethodConfig
+) <- CheckCache.ScreenMethodConfig <- function(
   cache_config,
   path,
-  screen_method,
-  phenotype_class = c("binary", "survival", "continuous"),
-  label_type = screen_method,
-  params,
   ...
 ) {
-  check_dots_empty()
   check_installed("jsonlite")
-  if (!endsWith(path, "cache_config.json") && dir.exists(path)) {
-    meta_json <- file.path(path, "cache_config.json")
+  meta_json <- if (!endsWith(path, "cache_config.json") && dir.exists(path)) {
+    file.path(path, "cache_config.json")
   } else if (endsWith(path, "cache_config.json")) {
-    meta_json <- path
+    path
   } else {
-    cli::cli_abort(c(
-      "x" = "Unsupported path: {.file {path}}",
-      ">" = "`path` must be either a path to {.file cache_config.json} , or a folder containing it"
-    ))
+    Abort(
+      "Unsupported path: {.file {path}}",
+      "`path` must be either a path to {.file cache_config.json} , or a folder containing it"
+    )
   }
   # * a list, NULL value became a NULL list
-  cache_meta <- make_null_list_NULL(jsonlite::read_json(meta_json)$config)
+  cache_meta <- make_null_list_NULL(jsonlite::read_json(meta_json)$config) # cpp fn
+  # method_name
+  # method_version
+  # screen_method
+  # phenotype_class
+  # label_type
+  # params = list(...)
 
-  inputs_meta <- list(
-    config = list(
-      screen_method = screen_method,
-      phenotype_class = phenotype_class,
-      label_type = label_type,
-      params = params
-    )
-  )
+  inputs_meta <- props(cache_config)
 
-  modified_config <- utils::modifyList(
-    cache_meta,
-    inputs_meta,
-    keep.null = TRUE
-  )
-  check_res <- identical(modified_config, cache_meta)
-  if (check_res) {
+  diff <- find_diff_in_2_lists(
+    inputs_meta, # user param
+    cache_meta # actual cache config
+  ) # cpp fn
+
+  if (isTRUE(diff)) {
     return(invisible(TRUE))
   }
 
-  diff_in_vec <- find_diff_in_2_lists(cache_meta, modified_config)
+  arg_name <- diff$name
+  user_val <- diff$x
+  actual_val <- diff$y
 
-  cli::cli_alert_warning(cli::col_yellow(
-    "Found slots different from the current parameters:"
-  ))
-  print(diff_in_vec)
-
-  cli::cli_abort(c(
-    "x" = "Cache config is not consistent with the current parameters"
-  ))
+  Abort(
+    "Cache config is not consistent with the current parameters",
+    "Parameter:{.field {arg_name}}, provided: {.val {user_val}}, actual: {.val {actual_val}}"
+  )
 }
 
 
 method(generic = CheckCache, class = ScreenMethodCache) <- function(
   cache_config,
   path,
-  screen_method,
-  phenotype_class = c("binary", "survival", "continuous"),
-  label_type = screen_method,
-  params,
   ...
-) {}
-
-make_null_list_NULL <- function(x) {
-  if (!is.list(x)) {
-    return(x)
-  }
-
-  if (length(x) == 0L) {
-    return(NULL)
-  }
-
-  lapply(x, make_null_list_NULL)
-}
-
-
-find_diff_in_2_lists <- function(x, y) {
-  if (identical(x, y)) {
-    return(TRUE)
-  }
-
-  purrr::map2(
-    x,
-    y,
-    ~ {
-      if (is.list(.x) && is.list(.y)) {
-        return(find_diff_in_2_lists(.x, .y))
-      }
-      if (identical(.x, .y)) {
-        return(TRUE)
-      }
-      return(FALSE)
-    }
+) {
+  CheckCache.ScreenMethodConfig(
+    cache_config = cache_config@screen_method_config,
+    path = path,
+    ...
   )
 }

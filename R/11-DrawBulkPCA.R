@@ -1,20 +1,32 @@
 #' @export
 DrawBulkPCA <- function(
-  pca_df,
-  var_labels,
+  bulk,
+  group,
+  batch = NULL,
   show_plot = TRUE,
   ...
 ) {
-  check_installed(c("ggplot2", "ggforce", "patchwork"))
+  check_installed(c("ggplot2", "ggforce", "patchwork", "tibble"))
+
+  pca <- prcomp(t(bulk), scale. = TRUE)
+  percent_var <- pca$sdev^2 / sum(pca$sdev^2)
+
+  pca_df <- tibble::tibble(
+    sample = colnames(bulk),
+    PC1 = pca$x[, 1],
+    PC2 = pca$x[, 2],
+    group = group,
+    batch = batch
+  )
 
   p_pca <- ggplot2::ggplot(
     pca_df,
-    ggplot2::aes(x = `PC1`, y = `PC2`, color = `condition`)
+    ggplot2::aes(x = `PC1`, y = `PC2`, color = `group`)
   ) +
     ggplot2::geom_point(size = 3, alpha = 0.8) +
     ggplot2::labs(
-      x = paste0("PC1 (", round(var_labels[1], 2), "%)"),
-      y = paste0("PC2 (", round(var_labels[2], 2), "%)")
+      x = paste0("PC1 (", round(percent_var[1], 2), "%)"),
+      y = paste0("PC2 (", round(percent_var[2], 2), "%)")
     ) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
@@ -22,7 +34,7 @@ DrawBulkPCA <- function(
       legend.justification = c(1, 1), # 对齐到右上角
     ) +
     ggforce::geom_mark_ellipse(
-      ggplot2::aes(fill = condition, group = condition),
+      ggplot2::aes(fill = group, group = group),
       alpha = 0.1,
       expand = ggplot2::unit(3, "mm"),
       show.legend = FALSE
@@ -54,7 +66,7 @@ DrawBulkPCA <- function(
   # 创建密度图 - 描边颜色与填充颜色一致
   density_x <- ggplot2::ggplot(
     pca_df,
-    ggplot2::aes(x = PC1, fill = condition, color = condition)
+    ggplot2::aes(x = PC1, fill = group, color = group)
   ) +
     ggplot2::geom_density(alpha = 0.7, bw = "nrd", adjust = 2) +
     ggplot2::coord_cartesian(xlim = pc1_range) + # 与主图x轴范围一致
@@ -63,7 +75,7 @@ DrawBulkPCA <- function(
 
   density_y <- ggplot2::ggplot(
     pca_df,
-    ggplot2::aes(x = PC2, fill = condition, color = condition)
+    ggplot2::aes(x = PC2, fill = group, color = group)
   ) +
     ggplot2::geom_density(alpha = 0.7, trim = FALSE, bw = "nrd", adjust = 1) +
     ggplot2::coord_cartesian(xlim = pc2_range) + # 与主图y轴范围一致
@@ -82,5 +94,5 @@ DrawBulkPCA <- function(
     print(combined_ellipse)
   }
 
-  combined_ellipse
+  invisible(combined_ellipse)
 }

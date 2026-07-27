@@ -15,7 +15,7 @@
 #'
 #' @param file Character string. Path to the cache file to load.
 #' @param ... Additional arguments (must be empty, checked by
-#'   \code{rlang::check_dots_empty0()}).
+#'   \code{check_dots_empty0()}).
 #'
 #' @return The cached R object.
 #'
@@ -28,32 +28,25 @@
 #' feature_df <- LoadCache("Scissor_res/survival_2025_01_01/feature_table.csv")
 #' }
 LoadCache <- function(file, ...) {
-  rlang::check_dots_empty0()
+  check_dots_empty()
   chk::chk_string(file)
   chk::chk_file(file)
 
   ext <- tools::file_ext(file)
 
-  result <- switch(
+  switch(
     ext,
-    "qs2" = {
-      if (!rlang::is_installed("qs2")) {
-        cli::cli_abort(c(
-          "x" = "Package {.pkg qs2} is required to read this cache file.",
-          ">" = "Install it with {.code install.packages('qs2')}.",
-          "i" = "This file was previously cached in qs2 format."
-        ))
-      }
+    "qs2" = ,
+    "qdata" = {
+      check_installed("qs2")
       qs2::qs_read(file)
     },
     RData = readRDS(file),
     rds = readRDS(file),
     csv = data.table::fread(file),
-    cli::cli_abort(c(
-      "x" = "Unsupported file extension: {.val {ext}}",
-      ">" = "Supported extensions: {.val {c('qs2', 'RData', 'rds', 'csv')}}"
-    ))
+    Abort(
+      "Unsupported file extension: {.val {ext}}",
+      "Supported extensions: {.val {c('qs2', 'qdata', 'RData', 'rds', 'csv')}}"
+    )
   )
-
-  result
 }

@@ -45,12 +45,12 @@ organization process is not described in detail here.
     # DefaultAssay(spatials) <- "SCT"
     VariableFeatures(spatials) <- lapply(spatial_list, function(seurat) {
       VariableFeatures(seurat)
-    }) %>%
-      unlist() %>%
+    }) |>
+      unlist() |>
       unique()
-    spatials <- RunPCA(spatials) %>%
-      FindNeighbors(dims = 1:30) %>%
-      FindClusters() %>%
+    spatials <- RunPCA(spatials) |>
+      FindNeighbors(dims = 1:30) |>
+      FindClusters() |>
       RunUMAP(dims = 1:30)
 
     # SeuratObject::SaveSeuratRds(spatials, "seurat.rds")
@@ -87,10 +87,10 @@ the bulk RNA-seq data and the survival information.
 
     paad_samples <- colnames(bulk)
 
-    tcga_paad_surv <- dplyr::filter(tcga_surv, sample %in% paad_samples) %>%
-      dplyr::select(sample, OS.time, OS) %>%
-      dplyr::rename(time = OS.time, status = OS) %>%
-      dplyr::filter(status != "NA", time != "NA", !is.na(status), !is.na(time)) %>%
+    tcga_paad_surv <- dplyr::filter(tcga_surv, sample %chin% paad_samples) |>
+      dplyr::select(sample, OS.time, OS) |>
+      dplyr::rename(time = OS.time, status = OS) |>
+      dplyr::filter(status != "NA", time != "NA", !is.na(status), !is.na(time)) |>
       tibble::column_to_rownames(var = "sample")
 
     head(tcga_paad_surv)

@@ -66,7 +66,7 @@ handle_usr_params <- function(usr_params) {
 
 #' @keywords internal
 GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
-  if (!"qc_colnames" %in% names(seurat_obj@misc)) {
+  if (!"qc_colnames" %chin% names(seurat_obj@misc)) {
     cli::cli_warn(
       "[{.fun GetVars2Regress}]: No QC columns found for regression in {.fun SCTransform}. Please run {.fun QCPatternDetect} first. Returning {.val NULL}."
     )
@@ -335,7 +335,7 @@ QCFilter <- function(
 
   # see `QCPatternDetect()` for the column names generation
   qc_colnames <- NULL
-  if ("qc_colnames" %in% names(seurat_obj@misc)) {
+  if ("qc_colnames" %chin% names(seurat_obj@misc)) {
     qc_colnames <- unlist(seurat_obj@misc$qc_colnames, use.names = FALSE)
   }
   if (is.null(qc_colnames) || length(qc_colnames) == 0) {
@@ -348,7 +348,7 @@ QCFilter <- function(
       return(NULL)
     }
 
-    present_cols <- qc_colnames[qc_colnames %in% colnames(meta)]
+    present_cols <- qc_colnames[qc_colnames %chin% colnames(meta)]
 
     valid_cols <- present_cols[vapply(
       X = present_cols,
@@ -371,14 +371,14 @@ QCFilter <- function(
     }
 
     purrr::map(valid_cols, function(col) {
-      if (!col %in% names(thresh)) {
+      if (!col %chin% names(thresh)) {
         cli::cli_warn(
           "[{.fun QCFilter}]: No threshold provided for {.val {col}}; skipping."
         )
         return(NULL)
       }
       expr(!!dplyr::sym(col) < !!thresh[[col]])
-    }) %>%
+    }) |>
       purrr::compact()
   }
   # be aware of expr is not supported in `subset()`

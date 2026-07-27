@@ -42,7 +42,7 @@ ValidateScreenFunc <- function(
 ) {
   cli::cli_h1(cli::col_cyan("Screening Function Validation"))
 
-  if (rlang::is_installed("tictoc")) {
+  if (is_installed("tictoc")) {
     tictoc::tic()
   }
 
@@ -67,7 +67,7 @@ ValidateScreenFunc <- function(
   dir_name_check <- ValidateDirName(func = func, ...)
   cli::cli_text("\n")
 
-  if (rlang::is_installed("tictoc")) {
+  if (is_installed("tictoc")) {
     end_time <- tictoc::toc(quiet = TRUE)
     cli::cli_text(tictoc::toc.outmsg(end_time$tic, end_time$toc, "Duration"))
     cli::cli_text("\n")
@@ -97,7 +97,7 @@ ValidateArgsInputs <- function(func, ...) {
   )
   func_formals <- formals(func)
   func_args <- names(func_formals)
-  has_dots <- "..." %in% func_args
+  has_dots <- "..." %chin% func_args
 
   # Check required parameters
   missing_args <- setdiff(required_args, func_args)
@@ -148,9 +148,9 @@ ValidateArgsVerbose <- function(func, ...) {
   func_formals <- formals(func)
   func_args <- names(func_formals)
 
-  verbose_used <- any(grepl("verbose", as.character(rlang::fn_body(func))))
-  has_dots <- "..." %in% func_args
-  has_verbose <- "verbose" %in% func_args || has_dots
+  verbose_used <- any(grepl("verbose", as.character(fn_body(func))))
+  has_dots <- "..." %chin% func_args
+  has_verbose <- "verbose" %chin% func_args || has_dots
 
   if (!has_verbose) {
     validate_note("Verbose control not supported")
@@ -175,7 +175,7 @@ ValidateArgsVerbose <- function(func, ...) {
 
 #' @keywords internal
 ValidateArgsSyntax <- function(func, ...) {
-  if (rlang::is_installed(c("tidycheckUsage", "knitr"))) {
+  if (is_installed(c("tidycheckUsage", "knitr"))) {
     report <- tidycheckUsage::tidycheckUsage(func)
     if (!is.null(report)) {
       validate_error("Syntax error in function")
@@ -194,7 +194,7 @@ ValidateArgsSyntax <- function(func, ...) {
     return(invisible())
   }
 
-  if (rlang::is_installed("codetools")) {
+  if (is_installed("codetools")) {
     code_report <- utils::capture.output(
       codetools::checkUsage(
         func,
@@ -257,7 +257,7 @@ ValidateArgsSyntax <- function(func, ...) {
 
 #' @keywords internal
 ValidateReturn <- function(func, ...) {
-  func_body <- rlang::fn_body(func)
+  func_body <- fn_body(func)
 
   find_last_return <- function(expr) {
     if (!is.call(expr)) {
@@ -307,7 +307,7 @@ ValidateReturn <- function(func, ...) {
           }
         }
       } else {
-        has_scRNA_data <- "scRNA_data" %in% arg_names
+        has_scRNA_data <- "scRNA_data" %chin% arg_names
       }
     }
   }
@@ -358,20 +358,20 @@ ValidateReturn <- function(func, ...) {
 
 #' @keywords internal
 ValidateDirName <- function(func, ...) {
-  func_body <- rlang::fn_body(func)
+  func_body <- fn_body(func)
 
   # 递归查找所有 dir.create 调用
   find_dir_create_calls <- function(expr) {
     calls <- list()
-    if (rlang::is_call(expr)) {
-      if (rlang::call_name(expr) == "dir.create") {
+    if (is_call(expr)) {
+      if (call_name(expr) == "dir.create") {
         calls <- list(expr)
       }
       # 递归遍历子表达式
-      for (arg in rlang::call_args(expr)) {
+      for (arg in call_args(expr)) {
         calls <- c(calls, find_dir_create_calls(arg))
       }
-    } else if (rlang::is_pairlist(expr)) {
+    } else if (is_pairlist(expr)) {
       for (elt in expr) {
         calls <- c(calls, find_dir_create_calls(elt))
       }
@@ -389,12 +389,12 @@ ValidateDirName <- function(func, ...) {
 
   # 检查每个 dir.create 调用的文件夹名
   for (call in dir_create_calls) {
-    folder_arg <- rlang::call_args(call)[[1]]
+    folder_arg <- call_args(call)[[1]]
 
     # 尝试获取文件夹名
-    if (rlang::is_syntactic_literal(folder_arg)) {
+    if (is_syntactic_literal(folder_arg)) {
       folder_name <- as.character(folder_arg)
-    } else if (rlang::is_symbol(folder_arg)) {
+    } else if (is_symbol(folder_arg)) {
       # cli::cli_inform("folder_arg: {folder_arg}") # * for debug
 
       # 如果是符号，尝试获取变量名
@@ -429,7 +429,7 @@ ValidateDirName <- function(func, ...) {
           "{cli::symbol$bullet} Current folder name: '{folder_name}'",
           "{cli::symbol$bullet} Recommended: Use '_res' suffix (e.g., '{suggested_folder_name}') to clearly distinguish the result (intermediate) folder from the source code"
         ),
-        .envir = rlang::current_env()
+        .envir = current_env()
       )
       note <- note + 1L
     } else {
@@ -449,7 +449,7 @@ ValidateDirName <- function(func, ...) {
 #' @keywords internal
 ValidateBadge <- function(...) {
   merge_check_res <- function(...) {
-    lists <- rlang::list2(...)
+    lists <- list2(...)
 
     all_names <- c("error", "warn", "note")
     lists <- lapply(lists, function(x) {

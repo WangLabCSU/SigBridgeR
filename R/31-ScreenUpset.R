@@ -92,11 +92,11 @@ ScreenUpset <- function(
       ignore.case = TRUE
     )
   }
-  if (!all(screen_type %in% all_screen_types)) {
-    cli::cli_abort(c(
-      "x" = "Screen type(s) not found in metadata.",
-      ">" = "{.val {screen_type[!screen_type %in% all_screen_types]}}"
-    ))
+  if (!all(screen_type %chin% all_screen_types)) {
+    Abort(
+      "Screen type(s) not found in metadata.",
+      "{.val {screen_type[!screen_type %chin% all_screen_types]}}"
+    )
   }
 
   max_comb <- length(screen_type)

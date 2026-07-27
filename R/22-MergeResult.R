@@ -178,7 +178,7 @@ MergeResult <- function(
     existing <- tolower(names(ScreenStrategy))
 
     method_vote <- tolower(names(weights))
-    not_exist <- !method_vote %in% existing
+    not_exist <- !method_vote %chin% existing
     if (any(not_exist)) {
       cli::cli_warn(c(
         "x" = "Some voting methods do not exist: {.val {method_vote}}",
@@ -187,7 +187,7 @@ MergeResult <- function(
     }
 
     vote_cols <- colnames(merged_meta)[
-      tolower(colnames(merged_meta)) %in% method_vote
+      tolower(colnames(merged_meta)) %chin% method_vote
     ]
     vote_data <- merged_meta[, ..vote_cols]
 

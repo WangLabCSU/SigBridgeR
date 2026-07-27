@@ -195,7 +195,7 @@ ChooseNormalization <- function(
       SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
     ),
     .progress = if (verbose) "Calculating" else FALSE
-  ) %>%
+  ) |>
     data.table::rbindlist()
 
   # * ===== 3. Normalize metrics for composite scoring =====
@@ -306,7 +306,7 @@ ChooseNormalizationCheck <- function(
   purrr::walk(
     method_objects,
     ~ if (
-      "data" %in%
+      "data" %chin%
         methods::slotNames(SeuratObject::LayerData(
           object = .x,
           assay = assay,

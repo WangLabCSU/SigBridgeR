@@ -3,18 +3,40 @@ r_pkg_version <- function(pkg_name) {
 }
 
 py_pkg_version <- function(pkg_name, conda_env) {
-  cmd <- sprintf(
-    "conda run -n %s python -c \"import importlib.metadata as m; print(m.version('%s'))\"",
-    shQuote(conda_env),
-    pkg_name
+  # 1. Prefer conda metadata: conda list -n ENV PKG
+  conda_out <- tryCatch(
+    system2(
+      command = "conda",
+      args = c(
+        "list",
+        "-n",
+        shQuote(conda_env),
+        shQuote(pkg_name)
+      ),
+      stdout = TRUE,
+      stderr = FALSE
+    ),
+    error = function(e) character(0L)
   )
 
-  out <- suppressWarnings(
-    system(cmd, intern = TRUE, ignore.stderr = TRUE)
-  )
+  conda_out <- conda_out[!grepl("^#", trimws(conda_out))]
 
-  if (!is.null(attr(out, "status"))) {
+  if (length(conda_out) == 0L) {
     return(NULL)
   }
-  out[1]
+
+  fields <- strsplit(trimws(conda_out), "\\s+") # list
+
+  hit <- fields[vapply(
+    X = fields,
+    FUN = function(x) {
+      length(x) >= 2L && identical(x[[1L]], pkg_name)
+    },
+    FUN.VALUE = logical(1L)
+  )]
+
+  if (length(hit) > 0L) {
+    return(hit[[1L]][[2L]])
+  }
+  NULL
 }

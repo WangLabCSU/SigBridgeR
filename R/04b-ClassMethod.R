@@ -5,7 +5,7 @@ Method <- new_class(
   properties = list(
     method_name = property_chr,
     method_version = property_chr,
-    executor = property_fn,
+    executor = property_fn
   ),
   abstract = TRUE,
   constructor = \(method_name, executor, algorithm_version) {
@@ -24,7 +24,7 @@ ScreenMethod <- new_class(
   parent = Method,
   properties = list(
     phenotype_class = property_phenotype_class,
-    mapper = property_fn
+    mapper = property_mapper_fn
   ),
   validator = \(self) {
     param_names <- fn_fmls_names(self$executor)
@@ -35,10 +35,10 @@ ScreenMethod <- new_class(
       "label_type",
       "phenotype_class"
     )
-    if (!all(expected_args %in% param_names)) {
+    if (!all(expected_args %chin% param_names)) {
       missing_args <- setdiff(expected_args, param_names)
 
-      cli::cli_fmt(cli::cli_alert_danger(
+      cli::cli_fmt(cli::cli_inform(
         "Missing arguments in function: {.arg {missing_args}}"
       ))
     }

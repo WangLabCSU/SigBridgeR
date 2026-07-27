@@ -93,7 +93,7 @@ SingleRAnnotate <- function(
   chk::chk_length(ref)
   if (ref == "HPCA") {
     # Human Primary Cell Atlas but not the `SingleCellExperiment` object.
-    rlang::check_installed("celldex")
+    check_installed("celldex")
     ref <- celldex::HumanPrimaryCellAtlasData(
       ensembl = ensembl,
       cell.ont = cell.ont,

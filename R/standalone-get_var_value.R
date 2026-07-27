@@ -42,7 +42,7 @@
 .gvv_resolve <- function(expr, def_env, visited = character(), depth = 0L) {
   if (is.symbol(expr)) {
     name <- as.character(expr)
-    if (name %in% visited) {
+    if (name %chin% visited) {
       rlang::abort(sprintf(
         "Circular dependency detected for variable: '%s'",
         name
@@ -96,7 +96,7 @@
     # or namespace-qualified (rlang::abort / cli::cli_abort).
     if (is.call(child) && !is.call(child[[1L]])) {
       child_op <- as.character(child[[1L]])
-      if (child_op %in% c("return", "stop", "abort", "cli_abort")) break
+      if (child_op %chin% c("return", "stop", "abort", "cli_abort")) break
     } else if (is.call(child) && is.call(child[[1L]])) {
       ns_call <- child[[1L]]
       if (
@@ -106,7 +106,7 @@
             as.character(ns_call[[2L]]),
             "::",
             as.character(ns_call[[3L]])
-          ) %in%
+          ) %chin%
             c("rlang::abort", "cli::cli_abort")
       ) {
         break
@@ -225,7 +225,7 @@
     ) {
       pkg <- as.character(ns_call[[2L]])
       fun <- as.character(ns_call[[3L]])
-      if (paste0(pkg, "::", fun) %in% c("rlang::abort", "cli::cli_abort")) {
+      if (paste0(pkg, "::", fun) %chin% c("rlang::abort", "cli::cli_abort")) {
         return(invisible())
       }
     }
@@ -236,7 +236,7 @@
   op <- as.character(expr[[1L]])
 
   # --- Control-transfer statements ---
-  if (op %in% c("return", "stop", "abort", "cli_abort")) {
+  if (op %chin% c("return", "stop", "abort", "cli_abort")) {
     return(invisible())
   }
   if (op == "break") {
@@ -248,7 +248,7 @@
   } # skip rest of this iteration
 
   # --- Assignment operators ---
-  if (op %in% c("<-", "=", "<<-")) {
+  if (op %chin% c("<-", "=", "<<-")) {
     lhs_expr <- expr[[2L]]
 
     # Subset-assignments like x[i, j] <- value are represented as
@@ -258,7 +258,7 @@
     # and store the whole replacement expression under the base variable.
     if (
       is.call(lhs_expr) &&
-        as.character(lhs_expr[[1L]]) %in% c("[", "[[", "$")
+        as.character(lhs_expr[[1L]]) %chin% c("[", "[[", "$")
     ) {
       lhs <- as.character(lhs_expr[[2L]])
       # Collect subscripts (everything after the base object)

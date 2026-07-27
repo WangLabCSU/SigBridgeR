@@ -13,7 +13,7 @@
 #'   OpenMP, data.table, and TensorFlow intra-op (unless overridden).
 #' @param dt Integer. Thread count for data.table (default: inherited from \code{threads}).
 #' @param cheapr Integer. Thread count for cheapr (default: inherited from \code{threads}).
-#' @param qs2 Integer. Thread count for qs2 (default: NULL).
+#' @param qs2 Integer. Thread count for qs2 (default: inherited from \code{threads}).
 #' @param openmp Integer. Thread count for OpenMP (default: NULL).
 #' @param tf_config Named list for TensorFlow-specific configuration:
 #'   \itemize{
@@ -55,7 +55,7 @@ setThreads <- function(
   threads = NULL,
   dt = threads,
   cheapr = threads,
-  qs2 = NULL,
+  qs2 = threads,
   openmp = NULL,
   tf_config = list(
     xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",

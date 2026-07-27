@@ -8,14 +8,8 @@ tmp
 *.RData
 inst/doc
 Tmp/**
-docs
 *.qs
-figures/**
-/doc/
-/Meta/
-release
-src/**
-.nfs0000003180000a930000073f
+docs/
 SKILL.md
 .codebuddy/
 
@@ -46,4 +40,3 @@ Rplots.pdf
 **/*.quarto_ipynb
 index_files/
 *index.html
-pkgdown/*_files

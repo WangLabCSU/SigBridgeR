@@ -66,128 +66,184 @@
 #'   \code{\link{SCPreProcessStrategy}}
 #'   \code{\link{SCAnnotateStrategy}}
 #'   \code{\link{ScreenStrategy}}
-Register <- new_generic(
-  name = "Register",
-  dispatch_args = c("method", "name")
+Register <- function(
+  ...,
+  overwrite = FALSE,
+  verbose = getFuncOption("verbose")
+) {
+  dots <- list(...)
+  purrr::iwalk(dots, \(x, name) {
+    RegisterImpl(x = x, name = name, overwrite = overwrite, verbose = verbose)
+  })
+}
+
+RegisterImpl <- new_generic(
+  name = "RegisterImpl",
+  dispatch_args = c("x", "name")
 )
 
-method(generic = Register, class = class_any) <- function(method, name, ...) {
-  cls_method <- class(method)
-  expected_cls <- c("ScreenMethod", "AnnotationMethod")
+
+method(generic = RegisterImpl, class = class_any) <- function(
+  x,
+  name,
+  ...
+) {
+  cls_method <- class(x)
+  expected_cls <- c("ScreenMethod", "AnnotationMethod", "function")
   Abort(
     "Unsupported class: {.cls {cls_method}}",
     "Expected {.cls {expected_cls}}"
   )
 }
 
-#' @rdname Register
-#' @export
-method(generic = Register, class = ScreenMethod) <- function(
-  func,
-  name,
+method(generic = RegisterImpl, class = ScreenMethod) <- function(
+  x,
+  name = NULL,
+  overwrite = FALSE,
   verbose = getFuncOption("verbose")
 ) {
-  registry <- unlist(registry)
-  chk::chk_logical(verbose)
-  if (!is.character(registry)) {
-    chk::chk_environment(registry)
-  }
+  # x is ScreenMethod
+  # method_name = property_chr,
+  # method_version = property_chr,
+  # executor = property_fn
+  # phenotype_class = property_phenotype_class,
+  # mapper = property_mapper_fn
 
-  if (is.character(registry)) {
-    registry <- SigBridgeRUtils::MatchArg(
-      registry,
-      c(
-        "auto",
-        "ScreenStrategy",
-        "SCPreProcessStrategy",
-        "SCAnnotateStrategy"
+  if (is.null(name)) {
+    if (verbose) {
+      cli::cli_alert_info(
+        "Name (key) not provided, using {.field @method_name}: {.val {x@method_name}}"
       )
-    )
-
-    if (identical(registry, "auto")) {
-      dots <- rlang::list2(...)
-      is_func <- purrr::map_lgl(dots, base::is.function)
-      for (i in seq_len(sum(is_func))) {
-        registry <- detect_registry(
-          method_name = names(dots)[i],
-          func = dots[[i]],
-          dots = dots,
-          verbose = verbose
-        ) # character
-        registry_obj <- utils::getFromNamespace(registry, "SigBridgeR")
-
-        switch(
-          registry,
-          "ScreenStrategy" = RegisterScreenMethod(
-            !!!dots[is_func][i],
-            registry = registry_obj,
-            verbose = verbose
-          ),
-          "SCPreProcessStrategy" = RegisterSeuratMethod(
-            !!!dots[is_func][i],
-            registry = registry_obj,
-            verbose = verbose
-          ),
-          "SCAnnotateStrategy" = RegisterAnnoMethod(
-            !!!dots[is_func][i],
-            registry = registry_obj,
-            verbose = verbose
-          )
-        )
-      }
-
-      return(invisible(TRUE))
     }
-
-    # "ScreenStrategy",        "SCPreProcessStrategy",        "SCAnnotateStrategy"
-    registry_obj <- utils::getFromNamespace(registry, "SigBridgeR")
-  } else if (is.environment(registry)) {
-    chk::chk_length(registry)
-    registry_obj <- registry
   } else {
-    cli::cli_abort(c(
-      "x" = "Unknown registry provided",
-      ">" = "Expected {.cls {c('character', 'environment','list')}}, \
-      got {.cls {class(registry)}}"
-    ))
+    x@method_name <- name
   }
 
-  switch(
-    registry,
-    "ScreenStrategy" = RegisterScreenMethod(
-      ...,
-      registry = registry_obj,
-      verbose = verbose
-    ),
-    "SCPreProcessStrategy" = RegisterSeuratMethod(
-      ...,
-      registry = registry_obj,
-      verbose = verbose
-    ),
-    "SCAnnotateStrategy" = RegisterAnnoMethod(
-      ...,
-      registry = registry_obj,
-      verbose = verbose
+  if (x@method_name %chin% names(ScreenStrategy) && !overwrite) {
+    Abort(
+      "Method {.field {x@method_name}} already exists",
+      "Please use `overwrite = {.val TRUE}` to overwrite"
     )
-  )
+  }
 
-  # invisbly TRUE
+  ScreenStrategy[[name]] <- x
+
+  if (verbose) {
+    cli::cli_alert_success(
+      "Registered {.field {x@method_name}} to {.cls ScreenStrategy}"
+    )
+  }
+
+  invisible(TRUE)
 }
 
-#' @rdname Register
-#' @export
-method(generic = Register, class = AnnotationMethod) <- function(
-  func,
+method(generic = RegisterImpl, class = AnnotationMethod) <- function(
+  x,
   name,
+  overwrite = FALSE,
   verbose = getFuncOption("verbose")
-) {}
+) {
+  if (is.null(name)) {
+    if (verbose) {
+      cli::cli_alert_info(
+        "Name (key) not provided, using {.field @method_name}: {.val {x@method_name}}"
+      )
+    }
+  } else {
+    x@method_name <- name
+  }
 
-#' @rdname Register
-#' @export
-method(generic = Register, class = class_function) <- function(
-  func,
+  if (x@method_name %chin% names(SCAnnotateStrategy) && !overwrite) {
+    Abort(
+      "Method {.field {x@method_name}} already exists",
+      "Please use `overwrite = {.val TRUE}` to overwrite"
+    )
+  }
+  SCAnnotateStrategy[[name]] <- x
+  if (verbose) {
+    cli::cli_alert_success(
+      "Registered {.field {x@method_name}} to {.cls SCAnnotateStrategy}"
+    )
+  }
+
+  invisible(TRUE)
+}
+
+method(generic = RegisterImpl, class = class_function) <- function(
+  x,
   name,
+  overwrite = FALSE,
   verbose = getFuncOption("verbose")
 ) {
   # Seurat
+  chk::chk_character(name, "name")
+  if (nchar(name) != 1) {
+    Abort(
+      "Name (key) must be a single character",
+      "Current value: {.val {name}}"
+    )
+  }
+
+  if (!is_func_from_pkg(x, "Seurat") && !is_func_from_pkg(x, "SeuratObject")) {
+    Abort(
+      "Function is not a Seurat function",
+      "Please check typo",
+      "Package version:\
+       {.pkg Seurat}: {r_pkg_version('Seurat')},\
+       {.pkg SeuratObject}: {r_pkg_version('SeuratObject')}"
+    )
+  }
+
+  if (name %chin% names(SCPreProcessStrategy) && !overwrite) {
+    Abort(
+      "Method {.field {name}} already exists",
+      "Please use `overwrite = {.val TRUE}` to overwrite"
+    )
+  }
+
+  SCPreProcessStrategy[[name]] <- x
+  if (verbose) {
+    cli::cli_alert_success(
+      "Registered {.field {name}} to {.cls SCPreProcessStrategy}"
+    )
+  }
+
+  invisible(TRUE)
+}
+
+is_func_from_pkg <- function(func, pkg_name) {
+  chk::chk_function(func)
+  chk::chk_character(pkg_name)
+
+  ns_name <- paste0("namespace:", pkg_name)
+
+  env <- environment(func)
+
+  # 快速路径：函数环境就是目标包 namespace
+  if (!is.null(env) && identical(environmentName(env), ns_name)) {
+    return(TRUE)
+  }
+
+  if (!requireNamespace(pkg_name, quietly = TRUE)) {
+    stop("pkg not installed")
+  }
+
+  ns <- asNamespace(pkg_name)
+
+  # 若函数环境就是 namespace，也认为来自该包
+  if (!is.null(env) && identical(env, ns)) {
+    return(TRUE)
+  }
+
+  # 慢路径：在 namespace 中查找是否存在同一函数对象
+  objs <- ls(ns, all.names = TRUE)
+
+  for (nm in objs) {
+    obj <- get(nm, envir = ns, inherits = FALSE)
+    if (is.function(obj) && identical(obj, func)) {
+      return(TRUE)
+    }
+  }
+
+  FALSE
 }

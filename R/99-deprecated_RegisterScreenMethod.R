@@ -85,6 +85,7 @@ RegisterScreenMethod <- function(
   overwrite = FALSE,
   verbose = getFuncOption("verbose")
 ) {
+  lifecycle::deprecate_warn("4.0.0", "RegisterScreenMethod()", "Register()")
   # * check the input
   if (!is.null(parameter_mapper)) {
     chk::chk_function(parameter_mapper)

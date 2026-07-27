@@ -407,7 +407,7 @@ check_model_key <- function(models = vector(), api_keys = list()) {
   #     ))
 
   #     cleaned_models <- trimws(tolower(models))
-  #     invalid_mask <- !cleaned_models %in% known_models
+  #     invalid_mask <- !cleaned_models %chin% known_models
 
   #     if (any(invalid_mask)) {
   #       invalid_original <- models[invalid_mask]

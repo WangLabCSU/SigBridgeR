@@ -1645,7 +1645,7 @@ In practice, please replace this with your actual phenotype
 classification; the approach shown here is for demonstration purposes
 only and is not recommended for real analyses.
 
-    sample_info <- tibble::rownames_to_column(pheno, var = "sample") %>%
+    sample_info <- tibble::rownames_to_column(pheno, var = "sample") |>
       dplyr::rename(condition = status)
     sample_info$batch <- "batch1"
 
@@ -1812,8 +1812,8 @@ additional reliability test.
     scissor_result$reliability_result$c_index_test_real
     #  [1] 0.6038544 0.5022222 0.6050725 0.6279391 0.5064935 0.6033520 0.6769231 0.6453089 0.4968421 0.6315789
 
-    scissor_result$reliability_result$c_index_test_back %>%
-      unlist() %>%
+    scissor_result$reliability_result$c_index_test_back |>
+      unlist() |>
       matrix(nrow = 10)
     #            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]      [,8]      [,9]     [,10]
     #  [1,] 0.5594714 0.4943820 0.5379747 0.5583658 0.5527728 0.6146435 0.5130597 0.5701275 0.4691943 0.5177305

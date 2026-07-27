@@ -119,7 +119,7 @@ ScreenFractionPlot <- function(
     chk::chk_vector(plot_color)
     chk::chk_named(plot_color)
   }
-  check_installed(c("ggplot2", "patchwork"))
+  check_installed(c("ggplot2", "patchwork", "dplyr"))
 
   dots <- rlang::list2(...)
   theme_args <- SigBridgeRUtils::FilterArgs4Func(dots, ggplot2::theme)
@@ -166,25 +166,25 @@ ScreenFractionPlot <- function(
 
   # Function to create plot for single screen type
   SinglePlot <- function(single_screen_type, title_suffix = "") {
-    stats_df <- meta_data %>%
+    stats_df <- meta_data |>
       dplyr::count(
         !!dplyr::sym(group_by),
         !!dplyr::sym(single_screen_type)
-      ) %>%
+      ) |>
       complete_counts(
         !!dplyr::sym(group_by),
         !!dplyr::sym(single_screen_type)
-      ) %>%
-      dplyr::group_by(!!dplyr::sym(group_by)) %>%
-      dplyr::mutate(Total = sum(`n`)) %>%
-      dplyr::ungroup() %>%
+      ) |>
+      dplyr::group_by(!!dplyr::sym(group_by)) |>
+      dplyr::mutate(Total = sum(`n`)) |>
+      dplyr::ungroup() |>
       dplyr::mutate(
         Fraction = ifelse(Total == 0, 0, `n` / Total)
       )
 
-    plot_order <- stats_df %>%
-      dplyr::filter(!!dplyr::sym(single_screen_type) == "Positive") %>%
-      dplyr::arrange(dplyr::desc(Fraction)) %>%
+    plot_order <- stats_df |>
+      dplyr::filter(!!dplyr::sym(single_screen_type) == "Positive") |>
+      dplyr::arrange(dplyr::desc(Fraction)) |>
       dplyr::pull(!!dplyr::sym(group_by))
 
     # Get label type from misc
@@ -330,10 +330,10 @@ complete_counts <- function(data, ..., fill = list(n = 0)) {
       unique_vals,
       list(stringsAsFactors = FALSE)
     )
-  ) %>%
+  ) |>
     stats::setNames(col_names)
 
-  dplyr::left_join(all_combos, data, by = col_names) %>%
+  dplyr::left_join(all_combos, data, by = col_names) |>
     dplyr::mutate(
       dplyr::across(
         dplyr::all_of(names(fill)),

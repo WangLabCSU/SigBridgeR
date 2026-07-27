@@ -4,7 +4,7 @@ ScreenMethodCache <- new_class(
   properties = list(
     cache_path = property_chr,
     cache_config_path = property_chr,
-    cache_config = property_list,
+    cache_data = property_data_list,
     screen_method_config = new_property(class = ScreenMethodConfig)
   )
 )

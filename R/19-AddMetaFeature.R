@@ -20,7 +20,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
   if (length(assay_names) == 0L) {
     cli::cli_abort(c("x" = "No assays found in Seurat object."))
   }
-  if (!(assay %in% assay_names)) {
+  if (!(assay %chin% assay_names)) {
     assay <- assay_names[[1L]]
   }
   assay_obj <- seurat_obj@assays[[assay]]

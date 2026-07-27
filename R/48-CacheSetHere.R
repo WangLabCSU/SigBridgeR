@@ -42,12 +42,12 @@ CacheSetHere <- function(
   timestamp = NULL,
   ...
 ) {
-  rlang::check_dots_empty0()
+  check_dots_empty()
   chk::chk_string(path)
-  mode <- rlang::arg_match(mode)
-  phenotype_class <- rlang::arg_match(phenotype_class)
+  mode <- arg_match(mode)
+  phenotype_class <- arg_match(phenotype_class)
   chk::chk_length(phenotype_class)
-  screen_method <- rlang::arg_match(screen_method, names(ScreenStrategy))
+  screen_method <- arg_match(screen_method, names(ScreenStrategy))
   chk::chk_length(screen_method)
 
   root_dir_name <- paste0(screen_method, "_res")
@@ -78,7 +78,6 @@ CacheSetHere <- function(
 # Save implementation
 # ---------------------------------------------------------------------------
 
-#' @keywords internal
 save_impl <- function(
   path,
   layer,
@@ -87,11 +86,11 @@ save_impl <- function(
   timestamp
 ) {
   if (layer == "cache") {
-    cli::cli_abort(c(
-      "x" = "Recursive caching is not supported.",
-      "x" = "{.path {path}} already contains {.file cache_config.json}.",
-      ">" = "Specify a root-level or parent-level path."
-    ))
+    Abort(
+      "Recursive caching is not supported.",
+      "{.path {path}} already contains {.file cache_config.json}.",
+      "Specify a root-level or parent-level path."
+    )
   }
 
   root_dir <- if (layer == "root") {
@@ -109,10 +108,10 @@ save_impl <- function(
   cache_dir <- file.path(root_dir, cache_name)
 
   if (dir.exists(cache_dir)) {
-    cli::cli_abort(c(
-      "x" = "Cache directory already exists: {.path {cache_dir}}",
-      ">" = "Choose a different path or delete the existing cache."
-    ))
+    Abort(
+      "Cache directory already exists: {.path {cache_dir}}",
+      "Choose a different path or delete the existing cache."
+    )
   }
 
   dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
@@ -124,28 +123,27 @@ save_impl <- function(
 # Load implementation
 # ---------------------------------------------------------------------------
 
-#' @keywords internal
 load_impl <- function(path, layer, root_dir_name) {
   if (layer == "root") {
     # root layer -- delegate to ChooseCache
     if (!dir.exists(path)) {
-      cli::cli_abort(c("x" = "Root directory not found: {.path {path}}"))
+      Abort("x" = "Root directory not found: {.path {path}}")
     }
     ChooseCache(path)
   } else if (layer == "cache") {
     # cache layer -- return as-is
     if (!dir.exists(path)) {
-      cli::cli_abort(c("x" = "Cache directory not found: {.path {path}}"))
+      Abort("x" = "Cache directory not found: {.path {path}}")
     }
     path
   } else {
     # parent layer -- look for root underneath
     root_dir <- file.path(path, root_dir_name)
     if (!dir.exists(root_dir)) {
-      cli::cli_abort(c(
-        "x" = "No cache root directory found under {.path {path}}.",
-        ">" = "Expected a directory named {.val {root_dir_name}}."
-      ))
+      Abort(
+        "No cache root directory found under {.path {path}}.",
+        "Expected a directory named {.val {root_dir_name}}."
+      )
     }
     ChooseCache(root_dir)
   }
@@ -155,7 +153,6 @@ load_impl <- function(path, layer, root_dir_name) {
 # Helpers
 # ---------------------------------------------------------------------------
 
-#' @keywords internal
 generate_cache_name <- function(phenotype_class, timestamp = NULL) {
   if (is.null(timestamp)) {
     timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")

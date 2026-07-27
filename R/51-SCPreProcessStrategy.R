@@ -35,20 +35,12 @@
 #'
 #' @family single_cell_preprocess
 #' @export
-SCPreProcessStrategyEnv <- rlang::new_environment(
+SCPreProcessStrategy <- new_environment(
   list(
-    o = function(...) {
-      SeuratObject::CreateSeuratObject(...)
-    },
-    n = function(...) {
-      Seurat::NormalizeData(...)
-    },
-    v = function(...) {
-      Seurat::FindVariableFeatures(...)
-    },
-    s = function(...) {
-      Seurat::ScaleData(...)
-    },
+    o = SeuratObject::CreateSeuratObject,
+    n = Seurat::NormalizeData,
+    v = Seurat::FindVariableFeatures,
+    s = Seurat::ScaleData,
     p = function(...) {
       dots <- rlang::list2(...)
       if (dots$features == "all") {
@@ -56,23 +48,11 @@ SCPreProcessStrategyEnv <- rlang::new_environment(
       }
       rlang::exec(Seurat::RunPCA, !!!dots)
     },
-    c = function(...) {
-      Seurat::FindClusters(...)
-    },
-    e = function(...) {
-      Seurat::FindNeighbors(...)
-    },
-    t = function(...) {
-      Seurat::RunTSNE(...)
-    },
-    u = function(...) {
-      Seurat::RunUMAP(...)
-    },
-    r = function(...) {
-      Seurat::SCTransform(...)
-    },
-    i = function(...) {
-      Seurat::IntegrateLayers(...)
-    }
+    c = Seurat::FindClusters,
+    e = Seurat::FindNeighbors,
+    t = Seurat::RunTSNE,
+    u = Seurat::RunUMAP,
+    r = Seurat::SCTransform,
+    i = Seurat::IntegrateLayers
   )
 )

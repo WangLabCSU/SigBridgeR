@@ -3,12 +3,6 @@
 #' @description Writes metadata for SigBridgeR cache identification to a JSON file.
 #'
 #' @param file Character string. Path to the JSON metadata file to be written.
-#' @param screen_method Character string. Screening method name. Must match one of the keys in `ScreenStrategy`.
-#' @param phenotype_class Character string. Type of phenotype data. One of `"binary"`, `"survival"`, or `"continuous"`.
-#' @param label_type Character string. Type of label for the screening. Defaults to `screen_method`.
-#' @param params List. Parameters used for the screening configuration.
-#' @param additional_description Character string. Optional additional description text to include in the metadata. Default is `NULL`.
-#' @param verbose Logical. Whether to print metadata preview for debugging. Default is `FALSE`.
 #' @param ... Additional arguments (must be empty, checked by `rlang::check_dots_empty0()`).
 #'
 #' @return Invisible. Returns the metadata list that was written to the file.
@@ -38,12 +32,15 @@
 #' )
 #' }
 #' @family cache_config
+#' @name WriteCacheMeta
 #' @export
 WriteCacheMeta <- new_generic(
   name = "WriteCacheMeta",
   dispatch_args = "cache_config"
 )
 
+#' @rdname WriteCacheMeta
+#' @export
 method(generic = WriteCacheMeta, class = class_any) <- function(
   cache_config,
   ...
@@ -56,64 +53,37 @@ method(generic = WriteCacheMeta, class = class_any) <- function(
   )
 }
 
-method(generic = WriteCacheMeta, class = ScreenMethodConfig) <- function(
+#' @rdname WriteCacheMeta
+#' @export
+method(
+  generic = WriteCacheMeta,
+  class = ScreenMethodConfig
+) <- WriteCacheMeta.ScreenMethodConfig <- function(
   cache_config,
-  file = "cache_config.json",
-  screen_method,
-  phenotype_class = c("binary", "survival", "continuous"),
-  label_type = screen_method,
-  params,
+  file,
   additional_description = NULL,
-  verbose = FALSE,
+  verbose = TRUE,
   ...
 ) {
-  rlang::check_dots_empty0()
-  rlang::check_installed("jsonlite", "writting .json config")
-  chk::chk_string(file)
-  chk::chk_string(phenotype_class)
-  chk::chk_string(label_type)
-  chk::chk_list(params)
+  check_installed("jsonlite")
   if (!is.null(additional_description)) {
     chk::chk_string(additional_description)
   }
-  chk::chk_flag(verbose)
-  chk::chk_length(file)
-
-  screen_method <- SigBridgeRUtils::MatchArg(
-    screen_method,
-    names(ScreenStrategy),
-    NULL
-  )
-  method_config <- ScreenStrategy[[screen_method]]
-
-  phenotype_class <- SigBridgeRUtils::MatchArg(
-    phenotype_class,
-    c("binary", "survival", "continuous"),
-    NULL
-  )
-  chk::chk_length(screen_method)
-  chk::chk_length(label_type)
+  chk::chk_chr(file)
 
   cache_meta <- list(
-    general = rlang::list2(
+    general = list2(
       file = file.path(getwd(), file),
       os = get_os_info(),
       time = get_time(),
       !!!get_r_info(),
       SigBridgeR_version = get_pkg_version()
     ),
-    config = list(
-      screen_method = screen_method,
-      phenotype_class = phenotype_class,
-      label_type = label_type,
-      params = params
-    ),
+    config = props(cache_config), # all properties as a list
     description = additional_description
   )
 
   if (verbose) {
-    cli::cli_h2(cli::col_blue("SigBridgeR Cache Metadata Preview"))
-    cli::cli_dl(cache_meta)
     cli::cli_alert_info("Meta to: {.path {file}}")
   }
 
@@ -136,7 +106,29 @@ method(generic = WriteCacheMeta, class = ScreenMethodConfig) <- function(
   invisible(cache_meta)
 }
 
-method(generic = WriteCacheMeta, class = ScreenMethodCache) <- function() {}
+#' @rdname WriteCacheMeta
+#' @export
+method(generic = WriteCacheMeta, class = ScreenMethodCache) <- function(
+  cache_config,
+  additional_description = NULL,
+  verbose = TRUE,
+  ...
+) {
+  dots <- list(...)
+  if (!is.null(dots$file)) {
+    warning(
+      "WriteCacheMeta(): `file` is deprecated, please use `cache_config@cache_config_path` instead"
+    )
+  }
+
+  WriteCacheMeta.ScreenMethodConfig(
+    cache_config = cache_config@screen_method_config,
+    file = cache_config@cache_config_path,
+    additional_description = additional_description,
+    verbose = verbose,
+    ...
+  )
+}
 
 
 get_os_info <- function() {
@@ -174,25 +166,12 @@ get_pkg_version <- function() {
 }
 
 
-get_cache_file_name <- function(
-  screen_method,
-  phenotype_class
-) {
-  paste(
-    screen_method,
-    phenotype_class,
-    format(Sys.time(), "%Y%m%d%H%M"),
-    sep = "_"
-  )
-}
-
-
 fetch_method_args2meta <- function() {
   parent_env <- parent.frame()
 
   parent_func <- sys.function(sys.parent())
 
-  param_names <- rlang::fn_fmls_names(parent_func)
+  param_names <- fn_fmls_names(parent_func)
 
   args <- mget(param_names, envir = parent_env, inherits = FALSE)
 

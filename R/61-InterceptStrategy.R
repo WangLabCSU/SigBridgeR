@@ -42,6 +42,7 @@ InterceptStrategy <- function(
   detailed = FALSE,
   ...
 ) {
+  check_installed("dplyr")
   strategy <- SigBridgeRUtils::MatchArg(
     strategy,
     c("ScreenStrategy", "SCPreProcessStrategy", "AnnotationStrategy"),
@@ -51,8 +52,8 @@ InterceptStrategy <- function(
   vars <- names(get0(strategy))
   info <- dplyr::bind_rows(purrr::map(vars, function(var_name) {
     var <- get0(strategy)[[var_name]]
-    if (length(var) > 1) {
-      purrr::map(var, ~ if (is.function(.x)) list(.x) else .x)
+    if (S7_inherits(var, "SigBridgeRBase")) {
+      props(var)
     } else if (is.function(var)) {
       list(method_name = var_name, func = list(var))
     } else {
@@ -63,7 +64,7 @@ InterceptStrategy <- function(
   if (detailed) {
     detailed_info <- switch(
       strategy,
-      "ScreenStrategy" = find_func_detail(info, "executor") %>%
+      "ScreenStrategy" = find_func_detail(info, "executor") |>
         find_func_detail("mapper"),
       "SCPreProcessStrategy" = find_func_detail(info, "func"),
       "AnnotationStrategy" = find_func_detail(info, "func")
@@ -77,9 +78,9 @@ InterceptStrategy <- function(
   }
 }
 
-#' @keywords internal
+
 find_func_detail <- function(tbl, col_name) {
-  if (!col_name %in% names(tbl)) {
+  if (!col_name %chin% names(tbl)) {
     cli::cli_abort("Column {.val {col_name}} not found in tbl")
   }
 

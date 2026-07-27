@@ -78,7 +78,7 @@ write the workflow.
           rep("Negative", ceiling(ncol(sc_data) / 2))
         ),
         col.name = "my_method"
-      ) %>%
+      ) |>
         # record parameters
         AddMisc(
           my_method_label = label_type,

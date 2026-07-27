@@ -147,9 +147,9 @@ DoscPP <- function(
   if (is.vector(phenotype)) {
     # The reason why using data.frame instead of vector is to
     # keep the same input and output format with scPP
-    phenotype <- as.data.frame(phenotype) %>%
-      SigBridgeRUtils::Rownames2Col("Sample") %>%
-      dplyr::rename("Feature" = 2) %>%
+    phenotype <- as.data.frame(phenotype) |>
+      SigBridgeRUtils::Rownames2Col("Sample") |>
+      dplyr::rename("Feature" = 2) |>
       dplyr::mutate(Feature = as.numeric(`Feature`))
   }
 

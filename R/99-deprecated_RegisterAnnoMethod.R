@@ -48,6 +48,7 @@ RegisterAnnoMethod <- function(
   overwrite = FALSE,
   verbose = getFuncOption("verbose")
 ) {
+  lifecycle::deprecate_warn("4.0.0", "RegisterAnnoMethod()", "Register()")
   chk::chk_logical(verbose)
   chk::chk_logical(overwrite)
   chk::chk_environment(registry)

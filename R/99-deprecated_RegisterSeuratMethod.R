@@ -47,6 +47,7 @@ RegisterSeuratMethod <- function(
   registry = SCPreProcessStrategy,
   verbose = getFuncOption("verbose")
 ) {
+  lifecycle::deprecate_warn("4.0.0", "RegisterSeuratMethod()", "Register()")
   chk::chk_logical(verbose)
   chk::chk_logical(overwrite)
   chk::chk_environment(registry)

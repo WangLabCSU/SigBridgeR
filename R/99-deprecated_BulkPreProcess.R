@@ -413,8 +413,8 @@ method(BulkPreProcess, class = class_datalike2d) <- function(
           summary(aov_result)[[1]]["Pr(>F)"][1, 1]
         }
 
-        batch_pvalues <- cpm_values[batch_test_idx, , drop = FALSE] %>%
-          asplit(1) %>% # by row
+        batch_pvalues <- cpm_values[batch_test_idx, , drop = FALSE] |>
+          asplit(1) |> # by row
           purrr::map_dbl(~ perform_anova_test(.x, sample_info$batch))
 
         batch_sig_prop <- mean(batch_pvalues < 0.05, na.rm = TRUE)

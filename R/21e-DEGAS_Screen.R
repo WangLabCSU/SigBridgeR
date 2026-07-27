@@ -430,7 +430,7 @@ DoDEGAS <- function(
   )
 
   meta2add <- t_sc_preds[,
-    !names(t_sc_preds) %in% c("cell_id", "diff"),
+    !names(t_sc_preds) %chin% c("cell_id", "diff"),
     with = FALSE
   ]
   data.table::setnames(

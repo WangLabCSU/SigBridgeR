@@ -94,8 +94,8 @@ Exmaple Usage:
     obj <- Seurat::CreateSeuratObject(counts)
 
     sct <- Seurat::SCTransfrom(obj)
-    lognorm <- Seurat::NormalizeData(obj) %>%
-      Seurat::ScaleData() %>%
+    lognorm <- Seurat::NormalizeData(obj) |>
+      Seurat::ScaleData() |>
       Seurat::FindVariableFeatures()
 
     ChooseNormalization(

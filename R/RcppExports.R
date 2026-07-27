@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 CountsToTPM_impl <- function(counts, gene_length) {
-    .Call('_SigBridgeR_CountsToTPM_impl', PACKAGE = 'SigBridgeR', counts, gene_length)
+    .Call(`_SigBridgeR_CountsToTPM_impl`, counts, gene_length)
 }
 
