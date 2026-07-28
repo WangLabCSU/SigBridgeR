@@ -36,8 +36,7 @@
 #' }
 CacheSetHere <- function(
   path,
-  screen_method,
-  phenotype_class = c("binary", "survival", "continuous"),
+  cache_config,
   mode = c("load", "save"),
   timestamp = NULL,
   ...
@@ -45,10 +44,8 @@ CacheSetHere <- function(
   check_dots_empty()
   chk::chk_string(path)
   mode <- arg_match(mode)
-  phenotype_class <- arg_match(phenotype_class)
-  chk::chk_length(phenotype_class)
-  screen_method <- arg_match(screen_method, names(ScreenStrategy))
-  chk::chk_length(screen_method)
+  phenotype_class <- cache_config@phenotype_class
+  screen_method <- cache_config@method_name
 
   root_dir_name <- paste0(screen_method, "_res")
 

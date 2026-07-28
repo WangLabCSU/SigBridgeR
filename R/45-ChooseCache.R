@@ -6,7 +6,7 @@
 #'
 #' @param directory Path to the parent directory containing cache
 #'   subdirectories.
-#' @param ... Unused, reserved for future extensions.
+#'
 #'
 #' @return The path to the selected cache directory (character string).
 #'
@@ -16,9 +16,7 @@
 #' }
 #' @export
 #' @family cache_config
-ChooseCache <- function(directory, ...) {
-  rlang::check_dots_empty()
-
+ChooseCache <- function(directory) {
   expected_dir_name <- paste0(names(ScreenStrategy), "_res")
   if (!basename(directory) %chin% expected_dir_name) {
     Abort(

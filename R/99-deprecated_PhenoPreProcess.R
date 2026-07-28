@@ -1,7 +1,7 @@
 #' @title Preprocess Phenotype Data
 #'
 #' @description
-#' Aligns and validates phenotype data with bulk RNA-seq expression matrix.
+#' `r lifecycle::badge('deprecated')` Aligns and validates phenotype data with bulk RNA-seq expression matrix.
 #' Supports three phenotype types (binary, continuous, survival) with automatic
 #' sample matching, type validation, and optional conditional mapping via
 #' \code{\link{PhenoMap}}.

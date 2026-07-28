@@ -23,9 +23,34 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// find_diff_in_2_lists
+SEXP find_diff_in_2_lists(SEXP x, SEXP y);
+RcppExport SEXP _SigBridgeR_find_diff_in_2_lists(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(find_diff_in_2_lists(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// make_null_list_NULL
+SEXP make_null_list_NULL(SEXP x);
+RcppExport SEXP _SigBridgeR_make_null_list_NULL(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(make_null_list_NULL(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_CountsToTPM_impl", (DL_FUNC) &_SigBridgeR_CountsToTPM_impl, 2},
+    {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
+    {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
     {NULL, NULL, 0}
 };
 

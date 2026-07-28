@@ -314,6 +314,7 @@ SCPreProcess.R6 <- function(
   ),
   column2only_tumor = NULL
 ) {
+  check_installed("dplyr")
   # Both `anndata` and `anndataR` are based on R6
 
   # * check

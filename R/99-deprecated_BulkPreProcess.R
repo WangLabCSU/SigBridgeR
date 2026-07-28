@@ -69,7 +69,7 @@ BulkCheck <- function(
 #' @title Bulk RNA-seq Data Preprocessing and Quality Control Function
 #'
 #' @description
-#' This function performs comprehensive preprocessing and quality control analysis
+#' `r lifecycle::badge('deprecated')` This function performs comprehensive preprocessing and quality control analysis
 #' for bulk RNA-seq data, including data validation, filtering, batch effect detection,
 #' principal component analysis, and visualization.
 #'

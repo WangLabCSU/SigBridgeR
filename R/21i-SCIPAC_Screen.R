@@ -184,6 +184,7 @@ DoSCIPAC <- function(
   nfold = 10L,
   ...
 ) {
+  check_installed("dplyr")
   CheckInstalled("Exceret/SCIPAC")
   # Validate phenotype_class parameter
   purrr::walk(

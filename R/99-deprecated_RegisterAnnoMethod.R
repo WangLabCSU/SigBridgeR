@@ -1,7 +1,7 @@
 #' @title Register an Annotation Method into the Strategy Registry
 #'
 #' @description
-#' Registers one or more user-defined annotation functions into a shared registry
+#' `r lifecycle::badge('deprecated')` Registers one or more user-defined annotation functions into a shared registry
 #' environment (e.g., \code{SCAnnotateStrategy}). Each method is stored with minimal
 #' metadata (\code{method_name} and \code{executor}) to enable dynamic dispatch in
 #' annotation pipelines.

@@ -27,7 +27,7 @@ ScreenMethod <- new_class(
     mapper = property_mapper_fn
   ),
   validator = \(self) {
-    param_names <- fn_fmls_names(self$executor)
+    param_names <- fn_fmlss_names(self@executor)
     expected_args <- c(
       "matched_bulk",
       "sc_data",
@@ -38,9 +38,9 @@ ScreenMethod <- new_class(
     if (!all(expected_args %chin% param_names)) {
       missing_args <- setdiff(expected_args, param_names)
 
-      cli::cli_fmt(cli::cli_inform(
-        "Missing arguments in function: {.arg {missing_args}}"
-      ))
+      Abort(
+        "Missing arguments in screening function: {.arg {missing_args}}"
+      )
     }
   }
 )

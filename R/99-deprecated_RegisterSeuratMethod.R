@@ -2,7 +2,7 @@
 #' @family Registering
 #' @family single_cell_preprocess
 #' @description
-#' Dynamically registers one or more new preprocessing strategies into a strategy
+#' `r lifecycle::badge('deprecated')` Dynamically registers one or more new preprocessing strategies into a strategy
 #' environment (i.e., \code{SCPreProcessStrategy}). Each strategy is stored under
 #' a user-defined key and wraps a Seurat-compatible function to conform to the
 #' standard interface: \code{function(object, params)}.

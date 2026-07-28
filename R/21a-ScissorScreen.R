@@ -1,5 +1,134 @@
 # ? ---- 2. DO SCISSOR ----
 
+#' Validate and Prepare DoScissor Parameters
+#'
+#' @description
+#' Internal helper that handles deprecated argument warnings, input validation,
+#' dots processing, and default-value resolution for [DoScissor()].
+#'
+#' @param matched_bulk,sc_data,phenotype,label_type,alpha,cutoff,family
+#'   Forwarded from [DoScissor()].
+#' @param reliability_test,cell_evaluation Forwarded from [DoScissor()].
+#' @param path2load_scissor_cache,path2save_scissor_inputs Deprecated arguments.
+#' @param ... Additional dots forwarded from [DoScissor()].
+#'
+#' @return A named list with elements: `family`, `verbose`, `seed`, `assay`,
+#'   `load_cache`, `save_cache`, `reliability_test`, `cell_evaluation`,
+#'   `label_type_scissor`, `phenotype_class_cache`, `dots`.
+#'
+#' @keywords internal
+#' @family scissor
+ValidateScissorParams <- function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type,
+  phenotype_class,
+  alpha,
+  cutoff,
+  family,
+  reliability_test,
+  cell_evaluation,
+  path2load_scissor_cache,
+  path2save_scissor_inputs,
+  ...
+) {
+  # -- deprecated-argument warnings -----------------------------------------
+  if (lifecycle::is_present(path2load_scissor_cache)) {
+    lifecycle::deprecate_warn(
+      "4.0.0",
+      "DoScissor(path2load_scissor_cache = )",
+      "DoScissor(load_cache = )"
+    )
+  }
+  if (lifecycle::is_present(path2save_scissor_inputs)) {
+    lifecycle::deprecate_warn(
+      "4.0.0",
+      "DoScissor(path2save_scissor_inputs = )",
+      "DoScissor(save_cache = )"
+    )
+  }
+  if (lifecycle::is_present(family)) {
+    lifecycle::deprecate_warn(
+      "4.0.0",
+      "DoScissor(family = c('gaussian', 'binomial', 'cox'))",
+      "DoScissor(phenotype_class = c('binary', 'continuous', 'survival'))"
+    )
+    family <- SigBridgeRUtils::MatchArg(
+      family,
+      c("gaussian", "binomial", "cox"),
+      NULL
+    )
+    phenotype_class <- family
+  }
+
+  # -- input validation -----------------------------------------------------
+  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
+  chk::chk_is(sc_data, "Seurat")
+  chk::chk_character(label_type)
+  chk::chk_range(cutoff)
+  chk::chk_list(reliability_test)
+  chk::chk_list(cell_evaluation)
+
+  phenotype_class <- SigBridgeRUtils::MatchArg(
+    phenotype_class,
+    c('binary', 'continuous', 'survival')
+  )
+
+  # -- process dots ---------------------------------------------------------
+  dots <- rlang::list2(...)
+  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
+  seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
+  assay <- dots$assay %||% "RNA"
+  load_cache <- dots$load_cache %||%
+    dirname(dots$path2load_scissor_cache)
+  save_cache <- dots$save_cache %||%
+    dirname(dots$path2save_scissor_inputs)
+
+  # -- fill defaults for reliability_test & cell_evaluation -----------------
+  reliability_test <- utils::modifyList(
+    list(run = FALSE, n = 10L, nfold = 10L),
+    reliability_test
+  )
+  cell_evaluation <- utils::modifyList(
+    list(
+      run = FALSE,
+      benchmark_data = "path_to_file.RData",
+      FDR = 0.05,
+      bootstrap_n = 100L
+    ),
+    cell_evaluation
+  )
+
+  # -- resolve label_type_scissor -------------------------------------------
+  if (phenotype_class %chin% c("binary", "survival")) {
+    label_type_scissor <- c(
+      glue::glue("{label_type}_Negative"),
+      glue::glue("{label_type}_Positive")
+    )
+  } else {
+    n <- length(table(phenotype))
+    label_type_scissor <- glue::glue("{label_type}_{seq_len(n)}")
+  }
+
+  # -- map family -> phenotype_class ----------------------------------------
+
+  list(
+    family = family,
+    verbose = verbose,
+    seed = seed,
+    assay = assay,
+    load_cache = load_cache,
+    save_cache = save_cache,
+    reliability_test = reliability_test,
+    cell_evaluation = cell_evaluation,
+    label_type = label_type,
+    label_type_scissor = label_type_scissor,
+    phenotype_class = phenotype_class,
+    dots = dots
+  )
+}
+
 #' @title Perform Scissor Screening Analysis
 #' @description
 #' Identifies phenotype-associated cell subpopulations in single-cell data using
@@ -40,7 +169,7 @@
 #' @param alpha Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If alpha = NULL, a default searching vector is used. The range of alpha is between 0 and 1. A larger alpha lays more emphasis on the l1 norm.
 #' @param cutoff  (default: `0.2`). When `alpha=NULL`, the cutoff is used to determine the optimal alpha.
 #'        Higher values increase specificity.
-#' @param family Model family for outcome type:
+#' @param family `r lifecycle::badge('deprecated')` Model family for outcome type:
 #'        - "gaussian": Continuous outcomes
 #'        - "binomial": Binary outcomes (default)
 #'        - "cox": Survival outcomes
@@ -61,7 +190,7 @@
 #'      Supports root-level, cache-level, or parent-level paths. See [CacheSetHere()].
 #'    - `save_cache`: Cache directory path for saving Scissor inputs. Supports
 #'      root-level or parent-level paths. See [CacheSetHere()].
-#'    - `path2load_scissor_cache` / `path2save_scissor_inputs`: Deprecated names,
+#'    - `r lifecycle::badge('deprecated')` `path2load_scissor_cache` / `path2save_scissor_inputs`: Deprecated names,
 #'      kept for backward compatibility.
 #'
 #' @return A list containing:
@@ -117,7 +246,7 @@ DoScissor <- function(
   label_type = "scissor",
   alpha = c(0.05, NULL),
   cutoff = 0.2,
-  family = c("gaussian", "binomial", "cox"),
+  family = lifecycle::deprecated(),
   reliability_test = list(
     run = FALSE,
     n = 10L,
@@ -129,82 +258,49 @@ DoScissor <- function(
     FDR_cutoff = 0.05,
     bootstrap_n = 100L
   ),
+  phenotype_class = c("binary", "continuous", "survival"),
+  path2load_scissor_cache = lifecycle::deprecated(),
+  path2save_scissor_inputs = lifecycle::deprecated(),
   ...
 ) {
-  # * Input validation
-  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
-  chk::chk_is(sc_data, "Seurat")
-  chk::chk_character(label_type)
-  chk::chk_range(cutoff)
-  family <- SigBridgeRUtils::MatchArg(
-    family,
-    c("gaussian", "binomial", "cox"),
-    NULL
-  )
-  chk::chk_list(reliability_test)
-  chk::chk_list(cell_evaluation)
-
-  # * get defaults from dots
-  dots <- rlang::list2(...)
-  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
-  seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
-  assay <- dots$assay %||% "RNA"
-  load_cache <- dots$load_cache %||% dirname(dots$path2load_scissor_cache) # compatible with old version
-  save_cache <- dots$save_cache %||% dirname(dots$path2save_scissor_inputs)
-
-  # * default setting for `reliability_test` & `cell_evaluation`
-  default_reliability_test <- list(
-    run = FALSE,
-    n = 10L,
-    nfold = 10L
-  )
-  default_cell_evalutaion <- list(
-    run = FALSE,
-    benchmark_data = "path_to_file.RData",
-    FDR = 0.05,
-    bootstrap_n = 100L
-  )
-  reliability_test <- utils::modifyList(
-    default_reliability_test,
-    reliability_test
-  )
-  cell_evaluation <- utils::modifyList(
-    default_cell_evalutaion,
-    cell_evaluation
+  # -- validate & prepare all parameters -----------------------------------
+  p <- ValidateScissorParams(
+    matched_bulk = matched_bulk,
+    sc_data = sc_data,
+    phenotype = phenotype,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    alpha = alpha,
+    cutoff = cutoff,
+    family = family,
+    reliability_test = reliability_test,
+    cell_evaluation = cell_evaluation,
+    path2load_scissor_cache = path2load_scissor_cache,
+    path2save_scissor_inputs = path2save_scissor_inputs,
+    ...
   )
 
-  if (family %chin% c("binomial", "cox")) {
-    label_type_scissor <- c(
-      glue::glue("{label_type}_Negative"),
-      glue::glue("{label_type}_Positive")
+  if (!is.null(p$load_cache) || !is.null(p$save_cache)) {
+    cache_config <- ScreenMethodConfig(
+      method_name = "Scissor",
+      phenotype_class = p$phenotype_class,
+      label_type = p$label_type,
+      param = fn_fmls()
     )
-  } else if (family == "gaussian") {
-    n <- length(table(phenotype))
-    label_type_scissor <- glue::glue("{label_type}_{seq_len(n)}")
   }
 
   # -- resolve cache paths using the caching system ------------------------
-  phenotype_class_cache <- switch(
-    family,
-    binomial = "binary",
-    cox = "survival",
-    gaussian = "continuous"
-  )
-
-  load_file <- if (!is.null(load_cache)) {
+  load_file <- if (!is.null(p$load_cache)) {
     load_cache_dir <- CacheSetHere(
-      path = load_cache,
-      screen_method = "Scissor",
-      phenotype_class = phenotype_class_cache,
+      path = p$load_cache,
+      cache_config = cache_config,
+      timestamp = p$dots$timestamp,
       mode = "load"
     )
 
     CheckCache(
       path = load_cache_dir,
-      screen_method = "Scissor",
-      phenotype_class = phenotype_class_cache,
-      label_type = label_type,
-      params = fetch_method_args2meta(),
+      cache_config = cache_config
     )
 
     file.path(load_cache_dir, "Scissor_inputs.RData")
@@ -212,32 +308,32 @@ DoScissor <- function(
     NULL
   }
 
-  if (!is.null(save_cache)) {
+  save_file <- if (!is.null(p$save_cache)) {
     save_cache_dir <- CacheSetHere(
-      path = save_cache,
-      screen_method = "Scissor",
-      phenotype_class = phenotype_class_cache,
+      path = p$load_cache,
+      cache_config = cache_config,
+      timestamp = p$dots$timestamp,
       mode = "save"
     )
 
-    save_file <- file.path(save_cache_dir, "Scissor_inputs.RData")
+    file.path(save_cache_dir, "Scissor_inputs.RData")
   } else {
-    save_file <- NULL
+    NULL
   }
 
   infos1 <- Scissor::Scissor.v5.optimized(
     bulk_dataset = matched_bulk,
     sc_dataset = sc_data,
     phenotype = phenotype,
-    tag = label_type_scissor,
+    tag = p$label_type_scissor,
     alpha = alpha,
     cutoff = cutoff,
-    family = family,
+    family = p$family,
     Save_file = save_file,
     Load_file = load_file,
-    verbose = verbose,
-    seed = seed,
-    assay = assay
+    verbose = p$verbose,
+    seed = p$seed,
+    assay = p$assay
   )
 
   # meta.data to add
@@ -249,42 +345,40 @@ DoScissor <- function(
   sc_meta$scissor[rownames(sc_meta) %chin% infos1$Scissor_neg] <- "Negative"
 
   # * reliability test
-  reliability_result <- if (reliability_test$run) {
+  reliability_result <- if (p$reliability_test$run) {
     DoScissorRelTest(
       scissor_res = infos1,
       alpha = infos1$para$alpha,
-      family = family,
+      family = p$family,
       cell_num = length(infos1$Scissor_pos) +
         length(infos1$Scissor_neg),
-      n = reliability_test$n,
-      nfold = reliability_test$nfold,
-      verbose = verbose
+      n = p$reliability_test$n,
+      nfold = p$reliability_test$nfold,
+      verbose = p$verbose
     )
   } else {
     NULL
   }
 
   # * cell_evaluation
-  evaluate_res <- if (cell_evaluation$run) {
+  evaluate_res <- if (p$cell_evaluation$run) {
     DoScissorCellEval(
-      benchmark_data_path = cell_evaluation$benchmark_data,
+      benchmark_data_path = p$cell_evaluation$benchmark_data,
       scissor_res = infos1,
-      FDR_cutoff = cell_evaluation$FDR_cutoff,
-      bootstrap_n = cell_evaluation$bootstrap_n,
-      verbose = verbose
+      FDR_cutoff = p$cell_evaluation$FDR_cutoff,
+      bootstrap_n = p$cell_evaluation$bootstrap_n,
+      verbose = p$verbose
     )
   } else {
     NULL
   }
 
-  if (!is.null(save_cache)) {
+  if (!is.null(p$save_cache)) {
     WriteCacheMeta(
       file = file.path(save_cache_dir, "cache_config.json"),
-      screen_method = "Scissor",
-      phenotype_class = phenotype_class_cache,
-      label_type = label_type,
-      params = fetch_method_args2meta(),
-      additional_description = dots$additional_description
+      cache_config = cache_config,
+      verbose = p$verbose,
+      additional_description = p$dots$additional_description
     )
   }
 

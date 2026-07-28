@@ -40,7 +40,7 @@
 #' }
 WriteCache <- new_generic("WriteCache", dispatch_args = "cache")
 
-method(generic = WriteCache, class = ScreenMethodConfig) <- function(
+method(WriteCache, ScreenMethodConfig) <- function(
   cache,
   additional_description = NULL,
   verbose = TRUE,
@@ -55,7 +55,7 @@ method(generic = WriteCache, class = ScreenMethodConfig) <- function(
   )
 }
 
-method(generic = WriteCache, class = ScreenMethodCache) <- function(
+method(WriteCache, ScreenMethodCache) <- function(
   cache,
   format = c("auto", "qs2", "qdata", "rdata", "csv"),
   max_rows = 1000L,

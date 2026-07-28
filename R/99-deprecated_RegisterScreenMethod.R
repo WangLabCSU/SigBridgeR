@@ -2,7 +2,7 @@
 #' @family Add_Screen_method
 #' @family Registering
 #' @description
-#' Registers one or more user-defined screening functions into a shared registry
+#' `r lifecycle::badge('deprecated')` Registers one or more user-defined screening functions into a shared registry
 #' (i.e., \code{ScreenStrategy}), enabling dynamic dispatch based on phenotype type
 #' (binary, survival, or continuous). Each method is stored with metadata including
 #' supported phenotypes and an optional parameter remapping function.

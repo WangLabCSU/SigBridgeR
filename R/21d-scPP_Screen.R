@@ -96,6 +96,7 @@ DoscPP <- function(
   probs = c(0.2, NULL),
   ...
 ) {
+  check_installed("dplyr")
   CheckInstalled("Exceret/ScPP")
   chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)

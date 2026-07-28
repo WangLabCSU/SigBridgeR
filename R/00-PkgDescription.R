@@ -8,7 +8,7 @@
 #' @section Main functions:
 #' The package includes multiple algorithms for integrative analysis of single-cell and bulk data to identify phenotype-associated cell populations. (see function \code{\link{Screen}})
 #'
-#' @section Data requirements (their pre-processing is also provided in the package):
+#' @section Data requirements:
 #' - Single-cell RNA-seq data (Seurat object format)
 #' - Bulk expression data
 #' - Phenotype data (survival, drug sensitivity, etc.)
@@ -20,8 +20,8 @@
 #' SigBridgeR is licensed under the GPL version 3.0. Please see the LICENSE file for details.
 #'
 #'
-#' @author Yuxi Yang \email{15364051195@163.com} ORCID: 0009-0006-1329-1224 (creator, author)
-#'
+#' @author
+#' @eval rd_authors()
 #'
 #' @docType package
 #' @name SigBridgeR-package
@@ -29,3 +29,31 @@
 #' @keywords internal
 #'
 "_PACKAGE"
+
+rd_authors <- function() {
+  # Read Authors@R from DESCRIPTION dynamically using base R
+  # roxygen2 runs in the package root, so DESCRIPTION is in the working dir
+  dcf <- read.dcf("DESCRIPTION")
+  authors <- eval(parse(text = dcf[1, "Authors@R"]))
+
+  # Format each author as a roxygen @author entry
+  lines <- vapply(
+    authors,
+    function(p) {
+      name <- paste(p$given, p$family)
+      email <- p$email
+      orcid <- p$comment["ORCID"]
+
+      if (length(email) && nzchar(email)) {
+        name <- sprintf("%s \\email{%s}", name, email)
+      }
+      if (length(orcid) && nzchar(orcid)) {
+        name <- sprintf("%s (ORCID: %s)", name, orcid)
+      }
+      name
+    },
+    character(1)
+  )
+
+  paste(lines, collapse = "\n#' ")
+}

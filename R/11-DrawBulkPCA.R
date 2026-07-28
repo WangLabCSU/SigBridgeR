@@ -19,6 +19,7 @@ DrawBulkPCA <- function(
     batch = batch
   )
 
+  PC1 <- PC2 <- NULL
   p_pca <- ggplot2::ggplot(
     pca_df,
     ggplot2::aes(x = `PC1`, y = `PC2`, color = `group`)

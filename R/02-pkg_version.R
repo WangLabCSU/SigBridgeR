@@ -1,5 +1,15 @@
 r_pkg_version <- function(pkg_name) {
-  tryCatch(utils::packageVersion(pkg_name), error = NULL)
+  tryCatch(as.character(utils::packageVersion(pkg_name)), error = NULL)
+}
+
+get_pkg_version <- function() {
+  tryCatch(
+    as.character(utils::packageVersion("SigBridgeR")),
+    error = function(e) {
+      # devtools::load_all() 会将工作目录切换至包根目录
+      read.dcf("DESCRIPTION")[, "Version"]
+    }
+  )
 }
 
 py_pkg_version <- function(pkg_name, conda_env) {

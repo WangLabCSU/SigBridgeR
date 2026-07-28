@@ -27,8 +27,7 @@
 #' result <- LoadCache("Scissor_res/survival_2025_01_01/result.qs2")
 #' feature_df <- LoadCache("Scissor_res/survival_2025_01_01/feature_table.csv")
 #' }
-LoadCache <- function(file, ...) {
-  check_dots_empty()
+LoadCache <- function(file) {
   chk::chk_string(file)
   chk::chk_file(file)
 

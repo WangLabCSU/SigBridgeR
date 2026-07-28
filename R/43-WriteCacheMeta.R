@@ -41,7 +41,7 @@ WriteCacheMeta <- new_generic(
 
 #' @rdname WriteCacheMeta
 #' @export
-method(generic = WriteCacheMeta, class = class_any) <- function(
+method(WriteCacheMeta, class_any) <- function(
   cache_config,
   ...
 ) {
@@ -56,8 +56,8 @@ method(generic = WriteCacheMeta, class = class_any) <- function(
 #' @rdname WriteCacheMeta
 #' @export
 method(
-  generic = WriteCacheMeta,
-  class = ScreenMethodConfig
+  WriteCacheMeta,
+  ScreenMethodConfig
 ) <- WriteCacheMeta.ScreenMethodConfig <- function(
   cache_config,
   file,
@@ -108,19 +108,12 @@ method(
 
 #' @rdname WriteCacheMeta
 #' @export
-method(generic = WriteCacheMeta, class = ScreenMethodCache) <- function(
+method(WriteCacheMeta, ScreenMethodCache) <- function(
   cache_config,
   additional_description = NULL,
   verbose = TRUE,
   ...
 ) {
-  dots <- list(...)
-  if (!is.null(dots$file)) {
-    warning(
-      "WriteCacheMeta(): `file` is deprecated, please use `cache_config@cache_config_path` instead"
-    )
-  }
-
   WriteCacheMeta.ScreenMethodConfig(
     cache_config = cache_config@screen_method_config,
     file = cache_config@cache_config_path,
@@ -152,35 +145,4 @@ get_r_info <- function() {
 
 get_time <- function() {
   format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-}
-
-
-get_pkg_version <- function() {
-  tryCatch(
-    as.character(utils::packageVersion("SigBridgeR")),
-    error = function(e) {
-      # devtools::load_all() 会将工作目录切换至包根目录
-      read.dcf("DESCRIPTION")[, "Version"]
-    }
-  )
-}
-
-
-fetch_method_args2meta <- function() {
-  parent_env <- parent.frame()
-
-  parent_func <- sys.function(sys.parent())
-
-  param_names <- fn_fmls_names(parent_func)
-
-  args <- mget(param_names, envir = parent_env, inherits = FALSE)
-
-  # 移除你不需要的参数
-  args$matched_bulk <- NULL
-  args$sc_data <- NULL
-  args$phenotype <- NULL
-  args$label_type <- NULL
-  args$phenotype_class <- NULL
-
-  args
 }

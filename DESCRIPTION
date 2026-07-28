@@ -1,6 +1,6 @@
 Package: SigBridgeR
 Title: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data
-Version: 3.8.1
+Version: 4.0.0
 Authors@R: 
     c(
         person("Yuxi", "Yang", email = "15364051195@163.com", role = c("cre", "aut"), comment = c(ORCID = "0009-0006-1329-1224")),
@@ -110,4 +110,5 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 LinkingTo: 
     Rcpp,
-    RcppArmadillo
+    RcppArmadillo (>= 0.12.4.0.0)
+SystemRequirements: C++14

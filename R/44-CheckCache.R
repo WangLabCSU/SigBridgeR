@@ -13,7 +13,6 @@
 #' @param label_type Character string specifying the label type. Defaults to
 #'   the value of `screen_method`.
 #' @param params List of parameters used for the screening method.
-#' @param ... Additional arguments (must be empty; raises error if provided).
 #'
 #' @return Returns `invisible(TRUE)` if the cache configuration is consistent
 #'   with the current parameters. Otherwise, aborts with an error message
@@ -25,12 +24,11 @@
 CheckCache <- new_generic("CheckCache", dispatch_args = "cache_config")
 
 method(
-  generic = CheckCache,
-  class = ScreenMethodConfig
+  CheckCache,
+  ScreenMethodConfig
 ) <- CheckCache.ScreenMethodConfig <- function(
   cache_config,
-  path,
-  ...
+  path
 ) {
   check_installed("jsonlite")
   meta_json <- if (!endsWith(path, "cache_config.json") && dir.exists(path)) {
@@ -74,14 +72,11 @@ method(
 }
 
 
-method(generic = CheckCache, class = ScreenMethodCache) <- function(
-  cache_config,
-  path,
-  ...
+method(CheckCache, ScreenMethodCache) <- function(
+  cache_config
 ) {
   CheckCache.ScreenMethodConfig(
     cache_config = cache_config@screen_method_config,
-    path = path,
-    ...
+    path = cache_config@cache_config_path
   )
 }

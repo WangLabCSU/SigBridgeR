@@ -5,3 +5,11 @@ CountsToTPM_impl <- function(counts, gene_length) {
     .Call(`_SigBridgeR_CountsToTPM_impl`, counts, gene_length)
 }
 
+find_diff_in_2_lists <- function(x, y) {
+    .Call(`_SigBridgeR_find_diff_in_2_lists`, x, y)
+}
+
+make_null_list_NULL <- function(x) {
+    .Call(`_SigBridgeR_make_null_list_NULL`, x)
+}
+

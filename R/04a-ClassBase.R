@@ -5,28 +5,20 @@ SigBridgeRBase <- new_class(
 
 property_sigbridger_verison <- new_property(
   class = class_character,
-  getter = function(self) {
-    utils::packageVersion("SigBridgeR")
-  },
   setter = function(self, value) {
-    if (!length(value)) {
-      return(self)
-    }
-
-    cli::cli_abort(
-      c(
-        "x" = "package version is {.field read-only}."
-      ),
-      call = rlang::caller_call(n = 2),
-      .frame = rlang::caller_env(n = 2)
+    Abort(
+      "Package version is {.field read-only}."
     )
   },
   validator = \(value) {
     if (!grepl(pattern = "\\.", x)) {
-      "package version does not contain a dot."
+      "Package version does not contain a dot."
     }
   },
-  default = get_pkg_version(),
+  default = tryCatch(
+    as.character(utils::packageVersion("SigBridgeR")),
+    error = NULL
+  ),
 )
 
 property_chr <- new_property(class = class_character)
@@ -49,20 +41,20 @@ property_fn <- new_property(class = class_function)
 property_list <- new_property(class = class_list, validator = \(value) {
   # NULL, NA & list() are invalid
   if (!is_named(value)) {
-    return("`list` must be named or not NULL.")
+    Abort("`list` must be named or not NULL.")
   }
 
   nms <- names(value)
   if (unique(nms) != nms) {
-    return("`list` names must be unique.")
+    Abort("`list` names must be unique.")
   }
 })
 
 property_mapper_fn <- new_property(class = class_any, validator = \(value) {
-  if (!is.function(value) || !is.null(value)) {
-    cli::cli_fmt(cli::cli_inform(
+  if (!is.function(value) && !is.null(value)) {
+    Abort(
       "mapper function must be a {.cls function} or {.val NULL}."
-    ))
+    )
   }
 })
 
@@ -70,9 +62,9 @@ property_py_env <- new_property(
   class = class_any,
   validator = \(value) {
     if (!is.null(value) && !is.character(value)) {
-      cli::cli_fmt(cli::cli_inform(
+      Abort(
         "`py_env` must be a {.cls character} or {.val NULL}."
-      ))
+      )
     }
   }
 )
@@ -80,11 +72,11 @@ property_py_env <- new_property(
 property_data_list <- new_property(class = class_list, validator = \(value) {
   # NULL, NA & list() are valid
   if (!is_named2(value)) {
-    return("`data_list` must be named.")
+    Abort("`data_list` must be named.")
   }
 
   nms <- names(value) # OK with NULL
   if (unique(nms) != nms) {
-    return("`data_list` names must be unique.")
+    Abort("`data_list` names must be unique.")
   }
 })

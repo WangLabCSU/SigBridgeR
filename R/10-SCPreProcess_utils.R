@@ -293,6 +293,7 @@ QCFilter <- function(
   verbose = TRUE,
   ...
 ) {
+  check_installed("dplyr")
   chk::chk_is(seurat_obj, "Seurat")
   chk::chk_list(data_filter.thresh)
 
