@@ -120,15 +120,16 @@ method(WriteCache, ScreenMethodCache) <- function(
   )
 
   # -- batch write ----------------------------------------------------------
+  saving_fn <- purrr::in_parallel(function(x, file, format) {
+    WriteSingleCacheData(
+      x = x,
+      file = file,
+      format = format
+    )
+  })
   purrr::pwalk(
     list(cache_data, files, formats),
-    purrr::in_parallel(function(x, file, format) {
-      WriteSingleCacheData(
-        x = x,
-        file = file,
-        format = format
-      )
-    }),
+    saving_fn,
     .progress = if (isTRUE(verbose)) "Saving cache files" else FALSE
   )
 

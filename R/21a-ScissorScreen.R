@@ -403,7 +403,7 @@ DoScissorRelTest <- function(
     )
   }
 
-  if (is_skewed_dynamic(scissor_res$Y)) {
+  if (IsSkewedDynamic(scissor_res$Y)) {
     cli::cli_warn("Skewed distribution detected. Result may be unstable")
   }
 
@@ -498,29 +498,4 @@ DoScissorCellEval <- function(
   }
 
   evaluate_res
-}
-
-#' @title Is 1 Much More Than 0
-#' @description
-#' A function to check whether Y is highly skewed. The expected ideal distribution is p1 : p0 = cutoff : (1 - cutoff).
-#' If the deviation exceeds n_sd times the standard deviation, it is considered skewed,
-#' i.e., the input phenotype raw data is skewed, which means the reliability test may be unreliable or error-prone.
-#'
-#' @keywords internal
-is_skewed_dynamic <- function(
-  x, # a vector
-  target = 0, # background value
-  expected_p = 0.8, # = cutoff
-  n_sd = 4L # n times standard deviation
-) {
-  n <- length(x)
-  if (n == 0) {
-    return(NA)
-  }
-
-  p_hat <- mean(x == target)
-  sd_expected <- sqrt(expected_p * (1 - expected_p) / n)
-
-  # 偏离超过 n_sd 倍标准差则判定为偏态
-  abs(p_hat - expected_p) > n_sd * sd_expected
 }

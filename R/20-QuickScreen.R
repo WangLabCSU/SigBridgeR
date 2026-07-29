@@ -241,8 +241,7 @@ Screen <- function(
   ),
   ...
 ) {
-  chk::chk_length(phenotype_class)
-  chk::chk_length(screen_method)
+  on.exit(gc(verbose = FALSE))
 
   if (is.null(label_type) || length(label_type) != 1) {
     cli::cli_alert_info(c(

@@ -58,11 +58,30 @@ ScreenMethodCache <- new_class(
     screen_method_config = new_property(class = ScreenMethodConfig)
   ),
   validator = \(self) {
-    EnsureParentDir(self@cache_path)
+    if (!dir.exists(self@cache_path)) {
+      Abort("@cache_path ({.file {self@cache_path}}) does not exist")
+    }
     EnsureParentDir(self@cache_config_path)
 
     if (!endsWith(path, "cache_config.json")) {
-      Abort("@cache_config_path must end with {.file cache_config.json}")
+      Abort(
+        "@cache_config_path ({.file {self@cache_config_path}}) must end with {.file cache_config.json}"
+      )
     }
+  },
+  constructor = \(
+    cache_path,
+    cache_config_path,
+    cache_data,
+    screen_method_config
+  ) {
+    new_object(
+      S7_object(),
+      cache_path = cache_path,
+      cache_config_path = cache_config_path,
+      cache_data = cache_data, # NULL is OK; stores the data
+      sigbridger_version = get_pkg_version(), # chr
+      screen_method_config = screen_method_config
+    )
   }
 )

@@ -1,35 +1,102 @@
+# ---- 2. Do scPP ----
+
+#' Validate and Prepare DoscPP Parameters
+#'
+#' @description
+#' Internal helper that handles package installation checks, input validation,
+#' and default-value resolution for [DoscPP()].
+#'
+#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class
+#'   Forwarded from [DoscPP()].
+#' @param ref_group,Log2FC_cutoff,estimate_cutoff,probs
+#'   Forwarded from [DoscPP()].
+#' @param ... Additional dots forwarded from [DoscPP()].
+#'
+#' @return A named list with elements: `phenotype_class`, `verbose`, `parallel`,
+#'   `seed`, `assay`.
+#'
+#' @keywords internal
+#' @family scPP
+ValidatescPPParams <- function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type,
+  phenotype_class,
+  ref_group,
+  Log2FC_cutoff,
+  estimate_cutoff,
+  probs,
+  ...
+) {
+  # -- package checks -------------------------------------------------------
+  check_installed("dplyr")
+  check_installed("scPAS", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/scPP")
+  })
+
+  # -- input validation -----------------------------------------------------
+  chk::chk_is(sc_data, "Seurat")
+  chk::chk_character(label_type)
+  phenotype_class <- tolower(phenotype_class)
+  phenotype_class <- arg_match(
+    phenotype_class,
+    c("binary", "continuous", "survival")
+  )
+  chk::chk_number(ref_group)
+  chk::chk_range(Log2FC_cutoff)
+  chk::chk_range(estimate_cutoff)
+  if (!is.null(probs)) {
+    chk::chk_range(probs, range = c(0, 0.5))
+  }
+  # scPP can't tolerate NA
+  chk::chk_not_any_na(matched_bulk)
+  chk::chk_not_any_na(phenotype)
+
+  # scPP is more strict than Scissor and scPAS
+  if (phenotype_class == "survival") {
+    if (!all(rownames(phenotype) == colnames(matched_bulk))) {
+      cli::cli_abort(c(
+        "x" = "Please check the rownames of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
+      ))
+    }
+  } else {
+    if (!all(names(phenotype) == colnames(matched_bulk))) {
+      cli::cli_abort(c(
+        "x" = "Please check the names of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
+      ))
+    }
+  }
+
+  # -- process dots ---------------------------------------------------------
+  dots <- list2(...)
+  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
+  parallel <- (dots$parallel %||% FALSE)
+  seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
+  assay <- dots$assay %||% "RNA"
+  save_cache <- dots$save_cache
+  load_cache <- dots$load_cache
+
+  # -- build cache config ---------------------------------------------------
+  cache_config <- ScreenMethodConfig(
+    method_name = "scPP",
+    param = get_env_vars(),
+    phenotype_class = phenotype_class,
+    label_type = label_type
+  )
+
+  get_env_vars()
+}
+
 #' @title Perform scPP screening analysis
 #'
 #' @description
 #' This function performs scPP screening on single-cell data using matched bulk data and phenotype information.
 #' It supports binary, continuous, and survival phenotype types.
 #'
-#' @usage
-#' DoscPP(
-#'   matched_bulk,
-#'   sc_data,
-#'   phenotype,
-#'   label_type = "scPP",
-#'   phenotype_class = c("binary", "continuous", "survival"),
-#'   ref_group = 0,
-#'   Log2FC_cutoff = 0.585,
-#'   estimate_cutoff = 0.2,
-#'   probs = c(0.2, NULL),
-#'   ...
-#' )
 #'
-#' @param matched_bulk Bulk expression data (genes × samples) where:
-#'        - Column names must match `phenotype` row names
-#' @param sc_data Seurat object containing preprocessed single-cell data:
-#'        - Normalized counts in `RNA` assay
-#' @param phenotype Data frame or tibble or named vector with:
-#'        - Rownames matching `matched_bulk` columns
-#'        - For survival: must contain time and status columns
-#' @param label_type Character specifying phenotype label type (e.g., "SBS1"), stored in `scRNA_data@misc`
-#' @param phenotype_class Analysis type (case-sensitive):
-#'        - `"Binary"`: Case-control studies (e.g., tumor/normal)
-#'        - `"Continuous"`: Quantitative traits (e.g., drug response)
-#'        - `"Survival"`: Time-to-event data (requires time/status columns)
+#' @inheritParams Screen
 #' @param ref_group Reference group or baseline for **binary** comparisons, e.g. "Normal" for Tumor/Normal studies and 0 for 0/1 case-control studies. (default: 0)
 #' @param Log2FC_cutoff Minimum log2 fold-change for binary markers (default: 0.585)
 #' @param estimate_cutoff Effect size threshold for **continuous** traits (default: 0.2)
@@ -96,60 +163,16 @@ DoscPP <- function(
   probs = c(0.2, NULL),
   ...
 ) {
-  check_installed("dplyr")
-  check_installed("scPAS", action = \(pkg, ...) {
-    check_installed("pak")
-    pak::pak("Exceret/scPAS")
-  })
+  # -- validate & prepare all parameters -----------------------------------
+  p <- exec(ValidatescPPParams, !!!fn_fmls())
 
-  chk::chk_is(sc_data, "Seurat")
-  chk::chk_character(label_type)
-  phenotype_class <- tolower(phenotype_class)
-  phenotype_class <- SigBridgeRUtils::MatchArg(
-    phenotype_class,
-    c("binary", "continuous", "survival"),
-    NULL
-  )
-  chk::chk_number(ref_group)
-  chk::chk_range(Log2FC_cutoff)
-  chk::chk_range(estimate_cutoff)
-  if (!is.null(probs)) {
-    chk::chk_range(probs, range = c(0, 0.5))
-  }
-  # scPP can't tolerate NA
-  chk::chk_not_any_na(matched_bulk)
-  chk::chk_not_any_na(phenotype)
-
-  # robust, scPP is more strict than scissor and scPAS
-  if (phenotype_class == "survival") {
-    if (!all(rownames(phenotype) == colnames(matched_bulk))) {
-      cli::cli_abort(c(
-        "x" = "Please check the rownames of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
-      ))
-    }
-  } else {
-    if (!all(names(phenotype) == colnames(matched_bulk))) {
-      cli::cli_abort(c(
-        "x" = "Please check the names of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
-      ))
-    }
-  }
-
-  # * default options
-  dots <- rlang::list2(...)
-  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
-  parallel <- (dots$parallel %||% FALSE) &
-    !inherits(future::plan("list")[[1]], "sequential")
-  seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
-  assay <- dots$assay %||% "RNA"
-
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start scPP screening."))
-    ts_cli$cli_alert_info("Finding overall markers...")
   }
 
   # decide which type of phenotype data is used
   if (is.vector(phenotype)) {
+    Feature <- NULL # suppress checking NOTE
     # The reason why using data.frame instead of vector is to
     # keep the same input and output format with scPP
     phenotype <- as.data.frame(phenotype) |>
@@ -158,76 +181,115 @@ DoscPP <- function(
       dplyr::mutate(Feature = as.numeric(`Feature`))
   }
 
-  gene_list <- switch(
-    phenotype_class,
-    "binary" = {
-      if (estimate_cutoff != 0.2) {
-        cli::cli_warn(
-          "The parameters {.arg estimate_cutoff} are not used for survival analysis. Ignore it"
-        )
-      }
-      ScPP::marker_Binary.optimized(
-        bulk_data = matched_bulk,
-        features = phenotype,
-        ref_group = ref_group,
-        Log2FC_cutoff = Log2FC_cutoff
-      )
-    },
-    "continuous" = {
-      if (Log2FC_cutoff != 0.585) {
-        cli::cli_warn(
-          "The parameters {.arg Log2FC_cutoff} are not used for survival analysis. Ignore it"
-        )
-      }
-      ScPP::marker_Continuous.optimized(
-        bulk_data = matched_bulk,
-        features = phenotype$Feature,
-        method = "spearman",
-        estimate_cutoff = estimate_cutoff
-      )
-    },
-    "survival" = {
-      if (estimate_cutoff != 0.2) {
-        cli::cli_warn(
-          "The parameters {.arg estimate_cutoff} are not used for survival analysis. Ignore it"
-        )
-      }
-      if (Log2FC_cutoff != 0.585) {
-        cli::cli_warn(
-          "The parameters {.arg Log2FC_cutoff} are not used for survival analysis. Ignore it"
-        )
-      }
-      ScPP::marker_Survival2(
-        bulk_data = matched_bulk,
-        survival_data = phenotype
-      )
-    }
-  )
-
-  l <- lapply(gene_list, length)
-  pos_null <- FALSE
-  neg_null <- FALSE
-  if ("gene_pos" %chin% names(l)) {
-    # Cannot combine the conditions due to the feature of `gene_list`
-    if (l[["gene_pos"]] == 0 && verbose) {
-      ts_cli$cli_alert_info("No significant positive genes found")
-      pos_null <- TRUE
-    }
-  }
-  if ("gene_neg" %chin% names(l)) {
-    if (l[["gene_neg"]] == 0 && verbose) {
-      ts_cli$cli_alert_info("No significant negative genes found")
-      neg_null <- TRUE
-    }
-  }
-  if (pos_null && neg_null) {
-    cli::cli_warn(
-      "scPP is not applicable to the current data. Returning {.val NULL}",
+  if (!is.null(p$load_cache)) {
+    cache <- CacheSysCall(
+      mode = "load",
+      path = p$load_cache,
+      cache = p$cache_config,
+      verbose = p$verbose,
+      timestamp = p$timestamp
     )
-    return(NULL)
-  }
+    gene_list <- cache$gene_list
+    rm(cache)
+    if (p$verbose) {
+      ts_cli$cli_alert_info("Loaded gene list from cache.")
+    }
+  } else {
+    if (p$verbose) {
+      ts_cli$cli_alert_info("Finding overall markers...")
+    }
 
-  if (verbose) {
+    gene_list <- switch(
+      p$phenotype_class,
+      "binary" = {
+        if (estimate_cutoff != 0.2) {
+          cli::cli_warn(
+            "The parameters {.arg estimate_cutoff} are not used for survival analysis. Ignore it"
+          )
+        }
+        ScPP::marker_Binary.optimized(
+          bulk_data = matched_bulk,
+          features = phenotype,
+          ref_group = ref_group,
+          Log2FC_cutoff = Log2FC_cutoff
+        )
+      },
+      "continuous" = {
+        if (Log2FC_cutoff != 0.585) {
+          cli::cli_warn(
+            "The parameters {.arg Log2FC_cutoff} are not used for survival analysis. Ignore it"
+          )
+        }
+        ScPP::marker_Continuous.optimized(
+          bulk_data = matched_bulk,
+          features = phenotype$Feature,
+          method = "spearman",
+          estimate_cutoff = estimate_cutoff
+        )
+      },
+      "survival" = {
+        if (estimate_cutoff != 0.2) {
+          cli::cli_warn(
+            "The parameters {.arg estimate_cutoff} are not used for survival analysis. Ignore it"
+          )
+        }
+        if (Log2FC_cutoff != 0.585) {
+          cli::cli_warn(
+            "The parameters {.arg Log2FC_cutoff} are not used for survival analysis. Ignore it"
+          )
+        }
+        ScPP::marker_Survival2(
+          bulk_data = matched_bulk,
+          survival_data = phenotype
+        )
+      }
+    )
+
+    l <- lapply(gene_list, length)
+    pos_null <- if ("gene_pos" %chin% names(l)) {
+      # Cannot combine the conditions due to the feature of `gene_list`
+      if (l[["gene_pos"]] == 0) {
+        cli::cli_warn("No significant positive genes found")
+        TRUE
+      }
+      FALSE
+    } else {
+      FALSE
+    }
+    neg_null <- if ("gene_neg" %chin% names(l)) {
+      if (l[["gene_neg"]] == 0) {
+        cli::cli_warn("No significant negative genes found")
+        TRUE
+      }
+      FALSE
+    } else {
+      FALSE
+    }
+    if (pos_null && neg_null) {
+      cli::cli_warn(
+        "scPP is not applicable to the current data. Returning {.val NULL}",
+      )
+      return(NULL)
+    }
+
+    gene_list <- if (is.null(p$load_cache)) {
+      # avoid saving cache when loading cache
+      cache <- ScreenMethodCache(
+        cache_path = save_cache,
+        cache_config_path = file.path(save_cache, "cache_config.json"),
+        cache_data = list(phenotype = phenotype, gene_list = gene_list), # NULL is OK; stores the data
+        screen_method_config = new_property(class = ScreenMethodConfig)
+      )
+      CacheSysCall(
+        mode = "save",
+        cache = cache,
+        verbose = p$verbose,
+        timestamp = p$dots$timestamp,
+      )
+    }
+  } # end of `is.null(p$load_cache)`
+
+  if (p$verbose) {
     ts_cli$cli_alert_info("Screening")
   }
 
@@ -236,25 +298,19 @@ DoscPP <- function(
     sc_dataset = sc_data,
     geneList = gene_list,
     probs = probs,
-    verbose = verbose,
-    parallel = parallel,
-    seed = seed,
-    assay = assay
+    verbose = p$verbose,
+    parallel = p$parallel,
+    seed = p$seed,
+    assay = p$assay
   )
   sc_data[[]] <- scPP_result$metadata
   sc_data <- SigBridgeRUtils::AddMisc(
     sc_data,
-    scPP_type = label_type,
-    scPP_para = list(
-      ref_group = ref_group,
-      Log2FC_cutoff = Log2FC_cutoff,
-      estimate_cutoff = estimate_cutoff,
-      probs = probs
-    ),
+    scPP = props(p$cache_config),
     cover = FALSE
   )
 
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_success(cli::col_green("scPP screening done."))
   }
 

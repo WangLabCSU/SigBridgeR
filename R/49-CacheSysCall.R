@@ -2,7 +2,7 @@
 #' @export
 CacheSysCall <- function(
   mode = c("load", "save"),
-  path,
+  path = if (mode == "save") cache@cache_path else NULL,
   cache,
   verbose = TRUE,
   timestamp = NULL,

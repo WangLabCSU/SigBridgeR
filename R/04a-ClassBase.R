@@ -15,10 +15,7 @@ property_sigbridger_verison <- new_property(
       "Package version does not contain a dot."
     }
   },
-  default = tryCatch(
-    as.character(utils::packageVersion("SigBridgeR")),
-    error = NULL
-  ),
+  default = get_pkg_version()
 )
 
 property_chr <- new_property(class = class_character)

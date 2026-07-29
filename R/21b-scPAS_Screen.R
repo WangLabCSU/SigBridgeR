@@ -27,11 +27,11 @@ ValidatescPASParams <- function(
   phenotype_class,
   assay,
   imputation,
-  imputation_method,
+  imputation_method = c("KNN", "ALRA"),
   nfeature,
   alpha,
   cutoff,
-  network_class,
+  network_class = c("SC", "bulk"),
   family,
   permutation_times,
   FDR_threshold,
@@ -325,7 +325,7 @@ DoscPAS <- function(
 
   sc_data <- SigBridgeRUtils::AddMisc(
     sc_data,
-    scPAS = p$cache_config,
+    scPAS = props(p$cache_config),
     cover = FALSE
   )
 
