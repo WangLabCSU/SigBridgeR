@@ -15,19 +15,25 @@ This document introduces a guide for extending SigBridgeR with custom algorithms
 
 Extend `SCPreProcess`: key = func 
 
-```{r,tl_dr,eval= FALSE}
+```{r}
+#| label: tl_dr
+#| eval: false
 Register(h = Seurat::RunHarmony) # (auto dispatch)
 ```
 
 Extend `SCAnnotate`: key = func
 
-```{r,tl_dr2,eval= FALSE}
+```{r}
+#| label: tl_dr2
+#| eval: false
 Register(my = my_function)
 ```
 
 Extend `Screen`: key = func
 
-```{r,tl_dr3,eval= FALSE}
+```{r}
+#| label: tl_dr3
+#| eval: false
 TemplateScreenFunc() # create a file
 ValidateScreenFunc(my_function)
 Register(my = my_function)
@@ -43,7 +49,9 @@ See [CONTRIBUTING.md](https://github.com/WangLabCSU/SigBridgeR/blob/main/CONTRIB
 
 It's recommended to install these packages for checking the code
 
-```{r, install,eval= FALSE}
+```{r}
+#| label: install
+#| eval: false
 pak::pkg_install(c(
   "tictoc",
   "yonicd/tidycheckUsage",
@@ -55,14 +63,18 @@ pak::pkg_install(c(
 
 ## Prepare a custom function
 
-```{r, include = FALSE, eval= FALSE}
+```{r}
+#| include: false
+#| eval: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-```{r,setup, eval= FALSE}
+```{r}
+#| label: setup
+#| eval: false
 library(SigBridgeR)
 ```
 
@@ -70,7 +82,9 @@ After the v3.2.0 update, SigBridgeR supports registering custom algorithms for s
 
 In order to conveniently organize and manage the dependencies and code of your own algorithm, you need to create an independent R package.
 
-```{r , a_pkg,eval= FALSE}
+```{r}
+#| label: a_pkg
+#| eval: false
 usethis::create_package("my_screen_pkg")
 # codeing
 devtools::document()
@@ -79,7 +93,9 @@ devtools::check()
 
 After completing the R package development for your own algorithm, use `TemplateScreenFunc` to obtain the template, and use the package to write the workflow.
 
-```{r, a_custom_algorithm,eval= FALSE}
+```{r}
+#| label: a_custom_algorithm
+#| eval: false
 my_screen_function <- function(
   matched_bulk,
   sc_data,
@@ -88,7 +104,11 @@ my_screen_function <- function(
   phenotype_class = c("binary", "survival", "continuous"),
   ...
 ) {
-  CheckInstalled("<your-name>/<your-repo>")
+  rlang::check_installed("pak")
+  rlang::check_installed("<your-repo>", action = \(pkg, ...) {
+    pak::pak("<your-name>/<your-repo>")
+  })
+
   dots <- list(...)
   verbose <- dots$verbose %||% TRUE
   # do something, here we just randomly assign a label to each cell
@@ -144,11 +164,15 @@ Format requirements for custom extension functions:
 
 To facilitate format validation, we provide a function `ValidateScreenFunc` to check the above requirements. The validation output resembles that of `rcmdcheck`; please ensure there are no errors or warnings, and as few notes as possible.
 
-```{r, validation,eval= FALSE}
+```{r}
+#| label: validation
+#| eval: false
 ValidateScreenFunc(my_screen_function)
 ```
 
-```{r, validation_2,eval= FALSE}
+```{r}
+#| label: validation_2
+#| eval: false
 # ── Screening Function Validation ──────────────────────────────────────────────────────────────────────
 # Start at 2026/01/19 22:04:17
 
@@ -168,7 +192,9 @@ ValidateScreenFunc(my_screen_function)
 
 By the way if providing a bad function
 
-```{r,bad_function,eval= FALSE}
+```{r}
+#| label: bad_function
+#| eval: false
 bad_fun <- function(x, save_path = "./analysis") {
   z <- x + 1
   y
@@ -179,7 +205,9 @@ bad_fun <- function(x, save_path = "./analysis") {
 ValidateScreenFunc(bad_fun)
 ```
 
-```{r,bad_function_2,eval= FALSE}
+```{r}
+#| label: bad_function_2
+#| eval: false
 # ── Screening Function Validation ───────────────────────────────────────────────────────────────────
 # Start at 2026/01/19 22:07:43
 
@@ -222,7 +250,9 @@ ValidateScreenFunc(bad_fun)
 
 Now we can register the function to the package:
 
-```{r, register,eval= FALSE}
+```{r}
+#| label: register
+#| eval: false
 RegisterScreenMethod(
   my_method = my_screen_function,
   supported_phenotypes = c("binary", "survival"),
@@ -235,7 +265,9 @@ RegisterScreenMethod(
 )
 ```
 
-```{r,register_2,eval= FALSE}
+```{r}
+#| label: register_2
+#| eval: false
 # ✔ Registered `my_method`
 ```
 
@@ -250,12 +282,16 @@ Details of the arguments:
 
 Let’s check whether it has indeed been registered 
 
-```{r, check_registry,eval= FALSE}
+```{r}
+#| label: check_registry
+#| eval: false
 tbl <- InterceptStrategy("ScreenStrategy")
 # A tibble: 22 × 4
 ```
 
-```{r, check_registry_2,eval= FALSE}
+```{r}
+#| label: check_registry_2
+#| eval: false
 names(ScreenStrategy)
 # [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"
 ```
@@ -264,9 +300,11 @@ names(ScreenStrategy)
 
 After completing the steps described in [Prepare a custom function](#prepare-a-custom-function), directly modify [68-ScreenStrategy.R](https://github.com/WangLabCSU/SigBridgeR/blob/main/R/68-ScreenStrategy.R), and fill in the function name you just wrote into `ScreenStrategy`, like: 
 
-```{r, modify_registry,eval= FALSE}
+```{r}
+#| label: modify_registry
+#| eval: false
 ###
-MyMethod = list(
+MyMethod <- list(
   method_name = "MyMethod",
   executor = DoMyMethod,
   phenotypes = c("binary", "survival", "continuous"),
@@ -283,7 +321,9 @@ See [CONTRIBUTING.md](https://github.com/WangLabCSU/SigBridgeR/blob/main/CONTRIB
 
 Now we can use the function in the `Screen` function:
 
-```{r, use_function,eval= FALSE}
+```{r}
+#| label: use_function
+#| eval: false
 a_seurat <- SeuratObject::CreateSeuratObject(Matrix::Matrix(
   1:100,
   nrow = 10,
@@ -309,15 +349,21 @@ my_res <- Screen(
 )
 ```
 
-```{r, use_function_2,eval= FALSE}
+```{r}
+#| label: use_function_2
+#| eval: false
 # ✔ my_screen_function finished
 ```
 
-```{r, use_function_3,eval= FALSE}
+```{r}
+#| label: use_function_3
+#| eval: false
 my_res$scRNA_data |> class()
 ```
 
-```{r, use_function_4,eval= FALSE}
+```{r}
+#| label: use_function_4
+#| eval: false
 # [1] "Seurat"
 # attr(,"package")
 # [1] "SeuratObject"
@@ -348,19 +394,25 @@ By default, the registry is defined as follows:
 
 For example, if we need to use `Seurat::LoadXenium` to load Xenium data for screening, register this function first.
 
-```{r,extend_seurat,eval= FALSE}
+```{r}
+#| label: extend_seurat
+#| eval: false
 RegisterSeuratMethod(x = Seurat::LoadXenium)
 # ✔ Registered x
 ```
 
 To check:
 
-```{r,check_seurat_extended,eval=FALSE}
+```{r}
+#| label: check_seurat_extended
+#| eval: false
 names(SCPreProcessStrategy)
 #  [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"
 ```
 
-```{r,check_seurat_extended2,eval=FALSE}
+```{r}
+#| label: check_seurat_extended2
+#| eval: false
 tbl <- InterceptStrategy("SCPreProcessStrategy")
 # tibble [12 × 2]
 ```
@@ -371,7 +423,9 @@ By default, SigBridgeR includes three built-in cell type annotation algorithms: 
 
 Extending cell annotation method is also very easy:
 
-```{r,extend_cell_anno,eval=FALSE}
+```{r}
+#| label: extend_cell_anno
+#| eval: false
 my_method <- function(seurat_obj, ...) {
   # placeholder
   return(seurat_obj)
@@ -385,7 +439,9 @@ RegisterAnnoMethod(
 
 To check:
 
-```{r,extend_cell_anoo2,eval=FALSE}
+```{r}
+#| label: extend_cell_anoo2
+#| eval: false
 names(SCAnnotateStrategy)
 # [1] "my"           "mLLMCelltype" "CellTypist"   "SingleR"
 ```

@@ -80,7 +80,10 @@ DoLP_SGL <- function(
   ),
   ...
 ) {
-  CheckInstalled("Exceret/LPSGL")
+  check_installed("LPSGL", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/LPSGL")
+  })
 
   # * Input validation
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))

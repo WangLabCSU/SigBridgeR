@@ -75,7 +75,10 @@ DoPIPET <- function(
   ),
   ...
 ) {
-  CheckInstalled("Exceret/PIPET")
+  check_installed("PIPET", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/PIPET")
+  })
 
   # * Input validation
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))

@@ -126,7 +126,11 @@ DoDEGAS <- function(
   ),
   ...
 ) {
-  CheckInstalled("Exceret/DEGAS")
+  check_installed("DEGAS", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/DEGAS")
+  })
+
   # * inputs check
   chk::chk_range(select_fraction)
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))

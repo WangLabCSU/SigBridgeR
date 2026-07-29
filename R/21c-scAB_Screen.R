@@ -6,17 +6,7 @@
 #' information. Uses non-negative matrix factorization (NMF) with dual regularization
 #' for phenotype association and cell-cell similarity.
 #'
-#' @param matched_bulk Normalized bulk expression matrix (genes × samples) where:
-#'        - Columns match `phenotype` row names
-#'        - Genes match features in `sc_data`
-#' @param sc_data Seurat object containing preprocessed single-cell data:
-#' @param phenotype Data frame with clinical annotations where:
-#'        - Rows correspond to `matched_bulk` columns
-#'        - For survival: contains `time` and `status` columns
-#' @param label_type Character specifying phenotype label type (e.g., "SBS1", "time"), stored in `scRNA_data@misc`
-#' @param phenotype_class Analysis mode:
-#'        - `"binary"`: Case-control design (e.g., responder/non-responder)
-#'        - `"survival"`: Time-to-event analysis data.frame
+#' @inheritParams Screen
 #' @param alpha Coefficient of phenotype regularization (default=`0.005`).
 #' @param alpha_2 Coefficent of cell-cell similarity regularization (default=`0.005`).
 #' @param k_max The maximum rank value to consider in the search. Must be at least 2. Defaults to `20`.
@@ -85,13 +75,14 @@ DoscAB <- function(
   tred = 2L,
   ...
 ) {
+  check_installed("scAB", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/scAB")
+  })
+
   chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
-  phenotype_class <- SigBridgeRUtils::MatchArg(
-    phenotype_class,
-    c("binary", "survival"),
-    NULL
-  )
+  phenotype_class <- arg_match(phenotype_class)
   chk::chk_number(maxiter)
   chk::chk_number(tred)
   # scAB can't tolerate NA
@@ -116,43 +107,30 @@ DoscAB <- function(
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
-  parallel <- (dots$parallel %||% FALSE) &
-    !inherits(future::plan("list")[[1]], "sequential")
   assay <- dots$assay %||% "RNA"
   load_cache <- dots$load_cache
   save_cache <- dots$save_cache
 
   # -- build cache params ----------------------------------------------------
-  cache_params <- list(
-    alpha = alpha,
-    alpha_2 = alpha_2,
-    k_max = k_max,
-    cross_k = cross_k,
-    repeat_times = repeat_times,
-    maxiter = maxiter,
-    tred = tred,
-    seed = seed,
-    assay = assay
+  cache_params <- ScreenMethodConfig(
+    method_name = "scAB",
+    phenotype_class = phenotype_class,
+    label_type = label_type,
+    param = fn_fmls() # NULL is OK; stores the parameters
   )
 
   # -- load mode: restore cached scAB_obj and k ------------------------------
   if (!is.null(load_cache)) {
-    cache_dir <- CacheSetHere(
+    cache <- CacheSysCall(
+      mode = "load",
       path = load_cache,
-      screen_method = "scAB",
-      phenotype_class = phenotype_class,
-      mode = "load"
-    )
-    CheckCache(
-      path = cache_dir,
-      screen_method = "scAB",
-      phenotype_class = phenotype_class,
-      label_type = label_type,
-      params = cache_params
+      cache = cache_params,
+      verbose = verbose,
+      timestamp = dots$timestamp,
     )
 
-    scAB_obj <- LoadCache(file = file.path(cache_dir, "scAB_obj.qs2"))
-    k <- LoadCache(file = file.path(cache_dir, "k.qs2"))
+    scAB_obj <- cache$scAB_obj
+    k <- cache$k
 
     if (verbose) {
       ts_cli$cli_alert_info(
@@ -196,30 +174,12 @@ DoscAB <- function(
 
     # -- save mode: persist scAB_obj and k to cache --------------------------
     if (!is.null(save_cache)) {
-      cache_dir <- CacheSetHere(
+      cache_dir <- CacheSysCall(
+        mode = "save",
         path = save_cache,
-        screen_method = "scAB",
-        phenotype_class = phenotype_class,
-        mode = "save"
-      )
-      WriteCache(
-        x = scAB_obj,
-        file = file.path(cache_dir, "scAB_obj.qs2"),
-        format = "qs2"
-      )
-      WriteCache(
-        x = k,
-        file = file.path(cache_dir, "k.qs2"),
-        format = "qs2"
-      )
-      WriteCacheMeta(
-        file = file.path(cache_dir, "cache_config.json"),
-        screen_method = "scAB",
-        phenotype_class = phenotype_class,
-        label_type = label_type,
-        params = cache_params,
-        verbose = FALSE,
-        additional_description = dots$additional_description
+        cache = cache_params,
+        verbose = verbose,
+        timestamp = dots$timestamp
       )
     }
   }
@@ -273,15 +233,7 @@ DoscAB <- function(
   )
   sc_data <- SigBridgeRUtils::AddMisc(
     seurat_obj = sc_data,
-    scAB_type = label_type,
-    scAB_para = c(
-      list(
-        iter = scAB_result$iter,
-        loss = scAB_result$loss,
-        method = scAB_result$method
-      ),
-      cache_params
-    ),
+    scAB = cache_params,
     cover = FALSE
   )
 

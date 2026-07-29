@@ -20,7 +20,9 @@ With so many parameters in the screening methods, it's often confusing how to se
 
 To enable scissor to search an optimal `alpha`, just change `alpha = <A value>` to `alpha = NULL`. In this case, alpha will iterate from 0.005 to 0.9 until the selected cells fraction is over the `cutoff` value. That is to say, Scissor will designate exactly the top (and bottom) percentage of cells —- corresponding to the specified cutoff value -— as positive cells.
 
-```{r,scissor_params,eval=FALSE}
+```{r}
+#| label: scissor_params
+#| eval: false
 # * From
 # scissor_res <- Screen(
 #   matched_bulk = matched_bulk,
@@ -44,7 +46,8 @@ scissor_res <- Screen(
 
 Output goes like this when using example data
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 # ℹ [2025/11/07 08:39:59] Scissor start...
 # ℹ [2025/11/07 08:39:59] Start from raw data...
 # ℹ Using "RNA_snn" graph for network.
@@ -85,7 +88,9 @@ Output goes like this when using example data
 
 scAB has two key parameters, `alpha` and `alpha_2`: the former determines the overall selection proportion, while the latter determines the selection proportion within each scAB subset. Simply change the values of these two parameters from single values to numeric sequences, and scAB will automatically iterate through the combinations to find the optimal pair of `alpha` and `alpha_2`.
 
-```{r,scAB_params,eval=FALSE}
+```{r}
+#| label: scAB_params
+#| eval: false
 # * From
 # scAB_res <- Screen(
 #   matched_bulk = matched_bulk,
@@ -112,14 +117,18 @@ scAB_res <- Screen(
 )
 ```
 
-```{r,scAB_params2,eval=FALSE}
+```{r}
+#| label: scAB_params2
+#| eval: false
 length(seq1) * length(seq2)
 # [1] 12
 ```
 
 As you can see, with so many (alpha, alpha_2) pairs -- each requiring evaluation -— the runtime can become prohibitively long. In such cases, parallel computing can be employed to accelerate the process.
 
-```{r,scAB_params3,eval=FALSE}
+```{r}
+#| label: scAB_params3
+#| eval: false
 # * install `furrr` first, as it is required for parallel computing
 # * We recommend using `future.mirai`, as it is more stable and faster than `future`
 rlang::check_installed(c("furrr", "future.mirai"))
@@ -140,7 +149,8 @@ scAB_res <- Screen(
 
 Output goes like this when using example data
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 # ℹ [2025/11/07 08:43:48] Start scAB screening.
 # ℹ  Using "RNA_snn" graph for network.
 # ℹ [2025/11/07 08:43:53] Selecting K...
@@ -161,7 +171,9 @@ After identifying the optimal (alpha, alpha_2) pair, scAB will use this paramete
 
 The iteration of alpha in scPAS is similar to that in Scissor, and the method to enable iteration is the same.
 
-```{r,scPAS_params,eval=FALSE}
+```{r}
+#| label: scPAS_params
+#| eval: false
 # * From
 # scPAS_res <- Screen(
 #   matched_bulk = matched_bulk,
@@ -185,7 +197,8 @@ scPAS_res <- Screen(
 
 Output goes like this when using example data
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 # ℹ [2025/10/20 16:43:31] Start scPAS screening.
 # ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.
 # ℹ [2025/10/20 16:43:32] Extracting single-cell expression profiles...
@@ -227,7 +240,9 @@ Output goes like this when using example data
 
 scPP is based on marker genes, AUC, and enrichment scores, which requires tuning the `probs` parameter, as it represents the quantile threshold. The input `probs` must be between 0 and 0.5.
 
-```{r,scPP_params,eval=FALSE}
+```{r}
+#| label: scPP_params
+#| eval: false
 # * From
 # scPP_res <- Screen(
 #   matched_bulk = matched_bulk,
@@ -252,7 +267,8 @@ scPP_res <- Screen(
 
 Output goes like this when using example data
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 # ℹ [2025/11/07 08:53:20] Start scPP screening.
 # ℹ [2025/11/07 08:53:20] Finding overall markers...
 # Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :
@@ -300,6 +316,8 @@ Output goes like this when using example data
 
 ## Session Info
 
-```{r,sessionInfo,echo=FALSE}
+```{r}
+#| label: sessionInfo
+#| echo: false
 sessionInfo()
 ```

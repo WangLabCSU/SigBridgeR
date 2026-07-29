@@ -97,7 +97,11 @@ DoscPP <- function(
   ...
 ) {
   check_installed("dplyr")
-  CheckInstalled("Exceret/ScPP")
+  check_installed("scPAS", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/scPAS")
+  })
+
   chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
   phenotype_class <- tolower(phenotype_class)

@@ -66,7 +66,11 @@ CacheSysCall.load <- function(
   }
 
   load_fn <- purrr::in_parallel(\(param_name) {
-    LoadCache(file = file.path(path, param_name))
+    file <- file.path(path, param_name)
+    if (!file.exists(file)) {
+      return(NULL)
+    }
+    LoadCache(file = file)
   })
   purrr::map(
     param_names,

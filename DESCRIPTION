@@ -18,21 +18,17 @@ Imports:
     chk,
     cli,
     data.table,
-    IDConverter,
     lifecycle,
     Matrix,
     purrr,
     rlang (>= 1.0.0),
     S7,
-    scAB (>= 1.0.4),
-    Scissor (>= 2.0.1),
     Seurat (>= 5.0.0),
     SeuratObject (>= 5.0.0),
     SigBridgeRUtils (>= 0.2.5)
 Depends: 
     R (>= 4.1.0)
 Remotes: 
-    github::Exceret/ALRA,
     github::Exceret/DEGAS,
     github::Exceret/LPSGL,
     github::Exceret/PIPET,
@@ -42,14 +38,10 @@ Remotes:
     github::Exceret/SCIPAC,
     github::Exceret/Scissor,
     github::Exceret/scPAS,
-    github::Exceret/ScPP,
-    github::ShixiangWang/IDConverter,
-    github::yonicd/tidycheckUsage
+    github::Exceret/ScPP
 Suggests: 
-    ALRA,
     anndata,
     anndataR,
-    BiocManager,
     carrier,
     celldex,
     cheapr,
@@ -74,7 +66,6 @@ Suggests:
     LPSGL,
     matrixStats,
     matrixTests,
-    methods,
     mLLMCelltype,
     org.Hs.eg.db,
     pak,
@@ -92,9 +83,11 @@ Suggests:
     rSIDISH (>= 0.0.2),
     rstudioapi,
     rTiRank,
+    scAB (>= 1.0.4),
     scCustomize,
     SCIPAC,
-    scPAS,
+    Scissor (>= 2.0.1),
+    scPAS (>= 0.2.1),
     ScPP,
     SingleR,
     sparseMatrixStats,

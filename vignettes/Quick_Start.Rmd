@@ -12,7 +12,9 @@ vignette: >
 
 ## Preparation
 
-```{r,prework,eval=FALSE}
+```{r}
+#| label: prework
+#| eval: false
 if (!requireNamespace("remotes")) {
   install.packages("remotes")
 }
@@ -28,21 +30,27 @@ library(Seurat)
 
 We will start with a simple example.
 
-```{r,set_workig_directory,eval=FALSE}
+```{r}
+#| label: set_workig_directory
+#| eval: false
 if (requireNamespace("here", quietly = TRUE)) {
   setwd(here::here())
   knitr::opts_knit$set(root.dir = here::here())
 }
 ```
 
-```{r,example,eval=FALSE}
+```{r}
+#| label: example
+#| eval: false
 library(zeallot) # %<-%
 c(mat_exam, bulk_bi, pheno_bi) %<-% LoadRefData(data_type = "binary")
 ```
 
 `mat_exam` is a single-cell RNA expression matrix, `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.
 
-```{r,binary_phenotype,eval=FALSE}
+```{r}
+#| label: binary_phenotype
+#| eval: false
 head(pheno_bi)
 # TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01
 #               1               1               1               1               1               1
@@ -50,7 +58,9 @@ head(pheno_bi)
 
 By the way, when using patients' survival data as phenotype, the reference data is a **data.frame**.
 
-```{r,survival_phenotype,eval=FALSE}
+```{r}
+#| label: survival_phenotype
+#| eval: false
 pheno_sur <- LoadRefData(data_type = "survival")[[3]]
 head(pheno_sur)
 #               time status
@@ -64,7 +74,9 @@ head(pheno_sur)
 
 The single-cell RNA expression matrix needs to be processed into a Seurat object. We set `scale.features` to all genes in order to maximize the flexibility of downstream analyses and capture a broader range of biological signals, so as to avoid insignificant results caused by too small a dataset.
 
-```{r,seurat,eval=FALSE}
+```{r}
+#| label: seurat
+#| eval: false
 seurat_obj <- SCPreProcess(
   mat_exam,
   params = list(
@@ -79,7 +91,9 @@ seurat_obj <- SCPreProcess(
 
 Then we can use these data to screen out phenotype-assoicated cells. Let's start by trying **Scissor**.
 
-```{r,scissor,eval=FALSE}
+```{r}
+#| label: scissor
+#| eval: false
 scissor_res <- Screen(
   bulk_bi,
   seurat_obj,
@@ -92,7 +106,9 @@ scissor_res <- Screen(
 
 Other screening methods are also available.
 
-```{r,other_screening,eval=FALSE}
+```{r}
+#| label: other_screening
+#| eval: false
 scpas_res <- Screen(
   bulk_bi,
   seurat_obj,
@@ -105,7 +121,9 @@ scpas_res <- Screen(
 
 Since the screening is performed on the same data, we merge them.
 
-```{r,merge,eval=FALSE}
+```{r}
+#| label: merge
+#| eval: false
 merged_seurat <- MergeResult(
   scissor_res,
   scpas_res
@@ -118,7 +136,9 @@ Finally, we visualize the screening results.
 
 -   stacked bar plot:
 
-```{r,visualize_fraction,eval=FALSE}
+```{r}
+#| label: visualize_fraction
+#| eval: false
 fraction <- ScreenFractionPlot(
   merged_seurat,
   group_by = "seurat_clusters",
@@ -129,7 +149,9 @@ fraction <- ScreenFractionPlot(
 # [1] "stats"         "plot"          "combined_plot"
 ```
 
-```{r,visualize_fraction_plot,eval=FALSE}
+```{r}
+#| label: visualize_fraction_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/fraction_q.png")
 ```
 
@@ -137,7 +159,9 @@ knitr::include_graphics("vignettes/example_figures/fraction_q.png")
 
 -   Venn diagram:
 
-```{r,visualize_venn,eval=FALSE}
+```{r}
+#| label: visualize_venn
+#| eval: false
 c(scissor_pos, scpas_pos) %<-%
   purrr::map(
     c("scissor", "scPAS"),
@@ -177,7 +201,9 @@ venn_plot <- ggVennDiagram::ggVennDiagram(
 
 ```
 
-```{r,visualize_venn_plot,eval=FALSE}
+```{r}
+#| label: visualize_venn_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/venn_q.png")
 ```
 
@@ -185,14 +211,18 @@ knitr::include_graphics("vignettes/example_figures/venn_q.png")
 
 -   Set plot:
 
-```{r,visualize_set,eval=FALSE}
+```{r}
+#| label: visualize_set
+#| eval: false
 upset <- ScreenUpset(
   merged_seurat,
   screen_type = c("scissor", "scPAS")
 )
 ```
 
-```{r,visualize_upset_plot,eval=FALSE}
+```{r}
+#| label: visualize_upset_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/upset_q.png")
 ```
 
@@ -200,7 +230,9 @@ knitr::include_graphics("vignettes/example_figures/upset_q.png")
 
 -   2D UMAP:
 
-```{r,visualize_umap,eval=FALSE}
+```{r}
+#| label: visualize_umap
+#| eval: false
 library(patchwork)
 library(randomcoloR)
 
@@ -249,7 +281,9 @@ umaps <- cluster_umap +
 umaps
 ```
 
-```{r,visualize_umap_plot,eval=FALSE}
+```{r}
+#| label: visualize_umap_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/umaps_q.png")
 ```
 
@@ -259,6 +293,7 @@ For more detail, please see [Full Tutorial](https://wanglabcsu.github.io/SigBrid
 
 Session information:
 
-```{r,session_info}
+```{r}
+#| label: session_info
 sessionInfo()
 ```

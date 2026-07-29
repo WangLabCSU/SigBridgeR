@@ -74,7 +74,10 @@ DoSIDISH <- function(
   sidish_params = list(),
   ...
 ) {
-  CheckInstalled("Exceret/rSIDISH")
+  check_installed("rSIDISH", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/rSIDISH")
+  })
 
   chk::chk_is(sc_data, "Seurat")
   # Validate phenotype_class parameter

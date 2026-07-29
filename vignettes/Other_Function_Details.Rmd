@@ -24,7 +24,9 @@ Currently, 3 package options are provided:
 
 These options can be modified using either the `setFuncOption` or `Options` function (the former is recommended).
 
-```{r,package_options_example,eval=FALSE}
+```{r}
+#| label: package_options_example
+#| eval: false
 setFuncOption(seed = 321L)
 
 options(SigBridgeR.seed = 321L)
@@ -32,13 +34,17 @@ options(SigBridgeR.seed = 321L)
 
 `setFuncOption` automatically detects the prefix, so parameters with a package name prefix are also compatible.
 
-```{r,package_options_example_2,eval=FALSE}
+```{r}
+#| label: package_options_example_2
+#| eval: false
 setFuncOption(SigBridgeR.seed = 321L)
 ```
 
 `getFuncOption` is used to retrieve the global parameters of SigBridgeR.
 
-```{r,package_options_example_3,eval=FALSE}
+```{r}
+#| label: package_options_example_3
+#| eval: false
 getFuncOption("seed")
 # 321
 
@@ -53,7 +59,8 @@ getFuncOption("SigBridgeR.seed")
 
 ### Basic Usage
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 # Set explicit thread count
 setThreads(8L)
 
@@ -65,7 +72,8 @@ setThreads(openmp = 4L) # OpenMP only
 ### TensorFlow Optimization
 ⚠️ **Must configure BEFORE importing TensorFlow**:
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 setThreads(
   threads = 8L,
   tf_config = list(
@@ -100,7 +108,9 @@ Evaluates 3 dimensions of preprocessing quality:
 
 Exmaple Usage:
 
-```{r,optimal_normalization,eval=FALSE}
+```{r}
+#| label: optimal_normalization
+#| eval: false
 obj <- Seurat::CreateSeuratObject(counts)
 
 sct <- Seurat::SCTransfrom(obj)
@@ -124,7 +134,8 @@ ChooseNormalization(
 )
 ```
 
-```{r,,eval=FALSE}
+```{r}
+#| eval: false
 # ℹ Using 1088 cells
 # ℹ Comparing 2 methods: sct and lognorm
 # ── Method Ranking (Composite Score)
@@ -149,7 +160,9 @@ Supports simultaneously adding Seurat objects preprocessed with multiple methods
 
 Usually the number if principle components (PCs) is manually set to 10 or 20 according to the elbow plot. However, it is not always the case that the PCs with the highest variance are the most informative. Here is a function to help you find the optimal number of PCs.
 
-```{r,find_optimal_pc_example,eval=FALSE}
+```{r}
+#| label: find_optimal_pc_example
+#| eval: false
 ndims <- FindRobustElbow(
   obj = seurat,
   verbose = TRUE,
@@ -173,7 +186,9 @@ print(ndims)
 
 This function will draw an elbow plot with each method and the recommended number of PCs. You can also use the `ndims` parameter to specify the maximum number of PCs to be tested. The default value is `50`.
 
-```{r,example_data_elbow_plot,eval=FALSE}
+```{r}
+#| label: example_data_elbow_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/elbow.png")
 ```
 
@@ -186,7 +201,9 @@ SigBridgeR uses `AddMisc()` to record what data features or evidence the various
 
 -   `AddMisc()` : Add miscellaneous information to the Seurat object. Support for adding multiple attributes to the `SeuratObject@misc` slot simultaneously.
 
-```{r,add_misc_example,eval=FALSE}
+```{r}
+#| label: add_misc_example
+#| eval: false
 # basic usage
 seurat_obj <- AddMisc(seurat_obj, "QC_stats" = qc_df)
 
@@ -206,7 +223,9 @@ seurat_obj <- AddMisc(seurat_obj, list(attr1 = "value1", attr2 = "value2"))
 SigBridgeR uses `AddMetaFeature()` to update the `SeuratObject@assays$RNA@meta.data`
 
 Add a new column to the metadata
-```{r,add_meta_feature_example,eval=FALSE}
+```{r}
+#| label: add_meta_feature_example
+#| eval: false
 gene_type <- rep("test", nrow(seurat_obj))
 
 seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type)
@@ -214,7 +233,9 @@ seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type)
 
 Add a data.frame to the metadata, with the column names as the metadata names. 
 
-```{r,add_meta_feature_example_2,eval=FALSE}
+```{r}
+#| label: add_meta_feature_example_2
+#| eval: false
 seurat_obj <- AddMetaFeature(
   seurat_obj,
   data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj)
@@ -223,7 +244,9 @@ seurat_obj <- AddMetaFeature(
 
 Add to different assays
 
-```{r,add_meta_feature_example_3,eval=FALSE}
+```{r}
+#| label: add_meta_feature_example_3
+#| eval: false
 seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "RNA")
 seurat_obj <- AddMetaFeature(
   seurat_obj,
@@ -242,7 +265,9 @@ If duplicate column names are detected, they will be suffixed with an underscore
 
 When passing raw matrices, the function performs a "join" operation based on the union of all genes. Missing values are filled with NA.
 
-```{r,matrix_integration_example,eval=FALSE}
+```{r}
+#| label: matrix_integration_example
+#| eval: false
 # Create dummy matrices
 mat1 <- matrix(
   rpois(50, 5),
@@ -261,7 +286,9 @@ integrated_mat <- SCIntegrate(BatchA = mat1, BatchB = mat2)
 integrated_mat2 <- SCIntegrate(mat1, mat2)
 ```
 
-```{r,head_integrated_mat,eval=FALSE}
+```{r}
+#| label: head_integrated_mat
+#| eval: false
 integrated_mat[1:6, 1:4]
 #     BatchA_C1 BatchA_C2 BatchA_C3 BatchA_C4
 # G1          3         2         4         5
@@ -309,7 +336,9 @@ If more are needed, see [A Guide for Custom Extensions](https://wanglabcsu.githu
 
 Example Usage
 
-```{r,seurat_integration_example,eval=FALSE}
+```{r}
+#| label: seurat_integration_example
+#| eval: false
 integrated <- SCIntegrate(
   obj1,
   obj2, # -> merge.Seurat
@@ -322,7 +351,9 @@ integrated <- SCIntegrate(
 
 An example using mock data
 
-```{r,seurat_integration_example_2,eval=FALSE}
+```{r}
+#| label: seurat_integration_example_2
+#| eval: false
 mat1 <- matrix(
   rpois(1000, 5),
   nrow = 20,
@@ -346,7 +377,9 @@ integrated_seu <- SCIntegrate(
 )
 ```
 
-```{r,head_integrated_seu,eval=FALSE}
+```{r}
+#| label: head_integrated_seu
+#| eval: false
 integrated_seu
 # An object of class Seurat
 # 30 features across 110 samples within 1 assay
@@ -361,7 +394,9 @@ As of version 3.3.0, three built-in cell annotation algorithms are included and 
 
 Basic usage:
 
-```{r,cell_type_annotation_example,eval=FALSE}
+```{r}
+#| label: cell_type_annotation_example
+#| eval: false
 seurat <- SCAnnotate(
   sc = seurat,
   method = c("CellTypist", "SingleR", "mLLMCelltype")
@@ -377,7 +412,9 @@ To control it manually, use following functions:
 
 This is the direct R wrapper of celltypist.annotate. Unlike `SCAnnotate`, it does not prepare an environment for you.
 
-```{r,cell_typist_annotation_example_2,eval=FALSE}
+```{r}
+#| label: cell_typist_annotation_example_2
+#| eval: false
 seurat <- CellTypistAnnotate(
   sc,
   model = NULL,
@@ -414,7 +451,9 @@ helpful link: [https://github.com/Teichlab/celltypist](https://github.com/Teichl
 
 ## mLLMCelltype Annotation
 
-```{r,mLLMCelltype_annotation_example,eval=FALSE}
+```{r}
+#| label: mLLMCelltype_annotation_example
+#| eval: false
 seurat <- mLLMCellTypeAnnotate(
   sc,
   seurat_obj_markers = NULL,
@@ -467,7 +506,9 @@ helpful link: [https://github.com/cafferychen777/mLLMCelltype](https://github.co
 
 ## SingleR Annotation
 
-```{r,singleR_annotation_example,eval=FALSE}
+```{r}
+#| label: singleR_annotation_example
+#| eval: false
 seurat <- SingleRAnnotate(
   sc,
   verbose = getFuncOption("verbose"), # TRUE
@@ -503,7 +544,9 @@ helpful link: [https://github.com/SingleR-inc/SingleR](https://github.com/Single
 
 Some screening methods (e.g. [Section 3.5 DEGAS](#35-option-e-degas-screening)) are built using Python and require an execution environment. Here is a function to help you set up a Python environment. Both Windows and Unix-like systems are supported.
 
-```{r,setup_python_env_example,eval=FALSE}
+```{r}
+#| label: setup_python_env_example
+#| eval: false
 # * This is an example of setting up a Python environment using conda
 SetupPyEnv(
     env_type = "conda",
@@ -523,7 +566,9 @@ SetupPyEnv(
 reticualte::use_condaenv("test-condaenv")
 ```
 
-```{r,setup_python_env_example_2,eval=FALSE}
+```{r}
+#| label: setup_python_env_example_2
+#| eval: false
 # * Or use virtualenv via reticulate
 SetupPyEnv(
   env_type = "venv",
@@ -540,7 +585,9 @@ reticulate::use_virtualenv("test-venv")
 
 You can use `ListPyEnv()` to list all the Python environments you have set up. Both conda and virtual environments are supported.
 
-```{r,list_py_env_example,eval=FALSE}
+```{r}
+#| label: list_py_env_example
+#| eval: false
 # * Unix-like systems
 ListPyEnv()
 #                 name                                                  python  type
@@ -551,7 +598,9 @@ ListPyEnv()
 
 Show the conda environments only:
 
-```{r,list_py_env_example_2,eval=FALSE}
+```{r}
+#| label: list_py_env_example_2
+#| eval: false
 # * Unix-like systems
 ListPyEnv(env_type = "conda")
 #                 name                                                  python  type
@@ -561,7 +610,9 @@ ListPyEnv(env_type = "conda")
 
 If the virtual environment isn't installed in the default location, you can specify the location of the virtual environment with the `venv_locations` parameter.
 
-```{r,list_py_env_example_3,eval=FALSE}
+```{r}
+#| label: list_py_env_example_3
+#| eval: false
 ListPyEnv(env_type = "venv", venv_locations = "~/here_is_a_dir/.virtualenvs")
 ```
 
@@ -578,7 +629,9 @@ ListPyEnv(env_type = "venv", venv_locations = "~/here_is_a_dir/.virtualenvs")
 
 When loading the example data, the single-cell RNA expression matrix, the bulk RNA expression matrix, and the clinical phenotype data are loaded all at once. These data are combined into a list and returned.
 
-```{r,load_ref_data_example,eval=FALSE}
+```{r}
+#| label: load_ref_data_example
+#| eval: false
 mydata <- LoadRefData(
   data_type = c("survival"),
   path = tempdir(),
@@ -619,7 +672,9 @@ mydata[[3]] |> head()
 
 We recommend using the `zeallot` package's `%<-%` function to assign values and rename them simultaneously.
 
-```{r,load_ref_data_example_2,eval=FALSE}
+```{r}
+#| label: load_ref_data_example_2
+#| eval: false
 library(zeallot)
 
 c(mat_exam, bulk, pheno) %<-%
@@ -647,7 +702,8 @@ These functions collapse duplicated row names (e.g., gene symbols) or column nam
 
 ### Basic Usage
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 # Example matrix with duplicate genes (rows) and samples (columns)
 mat <- matrix(
   1:16,
@@ -703,7 +759,9 @@ resolving the dependency chain.
 
 #### Example
 
-```{r,get_var_value_example,eval=FALSE}
+```{r}
+#| label: get_var_value_example
+#| eval: false
 g <- function(a = 1, b = 2) {
   c <<- a * 2 + b * 3
   d = c^2
@@ -723,6 +781,8 @@ get_var_value("a", h) # returns 1
 
 To copy `get_var_value` into your own package, run:
 
-```{r,usethis_use_standalone_example,eval=FALSE}
+```{r}
+#| label: usethis_use_standalone_example
+#| eval: false
 usethis::use_standalone("WangLabCSU/SigBridgeR", "standalone-get_var_value.R")
 ```

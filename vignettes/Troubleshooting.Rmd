@@ -36,7 +36,8 @@ R CMD INSTALL --configure-args="--disable-threading"  .
 
 or
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 BiocManager::install(
   "preprocessCore",
   configure.args = "--disable-threading",
@@ -60,7 +61,8 @@ This may be due to two reasons: first, a mismatch in the dimensions of the bulk 
 
 To check dimension mismatch：
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 ncol(your_bulk_data) == nrow(your_phenotype_data) # should be TRUE
 
 all(unique(colnames(your_bulk_data)) == unique(rownames(your_bulk_data))) # should be TRUE
@@ -70,7 +72,8 @@ all(order(colnames(your_bulk_data)) == order(rownames(your_phenotype_data))) # s
 
 Survival phenotype column names should be formatted as `time` and `status`, ensuring correct capitalization and spelling:
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 head(survival_phenotype) # case-sensitive
 #           time status
 # GSM70130 34.80      0
@@ -93,7 +96,8 @@ head(survival_phenotype) # case-sensitive
 
 An error occurred during installation, causing the package to be corrupted. Try reinstalling the package:
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 # I reccomend restarting R/RStudio before reinstalling
 remove.packages("SigBridgeR")
 
@@ -117,12 +121,16 @@ remotes::install_github("WangLabCSU/SigBridgeR")
 
 This may be due to the R environment being contaminated, which prevents the use of `%<-%`. You can try restarting the R environment or clean up the environment.
 
-```{r,restart_R,eval=FALSE}
+```{r}
+#| label: restart_R
+#| eval: false
 # restart R/RStudio
 .rs.api.restartSession()
 ```
 
-```{r,clean_all,eval=FALSE}
+```{r}
+#| label: clean_all
+#| eval: false
 rm(list = ls(all.names = TRUE))
 ```
 
@@ -164,7 +172,9 @@ This issue arises from the single-cell processing, which filtered out too many g
 
 `reticulate` cannot find the relevant environment because a Python backend has been registered. One solution is to pass in the Python path of the environment instead of the environment name.
 
-```{r,find_python_path,eval=FALSE}
+```{r}
+#| label: find_python_path
+#| eval: false
 envs <- ListPyEnv()
 head(envs) # goes like this
 #                                                            name                                                  python  type
@@ -174,7 +184,8 @@ head(envs) # goes like this
 
 For example, if wanna use the `r-reticulate-degas` environment, pass its Python location to `reticulate::use_condaenv()`.
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 py_path <- envs[envs$name == "r-reticulate-degas", "python"]
 # /home/user/miniconda3/envs/r-reticulate-degas/bin/python
 reticulate::use_condaenv(py_path)
@@ -233,7 +244,8 @@ If the output is `ModuleNotFoundError: No module named 'tensorflow'`, you need t
 
 Output message is probably like this:
 
-```{r,eval=FALSE}
+```{r}
+#| eval: false
 # Running SCTransform on assay: Xenium
 # vst.flavor='v2' set. Using model with fixed slope and excluding poisson genes.
 # Calculating cell attributes from input UMI matrix: log_umi

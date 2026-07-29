@@ -35,12 +35,16 @@ FUNC_NAME <- function(
   phenotype_class = c("binary", "survival", "continuous"),
   ...
 ) {
-  rlang::check_installed("<your-name>/<your-repo>")
+  rlang::check_installed("pak")
+  rlang::check_installed("<your-repo>", action = \(pkg, ...) {
+    pak::pak("<your-name>/<your-repo>") # TODO: Replace with your own package name and repository
+  })
+
   # Validate phenotype_class parameter
-  phenotype_class <- match.arg(phenotype_class)
+  phenotype_class <- rlang::arg_match(phenotype_class)
 
   # Extract additional arguments
-  dots <- list(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% TRUE
 
   # TODO: Implement your screening logic here
@@ -50,5 +54,6 @@ FUNC_NAME <- function(
   # Return result in expected format
   list(
     scRNA_data = modified_sc_data
+    # You can add more items to the list if needed
   )
 }

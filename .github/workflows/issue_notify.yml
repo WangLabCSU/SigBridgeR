@@ -19,8 +19,8 @@ on:
         types: [created, deleted]
     merge_group:
         types: [checks_requested]
-    milestone:
-        types: [opened, deleted]
+    # milestone:
+    #     types: [opened, deleted]
     page_build:
     project:
         types: [created, deleted, reopened]
@@ -40,9 +40,9 @@ on:
         types: [assigned, opened, synchronize, reopened]
     registry_package:
         types: [published]
-    status:
-    watch:
-        types: [started]
+    # status:
+    # watch:
+    #     types: [started]
     # schedule:
     #     - cron: "30 2 * * *"
 

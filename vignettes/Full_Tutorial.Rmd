@@ -64,7 +64,9 @@ SigBridgeR (short for **Sig**nificant cell-to-phenotype **Bridge** in **R**) is 
 
 First load the packages, you will see a version number message indicating successful loading:
 
-```{r,load_package,eval=FALSE}
+```{r}
+#| label: load_package
+#| eval: false
 library(SigBridgeR)
 # ✔ SigBridgeR v3.x.x loaded
 ```
@@ -92,7 +94,9 @@ You can use function `SCPreProcess` to preprocess your single-cell RNA-seq data.
 
 When starting from a raw count matrix (data.frame, matrix or dgCMatrix), `SCPreProcess` executes the steps defined in the pipeline argument (Default: `"onsvpcetu"`). You can customize parameters for each step via the `params` list.
 
-```{r,scpreprocessing_raw_matrix,eval=FALSE}
+```{r}
+#| label: scpreprocessing_raw_matrix
+#| eval: false
 your_seurat <- SCPreProcess(
   sc = your_matrix,
   ...,
@@ -166,7 +170,9 @@ SCPreProcess natively supports AnnData object. You can use package `anndata` or 
 
 First, import the data
 
-```{r,scpreprocessing_anndata,eval=FALSE}
+```{r}
+#| label: scpreprocessing_anndata
+#| eval: false
 reticulate::use_pythonenv("The_path_to_your_python")
 # reticulate::use_condaenv("conda_env_name")
 
@@ -175,7 +181,9 @@ anndata_obj <- anndata::read_h5ad("path_to_your_file.h5ad") # Or other file form
 
 Or use `anndataR` to read in your file:
 
-```{r,scpreprocessing_anndatar,eval=FALSE}
+```{r}
+#| label: scpreprocessing_anndatar
+#| eval: false
 reticulate::use_pythonenv("The_path_to_your_python")
 # reticulate::use_condaenv("conda_env_name")
 
@@ -184,7 +192,9 @@ anndata_obj <- anndataR::read_h5ad("path_to_your_file.h5ad") # basically no diff
 
 Then just pass it to `SCPreProcess`:
 
-```{r,scpreprocessing_in_anndata,eval=FALSE}
+```{r}
+#| label: scpreprocessing_in_anndata
+#| eval: false
 your_seurat <- SCPreProcess(
   anndata_obj,
   pipeline = "onsvpcetu", # Standard pipeline
@@ -207,7 +217,9 @@ For more quality control, please use [scCustmoize](https://samuel-marsh.github.i
 
 If you already have a Seurat object and aim to filter out phenotype-associated cells in tumor cells. `SCPreProcess` will validate its structure and filter out tumor cells using the specified metadata column:
 
-```{r,scpreprocessing_seurat,eval=FALSE}
+```{r}
+#| label: scpreprocessing_seurat
+#| eval: false
 your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
 ```
 
@@ -217,7 +229,9 @@ your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
 >
 > -   Code Example:
 >
-> ```{r,choose_tumor_column,eval=FALSE}
+> ```{r}
+> #| label: choose_tumor_column
+> #| eval: false
 > # For glioblastoma (GBM)
 > seurat_obj$is_tumor <- ifelse(
  >  grep
@@ -255,7 +269,9 @@ Key parameters for `BulkPreProcess`:
 
 Suppose you have bulk RNA-seq count data and sample information, and you want to perform comprehensive preprocessing and quality control. You can refer to and use the following code:
 
-```{r,bulk_preprocess_example,eval=FALSE}
+```{r}
+#| label: bulk_preprocess_example
+#| eval: false
 # Example usage of BulkPreProcess
 filtered_counts <- BulkPreProcess(
   data = your_count_matrix,
@@ -326,7 +342,9 @@ All parameters are set based on empirical values, and users should make appropri
 
 `SymbolConvert` performs a straightforward task: converting common gene identifiers (e.g., Ensemble IDs, Entrez) to standardized gene symbols by using the [IDConverter](https://github.com/ShixiangWang/IDConverter) package.
 
-```{r,symbol_convert_example,eval=FALSE}
+```{r}
+#| label: symbol_convert_example
+#| eval: false
 # genes * samples
 your_bulk_data <- read.csv(
   "path_to_your_file.csv",
@@ -339,7 +357,9 @@ your_bulk_data <- SymbolConvert(your_bulk_data)
 
 You can also use other package like `org.Hs.eg.db`  for gene symbol matching if you prefer not to use SymbolConvert's built-in `IDConverter`.
 
-```{r,symbol_convert_example2,eval=FALSE}
+```{r}
+#| label: symbol_convert_example2
+#| eval: false
 library(org.Hs.eg.db)
 
 your_bulk_data <- read.csv(
@@ -370,12 +390,16 @@ We provide some functions helping formatting and checking your phenotype data.
 
 **Checking NA and report the position**:
 
-```{r,NA_check_function,eval=FALSE}
+```{r}
+#| label: NA_check_function
+#| eval: false
 # `max_print`: output how many NA location messages at one time in console if NA exists
 CheckNA(your_phenotype_data, max_print = 5L)
 ```
 
-```{r, Check_NA_example, eval=FALSE}
+```{r}
+#| label: Check_NA_example
+#| eval: false
 mat <- matrix(
   c(NA, 1, 1, NA),
   2,
@@ -392,7 +416,9 @@ na_position <- CheckNA(mat)
 
 Use it just in tidyverse-like style. The difference between `PhenoMap` and the dplyr workflow is that `PhenoMap` is slightly faster when processing two-dimensional `data.frame` data, and it preserves the `names` attribute when processing one-dimensional vectors. Apart from these two points, there is no other difference — it is simply a syntactic sugar we provide.
 
-```{r,col_convert,eval=FALSE}
+```{r}
+#| label: col_convert
+#| eval: false
 # ? if a vector
 v <- 1:2000
 
@@ -425,7 +451,9 @@ head(d2)
 
 **Direct Interface for Foolproof Data Processing**
 
-```{r,pheno_pre_process,eval=FALSE}
+```{r}
+#| label: pheno_pre_process
+#| eval: false
 your_phenotype_data <- PhenoPreProcess(
   bulk = your_bulk_data,
   phenotype = your_phenotype_data,
@@ -481,7 +509,9 @@ Parameters pass to `...` when using `Scissor` method:
 
 **Usage**:
 
-```{r,scissor_screening,eval=FALSE}
+```{r}
+#| label: scissor_screening
+#| eval: false
 scissor_result <- Screen(
   matched_bulk = matched_bulk,
   sc_data = sc_dataset, # A Seurat object after preprocessing
@@ -495,7 +525,9 @@ scissor_result <- Screen(
 
 You can use the intermediate data for repeated runs. This is an inherent feature of the `Scissor`.
 
-```{r,scissor_screening_cache,eval=FALSE}
+```{r}
+#| label: scissor_screening_cache
+#| eval: false
 scissor_result <- Screen(
   sc_data = sc_dataset,
   label_type = "TP53",
@@ -507,7 +539,9 @@ scissor_result <- Screen(
 
 If only the parameters `alpha` and `cutoff` are adjusted, this method can also be applied.
 
-```{r,scissor_screening_param_adjusted,eval=FALSE}
+```{r}
+#| label: scissor_screening_param_adjusted
+#| eval: false
 # When `alpha = NULL`, an alpha iteration will continue until phenotype-associated cells are screened out or no cells are screened out even after exceeding the `cutoff`.
 scissor_result <- Screen(
   sc_data = sc_dataset,
@@ -531,7 +565,9 @@ scissor_result <- Screen(
 
 You can use `cell_evalutaion = TRUE` and `reliability_test = TRUE` to obtain some supporting information for each Scissor selected cell. First, prepare a benchmark dataset yourself for cell evalutaion.
 
-```{r,scissor_screening_cell_level_evaluation,eval=FALSE}
+```{r}
+#| label: scissor_screening_cell_level_evaluation
+#| eval: false
 scissor_result <- Screen(
   sc_data = sc_dataset,
   label_type = "TP53",
@@ -571,7 +607,9 @@ Parameters pass to `...` when using `scPAS` method (basically adapted from the `
 
 **usage**:
 
-```{r,scPAS_screening,eval=FALSE}
+```{r}
+#| label: scPAS_screening
+#| eval: false
 scpas_result <- Screen(
   matched_bulk = matched_bulk,
   sc_data = A_Seurat_object,
@@ -609,7 +647,9 @@ Parameters pass to `...` when using `scAB` method (basically adapted from the `s
 
 **usage**:
 
-```{r,scAB_screening,eval=FALSE}
+```{r}
+#| label: scAB_screening
+#| eval: false
 scab_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -628,7 +668,9 @@ scab_result <- Screen(
 
 When both `alpha` and `alpha_2` are specified as `NULL` or as search vectors, the total number of searches equals the product of their lengths, which may lead to long runtimes. In such cases, we recommend enabling parallel computation.
 
-```{r,scAB_screening_parallel,eval=FALSE}
+```{r}
+#| label: scAB_screening_parallel
+#| eval: false
 setFuncOption(parallel = TRUE, parallel.type = 'multisession', workers = 4L)
 ```
 
@@ -650,7 +692,9 @@ Parameters pass to `...` when using `scPP` method :
 
 **usage**:
 
-```{r,scPP_screening,eval=FALSE}
+```{r}
+#| label: scPP_screening
+#| eval: false
 # This will take several hours
 scpp_result <- Screen(
   matched_bulk = your_matched_bulk,
@@ -681,7 +725,9 @@ Parameters pass to `...` when using `DEGAS` method
 - `degas_params`: A list of parameters for the DEGAS algorithm, default is `list()`. Use `?DoDEGAS` to see the details.
 - `normality_test_method`: Method for normality testing: `"jarque-bera", "d'agostino", or "kolmogorov-smirnov"`, default is "jarque-bera".
 
-```{r,DEGAS_screening,eval=FALSE}
+```{r}
+#| label: DEGAS_screening
+#| eval: false
 degas_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -761,7 +807,9 @@ This code chunk will CREATE a conda environment called "**r-reticulate-degas**" 
 
 To obtain the default parameters for DEGAS, you can use `SigBridgeR:::DEGASParamSet()`
 
-```{r,get_default_params1,eval=FALSE}
+```{r}
+#| label: get_default_params1
+#| eval: false
 degas_param <- SigBridgeR:::DEGASParamSet(list())
 
 env_param <- SigBridgeR:::DEGASEnvSet(list())
@@ -769,7 +817,9 @@ env_param <- SigBridgeR:::DEGASEnvSet(list())
 
 You can use `ListPyEnvs()` to list all the python environments in your system, including virtual environments. Both Windows and Unix-like systems are supported. More information can be found in [https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html)
 
-```{r,show_python_envs2,eval=FALSE}
+```{r}
+#| label: show_python_envs2
+#| eval: false
 # * On Unix-like system it goes like this
 ListPyEnv()
 #                 name                                                   python  type
@@ -798,7 +848,9 @@ Parameters pass to `...` when using `LP_SGL` method
   - `logFC_threshold`: Log fold change threshold (default: `1`)
   - `pval_threshold`: P-value threshold (default: `0.05`)
 
-```{r,LP_SGL_screening,eval=FALSE}
+```{r}
+#| label: LP_SGL_screening
+#| eval: false
 lpsgl_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -841,7 +893,9 @@ Parameters pass to `...` when using `PIPET` method
 
 **Usage**:
 
-```{R,PIPET_screening,eval=FALSE}
+```{R}
+#| label: PIPET_screening
+#| eval: false
 pipet_result = Screen(
     matched_bulk = matched_bulk,
     sc_data = sc_dataset, # A Seurat object after preprocessing
@@ -873,7 +927,9 @@ Parameters passed to `...` when using `SIDISH` method:
 - `sidish_param`: List of parameters for SIDISH algorithm. See below for details.
 - `env_params`: List of parameters for environment setup. See below for details.
 
-```{r,SIDISH_screening,eval=FALSE}
+```{r}
+#| label: SIDISH_screening
+#| eval: false
 sidish_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -957,7 +1013,9 @@ This code chunk will CREATE a conda environment called **`r-reticulate-sidish-nv
 
 To obtain the default parameters for SIDISH, use `SigBridgeR:::SIDISHParamSet()` and `SigBridgeR:::SIDISHEnvSet()`:
 
-```{r,get_default_params,eval=FALSE}
+```{r}
+#| label: get_default_params
+#| eval: false
 # Get default SIDISH algorithm parameters
 sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
 
@@ -970,7 +1028,9 @@ env_default_gpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cuda")
 
 You can use `ListPyEnvs()` to list all Python environments available on your system (both conda and virtualenv):
 
-```{r,show_python_envs,eval=FALSE}
+```{r}
+#| label: show_python_envs
+#| eval: false
 ListPyEnv()
 #                 name                                                   python  type
 # 1               base                         /home/user/miniconda3/bin/python conda
@@ -1001,7 +1061,9 @@ Parameters pass to `...` when using `PIPET` method
 - `nfold`: Integer. Number of folds for cross-validation for regression models. Default is `10L`.
 - `...`: Additional arguments. Supports `assay` (character), `verbose` (logical), and `seed` (integer).
 
-```{r,SCIPAC_screening,eval=FALSE}
+```{r}
+#| label: SCIPAC_screening
+#| eval: false
 scipac_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -1030,7 +1092,9 @@ scipac_result <- Screen(
 
 If you have performed multiple screening methods one the same single-cell data, you can use the `MergeResult` to merge the screening results of these methods. The Seurat object or a results list from `Screen` is accepted.
 
-```{r,merge_screening_results,eval=FALSE}
+```{r}
+#| label: merge_screening_results
+#| eval: false
 merged_seurat <- MergeResult(
   your_scissor_result,
   your_scPAS_result,
@@ -1074,7 +1138,9 @@ Here we provide some visualization methods for the screening results. Considerin
 
 Suppose you have performed all algorithm screening on your Seurat object and wish to examine the distribution across different celltypes and patient, you may reference and use the following code:
 
-```{r,umap_exmaple,eval=FALSE}
+```{r}
+#| label: umap_exmaple
+#| eval: false
 library(zeallot)
 # library(Seurat)
 # library(patchwork)
@@ -1120,7 +1186,9 @@ This will generate seven UMAP plots separately.
 
 Or suppose you have performed `scPAS` screening on your Seurat object and want to visualize the distribution of prediction confidence scores, you may reference and use the following code:
 
-```{r,umap_exmaple2,eval=FALSE}
+```{r}
+#| label: umap_exmaple2
+#| eval: false
 library(zeallot)
 library(patchwork)
 # library(Seurat)
@@ -1163,7 +1231,9 @@ Key parameters for `ScreenFractionPlot`:
 
 Suppose you have already performed the `scPAS` algorithm screening on your Seurat object, and you want to check the proportion of positive cells across different patients. You can refer to and use the following code:
 
-```{r,stack_bar_plot_example,eval=FALSE}
+```{r}
+#| label: stack_bar_plot_example
+#| eval: false
 plot <- ScreenFractionPlot(
   screened_seurat = scpas_result$scRNA_data,
   group_by = "patient", # grouping basis for the x-axis
@@ -1174,7 +1244,9 @@ plot <- ScreenFractionPlot(
 
 If you have performed multiple screening methods and already merged the results, you can use the following code:
 
-```{r,stack_bar_plot_example_multiple,eval=FALSE}
+```{r}
+#| label: stack_bar_plot_example_multiple
+#| eval: false
 plot <- ScreenFractionPlot(
   screened_seurat = merged_seurat,
   group_by = "patient", # grouping basis for the x-axis
@@ -1204,7 +1276,9 @@ If multiple screen_types are specified
 
 **example**:
 
-```{r,venn_diagram_example,eval=FALSE}
+```{r}
+#| label: venn_diagram_example
+#| eval: false
 library(ggVennDiagram)
 
 # # * If you have merged the results, you can use the following code instead:
@@ -1296,7 +1370,9 @@ Key parameters for `ScreenUpset`:
 -   `combmatrix_point_color` : Color for points in the combination matrix. Default: "black".
 -   `...` : Additional arguments passed to `ggplot2::theme()` for customizing the plot appearance.
 
-```{r,upset_plot_example,eval=FALSE}
+```{r}
+#| label: upset_plot_example
+#| eval: false
 upset <- ScreenUpset(screened_seurat = merged_seurat)
 ```
 
@@ -1317,7 +1393,9 @@ upset <- ScreenUpset(screened_seurat = merged_seurat)
 
 Here we use the example data LUAD to demonstrate how to use the functions in `SigBridgeR` to screen cells associated with phenotype.
 
-```{r,set_working_directory,eval=FALSE}
+```{r}
+#| label: set_working_directory
+#| eval: false
 # Set working directory
 if (requireNamespace("here", quietly = TRUE)) {
   here::i_am(".here")
@@ -1326,7 +1404,9 @@ if (requireNamespace("here", quietly = TRUE)) {
 }
 ```
 
-```{r,example_data,eval=FALSE}
+```{r}
+#| label: example_data
+#| eval: false
 library(SigBridgeR)
 library(zeallot)
 
@@ -1372,7 +1452,9 @@ In practical data analysis, please adjust the thresholds and parameters as neede
 
 Now we use `SCPreProcess()` to pre-process the single-cell RNA expression matrix data.
 
-```{r,example_data_seurat,eval=FALSE}
+```{r}
+#| label: example_data_seurat
+#| eval: false
 seurat <- SCPreProcess(
   sc = mat_exam,
   params = list(
@@ -1395,7 +1477,9 @@ To facilitate the demonstration of the use of the `sample_info` parameter, we wi
 
 In practice, please replace this with your actual phenotype classification; the approach shown here is for demonstration purposes only and is not recommended for real analyses.
 
-```{r,example_data_bulk,eval=FALSE}
+```{r}
+#| label: example_data_bulk
+#| eval: false
 sample_info <- tibble::rownames_to_column(pheno, var = "sample") |>
   dplyr::rename(condition = status)
 sample_info$batch <- "batch1"
@@ -1466,7 +1550,9 @@ filtered_counts_mat <- BulkPreProcess(
 
 And we will see a PCA plot.
 
-```{r,bulk_preprocess_pca_plot,eval=FALSE}
+```{r}
+#| label: bulk_preprocess_pca_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/bulk_preprocess_pca.png")
 ```
 
@@ -1477,7 +1563,9 @@ Thus far, we have completed all the data preprocessing. We are now ready to form
 
 First, we use `scissor` to screen cells associated with survival.
 
-```{r,example_data_scissor,eval=FALSE}
+```{r}
+#| label: example_data_scissor
+#| eval: false
 scissor_result <- Screen(
   matched_bulk = bulk,
   sc_data = seurat,
@@ -1516,7 +1604,9 @@ table(scissor_result$scRNA_data$scissor)
 
 You will see an additional "Scissor_inputs.RData" in the working directory. This is the intermediate data generated by the Scissor method, which we can use to save running time ( You can also set `path2load_scissor_cache=NULL` to suppress the saving of intermediate files ). Meanwhile, we set `reliability_test=TRUE`, which will run an additional reliability test.
 
-```{r,example_data_scissor_reliability,eval=FALSE}
+```{r}
+#| label: example_data_scissor_reliability
+#| eval: false
 scissor_result <- Screen(
   matched_bulk = bulk, # doesn't need to be provided Since the intermediate data is provided
   sc_data = seurat,
@@ -1581,7 +1671,9 @@ scissor_result$reliability_result$c_index_test_back |>
 
 Next, we use scPAS, scAB, scPP, LP_SGL and PIPET to do the same screening. Generally you only need to change the `screen_method`, as long as you have not specified any particular parameters.
 
-```{r,example_data_scpas,eval=FALSE}
+```{r}
+#| label: example_data_scpas
+#| eval: false
 scpas_result <- Screen(
   matched_bulk = bulk,
   sc_data = seurat,
@@ -1617,7 +1709,9 @@ table(scpas_result$scRNA_data$scPAS)
 
 As you can see, due to differences in data and algorithms, not every screening algorithm is able to screen out cells. You can adjust the corresponding parameters, e.g. change the `alpha` to `NULL`, this will make scPAS iterate alpha until the result is significant (or judged as having no significant cell subpopulations). See also [3.2 (Option B) scPAS Screening](#32-option-b-scpas-screening)
 
-```{r,example_data_scpas2,eval=FALSE}
+```{r}
+#| label: example_data_scpas2
+#| eval: false
 scpas_result <- Screen(
   matched_bulk = bulk,
   sc_data = seurat,
@@ -1667,7 +1761,9 @@ scpas_result <- Screen(
 
 Generally speaking, a larger alpha means looser screening. However, it still won't result in the occurence of too many false-positive cells. You can also adjust the `cutoff` parameter as you like.
 
-```{r,example_data_scpas3,eval=FALSE}
+```{r}
+#| label: example_data_scpas3
+#| eval: false
 table(scpas_result$scRNA_data$scPAS)
 # Negative  Neutral Positive
 #        5     1085        3
@@ -1675,7 +1771,9 @@ table(scpas_result$scRNA_data$scPAS)
 
 Now we use scAB, scPP, DEGAS, LP_SGL and PIPET to screen cells.
 
-```{r,example_data_scab,eval=FALSE}
+```{r}
+#| label: example_data_scab
+#| eval: false
 scab_result <- Screen(
   matched_bulk = bulk,
   sc_data = seurat,
@@ -1696,7 +1794,9 @@ table(scab_result$scRNA_data$scAB)
 #     1018       75
 ```
 
-```{r,example_data_scpp,eval=FALSE}
+```{r}
+#| label: example_data_scpp
+#| eval: false
 scpp_result <- Screen(
   matched_bulk = bulk,
   sc_data = seurat,
@@ -1721,7 +1821,9 @@ table(scpp_result$scRNA_data$scPP)
 #       52      993       48
 ```
 
-```{r,example_data_degas,eval=FALSE}
+```{r}
+#| label: example_data_degas
+#| eval: false
 # I recommend running this code in the background.
 degas_result <- Screen(
   matched_bulk = bulk,
@@ -1751,7 +1853,9 @@ table(degas_result$scRNA_data$DEGAS)
 #     1038       55
 ```
 
-```{r,example_data_lpsgl,eval=FALSE}
+```{r}
+#| label: example_data_lpsgl
+#| eval: false
 # I recommend running this code in the background.
 lpsgl_result <- Screen(
   matched_bulk = bulk,
@@ -1779,7 +1883,9 @@ Note that PIPET does not support survival phenotype. We will show how to use PIP
 
 After these algorithms have been run, the four sets of data can be merged since screening methods performed on the same data.
 
-```{r,example_data_merge,eval=FALSE}
+```{r}
+#| label: example_data_merge
+#| eval: false
 screen_result <- MergeResult(
   scissor_result,
   scpas_result,
@@ -1803,7 +1909,9 @@ colnames(screen_result[[]])
 
 Finally, we can visualize the screening results. Let's start with a Venn diagram to see the situation.
 
-```{r,example_data_venn,eval=FALSE}
+```{r}
+#| label: example_data_venn
+#| eval: false
 library(ggVennDiagram)
 library(zeallot)
 
@@ -1873,7 +1981,9 @@ venn
 # )
 ```
 
-```{r,example_data_venn_plot,eval=FALSE}
+```{r}
+#| label: example_data_venn_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/venn.png")
 ```
 
@@ -1881,7 +1991,9 @@ knitr::include_graphics("vignettes/example_figures/venn.png")
 
 When there are too many sets, the visualization effect of the Venn diagram is not very good. We can use a set plot instead. Only positive cells are shown in the set plot.
 
-```{r,example_data_set_plot,eval=FALSE}
+```{r}
+#| label: example_data_set_plot
+#| eval: false
 upset <- ScreenUpset(
   screened_seurat = screen_result,
   screen_type = c("scissor", "scPAS", "scAB", "scPP", "DEGAS", "LP_SGL"),
@@ -1908,7 +2020,9 @@ head(upset$stats)
 # )
 ```
 
-```{r,example_data_upset_plot,eval=FALSE}
+```{r}
+#| label: example_data_upset_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/upset.png")
 ```
 
@@ -1917,7 +2031,9 @@ knitr::include_graphics("vignettes/example_figures/upset.png")
 
 A bar chart showing proportions can also be used to examine the screening results. Since the example data does not have sample metadata, we have created a fictional `Sample` column.
 
-```{r,example_data_bar,eval=FALSE}
+```{r}
+#| label: example_data_bar
+#| eval: false
 set.seed(123)
 # * fictional sample column
 screen_result$Sample <- sample(
@@ -1948,7 +2064,9 @@ fraction_list <- ScreenFractionPlot(
 # )
 ```
 
-```{r,example_data_fraction_plot,eval=FALSE}
+```{r}
+#| label: example_data_fraction_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/fraction.png")
 ```
 
@@ -1979,7 +2097,9 @@ fraction_list\
 
 UMAP is the most commonly used type of plot in academic literature.
 
-```{r,example_data_umap,eval=FALSE}
+```{r}
+#| label: example_data_umap
+#| eval: false
 library(patchwork)
 library(zeallot)
 
@@ -2045,7 +2165,9 @@ umaps
 # )
 ```
 
-```{r,example_data_umap_plot,eval=FALSE}
+```{r}
+#| label: example_data_umap_plot
+#| eval: false
 knitr::include_graphics("vignettes/example_figures/umaps.png")
 ```
 
@@ -2053,7 +2175,9 @@ knitr::include_graphics("vignettes/example_figures/umaps.png")
 
 All the analysis has been completed, and we can save the data for future use.
 
-```{r,save_example_data,eval=FALSE}
+```{r}
+#| label: save_example_data
+#| eval: false
 SeuratObject::SaveSeuratRds(
   object = screen_result,
   filename = "screened_result.rds"
@@ -2062,7 +2186,9 @@ SeuratObject::SaveSeuratRds(
 
 or in `.h5ad` format:
 
-```{r,save_example_data_2,eval=FALSE}
+```{r}
+#| label: save_example_data_2
+#| eval: false
 anndataR::write_h5ad(
   object = screen_result,
   path = "screened_result.h5ad",
@@ -2074,7 +2200,9 @@ anndataR::write_h5ad(
 
 Generally speaking, the process is the same as described in [5.1 Survival-associated cell screening](#51-survival-associated-cell-screening). Here, only the preprocessing of continuous phenotypic data is introduced.
 
-```{r,example_data_continuous_preprocessing,eval=FALSE}
+```{r}
+#| label: example_data_continuous_preprocessing
+#| eval: false
 library(SigBridgeR)
 library(zeallot)
 library(Seurat)
@@ -2104,7 +2232,9 @@ head(pheno)
 
 If your phenotype is a `data.frame`, try this to convert it to a `named vector`:
 
-```{r,example_data_continuous_preprocessing_2,eval=FALSE}
+```{r}
+#| label: example_data_continuous_preprocessing_2
+#| eval: false
 pheno <- setNames(your_data.frame$continuous_numeric, your_data.frame$sample)
 ```
 
@@ -2112,7 +2242,9 @@ pheno <- setNames(your_data.frame$continuous_numeric, your_data.frame$sample)
 
 This process is also the same as described in [5.1 Survival-associated cell screening](#51-survival-associated-cell-screening). Here, only the preprocessing of binary phenotypic data is introduced.
 
-```{r,example_data_binarized_preprocessing,eval=FALSE}
+```{r}
+#| label: example_data_binarized_preprocessing
+#| eval: false
 library(SigBridgeR)
 library(zeallot)
 library(Seurat)
@@ -2142,7 +2274,9 @@ head(pheno)
 
 If your phenotype is a `data.frame`, your binary variable is stored in the "data" column, categorized as 'Tumor' and 'Normal', we will assign 'Tumor' a value of 1 and 'Normal' a value of 0. In this way, cells screened as **Positive** will be associated with 'Tumor'. Try this to convert it to a `named vector`:
 
-```{r,example_data_binarized_preprocessing_2,eval=FALSE}
+```{r}
+#| label: example_data_binarized_preprocessing_2
+#| eval: false
 pheno <- mutate(
   pheno,
   data = dplyr::case_when(
@@ -2157,7 +2291,9 @@ pheno <- setNames(pheno$data, pheno$Sample)
 
 Previously, it was noted that PIPET cannot use patient survival data as the phenotype; here, we demonstrate using a binary phenotype instead.
 
-```{r,example_data_pipet,eval=FALSE}
+```{r}
+#| label: example_data_pipet
+#| eval: false
 pipet_result <- Screen(
   matched_bulk = bulk,
   sc_data = seurat,
@@ -2191,7 +2327,8 @@ View Troubleshooting[(https://github.com/WangX-Lab/SigBridgeR/wiki/Troubleshooti
 
 Session information:
 
-```{r,session_info}
+```{r}
+#| label: session_info
 sessionInfo()
 ```
 

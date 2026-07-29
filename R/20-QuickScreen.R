@@ -277,5 +277,5 @@ Screen <- function(
     params <- method_config$mapper(params)
   }
 
-  rlang::exec(method_config$executor, !!!params)
+  eval(method_config$executor, params)
 }

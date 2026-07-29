@@ -1,0 +1,114 @@
+name: Update NEWS.md on tag
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Get current tag
+        id: vars
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Get previous tag
+        id: prev
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 ${{ steps.vars.outputs.tag }}^ 2>/dev/null || echo "")
+          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
+
+      - name: Collect commits
+        run: |
+          if [ -z "${{ steps.prev.outputs.prev_tag }}" ]; then
+            git log --pretty=format:"- %s (%h)" ${{ steps.vars.outputs.tag }} > commits.txt
+          else
+            git log ${{ steps.prev.outputs.prev_tag }}..${{ steps.vars.outputs.tag }} --pretty=format:"- %s (%h)" > commits.txt
+          fi
+
+      - name: Collect changes
+        run: |
+          if [ -z "${{ steps.prev.outputs.prev_tag }}" ]; then
+            RANGE="${{ steps.vars.outputs.tag }}"
+          else
+            RANGE="${{ steps.prev.outputs.prev_tag }}..${{ steps.vars.outputs.tag }}"
+          fi
+
+          git log $RANGE --pretty=format:"- %s (%h)" > commits.txt
+          git diff --name-status $RANGE > changed_files.txt
+          git diff --stat $RANGE > diff_stat.txt
+
+      - name: Generate changelog entry
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TAG: ${{ steps.vars.outputs.tag }}
+        run: |
+          VERSION=${TAG#v}
+          PACKAGE=$(grep '^Package:' DESCRIPTION | awk '{print $2}')
+          COMMITS=$(cat commits.txt)
+          CHANGED_FILES=$(cat changed_files.txt)
+          DIFF_STAT=$(cat diff_stat.txt)
+
+          PROMPT=$(cat .github/prompts/news-changelog.md)
+          PROMPT="${PROMPT//'{{PACKAGE}}'/$PACKAGE}"
+          PROMPT="${PROMPT//'{{VERSION}}'/$VERSION}"
+          PROMPT="${PROMPT//'{{COMMITS}}'/$COMMITS}"
+
+          curl https://api.deepseek.com/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $DEEPSEEK_API_KEY" \
+            -d "$(jq -n \
+              --arg prompt "$PROMPT" \
+              '{
+                model: "deepseek-v4-pro",
+                messages: [
+                  {role: "user", content: $prompt}
+                ],
+                "thinking": {"type": "enabled"},
+                "reasoning_effort": "high",
+                "stream": false
+              }')" \
+            | jq -r '.choices[0].message.content' > new_entry.md
+
+      - name: Update NEWS.md
+        run: |
+          if [ ! -f NEWS.md ]; then
+            touch NEWS.md
+          fi
+
+          {
+            cat new_entry.md
+            echo ""
+            cat NEWS.md
+          } > NEWS.new.md
+
+          mv NEWS.new.md NEWS.md
+
+      - name: Commit and push NEWS.md
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add NEWS.md
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "docs: update NEWS.md for ${{ steps.vars.outputs.tag }}"
+
+          git pull --rebase origin main
+          git push origin HEAD:main

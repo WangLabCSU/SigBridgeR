@@ -7,14 +7,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r}
+#| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-```{r setup}
+```{r}
+#| label: setup
 library(SigBridgeR)
 library(Seurat)
 ```
@@ -25,7 +27,9 @@ library(Seurat)
 
 We will use `GSE274103` from NCBI GEO as an example. The file organization process is not described in detail here.
 
-```{r,preprocess,eval=FALSE}
+```{r}
+#| label: preprocess
+#| eval: false
 data_dir <- "GSE274103"
 
 samples <- c(
@@ -82,7 +86,9 @@ In theory, this workflow could be simplified using `SCPreProcess`; however, due 
 
 The bulk RNA-seq example data used here is from TCGA-PAAD. Due to copyright restrictions, it is provided solely for illustrative purposes in the vignette.
 
-```{r,preprocess2,eval=FALSE}
+```{r}
+#| label: preprocess2
+#| eval: false
 bulk <- readRDS("TCGA-PAAD.rds")
 #        TCGA-2J-AAB1-01 TCGA-2J-AAB4-01 TCGA-2J-AAB6-01 TCGA-2J-AAB8-01
 # TSPAN6       10.336507       10.992938       10.143383        9.415742
@@ -93,7 +99,9 @@ bulk <- readRDS("TCGA-PAAD.rds")
 
 The corresponding TCGA survival data can be obtained from **UCSC Xena (via UCSCXenaShiny)**. And we match the corresponding samples in both the bulk RNA-seq data and the survival information.
 
-```{r,survival,eval=FALSE}
+```{r}
+#| label: survival
+#| eval: false
 library(UCSCXenaShiny)
 tcga_surv <- load_data("tcga_surv")
 
@@ -125,7 +133,9 @@ Here we demonstrate the usage of **mLLMCelltype**. We also provide support for *
 
 Here we use DeepSeek v3 only as an example. Generally speaking, the more powerful the model and the greater the number of models used, the higher the prediction accuracy of mLLMCelltype.
 
-```{r,celltype_anno,eval=FALSE}
+```{r}
+#| label: celltype_anno
+#| eval: false
 spatials <- Seurat::PrepSCTFindMarkers(spatials)
 
 spatials <- SCAnnotate(
@@ -139,7 +149,9 @@ spatials <- SCAnnotate(
 # SeuratObject::SaveSeuratRds(spatials, "seurat.rds")
 ```
 
-```{r,celltype_anno_output,eval=FALSE}
+```{r}
+#| label: celltype_anno_output
+#| eval: false
 # ℹ [2026/02/09 11:26:14] [mLLMCelltype] Start annotating cell types
 # ℹ [2026/02/09 11:26:14] Find marker genes for each clusters
 # Calculating cluster 0
@@ -174,11 +186,15 @@ spatials <- SCAnnotate(
 # ✔ [2026/02/09 11:28:46] Annotation Finished
 ```
 
-```{r,celltype_anno2,eval=FALSE}
+```{r}
+#| label: celltype_anno2
+#| eval: false
 table(spatials$mllmcelltype_cell_type)
 ```
 
-```{r,celltype_anno_output2,eval=FALSE}
+```{r}
+#| label: celltype_anno_output2
+#| eval: false
 #     Acinar cells           Adipocytes              B cells         Chondrocytes    Endothelial cells
 #              594                  633                 2314                  920                 2122
 #      Enterocytes     Epithelial cells          Fibroblasts        Gastric cells         Goblet cells
@@ -193,7 +209,9 @@ table(spatials$mllmcelltype_cell_type)
 
 We can now run the screening. Let's try `Scissor`.
 
-```{r,screen,eval=FALSE}
+```{r}
+#| label: screen
+#| eval: false
 res <- Screen(
   matched_bulk = bulk,
   sc_data = spatials,
@@ -206,7 +224,9 @@ res <- Screen(
 # SeuratObject::SaveSeuratRds(res$scRNA_data, "screened_seurat.rds")
 ```
 
-```{r,screen_output,eval=FALSE}
+```{r}
+#| label: screen_output
+#| eval: false
 # ℹ `label_type` not specified or not of length 1, using "Scissor"
 # ℹ [2026/02/09 15:40:19] Scissor start...
 # ℹ [2026/02/09 15:40:19] Start from raw data...
@@ -253,7 +273,9 @@ Finally we can visualize the results. Here, we just provide a brief demonstratio
 
 Let's first see the spatial position of the Positive cells.
 
-```{r,viz,eval=FALSE}
+```{r}
+#| label: viz
+#| eval: false
 positive_cell <- colnames(res$scRNA_data)[
   res$scRNA_data$scissor == "Positive"
 ]
@@ -280,7 +302,9 @@ p <- Seurat::SpatialDimPlot(
 
 To visualize the cellular composition of Positive cells:
 
-```{r,viz2,eval=FALSE}
+```{r}
+#| label: viz2
+#| eval: false
 p2 <- Seurat::SpatialDimPlot(
   spatials,
   group.by = "mllmcelltype_cell_type",
@@ -299,13 +323,17 @@ p2 <- Seurat::SpatialDimPlot(
 
 To statistically assess the composition of Positive cells, you can do the following:
 
-```{r,stats,eval=FALSE}
+```{r}
+#| label: stats
+#| eval: false
 table(res$scRNA_data$mllmcelltype_cell_type[
   res$scRNA_data$scissor == "Positive"
 ])
 ```
 
-```{r,stats_output,eval=FALSE}
+```{r}
+#| label: stats_output
+#| eval: false
 #     Acinar cells           Adipocytes              B cells         Chondrocytes    Endothelial cells
 #              106                  100                   98                  566                   27
 #      Enterocytes     Epithelial cells          Fibroblasts        Gastric cells         Goblet cells
@@ -316,7 +344,9 @@ table(res$scRNA_data$mllmcelltype_cell_type[
 
 The proportion of Positive cells within each cell type can be calculated using the following code:
 
-```{r,stats2,eval=FALSE}
+```{r}
+#| label: stats2
+#| eval: false
 cell_total <- table(res$scRNA_data$mllmcelltype_cell_type)
 cell_positive <- table(res$scRNA_data$mllmcelltype_cell_type[
   res$scRNA_data$scissor == "Positive"
@@ -331,7 +361,9 @@ result <- sort(round(ratios, 4), decreasing = TRUE)
 result
 ```
 
-```{r,stats2_output,eval=FALSE}
+```{r}
+#| label: stats2_output
+#| eval: false
 #     Chondrocytes  Smooth muscle cells         Acinar cells           Adipocytes          Fibroblasts
 #           0.6152               0.2126               0.1785               0.1580               0.0940
 # Epithelial cells          Enterocytes              B cells        Gastric cells Neuroendocrine cells
@@ -344,6 +376,7 @@ result
 
 ## Sessioninfo
 
-```{r,sessioninfo}
+```{r}
+#| label: sessioninfo
 sessionInfo()
 ```

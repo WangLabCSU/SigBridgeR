@@ -160,7 +160,10 @@ DoTiRank <- function(
 
   ...
 ) {
-  CheckInstalled("Exceret/rTiRank")
+  check_installed("rTIRank", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/rTIRank")
+  })
   # Extract additional arguments
   dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")

@@ -6,7 +6,8 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r}
+#| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -24,8 +25,9 @@ knitr::opts_chunk$set(
 [![Devel_version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
-<!-- [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) -->
-<!-- [![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) -->
+[![Codecov test coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR)
+[![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) -->
+[![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR)
 <!-- badges: end -->
 
 
@@ -50,34 +52,21 @@ of the latest features and bug fixes.
 
 1.  Install the development version from GitHub:
 
-```r
-if (!requireNamespace("pak")) {
-  install.packages(
-    "pak",
-    repos = sprintf(
-      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
-      .Platform$pkgType,
-      R.Version()$os,
-      R.Version()$arch
-    )
-  )
-}
-pak::pkg_install("WangLabCSU/SigBridgeR")
+```{r}
+#| label: installation
+#| eval: false
+
+# install.packages("pak")
+pak::pak("WangLabCSU/SigBridgeR")
 ```
 
 2.  Install from r-universe:
 
-```r
+```{r}
+#| label: installation_runiverse
+#| eval: false
+
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
-```
-
-### It is recommended to install the following packages:
-
-`SigBridgeR` includes the Scissor and scAB algorithms by default. In addition to these, installing the following packages allows you to use additional algorithms.
-
-```r
-methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
-pak::pkg_install(file.path("Exceret", methods))
 ```
 
 **unnecessary but recommended**:
@@ -85,8 +74,11 @@ pak::pkg_install(file.path("Exceret", methods))
 <details>
 <summary>For better performance:</summary>
 
-```r
-pak::pkg_install(c(
+```{r}
+#| label: installation_extra
+#| eval: false
+
+pak::pak(
   # faster computation
   "sparseMatrixStats",
   "matrixStats",
@@ -97,16 +89,8 @@ pak::pkg_install(c(
   "cheapr",
   # better gene symbol conversion
   "scCustomize",
-  # parallel computation
-  "furrr",
-  "future"
+  "WGCNA"
 ))
-
-if (!requireNamespace("BiocManager")) {
-  install.packages("BiocManager")
-}
-# faster computation
-BiocManager::install("WGCNA")
 ```
 
 </details>
@@ -116,10 +100,13 @@ BiocManager::install("WGCNA")
 For seamless integration with single-cell RNA-seq data stored in `.h5ad`:
 </summary>
 
-```r
-pak::pkg_install("anndata")
+```{r}
+#| label: installation_anndata
+#| eval: false
+
+pak::pak("anndata")
 # or
-pak::pkg_install("anndataR") # both are supported
+pak::pak("anndataR") # both are supported
 ```
 
 </details>
@@ -129,14 +116,17 @@ pak::pkg_install("anndataR") # both are supported
 For visualization:
 </summary>
 
-```r
-pak::pkg_install(c(
- "ggplot2",
- "randomcoloR", # or RColorBrewer
- "ggupset", # for upset plot
- "patchwork", # for fraction stack plot
- "ggforce", # for pca plot
- "ggVennDiagram" # for venn diagram
+```{r}
+#| label: installation_visualization
+#| eval: false
+
+pak::pak(c(
+  "ggplot2",
+  "randomcoloR", # or RColorBrewer
+  "ggupset", # for upset plot
+  "patchwork", # for fraction stack plot
+  "ggforce", # for pca plot
+  "ggVennDiagram" # for venn diagram
 ))
 ```
 
@@ -147,8 +137,11 @@ pak::pkg_install(c(
 To use the built-in cell annotation methods:
 </summary>
 
-```r
-pak::pkg_install(c(
+```{r}
+#| label: installation_cell_annotation
+#| eval: false
+
+pak::pak(c(
   # SingleR
   "SingleR-inc/SingleR",
   "celldex",
@@ -168,8 +161,11 @@ pak::pkg_install(c(
 To add custom extension functions to SigBridgeR:
 </summary>
 
-```r
-pak::pkg_install(c(
+```{r}
+#| label: installation_custom_extension
+#| eval: false
+
+pak::pak(c(
   "tictoc",
   "codetools",
   "knitr",
@@ -186,10 +182,12 @@ pak::pkg_install(c(
 To reproduce the tutorial to learn more usage:
 </summary>
 
-```r
-pak::pkg_install(c(
+```{r}
+#| label: installation_tutorial
+#| eval: false
+
+pak::pak(c(
   "zeallot",
-  "here",
   "org.Hs.eg.db",
   "processx"
 ))
@@ -216,15 +214,32 @@ If you encounter problems, please check:
 
 Let us know if you have ideas to make this project better. Pull requests are welcome!
 
-<!-- ## 📚 Citation
+## 📚 Citation
 
-```r
+If you use SigBridgeR in your work, please cite:
+
+```{r}
+#| label: citation
 citation("SigBridgeR")
 ```
 
-```text
+If you use one or more of the following Algorithms, please cite the corresponding papers:
 
-``` -->
+- [Scissor](https://github.com/sunduanchen/Scissor) -> 
+  
+- [DEGAS](https://github.com/tsteelejohnson91/DEGAS) -> 
+  
+- [scAB](https://github.com/jinworks/scAB) -> 
+  
+- [LP_SGL](https://github.com/hongmeizhanghm/LP_SGL) -> 
+  
+- [SCIPAC](https://github.com/RavenGan/SCIPAC) -> 
+  
+- [PIPET](https://github.com/ruan2ruan/PIPET) -> 
+  
+- [scPAS](https://github.com/aiminXie/scPAS) -> 
+
+- [scPP](https://github.com/WangX-Lab/ScPP) -> He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci. Published online January 28, 2026. doi:10.1007/s12539-025-00803-6
 
 
 ## 🗺️ Similar Projects
