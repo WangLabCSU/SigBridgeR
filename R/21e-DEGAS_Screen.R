@@ -157,6 +157,10 @@ DoDEGAS <- function(
   load_cache <- dots$load_cache %||% tmp_dir
   save_cache <- dots$save_cache %||% tmp_dir
 
+  cm_genes <- intersect(rownames(matched_bulk), rownames(sc_data))
+  matched_bulk <- matched_bulk[cm_genes, ]
+  sc_data <- sc_data[cm_genes, ]
+
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("Starting DEGAS Screen"))
   }
