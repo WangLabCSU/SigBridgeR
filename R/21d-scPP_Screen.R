@@ -81,12 +81,12 @@ ValidatescPPParams <- function(
   # -- build cache config ---------------------------------------------------
   cache_config <- ScreenMethodConfig(
     method_name = "scPP",
-    param = get_env_vars(),
+    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars()
+  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
 }
 
 #' @title Perform scPP screening analysis

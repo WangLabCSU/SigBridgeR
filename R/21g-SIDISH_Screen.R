@@ -1,3 +1,72 @@
+# ---- 2. Do SIDISH ----
+
+#' Validate and Prepare DoSIDISH Parameters
+#'
+#' @description
+#' Internal helper that handles package installation checks, input validation,
+#' deprecated argument warnings, and default-value resolution for [DoSIDISH()].
+#'
+#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class,sidish_params
+#'   Forwarded from [DoSIDISH()].
+#' @param ... Additional dots forwarded from [DoSIDISH()].
+#'
+#' @return A named list with elements: `phenotype_class`, `verbose`, `seed`,
+#'   `assay`, `env_params`, `sidish_params`.
+#'
+#' @keywords internal
+#' @family SIDISH
+ValidateSIDISHParams <- function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type,
+  phenotype_class = "survival",
+  sidish_params,
+  ...
+) {
+  # -- package checks -------------------------------------------------------
+  check_installed("rSIDISH", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/rSIDISH")
+  })
+
+  # -- input validation -----------------------------------------------------
+  chk::chk_is(sc_data, "Seurat")
+  # Validate phenotype_class parameter
+  if (phenotype_class != "survival") {
+    Abort("Currently phenotype_class must be {.val survival}")
+  }
+
+  # -- process dots ---------------------------------------------------------
+  dots <- list2(...)
+  verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
+  seed <- dots$seed %||% getFuncOption("seed") %||% 123L
+  assay <- dots$assay %||% "RNA"
+  env_params <- dots$env_params
+
+  if (is.list(env_params)) {
+    lifecycle::deprecate_warn(
+      "3.8.1",
+      "DoSIDISH(env_params)",
+      details = "After the R-side binding of SIDISH is updated to version >=0.0.2,\
+       user-provided environment is no longer required."
+    )
+  }
+
+  # -- resolve sidish defaults ----------------------------------------------
+  sidish_params <- SIDISHParamSet(sidish_params = sidish_params)
+
+  cache_config <- ScreenMethodConfig(
+    method_name = "SIDISH",
+    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    method_version = as.character(packageVersion("rSIDISH")),
+    phenotype_class = phenotype_class,
+    label_type = label_type
+  )
+
+  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+}
+
 #' @title Perform SIDISH Screening Analysis
 #'
 #' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression
@@ -74,53 +143,26 @@ DoSIDISH <- function(
   sidish_params = list(),
   ...
 ) {
-  check_installed("rSIDISH", action = \(pkg, ...) {
-    check_installed("pak")
-    pak::pak("Exceret/rSIDISH")
-  })
-
-  chk::chk_is(sc_data, "Seurat")
-  # Validate phenotype_class parameter
-  if (phenotype_class != "survival") {
-    cli::cli_abort(c("x" = "Currently phenotype_class must be 'survival'"))
-  }
-
-  # Extract additional arguments
-  dots <- list(...)
-  verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
-  seed <- dots$seed %||% getFuncOption("seed") %||% 123L
-  assay <- dots$assay %||% "RNA"
-  env_params <- dots$env_params
-
-  if (is.list(env_params)) {
-    rlang::check_installed("lifecycle")
-    lifecycle::deprecate_warn(
-      "3.8.1",
-      "DoSIDISH(env_params)",
-      details = "After the R-side binding of SIDISH is updated to version >=0.0.2, user-provided environment is no longer required."
-    )
-  }
-
-  # * handling user parameters
-  sidish_params <- SIDISHParamSet(sidish_params = sidish_params)
+  # -- validate & prepare all parameters -----------------------------------
+  p <- exec(ValidateSIDISHParams, !!!fn_fmls())
 
   res <- rSIDISH::sidish(
     matched_bulk = matched_bulk,
     sc_data = sc_data,
     phenotype = phenotype,
     label_type = label_type,
-    phenotype_class = phenotype_class,
-    assay = assay,
-    verbose = verbose,
+    phenotype_class = p$phenotype_class,
+    assay = p$assay,
+    verbose = p$verbose,
     sidish_tools = system.file(
       "python/01_training_SIDISH.py",
       package = "rSIDISH"
     ),
-    !!!sidish_params,
-    seed = seed
+    !!!p$sidish_params,
+    seed = p$seed
   )
   # A Seurat
-  res <- AddMisc(res, SIDISH_paramss = sidish_params, SIDISH_type = label_type)
+  res <- AddMisc(res, p$cache_config)
 
   # Return result in expected format
   list(
@@ -140,7 +182,8 @@ SIDISHEnvSet <- function(env_params = list(), device = c("cuda", "cpu")) {
   lifecycle::deprecate_warn(
     "3.8.1",
     "SIDISHEnvSet()",
-    details = "After the R-side binding of SIDISH is updated to version >=0.0.2, user-provided environment is no longer required. This function has been deprecated and is retained for reference only"
+    details = "After the R-side binding of SIDISH is updated to version >=0.0.2,\
+     user-provided environment is no longer required. This function has been deprecated and is retained for reference only"
   )
   default <- list(
     env.name = if (device == "cuda") {

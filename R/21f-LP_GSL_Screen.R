@@ -1,3 +1,86 @@
+# ---- 2. Do LP-SGL ----
+
+#' Validate and Prepare DoLP_SGL Parameters
+#'
+#' @description
+#' Internal helper that handles package installation checks, deprecated argument
+#' warnings, input validation, and default-value resolution for [DoLP_SGL()].
+#'
+#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class,family
+#'   Forwarded from [DoLP_SGL()].
+#' @param resolution,alpha,nfold,dge_analysis Forwarded from [DoLP_SGL()].
+#' @param ... Additional dots forwarded from [DoLP_SGL()].
+#'
+#' @return A named list with elements: `phenotype_class`, `family`, `verbose`,
+#'   `seed`, `assay`, `cache_config`.
+#'
+#' @keywords internal
+#' @family LP_SGL
+ValidateLPSGLParams <- function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type,
+  phenotype_class = c("binary", "continuous", "survival"),
+  family = c("binomial", "cox", "gaussian"),
+  resolution,
+  alpha,
+  nfold,
+  dge_analysis,
+  ...
+) {
+  # -- package checks -------------------------------------------------------
+  check_installed("LPSGL", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/LPSGL")
+  })
+
+  # -- input validation -----------------------------------------------------
+  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
+  chk::chk_is(sc_data, c("Seurat"))
+  chk::chk_list(dge_analysis)
+  phenotype_class <- arg_match(phenotype_class)
+
+  # -- handle deprecated `family` -------------------------------------------
+  if (lifecycle::is_present(family)) {
+    lifecycle::deprecate_warn(
+      "4.0.0",
+      "DoLP_SGL(family =)",
+      "DoLP_SGL(phenotype_class =)"
+    )
+    phenotype_class <- switch(
+      family,
+      "binomial" = "binary",
+      "cox" = "survival",
+      "gaussian" = "continuous",
+      Abort("Invalid family")
+    )
+  }
+  family <- switch(
+    phenotype_class,
+    "binary" = "binomial",
+    "survival" = "cox",
+    "continuous" = "gaussian"
+  )
+
+  # -- process dots ---------------------------------------------------------
+  dots <- rlang::list2(...)
+  verbose <- dots$verbose %||% getFuncOption("verbose")
+  seed <- dots$seed %||% getFuncOption("seed")
+  assay <- dots$assay %||% "RNA"
+
+  # -- build cache config ---------------------------------------------------
+  cache_config <- ScreenMethodConfig(
+    method_name = "LP_SGL",
+    method_version = r_pkg_version("LPSGL"),
+    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    phenotype_class = phenotype_class,
+    label_type = label_type
+  )
+
+  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+}
+
 #' @title Perform LP-SGL Screening Analysis
 #' @description
 #' Identifies phenotype-associated cell subpopulations using Lasso-Penalized
@@ -5,11 +88,8 @@
 #' integrates bulk and single-cell RNA-seq data to identify cell subpopulations
 #' associated with phenotypic outcomes.
 #'
-#' @param matched_bulk Bulk expression matrix (features × samples)
-#' @param sc_data Single-cell RNA-seq data (Seurat object)
-#' @param phenotype Binary phenotype vector for bulk samples
-#' @param label_type Character specifying phenotype label type (default: "LP_SGL")
-#' @param family Type of regression model: "`logit`" (logistic), "`cox`" (Cox),
+#' @inheritParams Screem
+#' @param family `r lifecycle::badge("deprecated")` Type of regression model: "`logit`" (logistic), "`cox`" (Cox),
 #' or "`linear`" (linear regression)
 #' @param resolution Resolution parameter for Leiden clustering (default: `0.6`)
 #' @param alpha Alpha parameter for SGL balancing L1 and L2 penalties (default: `0.5`)
@@ -69,37 +149,20 @@ DoLP_SGL <- function(
   sc_data,
   phenotype,
   label_type = "LP_SGL",
-  family = c('logit', 'cox', 'linear'),
+  phenotype_class = c("binary", "continuous", "survival"),
+  family = lifecycle::deprecated(),
   resolution = 0.6,
   alpha = 0.5,
-  nfold = 5,
+  nfold = 5L,
   dge_analysis = list(
     run = FALSE, # whether to run DEG analysis
-    logFC_threshold = 1,
+    logFC_threshold = 1L,
     pval_threshold = 0.05
   ),
   ...
 ) {
-  check_installed("LPSGL", action = \(pkg, ...) {
-    check_installed("pak")
-    pak::pak("Exceret/LPSGL")
-  })
-
-  # * Input validation
-  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
-  chk::chk_is(sc_data, c("Seurat"))
-  chk::chk_list(dge_analysis)
-  family <- SigBridgeRUtils::MatchArg(
-    family,
-    c('logit', 'cox', 'linear'),
-    NULL
-  )
-
-  # * Default params
-  dots <- rlang::list2(...)
-  verbose <- dots$verbose %||% getFuncOption("verbose")
-  seed <- dots$seed %||% getFuncOption("seed")
-  assay <- dots$assay %||% "RNA"
+  # -- validate & prepare all parameters -----------------------------------
+  p <- exec(ValidateLPSGLParams, !!!fn_fmls())
 
   if (ncol(sc_data) > 5e4) {
     cli::cli_warn(
@@ -109,7 +172,7 @@ DoLP_SGL <- function(
   }
 
   # * Start
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green(
       "Starting LP-SGL screen"
     ))
@@ -117,10 +180,10 @@ DoLP_SGL <- function(
   # * Run Leiden clustering
   leiden_results <- LPSGL::run_leiden_clustering(
     seurat_obj = sc_data,
-    graph_name = paste0(assay, "_snn"),
+    graph_name = paste0(p$assay, "_snn"),
     resolution = resolution,
-    verbose = verbose,
-    seed = seed
+    verbose = p$verbose,
+    seed = p$seed
   )
   # * Run LP-SGL
   lpsgl_res <- LPSGL::label_cell(
@@ -130,19 +193,14 @@ DoLP_SGL <- function(
     cluster_membership = leiden_results,
     alpha = alpha,
     nfold = nfold,
-    type = family,
-    verbose = verbose,
-    seed = seed
+    type = p$family,
+    verbose = p$verbose,
+    seed = p$seed
   )
 
   seurat_obj <- AddMisc(
-    lpsgl_res$seurat_obj,
-    label_type = label_type,
-    family = family,
-    resolution = resolution,
-    alpha = alpha,
-    nfold = nfold,
-    dge_analysis = dge_analysis
+    seurat_obj = lpsgl_res$seurat_obj,
+    LP_SGL = props(p$cache_config)
   )
 
   # * Find Deferentially Expressed Genes if requested
@@ -163,7 +221,7 @@ DoLP_SGL <- function(
         logFC_threshold = dge_analysis$logFC_threshold,
         pval_threshold = dge_analysis$pval_threshold,
         adjust_method = 'BH',
-        verbose = verbose
+        verbose = p$verbose
       ),
       error = function(e) {
         ts_cli$cli_alert_danger(
@@ -174,7 +232,7 @@ DoLP_SGL <- function(
     )
   }
 
-  if (verbose) {
+  if (p$verbose) {
     res_table <- table(seurat_obj$LP_SGL)
     label <- tolower(paste(label_type, names(res_table)))
     names(res_table) <- label

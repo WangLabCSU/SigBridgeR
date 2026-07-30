@@ -128,12 +128,12 @@ ValidateDEGASParams <- function(
   # -- build cache config ---------------------------------------------------
   cache_config <- ScreenMethodConfig(
     method_name = "DEGAS",
-    param = get_env_vars(),
+    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars()
+  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
 }
 
 #' Train DEGAS Model and Optionally Cache

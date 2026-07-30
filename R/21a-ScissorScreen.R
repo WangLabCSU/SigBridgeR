@@ -115,12 +115,12 @@ ValidateScissorParams <- function(
 
   cache_config <- ScreenMethodConfig(
     method_name = "Scissor",
-    param = get_env_vars(),
+    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars() # contains `cache_config`
+  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")) # contains `cache_config`
 }
 
 #' @title Perform Scissor Screening Analysis

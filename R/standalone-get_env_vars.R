@@ -59,13 +59,23 @@
 #'
 #' @param env An environment whose bindings should be captured.
 #'   Defaults to `parent.frame()`, i.e. the calling environment.
+#' @param all.names A logical value. If `TRUE`, all object names are
+#'   returned. If `FALSE`, names which begin with a `.` are omitted.
+#'   Default is `FALSE`.
+#' @param exclude A character vector of variable names to exclude from
+#'   the result. Default is `character(0)` (no exclusion).
 #'
-#' @return A named list. Each element corresponds to one binding in `env`.
-#'   Hidden names (starting with `.`) are included.
+#' @return A named list. Each element corresponds to one binding in `env`,
+#'   excluding any names specified in `exclude`.
 #'
 #' @noRd
-get_env_vars <- function(env = parent.frame(), all.names = FALSE) {
+get_env_vars <- function(
+  env = parent.frame(),
+  all.names = FALSE,
+  exclude = character(0L)
+) {
   vars <- ls(envir = env, all.names = all.names)
+  vars <- setdiff(vars, exclude)
   setNames(mget(vars, envir = env, inherits = FALSE), vars)
 }
 

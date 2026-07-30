@@ -1,3 +1,106 @@
+# ---- 2. Do PIPET ----
+
+#' Validate and Prepare DoPIPET Parameters
+#'
+#' @description
+#' Internal helper that handles package installation checks, input validation,
+#' and default-value resolution for [DoPIPET()].
+#'
+#' @param matched_bulk,sc_data,phenotype,phenotype_class,only_pos_marker,group
+#'   Forwarded from [DoPIPET()].
+#' @param discretize_method,cutoff,label_type,marker_finder,log2FC,p_adjust
+#'   Forwarded from [DoPIPET()].
+#' @param show_log2FC,freq_counts,normalize,scale,nPerm,distance
+#'   Forwarded from [DoPIPET()].
+#' @param ... Additional dots forwarded from [DoPIPET()].
+#'
+#' @return A named list with elements: `phenotype_class`, `marker_finder`,
+#'   `distance`, `verbose`, `seed`, `parallel`, `assay`, `load_cache`,
+#'   `save_cache`, `cache_config`, `dots`.
+#'
+#' @keywords internal
+#' @family PIPET
+ValidatePIPETParams <- function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  phenotype_class,
+  only_pos_marker,
+  group,
+  discretize_method,
+  cutoff,
+  label_type,
+  marker_finder,
+  log2FC,
+  p_adjust,
+  show_log2FC,
+  freq_counts,
+  normalize,
+  scale,
+  nPerm,
+  distance,
+  ...
+) {
+  # -- package checks -------------------------------------------------------
+  check_installed("PIPET", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/PIPET")
+  })
+
+  # -- input validation -----------------------------------------------------
+  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
+  chk::chk_is(sc_data, "Seurat")
+  chk::chk_character(label_type)
+  phenotype_class <- SigBridgeRUtils::MatchArg(
+    phenotype_class,
+    c("binary", "continuous", "survival"),
+    NULL
+  )
+  purrr::walk(c(show_log2FC, normalize, scale), chk::chk_flag)
+  purrr::walk(
+    c(group),
+    ~ if (!is.null(.x)) chk::chk_character(.x)
+  )
+  chk::chk_integer(c(nPerm, freq_counts))
+  purrr::walk(c(log2FC, p_adjust), chk::chk_double)
+  marker_finder <- SigBridgeRUtils::MatchArg(
+    marker_finder,
+    c("limma", "DESeq2")
+  )
+
+  distance <- SigBridgeRUtils::MatchArg(
+    distance,
+    c(
+      "cosine",
+      "pearson",
+      "spearman",
+      "kendall",
+      "euclidean",
+      "maximum"
+    ),
+    NULL
+  )
+
+  # -- process dots ---------------------------------------------------------
+  dots <- list2(...)
+  verbose <- dots$verbose %||% getFuncOption("verbose")
+  seed <- dots$seed %||% getFuncOption("seed")
+  parallel <- (dots$parallel %||% FALSE)
+  assay <- dots$assay %||% "RNA"
+  load_cache <- dots$load_cache
+  save_cache <- dots$save_cache
+
+  # -- build cache config ---------------------------------------------------
+  cache_config <- ScreenMethodConfig(
+    method_name = "PIPET",
+    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    phenotype_class = phenotype_class,
+    label_type = label_type
+  )
+
+  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+}
+
 #' @title Perform PIPET Screening Analysis
 #' @description
 #' Predicts cell subpopulations in single-cell data by matching expression profiles
@@ -75,97 +178,93 @@ DoPIPET <- function(
   ),
   ...
 ) {
-  check_installed("PIPET", action = \(pkg, ...) {
-    check_installed("pak")
-    pak::pak("Exceret/PIPET")
-  })
+  # -- validate & prepare all parameters -----------------------------------
+  p <- exec(ValidatePIPETParams, !!!fn_fmls())
 
-  # * Input validation
-  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
-  chk::chk_is(sc_data, "Seurat")
-  chk::chk_character(label_type)
-  phenotype_class <- SigBridgeRUtils::MatchArg(
-    phenotype_class,
-    c("binary", "continuous", "survival"),
-    NULL
-  )
-  purrr::walk(c(show_log2FC, normalize, scale), chk::chk_flag)
-  purrr::walk(
-    c(group, distance),
-    ~ if (!is.null(.x)) chk::chk_character(.x)
-  )
-  chk::chk_integer(c(nPerm, freq_counts))
-  purrr::walk(c(log2FC, p_adjust), chk::chk_double)
-  marker_finder <- SigBridgeRUtils::MatchArg(
-    marker_finder,
-    c("limma", "DESeq2")
-  )
-
-  # * Default params
-  ## * general params
-  dots <- rlang::list2(...)
-  verbose <- dots$verbose %||% getFuncOption("verbose")
-  seed <- dots$seed %||% getFuncOption("seed")
-  parallel <- (dots$parallel %||% FALSE) &
-    !inherits(future::plan("list")[[1]], "sequential")
-  assay <- dots$assay %||% "RNA"
-
-  ## * PIPET params
-  distance <- SigBridgeRUtils::MatchArg(
-    distance,
-    c(
-      "cosine",
-      "pearson",
-      "spearman",
-      "kendall",
-      "euclidean",
-      "maximum"
-    )
-  )
-
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Starting PIPET screen"))
-    ts_cli$cli_alert_info("Creating markers from bulk data")
   }
 
-  phenotype_df <- PIPET::AdaptPheno(
-    phenotype = phenotype,
-    phenotype_type = phenotype_class,
-    discretize_method = discretize_method,
-    cutoff = cutoff
-  )
-
-  # a data.frame
-  markers <- if (marker_finder == "limma") {
-    PIPET::Create_Markers2(
-      bulk_data = matched_bulk,
-      colData = phenotype_df,
-      class_col = "class",
-      lg2FC = log2FC,
-      p.adjust = p_adjust,
-      show_log2FC = show_log2FC,
-      verbose = verbose,
-      seed = seed
+  # -- load mode: restore cached markers ------------------------------------
+  if (!is.null(p$load_cache)) {
+    cache <- CacheSysCall(
+      mode = "load",
+      path = p$load_cache,
+      cache = p$cache_config,
+      verbose = p$verbose,
+      timestamp = p$dots$timestamp,
     )
+
+    markers <- cache$markers
+    rm(cache)
+
+    if (p$verbose) {
+      ts_cli$cli_alert_info(
+        cli::col_green("Loaded PIPET markers from cache")
+      )
+    }
   } else {
-    PIPET::Create_Markers(
-      bulk_data = matched_bulk,
-      colData = phenotype_df,
-      class_col = "class",
-      lg2FC = log2FC,
-      p.adjust = p_adjust,
-      show_log2FC = show_log2FC,
-      verbose = verbose,
-      seed = seed
-    )
-  }
+    # -- normal flow: create markers ----------------------------------------
+    if (p$verbose) {
+      ts_cli$cli_alert_info("Creating markers from bulk data")
+    }
 
-  if (only_pos_marker) {
-    markers <- markers[markers$log2FoldChange > 0, ]
+    phenotype_df <- PIPET::AdaptPheno(
+      phenotype = phenotype,
+      phenotype_type = p$phenotype_class,
+      discretize_method = discretize_method,
+      cutoff = cutoff
+    )
+
+    # a data.frame
+    markers <- if (p$marker_finder == "limma") {
+      PIPET::Create_Markers2(
+        bulk_data = matched_bulk,
+        colData = phenotype_df,
+        class_col = "class",
+        lg2FC = log2FC,
+        p.adjust = p_adjust,
+        show_log2FC = show_log2FC,
+        verbose = p$verbose,
+        seed = p$seed
+      )
+    } else {
+      PIPET::Create_Markers(
+        bulk_data = matched_bulk,
+        colData = phenotype_df,
+        class_col = "class",
+        lg2FC = log2FC,
+        p.adjust = p_adjust,
+        show_log2FC = show_log2FC,
+        verbose = p$verbose,
+        seed = p$seed
+      )
+    }
+
+    if (only_pos_marker) {
+      markers <- markers[markers$log2FoldChange > 0, ]
+    }
+
+    # -- save mode: persist markers to cache --------------------------------
+    if (!is.null(p$save_cache)) {
+      cache <- ScreenMethodCache(
+        cache_path = p$save_cache,
+        cache_config_path = file.path(p$save_cache, "cache_config.json"),
+        cache_data = list(markers = markers),
+        screen_method_config = p$cache_config
+      )
+      CacheSysCall(
+        mode = "save",
+        path = p$save_cache,
+        cache = cache,
+        verbose = p$verbose,
+        timestamp = p$dots$timestamp
+      )
+    }
   }
 
   # Run PIPET core algorithm
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info("Running PIPET correlation analysis")
   }
 
@@ -177,11 +276,11 @@ DoPIPET <- function(
     normalize = normalize,
     scale = scale,
     nPerm = nPerm,
-    distance = distance,
-    verbose = verbose,
-    seed = seed,
-    parallel = parallel,
-    assay = assay
+    distance = p$distance,
+    verbose = p$verbose,
+    seed = p$seed,
+    parallel = p$parallel,
+    assay = p$assay
   )
 
   if (is.null(pipet_result)) {
@@ -191,37 +290,18 @@ DoPIPET <- function(
     ))
   }
 
-  # Add results to Seurat object if applicable
-
+  # Add results to Seurat object
   sc_data <- Seurat::AddMetaData(
     sc_data,
     metadata = pipet_result
   )
   sc_data <- AddMisc(
     seurat_obj = sc_data,
-    PIPET_type = label_type,
-    PIPET_params = list(
-      phenotype_class = phenotype_class,
-      group = group,
-      discretize_method = if (length(discretize_method) > 1) {
-        discretize_method[1]
-      } else {
-        discretize_method
-      },
-      cutoff = cutoff,
-      log2FC = log2FC,
-      p_adjust = p_adjust,
-      show_log2FC = show_log2FC,
-      freq_counts = freq_counts,
-      normalize = normalize,
-      scale = scale,
-      nPerm = nPerm,
-      distance = if (length(distance) > 1) distance[1] else distance
-    ),
+    PIPET = props(p$cache_config),
     cover = FALSE
   )
 
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_success(cli::col_green("PIPET screening done."))
   }
 
