@@ -20,8 +20,7 @@
 #' SigBridgeR is licensed under the GPL version 3.0. Please see the LICENSE file for details.
 #'
 #'
-#' @author
-#' @eval rd_authors()
+#' @author `r rd_authors()`
 #'
 #' @docType package
 #' @name SigBridgeR-package

@@ -81,7 +81,7 @@ InterceptStrategy <- function(
 
 find_func_detail <- function(tbl, col_name) {
   if (!col_name %chin% names(tbl)) {
-    cli::cli_abort("Column {.val {col_name}} not found in tbl")
+    Abort("Column {.val {col_name}} not found in tbl")
   }
 
   fn <- tbl[[col_name]]

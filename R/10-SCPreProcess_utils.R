@@ -65,6 +65,7 @@ handle_usr_params <- function(usr_params) {
 
 
 #' @keywords internal
+#' @family single_cell_preprocess
 GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
   if (!"qc_colnames" %chin% names(seurat_obj@misc)) {
     cli::cli_warn(
@@ -388,9 +389,9 @@ QCFilter <- function(
 
   all_conds <- c(list(nfeat_condition, ncount_condition), qc_conds)
   if (length(all_conds) == 0) {
-    cli::cli_abort(c(
-      "x" = "[{.fun QCFilter}]: No valid filtering conditions generated."
-    ))
+    Abort(
+      "[{.fun QCFilter}]: No valid filtering conditions generated."
+    )
   }
 
   full_expr <- purrr::reduce(
@@ -402,9 +403,9 @@ QCFilter <- function(
   logical_vec <- base::with(data = meta, expr = eval_tidy(full_expr))
 
   if (!is.logical(logical_vec) || length(logical_vec) != nrow(meta)) {
-    cli::cli_abort(c(
-      "x" = "[{.fun QCFilter}]: filtering condition did not produce a logical vector of length {.val {nrow(meta)}}."
-    ))
+    Abort(
+      "[{.fun QCFilter}]: filtering condition did not produce a logical vector of length {.val {nrow(meta)}}."
+    )
   }
 
   keep_cells <- rownames(meta)[logical_vec]

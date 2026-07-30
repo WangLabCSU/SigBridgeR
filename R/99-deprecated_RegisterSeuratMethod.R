@@ -60,16 +60,15 @@ RegisterSeuratMethod <- function(
     letter <- method_names[i]
 
     if (nchar(letter) != 1) {
-      cli::cli_abort(c("x" = "Method key name must be a single character"))
+      Abort("Method key name must be a single character")
     }
 
     lookup <- letter %chin% names(registry)
     if (lookup && !overwrite) {
-      cli::cli_abort(c(
-        "x" = "Method already exists: {.val {letter}}",
-        ">" = "Registered letters: {.val {names(registry)}}",
-        ">" = "Use `overwrite = TRUE` to force replacement"
-      ))
+      Abort(
+        "Method already exists: {.val {letter}}",
+        tips = "Registered letters: {.val {names(registry)}}\nUse `overwrite = TRUE` to force replacement"
+      )
     }
     executor <- dots[[i]]
 
@@ -86,9 +85,7 @@ RegisterSeuratMethod <- function(
     } else if (is.function(executor)) {
       executor
     } else {
-      cli::cli_abort(c(
-        "x" = "Provided function must be a function object or character function name."
-      ))
+      Abort("Provided function must be a function object or character function name.")
     }
 
     registry[[letter]] <- function(...) {

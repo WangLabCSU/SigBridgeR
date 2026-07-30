@@ -62,7 +62,7 @@ AggregateDupRows <- function(
 
   row_names <- rownames(x)
   if (is.null(row_names)) {
-    cli::cli_abort(c("x" = "Input must have row names"))
+    Abort("Input must have row names")
   }
 
   if (!anyDuplicated(row_names) > 0L) {
@@ -101,7 +101,7 @@ AggregateDupCols <- function(
 
   col_names <- colnames(x)
   if (is.null(col_names)) {
-    cli::cli_abort(c("x" = "Input must have column names"))
+    Abort("Input must have column names")
   }
 
   dup <- duplicated(col_names)
@@ -172,9 +172,7 @@ AggregateDupCols <- function(
       .(value = stats::median(value, na.rm = TRUE)),
       by = .(row_id, col_name)
     ],
-    cli::cli_abort(
-      "Unsupported method: {method}. Supported: first, last, max, min, sum, mean, median"
-    )
+    Abort("Unsupported method: {method}. Supported: first, last, max, min, sum, mean, median")
   )
 
   dt_wide <- data.table::dcast(dt_agg, row_id ~ col_name, value.var = "value")

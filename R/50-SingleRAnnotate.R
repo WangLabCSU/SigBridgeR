@@ -102,15 +102,11 @@ SingleRAnnotate <- function(
     labels <- ref$label.main
   } else if (ref == "custom") {
     # misunderstood the argument `ref`
-    cli::cli_abort(c(
-      "x" = "Please specify the reference dataset."
-    ))
+    Abort("Please specify the reference dataset.")
   } else if (is.null(labels)) {
     # Please find the label from ref data yourself because the `label` slotname may be different from different data.
     # e.g. when set `ref = celldex::HumanPrimaryCellAtlasData()`, there are 3 labels
-    cli::cli_abort(c(
-      "x" = "Please specify the `labels` from `ref`."
-    ))
+    Abort("Please specify the `labels` from `ref`.")
   }
 
   if (verbose) {

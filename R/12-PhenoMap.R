@@ -45,17 +45,11 @@ PhenoMap <- function(data, ..., .default = NA) {
   rules <- list2(...)
 
   if (length(rules) == 0) {
-    cli::cli_abort(c(
-      "x" = "Condition is empty",
-      ">" = "Format e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}"
-    ))
+    Abort("Condition is empty", tips = "Format e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}")
   }
 
   if (!all(vapply(X = rules, FUN = is.call, FUN.VALUE = logical(1)))) {
-    cli::cli_abort(c(
-      "x" = "Not all conditions are formula",
-      ">" = "Use e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}"
-    ))
+    Abort("Not all conditions are formula", tips = "Use e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}")
   }
 
   conditions <- lapply(rules, `[[`, 2)

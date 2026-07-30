@@ -171,7 +171,7 @@ mLLMCelltypeAnnotate <- function(
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindAllMarkers)
     )
     if (nrow(seurat_obj_markers) == 0) {
-      cli::cli_abort(c("x" = "No marker genes found"))
+      Abort("No marker genes found")
     }
   } else if (verbose) {
     ts_cli$cli_alert_info("Use provided marker genes")
@@ -274,11 +274,10 @@ mLLMCelltypeAnnotate <- function(
 #' @keywords internal
 check_model_key <- function(models = vector(), api_keys = list()) {
   if (length(models) != length(api_keys)) {
-    cli::cli_abort(c(
-      "x" = "[mLLMCelltypeAnnotate()] Number of models does not match number of API keys",
-      ">" = "Length of models: {length(models)}",
-      ">" = "Length of api_keys: {length(api_keys)}"
-    ))
+    Abort(
+      "[mLLMCelltypeAnnotate()] Number of models does not match number of API keys",
+      tips = "Length of models: {length(models)}\nLength of api_keys: {length(api_keys)}"
+    )
   }
 
   api_keys <- unlist(api_keys)
@@ -293,9 +292,7 @@ check_model_key <- function(models = vector(), api_keys = list()) {
         )
     )
   ) {
-    cli::cli_abort(c(
-      "x" = "[mLLMCelltypeAnnotate()] API keys not provided"
-    ))
+    Abort("[mLLMCelltypeAnnotate()] API keys not provided")
   }
 
   #   if (length(models) > 0) {

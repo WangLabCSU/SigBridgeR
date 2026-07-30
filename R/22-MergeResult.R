@@ -124,17 +124,16 @@ MergeResult <- function(
   verbose = SigBridgeRUtils::getFuncOption("verbose")
 ) {
   args <- rlang::list2(...)
+  ..duplicate_cols <- ..vote_cols <- NULL # suppress checking NOTE
 
   if (length(args) == 0) {
-    cli::cli_abort(
-      c("x" = "Input objects must be provided."),
-      class = "InputsNotFound"
-    )
+    Abort("Input objects must be provided.")
   }
   # Extract Seurat objects
-  seurat_objects <- list()
   seurat_objects <- lapply(args, function(x) {
-    if (inherits(x, "Seurat")) {
+    if (S7_inherits(x, "ScreenMethodResult")) {
+      return(x@scRNA_data)
+    } else if (inherits(x, "Seurat")) {
       return(x)
     } else if (is.list(x) && inherits(x$scRNA_data, "Seurat")) {
       return(x$scRNA_data)
@@ -148,7 +147,7 @@ MergeResult <- function(
   seurat_objects <- Filter(Negate(is.null), seurat_objects)
 
   if (length(seurat_objects) == 0) {
-    cli::cli_abort(c("x" = "No valid Seurat objects found in inputs."))
+    Abort("No valid Seurat objects found in inputs.")
   }
 
   # extract metadata
@@ -258,7 +257,7 @@ MergeResult <- function(
     misc_list[[key]] <- if (length(values) == 1) values[[1]] else values
   }
 
-  merged_obj <- SigBridgeRUtils::AddMisc(merged_obj, misc_list, cover = TRUE)
+  merged_obj <- AddMisc(merged_obj, misc_list, cover = TRUE)
 
   if (verbose) {
     cli::cli_alert_success(

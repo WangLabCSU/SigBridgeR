@@ -31,13 +31,6 @@ The JSON file includes a header comment indicating it is required for cache iden
 }
 \examples{
 \dontrun{
-WriteCacheMeta(
-  file = "cache/meta.json",
-  screen_method = "DEGAS",
-  phenotype_class = "binary",
-  params = list(n_top = 100),
-  additional_description = "Test run"
-)
 }
 }
 \seealso{

@@ -47,10 +47,10 @@ ValidateDEGASParams <- function(
   chk::chk_is(matched_bulk, c("matrix", "data.frame"))
   chk::chk_not_any_na(matched_bulk)
   if (!chk::vld_is(sc_data, c("Seurat", "Matrix", "matrix"))) {
-    cli::cli_abort(c(
-      "x" = "{.arg sc_data} cannot be of type {.cls {class(sc_data)}}",
-      ">" = "Available types: {.cls {c('Seurat', 'Matrix', 'matrix')}}"
-    ))
+    Abort(
+      "{.arg sc_data} cannot be of type {.cls {class(sc_data)}}",
+      "Available types: {.cls {c('Seurat', 'Matrix', 'matrix')}}"
+    )
   }
   chk::chk_character(label_type)
   if (!is.null(sc_data.pheno_colname)) {
@@ -74,9 +74,9 @@ ValidateDEGASParams <- function(
 
   # DEGAS path must contain "/"
   if (is.null(tmp_dir)) {
-    cli::cli_abort(c(
-      "x" = "{.arg tmp_dir} must be specified."
-    ))
+    Abort(
+      "{.arg tmp_dir} must be specified."
+    )
   }
   if (!endsWith(tmp_dir, "/")) {
     tmp_dir <- paste0(tmp_dir, "/")
@@ -124,7 +124,7 @@ ValidateDEGASParams <- function(
     TRUE
   assay <- dots$assay %||% "RNA"
   load_cache <- dots$load_cache
-  save_cache <- dots$save_cache
+  save_cache <- dots$save_cache %||% tmp_dir
 
   # -- build cache config ---------------------------------------------------
   cache_config <- ScreenMethodConfig(
@@ -238,14 +238,15 @@ TrainDEGASModel <- function(
   cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
 
   if (length(cm_genes) == 0) {
-    cli::cli_abort(c(
-      "x" = "No common genes found between single cell data and bulk data",
-      ">" = "Please check the inputs"
-    ))
+    Abort(
+      "No common genes found between single cell data and bulk data",
+      "Please check the inputs"
+    )
   }
 
   t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
   t_matched_bulk <- Matrix::t(matched_bulk[cm_genes, ])
+
   # Train DEGAS model
   ccModel1 <- DEGAS::runCCMTLBag.optimized(
     scExp = t_sc_mat,
@@ -260,8 +261,9 @@ TrainDEGASModel <- function(
     DEGAS.seed = DEGAS.seed,
     verbose = p$verbose
   )
-  names(ccModel1) <- glue::glue(
-    "ccModel_{seq_len(p$degas_params$DEGAS.bag_depth)}"
+  names(ccModel1) <- paste0(
+    "ccModel_",
+    seq_len(p$degas_params$DEGAS.bag_depth)
   )
 
   # -- save mode: persist ccModel1 to cache --------------------------------
@@ -559,12 +561,8 @@ DEGASModelDetect <- function(
     ifelse(is.vector(bulk_pheno), "Class", "Cox")
   }
   if (model_type.first == "Blank" && model_type.last == "Blank") {
-    cli::cli_abort(
-      c(
-        "x" = "Please specify at least one phenotype, currently both are {.val NULL}"
-      ),
-      class = "NoPhenotypeProvided",
-      call = call
+    Abort(
+      "Please specify at least one phenotype, currently both are {.val NULL}"
     )
   }
   paste0(model_type.first, model_type.last)

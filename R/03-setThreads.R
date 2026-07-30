@@ -159,7 +159,6 @@ setThreads <- function(
   }
 
   if (length(sys_results) > 0 && verbose) {
-    cli::cli_h2(cli::col_cyan("System-Level Configuration"))
     purrr::walk(sys_results, function(cfg) {
       cli::cli_text(
         "{cli::symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
@@ -208,7 +207,6 @@ setThreads <- function(
   )
 
   if (verbose) {
-    cli::cli_h2(cli::col_yellow("TensorFlow Configuration"))
     purrr::walk(tf_results, function(cfg) {
       cli::cli_text(
         "{cli::symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"

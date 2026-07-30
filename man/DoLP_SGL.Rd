@@ -19,6 +19,29 @@ DoLP_SGL(
 )
 }
 \arguments{
+\item{matched_bulk}{Matrix or data frame of preprocessed bulk RNA-seq expression
+data (genes x samples). Column names must match names/IDs in phenotype.}
+
+\item{sc_data}{A Seurat object containing scRNA-seq data to be screened.}
+
+\item{phenotype}{Phenotype data, either:
+\itemize{
+\item Named vector, where names match columns of matched_bulk
+\item Patient survival data frame, where row names match columns of matched_bulk,
+and column names are "time" and "status"
+}}
+
+\item{label_type}{Character specifying phenotype label type, e.g. "SBS1" or
+"time".}
+
+\item{phenotype_class}{Type of phenotypic outcome. Must be consistent with input
+data:
+\itemize{
+\item "binary": Binary traits, e.g. case/control
+\item "continuous": Continuous measurements
+\item "survival": Survival information
+}}
+
 \item{family}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Type of regression model: "\code{logit}" (logistic), "\code{cox}" (Cox),
 or "\code{linear}" (linear regression)}
 

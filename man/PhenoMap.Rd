@@ -53,7 +53,9 @@ df <- PhenoMap(
 
 Other input_preprocess: 
 \code{\link{BulkPreProcess}()},
+\code{\link{DrawBulkPCA}()},
 \code{\link{PhenoPreProcess}()},
-\code{\link{SCPreProcess}()}
+\code{\link{SCPreProcess}()},
+\code{\link{SymbolConvert}()}
 }
 \concept{input_preprocess}

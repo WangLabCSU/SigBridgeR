@@ -59,14 +59,16 @@ ScreenMethodCache <- new_class(
   ),
   validator = \(self) {
     if (!dir.exists(self@cache_path)) {
-      Abort("@cache_path ({.file {self@cache_path}}) does not exist")
+      return(cli::cli_fmt(cli::cli_text(
+        "@cache_path ({.file {self@cache_path}}) does not exist"
+      )))
     }
     EnsureParentDir(self@cache_config_path)
 
     if (!endsWith(path, "cache_config.json")) {
-      Abort(
+      cli::cli_fmt(cli::cli_text(
         "@cache_config_path ({.file {self@cache_config_path}}) must end with {.file cache_config.json}"
-      )
+      ))
     }
   },
   constructor = \(

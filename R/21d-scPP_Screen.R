@@ -57,15 +57,17 @@ ValidatescPPParams <- function(
   # scPP is more strict than Scissor and scPAS
   if (phenotype_class == "survival") {
     if (!all(rownames(phenotype) == colnames(matched_bulk))) {
-      cli::cli_abort(c(
-        "x" = "Please check the rownames of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
-      ))
+      Abort(
+        "Please check the rownames of {.var phenotype} and colnames of {.var bulk_dataset},\
+         they should be the same."
+      )
     }
   } else {
     if (!all(names(phenotype) == colnames(matched_bulk))) {
-      cli::cli_abort(c(
-        "x" = "Please check the names of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
-      ))
+      Abort(
+        "Please check the names of {.var phenotype} and colnames of {.var bulk_dataset},\
+         they should be the same."
+      )
     }
   }
 

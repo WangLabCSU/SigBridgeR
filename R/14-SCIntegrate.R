@@ -71,7 +71,7 @@ SCIntegrate <- function(
   # ! don't use S3 method
   dots <- list2(...)
   if (length(dots) == 0) {
-    cli::cli_abort(c("[{.fun SCIntegrate}]: No arguments provided."))
+    Abort("[{.fun SCIntegrate}]: No arguments provided.")
   }
   .quos <- enquos(...)
   if (

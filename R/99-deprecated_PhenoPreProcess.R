@@ -155,16 +155,14 @@ PhenoPreProcess <- function(
 
   # Validate bulk is a two-dimensional matrix with genes as rows and samples as columns
   if (!is_2d(bulk)) {
-    cli::cli_abort(c(
-      "x" = "`bulk` must be a 2-dimensional matrix",
-      ">" = "Current type is {.cls {class(bulk)}}"
-    ))
+    Abort(
+      "`bulk` must be a 2-dimensional matrix",
+      tips = "Current type is {.cls {class(bulk)}}"
+    )
   }
   n_samples <- ncol(bulk)
   if (n_samples < 2L) {
-    cli::cli_abort(c(
-      "x" = "`bulk` must have at least 2 samples (columns)"
-    ))
+      Abort("`bulk` must have at least 2 samples (columns)")
   }
 
   bulk <- as.matrix(bulk)
@@ -201,10 +199,10 @@ PhenoPreProcess <- function(
       sample_names
     }
     if (length(common_samples) == 0L) {
-      cli::cli_abort(c(
-        "x" = "No common sample names between `bulk` and `phenotype`",
-        ">" = "Check the colnames of `bulk` and rownames of `phenotype`"
-      ))
+      Abort(
+        "No common sample names between `bulk` and `phenotype`",
+        tips = "Check the colnames of `bulk` and rownames of `phenotype`"
+      )
     }
   } else {
     # vector
@@ -217,10 +215,10 @@ PhenoPreProcess <- function(
       sample_names
     }
     if (length(common_samples) == 0L) {
-      cli::cli_abort(c(
-        "x" = "No common sample names between `bulk` and `phenotype`",
-        ">" = "Check the colnames of `bulk` and names of `phenotype`"
-      ))
+      Abort(
+        "No common sample names between `bulk` and `phenotype`",
+        tips = "Check the colnames of `bulk` and names of `phenotype`"
+      )
     }
   }
 
@@ -313,19 +311,19 @@ handle_case_1 <- function(
     status_col <- grepv("status|censor|event", possible_cols)
 
     if (length(time_col) > 1 || length(status_col) > 1) {
-      cli::cli_abort(c(
-        "x" = "Unable to guess time and status columns, multiple columns found",
-        ">" = "Try specify them"
-      ))
+      Abort(
+        "Unable to guess time and status columns, multiple columns found",
+        tips = "Try specify them"
+      )
     }
 
     select <- c(time_col, status_col)
 
     if (length(unique(unlist(phenotype[status_col]))) != 2L) {
-      cli::cli_abort(c(
-        "x" = "Status column must have exactly 2 unique values",
-        ">" = "Current guessed columns: {.val {time_col}} {.val {status_col}}"
-      ))
+      Abort(
+        "Status column must have exactly 2 unique values",
+        tips = "Current guessed columns: {.val {time_col}} {.val {status_col}}"
+      )
     }
 
     return(phenotype[sample_names, select]) # df
@@ -335,27 +333,26 @@ handle_case_1 <- function(
   if (ncol(phenotype) == 1) {
     col_val_count <- col_count(phenotype, 1L)
     if (phenotype_class == "binary" && col_val_count > 2L) {
-      cli::cli_abort(c(
-        "x" = "Binary phenotype must have exactly 2 unique values",
-        ">" = "Currenly has {col_val_count} unique values"
-      ))
+      Abort(
+        "Binary phenotype must have exactly 2 unique values",
+        tips = "Currenly has {col_val_count} unique values"
+      )
     }
 
     if (phenotype_class == "continuous" && col_val_count == 2L) {
-      cli::cli_abort(c(
-        "x" = "Continuous phenotype must have more than 2 unique values",
-        ">" = "Currenly has exactly 2 unique values, \
-          if data is correct, specify {.code phenotype_class = \"binary\"}"
-      ))
+      Abort(
+        "Continuous phenotype must have more than 2 unique values",
+        tips = "Currenly has exactly 2 unique values, if data is correct, specify {.code phenotype_class = \"binary\"}"
+      )
     }
 
     if (col_val_count == 1L) {
-      cli::cli_abort(c("x" = "Only one unique value found"))
+      Abort("Only one unique value found")
     }
 
     col_val_class <- col_class(phenotype, 1)
     if (col_val_class == "character") {
-      cli::cli_abort(c("x" = "Must be numeric"))
+      Abort("Must be numeric")
     } else if (col_val_class == "logical") {
       return(stats::setNames(
         as.numeric(unlist(phenotype[sample_names, 1])),
@@ -369,10 +366,10 @@ handle_case_1 <- function(
       sample_names
     ))
   } else {
-    cli::cli_abort(c(
-      "x" = "Multiple columns found but `select` is NULL",
-      ">" = "Use `select = <colname>` to clearly specified"
-    ))
+    Abort(
+      "Multiple columns found but `select` is NULL",
+      tips = "Use `select = <colname>` to clearly specified"
+    )
   }
 }
 
@@ -400,9 +397,7 @@ handle_case_2 <- function(
   chk::chk_length(select, 2)
   col_exists <- select %chin% colnames(phenotype)
   if (!all(col_exists)) {
-    cli::cli_abort(c(
-      "x" = "Column {.val {colnames(phenotype)[!col_exists]}} not found in `phenotype`"
-    ))
+    Abort("Column {.val {colnames(phenotype)[!col_exists]}} not found in `phenotype`")
   }
 
   return(phenotype[sample_names, select])
@@ -417,18 +412,18 @@ handle_case_3 <- function(
 ) {
   # FALSE, NULL: 处理逻辑
   if (phenotype_class == "survival") {
-    cli::cli_abort(c(
-      "x" = "Invalid type of `phenotype`",
-      ">" = "Current type: {.cls {class(phenotype)}}, expect: {.cls {c('surv', 'data.frame')}}"
-    ))
+    Abort(
+      "Invalid type of `phenotype`",
+      tips = "Current type: {.cls {class(phenotype)}}, expect: {.cls {c('surv', 'data.frame')}}"
+    )
   }
 
   val_class <- unique(vapply(phenotype, class, character(1)))
   if (length(val_class) > 1 || val_class == "character") {
-    cli::cli_abort(c(
-      "x" = "Invalid type of `phenotype`",
-      ">" = "Current type: {.cls {val_class}}, expect: {.cls {c('numeric', 'integer')}}"
-    ))
+    Abort(
+      "Invalid type of `phenotype`",
+      tips = "Current type: {.cls {val_class}}, expect: {.cls {c('numeric', 'integer')}}"
+    )
   }
 
   # continuous & binary
@@ -445,10 +440,10 @@ handle_case_4 <- function(
 ) {
   # FALSE, 非NULL: 处理逻辑
   if (phenotype_class == "survival") {
-    cli::cli_abort(c(
-      "x" = "Invalid type of `phenotype`",
-      ">" = "Current type: {.cls {class(phenotype)}}"
-    ))
+    Abort(
+      "Invalid type of `phenotype`",
+      tips = "Current type: {.cls {class(phenotype)}}"
+    )
   }
 
   if (phenotype_class %chin% c("binary", "continuous")) {

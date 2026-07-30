@@ -11,6 +11,69 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// check_na_vector_cpp
+List check_na_vector_cpp(SEXP x);
+RcppExport SEXP _SigBridgeR_check_na_vector_cpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(check_na_vector_cpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// check_na_dense2d_cpp
+List check_na_dense2d_cpp(SEXP x, IntegerVector dim);
+RcppExport SEXP _SigBridgeR_check_na_dense2d_cpp(SEXP xSEXP, SEXP dimSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type dim(dimSEXP);
+    rcpp_result_gen = Rcpp::wrap(check_na_dense2d_cpp(x, dim));
+    return rcpp_result_gen;
+END_RCPP
+}
+// check_na_dataframe_cpp
+List check_na_dataframe_cpp(List df, int nr);
+RcppExport SEXP _SigBridgeR_check_na_dataframe_cpp(SEXP dfSEXP, SEXP nrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< int >::type nr(nrSEXP);
+    rcpp_result_gen = Rcpp::wrap(check_na_dataframe_cpp(df, nr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// check_na_sparse_csc_cpp
+List check_na_sparse_csc_cpp(SEXP x, IntegerVector i, IntegerVector p, IntegerVector dim);
+RcppExport SEXP _SigBridgeR_check_na_sparse_csc_cpp(SEXP xSEXP, SEXP iSEXP, SEXP pSEXP, SEXP dimSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type i(iSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type dim(dimSEXP);
+    rcpp_result_gen = Rcpp::wrap(check_na_sparse_csc_cpp(x, i, p, dim));
+    return rcpp_result_gen;
+END_RCPP
+}
+// check_na_sparse_triplet_cpp
+List check_na_sparse_triplet_cpp(SEXP x, IntegerVector i, IntegerVector j, IntegerVector dim);
+RcppExport SEXP _SigBridgeR_check_na_sparse_triplet_cpp(SEXP xSEXP, SEXP iSEXP, SEXP jSEXP, SEXP dimSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type i(iSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type j(jSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type dim(dimSEXP);
+    rcpp_result_gen = Rcpp::wrap(check_na_sparse_triplet_cpp(x, i, j, dim));
+    return rcpp_result_gen;
+END_RCPP
+}
 // CountsToTPM_impl
 SEXP CountsToTPM_impl(SEXP counts, NumericVector gene_length);
 RcppExport SEXP _SigBridgeR_CountsToTPM_impl(SEXP countsSEXP, SEXP gene_lengthSEXP) {
@@ -74,6 +137,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_SigBridgeR_check_na_vector_cpp", (DL_FUNC) &_SigBridgeR_check_na_vector_cpp, 1},
+    {"_SigBridgeR_check_na_dense2d_cpp", (DL_FUNC) &_SigBridgeR_check_na_dense2d_cpp, 2},
+    {"_SigBridgeR_check_na_dataframe_cpp", (DL_FUNC) &_SigBridgeR_check_na_dataframe_cpp, 2},
+    {"_SigBridgeR_check_na_sparse_csc_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_csc_cpp, 4},
+    {"_SigBridgeR_check_na_sparse_triplet_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_triplet_cpp, 4},
     {"_SigBridgeR_CountsToTPM_impl", (DL_FUNC) &_SigBridgeR_CountsToTPM_impl, 2},
     {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},

@@ -65,7 +65,7 @@
 #' @description
 #' Returns the number of properties (slots) stored in a `SigBridgeRBase` object.
 #'
-#' @inheritParams print.SigBridgeR::SigBridgeRBase
+#' @inheritParams "print.SigBridgeR::SigBridgeRBase"
 #'
 #' @return An integer: the number of properties.
 #'
@@ -82,7 +82,7 @@
 #' Returns the names of all properties (slots) stored in a `SigBridgeRBase`
 #' object.
 #'
-#' @inheritParams print.SigBridgeR::SigBridgeRBase
+#' @inheritParams "print.SigBridgeR::SigBridgeRBase"
 #'
 #' @return A character vector of property names.
 #'
@@ -102,7 +102,7 @@
 #' `<ScreenMethod: SigBridgeR 4.0.0>`. Each following line contains one property name
 #' and its value on the same line. Property types are not shown.
 #'
-#' @inheritParams print.SigBridgeR::SigBridgeRBase
+#' @inheritParams "print.SigBridgeR::SigBridgeRBase"
 #' @param ... Additional arguments passed to the format method. Currently unused.
 #'
 #' @return A character vector.
@@ -148,7 +148,7 @@
 #' @description
 #' Converts a `SigBridgeRBase` object into a named list of its properties.
 #'
-#' @inheritParams print.SigBridgeR::SigBridgeRBase
+#' @inheritParams "print.SigBridgeR::SigBridgeRBase"
 #' @param ... Additional arguments passed to the method. Currently unused.
 #'
 #' @return A named list of properties.
@@ -166,7 +166,7 @@
 #' Coercion of `SigBridgeRBase` to character is intentionally unsupported.
 #' Use [format()] to obtain a character representation instead.
 #'
-#' @inheritParams print.SigBridgeR::SigBridgeRBase
+#' @inheritParams "print.SigBridgeR::SigBridgeRBase"
 #' @param ... Additional arguments passed to the method. Currently unused.
 #'
 #' @return Throws an error; never returns.

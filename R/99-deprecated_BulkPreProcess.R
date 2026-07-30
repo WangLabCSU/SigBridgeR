@@ -7,24 +7,22 @@ BulkCheck <- function(
   verbose = TRUE
 ) {
   if (any(counts_matrix < 0, na.rm = TRUE)) {
-    cli::cli_abort(c(
-      "x" = "Expression matrix cannot contain negative values"
-    ))
+    Abort("Expression matrix cannot contain negative values")
   }
   if (any(counts_matrix != floor(counts_matrix))) {
     cli::cli_warn("Expression matrix contains non-integer value")
   }
   if (min_genes_detected > n_genes) {
-    cli::cli_abort(c(
-      "x" = "{.arg min_genes_detected} must be less than the number of genes in the data",
-      ">" = "Current number of genes: {.val {n_genes}}"
-    ))
+    Abort(
+      "{.arg min_genes_detected} must be less than the number of genes in the data",
+      tips = "Current number of genes: {.val {n_genes}}"
+    )
   }
   if (min_count_threshold > max(counts_matrix)) {
-    cli::cli_abort(c(
-      "x" = "{.arg min_count_threshold} must be less than the maximum count in the data",
-      ">" = "Current maximum count: {.val {max(counts_matrix)}}"
-    ))
+    Abort(
+      "{.arg min_count_threshold} must be less than the maximum count in the data",
+      tips = "Current maximum count: {.val {max(counts_matrix)}}"
+    )
   }
 
   # * Handle duplicated genes and samples
@@ -149,8 +147,9 @@ BulkCheck <- function(
 #'
 #' @return Filtered count matrix
 #' @family input_preprocess
-#' @export
+#'
 #' @name BulkPreProcess
+#' @export
 BulkPreProcess <- new_generic(
   name = "BulkPreProcess",
   dispatch_args = "data",
@@ -215,9 +214,7 @@ method(BulkPreProcess, class_any) <- function(
         sample_info <- data$sample_info
       }
     } else {
-      cli::cli_abort(c(
-        "x" = "If data is a list, it must contain 'count_matrix' element"
-      ))
+      Abort("If data is a list, it must contain 'count_matrix' element")
     }
   } else {
     counts_matrix <- as.matrix(data)
@@ -268,9 +265,7 @@ method(BulkPreProcess, class_any) <- function(
   } else {
     # Validate matching
     if (nrow(sample_info) != n_samples) {
-      cli::cli_abort(c(
-        "x" = "Number of rows in `sample_info` does not match number of columns in count matrix"
-      ))
+      Abort("Number of rows in `sample_info` does not match number of columns in count matrix")
     }
   }
 

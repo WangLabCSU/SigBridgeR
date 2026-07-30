@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+          ref: version4
 
       - name: Get current tag
         id: vars
@@ -110,5 +110,5 @@ jobs:
 
           git commit -m "docs: update NEWS.md for ${{ steps.vars.outputs.tag }}"
 
-          git pull --rebase origin main
-          git push origin HEAD:main
+          git pull --rebase origin version4
+          git push origin HEAD:version4

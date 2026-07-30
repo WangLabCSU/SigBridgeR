@@ -267,7 +267,7 @@ ChooseNormalization <- function(
     }
   }
 
-  list2(metrics = metrics, recommendation = best_method)
+  list(metrics = metrics, recommendation = best_method)
 }
 
 #' @keywords internal
@@ -291,10 +291,10 @@ ChooseNormalizationCheck <- function(
   purrr::walk(
     method_names,
     ~ if (nchar(.x) == 0) {
-      cli::cli_abort(c(
-        "x" = "Options must be named",
-        ">" = "e.g., SCT = sct_obj, Log = log_obj"
-      ))
+      Abort(
+        "Options must be named",
+        tips = "e.g., SCT = sct_obj, Log = log_obj"
+      )
     }
   )
   # all Seurat objects
@@ -314,22 +314,22 @@ ChooseNormalizationCheck <- function(
         ))
     ) {
       if (is.null(layer)) {
-        cli::cli_abort(c(
-          "x" = "All objects must contain normalized data in {.cls {assay}} assay {.cls data} slot"
-        ))
+        Abort(
+          "All objects must contain normalized data in {.cls {assay}} assay {.cls data} slot"
+        )
       }
 
-      cli::cli_abort(c(
-        "x" = "All objects must contain normalized data in {.cls {assay}} assay {.cls {layer}} {.cls data} slot"
-      ))
+      Abort(
+        "All objects must contain normalized data in {.cls {assay}} assay {.cls {layer}} {.cls data} slot"
+      )
     }
   )
   # same cell number
   if (length(unique(n_cells)) > 1) {
-    cli::cli_abort(c(
-      "x" = "Seurat objects contain different cell counts. Ensure comparable subsets",
-      ">" = "Detected: {n_cells}"
-    ))
+    Abort(
+      "Seurat objects contain different cell counts. Ensure comparable subsets",
+      tips = "Detected: {n_cells}"
+    )
   }
   chk::chk_range(low_expressed_thresh)
   chk::chk_named(
@@ -339,7 +339,7 @@ ChooseNormalizationCheck <- function(
   chk::chk_vector(weight)
   chk::chk_length(weight, 3)
   if (sum(weight) != 1) {
-    cli::cli_abort(c("x" = "weight must sum to 1"))
+    Abort("weight must sum to 1")
   }
 }
 

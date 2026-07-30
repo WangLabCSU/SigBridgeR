@@ -2,9 +2,15 @@
 % Please edit documentation in R/16-SCAnnotate.R
 \name{SCAnnotate}
 \alias{SCAnnotate}
+\alias{SCAnnotate.default}
+\alias{SCAnnotate.Seurat}
 \title{Unified Interface for Single-Cell Annotation Methods}
 \usage{
 SCAnnotate(sc, ...)
+
+\method{SCAnnotate}{default}(sc, ...)
+
+\method{SCAnnotate}{Seurat}(sc, method = c("CellTypist", "SingleR", "mLLMCelltype"), ...)
 }
 \arguments{
 \item{sc}{A \code{Seurat} object containing single-cell RNA-seq data with

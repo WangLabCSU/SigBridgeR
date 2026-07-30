@@ -88,7 +88,7 @@ ValidateLPSGLParams <- function(
 #' integrates bulk and single-cell RNA-seq data to identify cell subpopulations
 #' associated with phenotypic outcomes.
 #'
-#' @inheritParams Screem
+#' @inheritParams Screen
 #' @param family `r lifecycle::badge("deprecated")` Type of regression model: "`logit`" (logistic), "`cox`" (Cox),
 #' or "`linear`" (linear regression)
 #' @param resolution Resolution parameter for Leiden clustering (default: `0.6`)

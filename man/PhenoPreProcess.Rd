@@ -141,7 +141,9 @@ result <- PhenoPreProcess(
 
 Other input_preprocess: 
 \code{\link{BulkPreProcess}()},
+\code{\link{DrawBulkPCA}()},
 \code{\link{PhenoMap}()},
-\code{\link{SCPreProcess}()}
+\code{\link{SCPreProcess}()},
+\code{\link{SymbolConvert}()}
 }
 \concept{input_preprocess}

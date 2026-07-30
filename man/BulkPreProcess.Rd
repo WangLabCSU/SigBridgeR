@@ -107,8 +107,10 @@ Samples are retained if:
 \code{\link[SigBridgeR]{SymbolConvert}} for gene symbol conversion
 
 Other input_preprocess: 
+\code{\link{DrawBulkPCA}()},
 \code{\link{PhenoMap}()},
 \code{\link{PhenoPreProcess}()},
-\code{\link{SCPreProcess}()}
+\code{\link{SCPreProcess}()},
+\code{\link{SymbolConvert}()}
 }
 \concept{input_preprocess}

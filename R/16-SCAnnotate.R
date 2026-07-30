@@ -70,11 +70,14 @@
 #' annotated <- SCAnnotate(sc = seurat_obj, method = "single")  # -> "SingleR"
 #' }
 #' @export
+#' @name SCAnnotate
 #' @family single_cell_preprocess
 SCAnnotate <- function(sc, ...) {
   UseMethod("SCAnnotate")
 }
 
+#' @rdname SCAnnotate
+#' @export
 SCAnnotate.default <- function(sc, ...) {
   cls_sc <- class(sc)
   Abort(
@@ -83,6 +86,8 @@ SCAnnotate.default <- function(sc, ...) {
   )
 }
 
+#' @rdname SCAnnotate
+#' @export
 SCAnnotate.Seurat <- function(
   sc,
   method = c("CellTypist", "SingleR", "mLLMCelltype"),
@@ -104,7 +109,7 @@ SCAnnotate.Seurat <- function(
     )
     if (length(method) != 1) {
       Abort(
-        "x" = "Cannot auto-find a suitable method, please specify a method"
+        "Cannot auto-find a suitable method, please specify a method"
       )
     } else if (verbose) {
       cli::cli_alert_info(
@@ -123,7 +128,7 @@ SCAnnotate.Seurat <- function(
       method,
       names(SCAnnotateStrategy),
       NULL
-    ) # must chosen
+    ) # must chosen, partial match
 
     anno_func <- SCAnnotateStrategy[[method]]$executor
   }
@@ -140,53 +145,17 @@ SCAnnotate.Seurat <- function(
       ...
     )
   } else if (method %chin% c("CellTypist", "CellTypistAnnotate")) {
-    dots <- list2(...)
-
     if (is.null(dots$conda) && is.null(dots$python)) {
       existing_envs <- ListPyEnv(verbose = FALSE)
-      if (!"r-reticulate-celltypist" %chin% existing_envs$name) {
-        choice <- utils::askYesNo(
-          "Create a new conda environment for CellTypist?"
-        )
-
-        if (!isTRUE(choice)) {
-          Abort(
-            "Aborted. Please specify a conda environment or python interpreter"
-          )
-        }
-
-        default_args <- list(
-          env_type = "conda",
-          env_name = "r-reticulate-celltypist",
-          method = c("environment"),
-          env_file = system.file(
-            "conda/celltypist_environment.yml",
-            package = "SigBridgeR"
-          ),
-          python_version = "3.9.15",
-          packages = c(
-            "celltypist" = "any"
-          ),
-          env.verbose = SigBridgeRUtils::getFuncOption("verbose")
-        )
-
-        exec(
-          SetupPyEnv,
-          utils::modifyList(
-            default_args,
-            SigBridgeRUtils::FilterArgs4Func(dots, SetupPyEnv)
-          )
-        )
-      } else if (verbose) {
-        ts_cli$cli_alert_info(
-          "Existing environment {.val r-reticulate-celltypist} found"
-        )
-      }
-      dots$conda <- "r-reticulate-celltypist"
+      Abort(
+        "Please specify a python environment or a conda environment for CellTypist",
+        "Use {.code conda = \"env\"} or {.code python = \"env\"} to specify a python env",
+        "Available python envs: {existing_envs$name}"
+      )
     }
 
     # * used to filter out relevant arguments, pass to python function celltypist.annotate
-    celltypist.annotate <- function(
+    celltypist.annotate <- \(
       #   filename,
       #   model,
       transpose_input,
@@ -212,6 +181,6 @@ SCAnnotate.Seurat <- function(
       !!!SigBridgeRUtils::FilterArgs4Func(dots, celltypist.annotate)
     )
   } else {
-    cli::cli_abort(c("x" = "Unsupported method"))
+    Abort("Unsupported method: {method}")
   }
 }

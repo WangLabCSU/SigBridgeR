@@ -41,17 +41,8 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Yuxi Yang \email{15364051195@163.com} (\href{https://orcid.org/0009-0006-1329-1224}{ORCID})
-
-Authors:
-\itemize{
-  \item Shixiang Wang \email{shixiang1994wang@gmail.com} (\href{https://orcid.org/0000-0001-9855-7357}{ORCID})
-}
-
-Other contributors:
-\itemize{
-  \item Zeyu Yan \email{3191647388@qq.com} [contributor]
-}
-
+Yuxi Yang \email{15364051195@163.com} (ORCID: 0009-0006-1329-1224)
+#' Shixiang Wang \email{shixiang1994wang@gmail.com} (ORCID: 0000-0001-9855-7357)
+#' Zeyu Yan \email{3191647388@qq.com}
 }
 \keyword{internal}

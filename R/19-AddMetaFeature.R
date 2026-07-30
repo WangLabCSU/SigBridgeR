@@ -18,7 +18,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
 
   assay_names <- names(seurat_obj@assays)
   if (length(assay_names) == 0L) {
-    cli::cli_abort(c("x" = "No assays found in Seurat object."))
+    Abort("No assays found in Seurat object.")
   }
   if (!(assay %chin% assay_names)) {
     assay <- assay_names[[1L]]
@@ -42,9 +42,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
     )
   } else if (!identical(rownames(mf), gene_names)) {
     # Ensure rownames match — critical for later
-    cli::cli_abort(c(
-      "meta.data features rownames was corrupted and must be reset."
-    ))
+    Abort("meta.data features rownames was corrupted and must be reset.")
   }
 
   dt_mf <- data.table::as.data.table(mf, keep.rownames = "gene")
@@ -63,9 +61,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
     # Case 1: Atomic vector (numeric/character/logical/...)
     if (is.atomic(meta) && is.null(dim(meta))) {
       if (length(meta) != n_genes) {
-        cli::cli_abort(c(
-          "x" = "Input {i} (vector {if (nzchar(nm)) paste0(' \"', nm, '\"')}) has length {.val {length(meta)}}, but object has {.val {n_genes}} genes."
-        ))
+        Abort("Input {i} (vector {if (nzchar(nm)) paste0(' \"', nm, '\"')}) has length {.val {length(meta)}}, but object has {.val {n_genes}} genes.")
       }
 
       colname <- if (nzchar(nm)) nm else paste0("V", i)
@@ -78,7 +74,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
     # Case 2: 2D object (matrix, data.frame, data.table, DataFrame, etc.)
     dims <- dim(meta)
     if (length(dims) != 2L) {
-      cli::cli_abort(c("Input {i} is not a vector or 2D object."))
+      Abort("Input {i} is not a vector or 2D object.")
     }
 
     nrow_meta <- dims[[1L]]
@@ -90,9 +86,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
     } else if (ncol_meta == n_genes) {
       2L
     } else {
-      cli::cli_abort(c(
-        "Input {i} has dimensions {.val {nrow_meta}} x {.val {ncol_meta}}; neither matches gene count ({.val {n_genes}})."
-      ))
+      Abort("Input {i} has dimensions {.val {nrow_meta}} x {.val {ncol_meta}}; neither matches gene count ({.val {n_genes}}).")
     }
 
     # Extract as data.table, ensure gene names align
@@ -123,9 +117,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
         cn_orig <- names(dt_meta)[names(dt_meta) != "gene"]
 
         if (length(rn_orig) != nrow(mat) || length(cn_orig) != ncol(mat)) {
-          cli::cli_abort(c(
-            "Failed to transpose 2D input {i}: dimension mismatch."
-          ))
+          Abort("Failed to transpose 2D input {i}: dimension mismatch.")
         }
 
         mat_t <- Matrix::t(mat)

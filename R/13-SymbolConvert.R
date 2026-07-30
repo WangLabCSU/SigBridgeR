@@ -12,6 +12,7 @@
 #' @param ... No usage
 #'
 #' @export
+#' @family input_preprocess
 #'
 SymbolConvert <- function(
   data,
@@ -27,7 +28,7 @@ SymbolConvert <- function(
   )
   row_names <- gsub("\\..*$", "", rownames(data))
   if (is.null(row_names)) {
-    cli::cli_abort(c("x" = "Row names are missing in the data"))
+    Abort("Row names are missing in the data")
   }
 
   gene_symbols <- IDConverter::convert_hm_genes(

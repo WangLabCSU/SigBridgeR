@@ -69,11 +69,10 @@ RegisterAnnoMethod <- function(
     # Check for existing method
     exists_already <- method_name %chin% names(registry)
     if (exists_already && !overwrite) {
-      cli::cli_abort(c(
-        "x" = "Method already exists: {.val {method_name}}",
-        "i" = "Registered methods: {.val {names(registry)}}",
-        "i" = "Use {.code overwrite = TRUE} to force replacement"
-      ))
+      Abort(
+        "Method already exists: {.val {method_name}}",
+        info = "Registered methods: {.val {names(registry)}}\nUse {.code overwrite = TRUE} to force replacement"
+      )
     }
 
     registry[[method_name]] <- rlang::list2(

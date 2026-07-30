@@ -250,17 +250,15 @@ Screen <- function(
     label_type <- screen_method
   }
 
-  screen_method <- SigBridgeRUtils::MatchArg(
+  screen_method <- arg_match(
     screen_method,
-    names(ScreenStrategy),
-    NULL
+    names(ScreenStrategy)
   )
   method_config <- ScreenStrategy[[screen_method]]
 
-  phenotype_class <- SigBridgeRUtils::MatchArg(
+  phenotype_class <- arg_match(
     phenotype_class,
-    method_config$phenotype_class,
-    NULL
+    method_config$phenotype_class
   )
 
   params <- rlang::list2(
@@ -276,5 +274,5 @@ Screen <- function(
     params <- method_config$mapper(params)
   }
 
-  eval(method_config$executor, params)
+  ScreenMethodResult(eval(method_config$executor, params))
 }

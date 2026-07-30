@@ -147,8 +147,10 @@ Other single_cell_preprocess:
 
 Other input_preprocess: 
 \code{\link{BulkPreProcess}()},
+\code{\link{DrawBulkPCA}()},
 \code{\link{PhenoMap}()},
-\code{\link{PhenoPreProcess}()}
+\code{\link{PhenoPreProcess}()},
+\code{\link{SymbolConvert}()}
 }
 \concept{input_preprocess}
 \concept{single_cell_preprocess}

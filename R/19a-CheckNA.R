@@ -81,143 +81,183 @@
 #' @seealso \code{\link{is.na}}, \code{\link{complete.cases}}, \code{\link{na.omit}}
 CheckNA <- function(data, max_print = 5L, ...) {
   chk::chk_integer(max_print)
-  # Convert to data.table if it's a 2D structure but not already a data.table
-  is_2d_data <- is_2d(data)
+  chk::chk_gte(max_print, 0L)
+  check_installed("methods")
 
-  # Initialize output
-  na_info <- list()
+  is_2d_data <- is.data.frame(data) ||
+    inherits(data, "Matrix") ||
+    (!is.null(dim(data)) && length(dim(data)) == 2L)
 
-  # Handle 1D data (vectors)
   if (!is_2d_data) {
-    na_logi <- is.na(data)
-    na_count <- sum(na_logi)
-    na_positions <- which(na_logi)
-    na_info$positions <- na_positions
-    na_info$count <- na_count
+    res <- check_na_vector_cpp(data)
 
-    if (na_count == 0L) {
+    na_count <- res$count
+    na_positions <- res$positions
+
+    na_info <- list(
+      count = na_count,
+      positions = na_positions
+    )
+
+    if (na_count == 0) {
       cli::cli_alert_success("No NA values found in the data")
       return(invisible(na_info))
     }
 
-    cli::cli_alert_warning("Found {.pkg {na_count}} NA value{?s}")
+    cli::cli_alert_warning(
+      "Found {na_count} NA value{if (na_count == 1) '' else 's'}"
+    )
 
     if (max_print > 0L) {
-      positions_to_show <- na_positions[
-        seq_len(min(max_print, na_count))
-      ]
-      cli::cli_text("Positions: {.pkg {positions_to_show}}")
+      n_show <- min(max_print, length(na_positions))
+      cli::cli_text(
+        "Positions: {paste(na_positions[seq_len(n_show)], collapse = ', ')}"
+      )
 
-      if (na_count > max_print) {
-        validate_explain(
-          "{.pkg {na_count - max_print}} additional positions not shown",
-          .envir = current_env()
-        )
+      if (na_count > n_show) {
+        cli::cli_text("{na_count - n_show} additional positions not shown")
       }
     }
 
-    # For named vectors
     if (!is.null(names(data))) {
       na_names <- names(data)[na_positions]
       na_info$names <- na_names
 
       if (max_print > 0L) {
-        names_to_show <- na_names[seq_len(min(max_print, na_count))]
-        validate_explain(
-          "with names: {.val {names_to_show}}",
-          .envir = current_env()
+        n_show <- min(max_print, length(na_names))
+        cli::cli_text(
+          "with names: {paste(na_names[seq_len(n_show)], collapse = ', ')}"
         )
       }
     }
+
     return(invisible(na_info))
   }
 
-  # Handle 2D data (data.frames, matrices, data.tables)
+  res <- scan_na_2d(data)
 
-  if (!inherits(data, "Matrix")) {
-    data <- Matrix::Matrix(as.matrix(data))
-  }
+  na_count <- res$count
 
-  na_mat <- is.na(data)
-  na_count <- sum(na_mat)
-  na_info$count <- na_count
-
-  if (na_count == 0L) {
+  if (na_count == 0) {
+    na_info <- list(
+      count = na_count,
+      positions = data.frame(row = integer(), col = integer())
+    )
     cli::cli_alert_success("No NA values found in the data")
     return(invisible(na_info))
   }
 
+  pos <- data.frame(
+    row = res$row,
+    col = res$col
+  )
+
+  rn <- tryCatch(rownames(data), error = function(e) NULL)
+  cn <- tryCatch(colnames(data), error = function(e) NULL)
+
+  has_row_names <- !is.null(rn)
+  has_col_names <- !is.null(cn)
+
+  if (has_row_names) {
+    pos$row_name <- rn[pos$row]
+  }
+
+  if (has_col_names) {
+    pos$col_name <- cn[pos$col]
+  }
+
+  na_info <- list(
+    count = na_count,
+    positions = pos
+  )
+
   cli::cli_alert_warning(
-    "Found {.pkg {na_count}} NA value{?s} in data"
+    "Found {na_count} NA value{if (na_count == 1) '' else 's'} in data"
   )
 
   if (max_print > 0L) {
-    na_positions <- Matrix::which(na_mat, arr.ind = TRUE) # base matrix
-    na_positions <- as.data.frame(na_positions)
+    n_show <- min(max_print, nrow(pos))
 
-    if (!is.null(colnames(data))) {
-      na_positions$col_name <- colnames(data)[na_positions$col]
-      has_col_names <- TRUE
-    } else {
-      has_col_names <- FALSE
-    }
-    if (!is.null(rownames(data))) {
-      na_positions$row_name <- rownames(data)[na_positions$row]
-      has_row_names <- TRUE
-    } else {
-      has_row_names <- FALSE
-    }
-    na_info$positions <- na_positions
+    cli::cli_text("First {n_show} position{if (n_show == 1) '' else 's'}:")
 
-    if (max_print > 0L) {
-      positions_to_show <- min(max_print, na_count)
-
-      cli::cli_text(
-        "First {.pkg {positions_to_show}} position{?s}:"
-      )
+    for (i in seq_len(n_show)) {
+      r <- pos$row[i]
+      c <- pos$col[i]
 
       if (has_row_names && has_col_names) {
-        for (i in seq_len(positions_to_show)) {
-          validate_explain(
-            "Row {na_positions$row[i]} ({.val {na_positions$row_name[i]}}), \
-          col {na_positions$col[i]} ({.val {na_positions$col_name[i]}})",
-            .envir = current_env()
-          )
-        }
-      } else if (has_row_names) {
-        for (i in seq_len(positions_to_show)) {
-          validate_explain(
-            "Row {na_positions$row[i]} ({.val {na_positions$row_name[i]}}), \
-          col {na_positions$col[i]}",
-            .envir = current_env()
-          )
-        }
-      } else if (has_col_names) {
-        for (i in seq_len(positions_to_show)) {
-          validate_explain(
-            "Row {na_positions$row[i]}, \
-            Col {na_positions$col[i]} ({.val {na_positions$col_name[i]}})",
-            .envir = current_env()
-          )
-        }
-      } else {
-        for (i in seq_len(positions_to_show)) {
-          validate_explain(
-            "Row {na_positions$row[i]}, \
-            col {na_positions$col[i]}",
-            .envir = current_env()
-          )
-        }
-      }
-
-      if (na_count > max_print) {
-        validate_explain(
-          "{.pkg {na_count - max_print}} additional positions not shown",
-          .envir = current_env()
+        cli::cli_text(
+          "Row {r} ({.val {pos$row_name[i]}}), Col {c} ({.val {pos$col_name[i]}})"
         )
+      } else if (has_row_names) {
+        cli::cli_text(
+          "Row {r} ({.val {pos$row_name[i]}}), Col {c}"
+        )
+      } else if (has_col_names) {
+        cli::cli_text(
+          "Row {r}, Col {c} ({.val {pos$col_name[i]}})"
+        )
+      } else {
+        cli::cli_text("Row {r}, Col {c}")
       }
+    }
+
+    if (na_count > n_show) {
+      cli::cli_text("{na_count - n_show} additional positions not shown")
     }
   }
 
-  return(invisible(na_info))
+  invisible(na_info)
+}
+
+scan_na_2d <- function(data) {
+  if (is.data.frame(data)) {
+    return(check_na_dataframe_cpp(data, nrow(data)))
+  }
+
+  if (is.matrix(data)) {
+    return(check_na_dense2d_cpp(data, dim(data)))
+  }
+
+  if (inherits(data, "Matrix")) {
+    slots <- methods::slotNames(data)
+    d <- methods::slot(data, "Dim")
+
+    if (inherits(data, "sparseMatrix")) {
+      if (all(c("p", "i") %in% slots)) {
+        if (!("x" %in% slots)) {
+          return(list(count = 0, row = integer(), col = integer()))
+        }
+
+        return(check_na_sparse_csc_cpp(
+          methods::slot(data, "x"),
+          methods::slot(data, "i"),
+          methods::slot(data, "p"),
+          d
+        ))
+      }
+
+      if (all(c("i", "j", "x") %in% slots)) {
+        return(check_na_sparse_triplet_cpp(
+          methods::slot(data, "x"),
+          methods::slot(data, "i"),
+          methods::slot(data, "j"),
+          d
+        ))
+      }
+    }
+
+    if (all(c("x", "Dim") %in% slots)) {
+      xslot <- methods::slot(data, "x")
+      if (length(xslot) == prod(d)) {
+        return(check_na_dense2d_cpp(xslot, d))
+      }
+    }
+
+    # fallback for special Matrix classes
+    m <- as.matrix(data)
+    return(check_na_dense2d_cpp(m, dim(m)))
+  }
+
+  m <- as.matrix(data)
+  check_na_dense2d_cpp(m, dim(m))
 }

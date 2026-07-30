@@ -23,16 +23,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' WriteCacheMeta(
-#'   file = "cache/meta.json",
-#'   screen_method = "DEGAS",
-#'   phenotype_class = "binary",
-#'   params = list(n_top = 100),
-#'   additional_description = "Test run"
-#' )
 #' }
-#' @family cache_config
 #' @name WriteCacheMeta
+#' @family cache_config
+#'
 #' @export
 WriteCacheMeta <- new_generic(
   name = "WriteCacheMeta",
