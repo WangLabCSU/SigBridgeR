@@ -3,7 +3,7 @@
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v3.8.1 loaded
+#> ✔ SigBridgeR v3.8.2 loaded
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
@@ -422,12 +422,12 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_5.5.1       SeuratObject_5.4.0 sp_2.2-3           SigBridgeR_3.8.1  
+#> [1] Seurat_5.5.1       SeuratObject_5.4.0 sp_2.2-3           SigBridgeR_3.8.2  
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] deldir_2.0-4           pbapply_1.7-4          gridExtra_2.3.1       
 #>   [4] rlang_1.3.0            magrittr_2.0.5         RcppAnnoy_0.0.23      
-#>   [7] otel_0.2.0             spatstat.geom_3.8-1    matrixStats_1.5.0     
+#>   [7] otel_0.2.0             spatstat.geom_3.8-2    matrixStats_1.5.0     
 #>  [10] ggridges_0.5.7         compiler_4.6.1         png_0.1-9             
 #>  [13] systemfonts_1.3.2      vctrs_0.7.3            reshape2_1.4.5        
 #>  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         
@@ -443,8 +443,8 @@ sessionInfo()
 #>  [46] tensor_1.5.1           future.apply_1.20.2    zoo_1.8-15            
 #>  [49] sctransform_0.4.3      httpuv_1.6.17          Matrix_1.7-5          
 #>  [52] splines_4.6.1          igraph_2.3.3           tidyselect_1.2.1      
-#>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.5-0 
-#>  [58] spatstat.explore_3.8-1 codetools_0.2-20       miniUI_0.1.2          
+#>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.5-1 
+#>  [58] spatstat.explore_3.8-2 codetools_0.2-20       miniUI_0.1.2          
 #>  [61] listenv_1.0.0          lattice_0.22-9         tibble_3.3.1          
 #>  [64] plyr_1.8.9             shiny_1.14.0           S7_0.2.2              
 #>  [67] ROCR_1.0-12            evaluate_1.0.5         Rtsne_0.17            

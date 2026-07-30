@@ -16,12 +16,12 @@ Source:
 
 Yang Y, Wang S (2026). *SigBridgeR: Integrative Toolkit for Linking
 Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data*. R
-package version 3.8.1, <https://wanglabcsu.github.io/sigbridger>.
+package version 3.8.2, <https://wanglabcsu.github.io/sigbridger>.
 
     @Manual{,
       title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data},
       author = {Yuxi Yang and Shixiang Wang},
       year = {2026},
-      note = {R package version 3.8.1},
+      note = {R package version 3.8.2},
       url = {https://wanglabcsu.github.io/sigbridger},
     }
