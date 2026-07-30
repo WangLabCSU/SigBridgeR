@@ -4,17 +4,17 @@
 \alias{Property-visitor}
 \alias{$.SigBridgeRBase}
 \alias{[[.SigBridgeRBase}
-\title{Retrieve a property from \code{ScreenInput} object}
+\title{Retrieve a property from SigBridgeR object}
 \usage{
 \method{$}{SigBridgeRBase}(object, name)
 
 \method{[[}{SigBridgeRBase}(object, name)
 }
 \arguments{
-\item{object}{An object}
+\item{object}{An object inheriting from SigBridgeRBase}
 
 \item{name}{The name of the parameter as a character. Partial matching is not performed.}
 }
 \description{
-\code{SCInput}, \code{BulkInput} and \code{PhenoInput}
+Retrieve a property from SigBridgeR object
 }

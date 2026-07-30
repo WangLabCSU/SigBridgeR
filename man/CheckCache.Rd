@@ -4,14 +4,7 @@
 \alias{CheckCache}
 \title{Check Cache Configuration Consistency}
 \usage{
-CheckCache(
-  path,
-  screen_method,
-  phenotype_class = c("binary", "survival", "continuous"),
-  label_type = screen_method,
-  params,
-  ...
-)
+CheckCache(cache_config, ...)
 }
 \arguments{
 \item{path}{Character string specifying the path to the cache directory
@@ -26,8 +19,6 @@ Must be one of \code{"binary"}, \code{"survival"}, or \code{"continuous"}.}
 the value of \code{screen_method}.}
 
 \item{params}{List of parameters used for the screening method.}
-
-\item{...}{Additional arguments (must be empty; raises error if provided).}
 }
 \value{
 Returns \code{invisible(TRUE)} if the cache configuration is consistent

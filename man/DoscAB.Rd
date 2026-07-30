@@ -21,21 +21,28 @@ DoscAB(
 )
 }
 \arguments{
-\item{matched_bulk}{Normalized bulk expression matrix (genes × samples) where:
-- Columns match \code{phenotype} row names
-- Genes match features in \code{sc_data}}
+\item{matched_bulk}{Matrix or data frame of preprocessed bulk RNA-seq expression
+data (genes x samples). Column names must match names/IDs in phenotype.}
 
-\item{sc_data}{Seurat object containing preprocessed single-cell data:}
+\item{sc_data}{A Seurat object containing scRNA-seq data to be screened.}
 
-\item{phenotype}{Data frame with clinical annotations where:
-- Rows correspond to \code{matched_bulk} columns
-- For survival: contains \code{time} and \code{status} columns}
+\item{phenotype}{Phenotype data, either:
+\itemize{
+\item Named vector, where names match columns of matched_bulk
+\item Patient survival data frame, where row names match columns of matched_bulk,
+and column names are "time" and "status"
+}}
 
-\item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time"), stored in \code{scRNA_data@misc}}
+\item{label_type}{Character specifying phenotype label type, e.g. "SBS1" or
+"time".}
 
-\item{phenotype_class}{Analysis mode:
-- \code{"binary"}: Case-control design (e.g., responder/non-responder)
-- \code{"survival"}: Time-to-event analysis data.frame}
+\item{phenotype_class}{Type of phenotypic outcome. Must be consistent with input
+data:
+\itemize{
+\item "binary": Binary traits, e.g. case/control
+\item "continuous": Continuous measurements
+\item "survival": Survival information
+}}
 
 \item{alpha}{Coefficient of phenotype regularization (default=\code{0.005}).}
 
@@ -114,6 +121,9 @@ Other screen_method:
 \code{\link{DoTiRank}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}
+
+Other scAB: 
+\code{\link{ValidatescABParams}()}
 }
 \concept{scAB}
 \concept{screen_method}

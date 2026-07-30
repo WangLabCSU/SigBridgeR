@@ -1,3 +1,68 @@
+# ---- 2. Do TiRank ----
+
+#' Validate and Prepare DoTiRank Parameters
+#'
+#' @description
+#' Internal helper that handles package installation checks, mode resolution,
+#' and default-value resolution for [DoTiRank()].
+#'
+#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class,tirank_params
+#'   Forwarded from [DoTiRank()].
+#' @param save_path,load_cache Forwarded from [DoTiRank()].
+#' @param ... Additional dots forwarded from [DoTiRank()].
+#'
+#' @return A named list with elements: `mode`, `verbose`, `seed`, `assay`,
+#'   `load_cache`, `save_cache`, `cache_config`, `dots`.
+#'
+#' @keywords internal
+#' @family TiRank
+ValidateTiRankParams <- function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type,
+  phenotype_class,
+  tirank_params,
+  save_path,
+  load_cache,
+  ...
+) {
+  # -- package checks -------------------------------------------------------
+  check_installed("rTIRank", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/rTIRank")
+  })
+
+  # -- resolve mode from phenotype_class ------------------------------------
+  mode <- switch(
+    phenotype_class,
+    "binary" = "Classification",
+    "survival" = "Cox",
+    "continuous" = "Regression",
+    Abort(
+      "`phenotype_class` must be one of 'binary', 'survival', or 'continuous'"
+    )
+  )
+
+  # -- process dots ---------------------------------------------------------
+  dots <- rlang::list2(...)
+  verbose <- dots$verbose %||% getFuncOption("verbose")
+  seed <- dots$seed %||% getFuncOption("seed")
+  assay <- dots$assay %||% "RNA"
+  load_cache <- dots$load_cache %||% load_cache # compatible with last version
+  save_cache <- dots$save_cache %||% save_path
+
+  # -- build cache config ---------------------------------------------------
+  cache_config <- ScreenMethodConfig(
+    method_name = "TiRank",
+    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    phenotype_class = phenotype_class,
+    label_type = label_type
+  )
+
+  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+}
+
 #' @title Perform TiRank Screening Analysis
 #'
 #' @description
@@ -160,62 +225,34 @@ DoTiRank <- function(
 
   ...
 ) {
-  check_installed("rTIRank", action = \(pkg, ...) {
-    check_installed("pak")
-    pak::pak("Exceret/rTIRank")
-  })
-  # Extract additional arguments
-  dots <- rlang::list2(...)
-  verbose <- dots$verbose %||% getFuncOption("verbose")
-  seed <- dots$seed %||% getFuncOption("seed")
-  assay <- dots$assay %||% "RNA"
-  load_cache <- dots$load_cache %||% load_cache # compatible with last version
-  save_cache <- dots$save_cache %||% save_path
+  # -- validate & prepare all parameters -----------------------------------
+  p <- exec(ValidateTiRankParams, !!!fn_fmls())
 
-  set.seed(seed)
-  rTiRank::setup_seed(seed)
+  set.seed(p$seed)
+  rTiRank::setup_seed(p$seed)
 
-  mode <- switch(
-    phenotype_class,
-    "binary" = "Classification",
-    "survival" = "Cox",
-    "continuous" = "Regression",
-    cli::cli_abort(c(
-      "x" = "`phenotype_class` must be one of 'binary', 'survival', or 'continuous'"
-    ))
-  )
-
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Starting TiRank Screen"))
   }
 
-  # -- build cache params ----------------------------------------------------
-  cache_params <- list(
-    label_type = label_type,
-    phenotype_class = phenotype_class,
-    tirank_params = tirank_params,
-    seed = seed,
-    assay = assay
-  )
-
   # -- cache load / normal flow ----------------------------------------------
-  if (!is.null(load_cache)) {
+  if (!is.null(p$load_cache)) {
     cache_dir <- CacheSetHere(
-      path = load_cache,
+      path = p$load_cache,
       screen_method = "TiRank",
-      phenotype_class = phenotype_class,
+      phenotype_class = p$phenotype_class,
       mode = "load"
     )
 
     CheckCache(
       path = cache_dir,
       screen_method = "TiRank",
-      phenotype_class = phenotype_class,
+      phenotype_class = p$phenotype_class,
       label_type = label_type,
-      params = cache_params
+      params = p$cache_config
     )
 
-    if (verbose) {
+    if (p$verbose) {
       ts_cli$cli_alert_info(
         cli::col_green("Loaded TiRank cache from {.path {cache_dir}}")
       )
@@ -246,7 +283,7 @@ DoTiRank <- function(
         nlayers = tirank_params$nlayers,
         n_pred = tirank_params$n_pred,
         dropout = tirank_params$dropout,
-        mode = mode,
+        mode = p$mode,
         encoder_type = tirank_params$encoder_type,
         infer_mode = tirank_params$infer_mode,
         n_trials = tirank_params$n_trials,
@@ -261,12 +298,12 @@ DoTiRank <- function(
     )
   } else {
     # -- save mode: persist cache metadata ------------------------------------
-    chk::chk_not_null(save_cache)
+    chk::chk_not_null(p$save_cache)
 
     cache_dir <- CacheSetHere(
-      path = save_cache,
+      path = p$save_cache,
       screen_method = "TiRank",
-      phenotype_class = phenotype_class,
+      phenotype_class = p$phenotype_class,
       mode = "save"
     )
 
@@ -275,15 +312,15 @@ DoTiRank <- function(
     check_res <- rTiRank::check_bulk(
       bulk_exp = bulkExp,
       bulk_clinical = bulkClinical,
-      save_path = save_cache
+      save_path = p$save_cache
     )
-    if (verbose) {
+    if (p$verbose) {
       ts_cli$cli_alert_info("Transfer expression profile")
     }
 
     st_exp_df <- rTiRank::transfer_exp_profile(sc_data)
 
-    if (verbose) {
+    if (p$verbose) {
       ts_cli$cli_alert_info("Generate validation set")
     }
 
@@ -291,11 +328,11 @@ DoTiRank <- function(
       bulk_exp = check_res$bulk_exp,
       bulk_clinical = check_res$bulk_clinical,
       validation_proportion = tirank_params$validation_proportion,
-      mode = mode,
-      seed = seed,
+      mode = p$mode,
+      seed = p$seed,
     )
 
-    if (verbose) {
+    if (p$verbose) {
       ts_cli$cli_alert_info("Perform sampling")
     }
 
@@ -306,7 +343,7 @@ DoTiRank <- function(
       threshold = tirank_params$sampling_thresh
     )
 
-    if (verbose) {
+    if (p$verbose) {
       ts_cli$cli_alert_info("Compute cell-cell distance")
     }
 
@@ -318,7 +355,7 @@ DoTiRank <- function(
     )
     gc(verbose = FALSE)
 
-    if (verbose) {
+    if (p$verbose) {
       ts_cli$cli_alert_info("Training model")
     }
 
@@ -329,7 +366,7 @@ DoTiRank <- function(
       bulk_exp_val = val_res$bulk_exp_val,
       bulk_clinical_val = val_res$bulk_clinical_val,
       load_cache = NULL,
-      save_dir = save_cache,
+      save_dir = p$save_cache,
       device = "cuda",
       gpextractor_params = list(
         top_var_genes = tirank_params$top_var_genes,
@@ -347,7 +384,7 @@ DoTiRank <- function(
         nlayers = tirank_params$nlayers,
         n_pred = tirank_params$n_pred,
         dropout = tirank_params$dropout,
-        mode = mode,
+        mode = p$mode,
         encoder_type = tirank_params$encoder_type,
         infer_mode = tirank_params$infer_mode,
         n_trials = tirank_params$n_trials,
@@ -364,11 +401,11 @@ DoTiRank <- function(
     WriteCacheMeta(
       file = file.path(cache_dir, "cache_config.json"),
       screen_method = "TiRank",
-      phenotype_class = phenotype_class,
+      phenotype_class = p$phenotype_class,
       label_type = label_type,
-      params = cache_params,
+      params = p$cache_config,
       verbose = FALSE,
-      additional_description = dots$additional_description
+      additional_description = p$dots$additional_description
     )
   }
 
@@ -392,17 +429,17 @@ DoTiRank <- function(
     new = paste0("TiRank_", names(meta_to_add)[1:2])
   )
 
-  modified_sc_data <- SeuratObject::AddMetaData(
+  sc_data <- SeuratObject::AddMetaData(
     object = sc_data,
     metadata = as.data.frame(meta_to_add)
   )
-  modified_sc_data <- AddMisc(
-    seurat_obj = modified_sc_data,
-    TiRank_para = tirank_params,
-    TiRank_type = label_type
+  sc_data <- AddMisc(
+    seurat_obj = sc_data,
+    TiRank = props(p$cache_config),
+    cover = FALSE
   )
 
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("TiRank screening Done"))
   }
 

@@ -155,6 +155,9 @@ head(modified_seurat[[]])
 
 }
 \seealso{
+Other TiRank: 
+\code{\link{ValidateTiRankParams}()}
+
 Other screen_method: 
 \code{\link{DoDEGAS}()},
 \code{\link{DoLP_SGL}()},

@@ -5,11 +5,19 @@ CountsToTPM_impl <- function(counts, gene_length) {
     .Call(`_SigBridgeR_CountsToTPM_impl`, counts, gene_length)
 }
 
+IsSkewedDynamic_cpp <- function(x, target = 0.0, expected_p = 0.8, n_sd = 4L) {
+    .Call(`_SigBridgeR_IsSkewedDynamic_cpp`, x, target, expected_p, n_sd)
+}
+
 find_diff_in_2_lists <- function(x, y) {
     .Call(`_SigBridgeR_find_diff_in_2_lists`, x, y)
 }
 
 make_null_list_NULL <- function(x) {
     .Call(`_SigBridgeR_make_null_list_NULL`, x)
+}
+
+fast_assign_plan <- function(plan, rhs, env) {
+    invisible(.Call(`_SigBridgeR_fast_assign_plan`, plan, rhs, env))
 }
 

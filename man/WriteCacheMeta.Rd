@@ -4,33 +4,12 @@
 \alias{WriteCacheMeta}
 \title{Write Cache Metadata}
 \usage{
-WriteCacheMeta(
-  file = "cache_config.json",
-  screen_method,
-  phenotype_class = c("binary", "survival", "continuous"),
-  label_type = screen_method,
-  params,
-  additional_description = NULL,
-  verbose = FALSE,
-  ...
-)
+WriteCacheMeta(cache_config, ...)
 }
 \arguments{
-\item{file}{Character string. Path to the JSON metadata file to be written.}
-
-\item{screen_method}{Character string. Screening method name. Must match one of the keys in \code{ScreenStrategy}.}
-
-\item{phenotype_class}{Character string. Type of phenotype data. One of \code{"binary"}, \code{"survival"}, or \code{"continuous"}.}
-
-\item{label_type}{Character string. Type of label for the screening. Defaults to \code{screen_method}.}
-
-\item{params}{List. Parameters used for the screening configuration.}
-
-\item{additional_description}{Character string. Optional additional description text to include in the metadata. Default is \code{NULL}.}
-
-\item{verbose}{Logical. Whether to print metadata preview for debugging. Default is \code{FALSE}.}
-
 \item{...}{Additional arguments (must be empty, checked by \code{rlang::check_dots_empty0()}).}
+
+\item{file}{Character string. Path to the JSON metadata file to be written.}
 }
 \value{
 Invisible. Returns the metadata list that was written to the file.

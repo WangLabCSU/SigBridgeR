@@ -47,7 +47,7 @@ ValidateSIDISHParams <- function(
   if (is.list(env_params)) {
     lifecycle::deprecate_warn(
       "3.8.1",
-      "DoSIDISH(env_params)",
+      "DoSIDISH(env_params= )",
       details = "After the R-side binding of SIDISH is updated to version >=0.0.2,\
        user-provided environment is no longer required."
     )

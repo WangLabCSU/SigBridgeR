@@ -5,38 +5,45 @@
 \title{Perform Scissor Screening Analysis}
 \usage{
 DoScissor(
-   matched_bulk,
-   sc_data,
-   phenotype,
-   label_type = "scissor",
-   alpha = c(0.05, NULL),
-   cutoff = 0.2,
-   family = c("gaussian", "binomial", "cox"),
-   reliability_test = list(
-     run = FALSE, # whether to run reliability test
-     n = 10L, # permutation times
-     nfold = 10L # cross validation folds
-   ),
-   cell_evaluation = list(
-     run = FALSE, # whether to run cell evaluation
-     benchmark_data = "path_to_file.RData", # path to benchmark data
-     FDR_cutoff = 0.05,
-     bootstrap_n = 100L
-   ),
-   ...
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type = "scissor",
+  phenotype_class = c("binary", "continuous", "survival"),
+  alpha = c(0.05, NULL),
+  cutoff = 0.2,
+  family = c("gaussian", "binomial", "cox"),
+  reliability_test = list(run = FALSE, n = 10L, nfold = 10L),
+  cell_evaluation = list(run = FALSE, benchmark_data = "path_to_file.RData", FDR_cutoff =
+    0.05, bootstrap_n = 100L),
+  path2load_scissor_cache = lifecycle::deprecated(),
+  path2save_scissor_inputs = lifecycle::deprecated(),
+  ...
 )
 }
 \arguments{
-\item{matched_bulk}{Normalized bulk expression matrix (features × samples).
-Column names must match \code{phenotype} identifiers.}
+\item{matched_bulk}{Matrix or data frame of preprocessed bulk RNA-seq expression
+data (genes x samples). Column names must match names/IDs in phenotype.}
 
-\item{sc_data}{Seurat object containing single-cell RNA-seq data.}
+\item{sc_data}{A Seurat object containing scRNA-seq data to be screened.}
 
-\item{phenotype}{Clinical outcome data. Can be:
-- Vector: named with sample IDs
-- Data frame: with row names matching bulk columns}
+\item{phenotype}{Phenotype data, either:
+\itemize{
+\item Named vector, where names match columns of matched_bulk
+\item Patient survival data frame, where row names match columns of matched_bulk,
+and column names are "time" and "status"
+}}
 
-\item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time"), stored in \code{scRNA_data@misc}}
+\item{label_type}{Character specifying phenotype label type, e.g. "SBS1" or
+"time".}
+
+\item{phenotype_class}{Type of phenotypic outcome. Must be consistent with input
+data:
+\itemize{
+\item "binary": Binary traits, e.g. case/control
+\item "continuous": Continuous measurements
+\item "survival": Survival information
+}}
 
 \item{alpha}{Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If alpha = NULL, a default searching vector is used. The range of alpha is between 0 and 1. A larger alpha lays more emphasis on the l1 norm.}
 
@@ -142,7 +149,8 @@ Other screen_method:
 
 Other scissor: 
 \code{\link{DoScissorCellEval}()},
-\code{\link{DoScissorRelTest}()}
+\code{\link{DoScissorRelTest}()},
+\code{\link{ValidateScissorParams}()}
 }
 \concept{scissor}
 \concept{screen_method}

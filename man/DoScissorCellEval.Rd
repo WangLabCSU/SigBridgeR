@@ -36,7 +36,8 @@ and bootstrap resampling.
 \seealso{
 Other scissor: 
 \code{\link{DoScissor}()},
-\code{\link{DoScissorRelTest}()}
+\code{\link{DoScissorRelTest}()},
+\code{\link{ValidateScissorParams}()}
 }
 \concept{scissor}
 \keyword{internal}

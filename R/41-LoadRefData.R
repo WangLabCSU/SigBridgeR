@@ -24,6 +24,10 @@ LoadRefData <- function(
   timeout = SigBridgeRUtils::getFuncOption("timeout"),
   ...
 ) {
+  dots <- list2(...)
+  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
+  chk::chk_whole_number(timeout)
+
   data_type <- SigBridgeRUtils::MatchArg(
     data_type,
     c("survival", "binary", "continuous"),
@@ -37,12 +41,9 @@ LoadRefData <- function(
     } else {
       file.path(Sys.getenv("HOME"), ".cache", "SigBridgeR")
     }
+    cli::cli_alert_info("Using default cache path: {.path {path}}")
     dir.create(path, recursive = TRUE, showWarnings = FALSE)
   }
-  chk::chk_whole_number(timeout)
-
-  dots <- list2(...)
-  verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
 
   local_file <- file.path(path, glue::glue("{data_type}_ref_data.rds"))
 
@@ -130,18 +131,11 @@ LoadRefData <- function(
       if (success) break
     }
   } else if (verbose) {
-    cli::cli_alert_info("Found cached data.")
+    cli::cli_alert_info("Found cached data ({.file {local_file}}).")
   }
 
-  data <- try_fetch(
-    readRDS(local_file),
-    error = function(e) {
-      if (file.exists(local_file)) {
-        unlink(local_file) # Clean up corrupted file
-      }
-      cli::cli_abort(c("x" = "{e$message}"))
-    }
-  )
+  data <- readRDS(local_file)
+
   if (verbose) {
     cli::cli_alert_success(cli::col_green("Data loaded successfully."))
   }

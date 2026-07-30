@@ -83,11 +83,11 @@ WeightedVote <- function(
   voter_cols <- colnames(vote_data)
 
   if (any(names(weights) != voter_cols)) {
-    cli::cli_abort(c(
-      "x" = "The `weights` must have the same names as `vote_data`",
-      ">" = "Colnames of `vote_data`: {.val {voter_cols}}",
-      ">" = "Colnames of `weights`: {.val {names(weights)}}"
-    ))
+    Abort(
+      "The `weights` must have the same names as `vote_data`",
+      "Colnames of `vote_data`: {.val {voter_cols}}",
+      "Colnames of `weights`: {.val {names(weights)}}"
+    )
   }
   w <- weights[voter_cols]
 

@@ -8,11 +8,11 @@ Method <- new_class(
     executor = property_fn
   ),
   abstract = TRUE,
-  constructor = \(method_name, executor, algorithm_version) {
+  constructor = \(method_name, executor, method_version) {
     new_object(
       S7_object(),
       method_name = method_name,
-      method_version = algorithm_version,
+      method_version = method_version,
       executor = func
     )
   }
@@ -27,7 +27,7 @@ ScreenMethod <- new_class(
     mapper = property_mapper_fn
   ),
   validator = \(self) {
-    param_names <- fn_fmlss_names(self@executor)
+    param_names <- fn_fmls_names(self@executor)
     expected_args <- c(
       "matched_bulk",
       "sc_data",

@@ -4,16 +4,11 @@
 \alias{SCAnnotate}
 \title{Unified Interface for Single-Cell Annotation Methods}
 \usage{
-SCAnnotate(sc, method = c("CellTypist", "SingleR", "mLLMCelltype"), ...)
+SCAnnotate(sc, ...)
 }
 \arguments{
 \item{sc}{A \code{Seurat} object containing single-cell RNA-seq data with
 preprocessed expression matrix and (optionally) pre-computed clusters.}
-
-\item{method}{Character. Annotation method to use. Must be one of the keys
-registered in \code{SCAnnotateStrategy} (e.g., \code{"CellTypist"},
-\code{"SingleR"}, \code{"mLLMCelltype"}). Partial matching is supported.
-Use \code{names(SCAnnotateStrategy)} to list available methods.}
 
 \item{...}{Method-specific parameters passed to the underlying annotation function.
 Examples:
@@ -23,6 +18,11 @@ Examples:
 \item For \code{"mLLMCelltype"}: \code{tissue_name}, \code{models}, \code{api_keys}, etc.
 }
 See individual method documentation for details.}
+
+\item{method}{Character. Annotation method to use. Must be one of the keys
+registered in \code{SCAnnotateStrategy} (e.g., \code{"CellTypist"},
+\code{"SingleR"}, \code{"mLLMCelltype"}). Partial matching is supported.
+Use \code{names(SCAnnotateStrategy)} to list available methods.}
 }
 \value{
 The input \code{Seurat} object enriched with method-specific annotation
@@ -92,7 +92,6 @@ Other single_cell_preprocess:
 \code{\link{RegisterSeuratMethod}()},
 \code{\link{SCIntegrate}()},
 \code{\link{SCPreProcess}()},
-\code{\link{SCPreProcessStrategyEnv}},
-\code{\link{compatible_with_3.0.2}()}
+\code{\link{SCPreProcessStrategy}}
 }
 \concept{single_cell_preprocess}

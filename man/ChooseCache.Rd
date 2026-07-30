@@ -4,13 +4,11 @@
 \alias{ChooseCache}
 \title{Choose a Cache Directory}
 \usage{
-ChooseCache(directory, ...)
+ChooseCache(directory)
 }
 \arguments{
 \item{directory}{Path to the parent directory containing cache
 subdirectories.}
-
-\item{...}{Unused, reserved for future extensions.}
 }
 \value{
 The path to the selected cache directory (character string).

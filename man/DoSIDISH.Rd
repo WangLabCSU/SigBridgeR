@@ -111,7 +111,8 @@ Other screen_method:
 \code{\link{DoscPP}()}
 
 Other SIDISH: 
-\code{\link{SIDISHEnvSet}()}
+\code{\link{SIDISHEnvSet}()},
+\code{\link{ValidateSIDISHParams}()}
 }
 \concept{SIDISH}
 \concept{screen_method}

@@ -79,11 +79,11 @@ Register <- function(
 
 RegisterImpl <- new_generic(
   name = "RegisterImpl",
-  dispatch_args = c("x", "name")
+  dispatch_args = "x"
 )
 
 
-method(generic = RegisterImpl, class = class_any) <- function(
+method(generic = RegisterImpl, class_any) <- function(
   x,
   name,
   ...
@@ -96,7 +96,7 @@ method(generic = RegisterImpl, class = class_any) <- function(
   )
 }
 
-method(generic = RegisterImpl, class = ScreenMethod) <- function(
+method(generic = RegisterImpl, ScreenMethod) <- function(
   x,
   name = NULL,
   overwrite = FALSE,
@@ -137,7 +137,7 @@ method(generic = RegisterImpl, class = ScreenMethod) <- function(
   invisible(TRUE)
 }
 
-method(generic = RegisterImpl, class = AnnotationMethod) <- function(
+method(generic = RegisterImpl, AnnotationMethod) <- function(
   x,
   name,
   overwrite = FALSE,
@@ -169,7 +169,7 @@ method(generic = RegisterImpl, class = AnnotationMethod) <- function(
   invisible(TRUE)
 }
 
-method(generic = RegisterImpl, class = class_function) <- function(
+method(generic = RegisterImpl, class_function) <- function(
   x,
   name,
   overwrite = FALSE,

@@ -101,6 +101,9 @@ Other screen_method:
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}
+
+Other PIPET: 
+\code{\link{ValidatePIPETParams}()}
 }
 \concept{PIPET}
 \concept{screen_method}

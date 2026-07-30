@@ -9,6 +9,7 @@ DoscPAS(
   sc_data,
   phenotype,
   label_type = "scPAS",
+  phenotype_class = c("binary", "continuous", "survival"),
   assay = "RNA",
   imputation = FALSE,
   imputation_method = c("KNN", "ALRA"),
@@ -16,7 +17,7 @@ DoscPAS(
   alpha = c(0.01, NULL),
   cutoff = 0.2,
   network_class = c("SC", "bulk"),
-  family = c("cox", "gaussian", "binomial"),
+  family = lifecycle::deprecated(),
   permutation_times = 2000L,
   FDR_threshold = 0.05,
   independent = TRUE,
@@ -24,13 +25,28 @@ DoscPAS(
 )
 }
 \arguments{
-\item{matched_bulk}{Bulk RNA-seq data (genes x samples)}
+\item{matched_bulk}{Matrix or data frame of preprocessed bulk RNA-seq expression
+data (genes x samples). Column names must match names/IDs in phenotype.}
 
-\item{sc_data}{Single-cell RNA-seq data (Seurat object and preprocessed)}
+\item{sc_data}{A Seurat object containing scRNA-seq data to be screened.}
 
-\item{phenotype}{Phenotype data frame with sample annotations}
+\item{phenotype}{Phenotype data, either:
+\itemize{
+\item Named vector, where names match columns of matched_bulk
+\item Patient survival data frame, where row names match columns of matched_bulk,
+and column names are "time" and "status"
+}}
 
-\item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time"), stored in \code{scRNA_data@misc}.  (default: "scPAS")}
+\item{label_type}{Character specifying phenotype label type, e.g. "SBS1" or
+"time".}
+
+\item{phenotype_class}{Type of phenotypic outcome. Must be consistent with input
+data:
+\itemize{
+\item "binary": Binary traits, e.g. case/control
+\item "continuous": Continuous measurements
+\item "survival": Survival information
+}}
 
 \item{assay}{Assay to use from sc_data (default: 'RNA')}
 
@@ -46,7 +62,7 @@ DoscPAS(
 
 \item{network_class}{Network class to use (default: 'SC', indicating gene-gene similarity networks derived from single-cell data. The other one is 'bulk'.)}
 
-\item{family}{Model family for analysis (options: "cox", "gaussian", "binomial")}
+\item{family}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Model family for analysis (options: "cox", "gaussian", "binomial")}
 
 \item{permutation_times}{Number of permutations to perform (default: 2000)}
 
@@ -58,7 +74,6 @@ DoscPAS(
 \itemize{
 \item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
 \item \code{seed}: For reproducibility, default is \code{123L}
-\item \code{assay}: Assay to use for single-cell data. Defaults to `"RNA"
 }}
 }
 \value{
@@ -88,6 +103,9 @@ Other screen_method:
 \code{\link{DoTiRank}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPP}()}
+
+Other scPAS: 
+\code{\link{ValidatescPASParams}()}
 }
 \concept{scPAS}
 \concept{screen_method}

@@ -35,6 +35,7 @@ ValidateDEGASParams <- function(
   normality_test_method,
   ...
 ) {
+  # TODO Update DEGAS implemention
   # -- package checks -------------------------------------------------------
   check_installed("DEGAS", action = \(pkg, ...) {
     check_installed("pak")

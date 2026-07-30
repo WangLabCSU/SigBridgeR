@@ -13,7 +13,7 @@ SigBridgeR is an integrative toolkit designed to identify phenotype-associated c
 The package includes multiple algorithms for integrative analysis of single-cell and bulk data to identify phenotype-associated cell populations. (see function \code{\link{Screen}})
 }
 
-\section{Data requirements (their pre-processing is also provided in the package)}{
+\section{Data requirements}{
 
 \itemize{
 \item Single-cell RNA-seq data (Seurat object format)
@@ -41,6 +41,17 @@ Useful links:
 
 }
 \author{
-Yuxi Yang \email{15364051195@163.com} ORCID: 0009-0006-1329-1224 (creator, author)
+\strong{Maintainer}: Yuxi Yang \email{15364051195@163.com} (\href{https://orcid.org/0009-0006-1329-1224}{ORCID})
+
+Authors:
+\itemize{
+  \item Shixiang Wang \email{shixiang1994wang@gmail.com} (\href{https://orcid.org/0000-0001-9855-7357}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Zeyu Yan \email{3191647388@qq.com} [contributor]
+}
+
 }
 \keyword{internal}

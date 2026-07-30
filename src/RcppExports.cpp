@@ -23,6 +23,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// IsSkewedDynamic_cpp
+LogicalVector IsSkewedDynamic_cpp(SEXP x, double target, double expected_p, int n_sd);
+RcppExport SEXP _SigBridgeR_IsSkewedDynamic_cpp(SEXP xSEXP, SEXP targetSEXP, SEXP expected_pSEXP, SEXP n_sdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type target(targetSEXP);
+    Rcpp::traits::input_parameter< double >::type expected_p(expected_pSEXP);
+    Rcpp::traits::input_parameter< int >::type n_sd(n_sdSEXP);
+    rcpp_result_gen = Rcpp::wrap(IsSkewedDynamic_cpp(x, target, expected_p, n_sd));
+    return rcpp_result_gen;
+END_RCPP
+}
 // find_diff_in_2_lists
 SEXP find_diff_in_2_lists(SEXP x, SEXP y);
 RcppExport SEXP _SigBridgeR_find_diff_in_2_lists(SEXP xSEXP, SEXP ySEXP) {
@@ -46,11 +60,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fast_assign_plan
+void fast_assign_plan(List plan, SEXP rhs, Environment env);
+RcppExport SEXP _SigBridgeR_fast_assign_plan(SEXP planSEXP, SEXP rhsSEXP, SEXP envSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type plan(planSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type rhs(rhsSEXP);
+    Rcpp::traits::input_parameter< Environment >::type env(envSEXP);
+    fast_assign_plan(plan, rhs, env);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_CountsToTPM_impl", (DL_FUNC) &_SigBridgeR_CountsToTPM_impl, 2},
+    {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
+    {"_SigBridgeR_fast_assign_plan", (DL_FUNC) &_SigBridgeR_fast_assign_plan, 3},
     {NULL, NULL, 0}
 };
 

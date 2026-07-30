@@ -4,7 +4,7 @@
 \alias{DEGASEnvSet}
 \title{Set Default Values for Environment Configuration.}
 \usage{
-DEGASEnvSet(user_list)
+DEGASEnvSet(user_list = list())
 }
 \description{
 Set Default Values for Environment Configuration.
@@ -13,7 +13,8 @@ Set Default Values for Environment Configuration.
 Other DEGAS: 
 \code{\link{DEGASModelDetect}()},
 \code{\link{DEGASParamSet}()},
-\code{\link{DoDEGAS}()}
+\code{\link{DoDEGAS}()},
+\code{\link{TrainDEGASModel}()},
+\code{\link{ValidateDEGASParams}()}
 }
 \concept{DEGAS}
-\keyword{internal}

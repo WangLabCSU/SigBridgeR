@@ -166,14 +166,7 @@ BulkPreProcess <- new_generic(
 
 #' @rdname BulkPreProcess
 #' @export
-method(BulkPreProcess, class_any) <- function(data, ...) {
-  cls_data <- class(Data)
-  cli::cli_abort(c("x" = "Unsupported data class {..cls {cls_data}}"))
-}
-
-#' @rdname BulkPreProcess
-#' @export
-method(BulkPreProcess, class = class_datalike2d) <- function(
+method(BulkPreProcess, class_any) <- function(
   data,
   sample_info = NULL,
   gene_symbol_conversion = FALSE,

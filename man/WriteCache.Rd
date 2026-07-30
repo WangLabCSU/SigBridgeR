@@ -4,29 +4,25 @@
 \alias{WriteCache}
 \title{Write an R Object to Cache}
 \usage{
-WriteCache(
-  x,
-  file,
-  format = c("auto", "qs2", "rds", "csv"),
-  max_rows = 1000L,
-  max_cols = 20L,
-  ...
-)
+WriteCache(cache, ...)
 }
 \arguments{
+\item{...}{Additional arguments (must be empty, checked by
+\code{check_dots_empty0()}).}
+
 \item{x}{An R object to be cached.}
 
 \item{file}{Character string. Path to the cache file (with or without
 extension). If no extension is given, it is appended automatically.}
 
 \item{format}{Character string. Cache format. One of \code{"auto"},
-\code{"qs2"}, \code{"rds"}, or \code{"csv"}. When \code{"auto"}
+\code{"qs2"}, \code{"rdata"}, or \code{"csv"}. When \code{"auto"}
 (default):
 \itemize{
 \item If \code{x} is a data.frame with at most \code{max_rows} rows
 and \code{max_cols} columns, CSV format is used.
 \item Otherwise, \code{qs2} is preferred when the package is
-installed, falling back to \code{RDS}.
+installed, falling back to \code{rdata}.
 }}
 
 \item{max_rows}{Integer. Maximum number of rows to consider a data.frame
@@ -34,16 +30,13 @@ installed, falling back to \code{RDS}.
 
 \item{max_cols}{Integer. Maximum number of columns to consider a
 data.frame "small". Default is \code{20L}.}
-
-\item{...}{Additional arguments (must be empty, checked by
-\code{rlang::check_dots_empty0()}).}
 }
 \value{
 Invisible. Returns the absolute path to the written cache file.
 }
 \description{
 Writes an R object to the cache directory. Uses \code{qs2} for fast
-serialization when available, falling back to \code{RDS} for general
+serialization when available, falling back to \code{rdata} for general
 objects. Small data frames and data.tables are saved as CSV via
 \code{data.table::fwrite()} for easy inspection.
 }

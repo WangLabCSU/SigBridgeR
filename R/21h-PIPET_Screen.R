@@ -200,7 +200,7 @@ DoPIPET <- function(
 
     if (p$verbose) {
       ts_cli$cli_alert_info(
-        cli::col_green("Loaded PIPET markers from cache")
+        "Loaded PIPET markers from cache"
       )
     }
   } else {
@@ -284,10 +284,10 @@ DoPIPET <- function(
   )
 
   if (is.null(pipet_result)) {
-    cli::cli_abort(c(
-      "x" = "PIPET screening failed.",
-      ">" = "Try different parameters"
-    ))
+    Abort(
+      "PIPET screening failed.",
+      "Try different parameters, like `log2FC`"
+    )
   }
 
   # Add results to Seurat object

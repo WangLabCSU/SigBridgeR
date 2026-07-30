@@ -9,24 +9,17 @@ DoLP_SGL(
   sc_data,
   phenotype,
   label_type = "LP_SGL",
-  family = c("logit", "cox", "linear"),
+  phenotype_class = c("binary", "continuous", "survival"),
+  family = lifecycle::deprecated(),
   resolution = 0.6,
   alpha = 0.5,
-  nfold = 5,
-  dge_analysis = list(run = FALSE, logFC_threshold = 1, pval_threshold = 0.05),
+  nfold = 5L,
+  dge_analysis = list(run = FALSE, logFC_threshold = 1L, pval_threshold = 0.05),
   ...
 )
 }
 \arguments{
-\item{matched_bulk}{Bulk expression matrix (features × samples)}
-
-\item{sc_data}{Single-cell RNA-seq data (Seurat object)}
-
-\item{phenotype}{Binary phenotype vector for bulk samples}
-
-\item{label_type}{Character specifying phenotype label type (default: "LP_SGL")}
-
-\item{family}{Type of regression model: "\code{logit}" (logistic), "\code{cox}" (Cox),
+\item{family}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Type of regression model: "\code{logit}" (logistic), "\code{cox}" (Cox),
 or "\code{linear}" (linear regression)}
 
 \item{resolution}{Resolution parameter for Leiden clustering (default: \code{0.6})}
@@ -103,6 +96,9 @@ Other screen_method:
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()},
 \code{\link{DoscPP}()}
+
+Other LP_SGL: 
+\code{\link{ValidateLPSGLParams}()}
 }
 \concept{LP_SGL}
 \concept{screen_method}

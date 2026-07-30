@@ -14,7 +14,7 @@ DoDEGAS(
   label_type = "DEGAS",
   phenotype_class = c("binary", "continuous", "survival"),
   tmp_dir = "DEGAS_res",
-  env_params = list(),
+  env_params = lifecycle::deprecated(),
   degas_params = list(),
   normality_test_method = c("jarque-bera", "d'agostino", "kolmogorov-smirnov"),
   ...
@@ -43,7 +43,7 @@ files (default: \code{"DEGAS_res"}). Acts as fallback for \code{load_cache} and
 \code{save_cache} when not specified via \code{...}. Prefer using
 \code{load_cache} / \code{save_cache} in \code{...} instead. See \code{\link[=CacheSetHere]{CacheSetHere()}}.}
 
-\item{env_params}{List of environment parameters for Python setup including:
+\item{env_params}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} List of environment parameters for Python setup including:
 \itemize{
 \item env.name: environment name (default: \code{"r-reticulate-degas"})
 \item env.type: environment type "conda", "environment", or "venv" (default: \code{"environment"})
@@ -165,7 +165,9 @@ Other screen_method:
 Other DEGAS: 
 \code{\link{DEGASEnvSet}()},
 \code{\link{DEGASModelDetect}()},
-\code{\link{DEGASParamSet}()}
+\code{\link{DEGASParamSet}()},
+\code{\link{TrainDEGASModel}()},
+\code{\link{ValidateDEGASParams}()}
 }
 \concept{DEGAS}
 \concept{screen_method}

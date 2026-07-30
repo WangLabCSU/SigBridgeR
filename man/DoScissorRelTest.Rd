@@ -42,7 +42,8 @@ and robustness of identified phenotype-associated cells.
 \seealso{
 Other scissor: 
 \code{\link{DoScissor}()},
-\code{\link{DoScissorCellEval}()}
+\code{\link{DoScissorCellEval}()},
+\code{\link{ValidateScissorParams}()}
 }
 \concept{scissor}
 \keyword{internal}

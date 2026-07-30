@@ -100,8 +100,7 @@ Other single_cell_preprocess:
 \code{\link{RegisterSeuratMethod}()},
 \code{\link{SCAnnotate}()},
 \code{\link{SCPreProcess}()},
-\code{\link{SCPreProcessStrategyEnv}},
-\code{\link{compatible_with_3.0.2}()}
+\code{\link{SCPreProcessStrategy}}
 }
 \concept{single_cell_preprocess}
 \keyword{internal}

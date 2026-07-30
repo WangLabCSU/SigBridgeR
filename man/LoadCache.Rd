@@ -4,13 +4,13 @@
 \alias{LoadCache}
 \title{Load a Cached R Object}
 \usage{
-LoadCache(file, ...)
+LoadCache(file)
 }
 \arguments{
 \item{file}{Character string. Path to the cache file to load.}
 
 \item{...}{Additional arguments (must be empty, checked by
-\code{rlang::check_dots_empty0()}).}
+\code{check_dots_empty0()}).}
 }
 \value{
 The cached R object.

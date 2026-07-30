@@ -13,7 +13,8 @@ Set Default Parameter Values for DEGAS
 Other DEGAS: 
 \code{\link{DEGASEnvSet}()},
 \code{\link{DEGASModelDetect}()},
-\code{\link{DoDEGAS}()}
+\code{\link{DoDEGAS}()},
+\code{\link{TrainDEGASModel}()},
+\code{\link{ValidateDEGASParams}()}
 }
 \concept{DEGAS}
-\keyword{internal}

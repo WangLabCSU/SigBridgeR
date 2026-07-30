@@ -45,28 +45,28 @@ ScreenStrategy <- new_environment(
         params
       }
     ),
-    scAB = list(
+    scAB = ScreenMethod(
       method_name = "scAB",
       method_version = r_pkg_version("scAB"),
       executor = DoscAB,
       phenotype_class = c("binary", "survival"),
       mapper = NULL
     ),
-    scPP = list(
+    scPP = ScreenMethod(
       method_name = "scPP",
       method_version = r_pkg_version("ScPP"),
       executor = DoscPP,
       phenotype_class = c("binary", "survival", "continuous"),
       mapper = NULL
     ),
-    DEGAS = list(
+    DEGAS = ScreenMethod(
       method_name = "DEGAS",
       method_version = r_pkg_version("DEGAS"),
       executor = DoDEGAS,
       phenotype_class = c("binary", "survival", "continuous"),
       mapper = NULL
     ),
-    LP_SGL = list(
+    LP_SGL = ScreenMethod(
       method_name = "LP_SGL",
       method_version = r_pkg_version("LPSGL"),
       executor = DoLP_SGL,
@@ -81,28 +81,28 @@ ScreenStrategy <- new_environment(
         params
       }
     ),
-    PIPET = list(
+    PIPET = ScreenMethod(
       method_name = "PIPET",
       method_version = r_pkg_version("PIPET"),
       executor = DoPIPET,
       phenotype_class = c("binary", "survival", "continuous"),
       mapper = NULL
     ),
-    SIDISH = list(
+    SIDISH = ScreenMethod(
       method_name = "SIDISH",
       method_version = r_pkg_version("rSIDISH"),
       executor = DoSIDISH,
       phenotype_class = "survival",
       mapper = NULL
     ),
-    SCIPAC = list(
+    SCIPAC = ScreenMethod(
       method_name = "SCIPAC",
       method_version = r_pkg_version("SCIPAC"),
       executor = DoSCIPAC,
       phenotype_class = c("binary", "survival", "continuous"),
       mapper = NULL
     ),
-    TiRank = list(
+    TiRank = ScreenMethod(
       method_name = "TiRank",
       method_version = r_pkg_version("rTiRank"),
       executor = DoTiRank,

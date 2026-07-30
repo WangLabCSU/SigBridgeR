@@ -6,8 +6,7 @@
 \usage{
 CacheSetHere(
   path,
-  screen_method,
-  phenotype_class = c("binary", "survival", "continuous"),
+  cache_config,
   mode = c("load", "save"),
   timestamp = NULL,
   ...
@@ -15,12 +14,6 @@ CacheSetHere(
 }
 \arguments{
 \item{path}{Character string. User-specified path.}
-
-\item{screen_method}{Character string. Screening method name. Must match
-a key in \code{\link{ScreenStrategy}}.}
-
-\item{phenotype_class}{Character string. Phenotype class. One of
-\code{"binary"}, \code{"survival"}, or \code{"continuous"}.}
 
 \item{mode}{Character string. Either \code{"load"} (default) or
 \code{"save"}.}
@@ -30,6 +23,12 @@ cache directory in save mode. Defaults to
 \code{format(Sys.time(), "\%Y_\%m_\%d_\%H\%M")}.}
 
 \item{...}{Additional arguments (must be empty).}
+
+\item{screen_method}{Character string. Screening method name. Must match
+a key in \code{\link{ScreenStrategy}}.}
+
+\item{phenotype_class}{Character string. Phenotype class. One of
+\code{"binary"}, \code{"survival"}, or \code{"continuous"}.}
 }
 \value{
 Character string. The absolute path to the cache layer directory.

@@ -11,7 +11,8 @@ SIDISHEnvSet(env_params = list(), device = c("cuda", "cpu"))
 }
 \seealso{
 Other SIDISH: 
-\code{\link{DoSIDISH}()}
+\code{\link{DoSIDISH}()},
+\code{\link{ValidateSIDISHParams}()}
 }
 \concept{SIDISH}
 \keyword{internal}

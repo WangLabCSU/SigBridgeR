@@ -9,7 +9,7 @@ AnnotationMethod <- new_class(
     method_name = character(),
     executor = \() ...,
     pkg_name = character(),
-    pkg_version = character(),
+    method_version = character(),
     py_env = NULL
   ) {
     new_object(
@@ -17,7 +17,7 @@ AnnotationMethod <- new_class(
       method_name = method_name,
       executor = executor,
       py_env = py_env,
-      method_version = pkg_version %||%
+      method_version = method_version %||%
         if (is.null(py_env)) {
           r_pkg_version(pkg_name = pkg_name)
         } else {

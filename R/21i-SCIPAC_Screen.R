@@ -1,3 +1,93 @@
+# ---- 2. Do SCIPAC ----
+
+#' Validate and Prepare DoSCIPAC Parameters
+#'
+#' @description
+#' Internal helper that handles package installation checks, input validation,
+#' family resolution, and default-value resolution for [DoSCIPAC()].
+#'
+#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class
+#'   Forwarded from [DoSCIPAC()].
+#' @param hvg,do_pca_sc,n_pc,sc_batch_col,resolution,ela_net_alpha,bt_size
+#'   Forwarded from [DoSCIPAC()].
+#' @param ncore,ci_alpha,nfold Forwarded from [DoSCIPAC()].
+#' @param ... Additional dots forwarded from [DoSCIPAC()].
+#'
+#' @return A named list with elements: `phenotype_class`, `family`, `verbose`,
+#'   `seed`, `assay`, `cache_config`.
+#'
+#' @keywords internal
+#' @family SCIPAC
+ValidateSCIPACParams <- function(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type,
+  phenotype_class,
+  hvg,
+  do_pca_sc,
+  n_pc,
+  sc_batch_col,
+  resolution,
+  ela_net_alpha,
+  bt_size,
+  ncore,
+  ci_alpha,
+  nfold,
+  ...
+) {
+  # -- package checks -------------------------------------------------------
+  check_installed("dplyr")
+  check_installed("SCIPAC", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/SCIPAC")
+  })
+
+  # -- input validation -----------------------------------------------------
+  purrr::walk(
+    .x = c(hvg, n_pc, bt_size, ncore, nfold),
+    .f = chk::chk_integer,
+  )
+  purrr::walk(
+    .x = c(ela_net_alpha, ci_alpha),
+    .f = chk::chk_numeric,
+  )
+  chk::chk_numeric(resolution)
+  chk::chk_chr(label_type)
+  chk::chk_chr(phenotype_class)
+  if (!is.null(sc_batch_col)) {
+    chk::chk_character(sc_batch_col)
+  }
+  chk::chk_logical(do_pca_sc)
+
+  # -- resolve family from phenotype_class ----------------------------------
+  family <- switch(
+    phenotype_class,
+    "binary" = "binomial",
+    "survival" = "cox",
+    "continuous" = "gaussian",
+    Abort(
+      "phenotype_class must be one of 'binary', 'survival', or 'continuous'"
+    )
+  )
+
+  # -- process dots ---------------------------------------------------------
+  dots <- list2(...)
+  verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
+  seed <- dots$seed %||% getFuncOption("seed") %||% 123L
+  assay <- dots$assay %||% "RNA"
+
+  # -- build cache config ---------------------------------------------------
+  cache_config <- ScreenMethodConfig(
+    method_name = "SCIPAC",
+    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    phenotype_class = phenotype_class,
+    label_type = label_type
+  )
+
+  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+}
+
 #' @title Screen Single-Cell Data Using SCIPAC Algorithm
 #' @description
 #' Performs single-cell phenotype association analysis using the SCIPAC
@@ -184,45 +274,10 @@ DoSCIPAC <- function(
   nfold = 10L,
   ...
 ) {
-  check_installed("dplyr")
-  check_installed("SCIPAC", action = \(pkg, ...) {
-    check_installed("pak")
-    pak::pak("Exceret/SCIPAC")
-  })
-  # Validate phenotype_class parameter
-  purrr::walk(
-    .x = c(hvg, n_pc, bt_size, ncore, nfold),
-    .f = chk::chk_integer,
-  )
-  purrr::walk(
-    .x = c(ela_net_alpha, ci_alpha),
-    .f = chk::chk_numeric,
-  )
-  chk::chk_numeric(resolution)
-  chk::chk_chr(label_type)
-  chk::chk_chr(phenotype_class)
-  if (!is.null(sc_batch_col)) {
-    chk::chk_character(sc_batch_col)
-  }
-  chk::chk_logical(do_pca_sc)
+  # -- validate & prepare all parameters -----------------------------------
+  p <- exec(ValidateSCIPACParams, !!!fn_fmls())
 
-  family <- switch(
-    phenotype_class,
-    "binary" = "binomial",
-    "survival" = "cox",
-    "continuous" = "gaussian",
-    cli::cli_abort(c(
-      "x" = "phenotype_class must be one of 'binary', 'survival', or 'continuous'"
-    ))
-  )
-
-  # Extract additional arguments
-  dots <- list(...)
-  verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
-  seed <- dots$seed %||% getFuncOption("seed") %||% 123L
-  assay <- dots$assay %||% "RNA"
-
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start SCIPAC screening"))
     ts_cli$cli_alert_info("Find common variable geme (hvg = {.val {hvg}})")
   }
@@ -231,7 +286,7 @@ DoSCIPAC <- function(
     sc_data = sc_data,
     bulk = matched_bulk,
     hvg = hvg,
-    assay = assay
+    assay = p$assay
   )
   if (!is.null(sc_batch_col)) {
     sc_batch_col <- if (chk::vld_chr(sc_batch_col)) {
@@ -241,7 +296,7 @@ DoSCIPAC <- function(
     }
   }
 
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info("Running PCA (n_pc = {.val {n_pc}})")
   }
 
@@ -253,7 +308,7 @@ DoSCIPAC <- function(
     batch_var = sc_batch_col # NULL or a vector
   )
 
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info("Clustering (resolution = {.val {resolution}})")
   }
 
@@ -263,20 +318,20 @@ DoSCIPAC <- function(
   )
 
   phenotype <- switch(
-    family,
+    p$family,
     "binomial" = ,
     "gaussian" = as.factor(phenotype),
     "cox" = as.matrix(phenotype)
   )
 
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info("Screening ({.val {bt_size} bootstrap})")
   }
 
   SCIPAC_res <- SCIPAC::SCIPAC(
     bulk.dat = pca_res$bulk.dat.rot,
     y = phenotype,
-    family = family,
+    family = p$family,
     ct.res = cluster_res,
     ela.net.alpha = ela_net_alpha,
     bt.size = bt_size,
@@ -294,24 +349,11 @@ DoSCIPAC <- function(
   )
   modified_sc_data <- AddMisc(
     seurat_obj = modified_sc_data,
-    SCIPAC_para = list(
-      phenotype_class = phenotype_class,
-      hvg = hvg,
-      do_pca_sc = do_pca_sc,
-      n_pc = n_pc,
-      sc_batch_col = sc_batch_col,
-      resolution = resolution,
-      ela_net_alpha = ela_net_alpha,
-      bt_size = bt_size,
-      ncore = ncore,
-      ci_alpha = ci_alpha,
-      nfold = nfold,
-      k = cluster_res$k
-    ),
-    SCIPAC_type = label_type
+    SCIPAC = props(p$cache_config),
+    cover = FALSE
   )
 
-  if (verbose) {
+  if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("SCIPAC screening done"))
   }
 
@@ -331,9 +373,9 @@ OverLapSCBulk <- function(sc_data, bulk, hvg = 1000L, assay = "RNA") {
   cm_genes <- intersect(rownames(sc_expr), rownames(bulk))
 
   if (length(cm_genes) == 0L) {
-    cli::cli_abort(c(
-      "x" = "No overlapping genes between single cell data and bulk data"
-    ))
+    Abort(
+      "No overlapping genes between single cell data and bulk data"
+    )
   }
 
   bulk_new <- as.matrix(bulk[cm_genes, ])

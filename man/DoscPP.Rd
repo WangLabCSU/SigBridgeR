@@ -10,7 +10,7 @@ DoscPP(
   phenotype,
   label_type = "scPP",
   phenotype_class = c("binary", "continuous", "survival"),
-  ref_group = 0,
+  ref_group = 0L,
   Log2FC_cutoff = 0.585,
   estimate_cutoff = 0.2,
   probs = c(0.2, NULL),
@@ -18,22 +18,28 @@ DoscPP(
 )
 }
 \arguments{
-\item{matched_bulk}{Bulk expression data (genes × samples) where:
-- Column names must match \code{phenotype} row names}
+\item{matched_bulk}{Matrix or data frame of preprocessed bulk RNA-seq expression
+data (genes x samples). Column names must match names/IDs in phenotype.}
 
-\item{sc_data}{Seurat object containing preprocessed single-cell data:
-- Normalized counts in \code{RNA} assay}
+\item{sc_data}{A Seurat object containing scRNA-seq data to be screened.}
 
-\item{phenotype}{Data frame or tibble or named vector with:
-- Rownames matching \code{matched_bulk} columns
-- For survival: must contain time and status columns}
+\item{phenotype}{Phenotype data, either:
+\itemize{
+\item Named vector, where names match columns of matched_bulk
+\item Patient survival data frame, where row names match columns of matched_bulk,
+and column names are "time" and "status"
+}}
 
-\item{label_type}{Character specifying phenotype label type (e.g., "SBS1"), stored in \code{scRNA_data@misc}}
+\item{label_type}{Character specifying phenotype label type, e.g. "SBS1" or
+"time".}
 
-\item{phenotype_class}{Analysis type (case-sensitive):
-- \code{"Binary"}: Case-control studies (e.g., tumor/normal)
-- \code{"Continuous"}: Quantitative traits (e.g., drug response)
-- \code{"Survival"}: Time-to-event data (requires time/status columns)}
+\item{phenotype_class}{Type of phenotypic outcome. Must be consistent with input
+data:
+\itemize{
+\item "binary": Binary traits, e.g. case/control
+\item "continuous": Continuous measurements
+\item "survival": Survival information
+}}
 
 \item{ref_group}{Reference group or baseline for \strong{binary} comparisons, e.g. "Normal" for Tumor/Normal studies and 0 for 0/1 case-control studies. (default: 0)}
 
@@ -113,6 +119,9 @@ Other screen_method:
 \code{\link{DoTiRank}()},
 \code{\link{DoscAB}()},
 \code{\link{DoscPAS}()}
+
+Other scPP: 
+\code{\link{ValidatescPPParams}()}
 }
 \concept{scPP}
 \concept{screen_method}
