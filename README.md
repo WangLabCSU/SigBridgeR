@@ -4,22 +4,11 @@
 
 <!-- badges: start -->
 
-[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![License:GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3)
-[![Devel_version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
-[![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
-[![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR)
-<!-- [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) -->
-<!-- [![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) -->
-<!-- badges: end -->
+[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![License:GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3) [![Devel_version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) –\> [![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) [![code_size](https://img.shields.io/github/languages/code-size/https://github.com/WangLabCSU/SigBridgeR.svg)](https://github.com/https://github.com/WangLabCSU/SigBridgeR) <!-- badges: end -->
 
 ## 🌐 Overview
 
-SigBridgeR integrates multiple algorithms, using single-cell RNA
-sequencing data, bulk expression data, and sample-related phenotypic
-data, to identify the cells most closely associated with the phenotypic
-data, performing as a bridge to existing tools.
+SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data, bulk expression data, and sample-related phenotypic data, to identify the cells most closely associated with the phenotypic data, performing as a bridge to existing tools.
 
 <p align="center">
 
@@ -29,24 +18,13 @@ data, performing as a bridge to existing tools.
 
 ## 🔧 Installation
 
-Usually we recommend installing the latest release from GitHub because
-of the latest features and bug fixes.
+Usually we recommend installing the latest release from GitHub because of the latest features and bug fixes.
 
 1.  Install the development version from GitHub:
 
 ``` r
-if (!requireNamespace("pak")) {
-  install.packages(
-    "pak",
-    repos = sprintf(
-      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
-      .Platform$pkgType,
-      R.Version()$os,
-      R.Version()$arch
-    )
-  )
-}
-pak::pkg_install("WangLabCSU/SigBridgeR")
+# install.packages("pak")
+pak::pak("WangLabCSU/SigBridgeR")
 ```
 
 2.  Install from r-universe:
@@ -55,28 +33,16 @@ pak::pkg_install("WangLabCSU/SigBridgeR")
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
-### It is recommended to install the following packages:
-
-`SigBridgeR` includes the Scissor and scAB algorithms by default. In
-addition to these, installing the following packages allows you to use
-additional algorithms.
-
-``` r
-methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
-pak::pkg_install(file.path("Exceret", methods))
-```
-
 **unnecessary but recommended**:
 
 <details>
 
 <summary>
-
 For better performance:
 </summary>
 
 ``` r
-pak::pkg_install(c(
+pak::pak(
   # faster computation
   "sparseMatrixStats",
   "matrixStats",
@@ -87,16 +53,8 @@ pak::pkg_install(c(
   "cheapr",
   # better gene symbol conversion
   "scCustomize",
-  # parallel computation
-  "furrr",
-  "future"
+  "WGCNA"
 ))
-
-if (!requireNamespace("BiocManager")) {
-  install.packages("BiocManager")
-}
-# faster computation
-BiocManager::install("WGCNA")
 ```
 
 </details>
@@ -104,15 +62,13 @@ BiocManager::install("WGCNA")
 <details>
 
 <summary>
-
-For seamless integration with single-cell RNA-seq data stored in
-`.h5ad`:
+For seamless integration with single-cell RNA-seq data stored in `.h5ad`:
 </summary>
 
 ``` r
-pak::pkg_install("anndata")
+pak::pak("anndata")
 # or
-pak::pkg_install("anndataR") # both are supported
+pak::pak("anndataR") # both are supported
 ```
 
 </details>
@@ -120,18 +76,17 @@ pak::pkg_install("anndataR") # both are supported
 <details>
 
 <summary>
-
 For visualization:
 </summary>
 
 ``` r
-pak::pkg_install(c(
- "ggplot2",
- "randomcoloR", # or RColorBrewer
- "ggupset", # for upset plot
- "patchwork", # for fraction stack plot
- "ggforce", # for pca plot
- "ggVennDiagram" # for venn diagram
+pak::pak(c(
+  "ggplot2",
+  "randomcoloR", # or RColorBrewer
+  "ggupset", # for upset plot
+  "patchwork", # for fraction stack plot
+  "ggforce", # for pca plot
+  "ggVennDiagram" # for venn diagram
 ))
 ```
 
@@ -140,12 +95,11 @@ pak::pkg_install(c(
 <details>
 
 <summary>
-
 To use the built-in cell annotation methods:
 </summary>
 
 ``` r
-pak::pkg_install(c(
+pak::pak(c(
   # SingleR
   "SingleR-inc/SingleR",
   "celldex",
@@ -163,12 +117,11 @@ pak::pkg_install(c(
 <details>
 
 <summary>
-
 To add custom extension functions to SigBridgeR:
 </summary>
 
 ``` r
-pak::pkg_install(c(
+pak::pak(c(
   "tictoc",
   "codetools",
   "knitr",
@@ -180,74 +133,90 @@ pak::pkg_install(c(
 
 </details>
 
-<details>
-
-<summary>
-
-To reproduce the tutorial to learn more usage:
-</summary>
-
+<!-- 
+## 🤝 Community
+&#10;SigBridgeR allows the community developers to integrate new algorithms without modifying the core package. The following community-developed plugins are maintained by their respective authors.
+&#10;
 ``` r
-pak::pkg_install(c(
-  "zeallot",
-  "here",
-  "org.Hs.eg.db",
-  "processx"
+# Install community plugins via pak:
+pak::pak(c(
+  # Example: "username/sigbridger-plugin-example"
 ))
 ```
-
-</details>
+&#10;| Name | Author | Status | Repo Link |
+|------|--------|--------|-----------|
+| *Coming soon* | Be the first to contribute! | — | - |
+&#10;To contribute your own plugin, refer to the
+[vignette on extending SigBridgeR](https://wanglabcsu.github.io/SigBridgeR/articles/extending.html).
+-->
 
 ## 📓 Documentation
 
 Get Started:
 
 - View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
-- [A Quick Started Guide](vignettes/Quick_Start.md)
-- [Start from spatial transcriptome](vignettes/Spatial_Transcriptome.md)
-- [Full Tutorial](vignettes/Full_Tutorial.md) for more details
 - Use `?SigBridgeR::function_name` to access the help documents in R.
 
 If you encounter problems, please check:
 
 - the [Troubleshooting Guide](vignettes/Troubleshooting.md), or
-- the [Github issues](https://github.com/WangLabCSU/SigBridgeR/issues)
-  page if you want to file bug reports or feature requests
+- the [Github issues](https://github.com/WangLabCSU/SigBridgeR/issues) page if you want to file bug reports or feature requests
 
-Let us know if you have ideas to make this project better. Pull requests
-are welcome!
+Let us know if you have ideas to make this project better. Pull requests are welcome!
 
-<!-- ## 📚 Citation
-&#10;```r
+## 📚 Citation
+
+If you use SigBridgeR in your work, please cite:
+
+``` r
 citation("SigBridgeR")
+#> To cite package 'SigBridgeR' in publications use:
+#> 
+#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R package version 3.8.2,
+#>   <https://wanglabcsu.github.io/sigbridger>.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Manual{,
+#>     title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
+#> Subpopulations via scRNA-seq and Bulk Data},
+#>     author = {Yuxi Yang and Shixiang Wang},
+#>     year = {2026},
+#>     note = {R package version 3.8.2},
+#>     url = {https://wanglabcsu.github.io/sigbridger},
+#>   }
 ```
-&#10;```text
-&#10;``` -->
+
+If you use one or more of the following Algorithms, please cite the corresponding papers:
+
+- [Scissor](https://github.com/sunduanchen/Scissor) -\> Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
+
+- [DEGAS](https://github.com/tsteelejohnson91/DEGAS) -\> Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med. 2022 Feb 1;14(1):11.
+
+- [scAB](https://github.com/jinworks/scAB) -\> Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
+
+- [LP_SGL](https://github.com/hongmeizhanghm/LP_SGL) -\> Li J, Zhang H, Mu B, Zuo H, Zhou K. Identifying phenotype-associated subpopulations through LP_SGL. Briefings in Bioinformatics. 2023 Nov 22;25(1):bbad424.
+
+- [SCIPAC](https://github.com/RavenGan/SCIPAC) -\> Gan, D., Zhu, Y., Lu, X. & Li, J. SCIPAC: Quantitative estimation of cell-phenotype associations. Genome Biol 25, 119 (2024).
+
+- [PIPET](https://github.com/ruan2ruan/PIPET) -\> Ruan X, Cheng Y, Ye Y, Wang Y, Chen X, Yang Y, et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Briefings in Bioinformatics. 2024 May 23;25(4):bbae260.
+
+- [scPAS](https://github.com/aiminXie/scPAS) -\> Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell phenotype-associated subpopulation identifier. Briefings in Bioinformatics. 2024 Nov 22;26(1):bbae655.
+
+- [SIDISH](https://github.com/mcgilldinglab/SIDISH) -\> Jolasun, Y. et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation. Nat Commun 16, 11271 (2025).
+
+- [scPP](https://github.com/WangX-Lab/ScPP) -\> He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci. Published online January 28, 2026.
+
+- [TiRank](https://github.com/LenisLin/TiRank) -\> Lin, Y. et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med 18, 23 (2026).
 
 ## 🗺️ Similar Projects
 
-[scSurvival](https://github.com/cliffren/scSurvival): Single-cell
-expression matrix (log-normalized + HVG-selected) + survival data
-(optional clinical covariates and batch labels) -\> Survival-associated
-cell subpopulations
+[scSurvival](https://github.com/cliffren/scSurvival): Single-cell expression matrix (log-normalized + HVG-selected) + survival data (optional clinical covariates and batch labels) -\> Survival-associated cell subpopulations
 
-[CellPhenoX](https://github.com/fanzhanglab/pyCellPhenoX): Single-cell
-multi-omics data + bulk-level clinical variables, covariates (optional
-interaction effect terms) -\> interpretable score per cell
+[CellPhenoX](https://github.com/fanzhanglab/pyCellPhenoX): Single-cell multi-omics data + bulk-level clinical variables, covariates (optional interaction effect terms) -\> interpretable score per cell
 
-[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq
-count matrix (imputed by MAGIC + filtered for low coverage/expression) +
-bulk RNA-seq expression matrix (with matched survival time and event
-status) -\> breast cancer prognostic gene signatures and Cox PH risk
-prediction model
+[scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq count matrix (imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq expression matrix (with matched survival time and event status) -\> breast cancer prognostic gene signatures and Cox PH risk prediction model
 
-[SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq
-expression matrix + target scRNA-seq expression matrix + (optional) bulk
-RNA-seq expression matrix with paired survival data -\> cell embeddings,
-cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived
-risk scores with survival probability curves for individual cell
-subpopulations.
+[SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq expression matrix + target scRNA-seq expression matrix + (optional) bulk RNA-seq expression matrix with paired survival data -\> cell embeddings, cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived risk scores with survival probability curves for individual cell subpopulations.
 
-[scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data +
-bulk RNA-seq data + celltype annotation (optional batch labels) -\>
-phenotype-associated cell populations
+[scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data + bulk RNA-seq data + celltype annotation (optional batch labels) -\> phenotype-associated cell populations

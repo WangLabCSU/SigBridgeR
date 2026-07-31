@@ -2,6 +2,7 @@
 output: 
  md_document:
     variant: gfm
+    pandoc_args: ["--wrap=none"]
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -97,9 +98,7 @@ pak::pak(
 </details>
 
 <details>
-<summary>
-For seamless integration with single-cell RNA-seq data stored in `.h5ad`:
-</summary>
+<summary>For seamless integration with single-cell RNA-seq data stored in `.h5ad`:</summary>
 
 ```{r}
 #| label: installation_anndata
@@ -113,9 +112,7 @@ pak::pak("anndataR") # both are supported
 </details>
 
 <details>
-<summary>
-For visualization:
-</summary>
+<summary>For visualization:</summary>
 
 ```{r}
 #| label: installation_visualization
@@ -134,9 +131,7 @@ pak::pak(c(
 </details>
 
 <details>
-<summary>
-To use the built-in cell annotation methods:
-</summary>
+<summary>To use the built-in cell annotation methods:</summary>
 
 ```{r}
 #| label: installation_cell_annotation
@@ -158,9 +153,7 @@ pak::pak(c(
 </details>
 
 <details>
-<summary>
-To add custom extension functions to SigBridgeR:
-</summary>
+<summary>To add custom extension functions to SigBridgeR:</summary>
 
 ```{r}
 #| label: installation_custom_extension
@@ -177,6 +170,29 @@ pak::pak(c(
 ```
 
 </details>
+
+<!-- 
+## 🤝 Community
+
+SigBridgeR allows the community developers to integrate new algorithms without modifying the core package. The following community-developed plugins are maintained by their respective authors.
+
+```{r}
+#| label: installation_community_plugins
+#| eval: false
+
+# Install community plugins via pak:
+pak::pak(c(
+  # Example: "username/sigbridger-plugin-example"
+))
+```
+
+| Name | Author | Status | Repo Link |
+|------|--------|--------|-----------|
+| *Coming soon* | Be the first to contribute! | — | - |
+
+To contribute your own plugin, refer to the
+[vignette on extending SigBridgeR](https://wanglabcsu.github.io/SigBridgeR/articles/extending.html).
+-->
 
 
 ## 📓 Documentation
@@ -219,11 +235,12 @@ If you use one or more of the following Algorithms, please cite the correspondin
   
 - [scPAS](https://github.com/aiminXie/scPAS) -> Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell phenotype-associated subpopulation identifier. Briefings in Bioinformatics. 2024 Nov 22;26(1):bbae655.
 
-- [SIDISH](https://github.com/mcgilldinglab/SIDISH) ->
+- [SIDISH](https://github.com/mcgilldinglab/SIDISH) -> Jolasun, Y. et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation. Nat Commun 16, 11271 (2025).
 
-- [scPP](https://github.com/WangX-Lab/ScPP) -> He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci. Published online January 28, 2026. doi:10.1007/s12539-025-00803-6
+- [scPP](https://github.com/WangX-Lab/ScPP) -> He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci. Published online January 28, 2026.
 
-- [TiRank](https://github.com/LenisLin/TiRank) ->
+- [TiRank](https://github.com/LenisLin/TiRank) -> Lin, Y. et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med 18, 23 (2026).
+
 
 
 ## 🗺️ Similar Projects
