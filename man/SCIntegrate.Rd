@@ -3,7 +3,7 @@
 \name{SCIntegrate}
 \alias{SCIntegrate}
 \alias{SCIntegrate.data.frame}
-\alias{SCIntegrate.Matrix}
+\alias{SCIntegrate.matrix}
 \alias{SCIntegrate.Seurat}
 \title{Integrate Single-Cell Datasets}
 \usage{
@@ -19,7 +19,7 @@ SCIntegrate(
 
 SCIntegrate.data.frame(..., .quos = NULL)
 
-SCIntegrate.Matrix(..., .quos = NULL)
+SCIntegrate.matrix(..., .quos = NULL)
 
 SCIntegrate.Seurat(
   ...,

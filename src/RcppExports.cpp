@@ -11,6 +11,32 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// aggregate_dup_cols_cpp
+NumericMatrix aggregate_dup_cols_cpp(NumericMatrix x, CharacterVector col_names, std::string method);
+RcppExport SEXP _SigBridgeR_aggregate_dup_cols_cpp(SEXP xSEXP, SEXP col_namesSEXP, SEXP methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type col_names(col_namesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
+    rcpp_result_gen = Rcpp::wrap(aggregate_dup_cols_cpp(x, col_names, method));
+    return rcpp_result_gen;
+END_RCPP
+}
+// aggregate_dup_rows_cpp
+NumericMatrix aggregate_dup_rows_cpp(NumericMatrix x, CharacterVector row_names, std::string method);
+RcppExport SEXP _SigBridgeR_aggregate_dup_rows_cpp(SEXP xSEXP, SEXP row_namesSEXP, SEXP methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type row_names(row_namesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
+    rcpp_result_gen = Rcpp::wrap(aggregate_dup_rows_cpp(x, row_names, method));
+    return rcpp_result_gen;
+END_RCPP
+}
 // check_na_vector_cpp
 List check_na_vector_cpp(SEXP x);
 RcppExport SEXP _SigBridgeR_check_na_vector_cpp(SEXP xSEXP) {
@@ -100,6 +126,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// weighted_vote_cpp
+CharacterVector weighted_vote_cpp(CharacterMatrix vote_data, NumericVector weights, int ties_method);
+RcppExport SEXP _SigBridgeR_weighted_vote_cpp(SEXP vote_dataSEXP, SEXP weightsSEXP, SEXP ties_methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix >::type vote_data(vote_dataSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type weights(weightsSEXP);
+    Rcpp::traits::input_parameter< int >::type ties_method(ties_methodSEXP);
+    rcpp_result_gen = Rcpp::wrap(weighted_vote_cpp(vote_data, weights, ties_method));
+    return rcpp_result_gen;
+END_RCPP
+}
 // find_diff_in_2_lists
 SEXP find_diff_in_2_lists(SEXP x, SEXP y);
 RcppExport SEXP _SigBridgeR_find_diff_in_2_lists(SEXP xSEXP, SEXP ySEXP) {
@@ -137,6 +176,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_SigBridgeR_aggregate_dup_cols_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_cols_cpp, 3},
+    {"_SigBridgeR_aggregate_dup_rows_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_rows_cpp, 3},
     {"_SigBridgeR_check_na_vector_cpp", (DL_FUNC) &_SigBridgeR_check_na_vector_cpp, 1},
     {"_SigBridgeR_check_na_dense2d_cpp", (DL_FUNC) &_SigBridgeR_check_na_dense2d_cpp, 2},
     {"_SigBridgeR_check_na_dataframe_cpp", (DL_FUNC) &_SigBridgeR_check_na_dataframe_cpp, 2},
@@ -144,6 +185,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_check_na_sparse_triplet_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_triplet_cpp, 4},
     {"_SigBridgeR_CountsToTPM_impl", (DL_FUNC) &_SigBridgeR_CountsToTPM_impl, 2},
     {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
+    {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
     {"_SigBridgeR_fast_assign_plan", (DL_FUNC) &_SigBridgeR_fast_assign_plan, 3},

@@ -178,33 +178,12 @@ pak::pak(c(
 
 </details>
 
-<details>
-<summary>
-To reproduce the tutorial to learn more usage:
-</summary>
-
-```{r}
-#| label: installation_tutorial
-#| eval: false
-
-pak::pak(c(
-  "zeallot",
-  "org.Hs.eg.db",
-  "processx"
-))
-```
-
-</details>
-
 
 ## 📓 Documentation
 
 Get Started:
 
 -   View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
--   [A Quick Started Guide](vignettes/Quick_Start.md)
--   [Start from spatial transcriptome](vignettes/Spatial_Transcriptome.md) 
--   [Full Tutorial](vignettes/Full_Tutorial.md) for more details
 -   Use `?SigBridgeR::function_name` to access the help documents in R.
 
 If you encounter problems, please check:
@@ -226,21 +205,25 @@ citation("SigBridgeR")
 
 If you use one or more of the following Algorithms, please cite the corresponding papers:
 
-- [Scissor](https://github.com/sunduanchen/Scissor) -> 
+- [Scissor](https://github.com/sunduanchen/Scissor) -> Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
   
-- [DEGAS](https://github.com/tsteelejohnson91/DEGAS) -> 
+- [DEGAS](https://github.com/tsteelejohnson91/DEGAS) -> Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med. 2022 Feb 1;14(1):11.
   
-- [scAB](https://github.com/jinworks/scAB) -> 
+- [scAB](https://github.com/jinworks/scAB) -> Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
   
-- [LP_SGL](https://github.com/hongmeizhanghm/LP_SGL) -> 
+- [LP_SGL](https://github.com/hongmeizhanghm/LP_SGL) -> Li J, Zhang H, Mu B, Zuo H, Zhou K. Identifying phenotype-associated subpopulations through LP_SGL. Briefings in Bioinformatics. 2023 Nov 22;25(1):bbad424. 
   
-- [SCIPAC](https://github.com/RavenGan/SCIPAC) -> 
+- [SCIPAC](https://github.com/RavenGan/SCIPAC) -> Gan, D., Zhu, Y., Lu, X. & Li, J. SCIPAC: Quantitative estimation of cell-phenotype associations. Genome Biol 25, 119 (2024).
   
-- [PIPET](https://github.com/ruan2ruan/PIPET) -> 
+- [PIPET](https://github.com/ruan2ruan/PIPET) -> Ruan X, Cheng Y, Ye Y, Wang Y, Chen X, Yang Y, et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Briefings in Bioinformatics. 2024 May 23;25(4):bbae260. 
   
-- [scPAS](https://github.com/aiminXie/scPAS) -> 
+- [scPAS](https://github.com/aiminXie/scPAS) -> Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell phenotype-associated subpopulation identifier. Briefings in Bioinformatics. 2024 Nov 22;26(1):bbae655.
+
+- [SIDISH](https://github.com/mcgilldinglab/SIDISH) ->
 
 - [scPP](https://github.com/WangX-Lab/ScPP) -> He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci. Published online January 28, 2026. doi:10.1007/s12539-025-00803-6
+
+- [TiRank](https://github.com/LenisLin/TiRank) ->
 
 
 ## 🗺️ Similar Projects

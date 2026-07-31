@@ -24,8 +24,8 @@ AggregateDupCols(
 AggregateDups(
   x,
   method = c("max", "sum", "mean", "median", "first"),
-  row_method = NULL,
-  col_method = NULL,
+  row_method = method,
+  col_method = method,
   verbose = TRUE,
   ...
 )
@@ -89,11 +89,9 @@ Row/column order in output follows \emph{first occurrence} of each unique name i
 mat <- matrix(1:16, nrow = 4,
               dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"),
                             c("S1", "S1", "S2", "S3")))
+mat
+
 AggregateDups(mat, method = "sum")
-#>       S1 S2 S3
-#> TP53   5  7  9
-#> BRCA1  3  7 11
-#> ACTB   4  8 12
 
 }
 \concept{duplicate aggregation}

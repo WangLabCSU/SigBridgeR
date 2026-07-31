@@ -156,7 +156,7 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
 
 #' @keywords internal
 #' @rdname SCIntegrate
-SCIntegrate.Matrix <- function(..., .quos = NULL) {
+SCIntegrate.matrix <- function(..., .quos = NULL) {
   dots <- list2(...)
   .quos <- .quos %||% enquos(...)
 
@@ -332,7 +332,7 @@ get_names_4_ids <- function(..., .quoses = NULL) {
   unnamed <- which(var_names == "")
 
   if (length(unnamed) > 0) {
-    var_names[unnamed] <- purrr::map_chr(quoses[unnamed], as_label)
+    var_names[unnamed] <- purrr::map_chr(quoses[unnamed], rlang::as_label)
   }
 
   var_names

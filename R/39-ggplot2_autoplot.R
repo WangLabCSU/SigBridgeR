@@ -13,26 +13,19 @@ ggplot2::autoplot
 #' @param label Whether to label clusters
 #' @param label.size Label font size
 #' @param pt.size Point size
-#' @param cols Custom colors
-#' @param title Plot title
-#' @param save_path If not NULL, save plot to this path
-#' @param width Figure width
-#' @param height Figure height
+#' @param cols `vector` Custom colors
 #' @param ... Other arguments passed to [Seurat::DimPlot]
 #'
+#' @name autoplot-SigBridgeR
 #' @return ggplot object
 #' @export
-`autoplot.SigBridgeR::ScreenMethodResult` <- function(
+autoplot.Seurat <- function(
   object,
   group.by = NULL,
   label = TRUE,
   label.size = 4,
   pt.size = 0.5,
   cols = NULL,
-  title = NULL,
-  save_path = NULL,
-  width = 6,
-  height = 5,
   ...
 ) {
   check_installed(c("tidydr", "ggplot2"))
@@ -40,7 +33,7 @@ ggplot2::autoplot
   cluster_color <- cols %||% palette_SigBridgeR()
 
   p <- Seurat::DimPlot(
-    object = object@scRNA_data,
+    object = object,
     reduction = "umap",
     label = label,
     label.size = label.size,
@@ -54,20 +47,31 @@ ggplot2::autoplot
     tidydr::theme_dr() +
     ggplot2::theme(
       panel.grid = ggplot2::element_blank()
-    ) +
-    ggplot2::ggtitle(title)
-
-  if (!is.null(save_path)) {
-    ggplot2::ggsave(
-      plot = p,
-      filename = save_path,
-      width = width,
-      height = height,
-      dpi = 400
     )
-  }
 
   p
+}
+
+#' @rdname autoplot-SigBridgeR
+#' @export
+`autoplot.SigBridgeR::ScreenMethodResult` <- function(
+  object,
+  group.by = NULL,
+  label = TRUE,
+  label.size = 4,
+  pt.size = 0.5,
+  cols = NULL,
+  ...
+) {
+  autoplot.Seurat(
+    object = object@scRNA_data,
+    group.by = group.by,
+    label = label,
+    label.size = label.size,
+    pt.size = pt.size,
+    cols = cols,
+    ...
+  )
 }
 
 #' @title A Palette
