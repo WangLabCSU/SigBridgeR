@@ -30,6 +30,7 @@ Requirements:
 - Prefer R package terminology where relevant, such as functions, arguments, datasets, vignettes, examples, tests, dependencies, CRAN checks, and documentation.
 - If a commit is ambiguous, describe it conservatively.
 - Output only the new NEWS.md entry. Do not include explanations, comments, code fences, or any text outside the changelog entry.
+- All news writtern in English.
 
 Package: {{PACKAGE}}
 Version: {{VERSION}}

@@ -135,6 +135,7 @@ navbar:
             - intro
             - reference
             - articles
+            - troubleshooting
             - tutorials
             - news
         right:
@@ -151,41 +152,63 @@ navbar:
             text: Functions
             icon: fa-code
             href: reference/index.html
-        articles:
-            text: Articles
-            icon: fa-book-open
-            menu:
-                - text: How to use SigBridgeR
-                - text: Get Started
-                  icon: fa-rocket
-                  href: articles/Quick_Start.html
-                - text: Full Tutorial
-                  icon: fa-book
-                  href: articles/Full_Tutorial.html
-                - text: Sptial Workflow
-                  icon: fa-map-location
-                  href: articles/Spatial_Transcriptome.html
-                - text: -------
-                - text: Advanced Usage
-                - text: Find the optimal parameters
-                  icon: fa-cogs
-                  href: articles/Optimal_Params.html
-                - text: Extend SigBridgeR
-                  icon: fa-code-branch
-                  href: articles/Extending.html
-            assets: vignettes/example_figures
-        other_function:
-            text: Auxiliary Utils
-            icon: fa-bars
-            href: articles/Other_Function_Details.html
         troubleshooting:
             text: Troubleshooting
             icon: fa-bug
             href: articles/Troubleshooting.html
         search: []
+        lightswitch:
+            icon: fa-sun
+            aria-label: Light switch
+            id: lightswitch
+            menu:
+                - text: Light
+                  theme: light
+                  icon: fa-sun
+                - text: Dark
+                  theme: dark
+                  icon: fa-moon
+                - text: Auto
+                  theme: auto
+                  icon: fa-adjust
+        news:
+            text: Changelog
+            href: news/index.html
         github:
-            icon: fa-github
-            href: https://github.com/wanglabcsu/sigbridger/
+            icon: fab fa-github fa-lg
+            href: https://github.com/WangLabCSU/SigBridgeR/
+            aria-label: GitHub
+        articles:
+            text: Articles
+            icon: fa-book-open
+            menu:
+                - text: Get Started with SigBridgeR
+                  icon: fa-rocket
+                  href: articles/Quick_Start.html
+
+                - text: Full Tutorial
+                  icon: fa-book
+                  href: articles/Full_Tutorial.html
+
+                - text: Application of SigBridgeR to Single-cell Spatial Transcriptomics Data
+                  icon: fa-map-location
+                  href: articles/Spatial_Transcriptome.html
+
+                - text: -------
+                - text: Advanced Usage
+
+                - text: Find optimal parameters
+                  icon: fa-cogs
+                  href: articles/Optimal_Params.html
+
+                - text: "Extending SigBridgeR: A Guide for Custom Extensions"
+                  icon: fa-code-branch
+                  href: articles/Extending.html
+
+                - text: -------
+                - text: Auxiliary Utilities
+                  href: articles/Other_Function_Details.html
+            assets: vignettes/example_figures
 
 includes:
     in_header: |

@@ -2,7 +2,7 @@
 title: "Extending SigBridgeR: A Guide for Custom Extensions"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Extending SigBridgeR: A Guide for Custom Extensions}
+  %\VignetteIndexEntry{Extending}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -14,7 +14,7 @@
 #' @return Invisibly returns `x`.
 #'
 #' @family SigBridgeR-S3
-#' @rawNamespace S3method(print,"SigBridgeR::ScreenMethod")
+#' @rawNamespace S3method(print,"SigBridgeR::SigBridgeRBase")
 #' @export
 `print.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
   cls_x <- gsub(".*:", "", class(x)[1])

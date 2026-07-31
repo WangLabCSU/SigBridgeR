@@ -1,11 +1,11 @@
 ---
-title: "Quick Start Guide for SigBridgeR"
+title: "Get Started with SigBridgeR"
 date: '`r Sys.Date()`'
 output: 
   html_document
 knit: knitted
 vignette: >
-  %\VignetteIndexEntry{Quick Start Guide for SigBridgeR}
+  %\VignetteIndexEntry{Quick_Start}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,14 +15,7 @@ vignette: >
 ```{r}
 #| label: prework
 #| eval: false
-if (!requireNamespace("remotes")) {
-  install.packages("remotes")
-}
-remotes::install_github("WangLabCSU/SigBridgeR")
-
-
-# # Or install from r-universe:
-# install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
+#| include: false
 
 library(SigBridgeR)
 library(Seurat)
@@ -31,18 +24,8 @@ library(Seurat)
 We will start with a simple example.
 
 ```{r}
-#| label: set_workig_directory
-#| eval: false
-if (requireNamespace("here", quietly = TRUE)) {
-  setwd(here::here())
-  knitr::opts_knit$set(root.dir = here::here())
-}
-```
+#| label: example_data
 
-```{r}
-#| label: example
-#| eval: false
-library(zeallot) # %<-%
 c(mat_exam, bulk_bi, pheno_bi) %<-% LoadRefData(data_type = "binary")
 ```
 
@@ -50,10 +33,7 @@ c(mat_exam, bulk_bi, pheno_bi) %<-% LoadRefData(data_type = "binary")
 
 ```{r}
 #| label: binary_phenotype
-#| eval: false
 head(pheno_bi)
-# TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01
-#               1               1               1               1               1               1
 ```
 
 By the way, when using patients' survival data as phenotype, the reference data is a **data.frame**.
@@ -198,7 +178,6 @@ venn_plot <- ggVennDiagram::ggVennDiagram(
 ) +
   ggplot2::scale_fill_gradient(low = "white", high = "#ffb6b6ff") +
   ggplot2::ggtitle("Screening Venn Diagram")
-
 ```
 
 ```{r}
@@ -257,7 +236,7 @@ c(
   )
 
 set.seed(123)
-cols = randomcoloR::distinctColorPalette(
+cols <- randomcoloR::distinctColorPalette(
   length(unique(merged_seurat$seurat_clusters)),
   runTsne = TRUE
 )
