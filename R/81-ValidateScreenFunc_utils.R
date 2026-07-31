@@ -85,13 +85,19 @@ validate_success <- function(text, ...) {
 # ---- Helper: get function name from a function object ----
 
 #' @keywords internal
-get_fn_name <- function(func) {
+get_fn_name <- function(func, max_depth = 100L) {
   expr <- substitute(func)
-  if (is.symbol(expr)) {
-    resolved <- do.call(substitute, list(expr, env = parent.frame()))
-    if (is.symbol(resolved)) {
-      expr <- resolved
-    }
+  env <- parent.frame()
+
+  root <- promise_root_expr_cpp(
+    expr,
+    env,
+    as.integer(max_depth)
+  )
+
+  if (is.symbol(root)) {
+    as.character(root)
+  } else {
+    paste(deparse(root), collapse = "")
   }
-  deparse(expr)
 }

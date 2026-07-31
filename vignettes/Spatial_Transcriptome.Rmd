@@ -2,7 +2,7 @@
 title: "Application of SigBridgeR to Single-cell Spatial Transcriptomics Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Spatial_Transcriptome}
+  %\VignetteIndexEntry{Application of SigBridgeR to Single-cell Spatial Transcriptomics Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

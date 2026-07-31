@@ -1,3 +1,5 @@
+# nocov start
+
 #' @title Register an Annotation Method into the Strategy Registry
 #'
 #' @description

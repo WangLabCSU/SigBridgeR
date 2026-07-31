@@ -49,6 +49,10 @@ make_null_list_NULL <- function(x) {
     .Call(`_SigBridgeR_make_null_list_NULL`, x)
 }
 
+promise_root_expr_cpp <- function(expr, env, max_depth = 100L) {
+    .Call(`_SigBridgeR_promise_root_expr_cpp`, expr, env, max_depth)
+}
+
 fast_assign_plan <- function(plan, rhs, env) {
     invisible(.Call(`_SigBridgeR_fast_assign_plan`, plan, rhs, env))
 }

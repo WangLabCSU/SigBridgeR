@@ -162,10 +162,8 @@ pak::pak(c(
 pak::pak(c(
   "tictoc",
   "codetools",
-  "knitr",
   "lintr",
-  "rstudioapi",
-  "yonicd/tidycheckUsage"
+  "rstudioapi"
 ))
 ```
 

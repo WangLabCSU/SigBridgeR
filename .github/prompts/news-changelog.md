@@ -29,8 +29,11 @@ Requirements:
 - Use bullet points under each section.
 - Prefer R package terminology where relevant, such as functions, arguments, datasets, vignettes, examples, tests, dependencies, CRAN checks, and documentation.
 - If a commit is ambiguous, describe it conservatively.
-- Output only the new NEWS.md entry. Do not include explanations, comments, code fences, or any text outside the changelog entry.
-- All news writtern in English.
+- Besides the new NEWS.md entry, you can use following rules to NEWS.md
+  - You can include markdown syntax (tables, links, bold font, italics, list, etc.) outside the changelog entry when necessary.
+  - You can include code examples showing what has been changed or added, but do not include the entire file, code or function usage. The code chunk should be less than 30 lines, each line should be less than 80 characters. The code should be formatted with air style.
+  - You can use emojis and kaomoji. Generally, one or two emojis are fine.
+- All news writtern in English with markdon syntax
 
 Package: {{PACKAGE}}
 Version: {{VERSION}}

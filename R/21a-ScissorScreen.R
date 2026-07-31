@@ -48,7 +48,7 @@ ValidateScissorParams <- function(
       "DoScissor(save_cache = )"
     )
   }
-  if (family != c("gaussian", "binomial", "cox")) {
+  if (lifecycle::is_present(family)) {
     lifecycle::deprecate_warn(
       "4.0.0",
       "DoScissor(family = )",
@@ -213,7 +213,7 @@ DoScissor <- function(
   phenotype_class = c("binary", "continuous", "survival"),
   alpha = c(0.05, NULL),
   cutoff = 0.2,
-  family = c("gaussian", "binomial", "cox"),
+  family = lifecycle::deprecated(),
   reliability_test = list(
     run = FALSE,
     n = 10L,

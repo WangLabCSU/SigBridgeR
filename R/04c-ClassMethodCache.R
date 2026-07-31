@@ -70,6 +70,7 @@ ScreenMethodConfig <- new_class(
          but got {.val {self@method_name}}"
       )))
     }
+    invisible()
   },
   constructor = \(
     method_name,
@@ -147,10 +148,11 @@ ScreenMethodCache <- new_class(
     EnsureParentDir(self@cache_config_path)
 
     if (!endsWith(path, "cache_config.json")) {
-      cli::cli_fmt(cli::cli_text(
+      return(cli::cli_fmt(cli::cli_text(
         "@cache_config_path ({.file {self@cache_config_path}}) must end with {.file cache_config.json}"
-      ))
+      )))
     }
+    invisible()
   },
   constructor = \(
     cache_path,

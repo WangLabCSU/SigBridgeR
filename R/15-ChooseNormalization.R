@@ -290,7 +290,7 @@ ChooseNormalizationCheck <- function(
   # methods are named
   purrr::walk(
     method_names,
-    ~ if (nchar(.x) == 0) {
+    ~ if (!nzchar(.x, keepNA = TRUE)) {
       Abort(
         "Options must be named",
         tips = "e.g., SCT = sct_obj, Log = log_obj"

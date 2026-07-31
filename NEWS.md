@@ -20,7 +20,3 @@
 * Package dependencies were updated.
 * The pkgdown site configuration and workflow were modernized.
 * General code clean-up and routine maintenance.
-
-# SigBridgeR 4.0.0
-
-* Initial CRAN submission.

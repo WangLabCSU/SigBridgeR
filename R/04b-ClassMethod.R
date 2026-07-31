@@ -77,6 +77,7 @@ Method <- new_class(
 #'
 #' @returns A `ScreenMethod` S7 object.
 #'
+#'
 #' @family SigBridgeR-Classes
 #' @export
 ScreenMethod <- new_class(
@@ -100,6 +101,13 @@ ScreenMethod <- new_class(
 
       return(cli::cli_fmt(cli::cli_text(
         "Missing arguments in screening function: {.arg {missing_args}}"
+      )))
+    }
+
+    mapper_fml <- fn_fmls_names(self@mapper)
+    if (length(mapper_fml) > 1) {
+      return(cli::cli_fmt(cli::cli_text(
+        "Mapper function must have only one argument"
       )))
     }
   }

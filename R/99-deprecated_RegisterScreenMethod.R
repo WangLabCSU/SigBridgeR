@@ -1,3 +1,5 @@
+# nocov start
+
 #' @title Register a Custom Screening Method for Phenotype-Driven Analysis
 #' @family Add_Screen_method
 #' @family Registering

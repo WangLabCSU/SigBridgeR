@@ -1,3 +1,5 @@
+# nocov start
+
 BulkCheck <- function(
   counts_matrix,
   n_genes,
@@ -265,7 +267,9 @@ method(BulkPreProcess, class_any) <- function(
   } else {
     # Validate matching
     if (nrow(sample_info) != n_samples) {
-      Abort("Number of rows in `sample_info` does not match number of columns in count matrix")
+      Abort(
+        "Number of rows in `sample_info` does not match number of columns in count matrix"
+      )
     }
   }
 

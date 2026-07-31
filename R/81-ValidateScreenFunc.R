@@ -52,19 +52,19 @@ ValidateScreenFunc <- function(
   ))
   cli::cli_text("\n")
 
-  inputs_check <- ValidateArgsInputs(func = func, ...)
+  inputs_check <- ValidateArgsInputs(func, ...)
   cli::cli_text("\n")
 
-  verbose_check <- ValidateArgsVerbose(func = func, ...)
+  verbose_check <- ValidateArgsVerbose(func, ...)
   cli::cli_text("\n")
 
-  syntax_check <- ValidateArgsSyntax(func = func, ...)
+  syntax_check <- ValidateArgsSyntax(func, ...)
   cli::cli_text("\n")
 
-  return_check <- ValidateReturn(func = func, ...)
+  return_check <- ValidateReturn(func, ...)
   cli::cli_text("\n")
 
-  dir_name_check <- ValidateDirName(func = func, ...)
+  dir_name_check <- ValidateDirName(func, ...)
   cli::cli_text("\n")
 
   if (is_installed("tictoc")) {
@@ -175,31 +175,13 @@ ValidateArgsVerbose <- function(func, ...) {
 
 #' @keywords internal
 ValidateArgsSyntax <- function(func, ...) {
-  if (is_installed(c("tidycheckUsage", "knitr"))) {
-    report <- tidycheckUsage::tidycheckUsage(func)
-    if (!is.null(report)) {
-      validate_error("Syntax error in function")
-      report$file <- NULL
-      report$path <- NULL
-      report$fun <- NULL
-      print(knitr::kable(
-        report,
-        format = "pipe",
-        align = "c",
-        row.names = FALSE
-      ))
-      return(list(error = 1))
-    }
-    validate_success("Syntax check passed")
-    return(invisible())
-  }
-
   if (is_installed("codetools")) {
     code_report <- utils::capture.output(
       codetools::checkUsage(
         func,
-        name = "Syntax",
-        report = validate_explain
+        name = get_fn_name(func = func),
+        report = validate_explain,
+        all = TRUE
       ),
       type = "message"
     )
@@ -251,7 +233,7 @@ ValidateArgsSyntax <- function(func, ...) {
 
   cli::cli_warn(
     "Syntax check not supported due to missing dependencies: \
-      {.pkg yonicd/tidycheckUsage & knitr} or {.pkg codetools}"
+      {.pkg codetools}"
   )
 }
 

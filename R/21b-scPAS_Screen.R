@@ -66,7 +66,7 @@ ValidatescPASParams <- function(
   network_class <- arg_match(network_class)
 
   # -- handle deprecated `family` -------------------------------------------
-  if (!is.null(family)) {
+  if (lifecycle::is_present(family)) {
     lifecycle::deprecate_warn(
       "4.0.0",
       "DoscPAS(family = )",

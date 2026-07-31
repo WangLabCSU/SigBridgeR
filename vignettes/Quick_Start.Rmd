@@ -5,7 +5,7 @@ output:
   html_document
 knit: knitted
 vignette: >
-  %\VignetteIndexEntry{Quick_Start}
+  %\VignetteIndexEntry{Get Started with SigBridgeR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,7 +26,15 @@ We will start with a simple example.
 ```{r}
 #| label: example_data
 
-c(mat_exam, bulk_bi, pheno_bi) %<-% LoadRefData(data_type = "binary")
+ref %<-% LoadRefData(data_type = "binary")
+mat_exam <- ref[[1]]
+bulk_bi <- ref[[2]]
+pheno_bi <- ref[[3]]
+```
+
+```{r}
+#| include: false
+rm(ref)
 ```
 
 `mat_exam` is a single-cell RNA expression matrix, `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.

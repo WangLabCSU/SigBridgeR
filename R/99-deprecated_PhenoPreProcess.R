@@ -1,3 +1,5 @@
+# nocov start
+
 #' @title Preprocess Phenotype Data
 #'
 #' @description
@@ -162,7 +164,7 @@ PhenoPreProcess <- function(
   }
   n_samples <- ncol(bulk)
   if (n_samples < 2L) {
-      Abort("`bulk` must have at least 2 samples (columns)")
+    Abort("`bulk` must have at least 2 samples (columns)")
   }
 
   bulk <- as.matrix(bulk)
@@ -397,7 +399,9 @@ handle_case_2 <- function(
   chk::chk_length(select, 2)
   col_exists <- select %chin% colnames(phenotype)
   if (!all(col_exists)) {
-    Abort("Column {.val {colnames(phenotype)[!col_exists]}} not found in `phenotype`")
+    Abort(
+      "Column {.val {colnames(phenotype)[!col_exists]}} not found in `phenotype`"
+    )
   }
 
   return(phenotype[sample_names, select])

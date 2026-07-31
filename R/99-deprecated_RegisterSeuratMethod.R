@@ -1,3 +1,5 @@
+# nocov start
+
 #' @title Register a Seurat Processing Strategy
 #' @family Registering
 #' @family single_cell_preprocess
@@ -85,7 +87,9 @@ RegisterSeuratMethod <- function(
     } else if (is.function(executor)) {
       executor
     } else {
-      Abort("Provided function must be a function object or character function name.")
+      Abort(
+        "Provided function must be a function object or character function name."
+      )
     }
 
     registry[[letter]] <- function(...) {

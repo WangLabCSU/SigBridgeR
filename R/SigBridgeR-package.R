@@ -3,7 +3,10 @@
 #' @import S7
 #' @importFrom rlang abort caller_call caller_env check_dots_empty check_installed
 #' @importFrom rlang current_env enquos exec fn_body is_function is_installed
-#' @importFrom rlang list2 new_environment quo_name try_fetch warn
+#' @importFrom rlang list2 new_environment quo_name try_fetch warn is_interactive
+#' @importFrom rlang fn_fmls_names is_call call_name call_args is_symbol is_syntactic_literal
+#' @importFrom rlang f_name is_pairlist get_expr enquo
+#' @importFrom Rcpp evalCpp
 #' @rawNamespace if (getRversion() < "4.3.0") importFrom("S7", "@")
 #' @useDynLib SigBridgeR, .registration = TRUE
 ## usethis namespace: end

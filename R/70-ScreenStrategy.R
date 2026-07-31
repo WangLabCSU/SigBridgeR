@@ -20,30 +20,14 @@ ScreenStrategy <- new_environment(
       method_version = r_pkg_version("Scissor"),
       executor = DoScissor,
       phenotype_class = c("binary", "survival", "continuous"),
-      mapper = function(params) {
-        params$family <- switch(
-          params$phenotype_class,
-          "binary" = "binomial",
-          "survival" = "cox",
-          "continuous" = "gaussian"
-        )
-        params
-      }
+      mapper = NULL
     ),
     scPAS = ScreenMethod(
       method_name = "scPAS",
       method_version = r_pkg_version("scPAS"),
       executor = DoscPAS,
       phenotype_class = c("binary", "survival", "continuous"),
-      mapper = function(params) {
-        params$family <- switch(
-          params$phenotype_class,
-          "binary" = "binomial",
-          "survival" = "cox",
-          "continuous" = "gaussian"
-        )
-        params
-      }
+      mapper = NULL
     ),
     scAB = ScreenMethod(
       method_name = "scAB",
@@ -71,15 +55,7 @@ ScreenStrategy <- new_environment(
       method_version = r_pkg_version("LPSGL"),
       executor = DoLP_SGL,
       phenotype_class = c("binary", "survival", "continuous"),
-      mapper = function(params) {
-        params$family <- switch(
-          params$phenotype_class,
-          "binary" = "logit",
-          "survival" = "cox",
-          "continuous" = "linear"
-        )
-        params
-      }
+      mapper = NULL
     ),
     PIPET = ScreenMethod(
       method_name = "PIPET",
