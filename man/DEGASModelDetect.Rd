@@ -10,12 +10,12 @@ DEGASModelDetect(sc_pheno_colname, bulk_pheno, call = caller_env())
 Automatically select the DEGAS model based on single-cell labels and bulk-level phenotype information.
 }
 \seealso{
-Other DEGAS: 
-\code{\link{DEGASEnvSet}()},
-\code{\link{DEGASParamSet}()},
-\code{\link{DoDEGAS}()},
-\code{\link{TrainDEGASModel}()},
-\code{\link{ValidateDEGASParams}()}
+Other DEGAS:
+\code{\link[=DEGASEnvSet]{DEGASEnvSet()}},
+\code{\link[=DEGASParamSet]{DEGASParamSet()}},
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=TrainDEGASModel]{TrainDEGASModel()}},
+\code{\link[=ValidateDEGASParams]{ValidateDEGASParams()}}
 }
 \concept{DEGAS}
 \keyword{internal}

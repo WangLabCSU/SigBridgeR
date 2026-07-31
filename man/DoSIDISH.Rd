@@ -21,12 +21,16 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item{sc_data}{A Seurat object containing scRNA-seq data to be screened.}
 
 \item{phenotype}{Phenotype data, either:
-- Patient survival Data frame with row names matching \code{matched_bulk} columns, colnames named "time" and "status"}
+\itemize{
+\item Patient survival Data frame with row names matching \code{matched_bulk} columns, colnames named "time" and "status"
+}}
 
 \item{label_type}{Character specifying phenotype label type}
 
 \item{phenotype_class}{Type of phenotypic outcome (must be consistent with input data):
-- \code{"survival"}: Survival infomation}
+\itemize{
+\item \code{"survival"}: Survival infomation
+}}
 
 \item{sidish_params}{List of SIDISH algorithm parameters including:
 \strong{Preprocessing parameters:}
@@ -99,20 +103,20 @@ A named list containing:
 Perform SIDISH Screening Analysis
 }
 \seealso{
-Other screen_method: 
-\code{\link{DoDEGAS}()},
-\code{\link{DoLP_SGL}()},
-\code{\link{DoPIPET}()},
-\code{\link{DoSCIPAC}()},
-\code{\link{DoScissor}()},
-\code{\link{DoTiRank}()},
-\code{\link{DoscAB}()},
-\code{\link{DoscPAS}()},
-\code{\link{DoscPP}()}
+Other screen_method:
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoSCIPAC]{DoSCIPAC()}},
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoTiRank]{DoTiRank()}},
+\code{\link[=DoscAB]{DoscAB()}},
+\code{\link[=DoscPAS]{DoscPAS()}},
+\code{\link[=DoscPP]{DoscPP()}}
 
-Other SIDISH: 
-\code{\link{SIDISHEnvSet}()},
-\code{\link{ValidateSIDISHParams}()}
+Other SIDISH:
+\code{\link[=SIDISHEnvSet]{SIDISHEnvSet()}},
+\code{\link[=ValidateSIDISHParams]{ValidateSIDISHParams()}}
 }
 \concept{SIDISH}
 \concept{screen_method}

@@ -57,15 +57,15 @@ RegisterAnnoMethod(
 }
 }
 \seealso{
-Other Registering: 
-\code{\link{RegisterScreenMethod}()},
-\code{\link{RegisterSeuratMethod}()}
+Other Registering:
+\code{\link[=RegisterScreenMethod]{RegisterScreenMethod()}},
+\code{\link[=RegisterSeuratMethod]{RegisterSeuratMethod()}}
 
-Other Single_Cell_Annotation_Method: 
-\code{\link{CellTypistAnnotate}()},
+Other Single_Cell_Annotation_Method:
+\code{\link[=CellTypistAnnotate]{CellTypistAnnotate()}},
 \code{\link{SCAnnotateStrategy}},
-\code{\link{SingleRAnnotate}()},
-\code{\link{mLLMCelltypeAnnotate}()}
+\code{\link[=SingleRAnnotate]{SingleRAnnotate()}},
+\code{\link[=mLLMCelltypeAnnotate]{mLLMCelltypeAnnotate()}}
 }
 \concept{Registering}
 \concept{Single_Cell_Annotation_Method}

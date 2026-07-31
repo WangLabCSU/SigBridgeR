@@ -44,8 +44,8 @@ Internal helper that handles package installation checks, deprecated argument
 warnings, input validation, and default-value resolution for \code{\link[=DoscPAS]{DoscPAS()}}.
 }
 \seealso{
-Other scPAS: 
-\code{\link{DoscPAS}()}
+Other scPAS:
+\code{\link[=DoscPAS]{DoscPAS()}}
 }
 \concept{scPAS}
 \keyword{internal}

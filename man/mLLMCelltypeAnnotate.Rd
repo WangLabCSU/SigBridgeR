@@ -149,10 +149,10 @@ head(annotated$mllmcelltype_consensus_proportion)  # Only present in multi-model
 \code{\link[mLLMCelltype]{annotate_cell_types}},
 \code{\link[mLLMCelltype]{interactive_consensus_annotation}}
 
-Other Single_Cell_Annotation_Method: 
-\code{\link{CellTypistAnnotate}()},
-\code{\link{RegisterAnnoMethod}()},
+Other Single_Cell_Annotation_Method:
+\code{\link[=CellTypistAnnotate]{CellTypistAnnotate()}},
+\code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
 \code{\link{SCAnnotateStrategy}},
-\code{\link{SingleRAnnotate}()}
+\code{\link[=SingleRAnnotate]{SingleRAnnotate()}}
 }
 \concept{Single_Cell_Annotation_Method}

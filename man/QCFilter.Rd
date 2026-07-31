@@ -17,11 +17,11 @@ QCFilter(
 
 \item{data_filter.thresh}{A named list with thresholds. Default:
 \code{list(
-    nFeature_thresh = c(200L, 6000L),
-    nCount_thresh    = c(500L, 25000L),
-    percent.mt = 20L,
-    percent.rp = 60L
-  )}.}
+  nFeature_thresh = c(200L, 6000L),
+  nCount_thresh    = c(500L, 25000L),
+  percent.mt = 20L,
+  percent.rp = 60L
+)}.}
 
 \item{verbose}{Logical; whether to print progress messages via \code{cli}.}
 

@@ -33,8 +33,8 @@ Internal helper that handles package installation checks, input validation,
 and default-value resolution for \code{\link[=DoscPP]{DoscPP()}}.
 }
 \seealso{
-Other scPP: 
-\code{\link{DoscPP}()}
+Other scPP:
+\code{\link[=DoscPP]{DoscPP()}}
 }
 \concept{scPP}
 \keyword{internal}

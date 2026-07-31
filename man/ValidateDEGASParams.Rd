@@ -39,12 +39,12 @@ Internal helper that handles package installation checks, input validation,
 default-value resolution, and cache configuration for \code{\link[=DoDEGAS]{DoDEGAS()}}.
 }
 \seealso{
-Other DEGAS: 
-\code{\link{DEGASEnvSet}()},
-\code{\link{DEGASModelDetect}()},
-\code{\link{DEGASParamSet}()},
-\code{\link{DoDEGAS}()},
-\code{\link{TrainDEGASModel}()}
+Other DEGAS:
+\code{\link[=DEGASEnvSet]{DEGASEnvSet()}},
+\code{\link[=DEGASModelDetect]{DEGASModelDetect()}},
+\code{\link[=DEGASParamSet]{DEGASParamSet()}},
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=TrainDEGASModel]{TrainDEGASModel()}}
 }
 \concept{DEGAS}
 \keyword{internal}

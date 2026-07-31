@@ -2,7 +2,7 @@
 % Please edit documentation in R/39-ggplot2_autoplot.R
 \name{autoplot.SigBridgeR::ScreenMethodResult}
 \alias{autoplot.SigBridgeR::ScreenMethodResult}
-\title{autoplot method for Seurat UMAP}
+\title{autoplot  method for Seurat UMAP}
 \usage{
 \method{autoplot}{`SigBridgeR::ScreenMethodResult`}(
   object,
@@ -39,11 +39,11 @@
 
 \item{height}{Figure height}
 
-\item{...}{}
+\item{...}{Other arguments passed to \link[Seurat:DimPlot]{Seurat::DimPlot}}
 }
 \value{
 ggplot object
 }
 \description{
-autoplot method for Seurat UMAP
+A ggplot2 autoplot method for class ScreenMethodResult
 }

@@ -39,7 +39,8 @@ Method <- new_class(
       S7_object(),
       method_name = method_name,
       method_version = method_version,
-      executor = func
+      executor = func,
+      sigbridger_version = get_pkg_version()
     )
   }
 )
@@ -97,9 +98,9 @@ ScreenMethod <- new_class(
     if (!all(expected_args %chin% param_names)) {
       missing_args <- setdiff(expected_args, param_names)
 
-      cli::cli_fmt(cli::cli_text(
+      return(cli::cli_fmt(cli::cli_text(
         "Missing arguments in screening function: {.arg {missing_args}}"
-      ))
+      )))
     }
   }
 )

@@ -14,13 +14,13 @@ A character string with the version, or \code{NULL} if unavailable.
 }
 \description{
 Queries the installed version of an R package via
-\code{\link[utils:packageDescription]{utils::packageVersion()}}. Returns \code{NULL} on error (e.g., package not
+\code{\link[utils:packageVersion]{utils::packageVersion()}}. Returns \code{NULL} on error (e.g., package not
 installed).
 }
 \seealso{
-Other get-pkg-version: 
-\code{\link{get_pkg_version}()},
-\code{\link{py_pkg_version}()}
+Other get-pkg-version:
+\code{\link[=get_pkg_version]{get_pkg_version()}},
+\code{\link[=py_pkg_version]{py_pkg_version()}}
 }
 \concept{get-pkg-version}
 \keyword{internal}

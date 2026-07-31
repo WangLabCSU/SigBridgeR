@@ -212,15 +212,15 @@ result <- DoSCIPAC(
 \code{\link[SCIPAC]{SCIPAC}}, \code{\link[SCIPAC]{sc.bulk.pca}},
 \code{\link[SCIPAC]{seurat.ct}}, \code{\link{RegisterScreenMethod}}
 
-Other screen_method: 
-\code{\link{DoDEGAS}()},
-\code{\link{DoLP_SGL}()},
-\code{\link{DoPIPET}()},
-\code{\link{DoSIDISH}()},
-\code{\link{DoScissor}()},
-\code{\link{DoTiRank}()},
-\code{\link{DoscAB}()},
-\code{\link{DoscPAS}()},
-\code{\link{DoscPP}()}
+Other screen_method:
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoTiRank]{DoTiRank()}},
+\code{\link[=DoscAB]{DoscAB()}},
+\code{\link[=DoscPAS]{DoscPAS()}},
+\code{\link[=DoscPP]{DoscPP()}}
 }
 \concept{screen_method}

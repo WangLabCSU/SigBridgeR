@@ -7,6 +7,8 @@
 \method{as.character}{`SigBridgeR::SigBridgeRBase`}(x, ...)
 }
 \arguments{
+\item{x}{A \code{SigBridgeRBase} object. Basically all SigBridgeR objects.}
+
 \item{...}{Additional arguments passed to the method. Currently unused.}
 }
 \value{
@@ -17,11 +19,11 @@ Coercion of \code{SigBridgeRBase} to character is intentionally unsupported.
 Use \code{\link[=format]{format()}} to obtain a character representation instead.
 }
 \seealso{
-Other SigBridgeR-S3: 
-\code{\link{as.list.SigBridgeR::SigBridgeRBase}()},
-\code{\link{format.SigBridgeR::SigBridgeRBase}()},
-\code{\link{length.SigBridgeR::SigBridgeRBase}()},
-\code{\link{names.SigBridgeR::SigBridgeRBase}()},
-\code{\link{print.SigBridgeR::SigBridgeRBase}()}
+Other SigBridgeR-S3:
+\code{\link[=as.list.SigBridgeR::SigBridgeRBase]{as.list.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=format.SigBridgeR::SigBridgeRBase]{format.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=length.SigBridgeR::SigBridgeRBase]{length.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=names.SigBridgeR::SigBridgeRBase]{names.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=print.SigBridgeR::SigBridgeRBase]{print.SigBridgeR::SigBridgeRBase()}}
 }
 \concept{SigBridgeR-S3}

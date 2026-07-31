@@ -29,16 +29,20 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 scRNA-seq data to be screened.}
 
 \item{phenotype}{Phenotype data, either:
-- Named vector (names match \code{matched_bulk} columns), or
-- Patient survival data frame with row names matching \code{matched_bulk}
-columns, colnames named "time" and "status"}
+\itemize{
+\item Named vector (names match \code{matched_bulk} columns), or
+\item Patient survival data frame with row names matching \code{matched_bulk}
+columns, colnames named "time" and "status"
+}}
 
 \item{label_type}{Character specifying phenotype label type (default: \code{"TiRank"}).}
 
 \item{phenotype_class}{Type of phenotypic outcome (must be consistent with input data):
-- \code{"binary"}: Binary traits (e.g., case/control)
-- \code{"continuous"}: Continuous measurements
-- \code{"survival"}: Survival information}
+\itemize{
+\item \code{"binary"}: Binary traits (e.g., case/control)
+\item \code{"continuous"}: Continuous measurements
+\item \code{"survival"}: Survival information
+}}
 
 \item{tirank_params}{List of TiRank algorithm parameters:
 \describe{
@@ -155,19 +159,19 @@ head(modified_seurat[[]])
 
 }
 \seealso{
-Other TiRank: 
-\code{\link{ValidateTiRankParams}()}
+Other TiRank:
+\code{\link[=ValidateTiRankParams]{ValidateTiRankParams()}}
 
-Other screen_method: 
-\code{\link{DoDEGAS}()},
-\code{\link{DoLP_SGL}()},
-\code{\link{DoPIPET}()},
-\code{\link{DoSCIPAC}()},
-\code{\link{DoSIDISH}()},
-\code{\link{DoScissor}()},
-\code{\link{DoscAB}()},
-\code{\link{DoscPAS}()},
-\code{\link{DoscPP}()}
+Other screen_method:
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoSCIPAC]{DoSCIPAC()}},
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoscAB]{DoscAB()}},
+\code{\link[=DoscPAS]{DoscPAS()}},
+\code{\link[=DoscPP]{DoscPP()}}
 }
 \concept{TiRank}
 \concept{screen_method}

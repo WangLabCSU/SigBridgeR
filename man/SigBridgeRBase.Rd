@@ -4,7 +4,7 @@
 \alias{SigBridgeRBase}
 \title{SigBridgeRBase: Abstract Base Class for SigBridgeR}
 \usage{
-SigBridgeRBase()
+SigBridgeRBase(sigbridger_version = "4.0.0")
 }
 \description{
 \code{SigBridgeRBase} is the abstract base class for all S7 classes in the
@@ -21,8 +21,8 @@ for base R S3 generic functions, enabling polymorphic behavior across
 all SigBridgeR S7 objects through S3 method dispatch.
 }
 \seealso{
-Other SigBridgeR-Classes: 
-\code{\link{Method}()},
-\code{\link{ScreenMethod}()}
+Other SigBridgeR-Classes:
+\code{\link[=Method]{Method()}},
+\code{\link[=ScreenMethod]{ScreenMethod()}}
 }
 \concept{SigBridgeR-Classes}

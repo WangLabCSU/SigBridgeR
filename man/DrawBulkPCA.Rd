@@ -30,7 +30,7 @@ Performs PCA on transposed bulk expression data and visualizes the first two
 principal components as a scatter plot with marginal density plots. Optionally
 overlays batch information as point shapes (up to 4 batches).
 
-The plot is composed via \link[patchwork:patchwork-package]{patchwork::patchwork} from:
+The plot is composed via \link[patchwork:patchwork]{patchwork} from:
 \itemize{
 \item A top marginal density plot for PC1.
 \item A right marginal density plot for PC2.
@@ -62,11 +62,11 @@ DrawBulkPCA(bulk = bulk, group = group, batch = batch)
 
 }
 \seealso{
-Other input_preprocess: 
-\code{\link{BulkPreProcess}()},
-\code{\link{PhenoMap}()},
-\code{\link{PhenoPreProcess}()},
-\code{\link{SCPreProcess}()},
-\code{\link{SymbolConvert}()}
+Other input_preprocess:
+\code{\link[=BulkPreProcess]{BulkPreProcess()}},
+\code{\link[=PhenoMap]{PhenoMap()}},
+\code{\link[=PhenoPreProcess]{PhenoPreProcess()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}},
+\code{\link[=SymbolConvert]{SymbolConvert()}}
 }
 \concept{input_preprocess}

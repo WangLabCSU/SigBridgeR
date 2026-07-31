@@ -151,23 +151,23 @@ result <- DoDEGAS(
 Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med. 2022 Feb 1;14(1):11.
 }
 \seealso{
-Other screen_method: 
-\code{\link{DoLP_SGL}()},
-\code{\link{DoPIPET}()},
-\code{\link{DoSCIPAC}()},
-\code{\link{DoSIDISH}()},
-\code{\link{DoScissor}()},
-\code{\link{DoTiRank}()},
-\code{\link{DoscAB}()},
-\code{\link{DoscPAS}()},
-\code{\link{DoscPP}()}
+Other screen_method:
+\code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoSCIPAC]{DoSCIPAC()}},
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoTiRank]{DoTiRank()}},
+\code{\link[=DoscAB]{DoscAB()}},
+\code{\link[=DoscPAS]{DoscPAS()}},
+\code{\link[=DoscPP]{DoscPP()}}
 
-Other DEGAS: 
-\code{\link{DEGASEnvSet}()},
-\code{\link{DEGASModelDetect}()},
-\code{\link{DEGASParamSet}()},
-\code{\link{TrainDEGASModel}()},
-\code{\link{ValidateDEGASParams}()}
+Other DEGAS:
+\code{\link[=DEGASEnvSet]{DEGASEnvSet()}},
+\code{\link[=DEGASModelDetect]{DEGASModelDetect()}},
+\code{\link[=DEGASParamSet]{DEGASParamSet()}},
+\code{\link[=TrainDEGASModel]{TrainDEGASModel()}},
+\code{\link[=ValidateDEGASParams]{ValidateDEGASParams()}}
 }
 \concept{DEGAS}
 \concept{screen_method}

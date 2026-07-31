@@ -91,10 +91,10 @@ annotated_sce <- SingleRAnnotate(
 }
 }
 \seealso{
-Other Single_Cell_Annotation_Method: 
-\code{\link{CellTypistAnnotate}()},
-\code{\link{RegisterAnnoMethod}()},
+Other Single_Cell_Annotation_Method:
+\code{\link[=CellTypistAnnotate]{CellTypistAnnotate()}},
+\code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
 \code{\link{SCAnnotateStrategy}},
-\code{\link{mLLMCelltypeAnnotate}()}
+\code{\link[=mLLMCelltypeAnnotate]{mLLMCelltypeAnnotate()}}
 }
 \concept{Single_Cell_Annotation_Method}

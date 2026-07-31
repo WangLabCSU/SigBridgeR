@@ -82,14 +82,14 @@ RegisterScreenMethod(
 }
 }
 \seealso{
-Other Add_Screen_method: 
+Other Add_Screen_method:
 \code{\link{ScreenStrategy}},
-\code{\link{TemplateScreenFunc}()},
-\code{\link{ValidateScreenFunc}()}
+\code{\link[=TemplateScreenFunc]{TemplateScreenFunc()}},
+\code{\link[=ValidateScreenFunc]{ValidateScreenFunc()}}
 
-Other Registering: 
-\code{\link{RegisterAnnoMethod}()},
-\code{\link{RegisterSeuratMethod}()}
+Other Registering:
+\code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
+\code{\link[=RegisterSeuratMethod]{RegisterSeuratMethod()}}
 }
 \concept{Add_Screen_method}
 \concept{Registering}

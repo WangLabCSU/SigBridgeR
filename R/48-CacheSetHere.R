@@ -2,37 +2,61 @@
 #'
 #' @description
 #' Resolves a user-specified path to the cache layer directory. In
-#' \code{"save"} mode, the necessary directory structure is created
-#' automatically. In \code{"load"} mode, an existing cache directory is
+#' `"save"` mode, the necessary directory structure is created
+#' automatically. In `"load"` mode, an existing cache directory is
 #' identified.
 #'
-#' @param path Character string. User-specified path.
-#' @param screen_method Character string. Screening method name. Must match
-#'   a key in \code{\link{ScreenStrategy}}.
-#' @param phenotype_class Character string. Phenotype class. One of
-#'   \code{"binary"}, \code{"survival"}, or \code{"continuous"}.
-#' @param mode Character string. Either \code{"load"} (default) or
-#'   \code{"save"}.
-#' @param timestamp Character string. Optional timestamp string for the new
-#'   cache directory in save mode. Defaults to
-#'   \code{format(Sys.time(), "\%Y_\%m_\%d_\%H\%M")}.
-#' @param ... Additional arguments (must be empty).
+#' @details
+#' The function detects which cache layer the given path belongs to:
+#' \itemize{
+#'   \item **Cache layer**: The path directly contains a `cache_config.json`
+#'     file. In save mode this triggers an error (recursive caching is not
+#'     supported); in load mode the path is returned as-is.
+#'   \item **Root layer**: The path's basename matches `{method_name}_res`
+#'     (e.g., `"Scissor_res"`). In save mode a new cache subdirectory is
+#'     created; in load mode [ChooseCache()] is called to select an existing
+#'     cache.
+#'   \item **Parent layer**: The path is a parent directory. A
+#'     `{method_name}_res` subdirectory is created (save) or located (load)
+#'     underneath it.
+#' }
 #'
-#' @return Character string. The absolute path to the cache layer directory.
+#' In save mode, the cache directory is named
+#' `{phenotype_class}_{timestamp}` (e.g.,
+#' `"survival_20250730120000"`).
+#'
+#' @param path `character`. User-specified path to a cache, root, or parent
+#'   directory.
+#' @param cache_config A `ScreenMethodConfig` or `ScreenMethodCache` S7
+#'   object. `method_name` and `phenotype_class` are extracted from this
+#'   object to construct the cache directory path.
+#' @param mode `character`. Either `"load"` or `"save"`. Default: `"load"`.
+#' @param timestamp `character` or `NULL`. Optional timestamp string for the
+#'   new cache directory in save mode. When `NULL`, defaults to
+#'   `format(Sys.time(), "%Y%m%d%H%M%S")`.
+#' @param ... Additional arguments (must be empty, checked by
+#'   `rlang::check_dots_empty0()`).
+#'
+#' @returns A `character` string: the absolute path to the cache directory.
 #'
 #' @family cache_config
 #' @export
 #'
 #' @examples
 #' \dontrun{
+#' config <- ScreenMethodConfig(
+#'   method_name = "Scissor",
+#'   param = list(alpha = 0.05)
+#' )
+#'
 #' # Save: create a new cache under the root
-#' CacheSetHere("Scissor_res", "Scissor", "survival", mode = "save")
+#' CacheSetHere("Scissor_res", config, mode = "save")
 #'
 #' # Load: select an existing cache from the root
-#' CacheSetHere("Scissor_res", "Scissor", "survival", mode = "load")
+#' CacheSetHere("Scissor_res", config, mode = "load")
 #'
 #' # Load: point directly to a specific cache
-#' CacheSetHere("Scissor_res/survival_202512011212", "Scissor", "survival", mode = "load")
+#' CacheSetHere("Scissor_res/survival_207701011212", config, mode = "load")
 #' }
 CacheSetHere <- function(
   path,

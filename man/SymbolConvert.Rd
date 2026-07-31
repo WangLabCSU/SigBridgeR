@@ -29,11 +29,11 @@ Default: \code{"unknown_{k}"}.}
 Preprocess bulk expression data: convert Ensembles version IDs and TCGA version IDs to genes. NA values are replaced with \code{unknown_k} format (k stands for the position of the NA value in the row).
 }
 \seealso{
-Other input_preprocess: 
-\code{\link{BulkPreProcess}()},
-\code{\link{DrawBulkPCA}()},
-\code{\link{PhenoMap}()},
-\code{\link{PhenoPreProcess}()},
-\code{\link{SCPreProcess}()}
+Other input_preprocess:
+\code{\link[=BulkPreProcess]{BulkPreProcess()}},
+\code{\link[=DrawBulkPCA]{DrawBulkPCA()}},
+\code{\link[=PhenoMap]{PhenoMap()}},
+\code{\link[=PhenoPreProcess]{PhenoPreProcess()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}}
 }
 \concept{input_preprocess}

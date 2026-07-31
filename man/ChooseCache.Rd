@@ -7,30 +7,41 @@
 ChooseCache(directory)
 }
 \arguments{
-\item{directory}{Path to the parent directory containing cache
-subdirectories.}
+\item{directory}{\code{character}. Path to the parent directory containing
+cache subdirectories. The directory name must match
+\verb{\{method_name\}_res} for a registered screening method.}
 }
 \value{
-The path to the selected cache directory (character string).
+A \code{character} string: the path to the selected cache directory.
 }
 \description{
 Selects a cache directory from the specified path. If only one cache
 subdirectory exists, it is returned automatically; if multiple are found,
 an interactive menu is presented for the user to choose.
 }
+\details{
+The function expects the parent directory name to follow the convention
+\verb{\{method_name\}_res} (e.g., \code{"Scissor_res"}, \code{"scPAS_res"}). It validates
+the directory name against the registered screening methods in
+\code{ScreenStrategy}.
+
+If no cache subdirectories are found, the function aborts with an error.
+If exactly one subdirectory exists, it is returned without prompting.
+If multiple subdirectories exist, \code{utils::menu()} is used to present an
+interactive selection menu.
+}
 \examples{
-\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 \dontrun{
 cache_path <- ChooseCache("./Scissor_res")
 }
-\dontshow{\}) # examplesIf}
 }
 \seealso{
-Other cache_config: 
-\code{\link{CacheSetHere}()},
-\code{\link{CheckCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCache}()},
-\code{\link{WriteCacheMeta}()}
+Other cache_config:
+\code{\link[=CacheSetHere]{CacheSetHere()}},
+\code{\link[=CacheSysCall]{CacheSysCall()}},
+\code{\link[=CheckCache]{CheckCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCache]{WriteCache()}},
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}
 }
 \concept{cache_config}

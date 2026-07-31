@@ -7,6 +7,8 @@
 \method{as.list}{`SigBridgeR::SigBridgeRBase`}(x, ...)
 }
 \arguments{
+\item{x}{A \code{SigBridgeRBase} object. Basically all SigBridgeR objects.}
+
 \item{...}{Additional arguments passed to the method. Currently unused.}
 }
 \value{
@@ -16,11 +18,11 @@ A named list of properties.
 Converts a \code{SigBridgeRBase} object into a named list of its properties.
 }
 \seealso{
-Other SigBridgeR-S3: 
-\code{\link{as.character.SigBridgeR::SigBridgeRBase}()},
-\code{\link{format.SigBridgeR::SigBridgeRBase}()},
-\code{\link{length.SigBridgeR::SigBridgeRBase}()},
-\code{\link{names.SigBridgeR::SigBridgeRBase}()},
-\code{\link{print.SigBridgeR::SigBridgeRBase}()}
+Other SigBridgeR-S3:
+\code{\link[=as.character.SigBridgeR::SigBridgeRBase]{as.character.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=format.SigBridgeR::SigBridgeRBase]{format.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=length.SigBridgeR::SigBridgeRBase]{length.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=names.SigBridgeR::SigBridgeRBase]{names.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=print.SigBridgeR::SigBridgeRBase]{print.SigBridgeR::SigBridgeRBase()}}
 }
 \concept{SigBridgeR-S3}

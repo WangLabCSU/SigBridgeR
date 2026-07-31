@@ -32,14 +32,14 @@ It also records dimension information before and after filtering for
 traceability.
 }
 \seealso{
-Other single_cell_preprocess: 
-\code{\link{FindRobustElbow}()},
-\code{\link{Pattern2Colname}()},
-\code{\link{QCPatternDetect}()},
-\code{\link{RegisterSeuratMethod}()},
-\code{\link{SCAnnotate}()},
-\code{\link{SCIntegrate}()},
-\code{\link{SCPreProcess}()},
+Other single_cell_preprocess:
+\code{\link[=FindRobustElbow]{FindRobustElbow()}},
+\code{\link[=Pattern2Colname]{Pattern2Colname()}},
+\code{\link[=QCPatternDetect]{QCPatternDetect()}},
+\code{\link[=RegisterSeuratMethod]{RegisterSeuratMethod()}},
+\code{\link[=SCAnnotate]{SCAnnotate()}},
+\code{\link[=SCIntegrate]{SCIntegrate()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}},
 \code{\link{SCPreProcessStrategy}}
 }
 \concept{single_cell_preprocess}

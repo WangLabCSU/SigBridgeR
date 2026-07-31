@@ -16,9 +16,9 @@ back to reading the \code{Version} field from the \code{DESCRIPTION} file in the
 working directory.
 }
 \seealso{
-Other get-pkg-version: 
-\code{\link{py_pkg_version}()},
-\code{\link{r_pkg_version}()}
+Other get-pkg-version:
+\code{\link[=py_pkg_version]{py_pkg_version()}},
+\code{\link[=r_pkg_version]{r_pkg_version()}}
 }
 \concept{get-pkg-version}
 \keyword{internal}

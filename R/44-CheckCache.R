@@ -5,28 +5,69 @@
 #' This function reads a cache metadata JSON file and compares it with the
 #' provided screen method, phenotype class, label type, and parameters.
 #'
-#' @param path Character string specifying the path to the cache directory
-#'   or directly to the `cache_config.json` file.
-#' @param screen_method Character string indicating the screening method used.
-#' @param phenotype_class Character vector specifying the phenotype class type.
-#'   Must be one of `"binary"`, `"survival"`, or `"continuous"`.
-#' @param label_type Character string specifying the label type. Defaults to
-#'   the value of `screen_method`.
-#' @param params List of parameters used for the screening method.
+#' # Methods
+#' `CheckCache` is an S7 generic with methods available for the following
+#' classes:
 #'
-#' @return Returns `invisible(TRUE)` if the cache configuration is consistent
-#'   with the current parameters. Otherwise, aborts with an error message
+#' `r doclisting::methods_list("CheckCache")`
+#'
+#' @details
+#' The function compares each field in the current configuration against the
+#' cached metadata. If any field differs (method name, method version,
+#' phenotype class, label type, or parameters), the function aborts with a
+#' formatted error message showing which parameter differs and both the
+#' provided and actual values.
+#'
+#' @param cache_config A `ScreenMethodConfig` or `ScreenMethodCache` S7
+#'   object containing the current configuration to validate.
+#' @param path `character`. Path to the cache directory or directly to the
+#'   `cache_config.json` file. Required for `ScreenMethodConfig`; derived
+#'   from `cache_config@cache_config_path` for `ScreenMethodCache`.
+#'
+#' @returns Invisible `TRUE` if the cache configuration is consistent with
+#'   the current parameters. Otherwise, aborts with an error message
 #'   displaying the differences.
 #'
 #' @family cache_config
+#' @name CheckCache
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' # Check cache consistency for a ScreenMethodConfig
+#' config <- ScreenMethodConfig(
+#'   method_name = "Scissor",
+#'   param = list(alpha = 0.05)
+#' )
+#' CheckCache(config, path = "cache/cache_config.json")
+#'
+#' # Check using a ScreenMethodCache object
+#' cache <- ScreenMethodCache(
+#'   cache_path = "cache/",
+#'   cache_config_path = "cache/cache_config.json",
+#'   cache_data = list(),
+#'   screen_method_config = config
+#' )
+#' CheckCache(cache)
+#' }
 CheckCache <- new_generic("CheckCache", dispatch_args = "cache_config")
 
-method(
-  CheckCache,
-  ScreenMethodConfig
-) <- CheckCache.ScreenMethodConfig <- function(
+#' @rdname CheckCache
+#' @export
+method(CheckCache, class_any) <- function(
+  cache_config,
+  ...
+) {
+  cls_cache <- class(cache_config)
+  expected_cls <- c("ScreenMethodConfig", "ScreenMethodCache")
+  Abort(
+    "cache_config must be a class of {.cls {expected_cls}}",
+    "Current class is {.cls {cls_cache}}"
+  )
+}
+
+
+CheckCache.ScreenMethodConfig <- function(
   cache_config,
   path
 ) {
@@ -71,7 +112,16 @@ method(
   )
 }
 
+#' @rdname CheckCache
+#' @export
+method(
+  CheckCache,
+  ScreenMethodConfig
+) <- CheckCache.ScreenMethodConfig
 
+
+#' @rdname CheckCache
+#' @export
 method(CheckCache, ScreenMethodCache) <- function(
   cache_config
 ) {

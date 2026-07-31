@@ -1,4 +1,45 @@
-# 同时用作screen result和cache config
+# --------------------------------------------------------------------------------
+
+#' @title ScreenMethodConfig: Screening Method Configuration
+#'
+#' @description
+#' `ScreenMethodConfig` stores the configuration for a phenotype-associated
+#' cell screening method. It is used both to define screening parameters and
+#' as a cache result descriptor.
+#'
+#' @details
+#' This class is defined using the S7 object-oriented system and inherits from
+#' [SigBridgeRBase]. It validates that `method_name` is a registered screening
+#' method in [ScreenStrategy] and that `phenotype_class` is one of the
+#' supported types.
+#'
+#' ## Validator
+#'
+#' The class validator enforces:
+#' \itemize{
+#'   \item `param` must be a non-empty named list.
+#'   \item `phenotype_class` must be one or more of `"binary"`,
+#'     `"continuous"`, `"survival"`.
+#'   \item `method_name` must match a key in [ScreenStrategy].
+#' }
+#'
+#' @param method_name `character`. The name of the screening method (e.g.,
+#'   `"Scissor"`, `"scPAS"`). Must match a key in [ScreenStrategy].
+#' @param param `list`. A named list of parameters passed to the screening
+#'   function. Must be non-empty.
+#' @param method_version `character` or `NULL`. The version of the
+#'   underlying software package. When `NULL`, automatically resolved via
+#'   `r_pkg_version(method_name)`.
+#' @param phenotype_class `character`. The phenotype classification type(s).
+#'   One or more of `"binary"`, `"continuous"`, `"survival"`. Default: all
+#'   three.
+#' @param label_type `character`. The label type for the screening method.
+#'   Default: `character(0L)`.
+#'
+#' @returns A `ScreenMethodConfig` S7 object.
+#'
+#' @family S7-Classes
+#' @export
 ScreenMethodConfig <- new_class(
   name = "ScreenMethodConfig",
   parent = SigBridgeRBase,
@@ -11,21 +52,23 @@ ScreenMethodConfig <- new_class(
   ),
   validator = \(self) {
     if (length(self@params) == 0L) {
-      Abort("@params is empty")
+      return("@params is empty")
     }
 
     valid_phenotype_class <- c("binary", "continuous", "survival")
     if (!self@phenotype_class %chin% valid_phenotype_class) {
-      Abort(
-        "@phenotype_class must be one of {.val {valid_phenotype_class}}, but got {.val {self@phenotype_class}}"
-      )
+      return(cli::cli_fmt(cli::cli_text(
+        "@phenotype_class must be one of {.val {valid_phenotype_class}},\
+         but got {.val {self@phenotype_class}}"
+      )))
     }
 
     valid_method_name <- names(ScreenStrategy)
     if (!self@method_name %chin% valid_method_name) {
-      Abort(
-        "@method_name must be one of {.val {valid_method_name}}, but got {.val {self@method_name}}"
-      )
+      return(cli::cli_fmt(cli::cli_text(
+        "@method_name must be one of {.val {valid_method_name}},\
+         but got {.val {self@method_name}}"
+      )))
     }
   },
   constructor = \(
@@ -46,7 +89,46 @@ ScreenMethodConfig <- new_class(
   }
 )
 
+# --------------------------------------------------------------------------------
 
+#' @title ScreenMethodCache: Screening Method Cache Container
+#'
+#' @description
+#' `ScreenMethodCache` bundles cached screening data with its configuration
+#' and metadata. It serves as the primary container for reading from and
+#' writing to the cache system.
+#'
+#' @details
+#' This class is defined using the S7 object-oriented system and inherits from
+#' [SigBridgeRBase]. It wraps a `ScreenMethodConfig` together with cached data
+#' objects, file paths, and a read-only SigBridgeR version stamp.
+#'
+#' ## Validator
+#'
+#' The class validator checks that:
+#' \itemize{
+#'   \item `cache_path` is an existing directory.
+#'   \item The parent directory of `cache_config_path` exists.
+#'   \item `cache_config_path` ends with `"cache_config.json"`.
+#' }
+#'
+#' @param cache_path `character`. Path to the cache directory where data
+#'   files are stored.
+#' @param cache_config_path `character`. Path to the `cache_config.json`
+#'   metadata file. Must end with `"cache_config.json"`.
+#' @param cache_data `list`. A named list of cached data objects. Can be
+#'   `NULL` or empty (for load-only use).
+#' @param screen_method_config A `ScreenMethodConfig` S7 object containing
+#'   the screening method configuration.
+#'
+#' @prop sigbridger_version `character` (read-only). The SigBridgeR package
+#'   version at the time the cache was created. Automatically set from
+#'   `get_pkg_version()` and cannot be modified by the user.
+#'
+#' @returns A `ScreenMethodCache` S7 object.
+#'
+#' @family S7-Classes
+#' @export
 ScreenMethodCache <- new_class(
   name = "ScreenMethodCache",
   parent = SigBridgeRBase,
@@ -54,7 +136,6 @@ ScreenMethodCache <- new_class(
     cache_path = property_chr,
     cache_config_path = property_chr,
     cache_data = property_data_list, # NULL is OK; stores the data
-    sigbridger_version = property_sigbridger_verison, # chr
     screen_method_config = new_property(class = ScreenMethodConfig)
   ),
   validator = \(self) {
@@ -82,7 +163,6 @@ ScreenMethodCache <- new_class(
       cache_path = cache_path,
       cache_config_path = cache_config_path,
       cache_data = cache_data, # NULL is OK; stores the data
-      sigbridger_version = get_pkg_version(), # chr
       screen_method_config = screen_method_config
     )
   }

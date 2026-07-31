@@ -32,8 +32,8 @@ directly. Concrete subclasses such as \link{ScreenMethod} and \code{AnnotationMe
 provide specific method categories.
 }
 \seealso{
-Other SigBridgeR-Classes: 
-\code{\link{ScreenMethod}()},
-\code{\link{SigBridgeRBase}()}
+Other SigBridgeR-Classes:
+\code{\link[=ScreenMethod]{ScreenMethod()}},
+\code{\link[=SigBridgeRBase]{SigBridgeRBase()}}
 }
 \concept{SigBridgeR-Classes}

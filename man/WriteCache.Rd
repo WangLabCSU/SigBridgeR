@@ -2,37 +2,55 @@
 % Please edit documentation in R/46-WriteCache.R
 \name{WriteCache}
 \alias{WriteCache}
+\alias{WriteCache,any-method}
+\alias{WriteCache,SigBridgeR::ScreenMethodConfig-method}
+\alias{WriteCache,SigBridgeR::ScreenMethodCache-method}
 \title{Write an R Object to Cache}
 \usage{
 WriteCache(cache, ...)
+
+## S7 method for class <any>
+WriteCache(cache, ...)
+
+## S7 method for class <SigBridgeR::ScreenMethodConfig>
+WriteCache(cache, additional_description = NULL, verbose = TRUE, ...)
+
+## S7 method for class <SigBridgeR::ScreenMethodCache>
+WriteCache(
+  cache,
+  format = c("auto", "qs2", "qdata", "rdata", "csv"),
+  max_rows = 1000L,
+  max_cols = 20L,
+  additional_description = NULL,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
-\item{...}{Additional arguments (must be empty, checked by
-\code{check_dots_empty0()}).}
+\item{cache}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7 object
+containing the data and configuration to write.}
 
-\item{x}{An R object to be cached.}
+\item{...}{unused}
 
-\item{file}{Character string. Path to the cache file (with or without
-extension). If no extension is given, it is appended automatically.}
+\item{additional_description}{\code{character} or \code{NULL}. An optional string
+describing the cache entry. Default: \code{NULL}.}
 
-\item{format}{Character string. Cache format. One of \code{"auto"},
-\code{"qs2"}, \code{"rdata"}, or \code{"csv"}. When \code{"auto"}
-(default):
-\itemize{
-\item If \code{x} is a data.frame with at most \code{max_rows} rows
-and \code{max_cols} columns, CSV format is used.
-\item Otherwise, \code{qs2} is preferred when the package is
-installed, falling back to \code{rdata}.
-}}
+\item{verbose}{\code{logical}. Whether to print progress messages.
+Default: \code{TRUE}.}
 
-\item{max_rows}{Integer. Maximum number of rows to consider a data.frame
-"small". Default is \code{1000L}.}
+\item{format}{\code{character}. Cache format for \code{ScreenMethodCache}. One of
+\code{"auto"}, \code{"qs2"}, \code{"qdata"}, \code{"rdata"}, or \code{"csv"}. When \code{"auto"}
+(default), the format is detected per-object.}
 
-\item{max_cols}{Integer. Maximum number of columns to consider a
-data.frame "small". Default is \code{20L}.}
+\item{max_rows}{\code{integer}. Maximum number of rows to consider a
+data.frame "small" for CSV output. Default: \code{1000L}.}
+
+\item{max_cols}{\code{integer}. Maximum number of columns to consider a
+data.frame "small" for CSV output. Default: \code{20L}.}
 }
 \value{
-Invisible. Returns the absolute path to the written cache file.
+Invisible. Returns the absolute path(s) to the written cache
+file(s).
 }
 \description{
 Writes an R object to the cache directory. Uses \code{qs2} for fast
@@ -40,21 +58,58 @@ serialization when available, falling back to \code{rdata} for general
 objects. Small data frames and data.tables are saved as CSV via
 \code{data.table::fwrite()} for easy inspection.
 }
+\details{
+The \code{ScreenMethodCache} method writes both the cache metadata (via
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}) and the cached data objects to disk. The
+\code{ScreenMethodConfig} method only writes the metadata.
+\subsection{Format detection (ScreenMethodCache)}{
+
+When \code{format = "auto"} (default), the format for each data object is
+detected automatically:
+\itemize{
+\item If the object is a 2D structure (data.frame/matrix) with at most
+\code{max_rows} rows and \code{max_cols} columns, CSV format is used.
+\item If \code{qs2} is installed and the object is a list, vector,
+data.frame, or matrix, \code{qdata} format is used.
+\item If \code{qs2} is installed but the object is not qdata-compatible,
+\code{qs2} format is used.
+\item Otherwise, \code{rdata} format is used as a fallback.
+}
+}
+}
+\section{Methods}{
+\code{WriteCache} is an S7 generic with methods available for the following
+classes:
+
+\itemize{
+\item \code{ANY}
+\item \code{SigBridgeR::ScreenMethodCache}
+\item \code{SigBridgeR::ScreenMethodConfig}
+}
+}
+
 \examples{
 \dontrun{
-# Write a matrix as qs2
-WriteCache(cache_res, "Scissor_res/survival_2025_01_01/result.qs2")
+# Write using a ScreenMethodCache
+cache <- ScreenMethodCache(
+  cache_path = "Scissor_res/survival_2025_01_01/",
+  cache_config_path = "Scissor_res/survival_2025_01_01/cache_config.json",
+  cache_data = list(result = my_matrix),
+  screen_method_config = config
+)
+WriteCache(cache)
 
-# Write a small data.frame as CSV
-WriteCache(small_df, "Scissor_res/survival_2025_01_01/feature_table.csv")
+# Force CSV format for small data frames
+WriteCache(cache, format = "csv")
 }
 }
 \seealso{
-Other cache_config: 
-\code{\link{CacheSetHere}()},
-\code{\link{CheckCache}()},
-\code{\link{ChooseCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCacheMeta}()}
+Other cache_config:
+\code{\link[=CacheSetHere]{CacheSetHere()}},
+\code{\link[=CacheSysCall]{CacheSysCall()}},
+\code{\link[=CheckCache]{CheckCache()}},
+\code{\link[=ChooseCache]{ChooseCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}
 }
 \concept{cache_config}

@@ -27,12 +27,12 @@ using bootstrap-aggregated multi-task learning, and optionally persists the
 result to cache.
 }
 \seealso{
-Other DEGAS: 
-\code{\link{DEGASEnvSet}()},
-\code{\link{DEGASModelDetect}()},
-\code{\link{DEGASParamSet}()},
-\code{\link{DoDEGAS}()},
-\code{\link{ValidateDEGASParams}()}
+Other DEGAS:
+\code{\link[=DEGASEnvSet]{DEGASEnvSet()}},
+\code{\link[=DEGASModelDetect]{DEGASModelDetect()}},
+\code{\link[=DEGASParamSet]{DEGASParamSet()}},
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=ValidateDEGASParams]{ValidateDEGASParams()}}
 }
 \concept{DEGAS}
 \keyword{internal}

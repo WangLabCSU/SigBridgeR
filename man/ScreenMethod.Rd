@@ -5,6 +5,7 @@
 \title{ScreenMethod: Screening Method Class for Phenotype-Associated Cell Detection}
 \usage{
 ScreenMethod(
+  sigbridger_version = "4.0.0",
   method_name = character(0),
   method_version = character(0),
   executor = function() NULL,
@@ -47,8 +48,8 @@ It validates that the executor function accepts the required arguments:
 algorithms (e.g., Scissor, scPAS, scPP, TiRank).
 }
 \seealso{
-Other SigBridgeR-Classes: 
-\code{\link{Method}()},
-\code{\link{SigBridgeRBase}()}
+Other SigBridgeR-Classes:
+\code{\link[=Method]{Method()}},
+\code{\link[=SigBridgeRBase]{SigBridgeRBase()}}
 }
 \concept{SigBridgeR-Classes}

@@ -2,27 +2,33 @@
 % Please edit documentation in R/44-CheckCache.R
 \name{CheckCache}
 \alias{CheckCache}
+\alias{CheckCache,any-method}
+\alias{CheckCache,SigBridgeR::ScreenMethodConfig-method}
+\alias{CheckCache,SigBridgeR::ScreenMethodCache-method}
 \title{Check Cache Configuration Consistency}
 \usage{
 CheckCache(cache_config, ...)
+
+## S7 method for class <any>
+CheckCache(cache_config, ...)
+
+## S7 method for class <SigBridgeR::ScreenMethodConfig>
+CheckCache(cache_config, path)
+
+## S7 method for class <SigBridgeR::ScreenMethodCache>
+CheckCache(cache_config)
 }
 \arguments{
-\item{path}{Character string specifying the path to the cache directory
-or directly to the \code{cache_config.json} file.}
+\item{cache_config}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7
+object containing the current configuration to validate.}
 
-\item{screen_method}{Character string indicating the screening method used.}
-
-\item{phenotype_class}{Character vector specifying the phenotype class type.
-Must be one of \code{"binary"}, \code{"survival"}, or \code{"continuous"}.}
-
-\item{label_type}{Character string specifying the label type. Defaults to
-the value of \code{screen_method}.}
-
-\item{params}{List of parameters used for the screening method.}
+\item{path}{\code{character}. Path to the cache directory or directly to the
+\code{cache_config.json} file. Required for \code{ScreenMethodConfig}; derived
+from \code{cache_config@cache_config_path} for \code{ScreenMethodCache}.}
 }
 \value{
-Returns \code{invisible(TRUE)} if the cache configuration is consistent
-with the current parameters. Otherwise, aborts with an error message
+Invisible \code{TRUE} if the cache configuration is consistent with
+the current parameters. Otherwise, aborts with an error message
 displaying the differences.
 }
 \description{
@@ -30,12 +36,50 @@ Validates whether the cached configuration matches the current parameters.
 This function reads a cache metadata JSON file and compares it with the
 provided screen method, phenotype class, label type, and parameters.
 }
+\details{
+The function compares each field in the current configuration against the
+cached metadata. If any field differs (method name, method version,
+phenotype class, label type, or parameters), the function aborts with a
+formatted error message showing which parameter differs and both the
+provided and actual values.
+}
+\section{Methods}{
+\code{CheckCache} is an S7 generic with methods available for the following
+classes:
+
+\itemize{
+\item \code{ANY}
+\item \code{SigBridgeR::ScreenMethodCache}
+\item \code{SigBridgeR::ScreenMethodConfig}
+}
+}
+
+\examples{
+\dontrun{
+# Check cache consistency for a ScreenMethodConfig
+config <- ScreenMethodConfig(
+  method_name = "Scissor",
+  param = list(alpha = 0.05)
+)
+CheckCache(config, path = "cache/cache_config.json")
+
+# Check using a ScreenMethodCache object
+cache <- ScreenMethodCache(
+  cache_path = "cache/",
+  cache_config_path = "cache/cache_config.json",
+  cache_data = list(),
+  screen_method_config = config
+)
+CheckCache(cache)
+}
+}
 \seealso{
-Other cache_config: 
-\code{\link{CacheSetHere}()},
-\code{\link{ChooseCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCache}()},
-\code{\link{WriteCacheMeta}()}
+Other cache_config:
+\code{\link[=CacheSetHere]{CacheSetHere()}},
+\code{\link[=CacheSysCall]{CacheSysCall()}},
+\code{\link[=ChooseCache]{ChooseCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCache]{WriteCache()}},
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}
 }
 \concept{cache_config}

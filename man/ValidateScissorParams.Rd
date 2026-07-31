@@ -39,10 +39,10 @@ Internal helper that handles deprecated argument warnings, input validation,
 dots processing, and default-value resolution for \code{\link[=DoScissor]{DoScissor()}}.
 }
 \seealso{
-Other scissor: 
-\code{\link{DoScissor}()},
-\code{\link{DoScissorCellEval}()},
-\code{\link{DoScissorRelTest}()}
+Other scissor:
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoScissorCellEval]{DoScissorCellEval()}},
+\code{\link[=DoScissorRelTest]{DoScissorRelTest()}}
 }
 \concept{scissor}
 \keyword{internal}

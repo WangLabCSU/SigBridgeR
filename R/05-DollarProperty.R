@@ -4,7 +4,6 @@
 #' @param name The name of the parameter as a character. Partial matching is not performed.
 #'
 #' @name Property-visitor
-#' @export
 NULL
 
 #' @rdname Property-visitor

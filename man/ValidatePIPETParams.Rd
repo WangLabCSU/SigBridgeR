@@ -45,8 +45,8 @@ Internal helper that handles package installation checks, input validation,
 and default-value resolution for \code{\link[=DoPIPET]{DoPIPET()}}.
 }
 \seealso{
-Other PIPET: 
-\code{\link{DoPIPET}()}
+Other PIPET:
+\code{\link[=DoPIPET]{DoPIPET()}}
 }
 \concept{PIPET}
 \keyword{internal}

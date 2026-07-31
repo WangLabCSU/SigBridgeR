@@ -13,25 +13,24 @@ CacheSetHere(
 )
 }
 \arguments{
-\item{path}{Character string. User-specified path.}
+\item{path}{\code{character}. User-specified path to a cache, root, or parent
+directory.}
 
-\item{mode}{Character string. Either \code{"load"} (default) or
-\code{"save"}.}
+\item{cache_config}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7
+object. \code{method_name} and \code{phenotype_class} are extracted from this
+object to construct the cache directory path.}
 
-\item{timestamp}{Character string. Optional timestamp string for the new
-cache directory in save mode. Defaults to
-\code{format(Sys.time(), "\%Y_\%m_\%d_\%H\%M")}.}
+\item{mode}{\code{character}. Either \code{"load"} or \code{"save"}. Default: \code{"load"}.}
 
-\item{...}{Additional arguments (must be empty).}
+\item{timestamp}{\code{character} or \code{NULL}. Optional timestamp string for the
+new cache directory in save mode. When \code{NULL}, defaults to
+\code{format(Sys.time(), "\%Y\%m\%d\%H\%M\%S")}.}
 
-\item{screen_method}{Character string. Screening method name. Must match
-a key in \code{\link{ScreenStrategy}}.}
-
-\item{phenotype_class}{Character string. Phenotype class. One of
-\code{"binary"}, \code{"survival"}, or \code{"continuous"}.}
+\item{...}{Additional arguments (must be empty, checked by
+\code{rlang::check_dots_empty0()}).}
 }
 \value{
-Character string. The absolute path to the cache layer directory.
+A \code{character} string: the absolute path to the cache directory.
 }
 \description{
 Resolves a user-specified path to the cache layer directory. In
@@ -39,24 +38,49 @@ Resolves a user-specified path to the cache layer directory. In
 automatically. In \code{"load"} mode, an existing cache directory is
 identified.
 }
+\details{
+The function detects which cache layer the given path belongs to:
+\itemize{
+\item \strong{Cache layer}: The path directly contains a \code{cache_config.json}
+file. In save mode this triggers an error (recursive caching is not
+supported); in load mode the path is returned as-is.
+\item \strong{Root layer}: The path's basename matches \verb{\{method_name\}_res}
+(e.g., \code{"Scissor_res"}). In save mode a new cache subdirectory is
+created; in load mode \code{\link[=ChooseCache]{ChooseCache()}} is called to select an existing
+cache.
+\item \strong{Parent layer}: The path is a parent directory. A
+\verb{\{method_name\}_res} subdirectory is created (save) or located (load)
+underneath it.
+}
+
+In save mode, the cache directory is named
+\verb{\{phenotype_class\}_\{timestamp\}} (e.g.,
+\code{"survival_20250730120000"}).
+}
 \examples{
 \dontrun{
+config <- ScreenMethodConfig(
+  method_name = "Scissor",
+  param = list(alpha = 0.05)
+)
+
 # Save: create a new cache under the root
-CacheSetHere("Scissor_res", "Scissor", "survival", mode = "save")
+CacheSetHere("Scissor_res", config, mode = "save")
 
 # Load: select an existing cache from the root
-CacheSetHere("Scissor_res", "Scissor", "survival", mode = "load")
+CacheSetHere("Scissor_res", config, mode = "load")
 
 # Load: point directly to a specific cache
-CacheSetHere("Scissor_res/survival_202512011212", "Scissor", "survival", mode = "load")
+CacheSetHere("Scissor_res/survival_207701011212", config, mode = "load")
 }
 }
 \seealso{
-Other cache_config: 
-\code{\link{CheckCache}()},
-\code{\link{ChooseCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCache}()},
-\code{\link{WriteCacheMeta}()}
+Other cache_config:
+\code{\link[=CacheSysCall]{CacheSysCall()}},
+\code{\link[=CheckCache]{CheckCache()}},
+\code{\link[=ChooseCache]{ChooseCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCache]{WriteCache()}},
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}
 }
 \concept{cache_config}

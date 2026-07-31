@@ -1,33 +1,63 @@
 #' @title Write Cache Metadata
 #'
-#' @description Writes metadata for SigBridgeR cache identification to a JSON file.
+#' @description
+#' Writes metadata for SigBridgeR cache identification to a JSON file.
+#' The metadata includes general system information, cache configuration,
+#' and an optional user-provided description.
 #'
-#' @param file Character string. Path to the JSON metadata file to be written.
-#' @param ... Additional arguments (must be empty, checked by `rlang::check_dots_empty0()`).
+#' #' # Methods
+#' `WriteCacheMeta` is an S7 generic with methods available for the following
+#' classes:
 #'
-#' @return Invisible. Returns the metadata list that was written to the file.
+#' `r doclisting::methods_list("WriteCacheMeta")`
 #'
 #' @details
 #' This function creates a JSON metadata file containing:
 #' \describe{
-#'   \item{general}{File path, OS information, timestamp, R version, and SigBridgeR version}
+#'   \item{general}{File path, OS information, timestamp, R version, and
+#'     SigBridgeR version}
 #'   \item{config}{Screen method, phenotype class, label type, and parameters}
 #'   \item{description}{Additional user-provided description}
 #' }
 #'
-#' @details
-#' Only for SigBridgeR version >= 3.7.0
+#' The JSON file includes a header comment indicating it is required for
+#' cache identification and should not be modified.
 #'
+#' Only for SigBridgeR version >= 3.7.0.
 #'
-#' The JSON file includes a header comment indicating it is required for cache identification and should not be modified.
+#' @param cache_config A `ScreenMethodConfig` or `ScreenMethodCache` S7
+#'   object containing the cache configuration to write.
+#' @param file `character`. Path to the JSON metadata file to be written.
+#'   Required for `ScreenMethodConfig`; derived from
+#'   `cache_config@cache_config_path` for `ScreenMethodCache`.
+#' @param additional_description `character` or `NULL`. An optional string
+#'   describing the cache entry. Default: `NULL`.
+#' @param verbose `logical`. Whether to print progress messages.
+#'   Default: `TRUE`.
+#' @param ... Additional arguments (must be empty, checked by
+#'   `rlang::check_dots_empty0()`).
+#'
+#' @returns Invisible. Returns the metadata list that was written to the file.
+#'
+#' @family cache_config
+#' @name WriteCacheMeta
+#' @export
 #'
 #' @examples
 #' \dontrun{
-#' }
-#' @name WriteCacheMeta
-#' @family cache_config
+#' # Write metadata for a ScreenMethodConfig
+#' config <- ScreenMethodConfig(
+#'   method_name = "Scissor",
+#'   param = list(alpha = 0.05)
+#' )
+#' WriteCacheMeta(config, file = "cache/cache_config.json")
 #'
-#' @export
+#' # With an additional description
+#' WriteCacheMeta(config,
+#'   file = "cache/cache_config.json",
+#'   additional_description = "Scissor screening for survival phenotype"
+#' )
+#' }
 WriteCacheMeta <- new_generic(
   name = "WriteCacheMeta",
   dispatch_args = "cache_config"
@@ -47,12 +77,8 @@ method(WriteCacheMeta, class_any) <- function(
   )
 }
 
-#' @rdname WriteCacheMeta
-#' @export
-method(
-  WriteCacheMeta,
-  ScreenMethodConfig
-) <- WriteCacheMeta.ScreenMethodConfig <- function(
+
+WriteCacheMeta.ScreenMethodConfig <- function(
   cache_config,
   file,
   additional_description = NULL,
@@ -99,6 +125,13 @@ method(
 
   invisible(cache_meta)
 }
+
+#' @rdname WriteCacheMeta
+#' @export
+method(
+  WriteCacheMeta,
+  ScreenMethodConfig
+) <- WriteCacheMeta.ScreenMethodConfig
 
 #' @rdname WriteCacheMeta
 #' @export

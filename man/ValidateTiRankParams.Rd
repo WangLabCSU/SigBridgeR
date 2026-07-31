@@ -32,8 +32,8 @@ Internal helper that handles package installation checks, mode resolution,
 and default-value resolution for \code{\link[=DoTiRank]{DoTiRank()}}.
 }
 \seealso{
-Other TiRank: 
-\code{\link{DoTiRank}()}
+Other TiRank:
+\code{\link[=DoTiRank]{DoTiRank()}}
 }
 \concept{TiRank}
 \keyword{internal}

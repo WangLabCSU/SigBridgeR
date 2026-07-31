@@ -1,71 +1,58 @@
 #' @title Unified Registration Interface for Strategy Methods
 #'
 #' @description
-#' A convenience wrapper that dispatches registration requests to the appropriate
-#' strategy-specific registrar based on the target \code{registry}. This function
-#' provides a single entry point for registering screening, preprocessing, or
-#' annotation methods without needing to call \code{RegisterScreenMethod()},
-#' \code{RegisterSeuratMethod()}, or \code{RegisterAnnoMethod()} directly.
+#' Registers screening, preprocessing, or annotation methods into their
+#' respective strategy registries. `Register()` accepts named arguments where
+#' the name becomes the registry key and the value (an S7 object or function)
+#' is dispatched to the appropriate `RegisterImpl` method.
 #'
-#' Internally routes to:
+#' @details
+#' `Register()` iterates over its named `...` arguments, calling
+#' `RegisterImpl()` for each. `RegisterImpl` is an S7 generic that dispatches
+#' based on the class of the value:
 #' \itemize{
-#'   \item \code{registry = "auto"} → \code{detect_registry()}
-#'   \item \code{registry = "ScreenStrategy"} → \code{\link{RegisterScreenMethod}}
-#'   \item \code{registry = "SCPreProcessStrategy"} → \code{\link{RegisterSeuratMethod}}
-#'   \item \code{registry = "SCAnnotateStrategy"} → \code{\link{RegisterAnnoMethod}}
+#'   \item [ScreenMethod] → registered into [ScreenStrategy].
+#'   \item [AnnotationMethod] → registered into [SCAnnotateStrategy].
+#'   \item `function` → validated as a Seurat/SeuratObject function and
+#'     registered into [SCPreProcessStrategy].
 #' }
 #'
-#' @param ... Arguments passed to the underlying registrar. The exact requirements
-#'   depend on the target \code{registry}:
-#'   \describe{
-#'     \item{\code{ScreenStrategy}}{Named functions with optional \code{supported_phenotypes},
-#'       \code{parameter_mapper}, etc. (see \code{\link{RegisterScreenMethod}}).}
-#'     \item{\code{SCPreProcessStrategy}}{Named functions or character specifications
-#'       (e.g., \code{"h" = "Seurat::RunHarmony"}; see \code{\link{RegisterSeuratMethod}}).}
-#'     \item{\code{SCAnnotateStrategy}}{Named annotation functions (see \code{\link{RegisterAnnoMethod}}).}
-#'   }
-#' @param registry Character. Target strategy environment for registration.
-#'   Must be one of: \code{"auto"}, \code{"ScreenStrategy"}, \code{"SCPreProcessStrategy"}, or
-#'   \code{"SCAnnotateStrategy"}. Partial matching is supported (e.g., \code{"screen"} → \code{"ScreenStrategy"}).
-#' @param verbose Logical. Whether to print registration success messages.
-#'   Default: inherits from package option \code{getOption("SigBridgeRUtils.verbose")}.
+#' If the method name already exists in the target registry, the function
+#' aborts unless `overwrite = TRUE`.
 #'
-#' @return Invisibly returns \code{TRUE} on successful registration (via the underlying registrar).
-#' @export
+#' @param ... Named arguments where each name is the registry key and each
+#'   value is an S7 object ([ScreenMethod] or `AnnotationMethod`) or a
+#'   function (for `SCPreProcessStrategy`).
+#' @param overwrite `logical`. Whether to overwrite an existing entry with
+#'   the same name. Default: `FALSE`.
+#' @param verbose `logical`. Whether to print registration success messages.
+#'   Default: `getFuncOption("verbose")`.
+#'
+#' @returns Invisibly `TRUE` on successful registration.
+#'
+#' @seealso
+#'   [ScreenStrategy],
+#'   `SCAnnotateStrategy`,
+#'   `SCPreProcessStrategy`
+#'
 #' @name Register
+#' @export
 #'
 #' @examples
 #' \dontrun{
-#' # Register a screening method for binary/survival phenotypes
-#' Register(
-#'   registry = "ScreenStrategy",
-#'   Scissor = DoScissor,
-#'   supported_phenotypes = c("binary", "survival")
+#' # Register a ScreenMethod
+#' method <- ScreenMethod(
+#'   method_name = "Scissor",
+#'   executor = DoScissor
 #' )
+#' Register(Scissor = method)
 #'
-#' # Register a preprocessing step (e.g., Harmony integration)
-#' Register(
-#'   registry = "SCPreProcessStrategy",
-#'   h = "Seurat::RunHarmony"
-#' )
+#' # Register a Seurat preprocessing function
+#' Register(h = Seurat::RunHarmony)
 #'
-#' # Register an annotation method
-#' Register(
-#'   registry = "SCAnnotateStrategy",
-#'   my_annot = MyCustomAnnotator
-#' )
-#'
-#' # auto detects the target registry
-#' Register(my_annot2 = AnotherAnnotator)
+#' # Register with overwrite
+#' Register(Scissor = method, overwrite = TRUE)
 #' }
-#'
-#' @seealso
-#'   \code{\link{RegisterScreenMethod}},
-#'   \code{\link{RegisterSeuratMethod}},
-#'   \code{\link{RegisterAnnoMethod}},
-#'   \code{\link{SCPreProcessStrategy}}
-#'   \code{\link{SCAnnotateStrategy}}
-#'   \code{\link{ScreenStrategy}}
 Register <- function(
   ...,
   overwrite = FALSE,
@@ -77,12 +64,13 @@ Register <- function(
   })
 }
 
+#' @rdname Register
 RegisterImpl <- new_generic(
   name = "RegisterImpl",
   dispatch_args = "x"
 )
 
-
+#' @rdname Register
 method(generic = RegisterImpl, class_any) <- function(
   x,
   name,
@@ -96,6 +84,7 @@ method(generic = RegisterImpl, class_any) <- function(
   )
 }
 
+#' @rdname Register
 method(generic = RegisterImpl, ScreenMethod) <- function(
   x,
   name = NULL,
@@ -137,6 +126,7 @@ method(generic = RegisterImpl, ScreenMethod) <- function(
   invisible(TRUE)
 }
 
+#' @rdname Register
 method(generic = RegisterImpl, AnnotationMethod) <- function(
   x,
   name,
@@ -169,6 +159,7 @@ method(generic = RegisterImpl, AnnotationMethod) <- function(
   invisible(TRUE)
 }
 
+#' @rdname Register
 method(generic = RegisterImpl, class_function) <- function(
   x,
   name,

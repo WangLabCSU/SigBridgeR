@@ -20,9 +20,9 @@ environment by running \verb{conda list -n <env> <pkg>}. Returns \code{NULL} if 
 package is not found or conda is unavailable.
 }
 \seealso{
-Other get-pkg-version: 
-\code{\link{get_pkg_version}()},
-\code{\link{r_pkg_version}()}
+Other get-pkg-version:
+\code{\link[=get_pkg_version]{get_pkg_version()}},
+\code{\link[=r_pkg_version]{r_pkg_version()}}
 }
 \concept{get-pkg-version}
 \keyword{internal}

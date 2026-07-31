@@ -10,9 +10,9 @@ SIDISHEnvSet(env_params = list(), device = c("cuda", "cpu"))
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \seealso{
-Other SIDISH: 
-\code{\link{DoSIDISH}()},
-\code{\link{ValidateSIDISHParams}()}
+Other SIDISH:
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=ValidateSIDISHParams]{ValidateSIDISHParams()}}
 }
 \concept{SIDISH}
 \keyword{internal}

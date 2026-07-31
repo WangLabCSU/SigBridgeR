@@ -2,43 +2,105 @@
 % Please edit documentation in R/43-WriteCacheMeta.R
 \name{WriteCacheMeta}
 \alias{WriteCacheMeta}
+\alias{WriteCacheMeta,any-method}
+\alias{WriteCacheMeta,SigBridgeR::ScreenMethodConfig-method}
+\alias{WriteCacheMeta,SigBridgeR::ScreenMethodCache-method}
 \title{Write Cache Metadata}
 \usage{
 WriteCacheMeta(cache_config, ...)
+
+## S7 method for class <any>
+WriteCacheMeta(cache_config, ...)
+
+## S7 method for class <SigBridgeR::ScreenMethodConfig>
+WriteCacheMeta(
+  cache_config,
+  file,
+  additional_description = NULL,
+  verbose = TRUE,
+  ...
+)
+
+## S7 method for class <SigBridgeR::ScreenMethodCache>
+WriteCacheMeta(
+  cache_config,
+  additional_description = NULL,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
-\item{...}{Additional arguments (must be empty, checked by \code{rlang::check_dots_empty0()}).}
+\item{cache_config}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7
+object containing the cache configuration to write.}
 
-\item{file}{Character string. Path to the JSON metadata file to be written.}
+\item{...}{Additional arguments (must be empty, checked by
+\code{rlang::check_dots_empty0()}).}
+
+\item{file}{\code{character}. Path to the JSON metadata file to be written.
+Required for \code{ScreenMethodConfig}; derived from
+\code{cache_config@cache_config_path} for \code{ScreenMethodCache}.}
+
+\item{additional_description}{\code{character} or \code{NULL}. An optional string
+describing the cache entry. Default: \code{NULL}.}
+
+\item{verbose}{\code{logical}. Whether to print progress messages.
+Default: \code{TRUE}.}
 }
 \value{
 Invisible. Returns the metadata list that was written to the file.
 }
 \description{
 Writes metadata for SigBridgeR cache identification to a JSON file.
+The metadata includes general system information, cache configuration,
+and an optional user-provided description.
+
+#' # Methods
+\code{WriteCacheMeta} is an S7 generic with methods available for the following
+classes:
+
+\itemize{
+\item \code{ANY}
+\item \code{SigBridgeR::ScreenMethodCache}
+\item \code{SigBridgeR::ScreenMethodConfig}
+}
 }
 \details{
 This function creates a JSON metadata file containing:
 \describe{
-\item{general}{File path, OS information, timestamp, R version, and SigBridgeR version}
+\item{general}{File path, OS information, timestamp, R version, and
+SigBridgeR version}
 \item{config}{Screen method, phenotype class, label type, and parameters}
 \item{description}{Additional user-provided description}
 }
 
-Only for SigBridgeR version >= 3.7.0
+The JSON file includes a header comment indicating it is required for
+cache identification and should not be modified.
 
-The JSON file includes a header comment indicating it is required for cache identification and should not be modified.
+Only for SigBridgeR version >= 3.7.0.
 }
 \examples{
 \dontrun{
+# Write metadata for a ScreenMethodConfig
+config <- ScreenMethodConfig(
+  method_name = "Scissor",
+  param = list(alpha = 0.05)
+)
+WriteCacheMeta(config, file = "cache/cache_config.json")
+
+# With an additional description
+WriteCacheMeta(config,
+  file = "cache/cache_config.json",
+  additional_description = "Scissor screening for survival phenotype"
+)
 }
 }
 \seealso{
-Other cache_config: 
-\code{\link{CacheSetHere}()},
-\code{\link{CheckCache}()},
-\code{\link{ChooseCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCache}()}
+Other cache_config:
+\code{\link[=CacheSetHere]{CacheSetHere()}},
+\code{\link[=CacheSysCall]{CacheSysCall()}},
+\code{\link[=CheckCache]{CheckCache()}},
+\code{\link[=ChooseCache]{ChooseCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCache]{WriteCache()}}
 }
 \concept{cache_config}

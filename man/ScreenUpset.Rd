@@ -84,7 +84,7 @@ result <- ScreenUpset(
 
 }
 \seealso{
-Other visualization_function: 
-\code{\link{ScreenFractionPlot}()}
+Other visualization_function:
+\code{\link[=ScreenFractionPlot]{ScreenFractionPlot()}}
 }
 \concept{visualization_function}

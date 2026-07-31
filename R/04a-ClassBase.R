@@ -8,9 +8,6 @@
 #'
 #' @name SigBridgeR-properties
 #' @rdname SigBridgeR-properties
-#' @aliases property_sigbridger_verison property_chr property_phenotype_class
-#'   property_fn property_list property_mapper_fn property_py_env
-#'   property_data_list property_seurat
 #' @docType data
 NULL
 
@@ -24,13 +21,8 @@ NULL
 #' The default value is obtained from `get_pkg_version()`.
 property_sigbridger_verison <- new_property(
   class = class_character,
-  setter = function(self, value) {
-    Abort(
-      "Package version is {.field read-only}."
-    )
-  },
   validator = \(value) {
-    if (!grepl(pattern = "\\.", x)) {
+    if (!grepl(pattern = "\\.", value)) {
       "Package version does not contain a dot."
     }
   },
@@ -190,5 +182,6 @@ property_seurat <- new_property(
 #' @export
 SigBridgeRBase <- new_class(
   name = "SigBridgeRBase",
+  properties = list(sigbridger_version = property_sigbridger_verison),
   abstract = TRUE
 )

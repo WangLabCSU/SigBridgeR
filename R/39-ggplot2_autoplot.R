@@ -2,7 +2,11 @@
 ##' @export
 ggplot2::autoplot
 
-#' autoplot method for Seurat UMAP
+#' autoplot  method for Seurat UMAP
+#'
+#' @description
+#' A ggplot2 autoplot method for class ScreenMethodResult
+#'
 #'
 #' @param object Seurat object
 #' @param group.by Metadata column used for grouping/coloring
@@ -14,7 +18,7 @@ ggplot2::autoplot
 #' @param save_path If not NULL, save plot to this path
 #' @param width Figure width
 #' @param height Figure height
-#' @param ...
+#' @param ... Other arguments passed to [Seurat::DimPlot]
 #'
 #' @return ggplot object
 #' @export

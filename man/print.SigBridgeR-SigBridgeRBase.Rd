@@ -23,11 +23,11 @@ unordered list, with slot names in regular blue and each value preceded by
 its type.
 }
 \seealso{
-Other SigBridgeR-S3: 
-\code{\link{as.character.SigBridgeR::SigBridgeRBase}()},
-\code{\link{as.list.SigBridgeR::SigBridgeRBase}()},
-\code{\link{format.SigBridgeR::SigBridgeRBase}()},
-\code{\link{length.SigBridgeR::SigBridgeRBase}()},
-\code{\link{names.SigBridgeR::SigBridgeRBase}()}
+Other SigBridgeR-S3:
+\code{\link[=as.character.SigBridgeR::SigBridgeRBase]{as.character.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=as.list.SigBridgeR::SigBridgeRBase]{as.list.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=format.SigBridgeR::SigBridgeRBase]{format.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=length.SigBridgeR::SigBridgeRBase]{length.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=names.SigBridgeR::SigBridgeRBase]{names.SigBridgeR::SigBridgeRBase()}}
 }
 \concept{SigBridgeR-S3}

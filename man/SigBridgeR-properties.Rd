@@ -110,4 +110,3 @@ property_phenotype_class@validator(c("binary", "survival"))
 \seealso{
 \link[SeuratObject:Seurat-class]{SeuratObject::Seurat}
 }
-\keyword{datasets}

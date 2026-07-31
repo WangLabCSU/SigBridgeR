@@ -34,10 +34,10 @@ Evaluates the significance of Scissor-identified cells using benchmark data
 and bootstrap resampling.
 }
 \seealso{
-Other scissor: 
-\code{\link{DoScissor}()},
-\code{\link{DoScissorRelTest}()},
-\code{\link{ValidateScissorParams}()}
+Other scissor:
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoScissorRelTest]{DoScissorRelTest()}},
+\code{\link[=ValidateScissorParams]{ValidateScissorParams()}}
 }
 \concept{scissor}
 \keyword{internal}

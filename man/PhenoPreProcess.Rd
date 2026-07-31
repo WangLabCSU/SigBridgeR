@@ -139,11 +139,11 @@ result <- PhenoPreProcess(
 \seealso{
 \code{\link[=PhenoMap]{PhenoMap()}}
 
-Other input_preprocess: 
-\code{\link{BulkPreProcess}()},
-\code{\link{DrawBulkPCA}()},
-\code{\link{PhenoMap}()},
-\code{\link{SCPreProcess}()},
-\code{\link{SymbolConvert}()}
+Other input_preprocess:
+\code{\link[=BulkPreProcess]{BulkPreProcess()}},
+\code{\link[=DrawBulkPCA]{DrawBulkPCA()}},
+\code{\link[=PhenoMap]{PhenoMap()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}},
+\code{\link[=SymbolConvert]{SymbolConvert()}}
 }
 \concept{input_preprocess}

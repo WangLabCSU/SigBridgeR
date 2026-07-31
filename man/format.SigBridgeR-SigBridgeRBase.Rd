@@ -7,6 +7,8 @@
 \method{format}{`SigBridgeR::SigBridgeRBase`}(x, ...)
 }
 \arguments{
+\item{x}{A \code{SigBridgeRBase} object. Basically all SigBridgeR objects.}
+
 \item{...}{Additional arguments passed to the format method. Currently unused.}
 }
 \value{
@@ -22,11 +24,11 @@ The first line is displayed as \verb{<Class: name version>} when the object has
 and its value on the same line. Property types are not shown.
 }
 \seealso{
-Other SigBridgeR-S3: 
-\code{\link{as.character.SigBridgeR::SigBridgeRBase}()},
-\code{\link{as.list.SigBridgeR::SigBridgeRBase}()},
-\code{\link{length.SigBridgeR::SigBridgeRBase}()},
-\code{\link{names.SigBridgeR::SigBridgeRBase}()},
-\code{\link{print.SigBridgeR::SigBridgeRBase}()}
+Other SigBridgeR-S3:
+\code{\link[=as.character.SigBridgeR::SigBridgeRBase]{as.character.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=as.list.SigBridgeR::SigBridgeRBase]{as.list.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=length.SigBridgeR::SigBridgeRBase]{length.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=names.SigBridgeR::SigBridgeRBase]{names.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=print.SigBridgeR::SigBridgeRBase]{print.SigBridgeR::SigBridgeRBase()}}
 }
 \concept{SigBridgeR-S3}

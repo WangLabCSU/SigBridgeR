@@ -10,11 +10,11 @@ DEGASParamSet(user_list)
 Set Default Parameter Values for DEGAS
 }
 \seealso{
-Other DEGAS: 
-\code{\link{DEGASEnvSet}()},
-\code{\link{DEGASModelDetect}()},
-\code{\link{DoDEGAS}()},
-\code{\link{TrainDEGASModel}()},
-\code{\link{ValidateDEGASParams}()}
+Other DEGAS:
+\code{\link[=DEGASEnvSet]{DEGASEnvSet()}},
+\code{\link[=DEGASModelDetect]{DEGASModelDetect()}},
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=TrainDEGASModel]{TrainDEGASModel()}},
+\code{\link[=ValidateDEGASParams]{ValidateDEGASParams()}}
 }
 \concept{DEGAS}

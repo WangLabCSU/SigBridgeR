@@ -2,9 +2,26 @@
 % Please edit documentation in R/99-deprecated_BulkPreProcess.R
 \name{BulkPreProcess}
 \alias{BulkPreProcess}
+\alias{BulkPreProcess,any-method}
 \title{Bulk RNA-seq Data Preprocessing and Quality Control Function}
 \usage{
 BulkPreProcess(data, ...)
+
+## S7 method for class <any>
+BulkPreProcess(
+  data,
+  sample_info = NULL,
+  gene_symbol_conversion = FALSE,
+  check = TRUE,
+  min_count_threshold = 10L,
+  min_gene_expressed = 3L,
+  min_total_reads = 1000000L,
+  min_genes_detected = 10000L,
+  min_correlation = 0.8,
+  n_top_genes = 500L,
+  show_plot_results = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Expression matrix with genes as rows and samples as columns, or a list containing count_matrix and sample_info}
@@ -106,11 +123,11 @@ Samples are retained if:
 \code{\link[stats]{cor}} for correlation analysis,
 \code{\link[SigBridgeR]{SymbolConvert}} for gene symbol conversion
 
-Other input_preprocess: 
-\code{\link{DrawBulkPCA}()},
-\code{\link{PhenoMap}()},
-\code{\link{PhenoPreProcess}()},
-\code{\link{SCPreProcess}()},
-\code{\link{SymbolConvert}()}
+Other input_preprocess:
+\code{\link[=DrawBulkPCA]{DrawBulkPCA()}},
+\code{\link[=PhenoMap]{PhenoMap()}},
+\code{\link[=PhenoPreProcess]{PhenoPreProcess()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}},
+\code{\link[=SymbolConvert]{SymbolConvert()}}
 }
 \concept{input_preprocess}

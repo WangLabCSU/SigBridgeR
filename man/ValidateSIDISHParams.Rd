@@ -28,9 +28,9 @@ Internal helper that handles package installation checks, input validation,
 deprecated argument warnings, and default-value resolution for \code{\link[=DoSIDISH]{DoSIDISH()}}.
 }
 \seealso{
-Other SIDISH: 
-\code{\link{DoSIDISH}()},
-\code{\link{SIDISHEnvSet}()}
+Other SIDISH:
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=SIDISHEnvSet]{SIDISHEnvSet()}}
 }
 \concept{SIDISH}
 \keyword{internal}

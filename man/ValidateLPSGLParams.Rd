@@ -34,8 +34,8 @@ Internal helper that handles package installation checks, deprecated argument
 warnings, input validation, and default-value resolution for \code{\link[=DoLP_SGL]{DoLP_SGL()}}.
 }
 \seealso{
-Other LP_SGL: 
-\code{\link{DoLP_SGL}()}
+Other LP_SGL:
+\code{\link[=DoLP_SGL]{DoLP_SGL()}}
 }
 \concept{LP_SGL}
 \keyword{internal}

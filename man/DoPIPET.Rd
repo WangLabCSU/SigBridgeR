@@ -33,13 +33,17 @@ Column names must match \code{phenotype} identifiers.}
 \item{sc_data}{Seurat object containing single-cell RNA-seq data.}
 
 \item{phenotype}{Clinical outcome data. Can be:
-- Vector: named with sample IDs
-- Data frame: with row names matching bulk columns}
+\itemize{
+\item Vector: named with sample IDs
+\item Data frame: with row names matching bulk columns
+}}
 
 \item{phenotype_class}{Analysis mode:
-- \code{"binary"}: Case-control design (e.g., responder/non-responder)
-- \code{"continuous"}: Continuous outcome (e.g., age, size)
-- \code{"survival"}: Patient survival}
+\itemize{
+\item \code{"binary"}: Case-control design (e.g., responder/non-responder)
+\item \code{"continuous"}: Continuous outcome (e.g., age, size)
+\item \code{"survival"}: Patient survival
+}}
 
 \item{only_pos_marker}{A logical value. If \code{TRUE}, only upregulated marker genes
 (those with positive log2 fold change) will be retained. If \code{FALSE} (default),
@@ -91,19 +95,19 @@ This function implements a template-based classification approach with permutati
 testing for significance assessment.
 }
 \seealso{
-Other screen_method: 
-\code{\link{DoDEGAS}()},
-\code{\link{DoLP_SGL}()},
-\code{\link{DoSCIPAC}()},
-\code{\link{DoSIDISH}()},
-\code{\link{DoScissor}()},
-\code{\link{DoTiRank}()},
-\code{\link{DoscAB}()},
-\code{\link{DoscPAS}()},
-\code{\link{DoscPP}()}
+Other screen_method:
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoSCIPAC]{DoSCIPAC()}},
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoTiRank]{DoTiRank()}},
+\code{\link[=DoscAB]{DoscAB()}},
+\code{\link[=DoscPAS]{DoscPAS()}},
+\code{\link[=DoscPP]{DoscPP()}}
 
-Other PIPET: 
-\code{\link{ValidatePIPETParams}()}
+Other PIPET:
+\code{\link[=ValidatePIPETParams]{ValidatePIPETParams()}}
 }
 \concept{PIPET}
 \concept{screen_method}

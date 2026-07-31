@@ -135,22 +135,22 @@ obj_ad <- SCPreProcess(
 
 }
 \seealso{
-Other single_cell_preprocess: 
-\code{\link{FilterTumorCell}()},
-\code{\link{FindRobustElbow}()},
-\code{\link{Pattern2Colname}()},
-\code{\link{QCPatternDetect}()},
-\code{\link{RegisterSeuratMethod}()},
-\code{\link{SCAnnotate}()},
-\code{\link{SCIntegrate}()},
+Other single_cell_preprocess:
+\code{\link[=FilterTumorCell]{FilterTumorCell()}},
+\code{\link[=FindRobustElbow]{FindRobustElbow()}},
+\code{\link[=Pattern2Colname]{Pattern2Colname()}},
+\code{\link[=QCPatternDetect]{QCPatternDetect()}},
+\code{\link[=RegisterSeuratMethod]{RegisterSeuratMethod()}},
+\code{\link[=SCAnnotate]{SCAnnotate()}},
+\code{\link[=SCIntegrate]{SCIntegrate()}},
 \code{\link{SCPreProcessStrategy}}
 
-Other input_preprocess: 
-\code{\link{BulkPreProcess}()},
-\code{\link{DrawBulkPCA}()},
-\code{\link{PhenoMap}()},
-\code{\link{PhenoPreProcess}()},
-\code{\link{SymbolConvert}()}
+Other input_preprocess:
+\code{\link[=BulkPreProcess]{BulkPreProcess()}},
+\code{\link[=DrawBulkPCA]{DrawBulkPCA()}},
+\code{\link[=PhenoMap]{PhenoMap()}},
+\code{\link[=PhenoPreProcess]{PhenoPreProcess()}},
+\code{\link[=SymbolConvert]{SymbolConvert()}}
 }
 \concept{input_preprocess}
 \concept{single_cell_preprocess}

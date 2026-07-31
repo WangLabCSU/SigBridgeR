@@ -36,8 +36,8 @@ Internal helper that handles package installation checks, input validation,
 and default-value resolution for \code{\link[=DoscAB]{DoscAB()}}.
 }
 \seealso{
-Other scAB: 
-\code{\link{DoscAB}()}
+Other scAB:
+\code{\link[=DoscAB]{DoscAB()}}
 }
 \concept{scAB}
 \keyword{internal}
