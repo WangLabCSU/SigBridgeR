@@ -59,11 +59,10 @@ We encourage contributions to extend SigBridgeR's functionality. The main areas 
 | Area | Description |
 |------|-------------|
 | **New screening methods** | Register custom phenotype-associated cell screening algorithms via the extensible registry system. |
-| **New preprocessing steps** | Register custom Seurat preprocessing functions. |
 | **New annotation methods** | Register custom cell-type annotation algorithms. |
 | **Bug fixes & optimizations** | Fix issues or improve performance of existing code. |
 
-For detailed instructions on how to implement and register custom algorithms — including format requirements, validation, and registration — please refer to the [Extending SigBridgeR](https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html) vignette (`vignettes/Extending.Rmd`).
+For detailed instructions on how to implement and register custom algorithms — including format requirements, validation, and registration — please refer to the [Extending SigBridgeR: A Guide for Custom Extensions](https://wanglabcsu.github.io/SigBridgeR/articles/Extending_ScreenMethod.html) vignette (`vignettes/Extending.Rmd`).
 
 ## Development Setup
 
@@ -77,11 +76,27 @@ For detailed instructions on how to implement and register custom algorithms —
 2. **Install development dependencies** (recommended):
 
    code formatting: [air](https://github.com/posit-dev/air)   
+   lints for R (choose one): 
+      - [flir](https://github.com/etiennebacher/flir)
+      - [lintr](https://github.com/r-lib/lintr)
+      - [jarl](https://github.com/etiennebacher/jarl)
+  
+   install R code tools:
+
+   ```r
+   pak::pak(c(
+      "tictoc",
+      "codetools",
+      "lintr",
+      "rstudioapi"
+   ))
+   ```
+
 
 3. **Load the package** in your R session:
 
    ```r
-   devtools::load_all()
+   devtools::document()
    ```
 
 4. **Checking** everything is working:
@@ -117,7 +132,7 @@ For detailed instructions on how to implement and register custom algorithms —
 
 - **Issues:** Use [GitHub Issues](https://github.com/WangLabCSU/SigBridgeR/issues) for bug reports and feature requests.
 - **Discussions:** Use [GitHub Discussions](https://github.com/WangLabCSU/SigBridgeR/discussions) for questions and general help.
-- **Vignette:** See the [Extending SigBridgeR](https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html) vignette for detailed implementation guidance.
+- **Vignette:** See the [Extending SigBridgeR](https://wanglabcsu.github.io/SigBridgeR/) vignette for detailed implementation guidance.
 
 ---
 

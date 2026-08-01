@@ -43,10 +43,12 @@ SCPreProcessStrategy <- new_environment(
     s = Seurat::ScaleData,
     p = function(...) {
       dots <- rlang::list2(...)
-      if (dots$features == "all") {
+      if (is.null(dots$features)) {
+        return(Seurat::RunPCA(...))
+      } else if (dots$features == "all") {
         dots$features <- rownames(dots[[1]])
       }
-      rlang::exec(Seurat::RunPCA, !!!dots)
+      do.call(Seurat::RunPCA, dots)
     },
     c = Seurat::FindClusters,
     e = Seurat::FindNeighbors,

@@ -29,6 +29,7 @@ Other SigBridgeR-S3:
 \code{\link[=as.list.SigBridgeR::SigBridgeRBase]{as.list.SigBridgeR::SigBridgeRBase()}},
 \code{\link[=length.SigBridgeR::SigBridgeRBase]{length.SigBridgeR::SigBridgeRBase()}},
 \code{\link[=names.SigBridgeR::SigBridgeRBase]{names.SigBridgeR::SigBridgeRBase()}},
+\code{\link[=names<-.SigBridgeR::SigBridgeRBase]{names<-.SigBridgeR::SigBridgeRBase()}},
 \code{\link[=print.SigBridgeR::SigBridgeRBase]{print.SigBridgeR::SigBridgeRBase()}}
 }
 \concept{SigBridgeR-S3}

@@ -1,4 +1,5 @@
 # ? Package Description
+# nocov start
 
 #' @title SigBridgeR: Integrative Framework and Toolkit for Single-Cell Screening of Phenotype-Associated Cells
 #'
@@ -54,5 +55,5 @@ rd_authors <- function() {
     character(1)
   )
 
-  paste(lines, collapse = "\n#' ")
+  paste(lines, collapse = "\n")
 }

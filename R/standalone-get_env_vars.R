@@ -76,7 +76,7 @@ get_env_vars <- function(
 ) {
   vars <- ls(envir = env, all.names = all.names)
   vars <- setdiff(vars, exclude)
-  setNames(mget(vars, envir = env, inherits = FALSE), vars)
+  stats::setNames(mget(vars, envir = env, inherits = FALSE), vars)
 }
 
 # nocov end

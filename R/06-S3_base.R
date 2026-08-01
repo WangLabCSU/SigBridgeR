@@ -93,6 +93,24 @@
   prop_names(x)
 }
 
+#' Names of Properties in a SigBridgeR Object
+#'
+#' @description
+#' Returns the names of all properties (slots) stored in a `SigBridgeRBase`
+#' object.
+#'
+#' @param x A `SigBridgeRBase` object. Basically all SigBridgeR objects.
+#' @param value A character vector of property names.
+#'
+#' @return A character vector of property names.
+#'
+#' @family SigBridgeR-S3
+#' @export
+#' @rawNamespace S3method(`names<-`,"SigBridgeR::SigBridgeRBase")
+`names<-.SigBridgeR::SigBridgeRBase` <- function(x, value) {
+  Abort("Modification is restricted", "Please reconstruct a new object")
+}
+
 #' Format a SigBridgeR base object
 #'
 #' Format a `SigBridgeRBase` object as a compact character vector.

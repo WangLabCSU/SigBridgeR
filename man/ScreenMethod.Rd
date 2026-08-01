@@ -7,13 +7,15 @@
 ScreenMethod(
   sigbridger_version = "4.0.0",
   method_name = character(0),
-  method_version = character(0),
+  method_version = NULL,
   executor = function() NULL,
   phenotype_class = c("binary", "continuous", "survival"),
   mapper = NULL
 )
 }
 \arguments{
+\item{sigbridger_version}{Package Version of SigBridgeR}
+
 \item{method_name}{\code{character}. (Inherited from \link{Method}) A string
 identifying the screening method.}
 

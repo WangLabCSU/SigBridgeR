@@ -274,11 +274,11 @@ DoscPP <- function(
       return(NULL)
     }
 
-    gene_list <- if (is.null(p$load_cache)) {
+    gene_list <- if (is.null(p$save_cache)) {
       # avoid saving cache when loading cache
       cache <- ScreenMethodCache(
-        cache_path = save_cache,
-        cache_config_path = file.path(save_cache, "cache_config.json"),
+        cache_path = p$save_cache,
+        cache_config_path = file.path(p$save_cache, "cache_config.json"),
         cache_data = list(phenotype = phenotype, gene_list = gene_list), # NULL is OK; stores the data
         screen_method_config = new_property(class = ScreenMethodConfig)
       )

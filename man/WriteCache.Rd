@@ -30,23 +30,15 @@ WriteCache(
 \item{cache}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7 object
 containing the data and configuration to write.}
 
-\item{...}{unused}
-
-\item{additional_description}{\code{character} or \code{NULL}. An optional string
-describing the cache entry. Default: \code{NULL}.}
-
-\item{verbose}{\code{logical}. Whether to print progress messages.
-Default: \code{TRUE}.}
-
-\item{format}{\code{character}. Cache format for \code{ScreenMethodCache}. One of
-\code{"auto"}, \code{"qs2"}, \code{"qdata"}, \code{"rdata"}, or \code{"csv"}. When \code{"auto"}
-(default), the format is detected per-object.}
-
-\item{max_rows}{\code{integer}. Maximum number of rows to consider a
-data.frame "small" for CSV output. Default: \code{1000L}.}
-
-\item{max_cols}{\code{integer}. Maximum number of columns to consider a
-data.frame "small" for CSV output. Default: \code{20L}.}
+\item{...}{Additional arguments:
+\itemize{
+\item \code{format}: \code{character}. Cache format for \code{ScreenMethodCache}.
+One of\code{"auto"}, \code{"qs2"}, \code{"qdata"}, \code{"rdata"}, or \code{"csv"}. When \code{"auto"} (default), the format is detected per-object.
+\item \code{max_rows}: \code{integer}. Maximum number of rows to consider a data.frame "small" for CSV output. Default: \code{1000L}.
+\item \code{max_cols}: \code{integer}. Maximum number of columns to consider a data.frame "small" for CSV output. Default: \code{20L}.
+\item \code{additional_description}: \code{character} or \code{NULL}. An optional string describing the cache entry. Default: \code{NULL}.
+\item \code{verbose}: \code{logical}. Whether to print progress messages. Default: \code{TRUE}.
+}}
 }
 \value{
 Invisible. Returns the absolute path(s) to the written cache

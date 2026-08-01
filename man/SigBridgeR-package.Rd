@@ -42,7 +42,7 @@ Useful links:
 }
 \author{
 Yuxi Yang \email{15364051195@163.com} (ORCID: 0009-0006-1329-1224)
-#' Shixiang Wang \email{shixiang1994wang@gmail.com} (ORCID: 0000-0001-9855-7357)
-#' Zeyu Yan \email{3191647388@qq.com}
+Shixiang Wang \email{shixiang1994wang@gmail.com} (ORCID: 0000-0001-9855-7357)
+Zeyu Yan \email{3191647388@qq.com}
 }
 \keyword{internal}

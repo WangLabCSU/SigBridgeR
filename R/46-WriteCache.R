@@ -33,18 +33,13 @@
 #'
 #' @param cache A `ScreenMethodConfig` or `ScreenMethodCache` S7 object
 #'   containing the data and configuration to write.
-#' @param format `character`. Cache format for `ScreenMethodCache`. One of
-#'   `"auto"`, `"qs2"`, `"qdata"`, `"rdata"`, or `"csv"`. When `"auto"`
-#'   (default), the format is detected per-object.
-#' @param max_rows `integer`. Maximum number of rows to consider a
-#'   data.frame "small" for CSV output. Default: `1000L`.
-#' @param max_cols `integer`. Maximum number of columns to consider a
-#'   data.frame "small" for CSV output. Default: `20L`.
-#' @param additional_description `character` or `NULL`. An optional string
-#'   describing the cache entry. Default: `NULL`.
-#' @param verbose `logical`. Whether to print progress messages.
-#'   Default: `TRUE`.
-#' @param ... unused
+#' @param ... Additional arguments:
+#'   - `format`: `character`. Cache format for `ScreenMethodCache`.
+#'        One of`"auto"`, `"qs2"`, `"qdata"`, `"rdata"`, or `"csv"`. When `"auto"` (default), the format is detected per-object.
+#'   - `max_rows`: `integer`. Maximum number of rows to consider a data.frame "small" for CSV output. Default: `1000L`.
+#'   - `max_cols`: `integer`. Maximum number of columns to consider a data.frame "small" for CSV output. Default: `20L`.
+#'   - `additional_description`: `character` or `NULL`. An optional string describing the cache entry. Default: `NULL`.
+#'   - `verbose`: `logical`. Whether to print progress messages. Default: `TRUE`.
 #'
 #' @returns Invisible. Returns the absolute path(s) to the written cache
 #'   file(s).

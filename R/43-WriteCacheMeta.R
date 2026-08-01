@@ -27,15 +27,10 @@
 #'
 #' @param cache_config A `ScreenMethodConfig` or `ScreenMethodCache` S7
 #'   object containing the cache configuration to write.
-#' @param file `character`. Path to the JSON metadata file to be written.
-#'   Required for `ScreenMethodConfig`; derived from
-#'   `cache_config@cache_config_path` for `ScreenMethodCache`.
-#' @param additional_description `character` or `NULL`. An optional string
-#'   describing the cache entry. Default: `NULL`.
-#' @param verbose `logical`. Whether to print progress messages.
-#'   Default: `TRUE`.
-#' @param ... Additional arguments (must be empty, checked by
-#'   `rlang::check_dots_empty0()`).
+#' @param ... Additional arguments:
+#'   - `file`: `character`. Path to the JSON metadata file to be written. Required for `ScreenMethodConfig`; derived from `cache_config@cache_config_path` for `ScreenMethodCache`.
+#'   - `additional_description`: `character` or `NULL`. An optional string describing the cache entry. Default: `NULL`.
+#'   - `verbose`: `logical`. Whether to print progress messages. Default: `TRUE`.
 #'
 #' @returns Invisible. Returns the metadata list that was written to the file.
 #'

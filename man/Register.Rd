@@ -2,33 +2,9 @@
 % Please edit documentation in R/60-Register.R
 \name{Register}
 \alias{Register}
-\alias{RegisterImpl}
-\alias{RegisterImpl,any-method}
-\alias{RegisterImpl,SigBridgeR::ScreenMethod-method}
-\alias{RegisterImpl,SigBridgeR::AnnotationMethod-method}
-\alias{RegisterImpl,function-method}
 \title{Unified Registration Interface for Strategy Methods}
 \usage{
 Register(..., overwrite = FALSE, verbose = getFuncOption("verbose"))
-
-RegisterImpl(x, ...)
-
-## S7 method for class <any>
-RegisterImpl(x, name, ...)
-
-## S7 method for class <SigBridgeR::ScreenMethod>
-RegisterImpl(
-  x,
-  name = NULL,
-  overwrite = FALSE,
-  verbose = getFuncOption("verbose")
-)
-
-## S7 method for class <SigBridgeR::AnnotationMethod>
-RegisterImpl(x, name, overwrite = FALSE, verbose = getFuncOption("verbose"))
-
-## S7 method for class <function>
-RegisterImpl(x, name, overwrite = FALSE, verbose = getFuncOption("verbose"))
 }
 \arguments{
 \item{...}{Named arguments where each name is the registry key and each
@@ -82,6 +58,6 @@ Register(Scissor = method, overwrite = TRUE)
 }
 \seealso{
 \link{ScreenStrategy},
-\code{SCAnnotateStrategy},
-\code{SCPreProcessStrategy}
+\link{SCAnnotateStrategy},
+\link{SCPreProcessStrategy}
 }

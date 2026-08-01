@@ -32,8 +32,8 @@
 #'
 #' @seealso
 #'   [ScreenStrategy],
-#'   `SCAnnotateStrategy`,
-#'   `SCPreProcessStrategy`
+#'   [SCAnnotateStrategy],
+#'   [SCPreProcessStrategy]
 #'
 #' @name Register
 #' @export
@@ -63,14 +63,11 @@ Register <- function(
     RegisterImpl(x = x, name = name, overwrite = overwrite, verbose = verbose)
   })
 }
-
-#' @rdname Register
 RegisterImpl <- new_generic(
   name = "RegisterImpl",
   dispatch_args = "x"
 )
 
-#' @rdname Register
 method(generic = RegisterImpl, class_any) <- function(
   x,
   name,
@@ -84,7 +81,6 @@ method(generic = RegisterImpl, class_any) <- function(
   )
 }
 
-#' @rdname Register
 method(generic = RegisterImpl, ScreenMethod) <- function(
   x,
   name = NULL,
@@ -126,7 +122,6 @@ method(generic = RegisterImpl, ScreenMethod) <- function(
   invisible(TRUE)
 }
 
-#' @rdname Register
 method(generic = RegisterImpl, AnnotationMethod) <- function(
   x,
   name,
@@ -159,7 +154,6 @@ method(generic = RegisterImpl, AnnotationMethod) <- function(
   invisible(TRUE)
 }
 
-#' @rdname Register
 method(generic = RegisterImpl, class_function) <- function(
   x,
   name,

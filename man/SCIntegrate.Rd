@@ -9,6 +9,7 @@
 \usage{
 SCIntegrate(
   ...,
+  method = Seurat::HarmonyIntegration,
   pipeline = "nsvpiectu",
   add.cell.ids = NULL,
   collapse = FALSE,
@@ -23,6 +24,7 @@ SCIntegrate.matrix(..., .quos = NULL)
 
 SCIntegrate.Seurat(
   ...,
+  method = Seurat::HarmonyIntegration,
   pipeline = "nsvpiectu",
   add.cell.ids = NULL,
   collapse = FALSE,
@@ -35,7 +37,10 @@ SCIntegrate.Seurat(
 \arguments{
 \item{...}{For matrix method: matrices to integrate, optionally named.
 For Seurat method: Seurat objects to integrate, followed by additional
-parameters passed to integration functions, Seurat objects and parameters are automatically filtered and passed to appropriate functions.}
+parameters passed to integration functions, Seurat objects and parameters are automatically filtered
+and passed to appropriate functions.}
+
+\item{method}{Function to use for \code{Seurat} integration. Default: \code{Seurat::HarmonyIntegration}.}
 
 \item{pipeline}{Character string specifying processing steps for Seurat integration.
 Each letter represents a step: \code{"n"} = NormalizeData, \code{"s"} = ScaleData,
@@ -49,9 +54,15 @@ Seurat objects. Auto-inferred from argument names if not provided. (See Examples
 
 \item{collapse}{If TRUE, merge layers of the same name together; if FALSE, appends labels to the layer name}
 
-\item{merge.data}{Merge the data slots instead of just merging the counts (which requires renormalization); this is recommended if the same normalization approach was applied to all objects}
+\item{merge.data}{Merge the data slots instead of just merging the counts (which requires renormalization);
+this is recommended if the same normalization approach was applied to all objects}
 
-\item{merge.dr}{Choose how to handle merging dimensional reductions: - “TRUE”: merge dimensional reductions with the same name across objects; dimensional reductions with different names are added as-is - “NA”: keep dimensional reductions from separate objects separate; will append the project name for duplicate reduction names - “FALSE”: do not add dimensional reductions}
+\item{merge.dr}{Choose how to handle merging dimensional reductions:
+\itemize{
+\item "TRUE": merge dimensional reductions with the same name across objects; dimensional reductions with different names are added as-is
+\item "NA": keep dimensional reductions from separate objects separate; will append the project name for duplicate reduction names
+\item "FALSE": do not add dimensional reductions
+}}
 
 \item{project}{Project name for the Seurat object}
 
@@ -70,7 +81,7 @@ Unified interface for integrating heterogeneous single-cell datasets.
 Supports \code{Seurat} objects and matrices (via gene-wise aggregation and column concatenation).
 }
 \examples{
-\dontrun{
+\donttest{
 # Matrix integration
 mat1 <- matrix(rpois(100, 5), nrow = 20,
                dimnames = list(paste0("G", 1:20), paste0("C", 1:5)))
@@ -85,8 +96,8 @@ integrated <- SCIntegrate(A = mat1, B = mat2)
 # [1] "A_C1" "A_C2" "A_C3" "A_C4" "A_C5" "B_C1" "B_C2" "B_C3" "B_C4" "B_C5" "B_C6"
 
 # Seurat integration with custom pipeline
-seu1 <- CreateSeuratObject(mat1)
-seu2 <- CreateSeuratObject(mat2)
+seu1 <- Seurat::CreateSeuratObject(mat1)
+seu2 <- Seurat::CreateSeuratObject(mat2)
 integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsfpi")
 }
 

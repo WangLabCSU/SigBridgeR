@@ -268,7 +268,7 @@ DoscPAS <- function(
   y <- scPAS::prepare_phenotype(
     phenotype = phenotype,
     family = p$family,
-    tag = tag,
+    tag = p$label_type,
     verbose = p$verbose
   )
 
@@ -310,7 +310,7 @@ DoscPAS <- function(
     Coefs = model$Coefs,
     permutation_times = permutation_times,
     independent = independent,
-    FDR.threshold = FDR.threshold,
+    FDR.threshold = FDR_threshold,
     seed = p$seed
   )
 
@@ -319,7 +319,7 @@ DoscPAS <- function(
     risk_score = risk_score,
     mean.background = bg_stats$mean.background,
     sd.background = bg_stats$sd.background,
-    FDR.threshold = FDR.threshold,
+    FDR.threshold = FDR_threshold,
     cell_names = colnames(Expression_cell)
   )
 
@@ -342,6 +342,6 @@ DoscPAS <- function(
   }
 
   list(
-    scRNA_data = scPAS_result
+    scRNA_data = sc_data
   )
 }

@@ -22,7 +22,6 @@ benchmark_data
 ^SigBridgeR/Tmp/.*
 prework
 ^release/
-^tests/
 ^[.]?air[.]toml$
 ^\.vscode$
 ^inst/docs

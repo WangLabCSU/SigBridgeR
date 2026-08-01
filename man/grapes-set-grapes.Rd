@@ -125,3 +125,4 @@ list(1, 2, "a", "b", "c") \%->\% c(x, y, ..z)
 For more on unpacking custom objects please refer to
 \code{\link[zeallot:destructure]{destructure()}}.
 }
+\keyword{internal}

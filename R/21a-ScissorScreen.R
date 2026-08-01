@@ -148,6 +148,8 @@ ValidateScissorParams <- function(
 #' - benchmark_data: Path to benchmark data (RData file)
 #' - FDR_cutoff: FDR threshold for evaluation (default: `0.05`)
 #' - bootstrap_n: Bootstrap iterations (default: `100L`)
+#' @param path2load_scissor_cache A path to load the Scissor cache. This cache is used to save the precomputed Scissor inputs.
+#' @param path2save_scissor_inputs A path to save the Scissor inputs. This is used to save the precomputed Scissor inputs.
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`

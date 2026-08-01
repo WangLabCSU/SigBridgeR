@@ -59,6 +59,7 @@ Suggests:
     ggVennDiagram,
     glue,
     here,
+    IDConverter,
     jsonlite,
     KernSmooth,
     knitr,
@@ -78,7 +79,6 @@ Suggests:
     qs2,
     randomcoloR,
     RColorBrewer,
-    remotes,
     reticulate,
     rmarkdown,
     rSIDISH (>= 0.0.2),
@@ -95,6 +95,7 @@ Suggests:
     testthat (>= 3.0.0),
     tibble,
     tictoc,
+    tidydr,
     tidyr,
     WGCNA,
     zeallot

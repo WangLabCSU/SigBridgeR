@@ -8,6 +8,7 @@ TrainDEGASModel(
   matched_bulk,
   sc_data,
   phenotype,
+  t_sc_mat = t_sc_mat,
   sc_data.pheno_colname,
   label_type,
   p

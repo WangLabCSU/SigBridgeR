@@ -59,7 +59,7 @@ ValidateSIDISHParams <- function(
   cache_config <- ScreenMethodConfig(
     method_name = "SIDISH",
     param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
-    method_version = as.character(packageVersion("rSIDISH")),
+    method_version = as.character(utils::packageVersion("rSIDISH")),
     phenotype_class = phenotype_class,
     label_type = label_type
   )

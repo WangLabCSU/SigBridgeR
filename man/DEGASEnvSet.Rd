@@ -6,6 +6,9 @@
 \usage{
 DEGASEnvSet(user_list = list())
 }
+\arguments{
+\item{user_list}{Configuration parameters provided by users. Override the default values.}
+}
 \description{
 Set Default Values for Environment Configuration.
 }

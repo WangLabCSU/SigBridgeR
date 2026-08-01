@@ -32,6 +32,24 @@ property_sigbridger_verison <- new_property(
 #' @rdname SigBridgeR-properties
 #' @format An S7 property of class `class_character`.
 #' @details
+#' A read-only character property that returns the current version of the
+#' `SigBridgeR` package. Attempting to set this property will raise an error.
+#'
+#' The version string is validated to contain at least one dot (`.`).
+#' The default value is obtained from `get_pkg_version()`.
+property_verison <- new_property(
+  class = class_any,
+  validator = \(value) {
+    if (!grepl(pattern = "\\.", value) && !is.null(value)) {
+      "Package version string does not contain a dot."
+    }
+  },
+  default = NULL
+)
+
+#' @rdname SigBridgeR-properties
+#' @format An S7 property of class `class_character`.
+#' @details
 #' A general-purpose character property with no additional validation.
 #' Can be used for any string-typed attribute in subclasses.
 property_chr <- new_property(class = class_character)
@@ -178,6 +196,9 @@ property_seurat <- new_property(
 #' The primary purpose of this base class is to serve as a dispatch target
 #' for base R S3 generic functions, enabling polymorphic behavior across
 #' all SigBridgeR S7 objects through S3 method dispatch.
+#'
+#' @param sigbridger_version Package Version of SigBridgeR
+#'
 #' @family SigBridgeR-Classes
 #' @export
 SigBridgeRBase <- new_class(

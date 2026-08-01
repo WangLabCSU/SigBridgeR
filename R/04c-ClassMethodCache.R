@@ -45,7 +45,7 @@ ScreenMethodConfig <- new_class(
   parent = SigBridgeRBase,
   properties = list(
     method_name = property_chr,
-    method_version = property_chr,
+    method_version = property_verison,
     phenotype_class = property_chr,
     label_type = property_chr,
     param = property_data_list # NULL is OK; stores the parameters

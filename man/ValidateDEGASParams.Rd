@@ -25,7 +25,7 @@ ValidateDEGASParams(
 
 \item{sc_data.pheno_colname, label_type, phenotype_class, tmp_dir}{Forwarded from \code{\link[=DoDEGAS]{DoDEGAS()}}.}
 
-\item{env_params, degas_params, normality_test_method}{Forwarded from \code{\link[=DoDEGAS]{DoDEGAS()}}.}
+\item{env_params, degas_params, normality_test_method, t_sc_mat}{Forwarded from \code{\link[=DoDEGAS]{DoDEGAS()}}.}
 
 \item{...}{Additional dots forwarded from \code{\link[=DoDEGAS]{DoDEGAS()}}.}
 }

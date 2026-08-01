@@ -61,7 +61,9 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
     # Case 1: Atomic vector (numeric/character/logical/...)
     if (is.atomic(meta) && is.null(dim(meta))) {
       if (length(meta) != n_genes) {
-        Abort("Input {i} (vector {if (nzchar(nm)) paste0(' \"', nm, '\"')}) has length {.val {length(meta)}}, but object has {.val {n_genes}} genes.")
+        Abort(
+          "Input {i} (vector {if (nzchar(nm)) paste0(' \"', nm, '\"')}) has length {.val {length(meta)}}, but object has {.val {n_genes}} genes."
+        )
       }
 
       colname <- if (nzchar(nm)) nm else paste0("V", i)
@@ -86,7 +88,9 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
     } else if (ncol_meta == n_genes) {
       2L
     } else {
-      Abort("Input {i} has dimensions {.val {nrow_meta}} x {.val {ncol_meta}}; neither matches gene count ({.val {n_genes}}).")
+      Abort(
+        "Input {i} has dimensions {.val {nrow_meta}} x {.val {ncol_meta}}; neither matches gene count ({.val {n_genes}})."
+      )
     }
 
     # Extract as data.table, ensure gene names align

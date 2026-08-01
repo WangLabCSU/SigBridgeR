@@ -14,8 +14,6 @@
 #' installation instructions.
 #'
 #' @param file Character string. Path to the cache file to load.
-#' @param ... Additional arguments (must be empty, checked by
-#'   \code{check_dots_empty0()}).
 #'
 #' @return The cached R object.
 #'

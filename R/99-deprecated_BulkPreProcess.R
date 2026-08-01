@@ -91,20 +91,20 @@ BulkCheck <- function(
 #' }
 #'
 #' @param data Expression matrix with genes as rows and samples as columns, or a list containing count_matrix and sample_info
-#' @param sample_info Sample information data frame (optional), ignored if data is a list. A qualified `sample_info` should contain both `sample` and `condition` columns (case-sensitive), and there are no specific requirements for the data type stored in the `condition` column. `batch` column is optional, which is used for batch effect detection.
-#' @param gene_symbol_conversion Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: `FALSE`
-#' @param check Whether to perform detailed quality checks, default: `TRUE`
-#' @param min_count_threshold Minimum count threshold for gene filtering. Only values greater than this threshold are considered to represent valid gene expression. Default: `10L`
-#' @param min_gene_expressed Minimum number of samples a gene must be expressed in, default: `3L`
-#' @param min_total_reads Minimum total reads per sample, default: `1e6L`
-#' @param min_genes_detected Minimum number of genes detected per sample, default: `10000`
-#' @param min_correlation Minimum correlation threshold between samples, default: `0.8`
-#' @param n_top_genes Number of top variable genes for PCA analysis, default: `500`
-#' @param show_plot_results Whether to generate visualization plots, default: `TRUE`
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
 #'    - `method`: Method for duplicates aggregation, see [AggregateDups]
+#'    - `sample_info` Sample information data frame (optional), ignored if data is a list. A qualified `sample_info` should contain both `sample` and `condition` columns (case-sensitive), and there are no specific requirements for the data type stored in the `condition` column. `batch` column is optional, which is used for batch effect detection.
+#'    - `gene_symbol_conversion` Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: `FALSE`
+#'    - `check` Whether to perform detailed quality checks, default: `TRUE`
+#'    - `min_count_threshold` Minimum count threshold for gene filtering. Only values greater than this threshold are considered to represent valid gene expression. Default: `10L`
+#'    - `min_gene_expressed` Minimum number of samples a gene must be expressed in, default: `3L`
+#'    - `min_total_reads` Minimum total reads per sample, default: `1e6L`
+#'    - `min_genes_detected` Minimum number of genes detected per sample, default: `10000`
+#'    - `min_correlation` Minimum correlation threshold between samples, default: `0.8`
+#'    - `n_top_genes` Number of top variable genes for PCA analysis, default: `500`
+#' @param show_plot_results Whether to generate visualization plots, default: `TRUE`
 #'
 #' @section Quality Metrics:
 #' The function calculates and reports several quality metrics:
@@ -182,7 +182,7 @@ method(BulkPreProcess, class_any) <- function(
   ...
 ) {
   if (check) {
-    CheckInstalled(pkg = "edgeR", where = "bioc")
+    check_installed("edgeR")
   }
   purrr::walk(
     list(

@@ -6,6 +6,9 @@
 \usage{
 SigBridgeRBase(sigbridger_version = "4.0.0")
 }
+\arguments{
+\item{sigbridger_version}{Package Version of SigBridgeR}
+}
 \description{
 \code{SigBridgeRBase} is the abstract base class for all S7 classes in the
 SigBridgeR package. It provides a unified foundation for S3 method

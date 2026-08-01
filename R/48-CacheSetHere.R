@@ -148,13 +148,13 @@ load_impl <- function(path, layer, root_dir_name) {
   if (layer == "root") {
     # root layer -- delegate to ChooseCache
     if (!dir.exists(path)) {
-      Abort("x" = "Root directory not found: {.path {path}}")
+      Abort("Root directory not found: {.path {path}}")
     }
     ChooseCache(path)
   } else if (layer == "cache") {
     # cache layer -- return as-is
     if (!dir.exists(path)) {
-      Abort("x" = "Cache directory not found: {.path {path}}")
+      Abort("Cache directory not found: {.path {path}}")
     }
     path
   } else {

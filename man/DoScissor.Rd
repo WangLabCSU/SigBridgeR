@@ -12,7 +12,7 @@ DoScissor(
   phenotype_class = c("binary", "continuous", "survival"),
   alpha = c(0.05, NULL),
   cutoff = 0.2,
-  family = c("gaussian", "binomial", "cox"),
+  family = lifecycle::deprecated(),
   reliability_test = list(run = FALSE, n = 10L, nfold = 10L),
   cell_evaluation = list(run = FALSE, benchmark_data = "path_to_file.RData", FDR_cutoff =
     0.05, bootstrap_n = 100L),
@@ -71,6 +71,10 @@ Higher values increase specificity.}
 \item FDR_cutoff: FDR threshold for evaluation (default: \code{0.05})
 \item bootstrap_n: Bootstrap iterations (default: \code{100L})
 }}
+
+\item{path2load_scissor_cache}{A path to load the Scissor cache. This cache is used to save the precomputed Scissor inputs.}
+
+\item{path2save_scissor_inputs}{A path to save the Scissor inputs. This is used to save the precomputed Scissor inputs.}
 
 \item{...}{Additional arguments. Currently supports:
 \itemize{

@@ -162,7 +162,7 @@ CacheSysCall.load <- function(
 }
 
 CacheSysCall.save <- function(path, cache, verbose = TRUE, ...) {
-  EnsureParentDir(path, .envir = caller_env())
+  EnsureParentDir(path)
   WriteCache(
     cache,
     # format = c("auto", "qs2", "qdata", "rdata", "csv"),

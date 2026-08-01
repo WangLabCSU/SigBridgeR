@@ -31,25 +31,16 @@ BulkPreProcess(
 \item \code{verbose}: Logical indicating whether to print progress messages. Defaults to \code{TRUE}.
 \item \code{seed}: For reproducibility, default is \code{123L}
 \item \code{method}: Method for duplicates aggregation, see \link{AggregateDups}
+\item \code{sample_info} Sample information data frame (optional), ignored if data is a list. A qualified \code{sample_info} should contain both \code{sample} and \code{condition} columns (case-sensitive), and there are no specific requirements for the data type stored in the \code{condition} column. \code{batch} column is optional, which is used for batch effect detection.
+\item \code{gene_symbol_conversion} Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: \code{FALSE}
+\item \code{check} Whether to perform detailed quality checks, default: \code{TRUE}
+\item \code{min_count_threshold} Minimum count threshold for gene filtering. Only values greater than this threshold are considered to represent valid gene expression. Default: \code{10L}
+\item \code{min_gene_expressed} Minimum number of samples a gene must be expressed in, default: \code{3L}
+\item \code{min_total_reads} Minimum total reads per sample, default: \code{1e6L}
+\item \code{min_genes_detected} Minimum number of genes detected per sample, default: \code{10000}
+\item \code{min_correlation} Minimum correlation threshold between samples, default: \code{0.8}
+\item \code{n_top_genes} Number of top variable genes for PCA analysis, default: \code{500}
 }}
-
-\item{sample_info}{Sample information data frame (optional), ignored if data is a list. A qualified \code{sample_info} should contain both \code{sample} and \code{condition} columns (case-sensitive), and there are no specific requirements for the data type stored in the \code{condition} column. \code{batch} column is optional, which is used for batch effect detection.}
-
-\item{gene_symbol_conversion}{Whether to convert Ensembles version IDs and TCGA version IDs to genes with IDConverter, default: \code{FALSE}}
-
-\item{check}{Whether to perform detailed quality checks, default: \code{TRUE}}
-
-\item{min_count_threshold}{Minimum count threshold for gene filtering. Only values greater than this threshold are considered to represent valid gene expression. Default: \code{10L}}
-
-\item{min_gene_expressed}{Minimum number of samples a gene must be expressed in, default: \code{3L}}
-
-\item{min_total_reads}{Minimum total reads per sample, default: \code{1e6L}}
-
-\item{min_genes_detected}{Minimum number of genes detected per sample, default: \code{10000}}
-
-\item{min_correlation}{Minimum correlation threshold between samples, default: \code{0.8}}
-
-\item{n_top_genes}{Number of top variable genes for PCA analysis, default: \code{500}}
 
 \item{show_plot_results}{Whether to generate visualization plots, default: \code{TRUE}}
 }

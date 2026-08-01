@@ -15,6 +15,9 @@
 #' is resolved via `py_pkg_version()`.
 #'
 #' @inheritParams Method
+#' @param pkg_name The name of the R (Python) package when using this annotation method.
+#'   When `method_version` is `NULL`, the method version is resolved from
+#'   the R package version according to `pkg_name`.
 #' @param py_env `character` or `NULL`. A conda environment name or Python
 #'   path for Python-based annotation tools. When `NULL` (default), the
 #'   method version is resolved from an R package.
@@ -31,9 +34,11 @@ AnnotationMethod <- new_class(
   parent = Method,
   constructor = function(
     method_name = character(),
-    executor = \() ...,
+    executor = function() {
+      NULL
+    },
     pkg_name = character(),
-    method_version = character(),
+    method_version = NULL,
     py_env = NULL
   ) {
     new_object(

@@ -20,7 +20,8 @@
 #'
 #' @param cache_config A `ScreenMethodConfig` or `ScreenMethodCache` S7
 #'   object containing the current configuration to validate.
-#' @param path `character`. Path to the cache directory or directly to the
+#' @param ... Additional arguments to be passed to the method.
+#'   - `path`: `character`. Path to the cache directory or directly to the
 #'   `cache_config.json` file. Required for `ScreenMethodConfig`; derived
 #'   from `cache_config@cache_config_path` for `ScreenMethodCache`.
 #'
@@ -69,7 +70,8 @@ method(CheckCache, class_any) <- function(
 
 CheckCache.ScreenMethodConfig <- function(
   cache_config,
-  path
+  path,
+  ...
 ) {
   check_installed("jsonlite")
   meta_json <- if (!endsWith(path, "cache_config.json") && dir.exists(path)) {
@@ -123,7 +125,8 @@ method(
 #' @rdname CheckCache
 #' @export
 method(CheckCache, ScreenMethodCache) <- function(
-  cache_config
+  cache_config,
+  ...
 ) {
   CheckCache.ScreenMethodConfig(
     cache_config = cache_config@screen_method_config,

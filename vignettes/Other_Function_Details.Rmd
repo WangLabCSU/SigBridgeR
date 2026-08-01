@@ -10,6 +10,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r}
+#| include: false
+library(zeallot)
+library(SigBridgeR)
+```
+
 This document introduces several auxiliary functions of SigBridgeR.
 
 # Setting
@@ -764,7 +770,7 @@ resolving the dependency chain.
 #| eval: false
 g <- function(a = 1, b = 2) {
   c <<- a * 2 + b * 3
-  d = c^2
+  d <- c^2
   e <- d - 1
   e
 }

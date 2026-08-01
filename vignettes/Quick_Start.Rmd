@@ -19,6 +19,7 @@ vignette: >
 
 library(SigBridgeR)
 library(Seurat)
+library(zeallot)
 ```
 
 We will start with a simple example.
@@ -26,7 +27,7 @@ We will start with a simple example.
 ```{r}
 #| label: example_data
 
-ref %<-% LoadRefData(data_type = "binary")
+ref <- LoadRefData(data_type = "binary")
 mat_exam <- ref[[1]]
 bulk_bi <- ref[[2]]
 pheno_bi <- ref[[3]]

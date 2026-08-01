@@ -74,6 +74,7 @@
 #' Other input types are rejected by the underlying C++ implementation.
 #'
 #' @examples
+#' \donttest{
 #' x1 <- c(rep(0, 80), rep(1, 20))
 #' IsSkewedDynamic(x1)
 #'
@@ -83,12 +84,8 @@
 #' x3 <- c(rep(0, 50), rep(1, 50))
 #' IsSkewedDynamic(x3, expected_p = 0.8)
 #'
-#' IsSkewedDynamic(logical(c(rep(FALSE, 80), rep(TRUE, 20))),
-#'                   target = 0,
-#'                   expected_p = 0.8)
-#'
 #' IsSkewedDynamic(numeric(0))
-#'
+#' }
 #' @export
 IsSkewedDynamic <- function(
   x,

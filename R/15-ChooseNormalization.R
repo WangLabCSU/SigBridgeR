@@ -201,6 +201,7 @@ ChooseNormalization <- function(
   # * ===== 3. Normalize metrics for composite scoring =====
   # Lower is better: variance_mean_cor, mean_dropout_residual
   # Higher is better: marker_retention, hvgs_with_signal
+  composite_score <- variance_stability <- marker_signal <- dropout_robustness <- NULL # ease checking NOTE
   metrics[,
     c("variance_stability", "dropout_robustness") := lapply(
       .SD,
@@ -293,7 +294,7 @@ ChooseNormalizationCheck <- function(
     ~ if (!nzchar(.x, keepNA = TRUE)) {
       Abort(
         "Options must be named",
-        tips = "e.g., SCT = sct_obj, Log = log_obj"
+        "e.g., SCT = sct_obj, Log = log_obj"
       )
     }
   )
@@ -465,13 +466,15 @@ normalize_metric <- function(x, invert = FALSE) {
 #' @keywords internal
 ChooseNormalizationViz <- function(metrics_df) {
   check_installed(c("ggplot2", "patchwork"))
+
+  method <- variance_mean_cor <- NULL # ease checking NOTE
   # 1. Variance-mean correlation comparison
   vm_plot <- ggplot2::ggplot(
     metrics_df,
     ggplot2::aes(
-      x = .data$method,
-      y = .data$variance_mean_cor,
-      fill = .data$method
+      x = method,
+      y = variance_mean_cor,
+      fill = method
     )
   ) +
     ggplot2::geom_col(width = 0.7) +
@@ -498,9 +501,9 @@ ChooseNormalizationViz <- function(metrics_df) {
   score_plot <- ggplot2::ggplot(
     metrics_df,
     ggplot2::aes(
-      x = .data$method,
-      y = .data$composite_score,
-      fill = .data$method
+      x = method,
+      y = composite_score,
+      fill = method
     )
   ) +
     ggplot2::geom_col(width = 0.7) +

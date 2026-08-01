@@ -4,6 +4,7 @@
 \name{SigBridgeR-properties}
 \alias{SigBridgeR-properties}
 \alias{property_sigbridger_verison}
+\alias{property_verison}
 \alias{property_chr}
 \alias{property_phenotype_class}
 \alias{property_fn}
@@ -14,6 +15,8 @@
 \alias{property_seurat}
 \title{SigBridgeR Base Class Properties}
 \format{
+An S7 property of class \code{class_character}.
+
 An S7 property of class \code{class_character}.
 
 An S7 property of class \code{class_character}.
@@ -34,6 +37,8 @@ An S7 property of class \code{class_any}.
 }
 \usage{
 property_sigbridger_verison
+
+property_verison
 
 property_chr
 
@@ -58,6 +63,12 @@ for class attributes. These properties are exported for community developers
 to extend and subclass \code{SigBridgeRBase}.
 }
 \details{
+A read-only character property that returns the current version of the
+\code{SigBridgeR} package. Attempting to set this property will raise an error.
+
+The version string is validated to contain at least one dot (\code{.}).
+The default value is obtained from \code{get_pkg_version()}.
+
 A read-only character property that returns the current version of the
 \code{SigBridgeR} package. Attempting to set this property will raise an error.
 

@@ -6,9 +6,11 @@
 \usage{
 AnnotationMethod(
   method_name = character(),
-  executor = function() ...,
+  executor = function() {
+     NULL
+ },
   pkg_name = character(),
-  method_version = character(),
+  method_version = NULL,
   py_env = NULL
 )
 }
@@ -18,6 +20,10 @@ AnnotationMethod(
 
 \item{executor}{\code{function}. The function that performs the actual
 computation. This is the core workhorse of each method.}
+
+\item{pkg_name}{The name of the R (Python) package when using this annotation method.
+When \code{method_version} is \code{NULL}, the method version is resolved from
+the R package version according to \code{pkg_name}.}
 
 \item{method_version}{\code{character}. A string indicating the version of the
 underlying software package.}

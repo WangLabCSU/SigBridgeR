@@ -6,6 +6,9 @@
 \usage{
 DEGASParamSet(user_list)
 }
+\arguments{
+\item{user_list}{Configuration parameters provided by users. Override the default values.}
+}
 \description{
 Set Default Parameter Values for DEGAS
 }

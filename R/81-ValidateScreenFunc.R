@@ -179,7 +179,7 @@ ValidateArgsSyntax <- function(func, ...) {
     code_report <- utils::capture.output(
       codetools::checkUsage(
         func,
-        name = get_fn_name(func = func),
+        name = "Syntax",
         report = validate_explain,
         all = TRUE
       ),
@@ -393,7 +393,7 @@ ValidateDirName <- function(func, ...) {
     # "_res"
     if (!grepl("_res", folder_name)) {
       # suggested folder name
-      suggested_folder_name <- get_fn_name(func = func)
+      suggested_folder_name <- "func"
       suggested_folder_name <- if (
         startsWith(x = tolower(suggested_folder_name), prefix = "do")
       ) {

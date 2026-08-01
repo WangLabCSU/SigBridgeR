@@ -1,3 +1,5 @@
+# nocov start
+
 #' Get Installed Version of an R Package
 #'
 #' @description
@@ -12,7 +14,9 @@
 #' @keywords internal
 #' @family get-pkg-version
 r_pkg_version <- function(pkg_name) {
-  tryCatch(as.character(utils::packageVersion(pkg_name)), error = NULL)
+  tryCatch(as.character(utils::packageVersion(pkg_name)), error = function(e) {
+    NULL
+  })
 }
 
 #' Get SigBridgeR Package Version

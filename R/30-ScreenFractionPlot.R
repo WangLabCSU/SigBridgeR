@@ -165,6 +165,7 @@ ScreenFractionPlot <- function(
 
   # Function to create plot for single screen type
   SinglePlot <- function(single_screen_type, title_suffix = "") {
+    n <- Total <- Fraction <- NULL # ease checking NOTE
     stats_df <- meta_data |>
       dplyr::count(
         !!dplyr::sym(group_by),
@@ -223,7 +224,6 @@ ScreenFractionPlot <- function(
         fill = !!dplyr::sym(single_screen_type)
       )
     ) +
-
       ggplot2::geom_col(position = "stack", width = stack_width) +
       ggplot2::scale_y_continuous(
         labels = function(x) paste0(round(x * 100L, 0L), "%"),

@@ -55,6 +55,7 @@ ValidateTiRankParams <- function(
   # -- build cache config ---------------------------------------------------
   cache_config <- ScreenMethodConfig(
     method_name = "TiRank",
+    method_version = packageVersion("rTIRank"),
     param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
     phenotype_class = phenotype_class,
     label_type = label_type
@@ -409,6 +410,7 @@ DoTiRank <- function(
     )
   }
 
+  TiRank <- Reject <- Rank_Score <- . <- NULL # ease checking NOTE
   meta <- data.table::fread(file.path(
     save_path,
     "3_Analysis/spot_predict_score.csv"
@@ -445,7 +447,7 @@ DoTiRank <- function(
 
   # Return result in expected format
   list(
-    scRNA_data = modified_sc_data,
+    scRNA_data = sc_data,
     cell_cell_distance = cell_cell_distance
   )
 }

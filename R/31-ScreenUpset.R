@@ -74,11 +74,8 @@ ScreenUpset <- function(
   }
   chk::chk_whole_number(n_intersections)
   chk::chk_flag(show_plot)
-  vapply(
-    X = list(bar_color, combmatrix_point_color),
-    FUN = chk::chk_character,
-    FUN.VALUE = NULL
-  )
+  chk::chk_character(bar_color)
+  chk::chk_character(combmatrix_point_color)
 
   meta_data <- screened_seurat[[]]
   all_screen_types <- colnames(meta_data)
@@ -162,6 +159,7 @@ ScreenUpset <- function(
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
 
   # Create UpSet plot
+  sets <- count <- NULL # ease checking NOTE
   upset <- ggplot2::ggplot(
     intersection_data,
     ggplot2::aes(x = `sets`, y = `count`)

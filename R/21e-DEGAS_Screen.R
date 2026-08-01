@@ -10,7 +10,7 @@
 #'   Forwarded from [DoDEGAS()].
 #' @param sc_data.pheno_colname,label_type,phenotype_class,tmp_dir
 #'   Forwarded from [DoDEGAS()].
-#' @param env_params,degas_params,normality_test_method
+#' @param env_params,degas_params,normality_test_method,t_sc_mat
 #'   Forwarded from [DoDEGAS()].
 #' @param ... Additional dots forwarded from [DoDEGAS()].
 #'
@@ -156,6 +156,7 @@ TrainDEGASModel <- function(
   matched_bulk,
   sc_data,
   phenotype,
+  t_sc_mat = t_sc_mat,
   sc_data.pheno_colname,
   label_type,
   p
@@ -187,10 +188,8 @@ TrainDEGASModel <- function(
   }
 
   # DEGAS needs some global variables to be set up
-  list2env(p$degas_params, envir = .GlobalEnv)
   on.exit({
     # Clean up global variables
-    rm(list = names(p$degas_params), envir = .GlobalEnv)
     gc(verbose = FALSE)
   })
 
@@ -230,21 +229,6 @@ TrainDEGASModel <- function(
     }
 
   # anndata-like data formats
-  sc_mat <- if (inherits(sc_data, "Seurat")) {
-    SeuratObject::LayerData(sc_data, layer = "data", assay = p$assay)
-  } else {
-    sc_data
-  }
-  cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
-
-  if (length(cm_genes) == 0) {
-    Abort(
-      "No common genes found between single cell data and bulk data",
-      "Please check the inputs"
-    )
-  }
-
-  t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
   t_matched_bulk <- Matrix::t(matched_bulk[cm_genes, ])
 
   # Train DEGAS model
@@ -254,12 +238,23 @@ TrainDEGASModel <- function(
     patExp = t_matched_bulk,
     patLab = pheno_df,
     tmpDir = p$tmp_dir,
-    model_type = DEGAS.model_type,
-    architecture = DEGAS.architecture,
-    FFdepth = DEGAS.ff_depth,
-    Bagdepth = DEGAS.bag_depth,
-    DEGAS.seed = DEGAS.seed,
-    verbose = p$verbose
+    model_type = p$degas_paramsDEGAS.model_type,
+    architecture = p$degas_paramsDEGAS.architecture,
+    FFdepth = p$degas_paramsDEGAS.ff_depth,
+    Bagdepth = p$degas_paramsDEGAS.bag_depth,
+    DEGAS.pyloc = p$degas_params$DEGAS.pyloc,
+    DEGAS.toolsPath = p$degas_params$DEGAS.toolsPath,
+    DEGAS.train_steps = p$degas_params$DEGAS.train_steps,
+    DEGAS.scbatch_sz = p$degas_params$DEGAS.scbatch_sz,
+    DEGAS.patbatch_sz = p$degas_params$DEGAS.patbatch_sz,
+    DEGAS.hidden_feats = p$degas_params$DEGAS.hidden_feats,
+    DEGAS.do_prc = p$degas_params$DEGAS.do_prc,
+    DEGAS.lambda1 = p$degas_params$DEGAS.lambda1,
+    DEGAS.lambda2 = p$degas_params$DEGAS.lambda2,
+    DEGAS.lambda3 = p$degas_params$DEGAS.lambda3,
+    DEGAS.seed = p$degas_params$DEGAS.seed,
+    verbose = p$verbose,
+    force_rewrite = p$force_rewrite %||% FALSE,
   )
   names(ccModel1) <- paste0(
     "ccModel_",
@@ -271,7 +266,7 @@ TrainDEGASModel <- function(
     cache <- ScreenMethodCache(
       cache_path = p$save_cache,
       cache_config_path = file.path(p$save_cache, "cache_config.json"),
-      cache_data = list(ccModel1 = ccModel1),
+      cache_data = list(ccModel1 = ccModel1, pheno_df = pheno_df),
       screen_method_config = p$cache_config
     )
     CacheSysCall(
@@ -282,7 +277,7 @@ TrainDEGASModel <- function(
       timestamp = p$dots$timestamp
     )
   }
-  ccModel1
+  list(ccModel1 = ccModel1, pheno_df = pheno_df)
 }
 
 #' @title Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration
@@ -420,8 +415,24 @@ DoDEGAS <- function(
     ts_cli$cli_alert_info(cli::col_green("Starting DEGAS Screen"))
   }
 
+  sc_mat <- if (inherits(sc_data, "Seurat")) {
+    SeuratObject::LayerData(sc_data, layer = "data", assay = p$assay)
+  } else {
+    sc_data
+  }
+  cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
+
+  if (length(cm_genes) == 0) {
+    Abort(
+      "No common genes found between single cell data and bulk data",
+      "Please check the inputs"
+    )
+  }
+
+  t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
+
   # -- load mode: restore cached ccModel1 ------------------------------------
-  ccModel1 <- if (!is.null(p$load_cache)) {
+  res <- if (!is.null(p$load_cache)) {
     cache <- CacheSysCall(
       mode = "load",
       path = p$load_cache,
@@ -435,12 +446,13 @@ DoDEGAS <- function(
         cli::col_green("Loaded DEGAS cache from {.path {cache_dir}}")
       )
     }
-    cache$ccModel1
+    cache
   } else {
     TrainDEGASModel(
       matched_bulk = matched_bulk,
       sc_data = sc_data,
       phenotype = phenotype,
+      t_sc_mat = t_sc_mat,
       sc_data.pheno_colname = sc_data.pheno_colname,
       label_type = label_type,
       p = p
@@ -453,7 +465,7 @@ DoDEGAS <- function(
 
   # Predict with DEGAS model
   t_sc_preds <- data.table::as.data.table(DEGAS::predClassBag.optimized(
-    ccModel = ccModel1,
+    ccModel = res$ccModel1,
     Exp = t_sc_mat,
     scORpat = 'pat'
   ))
@@ -461,8 +473,8 @@ DoDEGAS <- function(
   if (p$phenotype_class == "survival") {
     data.table::setnames(t_sc_preds, "Hazard")
   } else {
-    pheno_df_colnames <- if (!is.null(pheno_df)) {
-      colnames(pheno_df)
+    pheno_df_colnames <- if (!is.null(res$pheno_df)) {
+      colnames(res$pheno_df)
     } else {
       NULL
     }
@@ -569,7 +581,7 @@ DEGASModelDetect <- function(
 }
 
 #' @title Set Default Values for Environment Configuration.
-#'
+#' @param user_list Configuration parameters provided by users. Override the default values.
 #' @export
 #' @family DEGAS
 DEGASEnvSet <- function(user_list = list()) {
@@ -603,6 +615,8 @@ DEGASEnvSet <- function(user_list = list()) {
 }
 
 #' @title Set Default Parameter Values for DEGAS
+#'
+#' @param user_list Configuration parameters provided by users. Override the default values.
 #'
 #' @export
 #' @family DEGAS

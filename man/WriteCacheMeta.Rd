@@ -33,18 +33,12 @@ WriteCacheMeta(
 \item{cache_config}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7
 object containing the cache configuration to write.}
 
-\item{...}{Additional arguments (must be empty, checked by
-\code{rlang::check_dots_empty0()}).}
-
-\item{file}{\code{character}. Path to the JSON metadata file to be written.
-Required for \code{ScreenMethodConfig}; derived from
-\code{cache_config@cache_config_path} for \code{ScreenMethodCache}.}
-
-\item{additional_description}{\code{character} or \code{NULL}. An optional string
-describing the cache entry. Default: \code{NULL}.}
-
-\item{verbose}{\code{logical}. Whether to print progress messages.
-Default: \code{TRUE}.}
+\item{...}{Additional arguments:
+\itemize{
+\item \code{file}: \code{character}. Path to the JSON metadata file to be written. Required for \code{ScreenMethodConfig}; derived from \code{cache_config@cache_config_path} for \code{ScreenMethodCache}.
+\item \code{additional_description}: \code{character} or \code{NULL}. An optional string describing the cache entry. Default: \code{NULL}.
+\item \code{verbose}: \code{logical}. Whether to print progress messages. Default: \code{TRUE}.
+}}
 }
 \value{
 Invisible. Returns the metadata list that was written to the file.

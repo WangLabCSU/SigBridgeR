@@ -81,23 +81,3 @@ validate_explain_speaker <- function(
 validate_success <- function(text, ...) {
   cli::cli_alert_success(cli::col_grey(text), ...)
 }
-
-# ---- Helper: get function name from a function object ----
-
-#' @keywords internal
-get_fn_name <- function(func, max_depth = 100L) {
-  expr <- substitute(func)
-  env <- parent.frame()
-
-  root <- promise_root_expr_cpp(
-    expr,
-    env,
-    as.integer(max_depth)
-  )
-
-  if (is.symbol(root)) {
-    as.character(root)
-  } else {
-    paste(deparse(root), collapse = "")
-  }
-}

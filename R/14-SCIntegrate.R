@@ -6,7 +6,9 @@
 #'
 #' @param ... For matrix method: matrices to integrate, optionally named.
 #'   For Seurat method: Seurat objects to integrate, followed by additional
-#'   parameters passed to integration functions, Seurat objects and parameters are automatically filtered and passed to appropriate functions.
+#'   parameters passed to integration functions, Seurat objects and parameters are automatically filtered
+#'   and passed to appropriate functions.
+#' @param method Function to use for `Seurat` integration. Default: \code{Seurat::HarmonyIntegration}.
 #' @param pipeline Character string specifying processing steps for Seurat integration.
 #'   Each letter represents a step: \code{"n"} = NormalizeData, \code{"s"} = ScaleData,
 #'   \code{"v"} = FindVariableFeatures, \code{"p"} = RunPCA, \code{"i"} = IntegrateLayers,
@@ -16,8 +18,12 @@
 #' @param add.cell.ids Character vector of prefixes for cell IDs when merging
 #'   Seurat objects. Auto-inferred from argument names if not provided. (See Examples for details)
 #' @param collapse If TRUE, merge layers of the same name together; if FALSE, appends labels to the layer name
-#' @param merge.data Merge the data slots instead of just merging the counts (which requires renormalization); this is recommended if the same normalization approach was applied to all objects
-#' @param merge.dr Choose how to handle merging dimensional reductions: - “TRUE”: merge dimensional reductions with the same name across objects; dimensional reductions with different names are added as-is - “NA”: keep dimensional reductions from separate objects separate; will append the project name for duplicate reduction names - “FALSE”: do not add dimensional reductions
+#' @param merge.data Merge the data slots instead of just merging the counts (which requires renormalization);
+#'   this is recommended if the same normalization approach was applied to all objects
+#' @param merge.dr Choose how to handle merging dimensional reductions:
+#'   - "TRUE": merge dimensional reductions with the same name across objects; dimensional reductions with different names are added as-is
+#'   - "NA": keep dimensional reductions from separate objects separate; will append the project name for duplicate reduction names
+#'   - "FALSE": do not add dimensional reductions
 #' @param project Project name for the Seurat object
 #' @param .quos Ignore it. Please do not pass any value
 #'
@@ -32,7 +38,7 @@
 #'
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Matrix integration
 #' mat1 <- matrix(rpois(100, 5), nrow = 20,
 #'                dimnames = list(paste0("G", 1:20), paste0("C", 1:5)))
@@ -47,8 +53,8 @@
 #' # [1] "A_C1" "A_C2" "A_C3" "A_C4" "A_C5" "B_C1" "B_C2" "B_C3" "B_C4" "B_C5" "B_C6"
 #'
 #' # Seurat integration with custom pipeline
-#' seu1 <- CreateSeuratObject(mat1)
-#' seu2 <- CreateSeuratObject(mat2)
+#' seu1 <- Seurat::CreateSeuratObject(mat1)
+#' seu2 <- Seurat::CreateSeuratObject(mat2)
 #' integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsfpi")
 #' }
 #'
@@ -61,6 +67,7 @@ NULL
 #' @export
 SCIntegrate <- function(
   ...,
+  method = Seurat::HarmonyIntegration,
   pipeline = "nsvpiectu",
   add.cell.ids = NULL,
   collapse = FALSE,
@@ -74,16 +81,13 @@ SCIntegrate <- function(
     Abort("[{.fun SCIntegrate}]: No arguments provided.")
   }
   .quos <- enquos(...)
-  if (
-    is.data.frame(dots[[1]]) ||
-      data.table::is.data.table(dots[[1]]) ||
-      tibble::is_tibble(dots[[1]])
-  ) {
-    return(SCIntegrate.Matrix(..., .quos = .quos))
+  if (is.data.frame(dots[[1L]])) {
+    return(SCIntegrate.data.frame(..., .quos = .quos))
   }
-  if (inherits(dots[[1]], "Seurat")) {
+  if (inherits(dots[[1L]], "Seurat")) {
     return(SCIntegrate.Seurat(
       ...,
+      method = method,
       pipeline = pipeline,
       add.cell.ids = add.cell.ids,
       collapse = collapse,
@@ -93,13 +97,13 @@ SCIntegrate <- function(
       .quos = .quos
     ))
   }
-  if (!inherits(dots[[1]], "Matrix") && !is.matrix(dots[[1]])) {
-    return(SCIntegrate.data.frame(..., .quos = .quos))
+  if (!inherits(dots[[1L]], "Matrix") || is.matrix(dots[[1L]])) {
+    return(SCIntegrate.matrix(..., .quos = .quos))
   }
 
-  cls <- c("Seurat", "matrix", "Matrix", "data.table", "tibble", "data.frame")
+  cls <- c("Seurat", "matrix", "Matrix", "data.frame")
   Abort(
-    "[{.fun SCIntegrate}]: No implementation for class {.cls {class(dots[[1]])}}",
+    "[{.fun SCIntegrate}]: No implementation for class {.cls {class(dots[[1L]])}}",
     "Available classes: {.cls {cls}}"
   )
 }
@@ -208,6 +212,7 @@ SCIntegrate.matrix <- function(..., .quos = NULL) {
 #' @keywords internal
 SCIntegrate.Seurat <- function(
   ...,
+  method = Seurat::HarmonyIntegration,
   pipeline = "nsvpiectu",
   add.cell.ids = NULL,
   collapse = FALSE,
@@ -221,7 +226,6 @@ SCIntegrate.Seurat <- function(
   # * parameters
   dots <- list2(...)
   .quos <- .quos %||% enquos(...)
-  method <- dots$method %||% Seurat::HarmonyIntegration
   verbose <- dots$verbose %||%
     SigBridgeRUtils::getFuncOption("verbose") %||%
     TRUE
@@ -232,7 +236,7 @@ SCIntegrate.Seurat <- function(
   if (verbose) {
     cli::cli_text("Start merging Seurat objects")
   }
-  first_seurat <- dots[[1]]
+  first_seurat <- dots[[1L]]
   other_seurat <- unlist(dots[is_seurat][-1])
   merged <- merge(
     x = first_seurat,
@@ -259,30 +263,34 @@ SCIntegrate.Seurat <- function(
 
   unknown <- setdiff(steps, steps_to_run)
   if (length(unknown) != 0) {
-    cli::cli_warn(
-      "[{.fun SCIntegrate.Seurat}]: Unknown pipeline steps: {.val {unknown}}"
+    Abort(
+      "[{.fun SCIntegrate.Seurat}]: Unknown pipeline steps: {.val {unknown}}",
+      "Current pipeline registered: {.val {names(SCPreProcessStrategy)}}"
     )
   }
 
-  # step: a letter
+  # step: a letter (input)
+  # steps_to_run[[step]]: a letter (run)
+  args_for_fn <- dots[!is_seurat]
+  args_integrate <- utils::modifyList(
+    SigBridgeRUtils::FilterArgs4Func(args_for_fn, method),
+    SigBridgeRUtils::FilterArgs4Func(args_for_fn, Seurat::IntegrateLayers)
+  )
   for (step in steps_to_run) {
     step_fun <- SCPreProcessStrategy[[step]] # a function
-    merged <- exec(
-      step_fun,
-      merged,
-      # steps_to_run[[step]] -- a letter
-      if (step != "i") {
-        !!!dots[!is_seurat]
-      } else {
-        !!!utils::modifyList(
-          SigBridgeRUtils::FilterArgs4Func(dots[!is_seurat], method),
-          SigBridgeRUtils::FilterArgs4Func(
-            dots[!is_seurat],
-            Seurat::IntegrateLayers
-          )
-        )
-      }
-    )
+    merged <- if (step != "i") {
+      exec(
+        .fn = step_fun,
+        merged,
+        !!!args_for_fn
+      )
+    } else {
+      exec(
+        .fn = step_fun,
+        merged,
+        !!!args_integrate
+      )
+    }
   }
 
   if (verbose) {

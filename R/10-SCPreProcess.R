@@ -403,8 +403,8 @@ SCPreProcess.R6 <- function(
     seurat
   } else {
     Abort(
-      "x" = "{.arg sc} must be an anndata or anndataR object",
-      ">" = "Current input is of class {.cls {class(sc)}}"
+      "{.arg sc} must be an anndata or anndataR object",
+      tips = "Current input is of class {.cls {class(sc)}}"
     )
   }
   rm(sc)

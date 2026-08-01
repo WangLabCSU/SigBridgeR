@@ -1,3 +1,5 @@
+# nocov start
+
 EnsureParentDir <- function(path) {
   parent <- dirname(normalizePath(path, mustWork = FALSE))
 

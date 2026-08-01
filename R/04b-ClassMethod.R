@@ -30,7 +30,7 @@ Method <- new_class(
   parent = SigBridgeRBase,
   properties = list(
     method_name = property_chr,
-    method_version = property_chr,
+    method_version = property_verison,
     executor = property_fn
   ),
   abstract = TRUE,
@@ -39,7 +39,7 @@ Method <- new_class(
       S7_object(),
       method_name = method_name,
       method_version = method_version,
-      executor = func,
+      executor = executor,
       sigbridger_version = get_pkg_version()
     )
   }
@@ -62,6 +62,7 @@ Method <- new_class(
 #' `phenotype_class`. This ensures a consistent interface across all screening
 #' algorithms (e.g., Scissor, scPAS, scPP, TiRank).
 #'
+#' @param sigbridger_version Package Version of SigBridgeR
 #' @param method_name `character`. (Inherited from [Method]) A string
 #'   identifying the screening method.
 #' @param executor `function`. (Inherited from [Method]) The screening
@@ -104,11 +105,13 @@ ScreenMethod <- new_class(
       )))
     }
 
-    mapper_fml <- fn_fmls_names(self@mapper)
-    if (length(mapper_fml) > 1) {
-      return(cli::cli_fmt(cli::cli_text(
-        "Mapper function must have only one argument"
-      )))
+    if (is.function(self@mapper)) {
+      mapper_fml <- fn_fmls_names(self@mapper)
+      if (length(mapper_fml) > 1) {
+        return(cli::cli_fmt(cli::cli_text(
+          "Mapper function must have only one argument"
+        )))
+      }
     }
   }
 )

@@ -170,6 +170,8 @@ FindRobustElbow <- function(
     # Create comprehensive visualization
     if (is_interactive()) {
       check_installed("ggplot2")
+      PC <- Variance <- NULL # ease checking NOTE
+
       plot_data <- data.table::data.table(
         PC = seq_len(ndims),
         Variance = pct_variance,

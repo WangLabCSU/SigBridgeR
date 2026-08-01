@@ -80,8 +80,8 @@ SingleRAnnotate <- function(
   labels = NULL,
   ...
 ) {
-  CheckInstalled("dviraran/SingleR")
-  CheckInstalled("celldex", where = "bioc")
+  check_installed("celldex")
+  check_installed("SingleR", action = \(pkg, ...) pak::pak("dviraran/SingleR"))
 
   orginally_seurat <- inherits(sc, "Seurat")
   sce_obj <- if (orginally_seurat) {

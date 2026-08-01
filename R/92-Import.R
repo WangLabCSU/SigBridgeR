@@ -1,3 +1,13 @@
+# nocov start
+
+utils::globalVariables(c(
+  # AddMisc
+  "base_key",
+  ".",
+  "suffix",
+  "max_suffix"
+))
+
 #' @inherit SigBridgeRUtils::AddMisc
 #' @export
 AddMisc <- SigBridgeRUtils::AddMisc

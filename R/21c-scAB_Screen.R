@@ -220,8 +220,8 @@ DoscAB <- function(
     # -- save mode: persist scAB_obj and k to cache --------------------------
     if (!is.null(p$save_cache)) {
       cache <- ScreenMethodCache(
-        cache_path = save_cache,
-        cache_config_path = file.path(save_cache, "cache_config.json"),
+        cache_path = p$save_cache,
+        cache_config_path = file.path(p$save_cache, "cache_config.json"),
         cache_data = list(k = k, scAB_obj = scAB_obj),
         screen_method_config = p$cache_config
       )
