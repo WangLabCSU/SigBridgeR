@@ -1,3 +1,14 @@
+# SigBridgeR 4.0.0-beta-2
+
+## DOCUMENTATION
+
+* Updated README with improved citation information. 📖
+
+## INTERNAL CHANGES
+
+* Refactored project dependencies and validation logic for better maintainability.
+* Performed general code cleanup and documentation updates.
+
 # SigBridgeR 4.0.0-beta-1
 
 ## BREAKING CHANGES
