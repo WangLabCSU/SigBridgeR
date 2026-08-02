@@ -26,10 +26,11 @@
 #'   \item `scRNA_data` must be a [Seurat][SeuratObject::Seurat-class] object.
 #' }
 #'
+#' @param scRNA_data A [Seurat][SeuratObject::Seurat-class] object
+#'   containing the screening results. This is the core required property
+#'   of the class.
 #' @param ... Named arguments to set as additional S7 properties on the
 #'   result object (e.g., screening statistics, method-specific outputs).
-#'   The `scRNA_data` property must be provided as one of the named
-#'   arguments.
 #'
 #' @returns A `ScreenMethodResult` S7 object.
 #'
@@ -54,11 +55,12 @@ ScreenMethodResult <- new_class(
       )))
     }
   },
-  constructor = \(...) {
-    dots <- list2(...)
-
-    obj <- new_object(S7_object(), sigbridger_version = get_pkg_version())
-    props(obj) <- dots
-    obj
+  constructor = \(scRNA_data, ..., sigbridger_version = get_pkg_version()) {
+    new_object(
+      S7_object(),
+      scRNA_data = scRNA_data,
+      ...,
+      sigbridger_version = sigbridger_version
+    )
   }
 )

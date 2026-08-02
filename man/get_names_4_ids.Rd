@@ -18,7 +18,7 @@ Character vector of names.
 Extract or infer names from \code{...} arguments.
 }
 \examples{
-\dontrun{
+\donttest{
 get_names_4_ids(a = 1, b = 2)
 # [1] "a" "b"
 c <- 3

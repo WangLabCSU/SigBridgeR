@@ -113,11 +113,6 @@ The value must inherit from the \code{"Seurat"} class.
 This property is used to store single-cell data in Seurat format
 for downstream analysis.
 }
-\examples{
-# Valid usage
-property_phenotype_class@validator("binary")
-property_phenotype_class@validator(c("binary", "survival"))
-}
 \seealso{
 \link[SeuratObject:Seurat-class]{SeuratObject::Seurat}
 }

@@ -40,9 +40,8 @@ BulkPreProcess(
 \item \code{min_genes_detected} Minimum number of genes detected per sample, default: \code{10000}
 \item \code{min_correlation} Minimum correlation threshold between samples, default: \code{0.8}
 \item \code{n_top_genes} Number of top variable genes for PCA analysis, default: \code{500}
+\item \code{show_plot_results} Whether to generate visualization plots, default: \code{TRUE}
 }}
-
-\item{show_plot_results}{Whether to generate visualization plots, default: \code{TRUE}}
 }
 \value{
 Filtered count matrix

@@ -40,3 +40,4 @@ Rplots.pdf
 **/*.quarto_ipynb
 index_files/
 *index.html
+tests/testthat/testthat-problems.rds

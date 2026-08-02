@@ -130,7 +130,7 @@ As you can see, with so many (alpha, alpha_2) pairs -- each requiring evaluation
 #| label: scAB_params3
 #| eval: false
 # * install `furrr` first, as it is required for parallel computing
-# * We recommend using `future.mirai`, as it is more stable and faster than `future`
+# * We recommend using `future.mirai`
 rlang::check_installed(c("furrr", "future.mirai"))
 
 future::plan(future.mirai::mirai_multisession, workers = 2L)
@@ -143,7 +143,7 @@ scAB_res <- Screen(
   screen_method = c("scAB"),
   alpha = seq1,
   alpha_2 = seq2
-  # parallel = TRUE # Auto-enabled
+  parallel = TRUE
 )
 ```
 
@@ -261,7 +261,8 @@ scPP_res <- Screen(
   phenotype = matched_phenotype_data,
   phenotype_class = "survival",
   screen_method = c("scPP"),
-  probs = NULL # <<< HERE
+  probs = NULL, # <<< HERE
+  parallel = TRUE
 )
 ```
 

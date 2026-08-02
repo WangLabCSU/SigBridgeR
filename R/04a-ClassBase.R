@@ -63,10 +63,6 @@ property_chr <- new_property(class = class_character)
 #'
 #' Default: `c("binary", "continuous", "survival")`.
 #'
-#' @examples
-#' # Valid usage
-#' property_phenotype_class@validator("binary")
-#' property_phenotype_class@validator(c("binary", "survival"))
 property_phenotype_class <- new_property(
   class = class_character,
   validator = \(value) {

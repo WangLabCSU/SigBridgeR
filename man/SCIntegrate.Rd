@@ -98,7 +98,7 @@ integrated <- SCIntegrate(A = mat1, B = mat2)
 # Seurat integration with custom pipeline
 seu1 <- Seurat::CreateSeuratObject(mat1)
 seu2 <- Seurat::CreateSeuratObject(mat2)
-integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsfpi")
+integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsvpi")
 }
 
 }

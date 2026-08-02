@@ -4,13 +4,15 @@
 \alias{ScreenMethodResult}
 \title{ScreenMethodResult: Screening Method Result Container}
 \usage{
-ScreenMethodResult(...)
+ScreenMethodResult(scRNA_data, ..., sigbridger_version = get_pkg_version())
 }
 \arguments{
+\item{scRNA_data}{A \link[SeuratObject:Seurat-class]{Seurat} object
+containing the screening results. This is the core required property
+of the class.}
+
 \item{...}{Named arguments to set as additional S7 properties on the
-result object (e.g., screening statistics, method-specific outputs).
-The \code{scRNA_data} property must be provided as one of the named
-arguments.}
+result object (e.g., screening statistics, method-specific outputs).}
 }
 \value{
 A \code{ScreenMethodResult} S7 object.

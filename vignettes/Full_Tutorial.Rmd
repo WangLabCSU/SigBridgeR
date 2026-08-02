@@ -223,120 +223,40 @@ If you already have a Seurat object and aim to filter out phenotype-associated c
 your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
 ```
 
-> Note: I don't recommend using columns like `column2only_tumor = "Celltype"` as tumor cell identities vary across tissues. instead:
->
-> -   Create a Dedicated Column: Add a new metadata column (e.g., is_tumor) to explicitly label cells:"Tumo(u)r"/"Normal"
->
-> -   Code Example:
->
-> ```{r}
-> #| label: choose_tumor_column
-> #| eval: false
-> # For glioblastoma (GBM)
-> seurat_obj$is_tumor <- ifelse(
- >  grep
-    l("GBM|glioblastoma|astrocytoma_grade_IV
-   ", seurat_obj$Celltyp
-   e, ignore.case = TR
-  UE),
- >  "Tumor,  # or "Tumou" 
- >  "Norma"  # or "Non-Tumo" 
-> )
-> ```
-
 ### 1.2 Bulk expression data
 
 Here are some methods for processing bulk RNA-seq gene expression data matrices.
 
-#### 1.2.1 Evaluate the quality of your bulk RNA-seq data
-
-`BulkPreProcess` performs comprehensive quality control on raw bulk RNA-seq count matrix data.
-
-Key parameters for `BulkPreProcess`:
-
--   `data`: Expression matrix with genes as rows and samples as columns, or a list containing count_matrix and sample_info.
--   `sample_info`: Sample information data frame (optional), ignored if data is a list. A qualified `sample_info` should contain both `sample` and `condition` columns (case-sensitive), and there are no specific requirements for the data type stored in the `condition` column.
--   `gene_symbol_conversion`: Whether to convert Ensembl version IDs and TCGA version IDs to genes with [SymbolConvert in Section 1.2.2](#122-gene-symbol-conversion), default TRUE.
--   `check`: Whether to perform detailed quality checks, default TRUE.
--   `min_count_threshold`: Minimum count threshold for gene filtering, default 10.
--   `min_gene_expressed`: Minimum number of samples a gene must be expressed in, default 3.
--   `min_total_reads`: Minimum total reads per sample, default 1e6.
--   `min_genes_detected`: Minimum number of genes detected per sample, default 10000.
--   `min_correlation`: Minimum correlation threshold between samples, default 0.8.
--   `n_top_genes`: Number of top variable genes for PCA analysis, default 500.
--   `show_plot_results`: Whether to generate PCA visualization plots, default TRUE.
--   `verbose`: Whether to output detailed information, default TRUE.
-
-Suppose you have bulk RNA-seq count data and sample information, and you want to perform comprehensive preprocessing and quality control. You can refer to and use the following code:
+#### 1.2.1 Convert bulk RNA-seq raw counts to TPM
 
 ```{r}
-#| label: bulk_preprocess_example
-#| eval: false
-# Example usage of BulkPreProcess
-filtered_counts <- BulkPreProcess(
-  data = your_count_matrix,
-  sample_info = your_sample_info,
-  gene_symbol_conversion = TRUE,
-  check = TRUE,
-  min_count_threshold = 10,
-  min_samples_expressed = 3,
-  min_total_reads = 1e6,
-  min_genes_detected = 10000,
-  min_correlation = 0.8,
-  n_top_genes = 500,
-  show_plot_results = TRUE,
-  verbose = TRUE
+#| label: bulk_tpm_example
+set.seed(123)
+ngenes <- 1000
+nsamples <- 1000
+
+gene_names <- paste0("GENE", seq_len(ngenes))
+sample_names <- paste0("Sample", seq_len(nsamples))
+
+counts <- matrix(
+  rnbinom(ngenes * nsamples, mu = 100, size = 10),
+  nrow = ngenes,
+  ncol = nsamples,
+  dimnames = list(gene_names, sample_names)
 )
+gene_length <- sample(
+  500:5000,
+  ngenes,
+  replace = TRUE
+)
+names(gene_length) <- gene_names
 ```
 
-The function returns a filtered bulk count matrix after applying quality control steps and does not perform log2 transformation on the data.
-
-##### Quality Control Metrics Reported 
-
--   Gene Filtering: 
-    
-    First, lowly expressed genes are removed, retaining genes that have an expression level reaching `min_count_threshold` in at least `min_gene_expressed` samples. This step is based on statistical power considerations, as lowly expressed genes are prone to false-positive results in differential analysis.
-
--   Sample Filtering: 
-  
-    Subsequently, low-quality samples are filtered based on three core indicators:\
-    - Sequencing Depth: The total number of reads must reach `min_total_reads`.
-    - Library Complexity: The number of detected genes must exceed `min_genes_detected`.
-    - Sample Consistency: When quality checking is enabled, the average correlation between samples must meet the `min_correlation` threshold.
-
-- Data Integrity Check: Identifies technical anomalies; too many missing values may indicate experimental issues.
-
-- Feature Expression Filtering: Uses a count threshold rather than a proportion threshold to avoid over-penalizing small samples. Genes must be stably expressed in multiple samples to ensure the reliability of statistical tests.
-
-- Sample-Level Filtering: 
-  
-  Comprehensively evaluates technical quality: \
-  Sequencing depth ensures detection sensitivity, the number of detected genes reflects library diversity, and sample correlation (Pearson) validates experimental reproducibility. PCA analysis further identifies batch effects and outlier samples.
-
--   PCA Variance: 
-    
-    Variance explained by first two principal components. \
-    When `show_plot_results = TRUE`, the function generates PCA plot colored by experimental condition
-
--   Batch Effects: Proportion of genes significantly affected by batch
-
-##### Recommended Parameter Adjustments 
-
-Parameter settings need to balance data quality and information retention:
-
--   For Low-Depth Sequencing Data: 
-    
-    Should relax `min_total_reads` and `min_genes_detected` due to technical limitations rather than quality issues causing low indicators.
-
--   For Noisy Datasets:  
-    
-    Need to increase the `min_correlation` threshold to strengthen sample consistency requirements and exclude technical variation interference.
-
--   For Large Datasets: 
-
-    Consider setting `check = FALSE` to enable only partial filtering functions and speed up the process.
-
-All parameters are set based on empirical values, and users should make appropriate adjustments according to the specific experimental design and sequencing platform characteristics.
+```{r}
+#| label: bulk_tpm_example2
+tpm <- CountsToTPM(counts, gene_length)
+tpm[1:5, 1:5]
+```
 
 #### 1.2.2 Gene Symbol Conversion
 
@@ -368,8 +288,6 @@ your_bulk_data <- read.csv(
   row.names = 1
 )
 
-your_bulk_data <- BulkPreProcess(your_bulk_data, gene_symbol_conversion = FALSE)
-
 ensembl_ids <- sub("\\..*", "", rownames(your_bulk_data))
 gene_symbols <- mapIds(
   org.Hs.eg.db,
@@ -399,17 +317,18 @@ CheckNA(your_phenotype_data, max_print = 5L)
 
 ```{r}
 #| label: Check_NA_example
-#| eval: false
 mat <- matrix(
   c(NA, 1, 1, NA),
   2,
   dimnames = list(c("Gene1", "Gene2"), c("Sample1", "Sample2"))
 )
-na_position <- CheckNA(mat)
-# ! Found 2 NA values in data
-# First 2 positions:
-#   Row 1 ("Gene1"), col 1 ("Sample1")
-#   Row 2 ("Gene2"), col 2 ("Sample2")
+CheckNA(mat)
+```
+
+```{r}
+#| label: mtcars
+mtcars$wt[5] <- NA
+CheckNA(mtcars)
 ```
 
 **In-place data transformation**
@@ -418,59 +337,26 @@ Use it just in tidyverse-like style. The difference between `PhenoMap` and the d
 
 ```{r}
 #| label: col_convert
-#| eval: false
 # ? if a vector
 v <- 1:2000
 
 v2 <- PhenoMap(v, v < 1000 ~ "0", v > 1000 ~ "1", .default = "here_is_1k")
 table(v2)
-#  0          1 here_is_1k
-#    999       1000          1
+```
 
+```{r}
+#| label: col_convert2
 v3 <- PhenoMap(v, v < 100 ~ 0, v < 1000 ~ 1, v > 1000 ~ 2, .default = NA_real_)
 table(v3)
-#    0    1    2
-#   99  900 1000
+```
 
+```{r}
+#| label: col_convert3
 # ? if a data
 d <- mtcars
 d2 <- PhenoMap(d, mpg > 15 ~ 1, mpg <= 15 ~ 0)
-table(d2$mpg)
-#  0  1
-#  6 26
 head(d2)
-#      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-#    <num> <num> <num> <num> <num> <num> <num> <num> <num> <num> <num>
-# 1:     1     6   160   110  3.90 2.620 16.46     0     1     4     4
-# 2:     1     6   160   110  3.90 2.875 17.02     0     1     4     4
-# 3:     1     4   108    93  3.85 2.320 18.61     1     1     4     1
-# 4:     1     6   258   110  3.08 3.215 19.44     1     0     3     1
-# 5:     1     8   360   175  3.15 3.440 17.02     0     0     3     2
-# 6:     1     6   225   105  2.76 3.460 20.22     1     0     3     1
 ```
-
-**Direct Interface for Foolproof Data Processing**
-
-```{r}
-#| label: pheno_pre_process
-#| eval: false
-your_phenotype_data <- PhenoPreProcess(
-  bulk = your_bulk_data,
-  phenotype = your_phenotype_data,
-  phenotype_class = "survival",
-  status == "death" ~ 1,
-  status == "alive" ~ 0,
-  selelct = c("time", "status")
-)
-```
-
-Key parameters for `PhenoPreProcess`:
-
-- `bulk`: Bulk RNA-seq expression data with genes as rows and samples as columns
-- `phenotype`: Phenotype data (Named numeric vector/ data.frame)
-- `phenotype_class`: Type of phenotype data, e.g., "binary", "survival", "continuous"
-- `...`: pass to `PhenoMap`
-- `select`: Columns to select from the phenotype data when it is a data.frame
 
 ------------------------------------------------------------------------
 
@@ -492,9 +378,7 @@ Key parameters for `Screen`:
 
 Parameters pass to `...` when using `Scissor` method:
 
--   `path2save_scissor_inputs`: deprecated, use `save_path` instead
 -   `save_path`: A character value specifying the path to save intermediate data, you can also set `NULL` to suppress the saving of intermediate files. Default: `Scissor_res/<cache_stamp>/Scissor_inputs.RData`
--   `path2load_scissor_cahce`: deprecated, use `load_path` instead
 -   `load_path`: A character value specifying the path to load intermediate data, e.g. `"Scissor_res/<cache_stamp>`. Default: `NULL`
 -   `alpha`: Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If alpha = NULL, a default searching vector is used. The range of alpha is in `[0,1]`. A larger alpha lays more emphasis on the l1 norm.
 -   `cutoff`: Cutoff for the percentage of the Scissor selected cells in total cells. This parameter is used to restrict the number of the Scissor selected cells. A cutoff less than 50% (default 20%) is recommended depending on the input data. Only used when `alpha = NULL`.
@@ -519,7 +403,7 @@ scissor_result <- Screen(
   label_type = "TP53", # The filtering labels are stored in the `@misc`, you can change it to your own label
   phenotype_class = "binary",
   screen_method = c("Scissor"),
-  path2save_scissor_inputs = "Tmp/Scissor_inputs.RData" # Intermediate data
+  save_cache = "Tmp" # Intermediate data
 )
 ```
 
@@ -533,7 +417,7 @@ scissor_result <- Screen(
   label_type = "TP53",
   phenotype_class = "binary",
   screen_method = c("Scissor"),
-  path2load_scissor_cahe = "Tmp/Scissor_inputs.RData" # Intermediate data
+  load_cache = "Tmp" # Intermediate data
 )
 ```
 
@@ -548,7 +432,7 @@ scissor_result <- Screen(
   label_type = "TP53",
   phenotype_class = "binary",
   screen_method = c("Scissor"),
-  path2load_scissor_cahce = "Tmp/Scissor_inputs.RData", # Intermediate data
+  load_cache = "Tmp", # Intermediate data
   alpha = NULL,
   cutoff = 0.2
 )
@@ -573,7 +457,7 @@ scissor_result <- Screen(
   label_type = "TP53",
   phenotype_class = "binary",
   screen_method = c("Scissor"),
-  path2load_scissor_cahce = "Tmp/Scissor_inputs.RData", # Intermediate data
+  load_cache = "Tmp", # Intermediate data
   reliability_test = TRUE,
   cell_evaluation = TRUE,
   cell_evaluation.benchmark_data = "path_to_benchmark_data.RData",
@@ -668,14 +552,6 @@ scab_result <- Screen(
 
 When both `alpha` and `alpha_2` are specified as `NULL` or as search vectors, the total number of searches equals the product of their lengths, which may lead to long runtimes. In such cases, we recommend enabling parallel computation.
 
-```{r}
-#| label: scAB_screening_parallel
-#| eval: false
-setFuncOption(parallel = TRUE, parallel.type = 'multisession', workers = 4L)
-```
-
-Then simply run the function directly.
-
 **returning structure**: A list containing:
 
 -   `scRNA_data`: A Seurat object after screening
@@ -728,6 +604,8 @@ Parameters pass to `...` when using `DEGAS` method
 ```{r}
 #| label: DEGAS_screening
 #| eval: false
+reticulate::use_condaenv("r-reticulate-degas")
+
 degas_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -736,29 +614,6 @@ degas_result <- Screen(
   screen_method = "DEGAS",
   # The type of phenotype
   phenotype_class = c("binary", "continuous", "survival"),
-  # Environment parameters
-  env_params = list(
-    env.name = "r-reticulate-degas",
-    env.type = "conda",
-    # Environment.yml file will be used to create the conda environment in default, so other parameters can be ignored
-    env.method = "environment",
-    # The path of the environment.yml file
-    env.file = system.file(
-      "conda/DEGAS_environment.yml",
-      package = "SigBridgeR"
-    ),
-    env.python_verion = "3.9.15",
-    env.packages = c(
-      "tensorflow" = "2.4.1",
-      "protobuf" = "3.20.3"
-    ),
-    # Force re-creating the env
-    env.recreate = FALSE,
-    # Use conda-forge channel for env creating
-    env.use_conda_forge = TRUE,
-    # Message output when creating the env
-    env.verbose = FALSE
-  ),
   # DEGAS parameters
   degas_params = list(
     # DEGAS.model_type will be automatically determined by the `phenotype_class`
@@ -803,17 +658,30 @@ degas_result <- Screen(
 )
 ```
 
-This code chunk will CREATE a conda environment called "**r-reticulate-degas**" with python 3.9.15, and install the required packages (tensorflow, protobuf) for DEGAS. If an environment with the same name already exists, it will directly use this environment without creating a new one (unless specified `env_params = list(env.recreate=TRUE)`).
+After update to v4.0.0. `Screen` does not automatically creat a python env for DEGAS, you need to create a python env for DEGAS before using `Screen`. So as to comply the R package's principle.
 
-To obtain the default parameters for DEGAS, you can use `SigBridgeR:::DEGASParamSet()`
+To obtain a template python env for DEGAS, you can use:
+
+```{r}
+#| label: get_degas_env_template
+env_config <- system.file(
+  "conda/DEGAS_environment.yml",
+  package = "SigBridgeR"
+) |>
+  readLines()
+```
+
+To obtain the default parameters for DEGAS, you can use:
 
 ```{r}
 #| label: get_default_params1
 #| eval: false
-degas_param <- SigBridgeR:::DEGASParamSet(list())
+degas_param <- DEGASParamSet(list())
 
-env_param <- SigBridgeR:::DEGASEnvSet(list())
+env_param <- DEGASEnvSet(list())
 ```
+
+
 
 You can use `ListPyEnvs()` to list all the python environments in your system, including virtual environments. Both Windows and Unix-like systems are supported. More information can be found in [https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html)
 
@@ -984,46 +852,19 @@ sidish_result <- Screen(
     train_distribution_fit = "fitted" # "fitted" or "default"
   ),
 
-  # Python environment parameters
-  env_params = list(
-    env.name = "r-reticulate-sidish-nvidia", # Auto-selected based on device parameter
-    env.type = "conda",
-    env.method = "environment",
-    env.file = system.file(
-      "conda/SIDISH_nvidia_environment.yml",
-      package = "SigBridgeR"
-    ),
-    env.python_verion = "3.12.12",
-    env.packages = c(
-      "numpy" = "1.26.4"
-      # Additional packages defined in environment.yml
-    ),
-    env.recreate = FALSE, # Force re-creating environment if TRUE
-    env.use_conda_forge = TRUE,
-    env.verbose = FALSE
-  ),
-
   verbose = TRUE
 )
 ```
 
-This code chunk will CREATE a conda environment called **`r-reticulate-sidish-nvidia`** (for GPU) or **`r-reticulate-sidish-cpu`** (for CPU) with Python 3.12.12 and install all required dependencies for SIDISH. If an environment with the same name already exists, it will be reused without recreation (unless `env_params = list(env.recreate = TRUE)` is specified).
 
 **Note**: SIDISH currently **only supports survival phenotypes** (`phenotype_class = "survival"`). The phenotype data frame must contain columns named `"time"` (survival time) and `"status"` (event indicator).
 
-To obtain the default parameters for SIDISH, use `SigBridgeR:::SIDISHParamSet()` and `SigBridgeR:::SIDISHEnvSet()`:
+To obtain the default parameters for SIDISH, use `SigBridgeR::SIDISHParamSet()`
 
 ```{r}
 #| label: get_default_params
 #| eval: false
-# Get default SIDISH algorithm parameters
-sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
-
-# Get default environment parameters (CPU version)
-env_default_cpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cpu")
-
-# Get default environment parameters (GPU version)
-env_default_gpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cuda")
+sidish_default_params <- SigBridgeR::SIDISHParamSet(list())
 ```
 
 You can use `ListPyEnvs()` to list all Python environments available on your system (both conda and virtualenv):
@@ -1037,9 +878,6 @@ ListPyEnv()
 # 2 r-reticulate-sidish-nvidia /home/user/miniconda3/envs/r-reticulate-sidish-nvidia/bin/python conda
 # 3 r-reticulate-sidish-cpu    /home/user/miniconda3/envs/r-reticulate-sidish-cpu/bin/python conda
 ```
-
-> **Important considerations**:
-> - GPU acceleration requires CUDA-compatible hardware. If GPU is not detected but `device = "cuda"` is specified, the function will abort with an error message. Set `sidish_param = list(device = "cpu")` to run on CPU. And of course the python environment must be recreated.
 
 **Return structure**: A named list containing:
 
@@ -1137,6 +975,13 @@ Here we provide some visualization methods for the screening results. Considerin
 **example**:
 
 Suppose you have performed all algorithm screening on your Seurat object and wish to examine the distribution across different celltypes and patient, you may reference and use the following code:
+
+```{r}
+#| label: fast_example
+#| eval: false
+# * Glance your seurat object
+ggplot2::autoplot(merged_seurat, group.by = "scissor")
+```
 
 ```{r}
 #| label: umap_exmaple
@@ -1394,17 +1239,6 @@ upset <- ScreenUpset(screened_seurat = merged_seurat)
 Here we use the example data LUAD to demonstrate how to use the functions in `SigBridgeR` to screen cells associated with phenotype.
 
 ```{r}
-#| label: set_working_directory
-#| eval: false
-# Set working directory
-if (requireNamespace("here", quietly = TRUE)) {
-  here::i_am(".here")
-  setwd(here::here())
-  knitr::opts_knit$set(root.dir = here::here())
-}
-```
-
-```{r}
 #| label: example_data
 #| eval: false
 library(SigBridgeR)
@@ -1448,8 +1282,6 @@ head(pheno)
 
 This single-cell RNA data is from humans. We set many parameters to `NULL` or `0` in order to maximize the flexibility of downstream analyses and capture a broader range of biological signals, so as to avoid insignificant results caused by too small a dataset.
 
-In practical data analysis, please adjust the thresholds and parameters as needed for your specific use case.
-
 Now we use `SCPreProcess()` to pre-process the single-cell RNA expression matrix data.
 
 ```{r}
@@ -1470,96 +1302,6 @@ seurat <- SCPreProcess(
   data_filter = list()
 )
 ```
-
-`BulkPreProcess()` is to pre-process the bulk expression data and the related clinical data.frame (containing bulk sample information) to perform PCA. Here, we want to retain the data so that the screening can reflect the most accurate situation. You can choose whether to filter or retain based on your own needs. See also [1.2 Bulk expression data](#12-bulk-expression-data) for more details.
-
-To facilitate the demonstration of the use of the `sample_info` parameter, we will divide the `pheno` based on its survival status into two groups, which will be stored in the `condition` column. `batch` column is used to store the batch information of the samples. The example is from one single batch. 
-
-In practice, please replace this with your actual phenotype classification; the approach shown here is for demonstration purposes only and is not recommended for real analyses.
-
-```{r}
-#| label: example_data_bulk
-#| eval: false
-sample_info <- tibble::rownames_to_column(pheno, var = "sample") |>
-  dplyr::rename(condition = status)
-sample_info$batch <- "batch1"
-
-head(sample_info)
-#         sample  time condition  batch
-# 1 TCGA-69-7978  4.40         0 batch1
-# 2 TCGA-62-8399 88.57         0 batch1
-# 3 TCGA-78-7539 25.99         0 batch1
-# 4 TCGA-73-4658 52.56         1 batch1
-# 5 TCGA-44-6775 23.16         0 batch1
-# 6 TCGA-44-2655 43.50         0 batch1
-
-set.seed(123)
-
-# * generate a mock data
-gene_ids <- c(
-  paste0("ENSG", sprintf("%011d", 1:3900)),
-  paste0("GENE_", LETTERS[1:100])
-)
-library(MASS)
-mu <- c(
-  runif(500, 100, 2000), # high
-  runif(1500, 20, 200), # medium
-  rexp(2000, rate = 1 / 2) # low (gamma-like, many near-zero)
-)
-lib_size_factor <- rlnorm(506, meanlog = log(3e7), sdlog = 0.3) / 3e7 # ~20–60M reads
-counts_mat <- matrix(0L, nrow = 4000, ncol = 506)
-
-for (i in seq_len(4000)) {
-  mu_i <- mu[i] * lib_size_factor
-  # dispersion decreases with mean: phi ≈ 0.5 / sqrt(mu_i + 1)
-  phi_i <- pmax(0.05, 0.5 / sqrt(mu_i + 1))
-  size_i <- 1 / phi_i
-  counts_mat[i, ] <- rnbinom(506, mu = mu_i, size = size_i)
-}
-counts_mat <- floor(counts_mat)
-counts_mat[counts_mat < 0] <- 0L
-
-colnames(counts_mat) <- sample_info$sample
-rownames(counts_mat) <- gene_ids
-
-
-filtered_counts_mat <- BulkPreProcess(
-  data = counts_mat,
-  sample_info = sample_info,
-  min_count_threshold = 10L,
-  min_gene_expressed = 3L,
-  min_total_reads = 1e5L,
-  min_genes_detected = 1000L,
-  min_correlation = 0.8,
-  n_top_genes = 500L, # used in pca
-  show_plot_results = TRUE
-)
-# ✔ [2025/12/23 15:19:20] Data loaded: 4000 genes * 506 samples
-# ℹ Aggregate Duplicated genes in rownames
-# ℹ [2025/12/23 15:19:21] Starting detailed quality checks...
-# ✔ Sample correlation: Good (minimum = 0.95)
-# ℹ [2025/12/23 15:19:23] PCA completed: PC1(0.99%) PC2(0.83%), 27 outlier samples
-# Warning: Detected 27 outlier sample(s) : TCGA-86-A456, TCGA-55-A492, TCGA-78-8660, TCGA-69-7973, TCGA-69-7980, TCGA-97-7937, TCGA-55-6543, TCGA-86-8671, TCGA-86-8359, TCGA-05-4405, TCGA-62-A471,
-# TCGA-35-3615, TCGA-05-5428, TCGA-99-8025, TCGA-44-6779, TCGA-4B-A93V, TCGA-MP-A4T7, TCGA-55-8203, …, TCGA-55-8301, and TCGA-55-7727
-# ℹ [2025/12/23 15:19:23] Generating visualization plots...
-# ✔ [2025/12/23 15:19:24] Data filtering completed:
-# ℹ   Genes: 4000 -> 2703 (removed 1297)
-# ℹ   Samples: 506 -> 506 (removed 0)
-# ✔ [2025/12/23 15:19:24] BulkPreProcess completed
-```
-
-And we will see a PCA plot.
-
-```{r}
-#| label: bulk_preprocess_pca_plot
-#| eval: false
-knitr::include_graphics("vignettes/example_figures/bulk_preprocess_pca.png")
-```
-
-[![pca](example_figures/bulk_preprocess_pca.png){fig-align="center" width="600"}]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/bulk_preprocess_pca.png))
-
-
-Thus far, we have completed all the data preprocessing. We are now ready to formally employ various single-cell phenotypic screening algorithms.
 
 First, we use `scissor` to screen cells associated with survival.
 
@@ -2022,12 +1764,9 @@ head(upset$stats)
 
 ```{r}
 #| label: example_data_upset_plot
-#| eval: false
+#| include: false
 knitr::include_graphics("vignettes/example_figures/upset.png")
 ```
-
-[![upset](example_figures/upset.png){fig-align="center" width="600"}]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/upset.png))
-
 
 A bar chart showing proportions can also be used to examine the screening results. Since the example data does not have sample metadata, we have created a fictional `Sample` column.
 
@@ -2066,13 +1805,11 @@ fraction_list <- ScreenFractionPlot(
 
 ```{r}
 #| label: example_data_fraction_plot
-#| eval: false
+#| include: false
 knitr::include_graphics("vignettes/example_figures/fraction.png")
 ```
 
 As you see, the `label_type`s set in function `Screen` are shown in the legend of each plot. 
-
-[![fraction](example_figures/fraction.png){fig-align="center" width="600"}]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/fraction.png))
 
 The `fraction_list` contains the statistical data and charts for each screening algorithm. The title of each plot will be appended with the method name as an identifier.
 
@@ -2167,11 +1904,9 @@ umaps
 
 ```{r}
 #| label: example_data_umap_plot
-#| eval: false
+#| include: false
 knitr::include_graphics("vignettes/example_figures/umaps.png")
 ```
-
-[![umaps](example_figures/umaps.png){fig-align="center" width="600"}]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps.png))
 
 All the analysis has been completed, and we can save the data for future use.
 
@@ -2248,7 +1983,6 @@ This process is also the same as described in [5.1 Survival-associated cell scre
 library(SigBridgeR)
 library(zeallot)
 library(Seurat)
-setwd(here::here())
 
 # * load the example data
 c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "binary")
@@ -2322,13 +2056,14 @@ table(pipet_result$scRNA_data$PIPET)
 
 ## 5. Troubleshooting
 
-View Troubleshooting[(https://github.com/WangX-Lab/SigBridgeR/wiki/Troubleshooting)](https://wanglabcsu.github.io/SigBridgeR/articles/Troubleshooting.html) for troubleshooting, especially for the environment setup.
+View Troubleshooting[(https://github.com/WangX-Lab/SigBridgeR/wiki/Troubleshooting)](https://wanglabcsu.github.io/SigBridgeR/articles/Troubleshooting.html) 
 
 
 Session information:
 
 ```{r}
 #| label: session_info
+#| echo: false
 sessionInfo()
 ```
 
@@ -2336,13 +2071,13 @@ sessionInfo()
 
 ## 6. References
 
-> 1.  Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
+> 1. Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
 >
-> 2.  Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell phenotype-associated subpopulation identifier. Briefings in Bioinformatics. 2024 Nov 22;26(1):bbae655.
+> 2. Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell phenotype-associated subpopulation identifier. Briefings in Bioinformatics. 2024 Nov 22;26(1):bbae655.
 >
-> 3.  Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
+> 3. Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
 >
-> 4.  WangX-Lab/ScPP Internet. cited 2025 Aug 31. Available from: https://github.com/WangX-Lab/ScPP
+> 4. He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci. Published online January 28, 2026.
 >
 > 5. Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med. 2022 Feb 1;14(1):11.
 >

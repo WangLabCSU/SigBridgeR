@@ -82,6 +82,22 @@ ValidateDEGASParams <- function(
     tmp_dir <- paste0(tmp_dir, "/")
   }
 
+  sc_mat <- if (inherits(sc_data, "Seurat")) {
+    SeuratObject::LayerData(sc_data, layer = "data", assay = p$assay)
+  } else {
+    sc_data
+  }
+  cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
+
+  if (length(cm_genes) == 0) {
+    Abort(
+      "No common genes found between single cell data and bulk data",
+      "Please check the inputs"
+    )
+  }
+
+  t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
+
   # -- resolve env & degas defaults -----------------------------------------
   degas_params <- DEGASParamSet(user_list = degas_params)
   if (lifecycle::is_present(env_params)) {
@@ -156,7 +172,8 @@ TrainDEGASModel <- function(
   matched_bulk,
   sc_data,
   phenotype,
-  t_sc_mat = t_sc_mat,
+  t_sc_mat,
+  cm_genes,
   sc_data.pheno_colname,
   label_type,
   p
@@ -415,22 +432,6 @@ DoDEGAS <- function(
     ts_cli$cli_alert_info(cli::col_green("Starting DEGAS Screen"))
   }
 
-  sc_mat <- if (inherits(sc_data, "Seurat")) {
-    SeuratObject::LayerData(sc_data, layer = "data", assay = p$assay)
-  } else {
-    sc_data
-  }
-  cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
-
-  if (length(cm_genes) == 0) {
-    Abort(
-      "No common genes found between single cell data and bulk data",
-      "Please check the inputs"
-    )
-  }
-
-  t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
-
   # -- load mode: restore cached ccModel1 ------------------------------------
   res <- if (!is.null(p$load_cache)) {
     cache <- CacheSysCall(
@@ -452,7 +453,8 @@ DoDEGAS <- function(
       matched_bulk = matched_bulk,
       sc_data = sc_data,
       phenotype = phenotype,
-      t_sc_mat = t_sc_mat,
+      t_sc_mat = p$t_sc_mat,
+      cm_genes = p$cm_genes,
       sc_data.pheno_colname = sc_data.pheno_colname,
       label_type = label_type,
       p = p
@@ -545,7 +547,7 @@ DoDEGAS <- function(
   # result
   list(
     scRNA_data = sc_data,
-    model = ccModel1,
+    model = res$ccModel1,
     DEGAS_prediction = t_sc_preds
   )
 }

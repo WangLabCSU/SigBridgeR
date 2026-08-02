@@ -104,7 +104,7 @@ BulkCheck <- function(
 #'    - `min_genes_detected` Minimum number of genes detected per sample, default: `10000`
 #'    - `min_correlation` Minimum correlation threshold between samples, default: `0.8`
 #'    - `n_top_genes` Number of top variable genes for PCA analysis, default: `500`
-#' @param show_plot_results Whether to generate visualization plots, default: `TRUE`
+#'    - `show_plot_results` Whether to generate visualization plots, default: `TRUE`
 #'
 #' @section Quality Metrics:
 #' The function calculates and reports several quality metrics:

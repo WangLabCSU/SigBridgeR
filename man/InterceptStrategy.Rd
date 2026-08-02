@@ -5,31 +5,19 @@
 \title{Inspect Registered Strategy Environments}
 \usage{
 InterceptStrategy(
-  strategy = c("ScreenStrategy", "SCPreProcessStrategy", "AnnotationStrategy"),
-  detailed = FALSE,
+  strategy = c("ScreenStrategy", "SCPreProcessStrategy", "SCAnnotateStrategy"),
   ...
 )
 }
 \arguments{
-\item{strategy}{Character. Name of the strategy environment to inspect.
+\item{strategy}{Character/Environment. strategy environment to inspect.
 Must be one of: \code{"ScreenStrategy"}, \code{"SCPreProcessStrategy"},
-or \code{"AnnotationStrategy"}. Partial matching is supported.}
-
-\item{detailed}{Logical. If \code{TRUE}, performs deep inspection of function objects
-(e.g., argument count, presence of \code{...}, body length, closure environment).
-Default: \code{FALSE}.}
+or \code{"SCAnnotateStrategy"}. Partial matching is supported.}
 
 \item{...}{Additional arguments (currently unused, reserved for future extension).}
 }
 \value{
-Invisibly returns a \code{data.frame}:
-\itemize{
-\item If \code{detailed = FALSE}: one row per entry in the strategy environment,
-with columns depending on content type (e.g., \code{method_name}, \code{func}, or \code{var}).
-\item If \code{detailed = TRUE}: augmented with introspection columns such as
-\code{func_n_args}, \code{func_has_dots}, \code{func_body_nlines},
-\code{func_is_closure}, etc.
-}
+Invisibly returns a tibble
 }
 \description{
 Lists and optionally inspects the contents of predefined strategy environments
@@ -42,12 +30,11 @@ registered pipelines—particularly useful when developing or auditing extensibl
 analysis frameworks.
 }
 \examples{
-\dontrun{
+\donttest{
 # List all preprocessing steps
 InterceptStrategy("SCPreProcessStrategy")
 
 # Get detailed function metadata for screen methods
-details <- InterceptStrategy("ScreenStrategy", detailed = TRUE, verbose = FALSE)
-head(details[, grep("executor_", names(details))])
+details <- InterceptStrategy("ScreenStrategy")
 }
 }

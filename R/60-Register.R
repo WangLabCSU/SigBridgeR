@@ -164,8 +164,10 @@ method(generic = RegisterImpl, class_function) <- function(
   chk::chk_character(name, "name")
   if (nchar(name) != 1) {
     Abort(
-      "Name (key) must be a single character",
-      "Current value: {.val {name}}"
+      "Name (key) must be a single letter",
+      "Current Name (key): {.val {name}}",
+      "If you intend to register a screen method or annotation method,\
+       please create a {.cls ScreenMethod} or {.cls AnnotationMethod} object"
     )
   }
 

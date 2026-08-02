@@ -1,0 +1,95 @@
+---
+title: "Performace Benchmarking"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Performace kinBenchmarking}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| include: FALSE
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r}
+#| label: setup
+library(SigBridgeR)
+library(microbenchmark)
+```
+
+This vignette demonstrates the performance of SigBridgeR function compared to other packages or R implementations, as a guide for developers to improve the performance of SigBridgeR.
+
+## `CountsToTPM`
+
+R implementation:
+
+```{r}
+#| label: R_CountsToTPM
+CountsToTPM_in_R <- function(counts, gene_length) {
+  # Match gene length order to counts rows
+  gene_length <- gene_length[rownames(counts)]
+  # Convert gene length from bp to kb
+  gene_length_kb <- gene_length / 1000L
+  # Reads Per Kilobase, RPK
+  rpk <- counts / gene_length_kb
+  # Per-sample scaling factor
+  scaling_factor <- colSums(rpk) / 1e6
+  # TPM
+  tpm <- sweep(rpk, 2L, scaling_factor, FUN = "/")
+  return(tpm)
+}
+```
+
+Data:
+
+```{r}
+set.seed(123)
+ngenes <- 2000
+nsamples <- 500
+
+gene_names <- paste0("GENE", seq_len(ngenes))
+sample_names <- paste0("Sample", seq_len(nsamples))
+
+counts <- matrix(
+  rnbinom(ngenes * nsamples, mu = 100, size = 10),
+  nrow = ngenes,
+  ncol = nsamples,
+  dimnames = list(gene_names, sample_names)
+)
+gene_length <- sample(
+  500:5000,
+  ngenes,
+  replace = TRUE
+)
+names(gene_length) <- gene_names
+```
+
+```{r}
+#| label: CountsToTPM
+set.seed(123L)
+CountsToTPM_stats <- microbenchmark(
+  SigBridgeR = {
+    CountsToTPM(counts, gene_length)
+  },
+  R = {
+    CountsToTPM_in_R(counts, gene_length)
+  }
+)
+CountsToTPM_stats
+```
+
+```{r}
+ggplot2::autoplot(CountsToTPM_stats)
+```
+
+```{r}
+#| label: consistency_check
+(CountsToTPM(counts, gene_length) -
+  CountsToTPM_in_R(counts, gene_length)) |>
+  abs() |>
+  max()
+```

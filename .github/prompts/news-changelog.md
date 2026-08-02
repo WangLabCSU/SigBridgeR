@@ -20,7 +20,6 @@ Requirements:
   - TESTING
   - INTERNAL CHANGES
 - Omit any section that has no relevant content.
-- Write concise, user-facing changelog entries.
 - Do not mechanically copy commit messages one by one.
 - Merge related commits into a single changelog bullet (e.g. "* Fixed bug") where appropriate.
 - Ignore trivial commits that are not relevant to users, unless they belong in INTERNAL CHANGES.
@@ -28,11 +27,11 @@ Requirements:
 - Do not include commit hashes, pull request numbers, or internal metadata unless they are essential.
 - Use bullet points under each section.
 - Prefer R package terminology where relevant, such as functions, arguments, datasets, vignettes, examples, tests, dependencies, CRAN checks, and documentation.
-- If a commit is ambiguous, describe it conservatively.
+- You can include commit messages in the changelog entry. If a commit is ambiguous, describe it according to the diff summary.
 - Besides the new NEWS.md entry, you can use following rules to NEWS.md
   - You can include markdown syntax (tables, links, bold font, italics, list, etc.) outside the changelog entry when necessary.
   - You can include code examples showing what has been changed or added, but do not include the entire file, code or function usage. The code chunk should be less than 30 lines, each line should be less than 80 characters. The code should be formatted with air style.
-  - You can use emojis and kaomoji. Generally, one or two emojis are fine.
+  - You can use emojis and kaomoji. Generally, one or two emojis per paragraph are fine.
 - All news writtern in English with markdon syntax
 
 Package: {{PACKAGE}}

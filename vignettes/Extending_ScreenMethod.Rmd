@@ -269,7 +269,6 @@ Let’s check whether it has indeed been registered
 ```{r}
 #| label: check_registry_2
 names(ScreenStrategy)
-# [1] "Scissor"   "scPP"      "LP_SGL"    "my_method" "PIPET"     "DEGAS"     "scAB"      "scPAS"
 ```
 
 ### Long-term support in SigBridgeR
@@ -284,7 +283,7 @@ After completing the steps described before, what you need to do is
    
 3. Add your contribution information to `README.Rmd`.
 
-4. Perform project-level code formatting, documentation, and `R CMD CHECK` in sequence.
+4. Perform project-level code formatting, documentation, and `R CMD CHECK`.
  
 5. Create a pull request.
 
@@ -324,83 +323,10 @@ my_res <- Screen(
 
 If you still have questions, please use GitHub [Issues](https://github.com/WangLabCSU/SigBridgeR/issues) or [Discussions](https://github.com/WangLabCSU/SigBridgeR/discussions).
 
-# Extend Seurat Methods
-
-In general, any Seurat function can be registered for use within `SCPreProcess`. However, due to the character-length limitation of the pipeline code string, at most **52** functions can be registered—one for each uppercase and lowercase letter (A–Z, a–z).  
-
-By default, the registry is defined as follows:
-
-**Pipeline Code Table:**
-
-| Code | Function               | Description                                      |
-|------|------------------------|--------------------------------------------------|
-| **o** | `CreateSeuratObject`   | **Required.** Must be the first step.            |
-| **n** | `NormalizeData`        | Standard normalization.                          |
-| **s** | `ScaleData`            | Scales data for PCA.                             |
-| **v** | `FindVariableFeatures` | Selects highly variable genes.                   |
-| **p** | `RunPCA`               | Principal Component Analysis.                    |
-| **e** | `FindNeighbors`        | Computes SNN graph.                              |
-| **c** | `FindClusters`         | Louvain algorithm clustering.                    |
-| **t** | `RunTSNE`              | t-SNE reduction.                                 |
-| **u** | `RunUMAP`              | UMAP reduction.                                  |
-| **r** | `SCTransform`          | **SCT workflow.** Replaces n, s, v.              |
-
-For example, if we need to use `Seurat::LoadXenium` to load Xenium data for screening, register this function first.
+## Session Info
 
 ```{r}
-#| label: extend_seurat
-#| eval: false
-RegisterSeuratMethod(x = Seurat::LoadXenium)
-# ✔ Registered x
+#| label: sessionInfo
+#| echo: false
+sessionInfo()
 ```
-
-To check:
-
-```{r}
-#| label: check_seurat_extended
-#| eval: false
-names(SCPreProcessStrategy)
-#  [1] "t" "u" "v" "x" "c" "e" "i" "n" "o" "p" "r" "s"
-```
-
-```{r}
-#| label: check_seurat_extended2
-#| eval: false
-tbl <- InterceptStrategy("SCPreProcessStrategy")
-# tibble [12 × 2]
-```
-
-# Extend Cell Type Annotation Methods
-
-By default, SigBridgeR includes three built-in cell type annotation algorithms: **SingleR**, **CellTypist**, and **mLLMCelltype**—all of which require additional installation and dependencies (See [README](https://wanglabcsu.github.io/SigBridgeR/index.html)). They can all be invoked through the unified interface function `SCAnnotate`.
-
-Extending cell annotation method is also very easy:
-
-```{r}
-#| label: extend_cell_anno
-#| eval: false
-my_method <- function(seurat_obj, ...) {
-  # placeholder
-  return(seurat_obj)
-}
-
-RegisterAnnoMethod(
-  my = my_method
-)
-# ✔ Registered `my`
-```
-
-To check:
-
-```{r}
-#| label: extend_cell_anoo2
-#| eval: false
-names(SCAnnotateStrategy)
-# [1] "my"           "mLLMCelltype" "CellTypist"   "SingleR"
-```
-
-Here are some recommendations for user-defined cell annotation functions.
-
-1. The first input and the first output must both be Seurat objects. 
-2. If multiple objects need to be returned, it is recommended to use a `list` format.
-3. Use `tidycheckUsage::tidycheckUsage()` to check the function's syntax.

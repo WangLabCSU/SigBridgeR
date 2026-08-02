@@ -162,19 +162,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// promise_root_expr_cpp
-SEXP promise_root_expr_cpp(SEXP expr, SEXP env, int max_depth);
-RcppExport SEXP _SigBridgeR_promise_root_expr_cpp(SEXP exprSEXP, SEXP envSEXP, SEXP max_depthSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type expr(exprSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type env(envSEXP);
-    Rcpp::traits::input_parameter< int >::type max_depth(max_depthSEXP);
-    rcpp_result_gen = Rcpp::wrap(promise_root_expr_cpp(expr, env, max_depth));
-    return rcpp_result_gen;
-END_RCPP
-}
 // fast_assign_plan
 void fast_assign_plan(List plan, SEXP rhs, Environment env);
 RcppExport SEXP _SigBridgeR_fast_assign_plan(SEXP planSEXP, SEXP rhsSEXP, SEXP envSEXP) {
@@ -201,7 +188,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
-    {"_SigBridgeR_promise_root_expr_cpp", (DL_FUNC) &_SigBridgeR_promise_root_expr_cpp, 3},
     {"_SigBridgeR_fast_assign_plan", (DL_FUNC) &_SigBridgeR_fast_assign_plan, 3},
     {NULL, NULL, 0}
 };

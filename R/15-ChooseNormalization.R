@@ -467,7 +467,7 @@ normalize_metric <- function(x, invert = FALSE) {
 ChooseNormalizationViz <- function(metrics_df) {
   check_installed(c("ggplot2", "patchwork"))
 
-  method <- variance_mean_cor <- NULL # ease checking NOTE
+  method <- variance_mean_cor <- composite_score <- NULL # ease checking NOTE
   # 1. Variance-mean correlation comparison
   vm_plot <- ggplot2::ggplot(
     metrics_df,

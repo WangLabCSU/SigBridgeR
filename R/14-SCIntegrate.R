@@ -55,7 +55,7 @@
 #' # Seurat integration with custom pipeline
 #' seu1 <- Seurat::CreateSeuratObject(mat1)
 #' seu2 <- Seurat::CreateSeuratObject(mat2)
-#' integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsfpi")
+#' integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsvpi")
 #' }
 #'
 #' @name SCIntegrate
@@ -307,7 +307,7 @@ SCIntegrate.Seurat <- function(
 #' @return Character vector of names.
 #' @keywords internal
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' get_names_4_ids(a = 1, b = 2)
 #' # [1] "a" "b"
 #' c <- 3
