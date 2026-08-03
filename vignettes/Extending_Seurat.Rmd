@@ -58,6 +58,13 @@ names(SCPreProcessStrategy)
 InterceptStrategy("SCPreProcessStrategy")
 ```
 
+overwrite:
+
+```{r}
+#| label: overwrite_seurat
+Register(x = Seurat::LoadXenium, overwrite = TRUE)
+```
+
 ## Session Info
 
 ```{r}

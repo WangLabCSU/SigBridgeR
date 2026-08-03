@@ -68,6 +68,7 @@ Suggests:
     matrixStats,
     matrixTests,
     methods,
+    microbenchmark,
     mLLMCelltype,
     org.Hs.eg.db,
     pak,
@@ -98,6 +99,7 @@ Suggests:
     tidydr,
     tidyr,
     WGCNA,
+    withr,
     zeallot
 VignetteBuilder: knitr
 Config/testthat/edition: 3

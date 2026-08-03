@@ -5,7 +5,7 @@
 #' The metadata includes general system information, cache configuration,
 #' and an optional user-provided description.
 #'
-#' #' # Methods
+#' # Methods
 #' `WriteCacheMeta` is an S7 generic with methods available for the following
 #' classes:
 #'
@@ -27,10 +27,20 @@
 #'
 #' @param cache_config A `ScreenMethodConfig` or `ScreenMethodCache` S7
 #'   object containing the cache configuration to write.
-#' @param ... Additional arguments:
-#'   - `file`: `character`. Path to the JSON metadata file to be written. Required for `ScreenMethodConfig`; derived from `cache_config@cache_config_path` for `ScreenMethodCache`.
-#'   - `additional_description`: `character` or `NULL`. An optional string describing the cache entry. Default: `NULL`.
-#'   - `verbose`: `logical`. Whether to print progress messages. Default: `TRUE`.
+#' @param ... Additional arguments passed to methods.
+#'
+#'   For `ScreenMethodConfig`:
+#'   - `file`: `character(1)`. Path to the JSON metadata file to be written.
+#'   - `additional_description`: `character` or `NULL`. An optional string
+#'     describing the cache entry. Default: `NULL`.
+#'   - `verbose`: `logical`. Whether to print progress messages. Default:
+#'     `TRUE`.
+#'
+#'   For `ScreenMethodCache`:
+#'   - `additional_description`: `character` or `NULL`. An optional string
+#'     describing the cache entry. Default: `NULL`.
+#'   - `verbose`: `logical`. Whether to print progress messages. Default:
+#'     `TRUE`.
 #'
 #' @returns Invisible. Returns the metadata list that was written to the file.
 #'
@@ -58,8 +68,6 @@ WriteCacheMeta <- new_generic(
   dispatch_args = "cache_config"
 )
 
-#' @rdname WriteCacheMeta
-#' @export
 method(WriteCacheMeta, class_any) <- function(
   cache_config,
   ...
@@ -80,6 +88,7 @@ WriteCacheMeta.ScreenMethodConfig <- function(
   verbose = TRUE,
   ...
 ) {
+  check_dots_empty()
   check_installed("jsonlite")
   if (!is.null(additional_description)) {
     chk::chk_string(additional_description)
@@ -121,20 +130,27 @@ WriteCacheMeta.ScreenMethodConfig <- function(
   invisible(cache_meta)
 }
 
-#' @rdname WriteCacheMeta
-#' @export
-method(
-  WriteCacheMeta,
-  ScreenMethodConfig
-) <- WriteCacheMeta.ScreenMethodConfig
+method(WriteCacheMeta, ScreenMethodConfig) <- function(
+  cache_config,
+  ...,
+  file,
+  additional_description = NULL,
+  verbose = TRUE
+) {
+  WriteCacheMeta.ScreenMethodConfig(
+    cache_config = cache_config,
+    file = file,
+    additional_description = additional_description,
+    verbose = verbose,
+    ...
+  )
+}
 
-#' @rdname WriteCacheMeta
-#' @export
 method(WriteCacheMeta, ScreenMethodCache) <- function(
   cache_config,
+  ...,
   additional_description = NULL,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ) {
   WriteCacheMeta.ScreenMethodConfig(
     cache_config = cache_config@screen_method_config,

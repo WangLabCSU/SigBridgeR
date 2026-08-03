@@ -38,7 +38,7 @@
 #'
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Matrix integration
 #' mat1 <- matrix(rpois(100, 5), nrow = 20,
 #'                dimnames = list(paste0("G", 1:20), paste0("C", 1:5)))
@@ -75,7 +75,7 @@ SCIntegrate <- function(
   merge.dr = FALSE,
   project = "Integrated Seurat"
 ) {
-  # ! don't use S3 method
+  # ! don't use genric
   dots <- list2(...)
   if (length(dots) == 0) {
     Abort("[{.fun SCIntegrate}]: No arguments provided.")
@@ -97,7 +97,7 @@ SCIntegrate <- function(
       .quos = .quos
     ))
   }
-  if (!inherits(dots[[1L]], "Matrix") || is.matrix(dots[[1L]])) {
+  if (inherits(dots[[1L]], "Matrix") || is.matrix(dots[[1L]])) {
     return(SCIntegrate.matrix(..., .quos = .quos))
   }
 
@@ -271,7 +271,7 @@ SCIntegrate.Seurat <- function(
 
   # step: a letter (input)
   # steps_to_run[[step]]: a letter (run)
-  args_for_fn <- dots[!is_seurat]
+  args_for_fn <- c(dots[!is_seurat], method = method)
   args_integrate <- utils::modifyList(
     SigBridgeRUtils::FilterArgs4Func(args_for_fn, method),
     SigBridgeRUtils::FilterArgs4Func(args_for_fn, Seurat::IntegrateLayers)
@@ -306,23 +306,6 @@ SCIntegrate.Seurat <- function(
 #' @param .quoses predefined
 #' @return Character vector of names.
 #' @keywords internal
-#' @examples
-#' \donttest{
-#' get_names_4_ids(a = 1, b = 2)
-#' # [1] "a" "b"
-#' c <- 3
-#' get_names_4_ids(a = 1, b = 2, c)
-#' # [1] "a" "b" "c"
-#' get_names_4_ids()
-#' # character(0)
-#'
-#' mat1 <- matrix(1:2)
-#' mat2 <- matrix(3:4)
-#' get_names_4_ids(mat1, mat2)
-#' # [1] "mat1" "mat2"
-#' get_names_4_ids(mat1, c = mat2)
-#' # [1] "mat1" "c"
-#' }
 get_names_4_ids <- function(..., .quoses = NULL) {
   dots <- list2(...)
 

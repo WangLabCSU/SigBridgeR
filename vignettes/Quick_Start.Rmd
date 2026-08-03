@@ -14,7 +14,6 @@ vignette: >
 
 ```{r}
 #| label: prework
-#| eval: false
 #| include: false
 
 library(SigBridgeR)
@@ -138,11 +137,7 @@ fraction <- ScreenFractionPlot(
 # [1] "stats"         "plot"          "combined_plot"
 ```
 
-```{r}
-#| label: visualize_fraction_plot
-#| include: false
-knitr::include_graphics("vignettes/example_figures/fraction_q.png")
-```
+[![fraction_q](vignettes/example_figures/fraction_q.png){fig-align="center" width="600"}](vignettes/example_figures/fraction_q.png)
 
 -   Venn diagram:
 
@@ -187,11 +182,7 @@ venn_plot <- ggVennDiagram::ggVennDiagram(
   ggplot2::ggtitle("Screening Venn Diagram")
 ```
 
-```{r}
-#| label: visualize_venn_plot
-#| include: false
-knitr::include_graphics("vignettes/example_figures/venn_q.png")
-```
+[![venn_q](vignettes/example_figures/venn_q.png){fig-align="center" width="600"}](vignettes/example_figures/venn_q.png)
 
 
 -   Set plot:
@@ -205,11 +196,7 @@ upset <- ScreenUpset(
 )
 ```
 
-```{r}
-#| label: visualize_upset_plot
-#| include: false
-knitr::include_graphics("vignettes/example_figures/upset_q.png")
-```
+[![upset_q](vignettes/example_figures/upset_q.png){fig-align="center" width="600"}](vignettes/example_figures/upset_q.png)
 
 -   2D UMAP:
 
@@ -264,11 +251,7 @@ umaps <- cluster_umap +
 umaps
 ```
 
-```{r}
-#| label: visualize_umap_plot
-#| include: false
-knitr::include_graphics("vignettes/example_figures/umaps_q.png")
-```
+[![umaps_q](vignettes/example_figures/umaps_q.png){fig-align="center" width="600"}](vignettes/example_figures/umaps_q.png)
 
 For more detail, please see [Full Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html).
 

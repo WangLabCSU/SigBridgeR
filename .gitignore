@@ -41,3 +41,5 @@ Rplots.pdf
 index_files/
 *index.html
 tests/testthat/testthat-problems.rds
+/.uvr/library/
+/.uvr/activate*

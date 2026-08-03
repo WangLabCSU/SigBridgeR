@@ -63,7 +63,6 @@ DrawBulkPCA(bulk = bulk, group = group, batch = batch)
 }
 \seealso{
 Other input_preprocess:
-\code{\link[=BulkPreProcess]{BulkPreProcess()}},
 \code{\link[=PhenoMap]{PhenoMap()}},
 \code{\link[=PhenoPreProcess]{PhenoPreProcess()}},
 \code{\link[=SCPreProcess]{SCPreProcess()}},

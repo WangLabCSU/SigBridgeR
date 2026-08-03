@@ -2,42 +2,38 @@
 % Please edit documentation in R/46-WriteCache.R
 \name{WriteCache}
 \alias{WriteCache}
-\alias{WriteCache,any-method}
-\alias{WriteCache,SigBridgeR::ScreenMethodConfig-method}
-\alias{WriteCache,SigBridgeR::ScreenMethodCache-method}
 \title{Write an R Object to Cache}
 \usage{
 WriteCache(cache, ...)
-
-## S7 method for class <any>
-WriteCache(cache, ...)
-
-## S7 method for class <SigBridgeR::ScreenMethodConfig>
-WriteCache(cache, additional_description = NULL, verbose = TRUE, ...)
-
-## S7 method for class <SigBridgeR::ScreenMethodCache>
-WriteCache(
-  cache,
-  format = c("auto", "qs2", "qdata", "rdata", "csv"),
-  max_rows = 1000L,
-  max_cols = 20L,
-  additional_description = NULL,
-  verbose = TRUE,
-  ...
-)
 }
 \arguments{
 \item{cache}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7 object
 containing the data and configuration to write.}
 
-\item{...}{Additional arguments:
+\item{...}{Additional arguments passed to methods.
+
+For \code{ScreenMethodConfig}:
 \itemize{
-\item \code{format}: \code{character}. Cache format for \code{ScreenMethodCache}.
-One of\code{"auto"}, \code{"qs2"}, \code{"qdata"}, \code{"rdata"}, or \code{"csv"}. When \code{"auto"} (default), the format is detected per-object.
-\item \code{max_rows}: \code{integer}. Maximum number of rows to consider a data.frame "small" for CSV output. Default: \code{1000L}.
-\item \code{max_cols}: \code{integer}. Maximum number of columns to consider a data.frame "small" for CSV output. Default: \code{20L}.
-\item \code{additional_description}: \code{character} or \code{NULL}. An optional string describing the cache entry. Default: \code{NULL}.
-\item \code{verbose}: \code{logical}. Whether to print progress messages. Default: \code{TRUE}.
+\item \code{file}: \code{character(1)}. Path to the output \code{cache_config.json} file.
+\item \code{additional_description}: \code{character} or \code{NULL}. An optional string
+describing the cache entry. Default: \code{NULL}.
+\item \code{verbose}: \code{logical}. Whether to print progress messages. Default:
+\code{TRUE}.
+}
+
+For \code{ScreenMethodCache}:
+\itemize{
+\item \code{format}: \code{character}. Cache format. One of \code{"auto"}, \code{"qs2"},
+\code{"qdata"}, \code{"rdata"}, or \code{"csv"}. When \code{"auto"} default, the format is
+detected per object.
+\item \code{max_rows}: \code{integer}. Maximum number of rows to consider a data.frame
+small for CSV output. Default: \code{1000L}.
+\item \code{max_cols}: \code{integer}. Maximum number of columns to consider a
+data.frame small for CSV output. Default: \code{20L}.
+\item \code{additional_description}: \code{character} or \code{NULL}. An optional string
+describing the cache entry. Default: \code{NULL}.
+\item \code{verbose}: \code{logical}. Whether to print progress messages. Default:
+\code{TRUE}.
 }}
 }
 \value{

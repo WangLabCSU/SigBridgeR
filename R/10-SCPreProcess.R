@@ -34,11 +34,11 @@
 #' Default structure:
 #' \preformatted{
 #' list(
-#'   o = list(project = "SC_Screen_Proj", min.cells = 400L), # do not pass `counts`
-#'   n = list(),             # NormalizeData args
-#'   s = list(),             # ScaleData args
-#'   v = list(),             # FindVariableFeatures args
-#'   c = list(resolution = 0.6),
+#'   o = list(), # do not pass `counts`
+#'   n = list(), # NormalizeData args
+#'   s = list(), # ScaleData args
+#'   v = list(), # FindVariableFeatures args
+#'   c = list(),
 #'   ...
 #' )
 #' }
@@ -110,31 +110,16 @@ SCPreProcess.default <- function(
   ...,
   pipeline = "onsvpcetu",
   params = list(
-    # * CreateSeuratObject
-    o = list(
-      project = "SC_Screen_Proj",
-      min.cells = 400L
-    ),
-    # * NormalizeData
-    n = list(),
-    # * ScaleData
-    s = list(),
-    # * FindVariableFeatures
-    v = list(),
-    # * RunPCA
-    p = list(),
-    # * FindNeightbors
-    e = list(),
-    # * FindClusters
-    c = list(
-      resolution = 0.6
-    ),
-    # * RunTSNE
-    t = list(),
-    # * RunUMAP
-    u = list()
-    # * SCTransform
-    # r = list()
+    o = list(), # * CreateSeuratObject
+    n = list(), # * NormalizeData
+    s = list(), # * ScaleData
+    v = list(), # * FindVariableFeatures
+    p = list(), # * RunPCA
+    e = list(), # * FindNeightbors
+    c = list(), # * FindClusters
+    t = list(), # * RunTSNE
+    u = list() # * RunUMAP
+    # r = list()    # * SCTransform
   ),
   quality_control = list(
     pattern = c("^MT-")
@@ -267,31 +252,16 @@ SCPreProcess.R6 <- function(
   ...,
   pipeline = "onsvpcetu",
   params = list(
-    # * CreateSeuratObject
-    o = list(
-      project = "SC_Screen_Proj",
-      min.cells = 400L
-    ),
-    # * NormalizeData
-    n = list(),
-    # * ScaleData
-    s = list(),
-    # * FindVariableFeatures
-    v = list(),
-    # * RunPCA
-    p = list(),
-    # * FindNeightbors
-    e = list(),
-    # * FindClusters
-    c = list(
-      resolution = 0.6
-    ),
-    # * RunTSNE
-    t = list(),
-    # * RunUMAP
-    u = list()
-    # * SCTransform
-    # r = list()
+    o = list(), # * CreateSeuratObject
+    n = list(), # * NormalizeData
+    s = list(), # * ScaleData
+    v = list(), # * FindVariableFeatures
+    p = list(), # * RunPCA
+    e = list(), # * FindNeightbors
+    c = list(), # * FindClusters
+    t = list(), # * RunTSNE
+    u = list() # * RunUMAP
+    # r = list()    # * SCTransform
   ),
   quality_control = list(
     pattern = c("^MT-")

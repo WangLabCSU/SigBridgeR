@@ -94,3 +94,6 @@ SigBridgeR_workflow.png
 
 # flir files
 ^flir$
+^uvr\.toml$
+^uvr\.lock$
+^\.uvr$

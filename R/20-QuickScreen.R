@@ -274,5 +274,6 @@ Screen <- function(
     params <- method_config$mapper(params)
   }
 
-  ScreenMethodResult(eval(method_config$executor, params))
+  res_list <- eval(method_config$executor, params)
+  exec(ScreenMethodResult, !!!res_list)
 }

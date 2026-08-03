@@ -2,31 +2,20 @@
 % Please edit documentation in R/44-CheckCache.R
 \name{CheckCache}
 \alias{CheckCache}
-\alias{CheckCache,any-method}
-\alias{CheckCache,SigBridgeR::ScreenMethodConfig-method}
-\alias{CheckCache,SigBridgeR::ScreenMethodCache-method}
 \title{Check Cache Configuration Consistency}
 \usage{
-CheckCache(cache_config, ...)
-
-## S7 method for class <any>
-CheckCache(cache_config, ...)
-
-## S7 method for class <SigBridgeR::ScreenMethodConfig>
-CheckCache(cache_config, path, ...)
-
-## S7 method for class <SigBridgeR::ScreenMethodCache>
 CheckCache(cache_config, ...)
 }
 \arguments{
 \item{cache_config}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7
 object containing the current configuration to validate.}
 
-\item{...}{Additional arguments to be passed to the method.
+\item{...}{Additional arguments to be passed to the method：
+
+For \code{ScreenMethodConfig}:
 \itemize{
 \item \code{path}: \code{character}. Path to the cache directory or directly to the
-\code{cache_config.json} file. Required for \code{ScreenMethodConfig}; derived
-from \code{cache_config@cache_config_path} for \code{ScreenMethodCache}.
+\code{cache_config.json} file. Required for \code{ScreenMethodConfig}
 }}
 }
 \value{

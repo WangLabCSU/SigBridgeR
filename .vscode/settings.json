@@ -1,15 +1,24 @@
 {
-    "[r]": {
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "Posit.air-vscode"
-    },
-    "[quarto]": {
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "quarto.quarto"
-    },
-    "positron.r.useNativePipe": true,
-    "positron.r.pipe": "|>",
-    "todo-tree.tree.showBadges": true,
-    "todo-tree.tree.disableCompactFolders": true,
-    "jarl.assignmentOperator": "<-"
+  "[quarto]": {
+    "editor.defaultFormatter": "quarto.quarto",
+    "editor.formatOnSave": true
+  },
+  "[r]": {
+    "editor.defaultFormatter": "Posit.air-vscode",
+    "editor.formatOnSave": true
+  },
+  "jarl.assignmentOperator": "<-",
+  "positron.r.customBinaries": [
+    "/opt/R/4.5.1/lib/R/bin/R"
+  ],
+  "positron.r.customRootFolders": [
+    "/data/home/yyx/.uvr/r-versions"
+  ],
+  "positron.r.interpreters.default": "/opt/R/4.5.1/lib/R/bin/R",
+  "positron.r.pipe": "|>",
+  "positron.r.useNativePipe": true,
+  "r.rpath.linux": "/opt/R/4.5.1/lib/R/bin/R",
+  "r.rterm.linux": "/opt/R/4.5.1/lib/R/bin/R",
+  "todo-tree.tree.disableCompactFolders": true,
+  "todo-tree.tree.showBadges": true
 }

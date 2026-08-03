@@ -265,7 +265,7 @@ describe("WeightedVote - row names", {
   it("preserves row names in output", {
     vote_data <- data.frame(
       Expert1 = c("Positive", "Negative", "Neutral"),
-      Expert2 = c("Positive", "Positive", "Other"),
+      Expert2 = c("Positive", "Neutral", "Other"),
       row.names = c("Cell1", "Cell2", "Cell3")
     )
     weights <- c(Expert1 = 1, Expert2 = 1)
@@ -283,7 +283,8 @@ describe("WeightedVote - row names", {
     # Use matrix without dimnames to avoid auto row names from data.frame
     vote_mat <- matrix(
       c("Positive", "Negative", "Positive", "Positive"),
-      nrow = 2, ncol = 2
+      nrow = 2,
+      ncol = 2
     )
     colnames(vote_mat) <- c("V1", "V2")
     weights <- c(V1 = 1, V2 = 1)
@@ -296,7 +297,8 @@ describe("WeightedVote - row names", {
   it("matrix input with row names preserves them", {
     vote_mat <- matrix(
       c("Positive", "Negative", "Neutral", "Other"),
-      nrow = 2, ncol = 2,
+      nrow = 2,
+      ncol = 2,
       dimnames = list(c("R1", "R2"), c("V1", "V2"))
     )
     weights <- c(V1 = 1, V2 = 1)
@@ -415,8 +417,11 @@ describe("WeightedVote - edge cases", {
 
     labels <- c("Positive", "Negative", "Neutral", "Other")
     vote_data <- as.data.frame(
-      matrix(sample(labels, n_rows * n_voters, replace = TRUE),
-             nrow = n_rows, ncol = n_voters)
+      matrix(
+        sample(labels, n_rows * n_voters, replace = TRUE),
+        nrow = n_rows,
+        ncol = n_voters
+      )
     )
     colnames(vote_data) <- paste0("V", seq_len(n_voters))
     weights <- setNames(rep(1, n_voters), paste0("V", seq_len(n_voters)))

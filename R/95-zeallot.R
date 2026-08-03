@@ -1,5 +1,3 @@
-#' @inherit zeallot::`%<-%`
-#' @keywords internal
 `%<-%` <- function(lhs, rhs) {
   lhs_expr <- substitute(lhs)
   env <- parent.frame()

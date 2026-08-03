@@ -13,9 +13,8 @@ SCPreProcess(sc, ...)
   sc = NULL,
   ...,
   pipeline = "onsvpcetu",
-  params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
-    list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
-    = list()),
+  params = list(o = list(), n = list(), s = list(), v = list(), p = list(), e = list(), c
+    = list(), t = list(), u = list()),
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_thresh = c(200L, 6000L), nCount_thresh = c(500L, 50000L),
     percent.mt = 20L, percent.rp = 60L),
@@ -26,9 +25,8 @@ SCPreProcess(sc, ...)
   sc,
   ...,
   pipeline = "onsvpcetu",
-  params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
-    list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
-    = list()),
+  params = list(o = list(), n = list(), s = list(), v = list(), p = list(), e = list(), c
+    = list(), t = list(), u = list()),
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_thresh = c(200L, 6000L), nCount_thresh = c(500L, 50000L),
     percent.mt = 20L, percent.rp = 60L),
@@ -68,11 +66,11 @@ Keys match the pipeline characters (e.g., \code{params$n} for \code{NormalizeDat
 Default structure:
 \preformatted{
 list(
-  o = list(project = "SC_Screen_Proj", min.cells = 400L), # do not pass `counts`
-  n = list(),             # NormalizeData args
-  s = list(),             # ScaleData args
-  v = list(),             # FindVariableFeatures args
-  c = list(resolution = 0.6),
+  o = list(), # do not pass `counts`
+  n = list(), # NormalizeData args
+  s = list(), # ScaleData args
+  v = list(), # FindVariableFeatures args
+  c = list(),
   ...
 )
 }}
@@ -146,7 +144,6 @@ Other single_cell_preprocess:
 \code{\link{SCPreProcessStrategy}}
 
 Other input_preprocess:
-\code{\link[=BulkPreProcess]{BulkPreProcess()}},
 \code{\link[=DrawBulkPCA]{DrawBulkPCA()}},
 \code{\link[=PhenoMap]{PhenoMap()}},
 \code{\link[=PhenoPreProcess]{PhenoPreProcess()}},

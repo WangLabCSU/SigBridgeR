@@ -30,7 +30,6 @@ Preprocess bulk expression data: convert Ensembles version IDs and TCGA version 
 }
 \seealso{
 Other input_preprocess:
-\code{\link[=BulkPreProcess]{BulkPreProcess()}},
 \code{\link[=DrawBulkPCA]{DrawBulkPCA()}},
 \code{\link[=PhenoMap]{PhenoMap()}},
 \code{\link[=PhenoPreProcess]{PhenoPreProcess()}},

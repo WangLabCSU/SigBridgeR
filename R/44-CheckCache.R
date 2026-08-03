@@ -20,10 +20,11 @@
 #'
 #' @param cache_config A `ScreenMethodConfig` or `ScreenMethodCache` S7
 #'   object containing the current configuration to validate.
-#' @param ... Additional arguments to be passed to the method.
+#' @param ... Additional arguments to be passed to the method：
+#'
+#'   For `ScreenMethodConfig`:
 #'   - `path`: `character`. Path to the cache directory or directly to the
-#'   `cache_config.json` file. Required for `ScreenMethodConfig`; derived
-#'   from `cache_config@cache_config_path` for `ScreenMethodCache`.
+#'   `cache_config.json` file. Required for `ScreenMethodConfig`
 #'
 #' @returns Invisible `TRUE` if the cache configuration is consistent with
 #'   the current parameters. Otherwise, aborts with an error message
@@ -51,14 +52,12 @@
 #' )
 #' CheckCache(cache)
 #' }
-CheckCache <- new_generic("CheckCache", dispatch_args = "cache_config")
+CheckCache <- new_generic(
+  "CheckCache",
+  dispatch_args = "cache_config"
+)
 
-#' @rdname CheckCache
-#' @export
-method(CheckCache, class_any) <- function(
-  cache_config,
-  ...
-) {
+method(CheckCache, class_any) <- function(cache_config, ...) {
   cls_cache <- class(cache_config)
   expected_cls <- c("ScreenMethodConfig", "ScreenMethodCache")
   Abort(
@@ -68,11 +67,8 @@ method(CheckCache, class_any) <- function(
 }
 
 
-CheckCache.ScreenMethodConfig <- function(
-  cache_config,
-  path,
-  ...
-) {
+CheckCache.ScreenMethodConfig <- function(cache_config, path, ...) {
+  check_dots_empty()
   check_installed("jsonlite")
   meta_json <- if (!endsWith(path, "cache_config.json") && dir.exists(path)) {
     file.path(path, "cache_config.json")
@@ -91,7 +87,6 @@ CheckCache.ScreenMethodConfig <- function(
   # screen_method
   # phenotype_class
   # label_type
-  # params = list(...)
 
   inputs_meta <- props(cache_config)
 
@@ -114,22 +109,21 @@ CheckCache.ScreenMethodConfig <- function(
   )
 }
 
-#' @rdname CheckCache
-#' @export
 method(
   CheckCache,
   ScreenMethodConfig
-) <- CheckCache.ScreenMethodConfig
+) <- function(cache_config, ..., path) {
+  CheckCache.ScreenMethodConfig(cache_config = cache_config, path = path, ...)
+}
 
 
-#' @rdname CheckCache
-#' @export
 method(CheckCache, ScreenMethodCache) <- function(
   cache_config,
   ...
 ) {
   CheckCache.ScreenMethodConfig(
     cache_config = cache_config@screen_method_config,
-    path = cache_config@cache_config_path
+    path = cache_config@cache_config_path,
+    ...
   )
 }

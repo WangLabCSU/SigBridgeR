@@ -10,7 +10,7 @@
 #'   Forwarded from [DoDEGAS()].
 #' @param sc_data.pheno_colname,label_type,phenotype_class,tmp_dir
 #'   Forwarded from [DoDEGAS()].
-#' @param env_params,degas_params,normality_test_method,t_sc_mat
+#' @param env_params,degas_params,normality_test_method
 #'   Forwarded from [DoDEGAS()].
 #' @param ... Additional dots forwarded from [DoDEGAS()].
 #'
@@ -82,22 +82,6 @@ ValidateDEGASParams <- function(
     tmp_dir <- paste0(tmp_dir, "/")
   }
 
-  sc_mat <- if (inherits(sc_data, "Seurat")) {
-    SeuratObject::LayerData(sc_data, layer = "data", assay = p$assay)
-  } else {
-    sc_data
-  }
-  cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
-
-  if (length(cm_genes) == 0) {
-    Abort(
-      "No common genes found between single cell data and bulk data",
-      "Please check the inputs"
-    )
-  }
-
-  t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
-
   # -- resolve env & degas defaults -----------------------------------------
   degas_params <- DEGASParamSet(user_list = degas_params)
   if (lifecycle::is_present(env_params)) {
@@ -141,6 +125,22 @@ ValidateDEGASParams <- function(
   assay <- dots$assay %||% "RNA"
   load_cache <- dots$load_cache
   save_cache <- dots$save_cache %||% tmp_dir
+
+  sc_mat <- if (inherits(sc_data, "Seurat")) {
+    SeuratObject::LayerData(sc_data, layer = "data", assay = assay)
+  } else {
+    sc_data
+  }
+  cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
+
+  if (length(cm_genes) == 0) {
+    Abort(
+      "No common genes found between single cell data and bulk data",
+      "Please check the inputs"
+    )
+  }
+
+  t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
 
   # -- build cache config ---------------------------------------------------
   cache_config <- ScreenMethodConfig(
@@ -468,7 +468,7 @@ DoDEGAS <- function(
   # Predict with DEGAS model
   t_sc_preds <- data.table::as.data.table(DEGAS::predClassBag.optimized(
     ccModel = res$ccModel1,
-    Exp = t_sc_mat,
+    Exp = p$t_sc_mat,
     scORpat = 'pat'
   ))
 
@@ -484,7 +484,7 @@ DoDEGAS <- function(
       data.table::setnames(t_sc_preds, pheno_df_colnames)
     }
   }
-  t_sc_preds[, "cell_id" := rownames(t_sc_mat)]
+  t_sc_preds[, "cell_id" := rownames(p$t_sc_mat)]
 
   if (p$verbose) {
     ts_cli$cli_alert_info("Labeling screened cells")

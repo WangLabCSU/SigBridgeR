@@ -140,7 +140,6 @@ result <- PhenoPreProcess(
 \code{\link[=PhenoMap]{PhenoMap()}}
 
 Other input_preprocess:
-\code{\link[=BulkPreProcess]{BulkPreProcess()}},
 \code{\link[=DrawBulkPCA]{DrawBulkPCA()}},
 \code{\link[=PhenoMap]{PhenoMap()}},
 \code{\link[=SCPreProcess]{SCPreProcess()}},

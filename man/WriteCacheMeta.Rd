@@ -2,42 +2,31 @@
 % Please edit documentation in R/43-WriteCacheMeta.R
 \name{WriteCacheMeta}
 \alias{WriteCacheMeta}
-\alias{WriteCacheMeta,any-method}
-\alias{WriteCacheMeta,SigBridgeR::ScreenMethodConfig-method}
-\alias{WriteCacheMeta,SigBridgeR::ScreenMethodCache-method}
 \title{Write Cache Metadata}
 \usage{
 WriteCacheMeta(cache_config, ...)
-
-## S7 method for class <any>
-WriteCacheMeta(cache_config, ...)
-
-## S7 method for class <SigBridgeR::ScreenMethodConfig>
-WriteCacheMeta(
-  cache_config,
-  file,
-  additional_description = NULL,
-  verbose = TRUE,
-  ...
-)
-
-## S7 method for class <SigBridgeR::ScreenMethodCache>
-WriteCacheMeta(
-  cache_config,
-  additional_description = NULL,
-  verbose = TRUE,
-  ...
-)
 }
 \arguments{
 \item{cache_config}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7
 object containing the cache configuration to write.}
 
-\item{...}{Additional arguments:
+\item{...}{Additional arguments passed to methods.
+
+For \code{ScreenMethodConfig}:
 \itemize{
-\item \code{file}: \code{character}. Path to the JSON metadata file to be written. Required for \code{ScreenMethodConfig}; derived from \code{cache_config@cache_config_path} for \code{ScreenMethodCache}.
-\item \code{additional_description}: \code{character} or \code{NULL}. An optional string describing the cache entry. Default: \code{NULL}.
-\item \code{verbose}: \code{logical}. Whether to print progress messages. Default: \code{TRUE}.
+\item \code{file}: \code{character(1)}. Path to the JSON metadata file to be written.
+\item \code{additional_description}: \code{character} or \code{NULL}. An optional string
+describing the cache entry. Default: \code{NULL}.
+\item \code{verbose}: \code{logical}. Whether to print progress messages. Default:
+\code{TRUE}.
+}
+
+For \code{ScreenMethodCache}:
+\itemize{
+\item \code{additional_description}: \code{character} or \code{NULL}. An optional string
+describing the cache entry. Default: \code{NULL}.
+\item \code{verbose}: \code{logical}. Whether to print progress messages. Default:
+\code{TRUE}.
 }}
 }
 \value{
@@ -47,16 +36,6 @@ Invisible. Returns the metadata list that was written to the file.
 Writes metadata for SigBridgeR cache identification to a JSON file.
 The metadata includes general system information, cache configuration,
 and an optional user-provided description.
-
-#' # Methods
-\code{WriteCacheMeta} is an S7 generic with methods available for the following
-classes:
-
-\itemize{
-\item \code{ANY}
-\item \code{SigBridgeR::ScreenMethodCache}
-\item \code{SigBridgeR::ScreenMethodConfig}
-}
 }
 \details{
 This function creates a JSON metadata file containing:
@@ -72,6 +51,17 @@ cache identification and should not be modified.
 
 Only for SigBridgeR version >= 3.7.0.
 }
+\section{Methods}{
+\code{WriteCacheMeta} is an S7 generic with methods available for the following
+classes:
+
+\itemize{
+\item \code{ANY}
+\item \code{SigBridgeR::ScreenMethodCache}
+\item \code{SigBridgeR::ScreenMethodConfig}
+}
+}
+
 \examples{
 \dontrun{
 # Write metadata for a ScreenMethodConfig

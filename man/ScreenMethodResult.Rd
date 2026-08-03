@@ -13,6 +13,8 @@ of the class.}
 
 \item{...}{Named arguments to set as additional S7 properties on the
 result object (e.g., screening statistics, method-specific outputs).}
+
+\item{sigbridger_version}{Package Version of SigBridgeR}
 }
 \value{
 A \code{ScreenMethodResult} S7 object.

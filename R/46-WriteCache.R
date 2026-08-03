@@ -33,13 +33,27 @@
 #'
 #' @param cache A `ScreenMethodConfig` or `ScreenMethodCache` S7 object
 #'   containing the data and configuration to write.
-#' @param ... Additional arguments:
-#'   - `format`: `character`. Cache format for `ScreenMethodCache`.
-#'        One of`"auto"`, `"qs2"`, `"qdata"`, `"rdata"`, or `"csv"`. When `"auto"` (default), the format is detected per-object.
-#'   - `max_rows`: `integer`. Maximum number of rows to consider a data.frame "small" for CSV output. Default: `1000L`.
-#'   - `max_cols`: `integer`. Maximum number of columns to consider a data.frame "small" for CSV output. Default: `20L`.
-#'   - `additional_description`: `character` or `NULL`. An optional string describing the cache entry. Default: `NULL`.
-#'   - `verbose`: `logical`. Whether to print progress messages. Default: `TRUE`.
+#' @param ... Additional arguments passed to methods.
+#'
+#'   For `ScreenMethodConfig`:
+#'   - `file`: `character(1)`. Path to the output `cache_config.json` file.
+#'   - `additional_description`: `character` or `NULL`. An optional string
+#'     describing the cache entry. Default: `NULL`.
+#'   - `verbose`: `logical`. Whether to print progress messages. Default:
+#'     `TRUE`.
+#'
+#'   For `ScreenMethodCache`:
+#'   - `format`: `character`. Cache format. One of `"auto"`, `"qs2"`,
+#'     `"qdata"`, `"rdata"`, or `"csv"`. When `"auto"` default, the format is
+#'     detected per object.
+#'   - `max_rows`: `integer`. Maximum number of rows to consider a data.frame
+#'     small for CSV output. Default: `1000L`.
+#'   - `max_cols`: `integer`. Maximum number of columns to consider a
+#'     data.frame small for CSV output. Default: `20L`.
+#'   - `additional_description`: `character` or `NULL`. An optional string
+#'     describing the cache entry. Default: `NULL`.
+#'   - `verbose`: `logical`. Whether to print progress messages. Default:
+#'     `TRUE`.
 #'
 #' @returns Invisible. Returns the absolute path(s) to the written cache
 #'   file(s).
@@ -62,10 +76,11 @@
 #' # Force CSV format for small data frames
 #' WriteCache(cache, format = "csv")
 #' }
-WriteCache <- new_generic("WriteCache", dispatch_args = "cache")
+WriteCache <- new_generic(
+  "WriteCache",
+  dispatch_args = "cache"
+)
 
-#' @rdname WriteCache
-#' @export
 method(WriteCache, class_any) <- function(
   cache,
   ...
@@ -78,13 +93,11 @@ method(WriteCache, class_any) <- function(
   )
 }
 
-#' @rdname WriteCache
-#' @export
 method(WriteCache, ScreenMethodConfig) <- function(
   cache,
+  ...,
   additional_description = NULL,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ) {
   WriteCacheMeta(
     cache_config = cache@screen_method_config,
@@ -95,19 +108,15 @@ method(WriteCache, ScreenMethodConfig) <- function(
   )
 }
 
-#' @rdname WriteCache
-#' @export
 method(WriteCache, ScreenMethodCache) <- function(
   cache,
+  ...,
   format = c("auto", "qs2", "qdata", "rdata", "csv"),
   max_rows = 1000L,
   max_cols = 20L,
   additional_description = NULL,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ) {
-  check_dots_empty()
-
   cache_path <- cache@cache_path
   cache_data <- cache@cache_data
 

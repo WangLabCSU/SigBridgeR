@@ -31,6 +31,7 @@
 #'   of the class.
 #' @param ... Named arguments to set as additional S7 properties on the
 #'   result object (e.g., screening statistics, method-specific outputs).
+#' @param sigbridger_version Package Version of SigBridgeR
 #'
 #' @returns A `ScreenMethodResult` S7 object.
 #'

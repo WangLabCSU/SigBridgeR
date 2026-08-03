@@ -81,7 +81,7 @@ Unified interface for integrating heterogeneous single-cell datasets.
 Supports \code{Seurat} objects and matrices (via gene-wise aggregation and column concatenation).
 }
 \examples{
-\donttest{
+\dontrun{
 # Matrix integration
 mat1 <- matrix(rpois(100, 5), nrow = 20,
                dimnames = list(paste0("G", 1:20), paste0("C", 1:5)))
