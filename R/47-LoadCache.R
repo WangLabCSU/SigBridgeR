@@ -3,11 +3,10 @@
 #' @description
 #' Reads a cached R object from disk. The file format is determined by the
 #' file extension:
-#' \itemize{
-#'   \item \code{.qs2}: loaded via \code{qs2::qs_read()}
-#'   \item \code{.RData} / \code{.rds}: loaded via \code{readRDS()}
-#'   \item \code{.csv}: loaded via \code{data.table::fread()}
-#' }
+#'
+#' * `.qs2`: loaded via `qs2::qs_read()`
+#' * `.RData` / `.rds`: loaded via `readRDS()`
+#' * `.csv`: loaded via `data.table::fread()`
 #'
 #' If the file was originally saved in \code{.qs2} format but \code{qs2} is
 #' not installed on the current machine, a clear error message is shown with

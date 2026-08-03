@@ -18,6 +18,7 @@ MergeResult(
 \item Lists containing \code{scRNA_data} (Seurat objects)
 \item Mixed combinations of the above
 }
+
 The first object serves as the base for merging. When duplicate metadata
 columns are found, priority is given to the first occurrence.}
 
@@ -26,10 +27,10 @@ screening methods produce categorical labels. Names must match screening
 method names (case-insensitive). If \code{NULL} (default), no voting is performed.}
 
 \item{ties.method}{Character. Method for resolving ties in weighted voting:
-\describe{
-\item{\code{"first"}}{Select the first category alphabetically (default)}
-\item{\code{"last"}}{Select the last category alphabetically}
-\item{\code{"random"}}{Randomly select among tied categories}
+\itemize{
+\item \strong{\code{"first"}}: Select the first category alphabetically (default)
+\item \strong{\code{"last"}}: Select the last category alphabetically
+\item \strong{\code{"random"}}: Randomly select among tied categories
 }}
 
 \item{verbose}{Logical. Whether to print progress messages. Default: inherits

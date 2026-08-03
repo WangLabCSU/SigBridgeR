@@ -21,6 +21,7 @@ attributes stored in \verb{@misc}:
 \item \code{raw_dim}: Original dimensions before filtering
 \item \code{column2only_tumor}: The column name used for filtering
 }
+
 If \code{column2only_tumor} is \code{NULL} or the specified column is not found,
 returns the original object unchanged.
 }

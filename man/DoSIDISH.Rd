@@ -87,16 +87,16 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 }}
 
 \item{...}{Additional arguments passed to the function. Common parameters include:
-\describe{
-\item{verbose}{Logical. Whether to print verbose output (default: \code{TRUE}).}
-\item{seed}{Integer. Random seed for reproducibility (default: \code{123L}).}
-\item{assay}{Character. Assay to use for screening (default: \code{"RNA"}).}
+\itemize{
+\item \strong{\code{verbose}}: Logical. Whether to print verbose output (default: \code{TRUE}).
+\item \strong{\code{seed}}: Integer. Random seed for reproducibility (default: \code{123L}).
+\item \strong{\code{assay}}: Character. Assay to use for screening (default: \code{"RNA"}).
 }}
 }
 \value{
 A named list containing:
-\describe{
-\item{scRNA_data}{Modified single-cell data object with integrated screening results.}
+\itemize{
+\item \strong{scRNA_data}: Modified single-cell data object with integrated screening results.
 }
 }
 \description{

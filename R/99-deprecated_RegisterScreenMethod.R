@@ -33,12 +33,11 @@
 #'
 #' @section Registry Entry Structure:
 #' Each registered method is stored as a list with four elements:
-#' \describe{
-#'   \item{\code{method_name}}{Character: the method key (e.g., "Scissor")}
-#'   \item{\code{executor}}{Function: the actual screening implementation}
-#'   \item{\code{phenotypes}}{Character vector: supported phenotype classes}
-#'   \item{\code{mapper}}{Function: parameter transformation hook}
-#' }
+#'
+#' * **`method_name`**: Character: the method key (e.g., "Scissor")
+#' * **`executor`**: Function: the actual screening implementation
+#' * **`phenotypes`**: Character vector: supported phenotype classes
+#' * **`mapper`**: Function: parameter transformation hook
 #'
 #' @return Invisibly returns \code{TRUE} on successful registration.
 #' @export

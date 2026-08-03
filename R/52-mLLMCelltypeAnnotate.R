@@ -6,15 +6,14 @@
 #' generation, with uncertainty quantification via agreement metrics.
 #'
 #' Workflow:
-#' \enumerate{
-#'   \item Identifies top marker genes per cluster (via \code{Seurat::FindAllMarkers()}
-#'         or user-provided markers).
-#'   \item Queries specified LLMs with marker gene lists and tissue context.
-#'   \item For multiple models: computes consensus annotations and uncertainty metrics
-#'         (consensus proportion, entropy) via \code{mLLMCelltype::interactive_consensus_annotation()}.
-#'   \item For single model: uses direct annotation via \code{mLLMCelltype::annotate_cell_types()}.
-#'   \item Adds results as metadata columns to the Seurat object.
-#' }
+#'
+#' 1. Identifies top marker genes per cluster (via `Seurat::FindAllMarkers()`
+#'    or user-provided markers).
+#' 2. Queries specified LLMs with marker gene lists and tissue context.
+#' 3. For multiple models: computes consensus annotations and uncertainty metrics
+#'    (consensus proportion, entropy) via `mLLMCelltype::interactive_consensus_annotation()`.
+#' 4. For single model: uses direct annotation via `mLLMCelltype::annotate_cell_types()`.
+#' 5. Adds results as metadata columns to the Seurat object.
 #'
 #' @param sc A \code{Seurat} object with pre-computed clusters
 #'   (stored in \code{Idents(sc)} or \code{sc$seurat_clusters}).
@@ -24,61 +23,54 @@
 #' @param tissue_name Character. Biological context for annotation (e.g., tissue type,
 #'   disease state). Helps LLMs interpret marker genes appropriately. Default: \code{"Human Tumor"}.
 #' @param models Character vector of LLM model identifiers. Supported formats:
-#'   \itemize{
-#'     \item OpenAI: \code{"gpt-4o"}, \code{"gpt-4o-mini"}, etc.
-#'     \item Anthropic: \code{"claude-3-5-sonnet-20240620"}, etc.
-#'     \item Google: \code{"gemini-1.5-pro"}, etc.
-#'     \item Alibaba: \code{"qwen-max"}, \code{"qwen-plus"}, etc.
-#'   }
+#'   * OpenAI: `"gpt-4o"`, `"gpt-4o-mini"`, etc.
+#'   * Anthropic: `"claude-3-5-sonnet-20240620"`, etc.
+#'   * Google: `"gemini-1.5-pro"`, etc.
+#'   * Alibaba: `"qwen-max"`, `"qwen-plus"`, etc.
 #'   Default: \code{c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")}.
 #'   For single-model mode, only the first model is used.
 #' @param api_keys Named list of API keys with provider names as keys:
-#'   \describe{
-#'     \item{\code{openai}}{OpenAI API key}
-#'     \item{\code{anthropic}}{Anthropic API key}
-#'     \item{\code{gemini}}{Google Cloud API key (with Gemini enabled)}
-#'     \item{\code{qwen}}{Alibaba DashScope API key}
-#'   }
-#'   Example: \code{list(openai = "sk-...", anthropic = "sk-ant-...")}.
-#'   \strong{Note}: Default placeholder keys (\code{"your-xxx-key"}) will fail—users must supply valid keys.
+#'
+#'   * **`openai`**: OpenAI API key
+#'   * **`anthropic`**: Anthropic API key
+#'   * **`gemini`**: Google Cloud API key (with Gemini enabled)
+#'   * **`qwen`**: Alibaba DashScope API key
+#'
+#'   Example: `list(openai = "sk-...", anthropic = "sk-ant-...")`.
+#'   **Note**: Default placeholder keys (`"your-xxx-key"`) will fail—users must supply valid keys.
 #'
 #' @param ... Additional arguments passed to downstream functions. Parameters are routed as follows:
-#' \describe{
-#'   \item{To \code{mLLMCelltype::annotate_cell_types()} and \code{mLLMCelltype::interactive_consensus_annotation()}:}{
-#'     \describe{
-#'       \item{\code{top_gene_count}}{Number of top genes to use per cluster (default: 10L).}
-#'       \item{\code{debug}}{Logical. If \code{TRUE}, prints debugging information.}
-#'       \item{\code{base_urls}}{Custom API base URLs: single character string (applied globally) or named list with provider-specific URLs (e.g., \code{list(openai = "...", anthropic = "...")}). Useful for proxies, enterprise gateways, or testing environments.}
-#'       \item{\code{controversy_threshold}}{Consensus proportion threshold (default: 0.7). Clusters below this value are flagged as controversial.}
-#'       \item{\code{entropy_threshold}}{Entropy threshold for controversial cluster detection (default: 1.0).}
-#'       \item{\code{max_discussion_rounds}}{Maximum discussion rounds for controversial clusters (default: 3).}
-#'       \item{\code{consensus_check_model}}{Model used for consensus validation.}
-#'       \item{\code{log_dir}}{Directory for log storage (default: \code{tempdir()}).}
-#'       \item{\code{cache_dir}}{Directory for cache storage (default: \code{tempdir()}).}
-#'       \item{\code{use_cache}}{Logical. Whether to use cached results (default: \code{TRUE}).}
-#'       \item{\code{clusters_to_analyze}}{Character/numeric vector of cluster IDs to analyze. Non-existent IDs trigger warnings.}
-#'       \item{\code{force_rerun}}{Logical. If \code{TRUE}, bypasses cache and forces re-analysis (affects discussion phase only). Default: \code{FALSE}.}
-#'     }
-#'   }
-#' }
 #'
-#' @return The input \code{Seurat} object with the following metadata columns added:
-#'   \describe{
-#'     \item{\code{mllmcelltype_cell_type}}{Consensus cell type annotation per cell.}
-#'     \item{\code{mllmcelltype_consensus_proportion}}{(Multi-model only) Proportion of models
-#'           agreeing on the assigned label (range: 0–1). Higher values indicate stronger consensus.}
-#'     \item{\code{mllmcelltype_entropy}}{(Multi-model only) Shannon entropy of model predictions.
-#'           Lower values indicate higher confidence (less disagreement among models).}
-#'   }
-#'   \strong{Note}: Uncertainty metrics are \emph{only added in multi-model mode}
-#'   (\code{length(models) > 1}).
+#' * **To `mLLMCelltype::annotate_cell_types()` and `mLLMCelltype::interactive_consensus_annotation()`**:
+#'   * `top_gene_count`: Number of top genes to use per cluster (default: 10L).
+#'   * `debug`: Logical. If `TRUE`, prints debugging information.
+#'   * `base_urls`: Custom API base URLs: single character string (applied globally) or named list with provider-specific URLs (e.g., `list(openai = "...", anthropic = "...")`). Useful for proxies, enterprise gateways, or testing environments.
+#'   * `controversy_threshold`: Consensus proportion threshold (default: 0.7). Clusters below this value are flagged as controversial.
+#'   * `entropy_threshold`: Entropy threshold for controversial cluster detection (default: 1.0).
+#'   * `max_discussion_rounds`: Maximum discussion rounds for controversial clusters (default: 3).
+#'   * `consensus_check_model`: Model used for consensus validation.
+#'   * `log_dir`: Directory for log storage (default: `tempdir()`).
+#'   * `cache_dir`: Directory for cache storage (default: `tempdir()`).
+#'   * `use_cache`: Logical. Whether to use cached results (default: `TRUE`).
+#'   * `clusters_to_analyze`: Character/numeric vector of cluster IDs to analyze. Non-existent IDs trigger warnings.
+#'   * `force_rerun`: Logical. If `TRUE`, bypasses cache and forces re-analysis (affects discussion phase only). Default: `FALSE`.
+#'
+#' @return The input `Seurat` object with the following metadata columns added:
+#'
+#'   * **`mllmcelltype_cell_type`**: Consensus cell type annotation per cell.
+#'   * **`mllmcelltype_consensus_proportion`**: (Multi-model only) Proportion of models
+#'     agreeing on the assigned label (range: 0–1). Higher values indicate stronger consensus.
+#'   * **`mllmcelltype_entropy`**: (Multi-model only) Shannon entropy of model predictions.
+#'     Lower values indicate higher confidence (less disagreement among models).
+#'
+#'   **Note**: Uncertainty metrics are *only added in multi-model mode*
+#'   (`length(models) > 1`).
 #'
 #' @section Requirements:
-#'   \itemize{
-#'     \item R packages: \code{mLLMCelltype}, \code{plyr}, \code{Seurat}
-#'     \item Valid API keys for selected LLM providers (costs may apply)
-#'     \item Internet connectivity for LLM API calls
-#'   }
+#'
+#' * R packages: `mLLMCelltype`, `plyr`, `Seurat`
+#' * Valid API keys for selected LLM providers (costs may apply)
+#' * Internet connectivity for LLM API calls
 #'
 #'
 #' @examples

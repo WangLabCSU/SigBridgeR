@@ -21,10 +21,9 @@
 #' ## Validator
 #'
 #' The class validator enforces:
-#' \itemize{
-#'   \item `scRNA_data` must be present on the object.
-#'   \item `scRNA_data` must be a [Seurat][SeuratObject::Seurat-class] object.
-#' }
+#'
+#' * `scRNA_data` must be present on the object.
+#' * `scRNA_data` must be a [Seurat][SeuratObject::Seurat-class] object.
 #'
 #' @param scRNA_data A [Seurat][SeuratObject::Seurat-class] object
 #'   containing the screening results. This is the core required property

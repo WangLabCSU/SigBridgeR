@@ -14,12 +14,10 @@
 #' This enables safe, lazy resolution of external dependencies and simplifies
 #' pipeline configuration via strings.
 #'
-#' @param ... Named arguments where each name is a **strategy key** (e.g., \code{"h"})
+#' @param ... Named arguments where each name is a **strategy key** (e.g., `"h"`)
 #'   and each value is either:
-#'   \itemize{
-#'     \item A **function**, or
-#'     \item A **character string** specifying a function (e.g., \code{"Seurat::RunHarmony"} or \code{"stats::prcomp"}).
-#'   }
+#'   * A **function**, or
+#'   * A **character string** specifying a function (e.g., `"Seurat::RunHarmony"` or `"stats::prcomp"`).
 #'   The function will be automatically wrapped to accept \code{object} and \code{params}, making it compatible with `SCPreProcess()` pipelines.
 #' @param overwrite Logical. If \code{FALSE} (default), throws an error when attempting
 #'   to replace an existing strategy. Set to \code{TRUE} to allow updates.

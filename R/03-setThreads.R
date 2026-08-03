@@ -16,12 +16,10 @@
 #' @param qs2 Integer. Thread count for qs2 (default: inherited from \code{threads}).
 #' @param openmp Integer. Thread count for OpenMP (default: NULL).
 #' @param tf_config Named list for TensorFlow-specific configuration:
-#'   \itemize{
-#'     \item \code{xla_flag}: Character. XLA JIT compilation flags (default: auto-optimized)
-#'     \item \code{xla_device}: Integer. XLA device ID (default: \code{1L})
-#'     \item \code{inter_op}: Integer. Inter-op parallelism threads (default: \code{max(2, floor(threads/4))})
-#'     \item \code{intra_op}: Integer. Intra-op parallelism threads (default: \code{1L}). If \code{NULL}, inherits global \code{threads} by default.
-#'   }
+#'   * `xla_flag`: Character. XLA JIT compilation flags (default: auto-optimized)
+#'   * `xla_device`: Integer. XLA device ID (default: `1L`)
+#'   * `inter_op`: Integer. Inter-op parallelism threads (default: `max(2, floor(threads/4))`)
+#'   * `intra_op`: Integer. Intra-op parallelism threads (default: `1L`). If `NULL`, inherits global `threads` by default.
 #' @param verbose Logical. Whether to print verbose output (default: inherited from function options).
 #' @param ... Additional arguments for \code{data.table::setDTthreads()} (e.g., \code{restore}).
 #'

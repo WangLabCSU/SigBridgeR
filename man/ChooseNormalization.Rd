@@ -15,7 +15,7 @@ ChooseNormalization(
 }
 \arguments{
 \item{...}{Named arguments where each value is a \code{Seurat} object representing
-a distinct preprocessing strategy (e.g., \code{SCT = sct_obj, Log = log_obj}).
+a distinct preprocessing strategy (e.g., \verb{SCT = sct_obj, Log = log_obj}).
 \strong{Requirements}:
 \itemize{
 \item Must be named (names become method identifiers)
@@ -41,16 +41,16 @@ quantile of mean expression are excluded. Default: \code{0.2} (bottom 20\% exclu
 
 \item{weight}{Named numeric vector specifying weights for composite scoring. Must
 contain exactly these components summing to 1:
-\describe{
-\item{\code{variance_stability}}{Weight for variance-mean decoupling (default: 0.4)}
-\item{\code{marker_signal}}{Weight for marker gene retention (default: 0.35)}
-\item{\code{dropout_robustness}}{Weight for dropout bias removal (default: 0.25)}
+\itemize{
+\item \strong{\code{variance_stability}}: Weight for variance-mean decoupling (default: 0.4)
+\item \strong{\code{marker_signal}}: Weight for marker gene retention (default: 0.35)
+\item \strong{\code{dropout_robustness}}: Weight for dropout bias removal (default: 0.25)
 }}
 }
 \value{
 A list containing:
-\describe{
-\item{\code{metrics}}{A \code{data.table} with diagnostic metrics per method:
+\itemize{
+\item \strong{\code{metrics}}: A \code{data.table} with diagnostic metrics per method:
 \itemize{
 \item \code{variance_mean_cor}: Pearson correlation between log10(mean) and
 log10(variance) of normalized expression (lower = better)
@@ -61,9 +61,8 @@ dropout rate (from counts) and normalized means (lower = better)
 \item \code{composite_score}: Weighted combination of normalized metrics (0–1 scale)
 \item \code{rank}: Method ranking (1 = best)
 }
-}
-\item{\code{recommendation}}{Character string naming the top-ranked method}
-\item{\code{plots}}{(Optional) Diagnostic visualizations if \code{ggplot2} available}
+\item \strong{\code{recommendation}}: Character string naming the top-ranked method
+\item \strong{\code{plots}}: (Optional) Diagnostic visualizations if \code{ggplot2} available
 }
 }
 \description{
@@ -88,14 +87,14 @@ comparison of preprocessed Seurat objects.
 \item Validates input objects (naming, cell count consistency, data slot presence)
 \item Subsamples cells (if needed) for computational efficiency
 \item Computes three core metrics per method:
-\describe{
-\item{Variance stabilization}{Correlation between log-transformed mean and
-variance of normalized expression}
-\item{Marker retention}{Overlap between user-provided markers and top HVGs}
-\item{Dropout robustness}{Correlation between gene dropout rate (from counts)
-and normalized expression means}
+\itemize{
+\item \strong{Variance stabilization}: Correlation between log-transformed mean and
+variance of normalized expression
+\item \strong{Marker retention}: Overlap between user-provided markers and top HVGs
+\item \strong{Dropout robustness}: Correlation between gene dropout rate (from counts)
+and normalized expression means
 }
-\item Normalizes metrics to 0-1  scale (inverting where lower=better)
+\item Normalizes metrics to 0-1 scale (inverting where lower=better)
 \item Computes weighted composite score and ranks methods
 \item Returns top recommendation with full diagnostic report
 }

@@ -16,12 +16,11 @@
 #' ## Validator
 #'
 #' The class validator enforces:
-#' \itemize{
-#'   \item `param` must be a non-empty named list.
-#'   \item `phenotype_class` must be one or more of `"binary"`,
-#'     `"continuous"`, `"survival"`.
-#'   \item `method_name` must match a key in [ScreenStrategy].
-#' }
+#'
+#' * `param` must be a non-empty named list.
+#' * `phenotype_class` must be one or more of `"binary"`,
+#'   `"continuous"`, `"survival"`.
+#' * `method_name` must match a key in [ScreenStrategy].
 #'
 #' @param method_name `character`. The name of the screening method (e.g.,
 #'   `"Scissor"`, `"scPAS"`). Must match a key in [ScreenStrategy].
@@ -107,11 +106,10 @@ ScreenMethodConfig <- new_class(
 #' ## Validator
 #'
 #' The class validator checks that:
-#' \itemize{
-#'   \item `cache_path` is an existing directory.
-#'   \item The parent directory of `cache_config_path` exists.
-#'   \item `cache_config_path` ends with `"cache_config.json"`.
-#' }
+#'
+#' * `cache_path` is an existing directory.
+#' * The parent directory of `cache_config_path` exists.
+#' * `cache_config_path` ends with `"cache_config.json"`.
 #'
 #' @param cache_path `character`. Path to the cache directory where data
 #'   files are stored.

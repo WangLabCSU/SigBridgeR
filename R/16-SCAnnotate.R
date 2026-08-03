@@ -14,20 +14,18 @@
 #'   Use \code{names(SCAnnotateStrategy)} to list available methods.
 #' @param ... Method-specific parameters passed to the underlying annotation function.
 #'   Examples:
-#'   \itemize{
-#'     \item For \code{"SingleR"}: \code{ref}, \code{labels}, \code{de.n}, etc.
-#'     \item For \code{"CellTypist"}: \code{model}, \code{download}, \code{python}, etc.
-#'     \item For \code{"mLLMCelltype"}: \code{tissue_name}, \code{models}, \code{api_keys}, etc.
-#'   }
+#'   * For `"SingleR"`: `ref`, `labels`, `de.n`, etc.
+#'   * For `"CellTypist"`: `model`, `download`, `python`, etc.
+#'   * For `"mLLMCelltype"`: `tissue_name`, `models`, `api_keys`, etc.
+#'
 #'   See individual method documentation for details.
 #'
-#' @return The input \code{Seurat} object enriched with method-specific annotation
+#' @return The input `Seurat` object enriched with method-specific annotation
 #'   metadata columns. Column names and content depend on the chosen method:
-#'   \describe{
-#'     \item{\code{SingleR}}{\code{SingleR_labels}, \code{SingleR_delta_next}, \code{SingleR_pruned_labels}}
-#'     \item{\code{CellTypist}}{\code{celltypist_prediction}, \code{celltypist_probability}, etc.}
-#'     \item{\code{mLLMCelltype}}{\code{mllmcelltype_cell_type}, \code{mllmcelltype_consensus_proportion}, \code{mllmcelltype_entropy}}
-#'   }
+#'
+#'   * **`SingleR`**: `SingleR_labels`, `SingleR_delta_next`, `SingleR_pruned_labels`
+#'   * **`CellTypist`**: `celltypist_prediction`, `celltypist_probability`, etc.
+#'   * **`mLLMCelltype`**: `mllmcelltype_cell_type`, `mllmcelltype_consensus_proportion`, `mllmcelltype_entropy`
 #'
 #' @section Extensibility:
 #'   New annotation methods can be registered via \code{\link{RegisterAnnoMethod}}

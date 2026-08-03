@@ -110,14 +110,10 @@ ValidatescPPParams <- function(
 #'
 #'
 #' @return A list containing:
-#' \describe{
-#'   \item{scRNA_data}{Seurat object with added metadata:
-#'     \describe{
-#'       \item{ScPP}{"Positive"/"Negative"/"Neutral" classification}
-#'     }
-#'   }
-#'   \item{gene_list}{List of genes used for screening}
-#' }
+#'
+#' * **scRNA_data**: Seurat object with added metadata:
+#'   * **ScPP**: "Positive"/"Negative"/"Neutral" classification
+#' * **gene_list**: List of genes used for screening
 #'
 #' @section Algorithm Steps:
 #' 1. Data Validation: Checks sample alignment between bulk and phenotype data

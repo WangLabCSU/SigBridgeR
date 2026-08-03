@@ -59,6 +59,7 @@ Characters map to Seurat functions:
 \item \code{'u'}: \code{RunUMAP}
 \item \code{'r'}: \code{SCTransform} (Alternative to n/s/v)
 }
+
 Default is \code{"onsvpcetu"}.}
 
 \item{params}{A named list of lists containing arguments for each pipeline step.

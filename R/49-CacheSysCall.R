@@ -14,21 +14,19 @@
 #' ## Load mode
 #'
 #' In `"load"` mode, the function:
-#' \enumerate{
-#'   \item Resolves the cache path via [CacheSetHere()].
-#'   \item Validates cache consistency via [CheckCache()].
-#'   \item Loads each cached data object via [LoadCache()] and returns them
-#'     as a named list.
-#' }
+#'
+#' 1. Resolves the cache path via [CacheSetHere()].
+#' 2. Validates cache consistency via [CheckCache()].
+#' 3. Loads each cached data object via [LoadCache()] and returns them
+#'    as a named list.
 #'
 #' ## Save mode
 #'
 #' In `"save"` mode, the function:
-#' \enumerate{
-#'   \item Resolves and creates the cache directory via [CacheSetHere()].
-#'   \item Writes the cache data and metadata via [WriteCache()].
-#'   \item Returns the cache data invisibly.
-#' }
+#'
+#' 1. Resolves and creates the cache directory via [CacheSetHere()].
+#' 2. Writes the cache data and metadata via [WriteCache()].
+#' 3. Returns the cache data invisibly.
 #'
 #' @param mode `character`. Either `"load"` or `"save"`.
 #' @param path `character` or `NULL`. User-specified path. In save mode,

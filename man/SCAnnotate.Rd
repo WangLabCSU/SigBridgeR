@@ -23,6 +23,7 @@ Examples:
 \item For \code{"CellTypist"}: \code{model}, \code{download}, \code{python}, etc.
 \item For \code{"mLLMCelltype"}: \code{tissue_name}, \code{models}, \code{api_keys}, etc.
 }
+
 See individual method documentation for details.}
 
 \item{method}{Character. Annotation method to use. Must be one of the keys
@@ -33,10 +34,10 @@ Use \code{names(SCAnnotateStrategy)} to list available methods.}
 \value{
 The input \code{Seurat} object enriched with method-specific annotation
 metadata columns. Column names and content depend on the chosen method:
-\describe{
-\item{\code{SingleR}}{\code{SingleR_labels}, \code{SingleR_delta_next}, \code{SingleR_pruned_labels}}
-\item{\code{CellTypist}}{\code{celltypist_prediction}, \code{celltypist_probability}, etc.}
-\item{\code{mLLMCelltype}}{\code{mllmcelltype_cell_type}, \code{mllmcelltype_consensus_proportion}, \code{mllmcelltype_entropy}}
+\itemize{
+\item \strong{\code{SingleR}}: \code{SingleR_labels}, \code{SingleR_delta_next}, \code{SingleR_pruned_labels}
+\item \strong{\code{CellTypist}}: \code{celltypist_prediction}, \code{celltypist_probability}, etc.
+\item \strong{\code{mLLMCelltype}}: \code{mllmcelltype_cell_type}, \code{mllmcelltype_consensus_proportion}, \code{mllmcelltype_entropy}
 }
 }
 \description{

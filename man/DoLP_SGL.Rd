@@ -53,24 +53,26 @@ or "\code{linear}" (linear regression)}
 
 \item{dge_analysis}{List controlling differential expression analysis:
 \itemize{
-\item{run: Whether to run DEG analysis (default: \code{FALSE})}
-\item{logFC_threshold: Log fold change threshold (default: \code{1})}
-\item{pval_threshold: P-value threshold (default: \code{0.05})}
+\item \code{run}: Whether to run DEG analysis (default: \code{FALSE})
+\item \code{logFC_threshold}: Log fold change threshold (default: \code{1})
+\item \code{pval_threshold}: P-value threshold (default: \code{0.05})
 }}
 
 \item{...}{Additional arguments passed to preprocessing functions, e.g.:
 \itemize{
-\item{verbose: Whether to print progress messages (default: \code{TRUE})}
-\item{seed: Random seed for reproducibility (default: \code{123L})}
-\item{assay: Assay to use for clustering (default: \code{"RNA"})}
+\item \code{verbose}: Whether to print progress messages (default: \code{TRUE})
+\item \code{seed}: Random seed for reproducibility (default: \code{123L})
+\item \code{assay}: Assay to use for clustering (default: \code{"RNA"})
 }}
 }
 \value{
 A list containing:
-\item{scRNA_data}{Seurat object with LP-SGL results integrated}
-\item{sgl_fit}{Fitted SGL model object}
-\item{cvfit}{Cross-validation results}
-\item{dge_res}{Differential expression results if requested (NULL otherwise)}
+\itemize{
+\item \strong{scRNA_data}: Seurat object with LP-SGL results integrated
+\item \strong{sgl_fit}: Fitted SGL model object
+\item \strong{cvfit}: Cross-validation results
+\item \strong{dge_res}: Differential expression results if requested (NULL otherwise)
+}
 }
 \description{
 Identifies phenotype-associated cell subpopulations using Lasso-Penalized

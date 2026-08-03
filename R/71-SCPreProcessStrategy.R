@@ -10,28 +10,26 @@
 #' and supports both standard (\code{NormalizeData}) and SCTransform-based workflows.
 #'
 #' @section Available Operations:
-#' \describe{
-#'   \item{\code{o}}{Create Seurat object from count matrix (\code{SeuratObject::CreateSeuratObject})}
-#'   \item{\code{n}}{Normalize data (\code{Seurat::NormalizeData})}
-#'   \item{\code{v}}{Find variable features (\code{Seurat::FindVariableFeatures})}
-#'   \item{\code{s}}{Scale data (\code{Seurat::ScaleData})}
-#'   \item{\code{p}}{Run PCA (\code{Seurat::RunPCA})}
-#'   \item{\code{c}}{Find clusters (\code{Seurat::FindClusters})}
-#'   \item{\code{e}}{Find neighbors (\code{Seurat::FindNeighbors})}
-#'   \item{\code{t}}{Run t-SNE (\code{Seurat::RunTSNE})}
-#'   \item{\code{u}}{Run UMAP (\code{Seurat::RunUMAP})}
-#'   \item{\code{r}}{SCTransform (\code{Seurat::SCTransform})}
-#'   \item{\code{i}}{Integrate layers (\code{Seurat::IntegrateLayers})}
-#' }
+#'
+#' * **`o`**: Create Seurat object from count matrix (`SeuratObject::CreateSeuratObject`)
+#' * **`n`**: Normalize data (`Seurat::NormalizeData`)
+#' * **`v`**: Find variable features (`Seurat::FindVariableFeatures`)
+#' * **`s`**: Scale data (`Seurat::ScaleData`)
+#' * **`p`**: Run PCA (`Seurat::RunPCA`)
+#' * **`c`**: Find clusters (`Seurat::FindClusters`)
+#' * **`e`**: Find neighbors (`Seurat::FindNeighbors`)
+#' * **`t`**: Run t-SNE (`Seurat::RunTSNE`)
+#' * **`u`**: Run UMAP (`Seurat::RunUMAP`)
+#' * **`r`**: SCTransform (`Seurat::SCTransform`)
+#' * **`i`**: Integrate layers (`Seurat::IntegrateLayers`)
 #'
 #' @section Usage Notes:
-#' \itemize{
-#'   \item These functions are **not intended for direct interactive use**. They are
-#'         internal building blocks for workflow engines (i.e., \code{SCPreProcess}).
-#'   \item You can access any operation via \code{SCPreProcessStrategy$letter},
-#'         but doing so bypasses pipeline validation and error handling.
-#'   \item To add more operations, use \code{RegisterSeuratMethod()}
-#' }
+#'
+#' * These functions are **not intended for direct interactive use**. They are
+#'   internal building blocks for workflow engines (i.e., `SCPreProcess`).
+#' * You can access any operation via `SCPreProcessStrategy$letter`,
+#'   but doing so bypasses pipeline validation and error handling.
+#' * To add more operations, use `RegisterSeuratMethod()`
 #'
 #' @family single_cell_preprocess
 #' @export

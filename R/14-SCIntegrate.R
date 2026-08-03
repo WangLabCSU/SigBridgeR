@@ -29,12 +29,10 @@
 #'
 #'
 #' @return
-#' \itemize{
-#'   \item \strong{Matrix method}: A matrix with all genes (union) and
-#'     concatenated cells. Missing values filled with \code{NA}.
-#'   \item \strong{Seurat method}: Integrated \code{Seurat} object with
-#'     processed layers according to \code{pipeline}.
-#' }
+#' * **Matrix method**: A matrix with all genes (union) and
+#'   concatenated cells. Missing values filled with `NA`.
+#' * **Seurat method**: Integrated `Seurat` object with
+#'   processed layers according to `pipeline`.
 #'
 #'
 #' @examples

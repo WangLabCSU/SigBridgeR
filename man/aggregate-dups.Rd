@@ -49,13 +49,13 @@ An aggregated object of the same effective type as \code{x}, with unique row/col
 \description{
 These functions collapse duplicated row names (e.g., gene symbols) or column names (e.g., sample IDs)
 in matrix-like objects by aggregating values using configurable methods. They support:
-\describe{
-\item{Rows}{\code{\link{AggregateDupRows}}: merges rows sharing the same row name.}
-\item{Columns}{\code{\link{AggregateDupCols}}: merges columns sharing the same column name.}
-\item{Both}{\code{\link{AggregateDups}}: convenience wrapper applying row-then-column aggregation.}
-}
+\itemize{
+\item \strong{Rows}: \code{\link{AggregateDupRows}}: merges rows sharing the same row name.
+\item \strong{Columns}: \code{\link{AggregateDupCols}}: merges columns sharing the same column name.
+\item \strong{Both}: \code{\link{AggregateDups}}: convenience wrapper applying row-then-column aggregation.
 Designed for expression matrices, count tables, or any numeric data where feature/sample duplication occurs.
 Handles \code{matrix}, \code{data.frame}, and S4 \code{Matrix} classes (e.g. \code{dgCMatrix}) robustly.
+}
 
 Convenience wrapper that first aggregates duplicated rows, then duplicated columns.
 Useful for cleaning matrices where both feature and sample duplication may occur.
@@ -63,23 +63,23 @@ Useful for cleaning matrices where both feature and sample duplication may occur
 \section{Methods}{
 
 Supported methods (applied column-wise for rows, row-wise for columns):
-\describe{
-\item{\code{"max"}}{Maximum value per group (default).}
-\item{\code{"sum"}}{Sum of values per group.}
-\item{\code{"mean"}}{Arithmetic mean (uses \code{na.rm = TRUE}).}
-\item{\code{"median"}}{Median value.}
-\item{\code{"first"}}{First occurrence in original order.}
+\itemize{
+\item \strong{\code{"max"}}: Maximum value per group (default).
+\item \strong{\code{"sum"}}: Sum of values per group.
+\item \strong{\code{"mean"}}: Arithmetic mean (uses \code{na.rm = TRUE}).
+\item \strong{\code{"median"}}: Median value.
+\item \strong{\code{"first"}}: First occurrence in original order.
 }
 }
 
 \section{Input Types and Return Types}{
-
 \tabular{ll}{
-Input class          \tab Output class (unless noted) \cr
-\code{matrix}        \tab \code{matrix} \cr
-\code{data.frame}    \tab \code{data.frame} \cr
-S4 \code{Matrix}     \tab \code{matrix} (dense) — S4 attributes dropped for generality \cr
+   Input class \tab Output class (unless noted) \cr
+   \code{matrix} \tab \code{matrix} \cr
+   \code{data.frame} \tab \code{data.frame} \cr
+   S4 \code{Matrix} \tab \code{matrix} (dense) — S4 attributes dropped for generality \cr
 }
+
 
 Row/column order in output follows \emph{first occurrence} of each unique name in \code{rownames(x)} / \code{colnames(x)}.
 }

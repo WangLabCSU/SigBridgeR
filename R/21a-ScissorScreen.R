@@ -162,28 +162,18 @@ ValidateScissorParams <- function(
 #'      kept for backward compatibility.
 #'
 #' @return A list containing:
-#' \describe{
-#'   \item{scRNA_data}{A Seurat object with screened cells containing metadata:
-#'     \describe{
-#'       \item{scissor}{"Positive"/"Negative"/"Neutral" classification}
-#'       \item{label_type}{Outcome label used}
-#'     }
-#'   }
-#'   \item{scissor_result}{Raw Scissor results}
-#'   \item{reliability_result}{If reliability_test=TRUE, contains:
-#'     \describe{
-#'       \item{statistic}{A value between 0 and 1}
-#'       \item{p}{p-value of the test statistic}
-#'       \item{AUC_test_real}{10 values of AUC for real data}
-#'       \item{AUC_test_back}{A list of AUC for background data}
-#'     }
-#'   }
-#'   \item{cell_evaluation}{If cell_evaluation=TRUE, contains:
-#'     \describe{
-#'       \item{evaluation_res}{A data.frame with some supporting information for each Scissor selected cell}
-#'     }
-#'   }
-#' }
+#'
+#' * **scRNA_data**: A Seurat object with screened cells containing metadata:
+#'   * **scissor**: "Positive"/"Negative"/"Neutral" classification
+#'   * **label_type**: Outcome label used
+#' * **scissor_result**: Raw Scissor results
+#' * **reliability_result**: If reliability_test=TRUE, contains:
+#'   * **statistic**: A value between 0 and 1
+#'   * **p**: p-value of the test statistic
+#'   * **AUC_test_real**: 10 values of AUC for real data
+#'   * **AUC_test_back**: A list of AUC for background data
+#' * **cell_evaluation**: If cell_evaluation=TRUE, contains:
+#'   * **evaluation_res**: A data.frame with some supporting information for each Scissor selected cell
 #'
 #' @references
 #' Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.

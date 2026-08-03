@@ -9,26 +9,23 @@
 #' The analysis flow is fully customizable via a character string \code{pipeline} and a configuration list \code{params}.
 #'
 #' @param sc Input data. Can be:
-#' \itemize{
-#'   \item \strong{Matrix/Data frame}: Raw count matrix (genes x cells).
-#'   \item \strong{AnnData}: Python AnnData object (read via \code{anndata} or \code{anndataR} packages).
-#'   \item \strong{Seurat}: A Seurat object (automatically validated and repaired if necessary).
-#' }
+#' * **Matrix/Data frame**: Raw count matrix (genes x cells).
+#' * **AnnData**: Python AnnData object (read via `anndata` or `anndataR` packages).
+#' * **Seurat**: A Seurat object (automatically validated and repaired if necessary).
 #' @param pipeline A character string defining the processing steps and order.
 #' Characters map to Seurat functions:
-#' \itemize{
-#'   \item \code{'o'}: \code{CreateSeuratObject} (Must be the first step and cannot be deleted)
-#'   \item \code{'n'}: \code{NormalizeData}
-#'   \item \code{'s'}: \code{ScaleData}
-#'   \item \code{'v'}: \code{FindVariableFeatures}
-#'   \item \code{'p'}: \code{RunPCA}
-#'   \item \code{'e'}: \code{FindNeighbors} (Because "n" is used)
-#'   \item \code{'c'}: \code{FindClusters}
-#'   \item \code{'t'}: \code{RunTSNE}
-#'   \item \code{'u'}: \code{RunUMAP}
-#'   \item \code{'r'}: \code{SCTransform} (Alternative to n/s/v)
-#' }
-#' Default is \code{"onsvpcetu"}.
+#' * `'o'`: `CreateSeuratObject` (Must be the first step and cannot be deleted)
+#' * `'n'`: `NormalizeData`
+#' * `'s'`: `ScaleData`
+#' * `'v'`: `FindVariableFeatures`
+#' * `'p'`: `RunPCA`
+#' * `'e'`: `FindNeighbors` (Because "n" is used)
+#' * `'c'`: `FindClusters`
+#' * `'t'`: `RunTSNE`
+#' * `'u'`: `RunUMAP`
+#' * `'r'`: `SCTransform` (Alternative to n/s/v)
+#'
+#' Default is `"onsvpcetu"`.
 #' @param params A named list of lists containing arguments for each pipeline step.
 #' Keys match the pipeline characters (e.g., \code{params$n} for \code{NormalizeData}).
 #' Default structure:

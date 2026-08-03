@@ -45,30 +45,37 @@ columns, colnames named "time" and "status"
 }}
 
 \item{tirank_params}{List of TiRank algorithm parameters:
-\describe{
+
 \strong{Data preprocessing:}
-\item{validation_proportion}{Proportion of bulk data held out for validation (default: \code{0.15}).}
-\item{sampling_thresh}{Threshold for resampling strategy (default: \code{0.5}).}
-\item{sampling_mode}{Resampling method: \code{"smote"}, \code{"downsample"}, \code{"upsample"}, or \code{"tomeklinks"}.}
-\item{top_var_genes}{Number of top variable genes to select (default: \code{2000L}).}
-\item{top_gene_pairs}{Number of top gene pairs for ranking (default: \code{1000L}).}
-\item{p_value_threshold}{P-value threshold for feature selection (default: \code{0.05}).}
-\item{max_cutoff}{Upper cutoff for correlation filtering (default: \code{0.8}).}
-\item{min_cutoff}{Lower cutoff for correlation filtering (default: \code{-0.8}).}
+\itemize{
+\item \code{validation_proportion}: Proportion of bulk data held out for validation (default: \code{0.15}).
+\item \code{sampling_thresh}: Threshold for resampling strategy (default: \code{0.5}).
+\item \code{sampling_mode}: Resampling method: \code{"smote"}, \code{"downsample"}, \code{"upsample"}, or \code{"tomeklinks"}.
+\item \code{top_var_genes}: Number of top variable genes to select (default: \code{2000L}).
+\item \code{top_gene_pairs}: Number of top gene pairs for ranking (default: \code{1000L}).
+\item \code{p_value_threshold}: P-value threshold for feature selection (default: \code{0.05}).
+\item \code{max_cutoff}: Upper cutoff for correlation filtering (default: \code{0.8}).
+\item \code{min_cutoff}: Lower cutoff for correlation filtering (default: \code{-0.8}).
+}
+
 \strong{Neural network architecture:}
-\item{nhead}{Number of attention heads (default: \code{2L}).}
-\item{nhid1}{Size of first hidden layer (default: \code{96L}).}
-\item{nhid2}{Size of second hidden layer (default: \code{8L}).}
-\item{n_output}{Output dimension of encoder (default: \code{32L}).}
-\item{nlayers}{Number of encoder layers (default: \code{3L}).}
-\item{n_pred}{Number of prediction heads (default: \code{2L}).}
-\item{dropout}{Dropout rate for regularization (default: \code{0.5}).}
-\item{encoder_type}{Encoder architecture: \code{"MLP"}, \code{"Transformer"}, or \code{"DenseNet"}.}
-\item{infer_mode}{Inference mode: \code{"SC"} (single-cell) or \code{"ST"} (spatial transcriptomics).}
+\itemize{
+\item \code{nhead}: Number of attention heads (default: \code{2L}).
+\item \code{nhid1}: Size of first hidden layer (default: \code{96L}).
+\item \code{nhid2}: Size of second hidden layer (default: \code{8L}).
+\item \code{n_output}: Output dimension of encoder (default: \code{32L}).
+\item \code{nlayers}: Number of encoder layers (default: \code{3L}).
+\item \code{n_pred}: Number of prediction heads (default: \code{2L}).
+\item \code{dropout}: Dropout rate for regularization (default: \code{0.5}).
+\item \code{encoder_type}: Encoder architecture: \code{"MLP"}, \code{"Transformer"}, or \code{"DenseNet"}.
+\item \code{infer_mode}: Inference mode: \code{"SC"} (single-cell) or \code{"ST"} (spatial transcriptomics).
+}
+
 \strong{Training:}
-\item{n_trials}{Number of repeated training trials (default: \code{5L}).}
-\item{do_reject}{Whether to apply rejection criteria to uncertain predictions (default: \code{TRUE}).}
-\item{tolerance}{Tolerance threshold for rejection (default: \code{0.05}).}
+\itemize{
+\item \code{n_trials}: Number of repeated training trials (default: \code{5L}).
+\item \code{do_reject}: Whether to apply rejection criteria to uncertain predictions (default: \code{TRUE}).
+\item \code{tolerance}: Tolerance threshold for rejection (default: \code{0.05}).
 }}
 
 \item{save_path}{(Soft-deprecated) Directory path for saving intermediate and
@@ -81,24 +88,24 @@ See \code{\link[=CacheSetHere]{CacheSetHere()}}.}
 Prefer using \code{load_cache} in \code{...} instead.}
 
 \item{...}{Additional arguments passed to the function. Common parameters include:
-\describe{
-\item{verbose}{Logical. Whether to print verbose output (default: TRUE).}
-\item{seed}{Integer. Random seed for reproducibility.}
-\item{assay}{Character. Name of assay to use from Seurat object (default: \code{"RNA"}).}
-\item{load_cache}{Cache directory path for loading cached data. Supports
-root-level, cache-level, or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.}
-\item{save_cache}{Cache directory path for saving results. Supports
-root-level or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.}
+\itemize{
+\item \code{verbose}: Logical. Whether to print verbose output (default: TRUE).
+\item \code{seed}: Integer. Random seed for reproducibility.
+\item \code{assay}: Character. Name of assay to use from Seurat object (default: \code{"RNA"}).
+\item \code{load_cache}: Cache directory path for loading cached data. Supports
+root-level, cache-level, or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.
+\item \code{save_cache}: Cache directory path for saving results. Supports
+root-level or parent-level paths. See \code{\link[=CacheSetHere]{CacheSetHere()}}.
 }}
 }
 \value{
 A named list containing:
-\describe{
-\item{scRNA_data}{Modified single-cell data object with integrated screening
+\itemize{
+\item \strong{scRNA_data}: Modified single-cell data object with integrated screening
 results added as metadata, including \code{TiRank_Reject}, \code{TiRank_Rank_Score},
 and \code{TiRank} (Positive/Neutral/Negative) columns, plus \code{TiRank_para}
-and \code{TiRank_type} stored in misc slot.}
-\item{cell_cell_distance}{Computed cell-cell similarity/distance matrix.}
+and \code{TiRank_type} stored in misc slot.
+\item \strong{cell_cell_distance}: Computed cell-cell similarity/distance matrix.
 }
 }
 \description{

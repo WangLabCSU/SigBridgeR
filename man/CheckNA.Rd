@@ -16,12 +16,13 @@ Set to \code{0} to suppress position details. Default: \code{5L}.}
 }
 \value{
 Invisible list containing NA information:
-\describe{
-\item{\code{count}}{Total number of NA values found}
-\item{\code{positions}}{For vectors: integer vector of positions; For 2D data:
-data frame with row/column indices and names (if available)}
-\item{\code{names}}{For named vectors: character vector of names corresponding to NA positions}
+\itemize{
+\item \strong{\code{count}}: Total number of NA values found
+\item \strong{\code{positions}}: For vectors: integer vector of positions; For 2D data:
+data frame with row/column indices and names (if available)
+\item \strong{\code{names}}: For named vectors: character vector of names corresponding to NA positions
 }
+
 Returns empty list components when no NA values are found.
 }
 \description{

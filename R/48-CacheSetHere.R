@@ -8,18 +8,17 @@
 #'
 #' @details
 #' The function detects which cache layer the given path belongs to:
-#' \itemize{
-#'   \item **Cache layer**: The path directly contains a `cache_config.json`
-#'     file. In save mode this triggers an error (recursive caching is not
-#'     supported); in load mode the path is returned as-is.
-#'   \item **Root layer**: The path's basename matches `{method_name}_res`
-#'     (e.g., `"Scissor_res"`). In save mode a new cache subdirectory is
-#'     created; in load mode [ChooseCache()] is called to select an existing
-#'     cache.
-#'   \item **Parent layer**: The path is a parent directory. A
-#'     `{method_name}_res` subdirectory is created (save) or located (load)
-#'     underneath it.
-#' }
+#'
+#' * **Cache layer**: The path directly contains a `cache_config.json`
+#'   file. In save mode this triggers an error (recursive caching is not
+#'   supported); in load mode the path is returned as-is.
+#' * **Root layer**: The path's basename matches `{method_name}_res`
+#'   (e.g., `"Scissor_res"`). In save mode a new cache subdirectory is
+#'   created; in load mode [ChooseCache()] is called to select an existing
+#'   cache.
+#' * **Parent layer**: The path is a parent directory. A
+#'   `{method_name}_res` subdirectory is created (save) or located (load)
+#'   underneath it.
 #'
 #' In save mode, the cache directory is named
 #' `{phenotype_class}_{timestamp}` (e.g.,

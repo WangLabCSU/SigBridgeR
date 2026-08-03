@@ -3,26 +3,22 @@
 #' A quantitative framework for selecting optimal normalization strategies
 #' (e.g., SCTransform vs. LogNormalization) based on diagnostic metrics rather
 #' than heuristics. Evaluates three critical dimensions of preprocessing quality:
-#' \enumerate{
-#'   \item \strong{Variance stabilization}: Decoupling of mean-variance relationship
-#'         in normalized expression (lower correlation = better).
-#'   \item \strong{Biological signal retention}: Preservation of known marker genes
-#'         within highly variable genes (higher retention = better).
-#'   \item \strong{Dropout robustness}: Removal of technical dropout bias from
-#'         normalized values (lower correlation with dropout rate = better).
-#' }
+#' 1. **Variance stabilization**: Decoupling of mean-variance relationship
+#'    in normalized expression (lower correlation = better).
+#' 2. **Biological signal retention**: Preservation of known marker genes
+#'    within highly variable genes (higher retention = better).
+#' 3. **Dropout robustness**: Removal of technical dropout bias from
+#'    normalized values (lower correlation with dropout rate = better).
 #'
 #' Methods are ranked using a weighted composite score. Designed for head-to-head
 #' comparison of preprocessed Seurat objects.
 #'
-#' @param ... Named arguments where each value is a \code{Seurat} object representing
-#'   a distinct preprocessing strategy (e.g., \code{SCT = sct_obj, Log = log_obj}).
-#'   \strong{Requirements}:
-#'   \itemize{
-#'     \item Must be named (names become method identifiers)
-#'     \item Must contain normalized data in the \code{data} slot of the specified assay/layer
-#'     \item Must have identical cell counts (for fair comparison)
-#'   }
+#' @param ... Named arguments where each value is a `Seurat` object representing
+#'   a distinct preprocessing strategy (e.g., `SCT = sct_obj, Log = log_obj`).
+#'   **Requirements**:
+#'   * Must be named (names become method identifiers)
+#'   * Must contain normalized data in the `data` slot of the specified assay/layer
+#'   * Must have identical cell counts (for fair comparison)
 #' @param subset_size Integer. Number of cells to subsample for diagnostics.
 #'   If missing or empty, defaults to \code{min(10000, total_cells)}. Smaller subsets
 #'   accelerate computation with minimal accuracy loss for large datasets (>50k cells).
@@ -37,56 +33,45 @@
 #'   quantile of mean expression are excluded. Default: \code{0.2} (bottom 20% excluded).
 #' @param weight Named numeric vector specifying weights for composite scoring. Must
 #'   contain exactly these components summing to 1:
-#'   \describe{
-#'     \item{\code{variance_stability}}{Weight for variance-mean decoupling (default: 0.4)}
-#'     \item{\code{marker_signal}}{Weight for marker gene retention (default: 0.35)}
-#'     \item{\code{dropout_robustness}}{Weight for dropout bias removal (default: 0.25)}
-#'   }
+#'
+#'   * **`variance_stability`**: Weight for variance-mean decoupling (default: 0.4)
+#'   * **`marker_signal`**: Weight for marker gene retention (default: 0.35)
+#'   * **`dropout_robustness`**: Weight for dropout bias removal (default: 0.25)
 #'
 #' @return A list containing:
-#'   \describe{
-#'     \item{\code{metrics}}{A \code{data.table} with diagnostic metrics per method:
-#'       \itemize{
-#'         \item \code{variance_mean_cor}: Pearson correlation between log10(mean) and
-#'               log10(variance) of normalized expression (lower = better)
-#'         \item \code{marker_retention}: Proportion of known markers in top HVGs
-#'               (higher = better; NA if \code{known_hvgs} not provided)
-#'         \item \code{mean_dropout_residual}: Absolute Spearman correlation between
-#'               dropout rate (from counts) and normalized means (lower = better)
-#'         \item \code{composite_score}: Weighted combination of normalized metrics (0–1 scale)
-#'         \item \code{rank}: Method ranking (1 = best)
-#'       }
-#'     }
-#'     \item{\code{recommendation}}{Character string naming the top-ranked method}
-#'     \item{\code{plots}}{(Optional) Diagnostic visualizations if \code{ggplot2} available}
-#'   }
+#'
+#' * **`metrics`**: A `data.table` with diagnostic metrics per method:
+#'   * `variance_mean_cor`: Pearson correlation between log10(mean) and
+#'     log10(variance) of normalized expression (lower = better)
+#'   * `marker_retention`: Proportion of known markers in top HVGs
+#'     (higher = better; NA if `known_hvgs` not provided)
+#'   * `mean_dropout_residual`: Absolute Spearman correlation between
+#'     dropout rate (from counts) and normalized means (lower = better)
+#'   * `composite_score`: Weighted combination of normalized metrics (0–1 scale)
+#'   * `rank`: Method ranking (1 = best)
+#' * **`recommendation`**: Character string naming the top-ranked method
+#' * **`plots`**: (Optional) Diagnostic visualizations if `ggplot2` available
 #'
 #' @section Workflow:
-#' \enumerate{
-#'   \item Validates input objects (naming, cell count consistency, data slot presence)
-#'   \item Subsamples cells (if needed) for computational efficiency
-#'   \item Computes three core metrics per method:
-#'     \describe{
-#'       \item{Variance stabilization}{Correlation between log-transformed mean and
-#'             variance of normalized expression}
-#'       \item{Marker retention}{Overlap between user-provided markers and top HVGs}
-#'       \item{Dropout robustness}{Correlation between gene dropout rate (from counts)
-#'             and normalized expression means}
-#'     }
-#'   \item Normalizes metrics to 0-1  scale (inverting where lower=better)
-#'   \item Computes weighted composite score and ranks methods
-#'   \item Returns top recommendation with full diagnostic report
-#' }
+#' 1. Validates input objects (naming, cell count consistency, data slot presence)
+#' 2. Subsamples cells (if needed) for computational efficiency
+#' 3. Computes three core metrics per method:
+#'    * **Variance stabilization**: Correlation between log-transformed mean and
+#'      variance of normalized expression
+#'    * **Marker retention**: Overlap between user-provided markers and top HVGs
+#'    * **Dropout robustness**: Correlation between gene dropout rate (from counts)
+#'      and normalized expression means
+#' 4. Normalizes metrics to 0-1 scale (inverting where lower=better)
+#' 5. Computes weighted composite score and ranks methods
+#' 6. Returns top recommendation with full diagnostic report
 #'
 #' @section Notes:
-#' \itemize{
-#'   \item Requires \emph{pre-normalized} Seurat objects—this function \strong{does not}
-#'         perform normalization itself. Users must first run \code{SCTransform()},
-#'         \code{NormalizeData()}, etc., and store results in the \code{data} slot.
-#'   \item Marker retention metric is only computed when \code{known_hvgs} is provided.
-#'         Without it, scoring relies solely on variance stabilization and dropout robustness.
-#'   \item Weights should sum to 1 (not enforced but recommended for interpretable scores).
-#' }
+#' * Requires *pre-normalized* Seurat objects—this function **does not**
+#'   perform normalization itself. Users must first run `SCTransform()`,
+#'   `NormalizeData()`, etc., and store results in the `data` slot.
+#' * Marker retention metric is only computed when `known_hvgs` is provided.
+#'   Without it, scoring relies solely on variance stabilization and dropout robustness.
+#' * Weights should sum to 1 (not enforced but recommended for interpretable scores).
 #'
 #' @examples
 #' \dontrun{

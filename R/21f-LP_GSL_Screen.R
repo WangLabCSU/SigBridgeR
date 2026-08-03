@@ -95,23 +95,20 @@ ValidateLPSGLParams <- function(
 #' @param alpha Alpha parameter for SGL balancing L1 and L2 penalties (default: `0.5`)
 #' @param nfold Number of folds for cross-validation (default: `5`)
 #' @param dge_analysis List controlling differential expression analysis:
-#' \itemize{
-#' \item{run: Whether to run DEG analysis (default: `FALSE`)}
-#' \item{logFC_threshold: Log fold change threshold (default: `1`)}
-#' \item{pval_threshold: P-value threshold (default: `0.05`)}
-#' }
+#' * `run`: Whether to run DEG analysis (default: `FALSE`)
+#' * `logFC_threshold`: Log fold change threshold (default: `1`)
+#' * `pval_threshold`: P-value threshold (default: `0.05`)
 #' @param ... Additional arguments passed to preprocessing functions, e.g.:
-#' \itemize{
-#' \item{verbose: Whether to print progress messages (default: `TRUE`)}
-#' \item{seed: Random seed for reproducibility (default: `123L`)}
-#' \item{assay: Assay to use for clustering (default: `"RNA"`)}
-#' }
+#' * `verbose`: Whether to print progress messages (default: `TRUE`)
+#' * `seed`: Random seed for reproducibility (default: `123L`)
+#' * `assay`: Assay to use for clustering (default: `"RNA"`)
 #'
 #' @return A list containing:
-#' \item{scRNA_data}{Seurat object with LP-SGL results integrated}
-#' \item{sgl_fit}{Fitted SGL model object}
-#' \item{cvfit}{Cross-validation results}
-#' \item{dge_res}{Differential expression results if requested (NULL otherwise)}
+#'
+#' * **scRNA_data**: Seurat object with LP-SGL results integrated
+#' * **sgl_fit**: Fitted SGL model object
+#' * **cvfit**: Cross-validation results
+#' * **dge_res**: Differential expression results if requested (NULL otherwise)
 #'
 #' @examples
 #' \dontrun{

@@ -39,11 +39,11 @@ and an optional user-provided description.
 }
 \details{
 This function creates a JSON metadata file containing:
-\describe{
-\item{general}{File path, OS information, timestamp, R version, and
-SigBridgeR version}
-\item{config}{Screen method, phenotype class, label type, and parameters}
-\item{description}{Additional user-provided description}
+\itemize{
+\item \strong{\code{general}}: File path, OS information, timestamp, R version, and
+SigBridgeR version
+\item \strong{\code{config}}: Screen method, phenotype class, label type, and parameters
+\item \strong{\code{description}}: Additional user-provided description
 }
 
 The JSON file includes a header comment indicating it is required for

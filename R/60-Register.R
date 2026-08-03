@@ -10,12 +10,11 @@
 #' `Register()` iterates over its named `...` arguments, calling
 #' `RegisterImpl()` for each. `RegisterImpl` is an S7 generic that dispatches
 #' based on the class of the value:
-#' \itemize{
-#'   \item [ScreenMethod] → registered into [ScreenStrategy].
-#'   \item [AnnotationMethod] → registered into [SCAnnotateStrategy].
-#'   \item `function` → validated as a Seurat/SeuratObject function and
-#'     registered into [SCPreProcessStrategy].
-#' }
+#'
+#' * [ScreenMethod] → registered into [ScreenStrategy].
+#' * [AnnotationMethod] → registered into [SCAnnotateStrategy].
+#' * `function` → validated as a Seurat/SeuratObject function and
+#'   registered into [SCPreProcessStrategy].
 #'
 #' If the method name already exists in the target registry, the function
 #' aborts unless `overwrite = TRUE`.

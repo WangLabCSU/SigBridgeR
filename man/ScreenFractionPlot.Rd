@@ -66,16 +66,15 @@ can be a vector of titles or single title (will append screen type prefix).}
 \value{
 A list containing:
 \itemize{
-\item{stats: A data frame (single screen) or list of data frames (multiple screens)
+\item \code{stats}: A data frame (single screen) or list of data frames (multiple screens)
 with screening statistics including:
 \itemize{
 \item Grouping variable counts
 \item Raw cell counts
 \item Percentage fractions
 }
-}
-\item{plot: A ggplot2 object (single screen) or list of ggplot2 objects (multiple screens)}
-\item{combined_plot: A combined plot using patchwork (only for multiple screens)}
+\item \code{plot}: A ggplot2 object (single screen) or list of ggplot2 objects (multiple screens)
+\item \code{combined_plot}: A combined plot using patchwork (only for multiple screens)
 }
 }
 \description{

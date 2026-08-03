@@ -73,9 +73,9 @@ Supports root-level or parent-level paths. See \code{\link[=CacheSetHere]{CacheS
 }
 \value{
 A list containing:
-\describe{
-\item{scRNA_data}{Filtered Seurat object with selected cells}
-\item{scAB_result}{scAB screening result}
+\itemize{
+\item \strong{scRNA_data}: Filtered Seurat object with selected cells
+\item \strong{scAB_result}: scAB screening result
 }
 }
 \description{

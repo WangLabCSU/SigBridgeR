@@ -12,20 +12,18 @@
 #' @param ... Additional arguments (currently unused, reserved for future extensions).
 #'
 #' @return Invisible list containing NA information:
-#'   \describe{
-#'     \item{\code{count}}{Total number of NA values found}
-#'     \item{\code{positions}}{For vectors: integer vector of positions; For 2D data:
-#'           data frame with row/column indices and names (if available)}
-#'     \item{\code{names}}{For named vectors: character vector of names corresponding to NA positions}
-#'   }
+#'
+#'   * **`count`**: Total number of NA values found
+#'   * **`positions`**: For vectors: integer vector of positions; For 2D data:
+#'     data frame with row/column indices and names (if available)
+#'   * **`names`**: For named vectors: character vector of names corresponding to NA positions
+#'
 #'   Returns empty list components when no NA values are found.
 #'
 #' @section Output Behavior:
-#' \itemize{
-#'   \item \strong{No NAs found}: Prints success message and returns empty list
-#'   \item \strong{NAs found}: Prints warning with count and up to \code{max_print} positions
-#'   \item \strong{Position details}: Includes row/column names when available for easier debugging
-#' }
+#' * **No NAs found**: Prints success message and returns empty list
+#' * **NAs found**: Prints warning with count and up to `max_print` positions
+#' * **Position details**: Includes row/column names when available for easier debugging
 #'
 #' @export
 #'

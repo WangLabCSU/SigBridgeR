@@ -121,16 +121,14 @@ ValidateSIDISHParams <- function(
 #'   - `train_num_workers`: number of data loading workers (default: `0`)
 #'   - `train_distribution_fit`: distribution fitting method, `"fitted"` or `"default"` (default: `"fitted"`)
 #' @param ... Additional arguments passed to the function. Common parameters include:
-#'   \describe{
-#'     \item{verbose}{Logical. Whether to print verbose output (default: `TRUE`).}
-#'     \item{seed}{Integer. Random seed for reproducibility (default: `123L`).}
-#'     \item{assay}{Character. Assay to use for screening (default: `"RNA"`).}
-#'   }
+#'
+#'   * **`verbose`**: Logical. Whether to print verbose output (default: `TRUE`).
+#'   * **`seed`**: Integer. Random seed for reproducibility (default: `123L`).
+#'   * **`assay`**: Character. Assay to use for screening (default: `"RNA"`).
 #'
 #' @return A named list containing:
-#'   \describe{
-#'     \item{scRNA_data}{Modified single-cell data object with integrated screening results.}
-#'   }
+#'
+#'   * **scRNA_data**: Modified single-cell data object with integrated screening results.
 #' @family screen_method
 #' @family SIDISH
 #' @export

@@ -13,12 +13,11 @@
 #'
 #' @details
 #' This function creates a JSON metadata file containing:
-#' \describe{
-#'   \item{general}{File path, OS information, timestamp, R version, and
-#'     SigBridgeR version}
-#'   \item{config}{Screen method, phenotype class, label type, and parameters}
-#'   \item{description}{Additional user-provided description}
-#' }
+#'
+#' * **`general`**: File path, OS information, timestamp, R version, and
+#'   SigBridgeR version
+#' * **`config`**: Screen method, phenotype class, label type, and parameters
+#' * **`description`**: Additional user-provided description
 #'
 #' The JSON file includes a header comment indicating it is required for
 #' cache identification and should not be modified.

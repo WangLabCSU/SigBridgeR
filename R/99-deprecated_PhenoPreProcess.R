@@ -11,21 +11,19 @@
 #' @param bulk A two-dimensional matrix or data frame of bulk RNA-seq expression
 #'   data with genes as rows and samples as columns. Must have at least 2 samples.
 #' @param phenotype Phenotype data, either:
-#'   \itemize{
-#'     \item Named numeric vector (for binary/continuous phenotypes)
-#'     \item Data frame/matrix with row names matching \code{colnames(bulk)}
-#'           (for survival or multi-column phenotypes)
-#'   }
+#'   * Named numeric vector (for binary/continuous phenotypes)
+#'   * Data frame/matrix with row names matching `colnames(bulk)`
+#'     (for survival or multi-column phenotypes)
 #' @param phenotype_class Character. Type of phenotype:
-#'   \describe{
-#'     \item{\code{"binary"}}{Two-class categorical outcome (e.g., case/control).
-#'           Must have exactly 2 unique values.}
-#'     \item{\code{"continuous"}}{Continuous measurement (e.g., age, expression).
-#'           Must have >2 unique values.}
-#'     \item{\code{"survival"}}{Survival data with time and status columns.
-#'           Automatically guesses columns named "time" and "status/censor" if
-#'           \code{select} is \code{NULL}.}
-#'   }
+#'
+#'   * **`"binary"`**: Two-class categorical outcome (e.g., case/control).
+#'     Must have exactly 2 unique values.
+#'   * **`"continuous"`**: Continuous measurement (e.g., age, expression).
+#'     Must have >2 unique values.
+#'   * **`"survival"`**: Survival data with time and status columns.
+#'     Automatically guesses columns named "time" and "status/censor" if
+#'     `select` is `NULL`.
+#'
 #'   Partial matching is supported.
 #' @param ... Conditional mapping rules passed to \code{\link{PhenoMap}} for
 #'   transforming phenotype values before validation. Format: \code{condition ~ value}.
@@ -37,30 +35,28 @@
 #'   from \code{getOption("SigBridgeRUtils.verbose")}.
 #'
 #' @return Preprocessed phenotype data:
-#'   \itemize{
-#'     \item For binary/continuous: Named numeric vector with sample names as names
-#'     \item For survival: Data frame with two columns (time, status) and sample
-#'           names as row names
-#'   }
-#'   Only samples present in both \code{bulk} and \code{phenotype} are retained.
+#'
+#'   * For binary/continuous: Named numeric vector with sample names as names
+#'   * For survival: Data frame with two columns (time, status) and sample
+#'     names as row names
+#'
+#'   Only samples present in both `bulk` and `phenotype` are retained.
 #'
 #' @section Validation Rules:
-#' \itemize{
-#'   \item \strong{Binary}: Must have exactly 2 unique values (e.g., 0/1, TRUE/FALSE)
-#'   \item \strong{Continuous}: Must have >2 unique values (to avoid confusion with binary)
-#'   \item \strong{Survival}: Must have exactly 2 unique values in status column
-#'         (typically 0 = censored, 1 = event)
-#'   \item \strong{Sample matching}: Common samples identified via \code{intersect(colnames(bulk), names/rownames(phenotype))}
-#' }
+#'
+#' * **Binary**: Must have exactly 2 unique values (e.g., 0/1, TRUE/FALSE)
+#' * **Continuous**: Must have >2 unique values (to avoid confusion with binary)
+#' * **Survival**: Must have exactly 2 unique values in status column
+#'   (typically 0 = censored, 1 = event)
+#' * **Sample matching**: Common samples identified via `intersect(colnames(bulk), names/rownames(phenotype))`
 #'
 #' @section Automatic Features:
-#' \itemize{
-#'   \item \strong{Survival column guessing}: When \code{phenotype_class = "survival"}
-#'         and \code{select = NULL}, automatically detects columns containing "time"
-#'         and "status"/"censor" in their names (case-insensitive).
-#'   \item \strong{Type conversion}: Logical values are converted to numeric (TRUE->1, FALSE->0)
-#'   \item \strong{Sample alignment}: Returns only samples present in both \code{bulk} and \code{phenotype}
-#' }
+#'
+#' * **Survival column guessing**: When `phenotype_class = "survival"`
+#'   and `select = NULL`, automatically detects columns containing "time"
+#'   and "status"/"censor" in their names (case-insensitive).
+#' * **Type conversion**: Logical values are converted to numeric (TRUE->1, FALSE->0)
+#' * **Sample alignment**: Returns only samples present in both `bulk` and `phenotype`
 #'
 #' @family input_preprocess
 #' @export

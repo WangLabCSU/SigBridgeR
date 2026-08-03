@@ -25,15 +25,16 @@ data with genes as rows and samples as columns. Must have at least 2 samples.}
 }}
 
 \item{phenotype_class}{Character. Type of phenotype:
-\describe{
-\item{\code{"binary"}}{Two-class categorical outcome (e.g., case/control).
-Must have exactly 2 unique values.}
-\item{\code{"continuous"}}{Continuous measurement (e.g., age, expression).
-Must have >2 unique values.}
-\item{\code{"survival"}}{Survival data with time and status columns.
+\itemize{
+\item \strong{\code{"binary"}}: Two-class categorical outcome (e.g., case/control).
+Must have exactly 2 unique values.
+\item \strong{\code{"continuous"}}: Continuous measurement (e.g., age, expression).
+Must have >2 unique values.
+\item \strong{\code{"survival"}}: Survival data with time and status columns.
 Automatically guesses columns named "time" and "status/censor" if
-\code{select} is \code{NULL}.}
+\code{select} is \code{NULL}.
 }
+
 Partial matching is supported.}
 
 \item{...}{Conditional mapping rules passed to \code{\link{PhenoMap}} for
@@ -54,6 +55,7 @@ Preprocessed phenotype data:
 \item For survival: Data frame with two columns (time, status) and sample
 names as row names
 }
+
 Only samples present in both \code{bulk} and \code{phenotype} are retained.
 }
 \description{

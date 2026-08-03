@@ -21,15 +21,14 @@
 #'
 #' When `format = "auto"` (default), the format for each data object is
 #' detected automatically:
-#' \itemize{
-#'   \item If the object is a 2D structure (data.frame/matrix) with at most
-#'     `max_rows` rows and `max_cols` columns, CSV format is used.
-#'   \item If `qs2` is installed and the object is a list, vector,
-#'     data.frame, or matrix, `qdata` format is used.
-#'   \item If `qs2` is installed but the object is not qdata-compatible,
-#'     `qs2` format is used.
-#'   \item Otherwise, `rdata` format is used as a fallback.
-#' }
+#'
+#' * If the object is a 2D structure (data.frame/matrix) with at most
+#'   `max_rows` rows and `max_cols` columns, CSV format is used.
+#' * If `qs2` is installed and the object is a list, vector,
+#'   data.frame, or matrix, `qdata` format is used.
+#' * If `qs2` is installed but the object is not qdata-compatible,
+#'   `qs2` format is used.
+#' * Otherwise, `rdata` format is used as a fallback.
 #'
 #' @param cache A `ScreenMethodConfig` or `ScreenMethodCache` S7 object
 #'   containing the data and configuration to write.

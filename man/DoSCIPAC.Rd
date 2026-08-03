@@ -41,11 +41,12 @@ containing \code{"time"} and \code{"status"} columns for survival analysis
 Default: \code{"SCIPAC"}.}
 
 \item{phenotype_class}{Type of phenotypic outcome:
-\describe{
-\item{\code{"binary"}}{Binary traits (e.g., case/control, responder/non-responder)}
-\item{\code{"continuous"}}{Continuous measurements (e.g., age, biomarker levels)}
-\item{\code{"survival"}}{Survival information (time-to-event data)}
+\itemize{
+\item \strong{\code{"binary"}}: Binary traits (e.g., case/control, responder/non-responder)
+\item \strong{\code{"continuous"}}: Continuous measurements (e.g., age, biomarker levels)
+\item \strong{\code{"survival"}}: Survival information (time-to-event data)
 }
+
 Partial matching is supported.}
 
 \item{hvg}{Integer. Number of highly variable genes to use for preprocessing.
@@ -81,12 +82,12 @@ Default: \code{0.05}.}
 }
 \value{
 A named list containing:
-\describe{
-\item{\code{scRNA_data}}{Modified Seurat object with SCIPAC screening results
+\itemize{
+\item \strong{\code{scRNA_data}}: Modified Seurat object with SCIPAC screening results
 added as metadata columns. Includes association statistics, p-values,
-and confidence intervals for each cell cluster.}
-\item{\code{pca_res}}{PCA rotation results from \code{SCIPAC::sc.bulk.pca()}}
-\item{\code{cluster_res}}{Clustering results from \code{SCIPAC::seurat.ct()}}
+and confidence intervals for each cell cluster.
+\item \strong{\code{pca_res}}: PCA rotation results from \code{SCIPAC::sc.bulk.pca()}
+\item \strong{\code{cluster_res}}: Clustering results from \code{SCIPAC::seurat.ct()}
 }
 }
 \description{

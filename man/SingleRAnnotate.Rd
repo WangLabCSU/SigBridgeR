@@ -36,6 +36,7 @@ Default: inherits from package option \code{getOption("SigBridgeR.verbose")}.}
 \item \code{"HPCA"}: Uses the \emph{Human Primary Cell Atlas} from the \code{celldex} package.
 \item A \code{SingleCellExperiment} object containing pre-labeled reference cells.
 }
+
 Note: The placeholder option \code{"custom"} is not valid—users must provide an actual reference object.
 
 A numeric matrix of (usually normalized and log-transformed) expression values from a reference dataset, or a SummarizedExperiment object containing such a matrix; see \code{SingleR::trainSingleR} for details.
@@ -52,10 +53,10 @@ Alternatively, if ref is a list, labels should be a list of the same length. Eac
 \value{
 \itemize{
 \item If input is a \code{Seurat} object: returns the same object with three new metadata columns:
-\describe{
-\item{\code{SingleR_labels}}{Predicted cell type labels.}
-\item{\code{SingleR_delta_next}}{Confidence score (difference between top and second-best scores).}
-\item{\code{SingleR_pruned_labels}}{Labels after pruning low-confidence assignments.}
+\itemize{
+\item \strong{\code{SingleR_labels}}: Predicted cell type labels.
+\item \strong{\code{SingleR_delta_next}}: Confidence score (difference between top and second-best scores).
+\item \strong{\code{SingleR_pruned_labels}}: Labels after pruning low-confidence assignments.
 }
 \item If input is a \code{SingleCellExperiment}: returns the \code{SingleR} prediction result
 }

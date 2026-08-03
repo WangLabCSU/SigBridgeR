@@ -53,11 +53,11 @@ maintaining compatibility with downstream validation and execution frameworks.
 \section{Registry Entry Structure}{
 
 Each registered method is stored as a list with four elements:
-\describe{
-\item{\code{method_name}}{Character: the method key (e.g., "Scissor")}
-\item{\code{executor}}{Function: the actual screening implementation}
-\item{\code{phenotypes}}{Character vector: supported phenotype classes}
-\item{\code{mapper}}{Function: parameter transformation hook}
+\itemize{
+\item \strong{\code{method_name}}: Character: the method key (e.g., "Scissor")
+\item \strong{\code{executor}}: Function: the actual screening implementation
+\item \strong{\code{phenotypes}}: Character vector: supported phenotype classes
+\item \strong{\code{mapper}}: Function: parameter transformation hook
 }
 }
 

@@ -7,61 +7,52 @@
 #' inputs are retained.
 #'
 #' @param ... Input objects to merge. Can be:
-#'   \itemize{
-#'     \item Seurat objects
-#'     \item Lists containing \code{scRNA_data} (Seurat objects)
-#'     \item Mixed combinations of the above
-#'   }
+#'   * Seurat objects
+#'   * Lists containing `scRNA_data` (Seurat objects)
+#'   * Mixed combinations of the above
+#'
 #'   The first object serves as the base for merging. When duplicate metadata
 #'   columns are found, priority is given to the first occurrence.
 #' @param weights Named numeric vector specifying weights for voting when multiple
 #'   screening methods produce categorical labels. Names must match screening
 #'   method names (case-insensitive). If \code{NULL} (default), no voting is performed.
 #' @param ties.method Character. Method for resolving ties in weighted voting:
-#'   \describe{
-#'     \item{\code{"first"}}{Select the first category alphabetically (default)}
-#'     \item{\code{"last"}}{Select the last category alphabetically}
-#'     \item{\code{"random"}}{Randomly select among tied categories}
-#'   }
+#'
+#'   * **`"first"`**: Select the first category alphabetically (default)
+#'   * **`"last"`**: Select the last category alphabetically
+#'   * **`"random"`**: Randomly select among tied categories
 #' @param verbose Logical. Whether to print progress messages. Default: inherits
 #'   from \code{getOption("SigBridgeR.verbose")}.
 #'
 #' @return A merged Seurat object containing:
-#'   \itemize{
-#'     \item Expression data from the first input object
-#'     \item Combined metadata from all input objects (inner join on cell IDs)
-#'     \item Merged slots (assays, reductions, graphs, images) from all objects
-#'     \item Combined miscellaneous information from all objects
-#'     \item Optional \code{vote} column in metadata if \code{weight} is provided
-#'   }
+#'
+#'   * Expression data from the first input object
+#'   * Combined metadata from all input objects (inner join on cell IDs)
+#'   * Merged slots (assays, reductions, graphs, images) from all objects
+#'   * Combined miscellaneous information from all objects
+#'   * Optional `vote` column in metadata if `weight` is provided
 #'
 #' @section Processing Workflow:
-#' \enumerate{
-#'   \item \strong{Input Validation}: Extracts Seurat objects from inputs (skips invalid objects with warning)
-#'   \item \strong{Metadata Extraction}: Converts metadata to data.table format for efficient merging
-#'   \item \strong{Cell Intersection}: Retains only cells present in all datasets (inner join)
-#'   \item \strong{Weighted Voting}: If \code{weight} provided, performs weighted voting across screening methods
-#'   \item \strong{Slot Merging}: Combines assays, reductions, graphs, and images from all objects
-#'   \item \strong{Misc Merging}: Aggregates miscellaneous information from all objects
-#' }
+#' 1. **Input Validation**: Extracts Seurat objects from inputs (skips invalid objects with warning)
+#' 2. **Metadata Extraction**: Converts metadata to data.table format for efficient merging
+#' 3. **Cell Intersection**: Retains only cells present in all datasets (inner join)
+#' 4. **Weighted Voting**: If `weight` provided, performs weighted voting across screening methods
+#' 5. **Slot Merging**: Combines assays, reductions, graphs, and images from all objects
+#' 6. **Misc Merging**: Aggregates miscellaneous information from all objects
 #'
 #' @section Weighted Voting:
-#' When \code{weight} is provided, the function:
-#' \enumerate{
-#'   \item Identifies columns in metadata matching registered screening method names
-#'   \item Extracts vote data (must contain "Positive", "Negative", "Neutral", or "Other")
-#'   \item Applies \code{\link{WeightedVote}} with specified weights
-#'   \item Adds \code{vote} column to merged metadata with final aggregated labels
-#' }
+#' When `weight` is provided, the function:
+#' 1. Identifies columns in metadata matching registered screening method names
+#' 2. Extracts vote data (must contain "Positive", "Negative", "Neutral", or "Other")
+#' 3. Applies [`WeightedVote`] with specified weights
+#' 4. Adds `vote` column to merged metadata with final aggregated labels
 #'
 #' @section Notes:
-#' \itemize{
-#'   \item Only cells present in \emph{all} input objects are retained (inner join behavior)
-#'   \item Duplicate metadata columns are resolved by keeping the first occurrence
-#'   \item For integrating \emph{heterogeneous} single-cell datasets (different samples),
-#'         use \code{\link{SCIntegrate}} instead
-#'   \item Weights should be non-negative; higher values indicate greater influence in voting
-#' }
+#' * Only cells present in *all* input objects are retained (inner join behavior)
+#' * Duplicate metadata columns are resolved by keeping the first occurrence
+#' * For integrating *heterogeneous* single-cell datasets (different samples),
+#'   use [`SCIntegrate`] instead
+#' * Weights should be non-negative; higher values indicate greater influence in voting
 #'
 #' @family result_management
 #' @export

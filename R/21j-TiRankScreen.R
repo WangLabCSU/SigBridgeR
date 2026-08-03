@@ -86,31 +86,32 @@ ValidateTiRankParams <- function(
 #'        - `"continuous"`: Continuous measurements
 #'        - `"survival"`: Survival information
 #' @param tirank_params List of TiRank algorithm parameters:
-#'   \describe{
-#'     \strong{Data preprocessing:}
-#'     \item{validation_proportion}{Proportion of bulk data held out for validation (default: `0.15`).}
-#'     \item{sampling_thresh}{Threshold for resampling strategy (default: `0.5`).}
-#'     \item{sampling_mode}{Resampling method: `"smote"`, `"downsample"`, `"upsample"`, or `"tomeklinks"`.}
-#'     \item{top_var_genes}{Number of top variable genes to select (default: `2000L`).}
-#'     \item{top_gene_pairs}{Number of top gene pairs for ranking (default: `1000L`).}
-#'     \item{p_value_threshold}{P-value threshold for feature selection (default: `0.05`).}
-#'     \item{max_cutoff}{Upper cutoff for correlation filtering (default: `0.8`).}
-#'     \item{min_cutoff}{Lower cutoff for correlation filtering (default: `-0.8`).}
-#'     \strong{Neural network architecture:}
-#'     \item{nhead}{Number of attention heads (default: `2L`).}
-#'     \item{nhid1}{Size of first hidden layer (default: `96L`).}
-#'     \item{nhid2}{Size of second hidden layer (default: `8L`).}
-#'     \item{n_output}{Output dimension of encoder (default: `32L`).}
-#'     \item{nlayers}{Number of encoder layers (default: `3L`).}
-#'     \item{n_pred}{Number of prediction heads (default: `2L`).}
-#'     \item{dropout}{Dropout rate for regularization (default: `0.5`).}
-#'     \item{encoder_type}{Encoder architecture: `"MLP"`, `"Transformer"`, or `"DenseNet"`.}
-#'     \item{infer_mode}{Inference mode: `"SC"` (single-cell) or `"ST"` (spatial transcriptomics).}
-#'     \strong{Training:}
-#'     \item{n_trials}{Number of repeated training trials (default: `5L`).}
-#'     \item{do_reject}{Whether to apply rejection criteria to uncertain predictions (default: `TRUE`).}
-#'     \item{tolerance}{Tolerance threshold for rejection (default: `0.05`).}
-#'   }
+#'
+#'   **Data preprocessing:**
+#'   * `validation_proportion`: Proportion of bulk data held out for validation (default: `0.15`).
+#'   * `sampling_thresh`: Threshold for resampling strategy (default: `0.5`).
+#'   * `sampling_mode`: Resampling method: `"smote"`, `"downsample"`, `"upsample"`, or `"tomeklinks"`.
+#'   * `top_var_genes`: Number of top variable genes to select (default: `2000L`).
+#'   * `top_gene_pairs`: Number of top gene pairs for ranking (default: `1000L`).
+#'   * `p_value_threshold`: P-value threshold for feature selection (default: `0.05`).
+#'   * `max_cutoff`: Upper cutoff for correlation filtering (default: `0.8`).
+#'   * `min_cutoff`: Lower cutoff for correlation filtering (default: `-0.8`).
+#'
+#'   **Neural network architecture:**
+#'   * `nhead`: Number of attention heads (default: `2L`).
+#'   * `nhid1`: Size of first hidden layer (default: `96L`).
+#'   * `nhid2`: Size of second hidden layer (default: `8L`).
+#'   * `n_output`: Output dimension of encoder (default: `32L`).
+#'   * `nlayers`: Number of encoder layers (default: `3L`).
+#'   * `n_pred`: Number of prediction heads (default: `2L`).
+#'   * `dropout`: Dropout rate for regularization (default: `0.5`).
+#'   * `encoder_type`: Encoder architecture: `"MLP"`, `"Transformer"`, or `"DenseNet"`.
+#'   * `infer_mode`: Inference mode: `"SC"` (single-cell) or `"ST"` (spatial transcriptomics).
+#'
+#'   **Training:**
+#'   * `n_trials`: Number of repeated training trials (default: `5L`).
+#'   * `do_reject`: Whether to apply rejection criteria to uncertain predictions (default: `TRUE`).
+#'   * `tolerance`: Tolerance threshold for rejection (default: `0.05`).
 #' @param save_path (Soft-deprecated) Directory path for saving intermediate and
 #'        final results (default: `"./TiRank_res"`). Acts as fallback for
 #'        \code{load_cache} and \code{save_cache} when not specified via \code{...}.
@@ -119,45 +120,41 @@ ValidateTiRankParams <- function(
 #' @param load_cache (Soft-deprecated) Optional path to cached data (default: \code{NULL}).
 #'        Prefer using \code{load_cache} in \code{...} instead.
 #' @param ... Additional arguments passed to the function. Common parameters include:
-#'   \describe{
-#'     \item{verbose}{Logical. Whether to print verbose output (default: TRUE).}
-#'     \item{seed}{Integer. Random seed for reproducibility.}
-#'     \item{assay}{Character. Name of assay to use from Seurat object (default: `"RNA"`).}
-#'     \item{load_cache}{Cache directory path for loading cached data. Supports
-#'       root-level, cache-level, or parent-level paths. See [CacheSetHere()].}
-#'     \item{save_cache}{Cache directory path for saving results. Supports
-#'       root-level or parent-level paths. See [CacheSetHere()].}
-#'   }
+#'
+#'   * `verbose`: Logical. Whether to print verbose output (default: TRUE).
+#'   * `seed`: Integer. Random seed for reproducibility.
+#'   * `assay`: Character. Name of assay to use from Seurat object (default: `"RNA"`).
+#'   * `load_cache`: Cache directory path for loading cached data. Supports
+#'     root-level, cache-level, or parent-level paths. See [CacheSetHere()].
+#'   * `save_cache`: Cache directory path for saving results. Supports
+#'     root-level or parent-level paths. See [CacheSetHere()].
 #'
 #' @return A named list containing:
-#'   \describe{
-#'     \item{scRNA_data}{Modified single-cell data object with integrated screening
-#'       results added as metadata, including \code{TiRank_Reject}, \code{TiRank_Rank_Score},
-#'       and \code{TiRank} (Positive/Neutral/Negative) columns, plus \code{TiRank_para}
-#'       and \code{TiRank_type} stored in misc slot.}
-#'     \item{cell_cell_distance}{Computed cell-cell similarity/distance matrix.}
-#'   }
+#'
+#'   * **scRNA_data**: Modified single-cell data object with integrated screening
+#'     results added as metadata, including `TiRank_Reject`, `TiRank_Rank_Score`,
+#'     and `TiRank` (Positive/Neutral/Negative) columns, plus `TiRank_para`
+#'     and `TiRank_type` stored in misc slot.
+#'   * **cell_cell_distance**: Computed cell-cell similarity/distance matrix.
 #'
 #' @details
 #' The TiRank screening workflow consists of the following steps:
-#' \enumerate{
-#'   \item \strong{Data preprocessing:} Normalizes bulk expression data and validates
-#'         compatibility with phenotype information.
-#'   \item \strong{Expression transfer:} Transfers the single-cell expression profile
-#'         into the TiRank-compatible format.
-#'   \item \strong{Validation set generation:} Splits bulk data into training and
-#'         validation sets according to \code{validation_proportion}.
-#'   \item \strong{Resampling:} Applies the specified sampling strategy to address
-#'         class imbalance in bulk data.
-#'   \item \strong{Cell-cell similarity:} Computes cell-cell distance or similarity
-#'         matrix from single-cell data.
-#'   \item \strong{Model training:} Trains a TiRank neural network (MLP, Transformer,
-#'         or DenseNet encoder) using bulk expression and phenotype.
-#'   \item \strong{Screening:} Applies the trained model to score each cell, producing
-#'         rank-based predictions with rejection handling.
-#'   \item \strong{Label assignment:} Classifies cells as \code{"Positive"},
-#'         \code{"Neutral"}, or \code{"Negative"} based on rank scores.
-#' }
+#' 1. **Data preprocessing:** Normalizes bulk expression data and validates
+#'    compatibility with phenotype information.
+#' 2. **Expression transfer:** Transfers the single-cell expression profile
+#'    into the TiRank-compatible format.
+#' 3. **Validation set generation:** Splits bulk data into training and
+#'    validation sets according to `validation_proportion`.
+#' 4. **Resampling:** Applies the specified sampling strategy to address
+#'    class imbalance in bulk data.
+#' 5. **Cell-cell similarity:** Computes cell-cell distance or similarity
+#'    matrix from single-cell data.
+#' 6. **Model training:** Trains a TiRank neural network (MLP, Transformer,
+#'    or DenseNet encoder) using bulk expression and phenotype.
+#' 7. **Screening:** Applies the trained model to score each cell, producing
+#'    rank-based predictions with rejection handling.
+#' 8. **Label assignment:** Classifies cells as `"Positive"`,
+#'    `"Neutral"`, or `"Negative"` based on rank scores.
 #'
 #' @family TiRank
 #' @family screen_method

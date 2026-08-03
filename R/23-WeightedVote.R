@@ -5,11 +5,10 @@
 #' to each item, and votes are combined using user-specified weights.
 #'
 #' @param vote_data A data frame or matrix where:
-#'   \itemize{
-#'     \item Rows represent items to be classified
-#'     \item Columns represent individual voters
-#'     \item Cell values must be one of: "Positive", "Negative", "Neutral", "Other"
-#'   }
+#'   * Rows represent items to be classified
+#'   * Columns represent individual voters
+#'   * Cell values must be one of: "Positive", "Negative", "Neutral", "Other"
+#'
 #'   Row names (if present) are preserved in the output.
 #' @param weights Named numeric vector specifying the weight for each voter.
 #'   Names must exactly match \code{colnames(vote_data)}. Weights should be

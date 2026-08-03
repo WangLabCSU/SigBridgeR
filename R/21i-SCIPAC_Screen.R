@@ -99,19 +99,17 @@ ValidateSCIPACParams <- function(
 #' @param sc_data A matrix/Matrix (genes × cells) or a Seurat object containing
 #'   scRNA-seq data to be screened.
 #' @param phenotype Phenotype data, either:
-#'   \itemize{
-#'     \item Named vector (names match \code{matched_bulk} columns)
-#'     \item Data frame with row names matching \code{matched_bulk} columns,
-#'           containing \code{"time"} and \code{"status"} columns for survival analysis
-#'   }
+#'   * Named vector (names match `matched_bulk` columns)
+#'   * Data frame with row names matching `matched_bulk` columns,
+#'     containing `"time"` and `"status"` columns for survival analysis
 #' @param label_type Character. Context info specifying the screening method identifier.
 #'   Default: \code{"SCIPAC"}.
 #' @param phenotype_class Type of phenotypic outcome:
-#'   \describe{
-#'     \item{\code{"binary"}}{Binary traits (e.g., case/control, responder/non-responder)}
-#'     \item{\code{"continuous"}}{Continuous measurements (e.g., age, biomarker levels)}
-#'     \item{\code{"survival"}}{Survival information (time-to-event data)}
-#'   }
+#'
+#'   * **`"binary"`**: Binary traits (e.g., case/control, responder/non-responder)
+#'   * **`"continuous"`**: Continuous measurements (e.g., age, biomarker levels)
+#'   * **`"survival"`**: Survival information (time-to-event data)
+#'
 #'   Partial matching is supported.
 #' @param hvg Integer. Number of highly variable genes to use for preprocessing.
 #'   Default: \code{1000L}.
@@ -135,41 +133,34 @@ ValidateSCIPACParams <- function(
 #' @param ... Additional arguments (support `assay`(character), `verbose`(logical) & `seed`(integer)).
 #'
 #' @return A named list containing:
-#'   \describe{
-#'     \item{\code{scRNA_data}}{Modified Seurat object with SCIPAC screening results
-#'           added as metadata columns. Includes association statistics, p-values,
-#'           and confidence intervals for each cell cluster.}
-#'     \item{\code{pca_res}}{PCA rotation results from \code{SCIPAC::sc.bulk.pca()}}
-#'     \item{\code{cluster_res}}{Clustering results from \code{SCIPAC::seurat.ct()}}
-#'   }
+#'
+#'   * **`scRNA_data`**: Modified Seurat object with SCIPAC screening results
+#'     added as metadata columns. Includes association statistics, p-values,
+#'     and confidence intervals for each cell cluster.
+#'   * **`pca_res`**: PCA rotation results from `SCIPAC::sc.bulk.pca()`
+#'   * **`cluster_res`**: Clustering results from `SCIPAC::seurat.ct()`
 #'
 #' @section Workflow:
-#' \enumerate{
-#'   \item \strong{Gene overlap}: Identifies common genes between scRNA-seq and bulk data
-#'   \item \strong{Preprocessing}: Selects HVGs and preprocesses both datasets
-#'   \item \strong{PCA rotation}: Aligns scRNA-seq and bulk data in shared PCA space
-#'   \item \strong{Clustering}: Identifies cell populations using Seurat clustering
-#'   \item \strong{Association testing}: Tests cluster-phenotype associations using
-#'         elastic net regression with bootstrap validation
-#'   \item \strong{Result integration}: Adds screening results to Seurat object metadata
-#' }
+#' 1. **Gene overlap**: Identifies common genes between scRNA-seq and bulk data
+#' 2. **Preprocessing**: Selects HVGs and preprocesses both datasets
+#' 3. **PCA rotation**: Aligns scRNA-seq and bulk data in shared PCA space
+#' 4. **Clustering**: Identifies cell populations using Seurat clustering
+#' 5. **Association testing**: Tests cluster-phenotype associations using
+#'    elastic net regression with bootstrap validation
+#' 6. **Result integration**: Adds screening results to Seurat object metadata
 #'
 #' @section Requirements:
-#' \itemize{
-#'   \item R package: \code{SCIPAC} (install from \code{Exceret/SCIPAC})
-#'   \item Gene symbols must be consistent between scRNA-seq and bulk datasets
-#'   \item Sufficient overlapping genes (typically >100) for reliable rotation
-#' }
+#' * R package: `SCIPAC` (install from `Exceret/SCIPAC`)
+#' * Gene symbols must be consistent between scRNA-seq and bulk datasets
+#' * Sufficient overlapping genes (typically >100) for reliable rotation
 #'
 #' @section Notes:
-#' \itemize{
-#'   \item For survival analysis, \code{phenotype} must be a data frame with
-#'         \code{"time"} and \code{"status"} columns
-#'   \item Binary phenotypes are automatically converted to factors
-#'   \item Continuous phenotypes use Gaussian family in elastic net regression
-#'   \item Screening parameters are stored in \code{scRNA_data@misc$SCIPAC_params}
-#'         for reproducibility
-#' }
+#' * For survival analysis, `phenotype` must be a data frame with
+#'   `"time"` and `"status"` columns
+#' * Binary phenotypes are automatically converted to factors
+#' * Continuous phenotypes use Gaussian family in elastic net regression
+#' * Screening parameters are stored in `scRNA_data@misc$SCIPAC_params`
+#'   for reproducibility
 #'
 #' @family screen_method
 #' @export

@@ -17,6 +17,7 @@ WeightedVote(
 \item Columns represent individual voters
 \item Cell values must be one of: "Positive", "Negative", "Neutral", "Other"
 }
+
 Row names (if present) are preserved in the output.}
 
 \item{weights}{Named numeric vector specifying the weight for each voter.

@@ -17,8 +17,8 @@ and each value is either:
 \itemize{
 \item A \strong{function}, or
 \item A \strong{character string} specifying a function (e.g., \code{"Seurat::RunHarmony"} or \code{"stats::prcomp"}).
-}
-The function will be automatically wrapped to accept \code{object} and \code{params}, making it compatible with \code{SCPreProcess()} pipelines.}
+The function will be automatically wrapped to accept \code{object} and \code{params}, making it compatible with \code{SCPreProcess()} pipelines.
+}}
 
 \item{overwrite}{Logical. If \code{FALSE} (default), throws an error when attempting
 to replace an existing strategy. Set to \code{TRUE} to allow updates.}

@@ -32,49 +32,50 @@ disease state). Helps LLMs interpret marker genes appropriately. Default: \code{
 \item Anthropic: \code{"claude-3-5-sonnet-20240620"}, etc.
 \item Google: \code{"gemini-1.5-pro"}, etc.
 \item Alibaba: \code{"qwen-max"}, \code{"qwen-plus"}, etc.
-}
 Default: \code{c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")}.
-For single-model mode, only the first model is used.}
+For single-model mode, only the first model is used.
+}}
 
 \item{api_keys}{Named list of API keys with provider names as keys:
-\describe{
-\item{\code{openai}}{OpenAI API key}
-\item{\code{anthropic}}{Anthropic API key}
-\item{\code{gemini}}{Google Cloud API key (with Gemini enabled)}
-\item{\code{qwen}}{Alibaba DashScope API key}
+\itemize{
+\item \strong{\code{openai}}: OpenAI API key
+\item \strong{\code{anthropic}}: Anthropic API key
+\item \strong{\code{gemini}}: Google Cloud API key (with Gemini enabled)
+\item \strong{\code{qwen}}: Alibaba DashScope API key
 }
+
 Example: \code{list(openai = "sk-...", anthropic = "sk-ant-...")}.
 \strong{Note}: Default placeholder keys (\code{"your-xxx-key"}) will fail—users must supply valid keys.}
 
 \item{...}{Additional arguments passed to downstream functions. Parameters are routed as follows:
-\describe{
-\item{To \code{mLLMCelltype::annotate_cell_types()} and \code{mLLMCelltype::interactive_consensus_annotation()}:}{
-\describe{
-\item{\code{top_gene_count}}{Number of top genes to use per cluster (default: 10L).}
-\item{\code{debug}}{Logical. If \code{TRUE}, prints debugging information.}
-\item{\code{base_urls}}{Custom API base URLs: single character string (applied globally) or named list with provider-specific URLs (e.g., \code{list(openai = "...", anthropic = "...")}). Useful for proxies, enterprise gateways, or testing environments.}
-\item{\code{controversy_threshold}}{Consensus proportion threshold (default: 0.7). Clusters below this value are flagged as controversial.}
-\item{\code{entropy_threshold}}{Entropy threshold for controversial cluster detection (default: 1.0).}
-\item{\code{max_discussion_rounds}}{Maximum discussion rounds for controversial clusters (default: 3).}
-\item{\code{consensus_check_model}}{Model used for consensus validation.}
-\item{\code{log_dir}}{Directory for log storage (default: \code{tempdir()}).}
-\item{\code{cache_dir}}{Directory for cache storage (default: \code{tempdir()}).}
-\item{\code{use_cache}}{Logical. Whether to use cached results (default: \code{TRUE}).}
-\item{\code{clusters_to_analyze}}{Character/numeric vector of cluster IDs to analyze. Non-existent IDs trigger warnings.}
-\item{\code{force_rerun}}{Logical. If \code{TRUE}, bypasses cache and forces re-analysis (affects discussion phase only). Default: \code{FALSE}.}
-}
+\itemize{
+\item \strong{To \code{mLLMCelltype::annotate_cell_types()} and \code{mLLMCelltype::interactive_consensus_annotation()}}:
+\itemize{
+\item \code{top_gene_count}: Number of top genes to use per cluster (default: 10L).
+\item \code{debug}: Logical. If \code{TRUE}, prints debugging information.
+\item \code{base_urls}: Custom API base URLs: single character string (applied globally) or named list with provider-specific URLs (e.g., \code{list(openai = "...", anthropic = "...")}). Useful for proxies, enterprise gateways, or testing environments.
+\item \code{controversy_threshold}: Consensus proportion threshold (default: 0.7). Clusters below this value are flagged as controversial.
+\item \code{entropy_threshold}: Entropy threshold for controversial cluster detection (default: 1.0).
+\item \code{max_discussion_rounds}: Maximum discussion rounds for controversial clusters (default: 3).
+\item \code{consensus_check_model}: Model used for consensus validation.
+\item \code{log_dir}: Directory for log storage (default: \code{tempdir()}).
+\item \code{cache_dir}: Directory for cache storage (default: \code{tempdir()}).
+\item \code{use_cache}: Logical. Whether to use cached results (default: \code{TRUE}).
+\item \code{clusters_to_analyze}: Character/numeric vector of cluster IDs to analyze. Non-existent IDs trigger warnings.
+\item \code{force_rerun}: Logical. If \code{TRUE}, bypasses cache and forces re-analysis (affects discussion phase only). Default: \code{FALSE}.
 }
 }}
 }
 \value{
 The input \code{Seurat} object with the following metadata columns added:
-\describe{
-\item{\code{mllmcelltype_cell_type}}{Consensus cell type annotation per cell.}
-\item{\code{mllmcelltype_consensus_proportion}}{(Multi-model only) Proportion of models
-agreeing on the assigned label (range: 0–1). Higher values indicate stronger consensus.}
-\item{\code{mllmcelltype_entropy}}{(Multi-model only) Shannon entropy of model predictions.
-Lower values indicate higher confidence (less disagreement among models).}
+\itemize{
+\item \strong{\code{mllmcelltype_cell_type}}: Consensus cell type annotation per cell.
+\item \strong{\code{mllmcelltype_consensus_proportion}}: (Multi-model only) Proportion of models
+agreeing on the assigned label (range: 0–1). Higher values indicate stronger consensus.
+\item \strong{\code{mllmcelltype_entropy}}: (Multi-model only) Shannon entropy of model predictions.
+Lower values indicate higher confidence (less disagreement among models).
 }
+
 \strong{Note}: Uncertainty metrics are \emph{only added in multi-model mode}
 (\code{length(models) > 1}).
 }

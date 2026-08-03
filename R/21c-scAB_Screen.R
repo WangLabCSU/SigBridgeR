@@ -113,10 +113,9 @@ ValidatescABParams <- function(
 #
 #'
 #' @return A list containing:
-#' \describe{
-#'   \item{scRNA_data}{Filtered Seurat object with selected cells}
-#'   \item{scAB_result}{scAB screening result}
-#' }
+#'
+#' * **scRNA_data**: Filtered Seurat object with selected cells
+#' * **scAB_result**: scAB screening result
 #'
 #' @references
 #' Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.

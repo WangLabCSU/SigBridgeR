@@ -17,18 +17,18 @@ and supports both standard (\code{NormalizeData}) and SCTransform-based workflow
 }
 \section{Available Operations}{
 
-\describe{
-\item{\code{o}}{Create Seurat object from count matrix (\code{SeuratObject::CreateSeuratObject})}
-\item{\code{n}}{Normalize data (\code{Seurat::NormalizeData})}
-\item{\code{v}}{Find variable features (\code{Seurat::FindVariableFeatures})}
-\item{\code{s}}{Scale data (\code{Seurat::ScaleData})}
-\item{\code{p}}{Run PCA (\code{Seurat::RunPCA})}
-\item{\code{c}}{Find clusters (\code{Seurat::FindClusters})}
-\item{\code{e}}{Find neighbors (\code{Seurat::FindNeighbors})}
-\item{\code{t}}{Run t-SNE (\code{Seurat::RunTSNE})}
-\item{\code{u}}{Run UMAP (\code{Seurat::RunUMAP})}
-\item{\code{r}}{SCTransform (\code{Seurat::SCTransform})}
-\item{\code{i}}{Integrate layers (\code{Seurat::IntegrateLayers})}
+\itemize{
+\item \strong{\code{o}}: Create Seurat object from count matrix (\code{SeuratObject::CreateSeuratObject})
+\item \strong{\code{n}}: Normalize data (\code{Seurat::NormalizeData})
+\item \strong{\code{v}}: Find variable features (\code{Seurat::FindVariableFeatures})
+\item \strong{\code{s}}: Scale data (\code{Seurat::ScaleData})
+\item \strong{\code{p}}: Run PCA (\code{Seurat::RunPCA})
+\item \strong{\code{c}}: Find clusters (\code{Seurat::FindClusters})
+\item \strong{\code{e}}: Find neighbors (\code{Seurat::FindNeighbors})
+\item \strong{\code{t}}: Run t-SNE (\code{Seurat::RunTSNE})
+\item \strong{\code{u}}: Run UMAP (\code{Seurat::RunUMAP})
+\item \strong{\code{r}}: SCTransform (\code{Seurat::SCTransform})
+\item \strong{\code{i}}: Integrate layers (\code{Seurat::IntegrateLayers})
 }
 }
 

@@ -53,18 +53,14 @@
 #' @param ... Other arguments passed to ggplot2::theme()
 #'
 #' @return A list containing:
-#' \itemize{
-#'   \item{stats: A data frame (single screen) or list of data frames (multiple screens)
-#'     with screening statistics including:
-#'     \itemize{
-#'       \item Grouping variable counts
-#'       \item Raw cell counts
-#'       \item Percentage fractions
-#'     }
-#'   }
-#'   \item{plot: A ggplot2 object (single screen) or list of ggplot2 objects (multiple screens)}
-#'   \item{combined_plot: A combined plot using patchwork (only for multiple screens)}
-#' }
+#'
+#' * `stats`: A data frame (single screen) or list of data frames (multiple screens)
+#'   with screening statistics including:
+#'   * Grouping variable counts
+#'   * Raw cell counts
+#'   * Percentage fractions
+#' * `plot`: A ggplot2 object (single screen) or list of ggplot2 objects (multiple screens)
+#' * `combined_plot`: A combined plot using patchwork (only for multiple screens)
 #'
 #' @section Visualization Details:
 #' - Bars are ordered by descending Positive fraction

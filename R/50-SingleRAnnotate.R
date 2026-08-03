@@ -8,21 +8,18 @@
 #' objects by adding prediction results as metadata columns.
 #'
 #' @param sc A single-cell dataset, either:
-#'   \itemize{
-#'     \item A \code{Seurat} object (recommended), or
-#'     \item A \code{SingleCellExperiment} object.
-#'   }
+#'   * A `Seurat` object (recommended), or
+#'   * A `SingleCellExperiment` object.
 #' @param verbose Logical. Whether to print progress messages.
 #'   Default: inherits from package option \code{getOption("SigBridgeR.verbose")}.
 #' @param ensembl Logical scalar indicating whether to convert row names to Ensembl IDs. Genes without a mapping to a non-duplicated Ensembl ID are discarded.
 #' @param cell.ont String specifying whether Cell Ontology terms should be included in the colData. If `"nonna"`, all samples without a valid term are discarded; if `"all"`, all samples are returned with (possibly NA) terms; if `"none"`, terms are not added.
 #' @param legacy Logical scalar indicating whether to pull data from ExperimentHub. By default, we use data from the gypsum backend.
 #' @param ref Reference data for annotation. One of:
-#'   \itemize{
-#'     \item \code{"HPCA"}: Uses the \emph{Human Primary Cell Atlas} from the \code{celldex} package.
-#'     \item A \code{SingleCellExperiment} object containing pre-labeled reference cells.
-#'   }
-#'   Note: The placeholder option \code{"custom"} is not valid—users must provide an actual reference object.
+#'   * `"HPCA"`: Uses the *Human Primary Cell Atlas* from the `celldex` package.
+#'   * A `SingleCellExperiment` object containing pre-labeled reference cells.
+#'
+#'   Note: The placeholder option `"custom"` is not valid—users must provide an actual reference object.
 #'
 #'   A numeric matrix of (usually normalized and log-transformed) expression values from a reference dataset, or a SummarizedExperiment object containing such a matrix; see `SingleR::trainSingleR` for details.
 #'   Alternatively, a list or List of SummarizedExperiment objects or numeric matrices containing multiple references. Row names may be different across entries but only the intersection will be used,
@@ -36,21 +33,17 @@
 #' @param ... Additional arguments passed to \code{SingleR::SingleR()} (e.g., \code{assay.type.ref}, \code{genes}).
 #'
 #' @return
-#'   \itemize{
-#'     \item If input is a \code{Seurat} object: returns the same object with three new metadata columns:
-#'       \describe{
-#'         \item{\code{SingleR_labels}}{Predicted cell type labels.}
-#'         \item{\code{SingleR_delta_next}}{Confidence score (difference between top and second-best scores).}
-#'         \item{\code{SingleR_pruned_labels}}{Labels after pruning low-confidence assignments.}
-#'       }
-#'     \item If input is a \code{SingleCellExperiment}: returns the \code{SingleR} prediction result
-#'   }
+#'
+#' * If input is a `Seurat` object: returns the same object with three new metadata columns:
+#'   * **`SingleR_labels`**: Predicted cell type labels.
+#'   * **`SingleR_delta_next`**: Confidence score (difference between top and second-best scores).
+#'   * **`SingleR_pruned_labels`**: Labels after pruning low-confidence assignments.
+#' * If input is a `SingleCellExperiment`: returns the `SingleR` prediction result
 #'
 #' @section Requirements:
-#'   \itemize{
-#'     \item The \code{celldex} package is required when using \code{ref = "HPCA"}.
-#'     \item All gene names must be consistent between test and reference datasets (e.g., Ensembl or symbol).
-#'   }
+#'
+#' * The `celldex` package is required when using `ref = "HPCA"`.
+#' * All gene names must be consistent between test and reference datasets (e.g., Ensembl or symbol).
 #'
 #' @examples
 #' \dontrun{

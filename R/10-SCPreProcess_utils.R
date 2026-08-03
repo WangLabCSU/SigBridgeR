@@ -129,13 +129,13 @@ GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
 #'
 #' @return A Seurat object containing only tumor cells, with the following
 #'         attributes stored in `@misc`:
-#'         \itemize{
-#'           \item `self_dim`: Dimensions of the filtered object
-#'           \item `raw_dim`: Original dimensions before filtering
-#'           \item `column2only_tumor`: The column name used for filtering
-#'         }
-#'         If `column2only_tumor` is `NULL` or the specified column is not found,
-#'         returns the original object unchanged.
+#'
+#'   * `self_dim`: Dimensions of the filtered object
+#'   * `raw_dim`: Original dimensions before filtering
+#'   * `column2only_tumor`: The column name used for filtering
+#'
+#'   If `column2only_tumor` is `NULL` or the specified column is not found,
+#'   returns the original object unchanged.
 #'
 #' @keywords internal
 #' @family single_cell_preprocess

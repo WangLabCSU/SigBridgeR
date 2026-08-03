@@ -58,13 +58,12 @@ data:
 }
 \value{
 A list containing:
-\describe{
-\item{scRNA_data}{Seurat object with added metadata:
-\describe{
-\item{ScPP}{"Positive"/"Negative"/"Neutral" classification}
+\itemize{
+\item \strong{scRNA_data}: Seurat object with added metadata:
+\itemize{
+\item \strong{ScPP}: "Positive"/"Negative"/"Neutral" classification
 }
-}
-\item{gene_list}{List of genes used for screening}
+\item \strong{gene_list}: List of genes used for screening
 }
 }
 \description{
