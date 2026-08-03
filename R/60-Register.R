@@ -205,7 +205,7 @@ is_func_from_pkg <- function(func, pkg_name) {
 
   env <- environment(func)
 
-  # 快速路径：函数环境就是目标包 namespace
+  #  namespace
   if (!is.null(env) && identical(environmentName(env), ns_name)) {
     return(TRUE)
   }
@@ -216,12 +216,10 @@ is_func_from_pkg <- function(func, pkg_name) {
 
   ns <- asNamespace(pkg_name)
 
-  # 若函数环境就是 namespace，也认为来自该包
   if (!is.null(env) && identical(env, ns)) {
     return(TRUE)
   }
 
-  # 慢路径：在 namespace 中查找是否存在同一函数对象
   objs <- ls(ns, all.names = TRUE)
 
   for (nm in objs) {

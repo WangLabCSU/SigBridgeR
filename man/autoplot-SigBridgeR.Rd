@@ -4,12 +4,13 @@
 \alias{autoplot-SigBridgeR}
 \alias{autoplot.Seurat}
 \alias{autoplot.SigBridgeR::ScreenMethodResult}
-\title{autoplot  method for Seurat UMAP}
+\title{autoplot method for Seurat UMAP}
 \usage{
 \method{autoplot}{Seurat}(
   object,
+  reduction = "umap",
   group.by = NULL,
-  label = TRUE,
+  label = FALSE,
   label.size = 4,
   pt.size = 0.5,
   cols = NULL,
@@ -29,21 +30,27 @@
 \arguments{
 \item{object}{Seurat object}
 
-\item{group.by}{Metadata column used for grouping/coloring}
+\item{reduction}{Which dimensionality reduction to use. If not specified, first searches for umap, then tsne, then pca}
 
-\item{label}{Whether to label clusters}
+\item{group.by}{Name of one or more metadata columns to group (color) cells by
+(for example, orig.ident); pass 'ident' to group by identity class}
 
-\item{label.size}{Label font size}
+\item{label}{Whether to label the clusters}
 
-\item{pt.size}{Point size}
+\item{label.size}{Sets size of labels}
 
-\item{cols}{\code{vector} Custom colors}
+\item{pt.size}{Adjust point size for plotting}
 
-\item{...}{Other arguments passed to \link[Seurat:DimPlot]{Seurat::DimPlot}}
+\item{cols}{Vector of colors, each color corresponds to an identity class. This may also be a single character
+or numeric value corresponding to a palette as specified by \code{\link[RColorBrewer]{brewer.pal.info}}.
+By default, ggplot2 assigns colors. We also include a number of palettes from the pals package.
+See \code{\link[Seurat]{DiscretePalette}} for details.}
+
+\item{...}{Extra parameters passed to \code{DimPlot}}
 }
 \value{
 ggplot object
 }
 \description{
-A ggplot2 autoplot method for class ScreenMethodResult
+A ggplot2 autoplot method for class ScreenMethodResult and SeuratObject
 }

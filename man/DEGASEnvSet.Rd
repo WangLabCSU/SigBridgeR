@@ -21,3 +21,4 @@ Other DEGAS:
 \code{\link[=ValidateDEGASParams]{ValidateDEGASParams()}}
 }
 \concept{DEGAS}
+\keyword{internal}

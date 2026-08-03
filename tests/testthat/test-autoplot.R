@@ -288,8 +288,132 @@ describe("autoplot.Seurat", {
     )
 
     autoplot(seurat)
-    expect_true(captured$label)
+    expect_false(captured$label)
     expect_equal(captured$label.size, 4)
+  })
+
+  it("uses 'umap' as default reduction", {
+    skip_if_not_installed("ggplot2")
+    skip_if_not_installed("SeuratObject")
+
+    seurat <- new_test_seurat()
+
+    captured <- new.env(parent = emptyenv())
+
+    local_mocked_bindings(
+      check_installed = function(pkg, ...) invisible(),
+      .package = "SigBridgeR"
+    )
+    local_mocked_bindings(
+      DimPlot = function(object, reduction, ...) {
+        captured$reduction <- reduction
+        ggplot2::ggplot()
+      },
+      NoAxes = function(...) ggplot2::theme(),
+      .package = "Seurat"
+    )
+    local_mocked_bindings(
+      theme_dr = function(...) ggplot2::theme(),
+      .package = "tidydr"
+    )
+
+    autoplot(seurat)
+    expect_equal(captured$reduction, "umap")
+  })
+
+  it("passes reduction to Seurat::DimPlot", {
+    skip_if_not_installed("ggplot2")
+    skip_if_not_installed("SeuratObject")
+
+    seurat <- new_test_seurat()
+
+    captured <- new.env(parent = emptyenv())
+
+    local_mocked_bindings(
+      check_installed = function(pkg, ...) invisible(),
+      .package = "SigBridgeR"
+    )
+    local_mocked_bindings(
+      DimPlot = function(object, reduction, ...) {
+        captured$reduction <- reduction
+        ggplot2::ggplot()
+      },
+      NoAxes = function(...) ggplot2::theme(),
+      .package = "Seurat"
+    )
+    local_mocked_bindings(
+      theme_dr = function(...) ggplot2::theme(),
+      .package = "tidydr"
+    )
+
+    autoplot(seurat, reduction = "pca")
+    expect_equal(captured$reduction, "pca")
+  })
+
+  it("uses ScreenStrategy colors when group.by is a registered strategy", {
+    skip_if_not_installed("ggplot2")
+    skip_if_not_installed("SeuratObject")
+
+    seurat <- new_test_seurat()
+
+    captured <- new.env(parent = emptyenv())
+
+    local_mocked_bindings(
+      check_installed = function(pkg, ...) invisible(),
+      .package = "SigBridgeR"
+    )
+    local_mocked_bindings(
+      DimPlot = function(object, reduction, cols, ...) {
+        captured$cols <- cols
+        ggplot2::ggplot()
+      },
+      NoAxes = function(...) ggplot2::theme(),
+      .package = "Seurat"
+    )
+    local_mocked_bindings(
+      theme_dr = function(...) ggplot2::theme(),
+      .package = "tidydr"
+    )
+
+    autoplot(seurat, group.by = "Scissor")
+    expect_equal(
+      captured$cols,
+      c(
+        "Other" = "#CECECE",
+        "Neutral" = "#CECECE",
+        "Positive" = "#c24b4b",
+        "Negative" = "#5189bb"
+      )
+    )
+  })
+
+  it("uses palette_SigBridgeR when group.by is not a registered strategy", {
+    skip_if_not_installed("ggplot2")
+    skip_if_not_installed("SeuratObject")
+
+    seurat <- new_test_seurat()
+
+    captured <- new.env(parent = emptyenv())
+
+    local_mocked_bindings(
+      check_installed = function(pkg, ...) invisible(),
+      .package = "SigBridgeR"
+    )
+    local_mocked_bindings(
+      DimPlot = function(object, reduction, cols, ...) {
+        captured$cols <- cols
+        ggplot2::ggplot()
+      },
+      NoAxes = function(...) ggplot2::theme(),
+      .package = "Seurat"
+    )
+    local_mocked_bindings(
+      theme_dr = function(...) ggplot2::theme(),
+      .package = "tidydr"
+    )
+
+    autoplot(seurat, group.by = "orig.ident")
+    expect_equal(captured$cols, palette_SigBridgeR())
   })
 })
 

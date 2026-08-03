@@ -336,7 +336,7 @@ check_model_key <- function(models = vector(), api_keys = list()) {
   #       "grok-3-mini-latest",
   #       "grok-3-mini-fast",
   #       "grok-3-mini-fast-latest",
-  #       # OpenRouter 格式：provider/model-name
+  #       # OpenRouter
   #       # OpenAI
   #       "openai/gpt-5",
   #       "openai/gpt-4o-mini",

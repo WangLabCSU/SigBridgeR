@@ -52,7 +52,7 @@ See [bioconductor_docker/issues/22](https://github.com/Bioconductor/bioconductor
 
 This may be due to two reasons: first, a mismatch in the dimensions of the bulk expression data and the phenotype data; second, incorrect column names in the survival phenotype data leading to a failure to match.
 
-To check dimension mismatch：
+To check dimension mismatch:
 
 ```{r}
 #| eval: false

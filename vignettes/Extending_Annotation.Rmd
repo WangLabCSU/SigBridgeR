@@ -29,7 +29,7 @@ Extending cell annotation method is easy:
 ```{r}
 #| label: extend_cell_anno
 my_method <- function(seurat_obj, ...) {
-  # TODO：Annotate cell type
+  # TODO: Annotate cell type
   return(seurat_obj)
 }
 my_sc_anno <- AnnotationMethod(

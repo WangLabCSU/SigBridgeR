@@ -20,7 +20,7 @@
 #'
 #' @param cache_config A `ScreenMethodConfig` or `ScreenMethodCache` S7
 #'   object containing the current configuration to validate.
-#' @param ... Additional arguments to be passed to the method：
+#' @param ... Additional arguments to be passed to the method:
 #'
 #'   For `ScreenMethodConfig`:
 #'   - `path`: `character`. Path to the cache directory or directly to the

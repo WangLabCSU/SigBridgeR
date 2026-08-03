@@ -10,7 +10,7 @@ CheckCache(cache_config, ...)
 \item{cache_config}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7
 object containing the current configuration to validate.}
 
-\item{...}{Additional arguments to be passed to the method：
+\item{...}{Additional arguments to be passed to the method:
 
 For \code{ScreenMethodConfig}:
 \itemize{

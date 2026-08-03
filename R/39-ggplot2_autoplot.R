@@ -2,27 +2,22 @@
 ##' @export
 ggplot2::autoplot
 
-#' autoplot  method for Seurat UMAP
+#' autoplot method for Seurat UMAP
 #'
 #' @description
-#' A ggplot2 autoplot method for class ScreenMethodResult
+#' A ggplot2 autoplot method for class ScreenMethodResult and SeuratObject
 #'
 #'
-#' @param object Seurat object
-#' @param group.by Metadata column used for grouping/coloring
-#' @param label Whether to label clusters
-#' @param label.size Label font size
-#' @param pt.size Point size
-#' @param cols `vector` Custom colors
-#' @param ... Other arguments passed to [Seurat::DimPlot]
+#' @inheritParams Seurat::DimPlot
 #'
 #' @name autoplot-SigBridgeR
 #' @return ggplot object
 #' @export
 autoplot.Seurat <- function(
   object,
+  reduction = "umap",
   group.by = NULL,
-  label = TRUE,
+  label = FALSE,
   label.size = 4,
   pt.size = 0.5,
   cols = NULL,
@@ -30,11 +25,21 @@ autoplot.Seurat <- function(
 ) {
   check_installed(c("tidydr", "ggplot2"))
 
-  cluster_color <- cols %||% palette_SigBridgeR()
+  cluster_color <- cols %||%
+    if (!is.null(group.by) && group.by %chin% names(ScreenStrategy)) {
+      c(
+        "Other" = "#CECECE",
+        "Neutral" = "#CECECE",
+        "Positive" = "#c24b4b",
+        "Negative" = "#5189bb"
+      )
+    } else {
+      palette_SigBridgeR()
+    }
 
   p <- Seurat::DimPlot(
     object = object,
-    reduction = "umap",
+    reduction = reduction,
     label = label,
     label.size = label.size,
     group.by = group.by,

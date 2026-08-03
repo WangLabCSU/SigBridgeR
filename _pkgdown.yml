@@ -36,6 +36,8 @@ reference:
           - CheckNA
           - PhenoPreProcess
           - PhenoMap
+          - CountsToTPM
+          - IsSkewedDynamic
 
     - title: Result Integration & Visualization
       desc: >
@@ -43,8 +45,11 @@ reference:
       contents:
           - MergeResult
           - WeightedVote
+          - DrawBulkPCA
           - ScreenFractionPlot
           - ScreenUpset
+          - autoplot
+          - palette_SigBridgeR
 
     - title: Screening Methods
       desc: >
@@ -119,6 +124,7 @@ reference:
           - WriteCache
           - LoadCache
           - CacheSetHere
+          - CacheSysCall
 
     - title: Package Configuration
       desc: >
@@ -127,6 +133,18 @@ reference:
           - getFuncOption
           - setFuncOption
           - setThreads
+
+    - title: OOP Sytem Design
+      desc: >
+          OOP system design for SigBridgeR
+      contents:
+          - SigBridgeRBase
+          - Method
+          - ScreenMethod
+          - ScreenMethodCache
+          - ScreenMethodConfig
+          - ScreenMethodResult
+          - AnnotationMethod
 
 # 导航栏配置
 navbar:
@@ -194,18 +212,26 @@ navbar:
                   icon: fa-map-location
                   href: articles/Spatial_Transcriptome.html
 
-                - text: -------
-                - text: Advanced Usage
-
                 - text: Find optimal parameters
                   icon: fa-cogs
                   href: articles/Optimal_Params.html
 
-                - text: "Extending SigBridgeR: A Guide for Custom Extensions"
+                - text: -------
+
+                - text: Extending SigBridgeR with Custom Algorithm"
                   icon: fa-code-branch
-                  href: articles/Extending.html
+                  href: articles/Extending_ScreenMethod.html
+
+                - text: Extend Seurat Preprocessing Pipeline
+                  icon: fa-code-branch
+                  href: articles/Extending_Seurat.html
+
+                - text: Extend Annotate Pipeline
+                  icon: fa-code-branch
+                  href: articles/Extending_Annotation.html
 
                 - text: -------
+
                 - text: Auxiliary Utilities
                   href: articles/Other_Function_Details.html
             assets: vignettes/example_figures

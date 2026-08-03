@@ -62,14 +62,13 @@ namespace
             for (int j = 0; j < nc; ++j)
             {
                 const double w = weights[j];
-                // 与 R 版 rowSums(..., na.rm = TRUE) 类似：
-                // NA / NaN 权重不贡献分数
+                // NA / NaN has no contribution
                 if (ISNAN(w) || w == 0.0)
                 {
                     continue;
                 }
                 SEXP v = STRING_ELT(vote_sexp, i + nr * j);
-                // NA vote 对 Positive 和 Other 都不加分
+                // NA vote
                 if (v == NA_STRING)
                 {
                     continue;
@@ -80,7 +79,7 @@ namespace
                 }
                 else
                 {
-                    // Negative / Neutral / Other / 其他非 NA 字符均归入 Other
+                    // Negative / Neutral / Other / -> Other
                     score_other += w;
                 }
             }
@@ -95,8 +94,6 @@ namespace
             }
             else
             {
-                // 平票时由模板策略决定；
-                // 此处没有 ties.method 的运行时分派
                 winner = TiePolicy::choose();
             }
             out[i] = winner == 0 ? "Positive" : "Other";

@@ -584,7 +584,7 @@ DEGASModelDetect <- function(
 
 #' @title Set Default Values for Environment Configuration.
 #' @param user_list Configuration parameters provided by users. Override the default values.
-#' @export
+#' @keywords internal
 #' @family DEGAS
 DEGASEnvSet <- function(user_list = list()) {
   lifecycle::deprecate_warn(
@@ -620,7 +620,7 @@ DEGASEnvSet <- function(user_list = list()) {
 #'
 #' @param user_list Configuration parameters provided by users. Override the default values.
 #'
-#' @export
+#' @keywords internal
 #' @family DEGAS
 DEGASParamSet <- function(user_list) {
   default_degas_params <- list(
