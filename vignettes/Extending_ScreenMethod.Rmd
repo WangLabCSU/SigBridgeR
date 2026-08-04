@@ -126,12 +126,12 @@ If still have questions, use `LoadRefData` to load the reference data and check 
 #| eval: false
 #| 
 ref %<-% LoadRefData(data_type = "binary")
-single_cell_mat <- ref[[1]]
+seurat_obj <- ref[[1]]
 bulk_bi <- ref[[2]]
 pheno_bi <- ref[[3]]
 
 ref2 %<-% LoadRefData(data_type = "survival")
-single_cell_mat <- ref2[[1]]
+seurat_obj <- ref2[[1]]
 bulk_bi <- ref2[[2]]
 pheno_bi <- ref2[[3]]
 ```

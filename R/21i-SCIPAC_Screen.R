@@ -245,8 +245,6 @@ ValidateSCIPACParams <- function(
 #' )
 #' }
 #'
-#' @seealso \code{\link[SCIPAC]{SCIPAC}}, \code{\link[SCIPAC]{sc.bulk.pca}},
-#'          \code{\link[SCIPAC]{seurat.ct}}, \code{\link{RegisterScreenMethod}}
 DoSCIPAC <- function(
   matched_bulk,
   sc_data,

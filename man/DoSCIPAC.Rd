@@ -210,9 +210,6 @@ result <- DoSCIPAC(
 
 }
 \seealso{
-\code{\link[SCIPAC]{SCIPAC}}, \code{\link[SCIPAC]{sc.bulk.pca}},
-\code{\link[SCIPAC]{seurat.ct}}, \code{\link{RegisterScreenMethod}}
-
 Other screen_method:
 \code{\link[=DoDEGAS]{DoDEGAS()}},
 \code{\link[=DoLP_SGL]{DoLP_SGL()}},

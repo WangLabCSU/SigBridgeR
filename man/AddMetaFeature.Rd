@@ -12,7 +12,7 @@ AddMetaFeature(seurat_obj, ..., assay = "RNA")
 \item{...}{One or more metadata inputs:
 \itemize{
 \item Named/unnamed vectors (length = ngenes)
-\item 2D objects (matrix, data.frame, data.table, etc.) where
+\item 2D objects (matrix, data.frame, etc.) where
 one dimension (rows or cols) has size = ngenes.
 }}
 

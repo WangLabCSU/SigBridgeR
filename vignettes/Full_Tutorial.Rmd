@@ -14,8 +14,6 @@ vignette: >
 
 ## 0. Preface
 
-### 0.1 Introduction to SigBridgeR
-
 SigBridgeR (short for **Sig**nificant cell-to-phenotype **Bridge** in **R**) is an R package for screening cells highly associated with phenotype data using single-cell RNA-seq, bulk RNA expression and sample related phenotype data (e.g. patient survival, age, etc). It integrates many single cell phenotypic screening methods ([8. References](#8-references)) and provides unified preprocessing, parameter tuning, and visualization approaches,performing as a unified integration panel.
 
 ------------------------------------------------------------------------
@@ -31,13 +29,232 @@ library(SigBridgeR)
 
 ### 1.1 Single-cell RNA-seq Data
 
-You can use function `SCPreProcess` to preprocess your single-cell RNA-seq data. This function utilizes a flexible pipeline system, allowing you to customize the analysis workflow using character codes:
+You need to preprocess your single-cell RNA-seq data into a Seurat object. We provide some function helping you do this purpose.
 
-**Pipeline Code Table:**
+#### 1.1.1 Find the Optimal Normalization Method for Seurat
+
+A simple scoring function for selecting a normalization method.
+
+Evaluates 3 dimensions of preprocessing quality:
+
+- **Variance stabilization**: Decoupling of mean-variance relationship in normalized expression (lower correlation = better).
+
+- **Biological signal retention**: Preservation of known marker genes within highly variable genes (higher retention = better).
+
+- **Dropout robustness**: Removal of technical dropout bias from normalized values (lower correlation with dropout rate = better).
+
+
+Exmaple Usage:
+
+```{r}
+#| label: optimal_normalization
+#| eval: false
+obj <- Seurat::CreateSeuratObject(counts)
+
+sct <- Seurat::SCTransfrom(obj)
+lognorm <- Seurat::NormalizeData(obj) |>
+  Seurat::ScaleData() |>
+  Seurat::FindVariableFeatures()
+
+ChooseNormalization(
+  sct = sct,
+  lognorm = lognorm,
+  # * More can be added here
+  subset_size = integer(),
+  known_hvgs = list(),
+  n_hvgs = 2000L,
+  low_expressed_thresh = 0.2,
+  weight = c(
+    variance_stability = 0.4,
+    marker_signal = 0.35,
+    dropout_robustness = 0.25
+  )
+)
+```
+
+```{r}
+#| eval: false
+# ℹ Using 1088 cells
+# ℹ Comparing 2 methods: sct and lognorm
+# ── Method Ranking (Composite Score)
+# Top method: log_norm
+# [1] log_norm: 0.825
+# [2] sctransform: 0.175
+```
+
+Supports simultaneously adding Seurat objects preprocessed with multiple methods, ensuring they are equivalent to the standard workflow of `NormalizeData` + `ScaleData` + `FindVariableFeatures`.
+
+**Parameters**
+
+- `subset_size`: Size of the single-cell data subset (i.e., number of cells) to be evaludated.
+- `known_hvgs`: list or character. Known highly variable genes, provided as a reference baseline. 
+- `n_hvgs`: Maximum number of highly variable genes to consider.
+- `low_expressed_thresh`: Percentage of genes excluded from consideration, ranked by expression level.
+- `weight`: Scoring weight that sum to 1.
+
+
+
+#### 1.1.2 Finding the Optimal Number of Principle Components 
+
+Usually the number if principle components (PCs) is manually set to 10 or 20 according to the elbow plot. However, it is not always the case that the PCs with the highest variance are the most informative. Here is a function to help you find the optimal number of PCs.
+
+```{r}
+#| label: find_optimal_pc_example
+#| eval: false
+ndims <- FindRobustElbow(
+  obj = seurat,
+  verbose = TRUE,
+  ndims = 50
+)
+# ── Method Results
+# ℹ Method 1A (Cumulative Variance > 90%): 1:40
+# ℹ Method 1B (Variance > Mean): 1:11
+# ℹ Method 1C (Variance > 2*SD): 1:4
+# ℹ Method 2 (Second Derivative): 1:2
+# ℹ Method 3 (Distance-based): 1:8
+# ✔ Final Recommended Dimensions:  1:35
+
+# ── Summary
+# ℹ Cumulative variance at 35 PCs: 84.8%
+# ℹ Variance explained by PC35: 1.09%
+
+print(ndims)
+# 35
+```
+
+This function will draw an elbow plot with each method and the recommended number of PCs. You can also use the `ndims` parameter to specify the maximum number of PCs to be tested. The default value is `50`.
+
+
+[![elbow](example_figures/elbow.png){fig-align="center" width="600"}]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/elbow.png))
+
+
+#### 1.1.3 Add miscellaneous information to the Seurat object
+
+SigBridgeR uses `AddMisc()` to record what data features or evidence the various screening algorithms are based on during execution. As a substitute for the `SeuratObject::Misc()`
+
+-   `AddMisc()` : Add miscellaneous information to the Seurat object. Support for adding multiple attributes to the `SeuratObject@misc` slot simultaneously.
+
+```{r}
+#| label: add_misc_example
+#| eval: false
+# basic usage
+seurat_obj <- AddMisc(seurat_obj, "QC_stats" = qc_df)
+
+# Auto-incrementing example when `cover` set to FALSE
+seurat_obj <- AddMisc(seurat_obj, markers = markers1)
+seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover = FALSE)
+
+# Add multiple attributes to the `SeuratObject@misc` slot simultaneously
+seurat_obj <- AddMisc(seurat_obj, markers1 = markers1, markers2 = markers2)
+
+# Add multiple attributes (stored as a list element) to the `SeuratObject@misc`
+seurat_obj <- AddMisc(seurat_obj, list(attr1 = "value1", attr2 = "value2"))
+```
+
+#### 1.1.4 Add Gene-level Metadata to the Seurat object
+
+SigBridgeR uses `AddMetaFeature()` to update the `SeuratObject@assays$RNA@meta.data`
+
+Add a new column to the metadata
+```{r}
+#| label: add_meta_feature_example
+#| eval: false
+gene_type <- rep("test", nrow(seurat_obj))
+
+seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type)
+```
+
+Add a data.frame to the metadata, with the column names as the metadata names. 
+
+```{r}
+#| label: add_meta_feature_example_2
+#| eval: false
+seurat_obj <- AddMetaFeature(
+  seurat_obj,
+  data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj)
+)
+```
+
+Add to different assays
+
+```{r}
+#| label: add_meta_feature_example_3
+#| eval: false
+seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "RNA")
+seurat_obj <- AddMetaFeature(
+  seurat_obj,
+  "gene_type" = gene_type,
+  assay = "ATAC"
+)
+```
+
+If duplicate column names are detected, they will be suffixed with an underscore and a number (e.g., `_1`, `_2`) for disambiguation.
+
+
+
+#### 1.1.5 Integration of Single Cell Data
+
+**Matrix Integration**
+
+When passing raw matrices, the function performs a "join" operation based on the union of all genes. Missing values are filled with NA.
+
+```{r}
+#| label: matrix_integration_example
+#| eval: false
+# Create dummy matrices
+mat1 <- matrix(
+  rpois(50, 5),
+  nrow = 10,
+  dimnames = list(paste0("G", 1:10), paste0("C", 1:5))
+)
+mat2 <- matrix(
+  rpois(60, 6),
+  nrow = 10,
+  dimnames = list(paste0("G", 5:14), paste0("C", 1:6))
+)
+
+# Integrate matrices with custom prefixes
+integrated_mat <- SCIntegrate(BatchA = mat1, BatchB = mat2)
+# default prefixed
+integrated_mat2 <- SCIntegrate(mat1, mat2)
+```
+
+```{r}
+#| label: head_integrated_mat
+#| eval: false
+integrated_mat[1:6, 1:4]
+#     BatchA_C1 BatchA_C2 BatchA_C3 BatchA_C4
+# G1          3         2         4         5
+# G10         2         4         3         4
+# G11        NA        NA        NA        NA
+# G12        NA        NA        NA        NA
+# G13        NA        NA        NA        NA
+# G14        NA        NA        NA        NA
+integrated_mat2[1:6, 1:4]
+#     mat1_C1 mat1_C2 mat1_C3 mat1_C4
+# G1        3       2       4       5
+# G10       2       4       3       4
+# G11      NA      NA      NA      NA
+# G12      NA      NA      NA      NA
+# G13      NA      NA      NA      NA
+# G14      NA      NA      NA      NA
+```
+
+Key Features:
+
+- Duplicate Resolution: Automatically calls `AggregateDups` to handle redundant gene symbols.
+
+- Auto-Naming: Uses argument names (like BatchA) as cell ID prefixes.
+
+**Seurat Integration**
+
+For Seurat objects, `SCIntegrate` automates the standard workflow via the pipeline parameter.
+
+The Pipeline String: Each letter in the pipeline argument triggers a specific Seurat command:
 
 | Code | Function | Description |
 | --- | --- | --- |
-| **o** | `CreateSeuratObject` | **Required.** Must be the first step. |
+| **o** | `CreateSeuratObject` | (do not use it in this function)|
 | **n** | `NormalizeData` | Standard normalization. |
 | **s** | `ScaleData` | Scales data for PCA. |
 | **v** | `FindVariableFeatures` | Selects highly variable genes. |
@@ -48,138 +265,64 @@ You can use function `SCPreProcess` to preprocess your single-cell RNA-seq data.
 | **u** | `RunUMAP` | UMAP reduction. |
 | **r** | `SCTransform` | **SCT workflow.** Replaces n, s, v. |
 
-#### 1.1.1 (Option A) Start from Raw Matrix
+If more are needed, see [A Guide for Custom Extensions](https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html)
 
-When starting from a raw count matrix (data.frame, matrix or dgCMatrix), `SCPreProcess` executes the steps defined in the pipeline argument (Default: `"onsvpcetu"`). You can customize parameters for each step via the `params` list.
+Example Usage
 
 ```{r}
-#| label: scpreprocessing_raw_matrix
+#| label: seurat_integration_example
 #| eval: false
-your_seurat <- SCPreProcess(
-  sc = your_matrix,
-  ...,
-  pipeline = "onsvpcetu",
-  params = list(
-    # * CreateSeuratObject
-    o = list(
-      project = "SC_Screen_Proj",
-      min.cells = 400L
-    ),
-    # * NormalizeData
-    n = list(),
-    # * ScaleData
-    s = list(),
-    # * FindVariableFeatures
-    v = list(),
-    # * RunPCA
-    p = list(),
-    # * FindNeightbors
-    e = list(),
-    # * FindClusters
-    c = list(
-      resolution = 0.6
-    ),
-    # * RunTSNE
-    t = list(),
-    # * RunUMAP
-    u = list()
-    # * SCTransform
-    # r = list()
-  ),
-  quality_control = list(
-    pattern = c("^MT-")
-  ),
-  data_filter = list(
-    nFeature_RNA_thresh = c(200L, 6000L),
-    nCount_RNA_thresh = c(500L, 50000L),
-    # * only used when specifed in `quality_control.pattern`
-    percent.mt = 20L, # mitochondrial genes
-    percent.rp = 60L # ribosomal protein genes
-    # ? When combined pattern is used, like `quality_control$pattern <- "^MT-|^RP[LS]"`
-    # ? Use `_` to separate different patterns like this:
-    # percent.mt_rp = 60L
-
-    # ? When filtering for non-mitochondrial genes and non-ribosomal proteins RNA genes,
-    # ? the column names are in lowercase letter form with regular expression symbols removed.
-    # `quality_control$pattern <- "^[rt]rna"`
-    # Correct threshhold setting is `percent.rt_rna = 60L`
-
-    # ? Use `SigBridgeR::Pattern2Colname()` to get the correct colname if still confused.
-  ),
-  column2only_tumor = NULL
+integrated <- SCIntegrate(
+  obj1,
+  obj2, # -> merge.Seurat
+  pipeline = "nsvpi",
+  method = Seurat::RPCAIntegration, # Change integration method
+  dims = 1:30, # Passed to RunPCA and IntegrateLayers
+  k.weight = 50 # Passed to IntegrateLayers
 )
 ```
 
-**Key Workflow Steps:**
-
-1. Pipeline Execution: The function runs Seurat methods in the order specified by the `pipeline` string (e.g., 'o' then 'n').
-
-2. QC & Filtering:
-
-    - Detection: Regex patterns in `quality_control` (e.g., `^MT-`) automatically generate metadata columns (e.g.,` percent.mt`).
-
-    - Filtering: Cells are filtered based on `data_filter` thresholds. Note: Custom patterns generate specific column names (e.g., `^[rt]rna` becomes `percent.rt_rna`).
-
-3. Tumor Filtering: If `column2only_tumor` is provided, the function retains only cells with `"Tumor/Cancer/Malignant"`(case-insensitive) labels in that metadata column.
-
-#### 1.1.2 (Option B) Start from AnnData Object
-
-SCPreProcess natively supports AnnData object. You can use package `anndata` or `anndataR` to read in your AnnData object from `.h5ad` file. 
-
-First, import the data
+An example using mock data
 
 ```{r}
-#| label: scpreprocessing_anndata
+#| label: seurat_integration_example_2
 #| eval: false
-reticulate::use_pythonenv("The_path_to_your_python")
-# reticulate::use_condaenv("conda_env_name")
+mat1 <- matrix(
+  rpois(1000, 5),
+  nrow = 20,
+  dimnames = list(paste0("G", 1:20), paste0("C", 1:50))
+)
+mat2 <- matrix(
+  rpois(1200, 6),
+  nrow = 20,
+  dimnames = list(paste0("G", 11:30), paste0("C", 1:60))
+)
 
-anndata_obj <- anndata::read_h5ad("path_to_your_file.h5ad") # Or other file formats, make sure the matrix is in obj$X.
-```
-
-Or use `anndataR` to read in your file:
-
-```{r}
-#| label: scpreprocessing_anndatar
-#| eval: false
-reticulate::use_pythonenv("The_path_to_your_python")
-# reticulate::use_condaenv("conda_env_name")
-
-anndata_obj <- anndataR::read_h5ad("path_to_your_file.h5ad") # basically no difference
-```
-
-Then just pass it to `SCPreProcess`:
-
-```{r}
-#| label: scpreprocessing_in_anndata
-#| eval: false
-your_seurat <- SCPreProcess(
-  anndata_obj,
-  pipeline = "onsvpcetu", # Standard pipeline
-  column2only_tumor = "Tissue" # Optional: keep only tumor cells
+seu1 <- Seurat::CreateSeuratObject(mat1)
+seu2 <- Seurat::CreateSeuratObject(mat2)
+integrated_seu <- SCIntegrate(
+  Seurat1 = seu1, # Add prefixes
+  Seurat2 = seu2,
+  method = Seurat::CCAIntegration,
+  pipeline = "nsvpi",
+  dims = 1:10,
+  k.weight = 40
 )
 ```
 
-The description of data (meta.data) in `anndata_obj$obs` will be add to `your_seurat@meta.data`.
-
-**helpful documentation:**
-
-For the structure of `anndata`, you can refer to
-
--   [AnnData for R](https://github.com/dynverse/anndata)
--   [{anndataR}: An R package for working with AnnData objects](https://github.com/scverse/anndataR)
-
-For more quality control, please use [scCustmoize](https://samuel-marsh.github.io/scCustomize/index.html), like `scCustomize::Add_Cell_QC_Metrics()`.
-
-#### 1.1.8 (Optional) Filter Out Tumor Cells
-
-If you already have a Seurat object and aim to filter out phenotype-associated cells in tumor cells. `SCPreProcess` will validate its structure and filter out tumor cells using the specified metadata column:
-
 ```{r}
-#| label: scpreprocessing_seurat
+#| label: head_integrated_seu
 #| eval: false
-your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
+integrated_seu
+# An object of class Seurat
+# 30 features across 110 samples within 1 assay
+# Active assay: RNA (30 features, 10 variable features)
+#  5 layers present: counts.1, counts.2, data.1, data.2, scale.data
+#  2 dimensional reductions calculated: pca, integrated.dr
 ```
+
+
+
 
 ### 1.2 Bulk expression data
 
@@ -1203,18 +1346,14 @@ library(SigBridgeR)
 library(zeallot)
 
 # * load the example data
-c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "survival")
+c(seurat, bulk, pheno) %<-% LoadRefData(data_type = "survival")
 
-dim(mat_exam)
-#[1] 33694  1093
-mat_exam[1:6, 1:2]
-#          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT
-# A1BG                            0                        0
-# A1BG.AS1                        0                        0
-# A1CF                            0                        2
-# A2M                             0                        0
-# A2M.AS1                         0                        0
-# A2ML1                           0                        0
+seurat
+# An object of class Seurat
+# 15924 features across 1077 samples within 1 assay
+# Active assay: RNA (15924 features, 2000 variable features)
+#  3 layers present: counts, data, scale.data
+#  2 dimensional reductions calculated: pca, umap
 
 dim(bulk)
 # [1] 4071  506
@@ -1238,28 +1377,7 @@ head(pheno)
 # TCGA-44-2655 43.50      0
 ```
 
-This single-cell RNA data is from humans. We set many parameters to `NULL` or `0` in order to maximize the flexibility of downstream analyses and capture a broader range of biological signals, so as to avoid insignificant results caused by too small a dataset.
-
-Now we use `SCPreProcess()` to pre-process the single-cell RNA expression matrix data.
-
-```{r}
-#| label: example_data_seurat
-#| eval: false
-seurat <- SCPreProcess(
-  sc = mat_exam,
-  params = list(
-    o = list(
-      min.cells = 0,
-      min.features = 0
-    ),
-    s = list(
-      features = rownames(mat_exam)
-    )
-  ),
-  quality_control = list(),
-  data_filter = list()
-)
-```
+This single-cell RNA data is from humans. It has already been preprocessed into a **Seurat** object (`seurat`) with QC filtering, normalization, clustering, and UMAP included, so it can be passed directly to `Screen()`.
 
 First, we use `scissor` to screen cells associated with survival.
 
@@ -1848,7 +1966,7 @@ All the analysis has been completed, and we can save the data for future use.
 #| eval: false
 SeuratObject::SaveSeuratRds(
   object = screen_result,
-  filename = "screened_result.rds"
+  file = "screened_result.rds"
 )
 ```
 
@@ -1877,10 +1995,14 @@ library(Seurat)
 setwd(here::here())
 
 # * load the example data
-c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "continuous")
+c(seurat, bulk, pheno) %<-% LoadRefData(data_type = "continuous")
 
-dim(mat_exam)
-# [1] 33694  1093
+seurat
+# An object of class Seurat
+# 15911 features across 1077 samples within 1 assay
+# Active assay: RNA (15911 features, 2000 variable features)
+#  3 layers present: counts, data, scale.data
+#  2 dimensional reductions calculated: pca, umap
 dim(bulk)
 # [1] 4106  289
 bulk[1:6, 1:6]
@@ -1918,10 +2040,14 @@ library(zeallot)
 library(Seurat)
 
 # * load the example data
-c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "binary")
+c(seurat, bulk, pheno) %<-% LoadRefData(data_type = "binary")
 
-dim(mat_exam)
-#[1] 33694  1093
+seurat
+# An object of class Seurat
+# 15911 features across 1077 samples within 1 assay
+# Active assay: RNA (15911 features, 2000 variable features)
+#  3 layers present: counts, data, scale.data
+#  2 dimensional reductions calculated: pca, umap
 dim(bulk)
 # [1] 4106  434
 bulk[1:6, 1:6]

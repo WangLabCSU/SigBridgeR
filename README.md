@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![License:GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3) [![Devel_version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) –\> [![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) [![code_size](https://img.shields.io/github/languages/code-size/https://github.com/WangLabCSU/SigBridgeR.svg)](https://github.com/https://github.com/WangLabCSU/SigBridgeR) <!-- badges: end -->
+[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![License:GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3) [![Devel_version](https://img.shields.io/badge/devel%20version-3.8.1-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) [![SigBridgeR_status_badge](https://wanglabcsu.r-universe.dev/SigBridgeR/badges/version)](https://wanglabcsu.r-universe.dev/SigBridgeR) [![code_size](https://img.shields.io/github/languages/code-size/https://github.com/WangLabCSU/SigBridgeR.svg)](https://github.com/https://github.com/WangLabCSU/SigBridgeR) <!-- badges: end -->
 
 ## 🌐 Overview
 
@@ -124,10 +124,8 @@ To add custom extension functions to SigBridgeR:
 pak::pak(c(
   "tictoc",
   "codetools",
-  "knitr",
   "lintr",
-  "rstudioapi",
-  "yonicd/tidycheckUsage"
+  "rstudioapi"
 ))
 ```
 
@@ -172,8 +170,8 @@ If you use SigBridgeR in your work, please cite:
 citation("SigBridgeR")
 #> To cite package 'SigBridgeR' in publications use:
 #> 
-#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R package version 3.8.2,
-#>   <https://wanglabcsu.github.io/sigbridger>.
+#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and
+#>   Bulk Data_. R package version 4.0.0, <https://wanglabcsu.github.io/sigbridger>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -182,7 +180,7 @@ citation("SigBridgeR")
 #> Subpopulations via scRNA-seq and Bulk Data},
 #>     author = {Yuxi Yang and Shixiang Wang},
 #>     year = {2026},
-#>     note = {R package version 3.8.2},
+#>     note = {R package version 4.0.0},
 #>     url = {https://wanglabcsu.github.io/sigbridger},
 #>   }
 ```

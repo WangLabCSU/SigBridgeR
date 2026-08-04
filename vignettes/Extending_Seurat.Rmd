@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 library(SigBridgeR)
 ```
 
+> This vignette will be deprecated as `SCPreProcess` is deprecated.
+
 # Extend Seurat Methods
 
 In general, any Seurat function can be registered for use within `SCPreProcess`. However, due to the character-length limitation of the pipeline code string, at most **52** functions can be registered—one for each uppercase and lowercase letter (A–Z, a–z).  

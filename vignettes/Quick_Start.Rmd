@@ -28,7 +28,7 @@ We will start with a simple example.
 #| eval: false
 
 ref <- LoadRefData(data_type = "binary")
-mat_exam <- ref[[1]]
+seurat_obj <- ref[[1]]
 bulk_bi <- ref[[2]]
 pheno_bi <- ref[[3]]
 ```
@@ -39,7 +39,7 @@ pheno_bi <- ref[[3]]
 rm(ref)
 ```
 
-`mat_exam` is a single-cell RNA expression matrix, `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.
+`seurat_obj` is a preprocessed single-cell RNA **Seurat** object (QC filtering, normalization, clustering, and UMAP are already included), `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.
 
 ```{r}
 #| label: binary_phenotype
@@ -65,20 +65,7 @@ head(pheno_sur)
 # TCGA-44-2655 43.50      0
 ```
 
-The single-cell RNA expression matrix needs to be processed into a Seurat object. We set `scale.features` to all genes in order to maximize the flexibility of downstream analyses and capture a broader range of biological signals, so as to avoid insignificant results caused by too small a dataset.
-
-```{r}
-#| label: seurat
-#| eval: false
-seurat_obj <- SCPreProcess(
-  mat_exam,
-  params = list(
-    s = list(
-      scale.feature = rownames(mat_exam)
-    )
-  )
-)
-```
+The reference single-cell RNA data has already been preprocessed into a **Seurat** object (`seurat_obj`), so it can be passed directly to `Screen()` without any further processing.
 
 ## Screening
 
