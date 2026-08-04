@@ -22,6 +22,7 @@
 #'   `"continuous"`, `"survival"`.
 #' * `method_name` must match a key in [ScreenStrategy].
 #'
+#' @param sigbridger_version Package Version of SigBridgeR
 #' @param method_name `character`. The name of the screening method (e.g.,
 #'   `"Scissor"`, `"scPAS"`). Must match a key in [ScreenStrategy].
 #' @param param `list`. A named list of parameters passed to the screening
@@ -50,12 +51,12 @@ ScreenMethodConfig <- new_class(
     param = property_data_list # NULL is OK; stores the parameters
   ),
   validator = \(self) {
-    if (length(self@params) == 0L) {
-      return("@params is empty")
+    if (length(self@param) == 0L) {
+      return("@param is empty")
     }
 
     valid_phenotype_class <- c("binary", "continuous", "survival")
-    if (!self@phenotype_class %chin% valid_phenotype_class) {
+    if (!any(self@phenotype_class %chin% valid_phenotype_class)) {
       return(cli::cli_fmt(cli::cli_text(
         "@phenotype_class must be one of {.val {valid_phenotype_class}},\
          but got {.val {self@phenotype_class}}"
@@ -63,7 +64,7 @@ ScreenMethodConfig <- new_class(
     }
 
     valid_method_name <- names(ScreenStrategy)
-    if (!self@method_name %chin% valid_method_name) {
+    if (!any(self@method_name %chin% valid_method_name)) {
       return(cli::cli_fmt(cli::cli_text(
         "@method_name must be one of {.val {valid_method_name}},\
          but got {.val {self@method_name}}"
@@ -76,7 +77,8 @@ ScreenMethodConfig <- new_class(
     param,
     method_version = NULL,
     phenotype_class = c("binary", "continuous", "survival"),
-    label_type = character(0L)
+    label_type = character(0L),
+    sigbridger_version = get_pkg_version()
   ) {
     new_object(
       S7_object(),
@@ -84,7 +86,8 @@ ScreenMethodConfig <- new_class(
       method_version = method_version %||% r_pkg_version(method_name),
       phenotype_class = phenotype_class,
       label_type = label_type,
-      param = param
+      param = param,
+      sigbridger_version = sigbridger_version
     )
   }
 )
@@ -111,6 +114,7 @@ ScreenMethodConfig <- new_class(
 #' * The parent directory of `cache_config_path` exists.
 #' * `cache_config_path` ends with `"cache_config.json"`.
 #'
+#' @param sigbridger_version Package Version of SigBridgeR
 #' @param cache_path `character`. Path to the cache directory where data
 #'   files are stored.
 #' @param cache_config_path `character`. Path to the `cache_config.json`
@@ -156,14 +160,16 @@ ScreenMethodCache <- new_class(
     cache_path,
     cache_config_path,
     cache_data,
-    screen_method_config
+    screen_method_config,
+    sigbridger_version = get_pkg_version()
   ) {
     new_object(
       S7_object(),
       cache_path = cache_path,
       cache_config_path = cache_config_path,
       cache_data = cache_data, # NULL is OK; stores the data
-      screen_method_config = screen_method_config
+      screen_method_config = screen_method_config,
+      sigbridger_version = sigbridger_version
     )
   }
 )

@@ -39,14 +39,15 @@ AnnotationMethod <- new_class(
     },
     pkg_name = character(),
     method_version = NULL,
-    py_env = NULL
+    py_env = NULL,
+    sigbridger_version = get_pkg_version()
   ) {
     new_object(
       S7_object(),
       method_name = method_name,
       executor = executor,
       py_env = py_env,
-      sigbridger_version = get_pkg_version(),
+      sigbridger_version = sigbridger_version,
       method_version = method_version %||%
         if (is.null(py_env)) {
           r_pkg_version(pkg_name = pkg_name)

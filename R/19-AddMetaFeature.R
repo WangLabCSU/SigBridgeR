@@ -21,7 +21,7 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
     assay <- SeuratObject::DefaultAssay(seurat_obj)
   }
   assay_obj <- Seurat::GetAssay(object = seurat_obj, assay = assay)
-  feature_names <- names(assay_obj)
+  feature_names <- rownames(assay_obj)
 
   dots <- list2(...)
   if (length(dots) == 0L) {

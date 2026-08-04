@@ -12,7 +12,8 @@ containing the screening results. This is the core required property
 of the class.}
 
 \item{...}{Named arguments to set as additional S7 properties on the
-result object (e.g., screening statistics, method-specific outputs).}
+result object (e.g., screening statistics, method-specific outputs). Stored
+as a list in the \code{extra} property.}
 
 \item{sigbridger_version}{Package Version of SigBridgeR}
 }

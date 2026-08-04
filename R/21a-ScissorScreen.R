@@ -26,27 +26,35 @@ ValidateScissorParams <- function(
   phenotype_class = c("binary", "continuous", "survival"),
   alpha,
   cutoff,
-  family,
+  family = lifecycle::deprecated(),
   reliability_test,
   cell_evaluation,
-  path2load_scissor_cache,
-  path2save_scissor_inputs,
+  path2load_scissor_cache = lifecycle::deprecated(),
+  path2save_scissor_inputs = lifecycle::deprecated(),
   ...
 ) {
+  dots <- rlang::list2(...)
+
   # -- deprecated-argument warnings -----------------------------------------
-  if (lifecycle::is_present(path2load_scissor_cache)) {
+  load_cache <- if (lifecycle::is_present(path2load_scissor_cache)) {
     lifecycle::deprecate_warn(
       "4.0.0",
       "DoScissor(path2load_scissor_cache = )",
       "DoScissor(load_cache = )"
     )
+    dirname(dots$path2load_scissor_cache)
+  } else {
+    dots$load_cache
   }
-  if (lifecycle::is_present(path2save_scissor_inputs)) {
+  save_cache <- if (lifecycle::is_present(path2save_scissor_inputs)) {
     lifecycle::deprecate_warn(
       "4.0.0",
       "DoScissor(path2save_scissor_inputs = )",
       "DoScissor(save_cache = )"
     )
+    dirname(dots$path2save_scissor_inputs)
+  } else {
+    dots$save_cache
   }
   if (lifecycle::is_present(family)) {
     lifecycle::deprecate_warn(
@@ -59,14 +67,15 @@ ValidateScissorParams <- function(
       "binomial" = "binary",
       "cox" = "survival",
       "gaussian" = "continuous",
-      Abort("Invalid family")
+      Abort("Invalid family: {.val {family}}")
     )
   }
   family <- switch(
     phenotype_class,
     "binary" = "binomial",
     "survival" = "cox",
-    "continuous" = "gaussian"
+    "continuous" = "gaussian",
+    Abort("Invalid phenotype_class: {.val {phenotype_class}}")
   )
 
   # -- input validation -----------------------------------------------------
@@ -78,14 +87,9 @@ ValidateScissorParams <- function(
   chk::chk_list(cell_evaluation)
 
   # -- process dots ---------------------------------------------------------
-  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
   assay <- dots$assay %||% "RNA"
-  load_cache <- dots$load_cache %||%
-    dirname(dots$path2load_scissor_cache)
-  save_cache <- dots$save_cache %||%
-    dirname(dots$path2save_scissor_inputs)
 
   # -- fill defaults for reliability_test & cell_evaluation -----------------
   reliability_test <- utils::modifyList(
@@ -103,7 +107,7 @@ ValidateScissorParams <- function(
   )
 
   # -- resolve label_type -------------------------------------------
-  label_type_scissor <- if (family %chin% c("binomial", "cox")) {
+  tag <- if (family %chin% c("binomial", "cox")) {
     c(
       glue::glue("{label_type}_Negative"),
       glue::glue("{label_type}_Positive")
@@ -135,7 +139,7 @@ ValidateScissorParams <- function(
 #' @param alpha Parameter used to balance the effect of the l1 norm and the network-based penalties. It can be a number or a searching vector. If alpha = NULL, a default searching vector is used. The range of alpha is between 0 and 1. A larger alpha lays more emphasis on the l1 norm.
 #' @param cutoff  (default: `0.2`). When `alpha=NULL`, the cutoff is used to determine the optimal alpha.
 #'        Higher values increase specificity.
-#' @param family Model family for outcome type:
+#' @param family `r lifecycle::badge("deprecated")` Model family for outcome type:
 #'        - "gaussian": Continuous outcomes
 #'        - "binomial": Binary outcomes (default)
 #'        - "cox": Survival outcomes
@@ -148,8 +152,6 @@ ValidateScissorParams <- function(
 #' - benchmark_data: Path to benchmark data (RData file)
 #' - FDR_cutoff: FDR threshold for evaluation (default: `0.05`)
 #' - bootstrap_n: Bootstrap iterations (default: `100L`)
-#' @param path2load_scissor_cache A path to load the Scissor cache. This cache is used to save the precomputed Scissor inputs.
-#' @param path2save_scissor_inputs A path to save the Scissor inputs. This is used to save the precomputed Scissor inputs.
 #' @param ... Additional arguments. Currently supports:
 #'    - `verbose`: Logical indicating whether to print progress messages. Defaults to `TRUE`.
 #'    - `seed`: For reproducibility, default is `123L`
@@ -217,12 +219,10 @@ DoScissor <- function(
     FDR_cutoff = 0.05,
     bootstrap_n = 100L
   ),
-  path2load_scissor_cache = lifecycle::deprecated(),
-  path2save_scissor_inputs = lifecycle::deprecated(),
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidateScissorParams, !!!fn_fmls())
+  p <- do.call(ValidateScissorParams, c(get_env_vars(), list(...)))
 
   # -- resolve cache paths using the caching system ------------------------
   load_file <- if (!is.null(p$load_cache)) {
@@ -260,7 +260,7 @@ DoScissor <- function(
     bulk_dataset = matched_bulk,
     sc_dataset = sc_data,
     phenotype = phenotype,
-    tag = p$label_type,
+    tag = p$tag,
     alpha = alpha,
     cutoff = cutoff,
     family = p$family,

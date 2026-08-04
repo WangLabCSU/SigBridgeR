@@ -179,7 +179,7 @@ DoPIPET <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidatePIPETParams, !!!fn_fmls())
+  p <- do.call(ValidatePIPETParams, c(get_env_vars(), list(...)))
 
   if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Starting PIPET screen"))

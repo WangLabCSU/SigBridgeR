@@ -258,7 +258,7 @@ Screen <- function(
 
   phenotype_class <- arg_match(
     phenotype_class,
-    method_config$phenotype_class
+    method_config@phenotype_class
   )
 
   params <- rlang::list2(
@@ -270,10 +270,10 @@ Screen <- function(
     ...
   )
   # * modified params according to specific method
-  if (!is.null(method_config$mapper)) {
-    params <- method_config$mapper(params)
+  if (!is.null(method_config@mapper)) {
+    params <- method_config@mapper(params)
   }
 
-  res_list <- eval(method_config$executor, params)
-  exec(ScreenMethodResult, !!!res_list)
+  res_list <- do.call(method_config@executor, params)
+  do.call(ScreenMethodResult, res_list)
 }

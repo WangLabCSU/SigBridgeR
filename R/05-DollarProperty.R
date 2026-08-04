@@ -8,12 +8,12 @@ NULL
 
 #' @rdname Property-visitor
 #' @export
-`$.SigBridgeRBase` <- function(object, name) {
+`$.SigBridgeR::SigBridgeRBase` <- function(object, name) {
   prop(object = object, name = name)
 }
 
 #' @rdname Property-visitor
 #' @export
-`[[.SigBridgeRBase` <- function(object, name) {
+`[[.SigBridgeR::SigBridgeRBase` <- function(object, name) {
   prop(object = object, name = name)
 }

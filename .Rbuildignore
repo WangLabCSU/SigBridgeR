@@ -13,8 +13,7 @@ docs/
 .*\.log$
 .*\.rds$
 .*\.rda$
-^example_data/
-^vignettes/example_data/
+^inst/extdata/
 ^vignettes/example_figures
 ^Meta/
 benchmark_data

@@ -30,7 +30,7 @@ ValidateDEGASParams <- function(
   label_type,
   phenotype_class,
   tmp_dir,
-  env_params,
+  env_params = lifecycle::deprecated(),
   degas_params,
   normality_test_method,
   ...
@@ -426,7 +426,7 @@ DoDEGAS <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidateDEGASParams, !!!fn_fmls())
+  p <- do.call(ValidateDEGASParams, c(get_env_vars(), list(...)))
 
   if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Starting DEGAS Screen"))

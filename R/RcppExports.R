@@ -33,16 +33,20 @@ CountsToTPM_impl <- function(counts, gene_length) {
     .Call(`_SigBridgeR_CountsToTPM_impl`, counts, gene_length)
 }
 
-IsSkewedDynamic_cpp <- function(x, target = 0.0, expected_p = 0.8, n_sd = 4L) {
-    .Call(`_SigBridgeR_IsSkewedDynamic_cpp`, x, target, expected_p, n_sd)
-}
-
 weighted_vote_cpp <- function(vote_data, weights, ties_method) {
     .Call(`_SigBridgeR_weighted_vote_cpp`, vote_data, weights, ties_method)
 }
 
+list_to_character_recursive <- function(x) {
+    .Call(`_SigBridgeR_list_to_character_recursive`, x)
+}
+
 find_diff_in_2_lists <- function(x, y) {
     .Call(`_SigBridgeR_find_diff_in_2_lists`, x, y)
+}
+
+IsSkewedDynamic_cpp <- function(x, target = 0.0, expected_p = 0.8, n_sd = 4L) {
+    .Call(`_SigBridgeR_IsSkewedDynamic_cpp`, x, target, expected_p, n_sd)
 }
 
 make_null_list_NULL <- function(x) {

@@ -12,7 +12,7 @@
   group.by = NULL,
   label = FALSE,
   label.size = 4,
-  pt.size = 0.5,
+  pt.size = NULL,
   cols = NULL,
   ...
 )

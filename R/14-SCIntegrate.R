@@ -280,7 +280,7 @@ SCIntegrate.Seurat <- function(
       exec(
         .fn = step_fun,
         merged,
-        !!!args_for_fn
+        !!!SigBridgeRUtils::FilterArgs4Func(args_for_fn, step_fun)
       )
     } else {
       exec(

@@ -29,7 +29,8 @@
 #'   containing the screening results. This is the core required property
 #'   of the class.
 #' @param ... Named arguments to set as additional S7 properties on the
-#'   result object (e.g., screening statistics, method-specific outputs).
+#'   result object (e.g., screening statistics, method-specific outputs). Stored
+#'   as a list in the `extra` property.
 #' @param sigbridger_version Package Version of SigBridgeR
 #'
 #' @returns A `ScreenMethodResult` S7 object.
@@ -40,7 +41,8 @@ ScreenMethodResult <- new_class(
   name = "ScreenMethodResult",
   parent = SigBridgeRBase,
   properties = list(
-    scRNA_data = property_seurat
+    scRNA_data = property_seurat,
+    extra = property_list
   ),
   validator = \(self) {
     if (!prop_exists(self, "scRNA_data")) {
@@ -59,7 +61,7 @@ ScreenMethodResult <- new_class(
     new_object(
       S7_object(),
       scRNA_data = scRNA_data,
-      ...,
+      extra = list(...),
       sigbridger_version = sigbridger_version
     )
   }

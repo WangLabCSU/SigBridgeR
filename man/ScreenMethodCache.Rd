@@ -8,7 +8,8 @@ ScreenMethodCache(
   cache_path,
   cache_config_path,
   cache_data,
-  screen_method_config
+  screen_method_config,
+  sigbridger_version = get_pkg_version()
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ metadata file. Must end with \code{"cache_config.json"}.}
 
 \item{screen_method_config}{A \code{ScreenMethodConfig} S7 object containing
 the screening method configuration.}
+
+\item{sigbridger_version}{Package Version of SigBridgeR}
 }
 \value{
 A \code{ScreenMethodCache} S7 object.

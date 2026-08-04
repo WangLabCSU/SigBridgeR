@@ -264,7 +264,7 @@ DoSCIPAC <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidateSCIPACParams, !!!fn_fmls())
+  p <- do.call(ValidateSCIPACParams, c(get_env_vars(), list(...)))
 
   if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start SCIPAC screening"))

@@ -5,17 +5,15 @@
 \title{ScreenMethod: Screening Method Class for Phenotype-Associated Cell Detection}
 \usage{
 ScreenMethod(
-  sigbridger_version = "4.0.0",
-  method_name = character(0),
-  method_version = NULL,
-  executor = function() NULL,
-  phenotype_class = c("binary", "continuous", "survival"),
-  mapper = NULL
+  method_name,
+  method_version,
+  executor,
+  phenotype_class,
+  mapper,
+  sigbridger_version = get_pkg_version()
 )
 }
 \arguments{
-\item{sigbridger_version}{Package Version of SigBridgeR}
-
 \item{method_name}{\code{character}. (Inherited from \link{Method}) A string
 identifying the screening method.}
 
@@ -32,6 +30,8 @@ phenotype classification type(s) the method supports. Valid values:
 
 \item{mapper}{\code{function} or \code{NULL}. An optional function used to transform
 or map parameters before screening. When \code{NULL}, no mapper is applied.}
+
+\item{sigbridger_version}{Package Version of SigBridgeR}
 }
 \value{
 A \code{ScreenMethod} S7 object.

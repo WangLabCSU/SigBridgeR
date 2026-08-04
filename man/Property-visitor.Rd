@@ -2,13 +2,13 @@
 % Please edit documentation in R/05-DollarProperty.R
 \name{Property-visitor}
 \alias{Property-visitor}
-\alias{$.SigBridgeRBase}
-\alias{[[.SigBridgeRBase}
+\alias{$.SigBridgeR::SigBridgeRBase}
+\alias{[[.SigBridgeR::SigBridgeRBase}
 \title{Retrieve a property from SigBridgeR object}
 \usage{
-\method{$}{SigBridgeRBase}(object, name)
+\method{$}{`SigBridgeR::SigBridgeRBase`}(object, name)
 
-\method{[[}{SigBridgeRBase}(object, name)
+\method{[[}{`SigBridgeR::SigBridgeRBase`}(object, name)
 }
 \arguments{
 \item{object}{An object inheriting from SigBridgeRBase}

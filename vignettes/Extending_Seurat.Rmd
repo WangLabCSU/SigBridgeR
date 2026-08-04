@@ -1,8 +1,8 @@
 ---
-title: "Extending SigBridgeR: A Guide for Extend SCPreProcess"
+title: "Extending SigBridgeR: A Guide for Extend Single Cell Preprocess Pipeline"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Extending SigBridgeR: A Guide for Extend SCPreProcess}
+  %\VignetteIndexEntry{Extending SigBridgeR: A Guide for Extend Single Cell Preprocess Pipeline}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,8 +17,6 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(SigBridgeR)
 ```
-
-> This vignette will be deprecated as `SCPreProcess` is deprecated.
 
 # Extend Seurat Methods
 

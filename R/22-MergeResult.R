@@ -115,14 +115,14 @@ MergeResult <- function(
   verbose = SigBridgeRUtils::getFuncOption("verbose")
 ) {
   args <- rlang::list2(...)
-  ..duplicate_cols <- ..vote_cols <- NULL # suppress checking NOTE
+  ..vote_cols <- NULL # suppress checking NOTE
 
   if (length(args) == 0) {
     Abort("Input objects must be provided.")
   }
   # Extract Seurat objects
   seurat_objects <- lapply(args, function(x) {
-    if (S7_inherits(x, "ScreenMethodResult")) {
+    if (S7_inherits(x, ScreenMethodResult)) {
       return(x@scRNA_data)
     } else if (inherits(x, "Seurat")) {
       return(x)

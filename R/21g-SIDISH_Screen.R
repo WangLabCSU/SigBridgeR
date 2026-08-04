@@ -142,7 +142,7 @@ DoSIDISH <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidateSIDISHParams, !!!fn_fmls())
+  p <- do.call(ValidateSIDISHParams, c(get_env_vars(), list(...)))
 
   res <- rSIDISH::sidish(
     matched_bulk = matched_bulk,

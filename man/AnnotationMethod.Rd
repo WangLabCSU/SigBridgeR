@@ -11,7 +11,8 @@ AnnotationMethod(
  },
   pkg_name = character(),
   method_version = NULL,
-  py_env = NULL
+  py_env = NULL,
+  sigbridger_version = get_pkg_version()
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ underlying software package.}
 \item{py_env}{\code{character} or \code{NULL}. A conda environment name or Python
 path for Python-based annotation tools. When \code{NULL} (default), the
 method version is resolved from an R package.}
+
+\item{sigbridger_version}{Package Version of SigBridgeR}
 }
 \value{
 An \code{AnnotationMethod} S7 object.

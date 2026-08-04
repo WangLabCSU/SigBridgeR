@@ -9,7 +9,8 @@ ScreenMethodConfig(
   param,
   method_version = NULL,
   phenotype_class = c("binary", "continuous", "survival"),
-  label_type = character(0L)
+  label_type = character(0L),
+  sigbridger_version = get_pkg_version()
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ three.}
 
 \item{label_type}{\code{character}. The label type for the screening method.
 Default: \code{character(0L)}.}
+
+\item{sigbridger_version}{Package Version of SigBridgeR}
 }
 \value{
 A \code{ScreenMethodConfig} S7 object.

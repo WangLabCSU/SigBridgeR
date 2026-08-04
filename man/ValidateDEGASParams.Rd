@@ -14,7 +14,7 @@ ValidateDEGASParams(
   label_type,
   phenotype_class,
   tmp_dir,
-  env_params,
+  env_params = lifecycle::deprecated(),
   degas_params,
   normality_test_method,
   ...

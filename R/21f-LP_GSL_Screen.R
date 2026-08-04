@@ -22,7 +22,7 @@ ValidateLPSGLParams <- function(
   phenotype,
   label_type,
   phenotype_class = c("binary", "continuous", "survival"),
-  family = c("binomial", "cox", "gaussian"),
+  family = lifecycle::deprecated(),
   resolution,
   alpha,
   nfold,
@@ -159,7 +159,7 @@ DoLP_SGL <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidateLPSGLParams, !!!fn_fmls())
+  p <- do.call(ValidateLPSGLParams, c(get_env_vars(), list(...)))
 
   if (ncol(sc_data) > 5e4) {
     cli::cli_warn(

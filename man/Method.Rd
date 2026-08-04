@@ -4,7 +4,12 @@
 \alias{Method}
 \title{Method: Abstract Base Class for Analysis Methods}
 \usage{
-Method(method_name, executor, method_version)
+Method(
+  method_name,
+  executor,
+  method_version,
+  sigbridger_version = get_pkg_version()
+)
 }
 \arguments{
 \item{method_name}{\code{character}. A string identifying the method (e.g.,
@@ -15,6 +20,8 @@ computation. This is the core workhorse of each method.}
 
 \item{method_version}{\code{character}. A string indicating the version of the
 underlying software package.}
+
+\item{sigbridger_version}{Package Version of SigBridgeR}
 }
 \value{
 A \code{Method} S7 object (abstract; cannot be instantiated directly).

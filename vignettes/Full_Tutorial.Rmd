@@ -44,19 +44,37 @@ Evaluates 3 dimensions of preprocessing quality:
 - **Dropout robustness**: Removal of technical dropout bias from normalized values (lower correlation with dropout rate = better).
 
 
-Exmaple Usage:
+Exmaple:
+
+```{r}
+#| include: false
+counts <- data.table::fread(
+  system.file(
+    "extdata",
+    "sc_mat.csv",
+    package = "SigBridgeR"
+  ),
+  data.table = FALSE
+)
+
+counts <- tibble::column_to_rownames(counts, "V1")
+counts <- as.matrix(counts)
+counts <- Matrix::Matrix(counts)
+
+options(future.globals.maxSize = 4 * 1024^3)
+future::plan(future.mirai::mirai_multisession(workers = 4L))
+```
 
 ```{r}
 #| label: optimal_normalization
-#| eval: false
 obj <- Seurat::CreateSeuratObject(counts)
 
-sct <- Seurat::SCTransfrom(obj)
+sct <- Seurat::SCTransform(obj)
 lognorm <- Seurat::NormalizeData(obj) |>
   Seurat::ScaleData() |>
   Seurat::FindVariableFeatures()
 
-ChooseNormalization(
+res <- ChooseNormalization(
   sct = sct,
   lognorm = lognorm,
   # * More can be added here
@@ -73,14 +91,10 @@ ChooseNormalization(
 ```
 
 ```{r}
-#| eval: false
-# ℹ Using 1088 cells
-# ℹ Comparing 2 methods: sct and lognorm
-# ── Method Ranking (Composite Score)
-# Top method: log_norm
-# [1] log_norm: 0.825
-# [2] sctransform: 0.175
+res$metrics |> format()
+res$recommendation
 ```
+
 
 Supports simultaneously adding Seurat objects preprocessed with multiple methods, ensuring they are equivalent to the standard workflow of `NormalizeData` + `ScaleData` + `FindVariableFeatures`.
 
@@ -99,33 +113,24 @@ Supports simultaneously adding Seurat objects preprocessed with multiple methods
 Usually the number if principle components (PCs) is manually set to 10 or 20 according to the elbow plot. However, it is not always the case that the PCs with the highest variance are the most informative. Here is a function to help you find the optimal number of PCs.
 
 ```{r}
+#| include: false
+seurat_obj <- lognorm |> Seurat::RunPCA()
+```
+
+```{r}
 #| label: find_optimal_pc_example
-#| eval: false
 ndims <- FindRobustElbow(
-  obj = seurat,
+  obj = seurat_obj,
   verbose = TRUE,
   ndims = 50
 )
-# ── Method Results
-# ℹ Method 1A (Cumulative Variance > 90%): 1:40
-# ℹ Method 1B (Variance > Mean): 1:11
-# ℹ Method 1C (Variance > 2*SD): 1:4
-# ℹ Method 2 (Second Derivative): 1:2
-# ℹ Method 3 (Distance-based): 1:8
-# ✔ Final Recommended Dimensions:  1:35
+```
 
-# ── Summary
-# ℹ Cumulative variance at 35 PCs: 84.8%
-# ℹ Variance explained by PC35: 1.09%
-
-print(ndims)
-# 35
+```{r}
+ndims
 ```
 
 This function will draw an elbow plot with each method and the recommended number of PCs. You can also use the `ndims` parameter to specify the maximum number of PCs to be tested. The default value is `50`.
-
-
-[![elbow](example_figures/elbow.png){fig-align="center" width="600"}]((https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/elbow.png))
 
 
 #### 1.1.3 Add miscellaneous information to the Seurat object
@@ -136,19 +141,26 @@ SigBridgeR uses `AddMisc()` to record what data features or evidence the various
 
 ```{r}
 #| label: add_misc_example
-#| eval: false
 # basic usage
-seurat_obj <- AddMisc(seurat_obj, "QC_stats" = qc_df)
+seurat_obj <- AddMisc(seurat_obj, "QC_stats" = "^MT-")
 
 # Auto-incrementing example when `cover` set to FALSE
-seurat_obj <- AddMisc(seurat_obj, markers = markers1)
-seurat_obj <- AddMisc(seurat_obj, markers = markers2, cover = FALSE)
+seurat_obj <- AddMisc(seurat_obj, markers = c("CD3D", "CD4", "CD8A"))
+seurat_obj <- AddMisc(
+  seurat_obj,
+  markers = c("CD3D", "CD4", "CD8A"),
+  cover = FALSE
+)
 
 # Add multiple attributes to the `SeuratObject@misc` slot simultaneously
-seurat_obj <- AddMisc(seurat_obj, markers1 = markers1, markers2 = markers2)
+seurat_obj <- AddMisc(seurat_obj, markers1 = "CD3D", markers2 = "CD4")
 
 # Add multiple attributes (stored as a list element) to the `SeuratObject@misc`
 seurat_obj <- AddMisc(seurat_obj, list(attr1 = "value1", attr2 = "value2"))
+```
+
+```{r}
+seurat_obj@misc |> str()
 ```
 
 #### 1.1.4 Add Gene-level Metadata to the Seurat object
@@ -159,20 +171,27 @@ Add a new column to the metadata
 ```{r}
 #| label: add_meta_feature_example
 #| eval: false
-gene_type <- rep("test", nrow(seurat_obj))
+gene_type <- paste0("test", 1:nrow(seurat_obj))
 
 seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type)
+```
+
+```{r}
+seurat_obj@assays$RNA@meta.data |> head()
 ```
 
 Add a data.frame to the metadata, with the column names as the metadata names. 
 
 ```{r}
 #| label: add_meta_feature_example_2
-#| eval: false
 seurat_obj <- AddMetaFeature(
   seurat_obj,
-  data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj)
+  data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj))
 )
+```
+
+```{r}
+seurat_obj@assays$RNA@meta.data |> head()
 ```
 
 Add to different assays
@@ -190,8 +209,6 @@ seurat_obj <- AddMetaFeature(
 
 If duplicate column names are detected, they will be suffixed with an underscore and a number (e.g., `_1`, `_2`) for disambiguation.
 
-
-
 #### 1.1.5 Integration of Single Cell Data
 
 **Matrix Integration**
@@ -200,7 +217,6 @@ When passing raw matrices, the function performs a "join" operation based on the
 
 ```{r}
 #| label: matrix_integration_example
-#| eval: false
 # Create dummy matrices
 mat1 <- matrix(
   rpois(50, 5),
@@ -220,24 +236,11 @@ integrated_mat2 <- SCIntegrate(mat1, mat2)
 ```
 
 ```{r}
-#| label: head_integrated_mat
-#| eval: false
-integrated_mat[1:6, 1:4]
-#     BatchA_C1 BatchA_C2 BatchA_C3 BatchA_C4
-# G1          3         2         4         5
-# G10         2         4         3         4
-# G11        NA        NA        NA        NA
-# G12        NA        NA        NA        NA
-# G13        NA        NA        NA        NA
-# G14        NA        NA        NA        NA
-integrated_mat2[1:6, 1:4]
-#     mat1_C1 mat1_C2 mat1_C3 mat1_C4
-# G1        3       2       4       5
-# G10       2       4       3       4
-# G11      NA      NA      NA      NA
-# G12      NA      NA      NA      NA
-# G13      NA      NA      NA      NA
-# G14      NA      NA      NA      NA
+integrated_mat[1:6, 1:7]
+```
+
+```{r}
+integrated_mat2[1:6, 1:7]
 ```
 
 Key Features:
@@ -265,7 +268,7 @@ The Pipeline String: Each letter in the pipeline argument triggers a specific Se
 | **u** | `RunUMAP` | UMAP reduction. |
 | **r** | `SCTransform` | **SCT workflow.** Replaces n, s, v. |
 
-If more are needed, see [A Guide for Custom Extensions](https://wanglabcsu.github.io/SigBridgeR/articles/Extending.html)
+If more are needed, see [A Guide for Extend Single Cell Preprocess Pipeline](https://wanglabcsu.github.io/SigBridgeR/articles/Extending_Seurat.html)
 
 Example Usage
 
@@ -286,7 +289,6 @@ An example using mock data
 
 ```{r}
 #| label: seurat_integration_example_2
-#| eval: false
 mat1 <- matrix(
   rpois(1000, 5),
   nrow = 20,
@@ -312,16 +314,8 @@ integrated_seu <- SCIntegrate(
 
 ```{r}
 #| label: head_integrated_seu
-#| eval: false
 integrated_seu
-# An object of class Seurat
-# 30 features across 110 samples within 1 assay
-# Active assay: RNA (30 features, 10 variable features)
-#  5 layers present: counts.1, counts.2, data.1, data.2, scale.data
-#  2 dimensional reductions calculated: pca, integrated.dr
 ```
-
-
 
 
 ### 1.2 Bulk expression data
@@ -361,19 +355,30 @@ tpm[1:5, 1:5]
 
 #### 1.2.2 Gene Symbol Conversion
 
-`SymbolConvert` performs a straightforward task: converting common gene identifiers (e.g., Ensemble IDs, Entrez) to standardized gene symbols by using the [IDConverter](https://github.com/ShixiangWang/IDConverter) package.
+`SymbolConvert` performs a straightforward task: converting common gene identifiers (e.g., Ensemble IDs, Entrez) to standardized gene symbols by using [IDConverter](https://github.com/ShixiangWang/IDConverter) package.
 
 ```{r}
 #| label: symbol_convert_example
-#| eval: false
+#| #| eval: false
 # genes * samples
-your_bulk_data <- read.csv(
+bulk <- read.csv(
   "path_to_your_file.csv",
   header = TRUE,
   row.names = 1
 )
+```
 
-your_bulk_data <- SymbolConvert(your_bulk_data)
+```{r}
+#| include: false
+bulk <- readRDS(system.file(
+  "extdata",
+  "binary_example_data.rds",
+  package = "SigBridgeR"
+))[[2]]
+```
+
+```{r}
+bulk <- SymbolConvert(bulk)
 ```
 
 You can also use other package like `org.Hs.eg.db`  for gene symbol matching if you prefer not to use SymbolConvert's built-in `IDConverter`.
@@ -383,13 +388,13 @@ You can also use other package like `org.Hs.eg.db`  for gene symbol matching if 
 #| eval: false
 library(org.Hs.eg.db)
 
-your_bulk_data <- read.csv(
+bulk <- read.csv(
   "path_to_your_file.csv",
   header = TRUE,
   row.names = 1
 )
 
-ensembl_ids <- sub("\\..*", "", rownames(your_bulk_data))
+ensembl_ids <- sub("\\..*", "", rownames(bulk))
 gene_symbols <- mapIds(
   org.Hs.eg.db,
   keys = ensembl_ids,
@@ -398,7 +403,7 @@ gene_symbols <- mapIds(
   multiVals = "first"
 )
 
-rownames(your_bulk_data) <- gene_symbols
+rownames(bulk) <- gene_symbols
 ```
 
 ### 1.3 Phenotype Data

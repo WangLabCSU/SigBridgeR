@@ -38,7 +38,7 @@
 #' @param show_null Logical whether to show groups with zero cells (default: FALSE).
 #' @param plot_color Custom color palette (named vector format):
 #'        - Required names: "Positive", "Negative", "Neutral"
-#'        - Default: c("Neutral"="#CECECE", "Other"="#CECECE", Positive"="#ff3333", "Negative"="#386c9b")
+#'        - Default: c("Neutral"="#CECECE", "Other"="#CECECE", Positive"="#c24b4b", "Negative"="#5189bb")
 #' @param show_plot Logical to immediately display plot (default: TRUE).
 #' @param plot_title Plot title (default: "Screen Fraction"). When multiple screen types,
 #'        can be a vector of titles or single title (will append screen type prefix).
@@ -155,8 +155,8 @@ ScreenFractionPlot <- function(
     c(
       "Neutral" = "#CECECE",
       "Other" = "#CECECE",
-      "Positive" = "#ff3333",
-      "Negative" = "#386c9b"
+      "Positive" = "#c24b4b",
+      "Negative" = "#5189bb"
     )
 
   # Function to create plot for single screen type

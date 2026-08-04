@@ -26,7 +26,6 @@ We will start with a simple example.
 ```{r}
 #| label: example_data
 #| eval: false
-
 ref <- LoadRefData(data_type = "binary")
 seurat_obj <- ref[[1]]
 bulk_bi <- ref[[2]]
@@ -34,35 +33,31 @@ pheno_bi <- ref[[3]]
 ```
 
 ```{r}
+#| label: example_data 
 #| include: false
-#| eval: false
-rm(ref)
+ref <- readRDS(system.file(
+  "extdata",
+  "binary_example_data.rds",
+  package = "SigBridgeR"
+))
+seurat_obj <- ref[[1]]
+bulk_bi <- ref[[2]]
+pheno_bi <- ref[[3]]
 ```
 
 `seurat_obj` is a preprocessed single-cell RNA **Seurat** object (QC filtering, normalization, clustering, and UMAP are already included), `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.
 
 ```{r}
 #| label: binary_phenotype
-#| eval: false
 head(pheno_bi)
-# TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01
-# 1               1               1               1               1               1
 ```
 
 By the way, when using patients' survival data as phenotype, the reference data is a **data.frame**.
 
 ```{r}
 #| label: survival_phenotype
-#| eval: false
 pheno_sur <- LoadRefData(data_type = "survival")[[3]]
 head(pheno_sur)
-#               time status
-# TCGA-69-7978  4.40      0
-# TCGA-62-8399 88.57      0
-# TCGA-78-7539 25.99      0
-# TCGA-73-4658 52.56      1
-# TCGA-44-6775 23.16      0
-# TCGA-44-2655 43.50      0
 ```
 
 The reference single-cell RNA data has already been preprocessed into a **Seurat** object (`seurat_obj`), so it can be passed directly to `Screen()` without any further processing.
@@ -73,7 +68,6 @@ Then we can use these data to screen out phenotype-assoicated cells. Let's start
 
 ```{r}
 #| label: scissor
-#| eval: false
 scissor_res <- Screen(
   bulk_bi,
   seurat_obj,
@@ -84,11 +78,18 @@ scissor_res <- Screen(
 )
 ```
 
+```{r}
+scissor_res |> class()
+```
+
+```{r}
+scissor_res |> print()
+```
+
 Other screening methods are also available.
 
 ```{r}
 #| label: other_screening
-#| eval: false
 scpas_res <- Screen(
   bulk_bi,
   seurat_obj,
@@ -99,11 +100,10 @@ scpas_res <- Screen(
 )
 ```
 
-Since the screening is performed on the same data, we can merge them.
+Since the screening is performed on the same data, we can merge them based on the cell names. Metadata will be merged as well.
 
 ```{r}
 #| label: merge
-#| eval: false
 merged_seurat <- MergeResult(
   scissor_res,
   scpas_res
@@ -118,24 +118,22 @@ Finally, we can visualize the screening results.
 
 ```{r}
 #| label: visualize_fraction
-#| eval: false
 fraction <- ScreenFractionPlot(
   merged_seurat,
   group_by = "seurat_clusters",
   screen_type = c("scissor", "scPAS")
 )
 
-# names(fraction)
-# [1] "stats"         "plot"          "combined_plot"
+names(fraction)
+
+fraction$combined_plot
 ```
 
-[![fraction_q](vignettes/example_figures/fraction_q.png){fig-align="center" width="600"}](vignettes/example_figures/fraction_q.png)
 
 -   Venn diagram:
 
 ```{r}
 #| label: visualize_venn
-#| eval: false
 c(scissor_pos, scpas_pos) %<-%
   purrr::map(
     c("scissor", "scPAS"),
@@ -172,29 +170,28 @@ venn_plot <- ggVennDiagram::ggVennDiagram(
 ) +
   ggplot2::scale_fill_gradient(low = "white", high = "#ffb6b6ff") +
   ggplot2::ggtitle("Screening Venn Diagram")
-```
 
-[![venn_q](vignettes/example_figures/venn_q.png){fig-align="center" width="600"}](vignettes/example_figures/venn_q.png)
+venn_plot
+```
 
 
 -   Set plot:
 
 ```{r}
 #| label: visualize_set
-#| eval: false
 upset <- ScreenUpset(
   merged_seurat,
   screen_type = c("scissor", "scPAS")
 )
-```
+names(upset)
 
-[![upset_q](vignettes/example_figures/upset_q.png){fig-align="center" width="600"}](vignettes/example_figures/upset_q.png)
+upset$plot
+```
 
 -   2D UMAP:
 
 ```{r}
 #| label: visualize_umap
-#| eval: false
 library(patchwork)
 library(randomcoloR)
 
@@ -243,14 +240,12 @@ umaps <- cluster_umap +
 umaps
 ```
 
-```{r}
-#| eval: false
-#| label: umaps_q2
-#| include: false
-ggplot2::autoplot(merged_seurat, group.by = "scAB")
-```
+UMAP has been registered in the `autoplot()` for easier check.
 
-[![umaps_q](vignettes/example_figures/umaps_q.png){fig-align="center" width="600"}](vignettes/example_figures/umaps_q.png)
+```{r}
+#| label: umaps_q2
+ggplot2::autoplot(merged_seurat, group.by = "scPAS")
+```
 
 For more detail, please see [Full Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html).
 

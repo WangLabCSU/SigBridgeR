@@ -97,7 +97,7 @@ property_list <- new_property(class = class_list, validator = \(value) {
   }
 
   nms <- names(value)
-  if (unique(nms) != nms) {
+  if (length(unique(nms)) != length(nms)) {
     "`list` names must be unique."
   }
 })
@@ -151,7 +151,7 @@ property_data_list <- new_property(class = class_list, validator = \(value) {
   }
 
   nms <- names(value) # OK with NULL
-  if (unique(nms) != nms) {
+  if (length(unique(nms)) != length(nms)) {
     "`data_list` names must be unique."
   }
 })

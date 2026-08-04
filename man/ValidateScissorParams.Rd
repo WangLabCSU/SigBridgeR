@@ -12,11 +12,11 @@ ValidateScissorParams(
   phenotype_class = c("binary", "continuous", "survival"),
   alpha,
   cutoff,
-  family,
+  family = lifecycle::deprecated(),
   reliability_test,
   cell_evaluation,
-  path2load_scissor_cache,
-  path2save_scissor_inputs,
+  path2load_scissor_cache = lifecycle::deprecated(),
+  path2save_scissor_inputs = lifecycle::deprecated(),
   ...
 )
 }

@@ -10,7 +10,7 @@ ValidateLPSGLParams(
   phenotype,
   label_type,
   phenotype_class = c("binary", "continuous", "survival"),
-  family = c("binomial", "cox", "gaussian"),
+  family = lifecycle::deprecated(),
   resolution,
   alpha,
   nfold,

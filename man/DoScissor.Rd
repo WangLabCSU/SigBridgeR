@@ -16,8 +16,6 @@ DoScissor(
   reliability_test = list(run = FALSE, n = 10L, nfold = 10L),
   cell_evaluation = list(run = FALSE, benchmark_data = "path_to_file.RData", FDR_cutoff =
     0.05, bootstrap_n = 100L),
-  path2load_scissor_cache = lifecycle::deprecated(),
-  path2save_scissor_inputs = lifecycle::deprecated(),
   ...
 )
 }
@@ -50,7 +48,7 @@ data:
 \item{cutoff}{(default: \code{0.2}). When \code{alpha=NULL}, the cutoff is used to determine the optimal alpha.
 Higher values increase specificity.}
 
-\item{family}{Model family for outcome type:
+\item{family}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Model family for outcome type:
 \itemize{
 \item "gaussian": Continuous outcomes
 \item "binomial": Binary outcomes (default)
@@ -71,10 +69,6 @@ Higher values increase specificity.}
 \item FDR_cutoff: FDR threshold for evaluation (default: \code{0.05})
 \item bootstrap_n: Bootstrap iterations (default: \code{100L})
 }}
-
-\item{path2load_scissor_cache}{A path to load the Scissor cache. This cache is used to save the precomputed Scissor inputs.}
-
-\item{path2save_scissor_inputs}{A path to save the Scissor inputs. This is used to save the precomputed Scissor inputs.}
 
 \item{...}{Additional arguments. Currently supports:
 \itemize{

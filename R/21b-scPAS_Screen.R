@@ -32,7 +32,7 @@ ValidatescPASParams <- function(
   alpha,
   cutoff,
   network_class = c("SC", "bulk"),
-  family,
+  family = lifecycle::deprecated(),
   permutation_times,
   FDR_threshold,
   independent,
@@ -77,14 +77,15 @@ ValidatescPASParams <- function(
       "cox" = "survival",
       "gaussian" = "continuous",
       "binomial" = "binary",
-      Abort("family must be one of 'cox', 'gaussian', 'binomial'.")
+      Abort("Invalid family: {.val {family}}")
     )
   }
   family <- switch(
     phenotype_class,
     "binary" = "binomial",
     "continuous" = "gaussian",
-    "survival" = "cox"
+    "survival" = "cox",
+    Abort("Invalid phenotype_class: {.val {phenotype_class}}")
   )
   label_type <- paste0(label_type, c("_Positive", "_Negative"))
 
@@ -160,7 +161,7 @@ DoscPAS <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidatescPASParams, !!!fn_fmls())
+  p <- do.call(ValidatescPASParams, c(get_env_vars(), list(...)))
 
   set.seed(p$seed)
 

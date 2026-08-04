@@ -224,7 +224,7 @@ DoTiRank <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidateTiRankParams, !!!fn_fmls())
+  p <- do.call(ValidateTiRankParams, c(get_env_vars(), list(...)))
 
   set.seed(p$seed)
   rTiRank::setup_seed(p$seed)

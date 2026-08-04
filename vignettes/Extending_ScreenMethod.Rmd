@@ -9,7 +9,6 @@ vignette: >
 
 ```{r}
 #| include: false
-
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -126,14 +125,14 @@ If still have questions, use `LoadRefData` to load the reference data and check 
 #| eval: false
 #| 
 ref %<-% LoadRefData(data_type = "binary")
-seurat_obj <- ref[[1]]
+seurat_bi <- ref[[1]]
 bulk_bi <- ref[[2]]
 pheno_bi <- ref[[3]]
 
 ref2 %<-% LoadRefData(data_type = "survival")
-seurat_obj <- ref2[[1]]
-bulk_bi <- ref2[[2]]
-pheno_bi <- ref2[[3]]
+seurat_sur <- ref2[[1]]
+bulk_sur <- ref2[[2]]
+pheno_sur <- ref2[[3]]
 ```
 
 ### Record algorithm parameters
@@ -141,8 +140,8 @@ pheno_bi <- ref2[[3]]
 After the update to v4.0.0, parameter recording is more standardized. You need to create all parameters as a `ScreenMethodConfig` object.
 
 ```{r}
-#| eval: false
 #| label: a_ScreenMethodConfig
+#| eval: false
 config <- ScreenMethodConfig(
   method_name = "foo",
   param = list(
@@ -201,7 +200,6 @@ The file containing this function can be placed under `inst/SigBridgeR` or under
 
 ```{r}
 #| label: if_used_in_pkg_documentation
-
 TemplateScreenFunc(
   filename = file.path(tmpdir, "foo2.R"),
   func_name = "Foo",
@@ -221,7 +219,6 @@ To facilitate format validation, we provide a function `ValidateScreenFunc` to c
 
 ```{r}
 #| label: validation
-#| eval: false
 ValidateScreenFunc(Foo)
 ```
 
@@ -269,6 +266,10 @@ Let’s check whether it has indeed been registered
 ```{r}
 #| label: check_registry_2
 names(ScreenStrategy)
+```
+
+```{r}
+InterceptStrategy(ScreenStrategy)
 ```
 
 ### Long-term support in SigBridgeR
@@ -322,6 +323,12 @@ my_res <- Screen(
 ```
 
 If you still have questions, please use GitHub [Issues](https://github.com/WangLabCSU/SigBridgeR/issues) or [Discussions](https://github.com/WangLabCSU/SigBridgeR/discussions).
+
+## Other development guideline
+
+In addition to the code formatting and interface requirements described above, there are several additional requirements:
+
+- If non-temporary, meaningful intermediate or analysis files need to be written, organize them in a `{method_name}_res` directory.
 
 ## Session Info
 

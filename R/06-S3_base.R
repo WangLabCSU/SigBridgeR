@@ -1,5 +1,3 @@
-# nocov start
-
 #' Print a ScreenMethod object
 #'
 #' Pretty-print a `ScreenMethod` object using the `cli` package.
@@ -45,6 +43,10 @@
 
     key <- if (is_function(key)) {
       fn_fmls_names(key)
+    } else if (is.list(key)) {
+      as.character.list(key)
+    } else if (typeof(key) %chin% c("S3", "S4", "S7", "R6")) {
+      class(key)
     } else {
       key
     }
@@ -144,7 +146,7 @@
     } else if (is.atomic(value)) {
       toString(as.character(value))
     } else {
-      toString(utils::capture.output(print(value)))
+      toString(class(value))
     }
   }
 
@@ -199,4 +201,47 @@
   )
 }
 
-# nocov end
+#' Convert a List to a Compact Character Representation
+#'
+#' Converts an R `list` into a single character string using the format
+#' `"key: value"`. Named elements use their names as keys, while unnamed
+#' elements use their 1-based positions. Nested lists are converted
+#' recursively and enclosed in parentheses.
+#'
+#' This method is registered as `as.character.list`, so it is called
+#' automatically when `as.character()` is applied to a list.
+#'
+#' @param x A list to be converted.
+#' @param ... Additional arguments passed to or from other methods.
+#'   Currently ignored.
+#'
+#' @return A character vector of length one.
+#'
+#' @examples
+#' x <- list(key1 = "val1", key2 = "val2")
+#' as.character(x)
+#' # "key1: val1, key2: val2"
+#'
+#' x <- list(key1 = list(key2 = list(key3 = "val3")))
+#' as.character(x)
+#' # "key1: (key2: (key3: val3))"
+#'
+#' x <- list(
+#'   a = 1,
+#'   b = list(
+#'     c = 2,
+#'     d = list(e = "hello")
+#'   ),
+#'   f = c(1, 2, 3)
+#' )
+#' as.character(x)
+#' # "a: 1, b: (c: 2, d: (e: hello)), f: 1, 2, 3"
+#'
+#' x <- list("foo", bar = NA, baz = NULL)
+#' as.character(x)
+#' # "1: foo, bar: NA, baz: NULL"
+#'
+#' @export
+as.character.list <- function(x, ...) {
+  list_to_character_recursive(x)
+}

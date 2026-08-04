@@ -51,7 +51,7 @@ InterceptStrategy <- function(
     Abort("Found empty strategy environment: {.val {var_names}}")
   }
   info <- purrr::map(var_names, function(var_name) {
-    var <- get0(strategy)[[var_name]]
+    var <- env[[var_name]]
 
     get_strategy_info(var, var_name)
   })

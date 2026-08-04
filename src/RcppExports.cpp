@@ -112,20 +112,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// IsSkewedDynamic_cpp
-LogicalVector IsSkewedDynamic_cpp(SEXP x, double target, double expected_p, int n_sd);
-RcppExport SEXP _SigBridgeR_IsSkewedDynamic_cpp(SEXP xSEXP, SEXP targetSEXP, SEXP expected_pSEXP, SEXP n_sdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type target(targetSEXP);
-    Rcpp::traits::input_parameter< double >::type expected_p(expected_pSEXP);
-    Rcpp::traits::input_parameter< int >::type n_sd(n_sdSEXP);
-    rcpp_result_gen = Rcpp::wrap(IsSkewedDynamic_cpp(x, target, expected_p, n_sd));
-    return rcpp_result_gen;
-END_RCPP
-}
 // weighted_vote_cpp
 CharacterVector weighted_vote_cpp(CharacterMatrix vote_data, NumericVector weights, int ties_method);
 RcppExport SEXP _SigBridgeR_weighted_vote_cpp(SEXP vote_dataSEXP, SEXP weightsSEXP, SEXP ties_methodSEXP) {
@@ -139,6 +125,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// list_to_character_recursive
+std::string list_to_character_recursive(List x);
+RcppExport SEXP _SigBridgeR_list_to_character_recursive(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(list_to_character_recursive(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // find_diff_in_2_lists
 SEXP find_diff_in_2_lists(SEXP x, SEXP y);
 RcppExport SEXP _SigBridgeR_find_diff_in_2_lists(SEXP xSEXP, SEXP ySEXP) {
@@ -148,6 +145,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
     rcpp_result_gen = Rcpp::wrap(find_diff_in_2_lists(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// IsSkewedDynamic_cpp
+LogicalVector IsSkewedDynamic_cpp(SEXP x, double target, double expected_p, int n_sd);
+RcppExport SEXP _SigBridgeR_IsSkewedDynamic_cpp(SEXP xSEXP, SEXP targetSEXP, SEXP expected_pSEXP, SEXP n_sdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type target(targetSEXP);
+    Rcpp::traits::input_parameter< double >::type expected_p(expected_pSEXP);
+    Rcpp::traits::input_parameter< int >::type n_sd(n_sdSEXP);
+    rcpp_result_gen = Rcpp::wrap(IsSkewedDynamic_cpp(x, target, expected_p, n_sd));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -184,9 +195,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_check_na_sparse_csc_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_csc_cpp, 4},
     {"_SigBridgeR_check_na_sparse_triplet_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_triplet_cpp, 4},
     {"_SigBridgeR_CountsToTPM_impl", (DL_FUNC) &_SigBridgeR_CountsToTPM_impl, 2},
-    {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
     {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
+    {"_SigBridgeR_list_to_character_recursive", (DL_FUNC) &_SigBridgeR_list_to_character_recursive, 1},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
+    {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
     {"_SigBridgeR_fast_assign_plan", (DL_FUNC) &_SigBridgeR_fast_assign_plan, 3},
     {NULL, NULL, 0}

@@ -17,7 +17,7 @@ ValidatescPASParams(
   alpha,
   cutoff,
   network_class = c("SC", "bulk"),
-  family,
+  family = lifecycle::deprecated(),
   permutation_times,
   FDR_threshold,
   independent,

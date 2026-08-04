@@ -1,3 +1,5 @@
+# nocov start
+
 #' @keywords internal
 #' @family single_cell_preprocess
 has_pattern <- function(qc_list) {

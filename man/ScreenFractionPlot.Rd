@@ -37,7 +37,7 @@ Must match metadata column(s) (case-sensitive, e.g., "scissor" for Scissor resul
 \item{plot_color}{Custom color palette (named vector format):
 \itemize{
 \item Required names: "Positive", "Negative", "Neutral"
-\item Default: c("Neutral"="#CECECE", "Other"="#CECECE", Positive"="#ff3333", "Negative"="#386c9b")
+\item Default: c("Neutral"="#CECECE", "Other"="#CECECE", Positive"="#c24b4b", "Negative"="#5189bb")
 }}
 
 \item{show_plot}{Logical to immediately display plot (default: TRUE).}

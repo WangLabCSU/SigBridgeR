@@ -14,6 +14,7 @@
 #' directly. Concrete subclasses such as [ScreenMethod] and `AnnotationMethod`
 #' provide specific method categories.
 #'
+#' @param sigbridger_version Package Version of SigBridgeR
 #' @param method_name `character`. A string identifying the method (e.g.,
 #'   `"Scissor"`, `"scPAS"`).
 #' @param executor `function`. The function that performs the actual
@@ -34,13 +35,18 @@ Method <- new_class(
     executor = property_fn
   ),
   abstract = TRUE,
-  constructor = \(method_name, executor, method_version) {
+  constructor = \(
+    method_name,
+    executor,
+    method_version,
+    sigbridger_version = get_pkg_version()
+  ) {
     new_object(
       S7_object(),
       method_name = method_name,
       method_version = method_version,
       executor = executor,
-      sigbridger_version = get_pkg_version()
+      sigbridger_version = sigbridger_version
     )
   }
 )
@@ -88,6 +94,23 @@ ScreenMethod <- new_class(
     phenotype_class = property_phenotype_class,
     mapper = property_mapper_fn
   ),
+  constructor = \(
+    method_name,
+    method_version,
+    executor,
+    phenotype_class,
+    mapper,
+    sigbridger_version = get_pkg_version()
+  ) {
+    new_object(
+      S7_object(),
+      method_name = method_name,
+      method_version = method_version,
+      executor = executor,
+      phenotype_class = phenotype_class,
+      sigbridger_version = sigbridger_version
+    )
+  },
   validator = \(self) {
     param_names <- fn_fmls_names(self@executor)
     expected_args <- c(

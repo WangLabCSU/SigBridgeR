@@ -16,7 +16,7 @@
 #'                 Default: c("freq", "degree").
 #' @param show_plot Whether to show the upset plot. Default: FALSE
 #' @param n_intersections Number of intersections to display in the plot. Default: 20.
-#' @param bar_color Color for the bars in the plot. Default: "#4E79A7".
+#' @param bar_color Color for the bars in the plot. Default: "#5189bb".
 #' @param combmatrix_point_color Color for points in the combination matrix. Default: "black".
 #' @param verbose Logical, whether to print a message
 #' @param ... Additional arguments passed to `ggupset::scale_x_upset()`, `ggupset::theme_combmatrix()`, and `ggplot2::theme()` for customizing the plot appearance. Argumetns are auto-filtered
@@ -61,7 +61,7 @@ ScreenUpset <- function(
   order_by = c("freq", "degree"),
   show_plot = FALSE,
   n_intersections = 20,
-  bar_color = "#4E79A7",
+  bar_color = "#5189bb",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
   ...

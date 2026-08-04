@@ -160,7 +160,7 @@ DoscAB <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- exec(ValidatescABParams, !!!fn_fmls())
+  p <- do.call(ValidatescABParams, c(get_env_vars(), list(...)))
 
   # -- load mode: restore cached scAB_obj and k ------------------------------
   if (!is.null(p$load_cache)) {

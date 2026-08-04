@@ -1,5 +1,7 @@
 # * ---- scRNA-seq preprocessing ----
 
+# nocov start
+
 #' @title Single-Cell RNA-seq Preprocessing Pipeline
 #' @name SCPreProcess
 #'

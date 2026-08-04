@@ -10,7 +10,7 @@ ScreenUpset(
   order_by = c("freq", "degree"),
   show_plot = FALSE,
   n_intersections = 20,
-  bar_color = "#4E79A7",
+  bar_color = "#5189bb",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
   ...
@@ -30,7 +30,7 @@ Default: c("freq", "degree").}
 
 \item{n_intersections}{Number of intersections to display in the plot. Default: 20.}
 
-\item{bar_color}{Color for the bars in the plot. Default: "#4E79A7".}
+\item{bar_color}{Color for the bars in the plot. Default: "#5189bb".}
 
 \item{combmatrix_point_color}{Color for points in the combination matrix. Default: "black".}
 

@@ -47,11 +47,6 @@ LoadRefData <- function(
 
   local_file <- file.path(path, glue::glue("{data_type}_ref_data.rds"))
 
-  # Set timeout for the download
-  old_timeout <- getOption("timeout")
-  options(timeout = timeout)
-  on.exit(options(timeout = old_timeout))
-
   if (!file.exists(local_file)) {
     if (verbose) {
       cli::cli_alert_info("Downloading reference data...")
@@ -60,19 +55,19 @@ LoadRefData <- function(
     # Define multiple sources with priority order
     data_urls <- list(
       survival = list(
-        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/survival_example_data.rds",
-        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/survival_example_data.rds",
-        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/survival_example_data.rds"
+        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/inst/extdata/survival_example_data.rds",
+        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/inst/extdata/survival_example_data.rds",
+        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/inst/extdata/survival_example_data.rds"
       ),
       binary = list(
-        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/binary_example_data.rds",
-        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/binary_example_data.rds",
-        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/binary_example_data.rds"
+        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/inst/extdata/binary_example_data.rds",
+        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/inst/extdata/binary_example_data.rds",
+        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/inst/extdata/binary_example_data.rds"
       ),
       continuous = list(
-        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/vignettes/example_data/continuous_example_data.rds",
-        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/vignettes/example_data/continuous_example_data.rds",
-        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/vignettes/example_data/continuous_example_data.rds"
+        "GitHub Raw" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/refs/heads/main/inst/extdata/continuous_example_data.rds",
+        "GitHub API" = "https://raw.githubusercontent.com/WangLabCSU/SigBridgeR/main/inst/extdata/continuous_example_data.rds",
+        "CDN (jsDelivr)" = "https://cdn.jsdelivr.net/gh/WangLabCSU/SigBridgeR@main/inst/extdata/continuous_example_data.rds"
       )
     )
 
@@ -85,7 +80,7 @@ LoadRefData <- function(
       data_url <- available_urls[[i]]
 
       if (verbose) {
-        cli::cli_alert_info(glue::glue("Trying {source_name}..."))
+        cli::cli_alert_info("Trying {source_name}...")
       }
 
       success <- try_fetch(
@@ -96,12 +91,6 @@ LoadRefData <- function(
             mode = "wb",
             quiet = FALSE # Show progress
           )
-
-          if (verbose) {
-            cli::cli_alert_success(
-              "Successfully downloaded from {source_name}"
-            )
-          }
           TRUE
         },
         error = function(e) {
@@ -109,15 +98,8 @@ LoadRefData <- function(
             unlink(local_file)
           }
 
-          if (verbose) {
-            cli::cli_warn(
-              "Failed from {source_name}: {e$message}"
-            )
-          }
-
           # If this was the last source, show final error
           if (i == length(available_urls)) {
-            options(timeout = old_timeout)
             Abort(
               cli::col_red("All download attempts failed."),
               "Please check your internet connection or try again later.",
@@ -128,17 +110,16 @@ LoadRefData <- function(
         }
       )
 
-      if (success) break
+      if (success) {
+        if (verbose) {
+          cli::cli_alert_success(cli::col_green("Data loaded successfully."))
+        }
+        break
+      }
     }
   } else if (verbose) {
     cli::cli_alert_info("Found cached data ({.file {local_file}}).")
   }
 
-  data <- readRDS(local_file)
-
-  if (verbose) {
-    cli::cli_alert_success(cli::col_green("Data loaded successfully."))
-  }
-
-  data
+  readRDS(local_file)
 }
