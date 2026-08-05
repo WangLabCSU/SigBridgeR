@@ -33,6 +33,10 @@ CountsToTPM_impl <- function(counts, gene_length) {
     .Call(`_SigBridgeR_CountsToTPM_impl`, counts, gene_length)
 }
 
+ExtractMetricsCpp <- function(assay_data, counts, low_expressed_thresh = 0.2) {
+    .Call(`_SigBridgeR_ExtractMetricsCpp`, assay_data, counts, low_expressed_thresh)
+}
+
 weighted_vote_cpp <- function(vote_data, weights, ties_method) {
     .Call(`_SigBridgeR_weighted_vote_cpp`, vote_data, weights, ties_method)
 }
@@ -51,6 +55,10 @@ IsSkewedDynamic_cpp <- function(x, target = 0.0, expected_p = 0.8, n_sd = 4L) {
 
 make_null_list_NULL <- function(x) {
     .Call(`_SigBridgeR_make_null_list_NULL`, x)
+}
+
+normalize_metric <- function(x, invert = FALSE) {
+    .Call(`_SigBridgeR_normalize_metric`, x, invert)
 }
 
 fast_assign_plan <- function(plan, rhs, env) {

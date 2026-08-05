@@ -177,7 +177,7 @@ ChooseNormalization <- function(
       method_name = .y,
       ground_truth_markers = known_hvgs,
       n_hvgs = n_hvgs,
-      SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
+      !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
     ),
     .progress = if (verbose) "Calculating" else FALSE
   ) |>
@@ -190,7 +190,7 @@ ChooseNormalization <- function(
   metrics[,
     c("variance_stability", "dropout_robustness") := lapply(
       .SD,
-      normalize_metric,
+      normalize_metric, # cpp fn
       invert = TRUE
     ),
     .SDcols = c("variance_mean_cor", "mean_dropout_residual")
@@ -210,8 +210,6 @@ ChooseNormalization <- function(
 
   data.table::setorder(metrics, -composite_score)
   metrics[, rank := 1:.N] # Rank methods
-
-  plots <- ChooseNormalizationViz(metrics)
 
   # ===== 6. Report results =====
   if (verbose) {
@@ -251,6 +249,9 @@ ChooseNormalization <- function(
         )
       }
     }
+
+    plots <- ChooseNormalizationViz(metrics)
+    print(plots)
   }
 
   list(metrics = metrics, recommendation = best_method)
@@ -340,35 +341,22 @@ ExtractMetrics <- function(
   ...
 ) {
   dots <- list2(...)
-  # 1. Variance-mean correlation on normalized data
+  # 1. Variance-mean correlation on normalized data + Dropout residual analysis
   assay_data <- SeuratObject::LayerData(
     object = obj,
     assay = assay,
     layer = "data"
   )
-  means <- SigBridgeRUtils::rowMeans3(assay_data)
-  vars <- SigBridgeRUtils::rowVars3(assay_data)
-
-  # Filter lowly expressed genes (bottom 20%)
-  valid <- means > stats::quantile(means, low_expressed_thresh, na.rm = TRUE) &
-    vars > 0
-  var_mean_cor <- if (sum(valid) > 100) {
-    if (is_installed(c("cheapr", "WGCNA"))) {
-      WGCNA::cor(
-        cheapr::log10_(means[valid] + 1),
-        cheapr::log10_(vars[valid] + 1e-6),
-        use = "complete.obs"
-      )
-    } else {
-      stats::cor(
-        log10(means[valid] + 1),
-        log10(vars[valid] + 1e-6),
-        use = "complete.obs"
-      )
-    }
-  } else {
-    NA
-  }
+  counts <- SeuratObject::LayerData(
+    object = obj,
+    assay = assay,
+    layer = "counts"
+  )
+  metrics <- ExtractMetricsCpp(
+    assay_data = assay_data,
+    counts = counts,
+    low_expressed_thresh = low_expressed_thresh
+  )
 
   # 2. Marker gene retention in HVGs
   if (!is.null(ground_truth_markers)) {
@@ -380,73 +368,31 @@ ExtractMetrics <- function(
     )
     n_hvgs_detected <- length(hvgs_detected)
     hvgs <- utils::head(hvgs_detected, n_hvgs)
-    if (length(hvgs) > 0) {
-      marker_retention <- length(intersect(hvgs, all_markers)) / length(hvgs)
+    marker_retention <- if (length(hvgs) > 0) {
+      length(intersect(hvgs, all_markers)) / length(hvgs)
+    } else {
+      NA_real_
     }
   } else {
-    marker_retention <- NA
     n_hvgs_detected <- length(exec(
       Seurat::VariableFeatures,
       object = obj,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
     ))
-  }
-
-  # 3. Dropout residual analysis
-  # Assess whether normalized values still correlate with detection rate
-  counts <- SeuratObject::LayerData(
-    object = obj,
-    assay = assay,
-    layer = "counts"
-  )
-  dropout_rate <- SigBridgeRUtils::rowMeans3(counts == 0)
-
-  # Correlation between dropout rate and normalized expression
-  # Lower = better (successful normalization removes technical dropout bias)
-  dropout_residual <- if (!is_installed("WGCNA")) {
-    stats::cor(
-      dropout_rate,
-      means,
-      use = "complete.obs",
-      method = "spearman"
-    )
-  } else {
-    WGCNA::cor(
-      dropout_rate,
-      means,
-      use = "complete.obs",
-      method = "spearman"
-    )
+    marker_retention <- NA_real_
   }
 
   list(
     method = method_name,
-    variance_mean_cor = var_mean_cor,
+    variance_mean_cor = metrics$variance_mean_cor,
     marker_retention = marker_retention,
-    mean_dropout_residual = abs(dropout_residual), # absolute value for scoring
-    n_cells = ncol(obj),
-    n_genes = nrow(obj),
+    mean_dropout_residual = metrics$mean_dropout_residual, # absolute value for scoring
+    n_cells = metrics$n_cells,
+    n_genes = metrics$n_genes,
     n_hvgs_detected = n_hvgs_detected
   )
 }
 
-
-#' Min-max normalizati
-#' @keywords internal
-normalize_metric <- function(x, invert = FALSE) {
-  sd1 <- if (is_installed("cheapr")) {
-    cheapr::sd_(x, na.rm = TRUE)
-  } else {
-    stats::sd(x, na.rm = TRUE)
-  }
-
-  if (sd1 < .Machine$double.eps) {
-    return(rep(0.5, length(x)))
-  }
-  norm_x <- (x - min(x, na.rm = TRUE)) /
-    (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
-  if (invert) 1 - norm_x else norm_x
-}
 
 #' @keywords internal
 ChooseNormalizationViz <- function(metrics_df) {
@@ -504,9 +450,5 @@ ChooseNormalizationViz <- function(metrics_df) {
       axis.text.x = ggplot2::element_text(angle = 30, hjust = 1, size = 10)
     )
 
-  list(
-    var_mean_plot = vm_plot,
-    composite_score_plot = score_plot,
-    combined_plot = patchwork::wrap_plots(vm_plot, score_plot, ncol = 2)
-  )
+  patchwork::wrap_plots(vm_plot, score_plot, ncol = 2)
 }

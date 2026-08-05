@@ -112,6 +112,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ExtractMetricsCpp
+List ExtractMetricsCpp(SEXP assay_data, SEXP counts, double low_expressed_thresh);
+RcppExport SEXP _SigBridgeR_ExtractMetricsCpp(SEXP assay_dataSEXP, SEXP countsSEXP, SEXP low_expressed_threshSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type assay_data(assay_dataSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type counts(countsSEXP);
+    Rcpp::traits::input_parameter< double >::type low_expressed_thresh(low_expressed_threshSEXP);
+    rcpp_result_gen = Rcpp::wrap(ExtractMetricsCpp(assay_data, counts, low_expressed_thresh));
+    return rcpp_result_gen;
+END_RCPP
+}
 // weighted_vote_cpp
 CharacterVector weighted_vote_cpp(CharacterMatrix vote_data, NumericVector weights, int ties_method);
 RcppExport SEXP _SigBridgeR_weighted_vote_cpp(SEXP vote_dataSEXP, SEXP weightsSEXP, SEXP ties_methodSEXP) {
@@ -173,6 +186,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// normalize_metric
+NumericVector normalize_metric(NumericVector x, bool invert);
+RcppExport SEXP _SigBridgeR_normalize_metric(SEXP xSEXP, SEXP invertSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type invert(invertSEXP);
+    rcpp_result_gen = Rcpp::wrap(normalize_metric(x, invert));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fast_assign_plan
 void fast_assign_plan(List plan, SEXP rhs, Environment env);
 RcppExport SEXP _SigBridgeR_fast_assign_plan(SEXP planSEXP, SEXP rhsSEXP, SEXP envSEXP) {
@@ -195,11 +220,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_check_na_sparse_csc_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_csc_cpp, 4},
     {"_SigBridgeR_check_na_sparse_triplet_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_triplet_cpp, 4},
     {"_SigBridgeR_CountsToTPM_impl", (DL_FUNC) &_SigBridgeR_CountsToTPM_impl, 2},
+    {"_SigBridgeR_ExtractMetricsCpp", (DL_FUNC) &_SigBridgeR_ExtractMetricsCpp, 3},
     {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
     {"_SigBridgeR_list_to_character_recursive", (DL_FUNC) &_SigBridgeR_list_to_character_recursive, 1},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
     {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
+    {"_SigBridgeR_normalize_metric", (DL_FUNC) &_SigBridgeR_normalize_metric, 2},
     {"_SigBridgeR_fast_assign_plan", (DL_FUNC) &_SigBridgeR_fast_assign_plan, 3},
     {NULL, NULL, 0}
 };

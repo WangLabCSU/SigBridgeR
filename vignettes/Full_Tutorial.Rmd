@@ -369,19 +369,10 @@ bulk <- read.csv(
 ```
 
 ```{r}
-#| include: false
-bulk <- readRDS(system.file(
-  "extdata",
-  "binary_example_data.rds",
-  package = "SigBridgeR"
-))[[2]]
-```
-
-```{r}
 bulk <- SymbolConvert(bulk)
 ```
 
-You can also use other package like `org.Hs.eg.db`  for gene symbol matching if you prefer not to use SymbolConvert's built-in `IDConverter`.
+You can also use other package like `org.Hs.eg.db`  for gene symbol matching if you prefer not to use `SymbolConvert`'s built-in `IDConverter`.
 
 ```{r}
 #| label: symbol_convert_example2
@@ -461,7 +452,7 @@ table(v3)
 # ? if a data
 d <- mtcars
 d2 <- PhenoMap(d, mpg > 15 ~ 1, mpg <= 15 ~ 0)
-head(d2)
+table(d2$mpg)
 ```
 
 ------------------------------------------------------------------------
@@ -741,7 +732,7 @@ degas_result <- Screen(
     # The python executable path of the conda environment, auto detected in default
     DEGAS.pyloc = NULL,
     # Some functions will be called in the DEGAS algorithm
-    DEGAS.toolsPath = paste0(.libPaths()[1], "/DEGAS/tools/"), # or `file.path(.libaPaths()[1], "SigBridgeR/DEGAS_tools/")`
+    DEGAS.toolsPath = paste0(.libPaths()[1], "/DEGAS/tools/"),
     # Screening parameters
     DEGAS.ff_depth = 3,
     DEGAS.bag_depth = 5,
@@ -766,7 +757,7 @@ degas_result <- Screen(
 
 After update to v4.0.0. `Screen` does not automatically creat a python env for DEGAS, you need to create a python env for DEGAS before using `Screen`. So as to comply the R package's principle.
 
-To obtain a template python env for DEGAS, you can use:
+To obtain a template python env configuration file for DEGAS, you can use:
 
 ```{r}
 #| label: get_degas_env_template
@@ -782,14 +773,12 @@ To obtain the default parameters for DEGAS, you can use:
 ```{r}
 #| label: get_default_params1
 #| eval: false
-degas_param <- DEGASParamSet(list())
+degas_param <- SigBridgeR:::DEGASParamSet(list())
 
-env_param <- DEGASEnvSet(list())
+env_param <- SigBridgeR:::DEGASEnvSet(list())
 ```
 
-
-
-You can use `ListPyEnvs()` to list all the python environments in your system, including virtual environments. Both Windows and Unix-like systems are supported. More information can be found in [https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html)
+You can use `ListPyEnvs()` to list all the python environments in your system, including virtual environments. Both Windows and Unix-like systems are supported. More information can be found in [Other_Function_Details](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html)
 
 ```{r}
 #| label: show_python_envs2
@@ -970,7 +959,7 @@ To obtain the default parameters for SIDISH, use `SigBridgeR::SIDISHParamSet()`
 ```{r}
 #| label: get_default_params
 #| eval: false
-sidish_default_params <- SigBridgeR::SIDISHParamSet(list())
+sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
 ```
 
 You can use `ListPyEnvs()` to list all Python environments available on your system (both conda and virtualenv):
@@ -1034,7 +1023,7 @@ scipac_result <- Screen(
 
 ### 2.F Merge screening results
 
-If you have performed multiple screening methods one the same single-cell data, you can use the `MergeResult` to merge the screening results of these methods. The Seurat object or a results list from `Screen` is accepted.
+If you have performed multiple screening methods on **the same** single-cell data, you can use the `MergeResult` to merge the screening results of these methods. The Seurat object or a results list from `Screen` is accepted.
 
 ```{r}
 #| label: merge_screening_results
@@ -1064,7 +1053,8 @@ merged_seurat <- MergeResult(
 )
 ```
 
-This function merges all slots from the input Seurat objects. Note that intermediate data (e.g., `scissor_result$reliability.test` or `scab_result$scAB_result`) will not be retained during the merge. While the function can technically combine different single-cell datasets, it is specifically designed for merging replicates or batches of the *same* single-cell RNA-seq experiment; using it for heterogeneous data may lead to subtle (and potentially hard-to-detect) errors.
+This function merges all slots from the input Seurat objects. Note that intermediate data (e.g., `scissor_result$reliability.test` or `scab_result$scAB_result`) **will not be retained** during the merge. 
+While the function can technically combine different single-cell datasets, it is specifically designed for merging replicates or batches of the **same** single-cell RNA-seq experiment; using it for heterogeneous data may lead to subtle (and potentially hard-to-detect) errors  (You may consider `SCIntegrate` for this purpose).
 
 **returning structure**:
 
@@ -1074,7 +1064,9 @@ A Seurat object with all merged slots.
 
 ## 3. Visualization
 
-Here we provide some visualization methods for the screening results. Considering that many people have different needs for data visualization, `SigBridgeR` hardly provides visualization (except for fraction plot and upset plot, because we provide some statistic results for them). We only provide the source code for reference.
+Here we provide some visualization methods for the screening results. Considering that many people have different needs for data visualization, `SigBridgeR` hardly provides visualization (except for fraction plot and upset plot, because we provide some statistic results for them).
+
+If you have any suggestions for visualization, please submit an issue or pull request.
 
 ### 3.1 UMAP 
 
@@ -1083,8 +1075,16 @@ Here we provide some visualization methods for the screening results. Considerin
 Suppose you have performed all algorithm screening on your Seurat object and wish to examine the distribution across different celltypes and patient, you may reference and use the following code:
 
 ```{r}
+#| include: false
+merged_seurat <- qs2::qs_read(system.file(
+  "extdata",
+  "merged_seurat_from_getstarted.qs2",
+  package = "SigBridgeR"
+))
+```
+
+```{r}
 #| label: fast_example
-#| eval: false
 # * Glance your seurat object
 ggplot2::autoplot(merged_seurat, group.by = "scissor")
 ```
@@ -1111,7 +1111,7 @@ c(
     # make sure these column names exist
     c("celltype", "patient", "scissor", "scAB", "scPAS", "scPP", "DEGAS"),
     ~ Seurat::DimPlot(
-      your_seurat_obj,
+      merged_seurat,
       group.by = .x,
       pt.size = 0.05,
       reduction = "umap"
@@ -1139,7 +1139,6 @@ Or suppose you have performed `scPAS` screening on your Seurat object and want t
 
 ```{r}
 #| label: umap_exmaple2
-#| eval: false
 library(zeallot)
 library(patchwork)
 # library(Seurat)
@@ -1149,11 +1148,11 @@ c(scPAS_Pvalue_umap, scPAS_NRS_umap) %<-%
   purrr::map(
     c("scPAS_Pvalue", "scPAS_NRS"),
     ~ Seurat::FeaturePlot(
-      object = your_seurat_obj,
+      object = merged_seurat,
       features = .x,
     ) +
       ggplot2::ggtitle(.x) +
-      theme(legend.position = "right")
+      ggplot2::theme(legend.position = "right")
   )
 
 # * Show
@@ -1184,26 +1183,26 @@ Suppose you have already performed the `scPAS` algorithm screening on your Seura
 
 ```{r}
 #| label: stack_bar_plot_example
-#| eval: false
 plot <- ScreenFractionPlot(
-  screened_seurat = scpas_result$scRNA_data,
-  group_by = "patient", # grouping basis for the x-axis
+  screened_seurat = merged_seurat,
+  group_by = "seurat_clusters", # grouping basis for the x-axis
   screen_type = "scPAS",
   plot_title = "scPAS Screening Results"
 )
+plot
 ```
 
 If you have performed multiple screening methods and already merged the results, you can use the following code:
 
 ```{r}
 #| label: stack_bar_plot_example_multiple
-#| eval: false
 plot <- ScreenFractionPlot(
   screened_seurat = merged_seurat,
-  group_by = "patient", # grouping basis for the x-axis
-  screen_type = c("scPAS", "scAB", "scPP"), # multiple screening results
+  group_by = "seurat_clusters", # grouping basis for the x-axis
+  screen_type = c("scPAS", "scissor"), # multiple screening results
   plot_title = "Screening Results" #  A screen_type prefix will be added to the current plot title
 )
+plot$combined_plot
 ```
 
 The order of the groups is determined by the proportion of **Positive** cells within each group.
@@ -1323,8 +1322,8 @@ Key parameters for `ScreenUpset`:
 
 ```{r}
 #| label: upset_plot_example
-#| eval: false
 upset <- ScreenUpset(screened_seurat = merged_seurat)
+upset$plot
 ```
 
 **returning structure**:
@@ -1338,7 +1337,7 @@ upset <- ScreenUpset(screened_seurat = merged_seurat)
 
 ------------------------------------------------------------------------
 
-## 4. Example 
+## 4. Example (last updated: 2025-7-31)
 
 ### 4.1 Survival-associated cell screening
 

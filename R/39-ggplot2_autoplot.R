@@ -26,7 +26,10 @@ autoplot.Seurat <- function(
   check_installed(c("tidydr", "ggplot2"))
 
   cluster_color <- cols %||%
-    if (!is.null(group.by) && group.by %chin% names(ScreenStrategy)) {
+    if (
+      !is.null(group.by) &&
+        tolower(group.by) %chin% tolower(names(ScreenStrategy))
+    ) {
       c(
         "Other" = "#CECECE",
         "Neutral" = "#CECECE",
