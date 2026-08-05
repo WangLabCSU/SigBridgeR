@@ -33,7 +33,7 @@ pheno_bi <- ref[[3]]
 ```
 
 ```{r}
-#| label: example_data 
+#| label: example_data_backend
 #| include: false
 ref <- readRDS(system.file(
   "extdata",

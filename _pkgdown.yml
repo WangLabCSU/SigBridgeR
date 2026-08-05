@@ -23,7 +23,6 @@ reference:
       desc: >
           Functions for preprocessing inputs.
       contents:
-          - BulkPreProcess
           - SCPreProcess
           - QCFilter
           - QCPatternDetect
@@ -49,6 +48,7 @@ reference:
           - ScreenFractionPlot
           - ScreenUpset
           - autoplot
+          - autoplot-SigBridgeR
           - palette_SigBridgeR
 
     - title: Screening Methods
@@ -145,6 +145,10 @@ reference:
           - ScreenMethodConfig
           - ScreenMethodResult
           - AnnotationMethod
+          - SigBridgeR-properties
+          - SigBridgeR-S3
+          - Property-visitor
+          - as.character.list
 
 # 导航栏配置
 navbar:

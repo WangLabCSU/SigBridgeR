@@ -24,6 +24,7 @@ First load the packages, you will see a version number message indicating succes
 
 ```{r}
 #| label: load_package
+
 library(SigBridgeR)
 ```
 
@@ -48,6 +49,7 @@ Exmaple:
 
 ```{r}
 #| include: false
+#| eval: false
 counts <- data.table::fread(
   system.file(
     "extdata",
@@ -67,6 +69,7 @@ future::plan(future.mirai::mirai_multisession(workers = 4L))
 
 ```{r}
 #| label: optimal_normalization
+#| eval: false
 obj <- Seurat::CreateSeuratObject(counts)
 
 sct <- Seurat::SCTransform(obj)
@@ -91,6 +94,7 @@ res <- ChooseNormalization(
 ```
 
 ```{r}
+#| eval: false
 res$metrics |> format()
 res$recommendation
 ```
@@ -114,11 +118,13 @@ Usually the number if principle components (PCs) is manually set to 10 or 20 acc
 
 ```{r}
 #| include: false
+#| eval: false
 seurat_obj <- lognorm |> Seurat::RunPCA()
 ```
 
 ```{r}
 #| label: find_optimal_pc_example
+#| eval: false
 ndims <- FindRobustElbow(
   obj = seurat_obj,
   verbose = TRUE,
@@ -127,6 +133,7 @@ ndims <- FindRobustElbow(
 ```
 
 ```{r}
+#| eval: false
 ndims
 ```
 
@@ -141,6 +148,7 @@ SigBridgeR uses `AddMisc()` to record what data features or evidence the various
 
 ```{r}
 #| label: add_misc_example
+#| eval: false
 # basic usage
 seurat_obj <- AddMisc(seurat_obj, "QC_stats" = "^MT-")
 
@@ -160,6 +168,7 @@ seurat_obj <- AddMisc(seurat_obj, list(attr1 = "value1", attr2 = "value2"))
 ```
 
 ```{r}
+#| eval: false
 seurat_obj@misc |> str()
 ```
 
@@ -177,6 +186,7 @@ seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type)
 ```
 
 ```{r}
+#| eval: false
 seurat_obj@assays$RNA@meta.data |> head()
 ```
 
@@ -184,6 +194,7 @@ Add a data.frame to the metadata, with the column names as the metadata names.
 
 ```{r}
 #| label: add_meta_feature_example_2
+#| eval: false
 seurat_obj <- AddMetaFeature(
   seurat_obj,
   data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj))
@@ -191,6 +202,7 @@ seurat_obj <- AddMetaFeature(
 ```
 
 ```{r}
+#| eval: false
 seurat_obj@assays$RNA@meta.data |> head()
 ```
 
@@ -359,7 +371,7 @@ tpm[1:5, 1:5]
 
 ```{r}
 #| label: symbol_convert_example
-#| #| eval: false
+#| eval: false
 # genes * samples
 bulk <- read.csv(
   "path_to_your_file.csv",
@@ -761,6 +773,7 @@ To obtain a template python env configuration file for DEGAS, you can use:
 
 ```{r}
 #| label: get_degas_env_template
+#| eval: false
 env_config <- system.file(
   "conda/DEGAS_environment.yml",
   package = "SigBridgeR"
@@ -1076,6 +1089,7 @@ Suppose you have performed all algorithm screening on your Seurat object and wis
 
 ```{r}
 #| include: false
+#| eval: false
 merged_seurat <- qs2::qs_read(system.file(
   "extdata",
   "merged_seurat_from_getstarted.qs2",
@@ -1085,6 +1099,7 @@ merged_seurat <- qs2::qs_read(system.file(
 
 ```{r}
 #| label: fast_example
+#| eval: false
 # * Glance your seurat object
 ggplot2::autoplot(merged_seurat, group.by = "scissor")
 ```
@@ -1139,6 +1154,7 @@ Or suppose you have performed `scPAS` screening on your Seurat object and want t
 
 ```{r}
 #| label: umap_exmaple2
+#| eval: false
 library(zeallot)
 library(patchwork)
 # library(Seurat)
@@ -1183,6 +1199,7 @@ Suppose you have already performed the `scPAS` algorithm screening on your Seura
 
 ```{r}
 #| label: stack_bar_plot_example
+#| eval: false
 plot <- ScreenFractionPlot(
   screened_seurat = merged_seurat,
   group_by = "seurat_clusters", # grouping basis for the x-axis
@@ -1196,6 +1213,7 @@ If you have performed multiple screening methods and already merged the results,
 
 ```{r}
 #| label: stack_bar_plot_example_multiple
+#| eval: false
 plot <- ScreenFractionPlot(
   screened_seurat = merged_seurat,
   group_by = "seurat_clusters", # grouping basis for the x-axis
@@ -1322,6 +1340,7 @@ Key parameters for `ScreenUpset`:
 
 ```{r}
 #| label: upset_plot_example
+#| eval: false
 upset <- ScreenUpset(screened_seurat = merged_seurat)
 upset$plot
 ```

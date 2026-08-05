@@ -1,3 +1,43 @@
+#' Base R Methods for SigBridgeR Objects
+#'
+#' @description
+#' S3 methods that make every `SigBridgeRBase` object -- and therefore every
+#' SigBridgeR object, such as `ScreenMethod`, `ScreenMethodResult`, and
+#' `InterceptStrategy` -- behave like a standard R object. They support the
+#' base generics `print()`, `length()`, `names()`, `names<-()`, `format()`,
+#' `as.list()`, and `as.character()`.
+#'
+#' @details
+#' All SigBridgeR objects inherit from the abstract base class
+#' [SigBridgeRBase] and store their data in S7 properties. The methods
+#' documented on this page expose those properties through familiar base R
+#' interfaces:
+#'
+#' - `print()` displays a human-readable summary of the object. The class
+#'   name is shown in bold blue and each property is listed with its name,
+#'   value type, and value.
+#' - `length()` returns the number of properties stored in the object.
+#' - `names()` returns the names of the object's properties.
+#' - `names<-()` is restricted: properties are validated by their S7
+#'   definitions, so modifying them in place is not allowed. Reconstruct a
+#'   new object instead.
+#' - `format()` converts the object to a compact character vector, starting
+#'   with a header of the form `<Class: SigBridgeR <version>>`.
+#' - `as.list()` converts the object to a named list of its properties.
+#'
+#' `as.character()` is intentionally unsupported: coercing a
+#' `SigBridgeRBase` object to a character vector is not meaningful and
+#' always throws an error. Use [format()] instead.
+#'
+#' @seealso
+#' - [SigBridgeRBase] for the abstract base class on which these methods
+#'   dispatch.
+#' - [S7::props()] for the underlying property accessor.
+#'
+#' @name SigBridgeR-S3
+#' @export
+NULL
+
 #' Print a ScreenMethod object
 #'
 #' Pretty-print a `ScreenMethod` object using the `cli` package.
@@ -11,7 +51,7 @@
 #'
 #' @return Invisibly returns `x`.
 #'
-#' @family SigBridgeR-S3
+#' @rdname SigBridgeR-S3
 #' @rawNamespace S3method(print,"SigBridgeR::SigBridgeRBase")
 #' @export
 `print.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
@@ -71,7 +111,7 @@
 #'
 #' @return An integer: the number of properties.
 #'
-#' @family SigBridgeR-S3
+#' @rdname SigBridgeR-S3
 #' @export
 #' @rawNamespace S3method(length,"SigBridgeR::SigBridgeRBase")
 `length.SigBridgeR::SigBridgeRBase` <- function(x) {
@@ -88,7 +128,7 @@
 #'
 #' @return A character vector of property names.
 #'
-#' @family SigBridgeR-S3
+#' @rdname SigBridgeR-S3
 #' @export
 #' @rawNamespace S3method(names,"SigBridgeR::SigBridgeRBase")
 `names.SigBridgeR::SigBridgeRBase` <- function(x) {
@@ -106,7 +146,7 @@
 #'
 #' @return A character vector of property names.
 #'
-#' @family SigBridgeR-S3
+#' @rdname SigBridgeR-S3
 #' @export
 #' @rawNamespace S3method(`names<-`,"SigBridgeR::SigBridgeRBase")
 `names<-.SigBridgeR::SigBridgeRBase` <- function(x, value) {
@@ -127,7 +167,7 @@
 #'
 #' @return A character vector.
 #'
-#' @family SigBridgeR-S3
+#' @rdname SigBridgeR-S3
 #' @export
 #' @rawNamespace S3method(format,"SigBridgeR::SigBridgeRBase")
 `format.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
@@ -173,7 +213,7 @@
 #'
 #' @return A named list of properties.
 #'
-#' @family SigBridgeR-S3
+#' @rdname SigBridgeR-S3
 #' @export
 #' @rawNamespace S3method(as.list,"SigBridgeR::SigBridgeRBase")
 `as.list.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
@@ -191,7 +231,7 @@
 #'
 #' @return Throws an error; never returns.
 #'
-#' @family SigBridgeR-S3
+#' @rdname SigBridgeR-S3
 #' @export
 #' @rawNamespace S3method(as.character,"SigBridgeR::SigBridgeRBase")
 `as.character.SigBridgeR::SigBridgeRBase` <- function(x, ...) {

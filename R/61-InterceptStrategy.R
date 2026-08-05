@@ -34,6 +34,7 @@ InterceptStrategy <- function(
   ),
   ...
 ) {
+  check_dots_empty()
   check_installed("dplyr")
   env <- if (is.character(strategy)) {
     strategy <- SigBridgeRUtils::MatchArg(
@@ -41,7 +42,7 @@ InterceptStrategy <- function(
       c("ScreenStrategy", "SCPreProcessStrategy", "SCAnnotateStrategy"),
       NULL
     )
-    get0(strategy)
+    get(strategy, mode = "environment")
   } else {
     strategy
   }

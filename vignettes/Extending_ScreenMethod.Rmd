@@ -269,7 +269,7 @@ names(ScreenStrategy)
 ```
 
 ```{r}
-InterceptStrategy(ScreenStrategy)
+InterceptStrategy("ScreenStrategy")
 ```
 
 ### Long-term support in SigBridgeR
