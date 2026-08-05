@@ -32,23 +32,11 @@ bulk_bi <- ref[[2]]
 pheno_bi <- ref[[3]]
 ```
 
-```{r}
-#| label: example_data_backend
-#| include: false
-ref <- readRDS(system.file(
-  "extdata",
-  "binary_example_data.rds",
-  package = "SigBridgeR"
-))
-seurat_obj <- ref[[1]]
-bulk_bi <- ref[[2]]
-pheno_bi <- ref[[3]]
-```
-
 `seurat_obj` is a preprocessed single-cell RNA **Seurat** object (QC filtering, normalization, clustering, and UMAP are already included), `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.
 
 ```{r}
 #| label: binary_phenotype
+#| eval: false
 head(pheno_bi)
 ```
 
@@ -56,6 +44,7 @@ By the way, when using patients' survival data as phenotype, the reference data 
 
 ```{r}
 #| label: survival_phenotype
+#| eval: false
 pheno_sur <- LoadRefData(data_type = "survival")[[3]]
 head(pheno_sur)
 ```
@@ -68,6 +57,7 @@ Then we can use these data to screen out phenotype-assoicated cells. Let's start
 
 ```{r}
 #| label: scissor
+#| eval: false
 scissor_res <- Screen(
   bulk_bi,
   seurat_obj,
@@ -79,10 +69,12 @@ scissor_res <- Screen(
 ```
 
 ```{r}
+#| eval: false
 scissor_res |> class()
 ```
 
 ```{r}
+#| eval: false
 scissor_res |> print()
 ```
 
@@ -90,6 +82,7 @@ Other screening methods are also available.
 
 ```{r}
 #| label: other_screening
+#| eval: false
 scpas_res <- Screen(
   bulk_bi,
   seurat_obj,
@@ -104,6 +97,7 @@ Since the screening is performed on the same data, we can merge them based on th
 
 ```{r}
 #| label: merge
+#| eval: false
 merged_seurat <- MergeResult(
   scissor_res,
   scpas_res
@@ -118,6 +112,7 @@ Finally, we can visualize the screening results.
 
 ```{r}
 #| label: visualize_fraction
+#| eval: false
 fraction <- ScreenFractionPlot(
   merged_seurat,
   group_by = "seurat_clusters",
@@ -134,6 +129,7 @@ fraction$combined_plot
 
 ```{r}
 #| label: visualize_venn
+#| eval: false
 c(scissor_pos, scpas_pos) %<-%
   purrr::map(
     c("scissor", "scPAS"),
@@ -179,6 +175,7 @@ venn_plot
 
 ```{r}
 #| label: visualize_set
+#| eval: false
 upset <- ScreenUpset(
   merged_seurat,
   screen_type = c("scissor", "scPAS")
@@ -192,6 +189,7 @@ upset$plot
 
 ```{r}
 #| label: visualize_umap
+#| eval: false
 library(patchwork)
 library(randomcoloR)
 
@@ -244,6 +242,7 @@ UMAP has been registered in the `autoplot()` for easier check.
 
 ```{r}
 #| label: umaps_q2
+#| eval: false
 ggplot2::autoplot(merged_seurat, group.by = "scPAS")
 ```
 

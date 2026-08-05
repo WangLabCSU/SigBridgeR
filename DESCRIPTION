@@ -16,7 +16,7 @@ Roxygen: list(markdown = TRUE)
 Imports: 
     chk,
     cli,
-    data.table,
+    data.table (>= 1.9.8),
     ggplot2,
     lifecycle,
     Matrix,

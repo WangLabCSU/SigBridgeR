@@ -24,7 +24,6 @@ First load the packages, you will see a version number message indicating succes
 
 ```{r}
 #| label: load_package
-
 library(SigBridgeR)
 ```
 
@@ -381,6 +380,7 @@ bulk <- read.csv(
 ```
 
 ```{r}
+#| eval: false
 bulk <- SymbolConvert(bulk)
 ```
 

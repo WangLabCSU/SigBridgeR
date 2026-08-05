@@ -35,7 +35,6 @@
 #' - [S7::props()] for the underlying property accessor.
 #'
 #' @name SigBridgeR-S3
-#' @export
 NULL
 
 #' Print a ScreenMethod object

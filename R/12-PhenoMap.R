@@ -78,20 +78,38 @@ PhenoMap <- function(data, ..., .default = NA) {
 
   dt <- data.table::as.data.table(data)
 
-  args <- vector("list", length(rules) * 2)
-  args[seq(1, length(args), 2)] <- conditions
-  args[seq(2, length(args), 2)] <- values
+  col <- all.vars(conditions[[1L]])[1L]
 
-  if (!is.na(.default)) {
-    args$default <- .default
+  if (is.na(col) || !col %in% names(dt)) {
+    Abort(
+      "Cannot determine target column from the first condition",
+      tips = "Use e.g.: {.code mpg > 15 ~ 1, mpg <= 15 ~ 0}"
+    )
   }
 
-  expr <- substitute(
-    DT[, COL := do.call(data.table::fcase, ARGS)],
-    list(DT = dt, COL = as.name(col), ARGS = args)
-  )
+  args <- vector("list", length(rules) * 2L)
 
-  eval(expr, envir = parent.frame())
+  for (i in seq_along(rules)) {
+    env <- environment(rules[[i]])
+
+    args[[2L * i - 1L]] <- eval(
+      conditions[[i]],
+      envir = dt,
+      enclos = env
+    )
+
+    args[[2L * i]] <- eval(
+      values[[i]],
+      envir = dt,
+      enclos = env
+    )
+  }
+
+  args$default <- .default
+
+  res <- do.call(data.table::fcase, args)
+
+  data.table::set(dt, j = col, value = res)
 
   dt
 }
