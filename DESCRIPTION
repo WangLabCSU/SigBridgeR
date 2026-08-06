@@ -29,17 +29,6 @@ Imports:
     SigBridgeRUtils (>= 0.2.5)
 Depends: 
     R (>= 4.1.0)
-Remotes: 
-    github::Exceret/DEGAS,
-    github::Exceret/LPSGL,
-    github::Exceret/PIPET,
-    github::Exceret/rTiRank,
-    github::Exceret/rSIDISH,
-    github::Exceret/scAB,
-    github::Exceret/SCIPAC,
-    github::Exceret/Scissor,
-    github::Exceret/scPAS,
-    github::Exceret/ScPP
 Suggests: 
     anndata,
     anndataR,

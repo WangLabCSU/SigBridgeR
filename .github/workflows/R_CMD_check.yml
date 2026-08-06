@@ -156,8 +156,8 @@ jobs:
               with:
                   extra-packages: |
                       any::rcmdcheck
-                      any::remotes
-                  #   dependencies: '"hard"'
+                  #   any::remotes
+                  dependencies: '"hard"'
                   needs: check
 
             - name: Running R CMD check

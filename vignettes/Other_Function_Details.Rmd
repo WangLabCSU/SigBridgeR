@@ -426,10 +426,10 @@ mat
 
 # Collapse duplicate genes using sum
 AggregateDupRows(mat, method = "sum")
-#       S1 S1.1 S2 S3
-# TP53   2    6 10 14
-# BRCA1  3    7 11 15
-# ACTB   4    8 12 16
+#       S1 S1 S2 S3
+# TP53   2  6 10 14
+# BRCA1  3  7 11 15
+# ACTB   4  8 12 16
 
 # Collapse duplicate samples using max
 AggregateDupCols(mat, method = "max")
@@ -474,7 +474,7 @@ g <- function(a = 1, b = 2) {
   e <- d - 1
   e
 }
-get_var_value("e", g) # returns 63
+get_var_value("d", g) # returns 64
 
 h <- function(a = "A", ...) {
   a <- 1

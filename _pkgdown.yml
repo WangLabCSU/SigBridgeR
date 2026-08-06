@@ -237,6 +237,7 @@ navbar:
                 - text: -------
 
                 - text: Auxiliary Utilities
+                  icon: fa-tools
                   href: articles/Other_Function_Details.html
             assets: vignettes/example_figures
 
