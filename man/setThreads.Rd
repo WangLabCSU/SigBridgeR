@@ -5,10 +5,11 @@
 \title{Configure Parallel Execution Backends}
 \usage{
 setThreads(
-  threads = NULL,
+  threads = 2L,
   dt = threads,
   cheapr = threads,
   qs2 = threads,
+  WGCNA = threads,
   openmp = NULL,
   tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
     NULL, inter_op = NULL, intra_op = c(1L, NULL)),
@@ -18,8 +19,7 @@ setThreads(
 }
 \arguments{
 \item{threads}{Integer. Global thread count used as default for all backends.
-If \code{NULL} (default), uses \code{floor(availableCores() / 2)}. Applied to:
-OpenMP, data.table, and TensorFlow intra-op (unless overridden).}
+Default: \code{2L}}
 
 \item{dt}{Integer. Thread count for data.table (default: inherited from \code{threads}).}
 
@@ -27,7 +27,9 @@ OpenMP, data.table, and TensorFlow intra-op (unless overridden).}
 
 \item{qs2}{Integer. Thread count for qs2 (default: inherited from \code{threads}).}
 
-\item{openmp}{Integer. Thread count for OpenMP (default: NULL).}
+\item{WGCNA}{Integer. Thread count for WGCNA (default: inherited from \code{threads}).}
+
+\item{openmp}{Integer. Thread count for OpenMP (default: inherited from \code{threads}).}
 
 \item{tf_config}{Named list for TensorFlow-specific configuration:
 \itemize{

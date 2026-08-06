@@ -9,12 +9,12 @@
 #' TensorFlow via \code{reticulate::import("tensorflow")}.
 #'
 #' @param threads Integer. Global thread count used as default for all backends.
-#'   If \code{NULL} (default), uses \code{floor(availableCores() / 2)}. Applied to:
-#'   OpenMP, data.table, and TensorFlow intra-op (unless overridden).
+#'   Default: `2L`
 #' @param dt Integer. Thread count for data.table (default: inherited from \code{threads}).
 #' @param cheapr Integer. Thread count for cheapr (default: inherited from \code{threads}).
 #' @param qs2 Integer. Thread count for qs2 (default: inherited from \code{threads}).
-#' @param openmp Integer. Thread count for OpenMP (default: NULL).
+#' @param openmp Integer. Thread count for OpenMP (default: inherited from \code{threads}).
+#' @param WGCNA Integer. Thread count for WGCNA (default: inherited from \code{threads}).
 #' @param tf_config Named list for TensorFlow-specific configuration:
 #'   * `xla_flag`: Character. XLA JIT compilation flags (default: auto-optimized)
 #'   * `xla_device`: Integer. XLA device ID (default: `1L`)
@@ -50,10 +50,11 @@
 #' setThreads(dt = 4L , verbose = FALSE)
 #' }
 setThreads <- function(
-  threads = NULL,
+  threads = 2L,
   dt = threads,
   cheapr = threads,
   qs2 = threads,
+  WGCNA = threads,
   openmp = NULL,
   tf_config = list(
     xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",
@@ -67,13 +68,158 @@ setThreads <- function(
   ...
 ) {
   # ===== 1. 参数验证与默认值 =====
-  check_installed("future")
 
-  # 全局线程数（系统级默认值）
-  threads <- threads %||% as.integer(floor(future::availableCores() / 2))
   chk::chk_integer(threads)
   chk::chk_list(tf_config)
 
+  if (!is.null(tf_config$xla_flag)) {
+    chk::chk_chr(tf_config$xla_flag)
+  }
+
+  if (!is.null(tf_config$inter_op)) {
+    chk::chk_integer(tf_config$inter_op)
+    chk::chk_range(tf_config$inter_op, c(0, Inf))
+  }
+
+  if (!is.null(tf_config$intra_op)) {
+    chk::chk_integer(tf_config$intra_op)
+    chk::chk_range(tf_config$intra_op, c(0, Inf))
+  }
+
+  verbose <- verbose %||% TRUE
+
+  # ===== 2. 各后端独立配置，统一收集结果 =====
+  results <- c(
+    config_openmp_threads(openmp),
+    config_qs2_threads(qs2),
+    config_dt_threads(dt, ...),
+    config_cheapr_threads(cheapr),
+    config_wgcna_threads(WGCNA),
+    config_tf_threads(
+      threads = threads,
+      tf_config = tf_config
+    )
+  )
+
+  # ===== 3. 统一打印输出 =====
+  if (isTRUE(verbose)) {
+    print_thread_config(results)
+  }
+
+  invisible(results)
+}
+
+config_openmp_threads <- function(openmp = NULL) {
+  if (!is.numeric(openmp)) {
+    return(list())
+  }
+
+  old_val <- Sys.getenv("OMP_NUM_THREADS", unset = "")
+  Sys.setenv(OMP_NUM_THREADS = as.character(openmp))
+
+  list(
+    openmp = list(
+      name = "OMP_NUM_THREADS",
+      old = if (old_val == "") "unset (1)" else old_val,
+      new = openmp
+    )
+  )
+}
+
+
+config_qs2_threads <- function(qs2 = NULL) {
+  if (!is.numeric(qs2)) {
+    return(list())
+  }
+
+  check_installed("qs2")
+
+  old_qs2 <- qs2::qopt("nthreads")
+  qs2::qopt(parameter = "nthreads", value = qs2)
+
+  list(
+    qs2 = list(
+      name = "qs2",
+      old = old_qs2,
+      new = qs2
+    )
+  )
+}
+
+
+config_dt_threads <- function(dt = NULL, ...) {
+  if (!is.numeric(dt)) {
+    return(list())
+  }
+
+  old_dt <- data.table::getDTthreads(verbose = FALSE)
+
+  exec(
+    .fn = data.table::setDTthreads,
+    threads = dt,
+    !!!SigBridgeRUtils::FilterArgs4Func(
+      list(...),
+      data.table::setDTthreads
+    )
+  )
+
+  list(
+    dt = list(
+      name = "data.table",
+      old = old_dt,
+      new = dt
+    )
+  )
+}
+
+config_cheapr_threads <- function(cheapr = NULL) {
+  if (!is.numeric(cheapr)) {
+    return(list())
+  }
+
+  check_installed("cheapr")
+
+  old_chpr <- cheapr::get_threads()
+  cheapr::set_threads(cheapr)
+
+  list(
+    cheapr = list(
+      name = "cheapr",
+      old = if (old_chpr == 2L) "default (2)" else old_chpr,
+      new = cheapr
+    )
+  )
+}
+
+config_wgcna_threads <- function(WGCNA = NULL) {
+  if (!is.numeric(WGCNA)) {
+    return(list())
+  }
+
+  check_installed("WGCNA")
+
+  old_wgcna <- WGCNA::WGCNAnThreads()
+  WGCNA::enableWGCNAThreads(WGCNA)
+
+  list(
+    WGCNA = list(
+      name = "WGCNA",
+      old = old_wgcna,
+      new = WGCNA
+    )
+  )
+}
+
+
+config_tf_threads <- function(
+  threads,
+  tf_config = list(
+    xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",
+    xla_device = NULL,
+    inter_op = NULL,
+    intra_op = c(1L, NULL)
+  )
+) {
   tf_config_default <- list(
     xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",
     xla_device = NULL,
@@ -81,20 +227,8 @@ setThreads <- function(
     intra_op = c(1L, NULL)
   )
 
-  # TensorFlow配置标准化
   tf_config <- utils::modifyList(tf_config_default, tf_config)
 
-  chk::chk_chr(tf_config$xla_flag)
-  if (!is.null(tf_config$inter_op)) {
-    chk::chk_integer(tf_config$inter_op)
-    chk::chk_range(tf_config$inter_op, c(0, Inf))
-  }
-  if (!is.null(tf_config$intra_op)) {
-    chk::chk_integer(tf_config$intra_op)
-    chk::chk_range(tf_config$intra_op, c(0, Inf))
-  }
-
-  # 推导未指定的TF线程数
   tf_config$xla_device <- tf_config$xla_device %||% 1L
 
   tf_config$inter_op <- tf_config$inter_op %||%
@@ -102,74 +236,8 @@ setThreads <- function(
 
   tf_config$intra_op <- tf_config$intra_op %||% threads
 
-  dots <- list2(...)
-  verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
-  results <- list()
-
-  # ===== 3. 系统级后端配置 =====
-  sys_results <- list()
-
-  if (is.numeric(openmp)) {
-    old_val <- Sys.getenv("OMP_NUM_THREADS", unset = "")
-    Sys.setenv(OMP_NUM_THREADS = as.character(openmp))
-    sys_results$openmp <- list(
-      name = "OMP_NUM_THREADS",
-      old = if (old_val == "") "unset (1)" else old_val,
-      new = openmp
-    )
-  }
-
-  if (is.numeric(qs2)) {
-    check_installed("qs2")
-    old_qs2 <- qs2::qopt("nthreads")
-    qs2::qopt(parameter = "nthreads", value = qs2)
-    sys_results$qs2 <- list(
-      name = "qs2",
-      old = old_qs2,
-      new = qs2
-    )
-  }
-
-  if (is.numeric(dt)) {
-    old_dt <- data.table::getDTthreads(verbose = FALSE)
-    exec(
-      .fn = data.table::setDTthreads,
-      threads = dt,
-      !!!SigBridgeRUtils::FilterArgs4Func(list(...), data.table::setDTthreads)
-    )
-
-    sys_results$dt <- list(
-      name = "data.table",
-      old = old_dt,
-      new = dt
-    )
-  }
-
-  if (is.numeric(cheapr)) {
-    check_installed("cheapr")
-    old_chpr <- cheapr::get_threads()
-    cheapr::set_threads(cheapr)
-    sys_results$cheapr <- list(
-      name = "cheapr",
-      old = if (old_chpr == 2L) "default (2)" else old_chpr,
-      new = cheapr
-    )
-  }
-
-  if (length(sys_results) > 0 && verbose) {
-    purrr::walk(sys_results, function(cfg) {
-      cli::cli_text(
-        "{cli::symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
-      )
-    })
-  }
-
-  results <- c(results, sys_results)
-
-  # ===== 4. TensorFlow专属配置（统一命名空间） =====
   tf_results <- list()
 
-  # XLA JIT
   old_xla_flag <- Sys.getenv("TF_XLA_FLAGS", unset = "")
   Sys.setenv(TF_XLA_FLAGS = tf_config$xla_flag)
   tf_results$xla_flag <- list(
@@ -186,7 +254,6 @@ setThreads <- function(
     new = tf_config$xla_device
   )
 
-  # Inter-op threads
   old_inter <- Sys.getenv("TF_NUM_INTEROP_THREADS", unset = "")
   Sys.setenv(TF_NUM_INTEROP_THREADS = as.character(tf_config$inter_op))
   tf_results$inter_op <- list(
@@ -195,7 +262,6 @@ setThreads <- function(
     new = tf_config$inter_op
   )
 
-  # Intra-op threads
   old_intra <- Sys.getenv("TF_NUM_INTRAOP_THREADS", unset = "")
   Sys.setenv(TF_NUM_INTRAOP_THREADS = as.character(tf_config$intra_op))
   tf_results$intra_op <- list(
@@ -204,13 +270,20 @@ setThreads <- function(
     new = tf_config$intra_op
   )
 
-  if (verbose) {
-    purrr::walk(tf_results, function(cfg) {
-      cli::cli_text(
-        "{cli::symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
-      )
-    })
+  tf_results
+}
+
+
+print_thread_config <- function(results) {
+  if (length(results) == 0) {
+    return(invisible(NULL))
   }
 
-  invisible(c(results, tf_results))
+  purrr::walk(results, function(cfg) {
+    cli::cli_text(
+      "{cli::symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
+    )
+  })
+
+  invisible(NULL)
 }
