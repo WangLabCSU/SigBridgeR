@@ -83,7 +83,7 @@ NULL
     key <- if (is_function(key)) {
       fn_fmls_names(key)
     } else if (is.list(key)) {
-      as.character.list(key)
+      list_to_chr(key)
     } else if (typeof(key) %chin% c("S3", "S4", "S7", "R6")) {
       class(key)
     } else {
@@ -247,7 +247,7 @@ NULL
 #' elements use their 1-based positions. Nested lists are converted
 #' recursively and enclosed in parentheses.
 #'
-#' This method is registered as `as.character.list`, so it is called
+#' This method is registered as `list_to_chr`, so it is called
 #' automatically when `as.character()` is applied to a list.
 #'
 #' @param x A list to be converted.
@@ -281,6 +281,6 @@ NULL
 #' # "1: foo, bar: NA, baz: NULL"
 #'
 #' @export
-as.character.list <- function(x, ...) {
+list_to_chr <- function(x, ...) {
   list_to_character_recursive(x)
 }
