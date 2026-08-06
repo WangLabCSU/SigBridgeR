@@ -15,6 +15,7 @@ vignette: >
 ```{r}
 #| label: prework
 #| include: false
+#| eval: false
 
 library(SigBridgeR)
 library(Seurat)

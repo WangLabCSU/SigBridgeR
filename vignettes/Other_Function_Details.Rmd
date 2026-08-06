@@ -12,6 +12,7 @@ vignette: >
 
 ```{r}
 #| include: false
+#| eval: false
 library(zeallot)
 library(SigBridgeR)
 ```
