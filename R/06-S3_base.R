@@ -37,9 +37,9 @@
 #' @name SigBridgeR-S3
 NULL
 
-#' Print a ScreenMethod object
+#' Print a SigBridgeR object
 #'
-#' Pretty-print a `ScreenMethod` object using the `cli` package.
+#' Pretty-print a `SigBridgeR` object using the `cli` package.
 #'
 #' The class name is displayed in bold blue. Slots are displayed as an
 #' unordered list, with slot names in regular blue and each value preceded by
@@ -100,6 +100,26 @@ NULL
 
   invisible(x)
 }
+
+
+#' Summary of a SigBridgeR object
+#'
+#' The class name is displayed in bold blue. Slots are displayed as an
+#' unordered list, with slot names in regular blue and each value preceded by
+#' its type.
+#'
+#' @param object A `SigBridgeRBase` object. Basically all SigBridgeR objects.
+#' @param ... Additional arguments passed to the print method. Currently unused.
+#'
+#' @return Invisibly returns `object`.
+#'
+#' @rdname SigBridgeR-S3
+#' @rawNamespace S3method(summary,"SigBridgeR::SigBridgeRBase")
+#' @export
+`summary.SigBridgeR::SigBridgeRBase` <- function(object, ...) {
+  `print.SigBridgeR::SigBridgeRBase`(x = object, ...)
+}
+
 
 #' Number of Properties in a SigBridgeR Object
 #'

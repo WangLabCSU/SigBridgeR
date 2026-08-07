@@ -14,7 +14,9 @@ docs/
 .*\.rds$
 .*\.rda$
 ^inst/extdata/
+extdata/
 ^vignettes/example_figures
+vignettes/*
 ^Meta/
 benchmark_data
 ^Tmp/.*

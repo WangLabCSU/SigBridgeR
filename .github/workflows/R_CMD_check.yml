@@ -156,6 +156,7 @@ jobs:
               with:
                   extra-packages: |
                       any::rcmdcheck
+                      any::zeallot
                   #   any::remotes
                   dependencies: '"hard"'
                   needs: check

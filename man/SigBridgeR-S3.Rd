@@ -3,6 +3,7 @@
 \name{SigBridgeR-S3}
 \alias{SigBridgeR-S3}
 \alias{print.SigBridgeR::SigBridgeRBase}
+\alias{summary.SigBridgeR::SigBridgeRBase}
 \alias{length.SigBridgeR::SigBridgeRBase}
 \alias{names.SigBridgeR::SigBridgeRBase}
 \alias{names<-.SigBridgeR::SigBridgeRBase}
@@ -12,6 +13,8 @@
 \title{Base R Methods for SigBridgeR Objects}
 \usage{
 \method{print}{`SigBridgeR::SigBridgeRBase`}(x, ...)
+
+\method{summary}{`SigBridgeR::SigBridgeRBase`}(object, ...)
 
 \method{length}{`SigBridgeR::SigBridgeRBase`}(x)
 
@@ -30,10 +33,14 @@
 
 \item{...}{Additional arguments passed to the method. Currently unused.}
 
+\item{object}{A \code{SigBridgeRBase} object. Basically all SigBridgeR objects.}
+
 \item{value}{A character vector of property names.}
 }
 \value{
 Invisibly returns \code{x}.
+
+Invisibly returns \code{object}.
 
 An integer: the number of properties.
 
@@ -54,7 +61,11 @@ SigBridgeR object, such as \code{ScreenMethod}, \code{ScreenMethodResult}, and
 base generics \code{print()}, \code{length()}, \code{names()}, \verb{names<-()}, \code{format()},
 \code{as.list()}, and \code{as.character()}.
 
-Pretty-print a \code{ScreenMethod} object using the \code{cli} package.
+Pretty-print a \code{SigBridgeR} object using the \code{cli} package.
+
+The class name is displayed in bold blue. Slots are displayed as an
+unordered list, with slot names in regular blue and each value preceded by
+its type.
 
 Returns the number of properties (slots) stored in a \code{SigBridgeRBase} object.
 
