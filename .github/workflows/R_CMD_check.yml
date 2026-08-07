@@ -157,7 +157,9 @@ jobs:
                   extra-packages: |
                       any::rcmdcheck
                       any::zeallot
-                  #   any::remotes
+                      any::testthat
+                      any::pak
+                      any::remotes
                   dependencies: '"hard"'
                   needs: check
 
