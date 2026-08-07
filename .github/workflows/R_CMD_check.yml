@@ -160,6 +160,8 @@ jobs:
                       any::testthat
                       any::pak
                       any::remotes
+                      any::tidydr
+                      any::ggupset
                   dependencies: '"hard"'
                   needs: check
 
