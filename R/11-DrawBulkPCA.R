@@ -81,7 +81,7 @@ DrawBulkPCA <- function(
     ggplot2::theme_minimal() +
     ggplot2::theme(
       legend.position = c(0.95, 0.95), # 图例在右上角内部
-      legend.justification = c(1, 1), # 对齐到右上角
+      legend.justification = c(1, 1) # 对齐到右上角
     ) +
     ggforce::geom_mark_ellipse(
       ggplot2::aes(fill = group, group = group),

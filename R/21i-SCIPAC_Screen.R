@@ -46,11 +46,11 @@ ValidateSCIPACParams <- function(
   # -- input validation -----------------------------------------------------
   purrr::walk(
     .x = c(hvg, n_pc, bt_size, ncore, nfold),
-    .f = chk::chk_integer,
+    .f = chk::chk_integer
   )
   purrr::walk(
     .x = c(ela_net_alpha, ci_alpha),
-    .f = chk::chk_numeric,
+    .f = chk::chk_numeric
   )
   chk::chk_numeric(resolution)
   chk::chk_chr(label_type)

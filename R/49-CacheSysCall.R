@@ -104,7 +104,7 @@ CacheSysCall <- function(
     path = path,
     cache_config = cache_config,
     mode = mode,
-    timestamp = timestamp,
+    timestamp = timestamp
   )
 
   dots <- list2(...)

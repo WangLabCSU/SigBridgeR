@@ -271,7 +271,7 @@ TrainDEGASModel <- function(
     DEGAS.lambda3 = p$degas_params$DEGAS.lambda3,
     DEGAS.seed = p$degas_params$DEGAS.seed,
     verbose = p$verbose,
-    force_rewrite = p$force_rewrite %||% FALSE,
+    force_rewrite = p$force_rewrite %||% FALSE
   )
   names(ccModel1) <- paste0(
     "ccModel_",
@@ -439,7 +439,7 @@ DoDEGAS <- function(
       path = p$load_cache,
       cache = p$cache_config,
       verbose = p$verbose,
-      timestamp = p$dots$timestamp,
+      timestamp = p$dots$timestamp
     )
 
     if (p$verbose) {

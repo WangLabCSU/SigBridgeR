@@ -192,7 +192,7 @@ DoPIPET <- function(
       path = p$load_cache,
       cache = p$cache_config,
       verbose = p$verbose,
-      timestamp = p$dots$timestamp,
+      timestamp = p$dots$timestamp
     )
 
     markers <- cache$markers

@@ -265,7 +265,7 @@ DoscPP <- function(
     }
     if (pos_null && neg_null) {
       cli::cli_warn(
-        "scPP is not applicable to the current data. Returning {.val NULL}",
+        "scPP is not applicable to the current data. Returning {.val NULL}"
       )
       return(NULL)
     }
@@ -282,7 +282,7 @@ DoscPP <- function(
         mode = "save",
         cache = cache,
         verbose = p$verbose,
-        timestamp = p$dots$timestamp,
+        timestamp = p$dots$timestamp
       )
     }
   } # end of `is.null(p$load_cache)`

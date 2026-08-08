@@ -220,7 +220,6 @@ DoTiRank <- function(
   ),
   save_path = "./TiRank_res",
   load_cache = NULL,
-
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
@@ -327,7 +326,7 @@ DoTiRank <- function(
       bulk_clinical = check_res$bulk_clinical,
       validation_proportion = tirank_params$validation_proportion,
       mode = p$mode,
-      seed = p$seed,
+      seed = p$seed
     )
 
     if (p$verbose) {

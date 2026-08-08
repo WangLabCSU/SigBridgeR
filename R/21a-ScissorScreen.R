@@ -230,7 +230,7 @@ DoScissor <- function(
       path = p$load_cache,
       cache_config = p$cache_config,
       mode = "load",
-      timestamp = p$dots$timestamp,
+      timestamp = p$dots$timestamp
     )
 
     CheckCache(
@@ -313,7 +313,7 @@ DoScissor <- function(
       file = file.path(save_cache_dir, "cache_config.json"),
       cache_config = p$cache_config,
       additional_description = p$dots$additional_description,
-      verbose = p$verbose,
+      verbose = p$verbose
     )
   }
 
