@@ -7,24 +7,36 @@
 mLLMCelltypeAnnotate(
   sc,
   seurat_obj_markers = NULL,
-  tissue_name = "Human Cancer",
-  models = c("gpt-5", "claude-sonnet-4-5-20250929", "gemini-3-pro",
-    "qwen-max-2025-01-25"),
-  api_keys = list(anthropic = "your-anthropic-key", openai = "your-openai-key", gemini =
-    "your-google-key", qwen = "your-qwen-key"),
+  tissue_name = NULL,
+  models = vector("character", 0),
+  api_keys = list(),
+  top_gene_count = 10,
+  debug = FALSE,
+  base_urls = NULL,
+  return_reasoning = FALSE,
+  controversy_threshold = 0.7,
+  entropy_threshold = 1,
+  max_discussion_rounds = 3,
+  consensus_check_model = NULL,
+  log_dir = "logs",
+  cache_dir = NULL,
+  use_cache = TRUE,
+  clusters_to_analyze = NULL,
+  force_rerun = FALSE,
   ...
 )
 }
 \arguments{
-\item{sc}{A \code{Seurat} object with pre-computed clusters
-(stored in \code{Idents(sc)} or \code{sc$seurat_clusters}).}
+\item{sc}{A \code{Seurat} object with pre-computed clusters (stored in
+\code{Idents(sc)} or \code{sc$seurat_clusters}).}
 
-\item{seurat_obj_markers}{Optional pre-computed marker gene table or list (output of
+\item{seurat_obj_markers}{Optional pre-computed marker gene table (output of
 \code{Seurat::FindAllMarkers()}). If \code{NULL} (default), markers are computed
 automatically using parameters passed via \code{...}.}
 
-\item{tissue_name}{Character. Biological context for annotation (e.g., tissue type,
-disease state). Helps LLMs interpret marker genes appropriately. Default: \code{"Human Tumor"}.}
+\item{tissue_name}{Character. Biological context for annotation (e.g.,
+tissue type or disease state), which helps LLMs interpret marker genes
+appropriately. Default: \code{NULL}.}
 
 \item{models}{Character vector of LLM model identifiers. Supported formats:
 \itemize{
@@ -32,11 +44,13 @@ disease state). Helps LLMs interpret marker genes appropriately. Default: \code{
 \item Anthropic: \code{"claude-3-5-sonnet-20240620"}, etc.
 \item Google: \code{"gemini-1.5-pro"}, etc.
 \item Alibaba: \code{"qwen-max"}, \code{"qwen-plus"}, etc.
-Default: \code{c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")}.
-For single-model mode, only the first model is used.
-}}
+}
 
-\item{api_keys}{Named list of API keys with provider names as keys:
+For single-model mode (\code{length(models) == 1}), only the first model is
+used via \code{mLLMCelltype::annotate_cell_types()}. Must be provided.
+Default: \code{character()}.}
+
+\item{api_keys}{Named vector of API keys with provider names as keys:
 \itemize{
 \item \strong{\code{openai}}: OpenAI API key
 \item \strong{\code{anthropic}}: Anthropic API key
@@ -45,35 +59,70 @@ For single-model mode, only the first model is used.
 }
 
 Example: \code{list(openai = "sk-...", anthropic = "sk-ant-...")}.
-\strong{Note}: Default placeholder keys (\code{"your-xxx-key"}) will fail—users must supply valid keys.}
+Must be provided and named; placeholder keys (e.g., \code{"your-xxx-key"})
+will fail. Default: \code{list()}.}
 
-\item{...}{Additional arguments passed to downstream functions. Parameters are routed as follows:
+\item{top_gene_count}{Integer. Number of top marker genes per cluster passed
+to the LLMs. Default: \code{10}.}
+
+\item{debug}{Logical. Whether to enable debug output from
+\code{mLLMCelltype::annotate_cell_types()}. Default: \code{FALSE}.}
+
+\item{base_urls}{Character vector or list of custom base URLs for the LLM
+API endpoints (e.g., for proxies or local deployments). Default: \code{NULL}
+(use the default endpoints).}
+
+\item{return_reasoning}{Logical. Whether to return the reasoning text from
+the single-model annotation. Default: \code{FALSE}.}
+
+\item{controversy_threshold}{Numeric. Consensus proportion below which a
+cluster is considered controversial and triggers further discussion.
+Default: \code{0.7}.}
+
+\item{entropy_threshold}{Numeric. Entropy below which consensus is
+considered reached. Default: \code{1}.}
+
+\item{max_discussion_rounds}{Integer. Maximum number of discussion rounds in
+the consensus process. Default: \code{3}.}
+
+\item{consensus_check_model}{Character. Model used to check consensus during
+the discussion. Default: \code{NULL} (use the first model).}
+
+\item{log_dir}{Character. Directory for saving the consensus process logs.
+Default: \code{"logs"}.}
+
+\item{cache_dir}{Character. Directory for caching API responses.
+Default: \code{NULL}.}
+
+\item{use_cache}{Logical. Whether to use cached API responses.
+Default: \code{TRUE}.}
+
+\item{clusters_to_analyze}{Character or integer vector. Subset of cluster
+IDs to analyze; \code{NULL} analyzes all clusters. Default: \code{NULL}.}
+
+\item{force_rerun}{Logical. Whether to ignore cached results and re-run the
+annotation. Default: \code{FALSE}.}
+
+\item{...}{Additional arguments routed to downstream functions:
 \itemize{
-\item \strong{To \code{mLLMCelltype::annotate_cell_types()} and \code{mLLMCelltype::interactive_consensus_annotation()}}:
-\itemize{
-\item \code{top_gene_count}: Number of top genes to use per cluster (default: 10L).
-\item \code{debug}: Logical. If \code{TRUE}, prints debugging information.
-\item \code{base_urls}: Custom API base URLs: single character string (applied globally) or named list with provider-specific URLs (e.g., \code{list(openai = "...", anthropic = "...")}). Useful for proxies, enterprise gateways, or testing environments.
-\item \code{controversy_threshold}: Consensus proportion threshold (default: 0.7). Clusters below this value are flagged as controversial.
-\item \code{entropy_threshold}: Entropy threshold for controversial cluster detection (default: 1.0).
-\item \code{max_discussion_rounds}: Maximum discussion rounds for controversial clusters (default: 3).
-\item \code{consensus_check_model}: Model used for consensus validation.
-\item \code{log_dir}: Directory for log storage (default: \code{tempdir()}).
-\item \code{cache_dir}: Directory for cache storage (default: \code{tempdir()}).
-\item \code{use_cache}: Logical. Whether to use cached results (default: \code{TRUE}).
-\item \code{clusters_to_analyze}: Character/numeric vector of cluster IDs to analyze. Non-existent IDs trigger warnings.
-\item \code{force_rerun}: Logical. If \code{TRUE}, bypasses cache and forces re-analysis (affects discussion phase only). Default: \code{FALSE}.
-}
+\item Arguments matching \code{Seurat::FindAllMarkers()} formals (e.g., \code{min.pct},
+\code{logfc.threshold}, \code{test.use}) are passed to marker detection when
+\code{seurat_obj_markers = NULL}.
+\item \code{verbose}: Logical. Whether to print progress messages. Default:
+\code{getFuncOption("verbose")}.
+\item \code{seed}: Integer. Random seed. Default: \code{getFuncOption("seed")}.
 }}
 }
 \value{
 The input \code{Seurat} object with the following metadata columns added:
 \itemize{
 \item \strong{\code{mllmcelltype_cell_type}}: Consensus cell type annotation per cell.
-\item \strong{\code{mllmcelltype_consensus_proportion}}: (Multi-model only) Proportion of models
-agreeing on the assigned label (range: 0–1). Higher values indicate stronger consensus.
-\item \strong{\code{mllmcelltype_entropy}}: (Multi-model only) Shannon entropy of model predictions.
-Lower values indicate higher confidence (less disagreement among models).
+\item \strong{\code{mllmcelltype_consensus_proportion}}: (Multi-model only) Proportion
+of models agreeing on the assigned label (range: 0-1). Higher values
+indicate stronger consensus.
+\item \strong{\code{mllmcelltype_entropy}}: (Multi-model only) Shannon entropy of model
+predictions. Lower values indicate higher confidence (less disagreement
+among models).
 }
 
 \strong{Note}: Uncertainty metrics are \emph{only added in multi-model mode}
@@ -81,26 +130,28 @@ Lower values indicate higher confidence (less disagreement among models).
 }
 \description{
 Performs automated cell type annotation for Seurat clusters by leveraging
-multiple large language models (LLMs) to interpret cluster-specific marker genes.
-The function supports both single-model annotation and multi-model consensus
-generation, with uncertainty quantification via agreement metrics.
+multiple large language models (LLMs) to interpret cluster-specific marker
+genes. The function supports both single-model annotation and multi-model
+consensus generation, with uncertainty quantification via agreement metrics.
 
 Workflow:
 \enumerate{
 \item Identifies top marker genes per cluster (via \code{Seurat::FindAllMarkers()}
 or user-provided markers).
 \item Queries specified LLMs with marker gene lists and tissue context.
-\item For multiple models: computes consensus annotations and uncertainty metrics
-(consensus proportion, entropy) via \code{mLLMCelltype::interactive_consensus_annotation()}.
-\item For single model: uses direct annotation via \code{mLLMCelltype::annotate_cell_types()}.
+\item For multiple models: computes consensus annotations and uncertainty
+metrics (consensus proportion, entropy) via
+\code{mLLMCelltype::interactive_consensus_annotation()}.
+\item For single model: uses direct annotation via
+\code{mLLMCelltype::annotate_cell_types()}.
 \item Adds results as metadata columns to the Seurat object.
 }
 }
 \section{Requirements}{
 
 \itemize{
-\item R packages: \code{mLLMCelltype}, \code{plyr}, \code{Seurat}
-\item Valid API keys for selected LLM providers (costs may apply)
+\item R packages: \code{mLLMCelltype}, \code{Seurat}
+\item Valid API keys for the selected LLM providers (costs may apply)
 \item Internet connectivity for LLM API calls
 }
 }
@@ -108,7 +159,7 @@ or user-provided markers).
 \examples{
 \dontrun{
 # Multi-model consensus annotation
-annotated <- mLLMCellTypeAnnotate(
+annotated <- mLLMCelltypeAnnotate(
   sc = pbmc_small,
   tissue_name = "Peripheral Blood Mononuclear Cells",
   models = c("gpt-4o", "claude-3-5-sonnet-20240620"),
@@ -121,7 +172,7 @@ annotated <- mLLMCellTypeAnnotate(
   logfc.threshold = 0.5
 )
 
-# Usr-level markers
+# User-provided markers
 markers_list <- list(
   "0" = c("CD3D", "CD3E", "CD2", "IL7R", "LTB"),
   "1" = c("CD14", "LYZ", "CST3", "MS4A7", "FCGR3A")
@@ -135,7 +186,7 @@ markers_df <- data.frame(
 )
 
 # Single-model annotation (faster, no consensus metrics)
-annotated <- mLLMCellTypeAnnotate(
+annotated <- mLLMCelltypeAnnotate(
   sc = pbmc_small,
   models = "gpt-4o-mini",
   api_keys = list(openai = Sys.getenv("OPENAI_API_KEY"))

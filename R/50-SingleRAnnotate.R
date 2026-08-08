@@ -73,7 +73,6 @@ SingleRAnnotate <- function(
   labels = NULL,
   ...
 ) {
-  check_installed("celldex")
   check_installed("SingleR", action = \(pkg, ...) pak::pak("dviraran/SingleR"))
 
   orginally_seurat <- inherits(sc, "Seurat")
@@ -95,7 +94,7 @@ SingleRAnnotate <- function(
     labels <- ref$label.main
   } else if (ref == "custom") {
     # misunderstood the argument `ref`
-    Abort("Please specify the reference dataset.")
+    Abort("Please specify the reference dataset. Not character `'custom'`")
   } else if (is.null(labels)) {
     # Please find the label from ref data yourself because the `label` slotname may be different from different data.
     # e.g. when set `ref = celldex::HumanPrimaryCellAtlasData()`, there are 3 labels
@@ -116,7 +115,7 @@ SingleRAnnotate <- function(
     ...
   )
   if (verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Finish"))
+    ts_cli$cli_alert_success("Annotation finish")
   }
 
   if (!orginally_seurat) {

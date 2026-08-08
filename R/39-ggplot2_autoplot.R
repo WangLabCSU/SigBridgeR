@@ -1,5 +1,5 @@
-##' @importFrom ggplot2 autoplot
-##' @export
+#' @importFrom ggplot2 autoplot
+#' @export
 ggplot2::autoplot
 
 #' autoplot method for Seurat UMAP
