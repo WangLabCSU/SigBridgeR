@@ -143,7 +143,13 @@ describe("ScreenUpset - intersection counts", {
     skip_if_not_installed("tibble")
 
     seurat <- new_test_seurat(5L)
-    seurat$scissor <- c("Positive", "Positive", "Positive", "Negative", "Neutral")
+    seurat$scissor <- c(
+      "Positive",
+      "Positive",
+      "Positive",
+      "Negative",
+      "Neutral"
+    )
     seurat$scPAS <- c("Positive", "Negative", "Neutral", "Positive", "Other")
 
     result <- ScreenUpset(seurat, screen_type = c("scissor", "scPAS"))
@@ -164,12 +170,20 @@ describe("ScreenUpset - intersection counts", {
 
     seurat <- new_test_seurat(6L)
     seurat$scissor <- c(
-      "Positive", "Positive", "Positive",
-      "Negative", "Neutral", "Positive"
+      "Positive",
+      "Positive",
+      "Positive",
+      "Negative",
+      "Neutral",
+      "Positive"
     )
     seurat$scPAS <- c(
-      "Positive", "Positive", "Negative",
-      "Positive", "Neutral", "Positive"
+      "Positive",
+      "Positive",
+      "Negative",
+      "Positive",
+      "Neutral",
+      "Positive"
     )
 
     result <- ScreenUpset(seurat, screen_type = c("scissor", "scPAS"))

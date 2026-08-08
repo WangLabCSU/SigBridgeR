@@ -1,43 +1,58 @@
 #' @title Annotate Cell Types Using CellTypist (Python Backend)
+#' @family Single_Cell_Annotation_Method
+#'
 #' @description
 #' Performs automated cell type annotation via the \code{celltypist} Python package
 #' using \code{reticulate} integration. Accepts a \code{Seurat} object as input and
 #' returns it enriched with CellTypist prediction results as metadata columns.
 #'
-#' Requires a Python environment with \code{celltypist} installed (see \url{https://github.com/Teichlab/celltypist}). The function
-#' automatically attempts to locate a suitable Python interpreter, but users may
-#' specify a custom path via the \code{python} argument.
+#' Requires a Python environment with \code{celltypist} installed (see
+#' \url{https://github.com/Teichlab/celltypist}). By default the function locates a
+#' suitable Python interpreter automatically via \code{reticulate}; use
+#' \code{reticulate::use_python()} to pin a specific environment beforehand.
 #'
 #' @param sc A \code{Seurat} object containing single-cell RNA-seq data. Must have
 #'   a valid assay with gene expression matrix.
 #' @param model Character. CellTypist model specification. One of:
-#'   * Model name (e.g., `"Immune_All_Low"`): Loads the specified built-in model.
-#'   * Path to a local `.pkl` model file.
-#'
+#'   * A built-in model name (e.g., `"Immune_All_Low"`); a `.pkl` suffix is appended
+#'     automatically if missing.
+#'   * A path to a local `.pkl` model file.
 #' @param download Logical. Whether to automatically download the model first.
-#'   Default: \code{TRUE}.
-#' @param conda  Character. Conda environment name. Ignore `python` if specified.
-#' @param python Character. Path to Python executable with \code{celltypist} installed.
-#'   If \code{NULL} (default), auto-detected via \code{ListPyEnv()}. Must point to a valid Python binary.
-#' @param venv_locations Character. Path to parent dirtectory storing Python virtual environment.
-#' @param force_update Logical. Whether to force update the model file. `download` must be \code{TRUE} before this option is effective.
+#'   Default: `TRUE`.
+#' @param force_update Logical. Whether to force re-downloading the model files
+#'   when \code{download = TRUE}. Default: `FALSE`.
+#' @param majority_voting Logical. Whether to refine predicted labels by running a
+#'   majority voting classifier after over-clustering. Default: `FALSE`.
+#' @param mode Character. Prediction mode: `"best match"` selects the cell type with
+#'   the largest score; `"prob match"` enables multi-label classification.
+#'   Default: `"best match"`.
+#' @param p_thres Numeric. Probability threshold for multi-label classification in
+#'   `"prob match"` mode. Ignored when \code{mode = "best match"}. Default: `0.5`.
+#' @param transpose_input Logical. Whether to transpose the input matrix. Set to
+#'   `TRUE` if the input is in gene-by-cell format. Default: `FALSE`.
+#' @param gene_file Character. Path to a file with genes (one per line) corresponding
+#'   to rows of the input matrix. Default: `NULL`.
+#' @param cell_file Character. Path to a file with cells (one per line) corresponding
+#'   to columns of the input matrix. Default: `NULL`.
+#' @param over_clustering Character or vector. Over-clustering specification used for
+#'   majority voting: (1) path to a plain file with one cluster ID per line;
+#'   (2) metadata column name in AnnData; (3) vector/array of cluster assignments;
+#'   or (4) omitted for the heuristic approach. Ignored when
+#'   \code{majority_voting = FALSE}. Default: `NULL`.
+#' @param use_GPU Logical. Whether to use GPU acceleration (via rapids-singlecell)
+#'   for over-clustering. Only relevant when \code{majority_voting = TRUE}.
+#'   Default: `FALSE`.
+#' @param min_prop Numeric. Minimum proportion of the dominant cell type required to
+#'   name a subcluster; subclusters below the threshold are labeled `'Heterogeneous'`.
+#'   Ignored when \code{majority_voting = FALSE}. Default: `0L`.
 #' @param verbose Logical. Whether to print progress messages during annotation.
-#'   Default: inherits from package option \code{getOption("SigBridgeR.verbose")}.
-#' @param celltypist_tools Character. Path to the internal Python bridge script.
-#'   Default: internal package resource (\code{system.file("python/73-CellTypistAnnotate.py", package = "SigBridgeR")}).
-#'   Typically should not be modified by users.
-#' @param ... Additional arguments passed to CellTypist's `annotate()` function via Python, such as:
-#'   * `majority_voting`: Logical. Whether to refine predicted labels by running majority voting classifier after over-clustering. (Default: `FALSE`)
-#'   * `mode`: Character. Prediction mode (`"best match"` or `"prob match"`). For `"best match"`, selects cell type with largest score; `"prob match"` enables multi-label classification. (Default: `"best match"`)
-#'   * `p_thres`: Numeric. Probability threshold for multi-label classification in `"prob match"` mode. Ignored if `mode = "best match"`. (Default: 0.5)
-#'   * `transpose_input`: Logical. Whether to transpose input matrix. Set to `TRUE` if filename is in gene-by-cell format. (Default: `FALSE`)
-#'   * `gene_file`: Character. Path to file with genes (one per line) corresponding to rows in mtx file. Ignored if input is not in mtx format.
-#'   * `cell_file`: Character. Path to file with cells (one per line) corresponding to columns in mtx file. Ignored if input is not in mtx format.
-#'   * `over_clustering`: Character or vector. Over-clustering specification: (1) path to plain file with one cluster ID per line; (2) metadata column name in AnnData; (3) vector/array of cluster assignments; or (4) omitted for heuristic approach. Ignored if `majority_voting = FALSE`.
-#'   * `use_GPU`: Logical. Whether to use GPU acceleration via rapids-singlecell for over-clustering. Only relevant when `majority_voting = TRUE`. (Default: `FALSE`)
-#'   * `min_prop`: Numeric. Minimum proportion of dominant cell type required to name a subcluster. Subclusters below threshold are labeled 'Heterogeneous'. Ignored if `majority_voting = FALSE`. (Default: 0)
+#'   Default: \code{getFuncOption("verbose")}.
+#' @param ... Additional arguments passed through to the CellTypist Python backend.
 #'
-#' @return The input \code{Seurat} object with some metadata columns added, Column names may vary slightly depending on CellTypist version and options used. Usually cell type labels will be added to `meta.data`, and scoring matrix will be add to `misc$celltypist`
+#' @return The input \code{Seurat} object with prediction results added:
+#'   cell type labels are stored as new columns in `meta.data` (prefixed with
+#'   `celltypist_`), and the scoring matrices are stored in `misc$celltypist`.
+#'   Column names may vary slightly depending on the CellTypist version and options used.
 #'
 #' @section Requirements:
 #'
@@ -45,46 +60,71 @@
 #' * Python packages: `celltypist`, `scanpy`, `anndata`
 #' * A working Python environment discoverable by `reticulate`
 #'
-#'
 #' @examples
 #' \dontrun{
-#' # Use a specific immune model with majority voting
+#' # Use a built-in immune model with majority voting
 #' annotated <- CellTypistAnnotate(
-#'   seurat_obj,
+#'   sc = seurat_obj,
 #'   model = "Immune_All_Low",
 #'   majority_voting = TRUE
 #' )
 #'
-#' # Specify custom Python environment
+#' # Probability-based multi-label annotation
 #' annotated <- CellTypistAnnotate(
-#'   seurat_obj,
-#'   python = "/path/to/miniconda3/envs/celltypist/bin/python"
+#'   sc = seurat_obj,
+#'   model = "Immune_All_Low",
+#'   mode = "prob match",
+#'   p_thres = 0.5
+#' )
+#'
+#' # Use a local model file
+#' annotated <- CellTypistAnnotate(
+#'   sc = seurat_obj,
+#'   model = "/path/to/My_Model.pkl"
 #' )
 #' }
-#' @family Single_Cell_Annotation_Method
 #' @export
 CellTypistAnnotate <- function(
   sc,
   model = NULL,
   download = TRUE,
-  conda = NULL,
-  python = NULL,
-  venv_locations = NULL,
-  force_update = TRUE,
+  force_update = FALSE,
+  majority_voting = FALSE,
+  mode = c("best match", "prob match"),
+  p_thres = 0.5,
+  transpose_input = FALSE,
+  gene_file = NULL,
+  cell_file = NULL,
+  over_clustering = NULL,
+  use_GPU = FALSE,
+  min_prop = 0L,
   verbose = getFuncOption("verbose"),
-  celltypist_tools = system.file(
-    "python/73-CellTypistAnnotate.py",
-    package = "SigBridgeR"
-  ),
   ...
 ) {
-  check_installed(c("anndataR", "reticulate"))
+  check_installed("anndataR")
   chk::chk_is(sc, "Seurat")
   if (!is.null(model)) {
     chk::chk_character(model)
+    if (!endsWith(model, ".pkl")) {
+      model <- paste0(model, ".pkl")
+    }
   }
+  mode <- arg_match(mode)
   chk::chk_logical(download)
-  chk::chk_file(celltypist_tools)
+  chk::chk_logical(force_update)
+  chk::chk_logical(majority_voting)
+  chk::chk_numeric(p_thres)
+  chk::chk_logical(transpose_input)
+  chk::chk_logical(use_GPU)
+  chk::chk_numeric(min_prop)
+  chk::chk_logical(verbose)
+  if (!is.null(gene_file)) {
+    chk::chk_character(gene_file)
+  }
+  if (!is.null(cell_file)) {
+    chk::chk_character(cell_file)
+  }
+  # ----------------------------------------------------------------------------
 
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green(
@@ -92,65 +132,29 @@ CellTypistAnnotate <- function(
     ))
   }
 
-  py_envs <- ListPyEnv(venv_locations = venv_locations, verbose = FALSE)
-  if (!is.null(conda)) {
-    if (!is.null(python)) {
-      cli::cli_warn("`python` is ignored due to `conda` specified")
-    }
-    SigBridgeRUtils::MatchArg(
-      conda,
-      py_envs$name[py_envs$type == "conda"],
-      NULL
+  predicted_labels <- decision_matrix <- probability_matrix <- NULL # suppress checking NOTE
+  c(predicted_labels, decision_matrix, probability_matrix) %<-%
+    PyModule$celltypist$annotate_celltypist(
+      adata = anndataR::as_AnnData(
+        x = sc,
+        x_mapping = "data",
+        output_class = "ReticulateAnnData"
+      ),
+      model = model,
+      ...,
+      transpose_input = transpose_input,
+      gene_file = gene_file,
+      cell_file = cell_file,
+      majority_voting = majority_voting,
+      over_clustering = over_clustering,
+      use_GPU = use_GPU,
+      mode = mode,
+      p_thres = p_thres,
+      min_prop = min_prop,
+      download = download,
+      force_update = force_update,
+      verbose = verbose
     )
-    reticulate::use_condaenv(py_envs$python[py_envs$name == conda])
-    if (verbose) {
-      ts_cli$cli_alert_info("Using Conda Env: {.val {conda}}")
-    }
-  } else {
-    python <- python %||% py_envs$python[[1]]
-    chk::chk_file(python)
-    reticulate::use_python(python)
-    if (verbose) {
-      ts_cli$cli_alert_info("Using Python: {.file {python}}")
-    }
-  }
-
-  if (!is.null(model)) {
-    if (!grepl("\\.pkl", model)) {
-      model <- paste0(model, ".pkl")
-    }
-  }
-
-  dots <- list2(...)
-
-  # * initiate
-  py <- reticulate::py
-  reticulate::py_run_string("import os") # warm up
-
-  py$adata <- anndataR::as_AnnData(
-    x = sc,
-    x_mapping = "data",
-    output_class = "ReticulateAnnData"
-  )
-  py$model <- reticulate::r_to_py(model) # A string
-  py$download <- reticulate::r_to_py(download) # A boolean
-  py$verbose <- reticulate::r_to_py(verbose) # A boolean
-  py$force_update <- reticulate::r_to_py(force_update) # A boolean
-  if (length(dots) > 0) {
-    var_names <- get_names_4_ids(..., .quoses = enquos(...))
-    for (var_name in var_names) {
-      py[[var_name]] <- reticulate::r_to_py(dots[[var_name]])
-    }
-  }
-  reticulate::py_run_file(celltypist_tools)
-
-  if (verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Annotation done"))
-  }
-
-  predicted_labels <- reticulate::py_to_r(py$predicted_labels)
-  decision_matrix <- reticulate::py_to_r(py$decision_matrix)
-  probability_matrix <- reticulate::py_to_r(py$probability_matrix)
 
   colnames(predicted_labels) <- paste0(
     "celltypist_",
@@ -161,6 +165,9 @@ CellTypistAnnotate <- function(
       celltypist = list(
         decision_matrix = decision_matrix,
         probability_matrix = probability_matrix
-      )
+      ),
+      cover = FALSE
     )
+
+  sc
 }

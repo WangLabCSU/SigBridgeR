@@ -1,3 +1,5 @@
+skip_if_not_installed("ggplot2")
+
 # Helper: create a minimal Seurat object with n cells
 new_test_seurat <- function(n_cells = 2L, n_genes = 2L) {
   m <- matrix(
@@ -46,7 +48,11 @@ describe("autoplot.Seurat", {
     seurat <- new_test_seurat()
 
     local_mocked_bindings(
-      check_installed = function(pkg, reason = NULL, call = rlang::caller_env()) {
+      check_installed = function(
+        pkg,
+        reason = NULL,
+        call = rlang::caller_env()
+      ) {
         rlang::abort("Mock: package not installed", call = call)
       },
       .package = "SigBridgeR"

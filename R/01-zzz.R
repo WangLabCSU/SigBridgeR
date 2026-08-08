@@ -12,7 +12,7 @@
 }
 
 .onLoad <- function(libname, pkgname) {
-  # default options
+  # * default options
   op <- options()
   op_pkg <- list(
     SigBridgeR.verbose = TRUE,
@@ -25,6 +25,28 @@
   if (any(toset)) {
     options(op_pkg[toset])
   }
+
+  # * Python module
+  reticulate::py_require(
+    packages = c(
+      "celltypist",
+      "anndata",
+      "pandas"
+    ),
+    python_version = ">=3.6"
+  )
+  python_path <- system.file(
+    "python",
+    package = pkgname
+  )
+  PyModule$celltypist <- reticulate::import_from_path(
+    module = "celltypist_annotate",
+    path = python_path,
+    convert = FALSE,
+    delay_load = TRUE
+  )
+
+  # * S7 OOP system
   S7::methods_register()
   invisible()
 }
