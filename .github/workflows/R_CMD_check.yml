@@ -162,6 +162,10 @@ jobs:
                       any::remotes
                       any::tidydr
                       any::ggupset
+                      any::ggplot2
+                      any::ggforce
+                      any::patchwork
+                      any::tibble
                   dependencies: '"hard"'
                   needs: check
 
