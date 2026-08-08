@@ -47,6 +47,7 @@
 #'   Ignored when \code{majority_voting = FALSE}. Default: `0L`.
 #' @param verbose Logical. Whether to print progress messages during annotation.
 #'   Default: \code{getFuncOption("verbose")}.
+#' @param assay which Seurat assay to use
 #' @param ... Additional arguments passed through to the CellTypist Python backend.
 #'
 #' @return The input \code{Seurat} object with prediction results added:
@@ -99,6 +100,7 @@ CellTypistAnnotate <- function(
   use_GPU = FALSE,
   min_prop = 0L,
   verbose = getFuncOption("verbose"),
+  assay = "RNA",
   ...
 ) {
   check_installed("anndataR")
@@ -132,29 +134,33 @@ CellTypistAnnotate <- function(
     ))
   }
 
-  predicted_labels <- decision_matrix <- probability_matrix <- NULL # suppress checking NOTE
-  c(predicted_labels, decision_matrix, probability_matrix) %<-%
-    PyModule$celltypist$annotate_celltypist(
-      adata = anndataR::as_AnnData(
-        x = sc,
-        x_mapping = "data",
-        output_class = "ReticulateAnnData"
-      ),
-      model = model,
-      ...,
-      transpose_input = transpose_input,
-      gene_file = gene_file,
-      cell_file = cell_file,
-      majority_voting = majority_voting,
-      over_clustering = over_clustering,
-      use_GPU = use_GPU,
-      mode = mode,
-      p_thres = p_thres,
-      min_prop = min_prop,
-      download = download,
-      force_update = force_update,
-      verbose = verbose
-    )
+  anno_res <- PyModule$celltypist$annotate_celltypist(
+    adata = anndataR::as_AnnData(
+      x = sc,
+      x_mapping = "data",
+      assay_name = assay,
+      output_class = "ReticulateAnnData"
+    ),
+    model = model,
+    ...,
+    transpose_input = transpose_input,
+    gene_file = gene_file,
+    cell_file = cell_file,
+    majority_voting = majority_voting,
+    over_clustering = over_clustering,
+    use_GPU = use_GPU,
+    mode = mode,
+    p_thres = p_thres,
+    min_prop = min_prop,
+    download = download,
+    force_update = force_update,
+    verbose = verbose
+  ) |>
+    reticulate::py_to_r()
+
+  predicted_labels <- anno_res[[1L]]
+  decision_matrix <- anno_res[[2L]]
+  probability_matrix <- anno_res[[3L]]
 
   colnames(predicted_labels) <- paste0(
     "celltypist_",
@@ -168,6 +174,131 @@ CellTypistAnnotate <- function(
       ),
       cover = FALSE
     )
+}
 
-  sc
+#' @title Download CellTypist Models
+#' @family Single_Cell_Annotation_Method
+#'
+#' @description
+#' Downloads CellTypist pre-trained models via the \pkg{celltypist} Python
+#' backend. A single model, multiple models, or all models can be downloaded.
+#' The models are saved to CellTypist's local models directory and can
+#' subsequently be used by \code{\link{CellTypistAnnotate}} without
+#' re-downloading each time.
+#'
+#' To see all available models and their descriptions, see
+#' \url{https://github.com/Teichlab/celltypist}.
+#'
+#' @param model Character. Name(s) of the CellTypist model(s) to download,
+#'   e.g. `"Immune_All_Low"`. A `.pkl` suffix is appended automatically if
+#'   missing. When `NULL`, all models are downloaded. Default: `NULL`.
+#' @param force_update Logical. Whether to force re-downloading the CellTypist
+#'   model files even when they already exist locally. Default: `FALSE`.
+#'
+#' @return Invisibly `NULL`. The models are downloaded to the CellTypist models
+#'   directory (see `models.models_path` in the Python backend).
+#'
+#' @section Requirements:
+#'
+#' * A Python environment with `celltypist` installed, discoverable by `reticulate`.
+#'
+#' @examples
+#' \dontrun{
+#' # Download all CellTypist models
+#' DownloadCellTypistModels()
+#'
+#' # Download a single model
+#' DownloadCellTypistModels(model = "Immune_All_Low")
+#'
+#' # Force re-downloading a specific model
+#' DownloadCellTypistModels(model = "Immune_All_Low", force_update = TRUE)
+#' }
+#' @export
+DownloadCellTypistModels <- function(model = NULL, force_update = FALSE) {
+  chk::chk_logical(force_update)
+  if (!is.null(model)) {
+    chk::chk_character(model)
+    model <- ifelse(
+      endsWith(model, ".pkl"),
+      model,
+      paste0(model, ".pkl")
+    )
+  }
+  PyModule$celltypist$download_models(
+    model = model,
+    force_update = force_update
+  )
+}
+
+#' @title List Available CellTypist Models
+#' @family Single_Cell_Annotation_Method
+#'
+#' @description
+#' Lists the CellTypist pre-trained models available locally. By default it
+#' reads all model files under `~/.celltypist/data/models`, the default
+#' CellTypist models directory (overridable via the `CELLTYPIST_FOLDER`
+#' environment variable). Models are downloaded with
+#' \code{\link{DownloadCellTypistModels}} and used by
+#' \code{\link{CellTypistAnnotate}}.
+#'
+#' @param path Character. Path to the CellTypist models directory. Default:
+#'   `NULL`, which resolves to `$CELLTYPIST_FOLDER/data/models` (or
+#'   `~/.celltypist/data/models` when the environment variable is unset).
+#' @param verbose Logical. Whether to print the model list to the console.
+#'   Default: \code{getFuncOption("verbose")}.
+#'
+#' @return A character vector of available model names (without the `.pkl`
+#'   suffix). Invisibly returned when \code{verbose = TRUE}.
+#'
+#' @examples
+#' \dontrun{
+#' # List all locally available CellTypist models
+#' ListCellTypistModels()
+#'
+#' # List models in a custom directory, without printing
+#' ListCellTypistModels(path = "~/my_models", verbose = FALSE)
+#' }
+#' @export
+ListCellTypistModels <- function(
+  path = NULL,
+  verbose = getFuncOption("verbose")
+) {
+  chk::chk_logical(verbose)
+  path <- path %||%
+    file.path(
+      Sys.getenv(
+        "CELLTYPIST_FOLDER",
+        unset = path.expand("~/.celltypist")
+      ),
+      "data",
+      "models"
+    )
+  chk::chk_string(path)
+
+  if (!dir.exists(path)) {
+    Abort(
+      "CellTypist models directory not found: {.path {path}}.",
+      "Run {.fn DownloadCellTypistModels} to download the models first."
+    )
+  }
+
+  models <- sort(list.files(
+    path = path,
+    pattern = "[.]pkl$"
+  ))
+  model_names <- gsub("[.]pkl$", "", models)
+
+  if (verbose) {
+    if (length(model_names)) {
+      cli::cli_h2("Available CellTypist models ({length(model_names)})")
+      cli::cli_li(model_names)
+    } else {
+      cli::cli_alert_info(
+        "No CellTypist models found in {.path {path}}."
+      )
+    }
+    invisible(model_names)
+  } else {
+    model_names
+  }
 }

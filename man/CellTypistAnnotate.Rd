@@ -8,7 +8,7 @@ CellTypistAnnotate(
   sc,
   model = NULL,
   download = TRUE,
-  force_update = TRUE,
+  force_update = FALSE,
   majority_voting = FALSE,
   mode = c("best match", "prob match"),
   p_thres = 0.5,
@@ -19,6 +19,7 @@ CellTypistAnnotate(
   use_GPU = FALSE,
   min_prop = 0L,
   verbose = getFuncOption("verbose"),
+  assay = "RNA",
   ...
 )
 }
@@ -37,7 +38,7 @@ automatically if missing.
 Default: \code{TRUE}.}
 
 \item{force_update}{Logical. Whether to force re-downloading the model files
-when \code{download = TRUE}. Default: \code{TRUE}.}
+when \code{download = TRUE}. Default: \code{FALSE}.}
 
 \item{majority_voting}{Logical. Whether to refine predicted labels by running a
 majority voting classifier after over-clustering. Default: \code{FALSE}.}
@@ -74,6 +75,8 @@ Ignored when \code{majority_voting = FALSE}. Default: \code{0L}.}
 
 \item{verbose}{Logical. Whether to print progress messages during annotation.
 Default: \code{getFuncOption("verbose")}.}
+
+\item{assay}{which Seurat assay to use}
 
 \item{...}{Additional arguments passed through to the CellTypist Python backend.}
 }
@@ -128,6 +131,8 @@ annotated <- CellTypistAnnotate(
 }
 \seealso{
 Other Single_Cell_Annotation_Method:
+\code{\link[=DownloadCellTypistModels]{DownloadCellTypistModels()}},
+\code{\link[=ListCellTypistModels]{ListCellTypistModels()}},
 \code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
 \code{\link{SCAnnotateStrategy}},
 \code{\link[=SingleRAnnotate]{SingleRAnnotate()}},

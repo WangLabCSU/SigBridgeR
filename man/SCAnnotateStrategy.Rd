@@ -23,6 +23,8 @@ Storing structure - named list
 \seealso{
 Other Single_Cell_Annotation_Method:
 \code{\link[=CellTypistAnnotate]{CellTypistAnnotate()}},
+\code{\link[=DownloadCellTypistModels]{DownloadCellTypistModels()}},
+\code{\link[=ListCellTypistModels]{ListCellTypistModels()}},
 \code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
 \code{\link[=SingleRAnnotate]{SingleRAnnotate()}},
 \code{\link[=mLLMCelltypeAnnotate]{mLLMCelltypeAnnotate()}}

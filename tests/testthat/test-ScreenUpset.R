@@ -1,4 +1,8 @@
 # Helper: create a minimal Seurat object with n cells
+skip_if_not_installed("ggplot2")
+skip_if_not_installed("ggupset")
+skip_if_not_installed("tibble")
+
 new_test_seurat <- function(n_cells = 2L, n_genes = 2L) {
   m <- matrix(
     seq_len(n_cells * n_genes),

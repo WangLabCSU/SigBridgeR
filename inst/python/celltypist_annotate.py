@@ -267,6 +267,29 @@ def annotate_celltypist(
     )
 
 
+def download_models(
+    model: str | list | tuple | None = None,
+    force_update: bool = False,
+):
+    """
+    Download CellTypist models.
+
+    Parameters
+    ----------
+    model
+        A single model name (e.g. ``'Immune_All_Low.pkl'``), a list/tuple of
+        model names, or ``None`` to download all available models.
+        (Default: ``None``)
+    force_update
+        Whether to force re-downloading the CellTypist model files.
+        (Default: ``False``)
+    """
+    models.download_models(force_update=force_update, model=model)
+
+
+download_all_models = download_models  # backward-compatible alias
+
+
 if __name__ == "__main__":
     raise SystemExit("This module is intended to be called from R via reticulate.")
 # R 端模块

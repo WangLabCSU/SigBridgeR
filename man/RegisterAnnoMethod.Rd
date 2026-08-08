@@ -63,6 +63,8 @@ Other Registering:
 
 Other Single_Cell_Annotation_Method:
 \code{\link[=CellTypistAnnotate]{CellTypistAnnotate()}},
+\code{\link[=DownloadCellTypistModels]{DownloadCellTypistModels()}},
+\code{\link[=ListCellTypistModels]{ListCellTypistModels()}},
 \code{\link{SCAnnotateStrategy}},
 \code{\link[=SingleRAnnotate]{SingleRAnnotate()}},
 \code{\link[=mLLMCelltypeAnnotate]{mLLMCelltypeAnnotate()}}

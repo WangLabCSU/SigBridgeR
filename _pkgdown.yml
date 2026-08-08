@@ -82,6 +82,8 @@ reference:
           - CellTypistAnnotate
           - SingleRAnnotate
           - mLLMCelltypeAnnotate
+          - DownloadCellTypistModels
+          - ListCellTypistModels
 
     - title: Reference Data & External Resources
       desc: >

@@ -94,6 +94,8 @@ annotated_sce <- SingleRAnnotate(
 \seealso{
 Other Single_Cell_Annotation_Method:
 \code{\link[=CellTypistAnnotate]{CellTypistAnnotate()}},
+\code{\link[=DownloadCellTypistModels]{DownloadCellTypistModels()}},
+\code{\link[=ListCellTypistModels]{ListCellTypistModels()}},
 \code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
 \code{\link{SCAnnotateStrategy}},
 \code{\link[=mLLMCelltypeAnnotate]{mLLMCelltypeAnnotate()}}

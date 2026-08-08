@@ -152,6 +152,8 @@ head(annotated$mllmcelltype_consensus_proportion)  # Only present in multi-model
 
 Other Single_Cell_Annotation_Method:
 \code{\link[=CellTypistAnnotate]{CellTypistAnnotate()}},
+\code{\link[=DownloadCellTypistModels]{DownloadCellTypistModels()}},
+\code{\link[=ListCellTypistModels]{ListCellTypistModels()}},
 \code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
 \code{\link{SCAnnotateStrategy}},
 \code{\link[=SingleRAnnotate]{SingleRAnnotate()}}

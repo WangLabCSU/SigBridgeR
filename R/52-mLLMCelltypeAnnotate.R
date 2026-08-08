@@ -263,7 +263,6 @@ mLLMCelltypeAnnotate <- function(
   sc
 }
 
-#' @keywords internal
 check_model_key <- function(models = vector(), api_keys = list()) {
   if (length(models) != length(api_keys)) {
     Abort(
