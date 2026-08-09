@@ -45,8 +45,24 @@ data, performing as a bridge to existing tools.
 
 </p>
 
+**Current Status**
 
-## 🔧 Installation
+|  Algorithm  | Supported Phenotypes | Cache Support | License |
+|:-----------:|:--------------------:|:-------------:|:-----------:|
+| **Scissor** | `binary`<br>`survival`<br>`continuous`  |     ✅      | GPL-3|
+|  **scPAS**  | `binary`<br>`survival`<br>`continuous` |            | GPL-3 |
+|  **scAB**   | `binary`<br>`survival`  |     ✅      | GPL-3 |
+|  **scPP**   | `binary`<br>`survival`<br>`continuous` |          | GPL-3 |
+|  **DEGAS**  | `binary`<br>`survival`<br>`continuous`  |          | MIT |
+| **LP-SGL**  |  `binary`<br>`survival`<br>`continuous`  |      | No License   |
+|  **PIPET**  |  `binary`<br>`survival`<br>`continuous`   |          | GPL-3 |
+| **SIDISH**  | `survival` |          | MIT |
+| **SCIPAC**  |  `binary`<br>`survival`<br>`continuous`    |          | MIT |
+| **TiRank**  |  `binary`<br>`survival`<br>`continuous`  |         | MIT |
+
+
+
+## 🔧 Installatation
 
 Usually we recommend installing the latest release from GitHub because
 of the latest features and bug fixes.
@@ -192,9 +208,7 @@ To contribute your own plugin, refer to the
 -->
 
 
-## 📓 Documentation
-
-Get Started:
+## 📓 Get Started
 
 -   View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 -   Use `?SigBridgeR::function_name` to access the help documents in R.
@@ -209,35 +223,12 @@ Let us know if you have ideas to make this project better. Pull requests are wel
 
 ## 📚 Citation
 
-If you use SigBridgeR in your work, please cite:
+If you use SigBridgeR in your work, please cite the corresponding papers:
 
 ```{r}
 #| label: citation
 citation("SigBridgeR")
 ```
-
-If you use one or more of the following Algorithms, please cite the corresponding papers:
-
-- [Scissor](https://github.com/sunduanchen/Scissor) -> Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
-  
-- [DEGAS](https://github.com/tsteelejohnson91/DEGAS) -> Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med. 2022 Feb 1;14(1):11.
-  
-- [scAB](https://github.com/jinworks/scAB) -> Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
-  
-- [LP_SGL](https://github.com/hongmeizhanghm/LP_SGL) -> Li J, Zhang H, Mu B, Zuo H, Zhou K. Identifying phenotype-associated subpopulations through LP_SGL. Briefings in Bioinformatics. 2023 Nov 22;25(1):bbad424. 
-  
-- [SCIPAC](https://github.com/RavenGan/SCIPAC) -> Gan, D., Zhu, Y., Lu, X. & Li, J. SCIPAC: Quantitative estimation of cell-phenotype associations. Genome Biol 25, 119 (2024).
-  
-- [PIPET](https://github.com/ruan2ruan/PIPET) -> Ruan X, Cheng Y, Ye Y, Wang Y, Chen X, Yang Y, et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Briefings in Bioinformatics. 2024 May 23;25(4):bbae260. 
-  
-- [scPAS](https://github.com/aiminXie/scPAS) -> Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell phenotype-associated subpopulation identifier. Briefings in Bioinformatics. 2024 Nov 22;26(1):bbae655.
-
-- [SIDISH](https://github.com/mcgilldinglab/SIDISH) -> Jolasun, Y. et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation. Nat Commun 16, 11271 (2025).
-
-- [scPP](https://github.com/WangX-Lab/ScPP) -> He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci. Published online January 28, 2026.
-
-- [TiRank](https://github.com/LenisLin/TiRank) -> Lin, Y. et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med 18, 23 (2026).
-
 
 
 ## 🗺️ Similar Projects

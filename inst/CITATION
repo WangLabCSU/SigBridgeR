@@ -1,0 +1,250 @@
+citHeader("Please cite the following publications when using this package.")
+
+bibentry(
+  bibtype = "Manual",
+  title = "SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data",
+  author = c(
+    as.person("Yuxi Yang"),
+    as.person("Shixiang Wang")
+  ),
+  year = "2026",
+  note = "R package version 4.0.0",
+  url = "https://wanglabcsu.github.io/sigbridger"
+)
+
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Duanchen Sun"),
+    as.person("Xiangnan Guan"),
+    as.person("Amy E. Moran"),
+    as.person("Ling-Yun Wu"),
+    as.person("David Z. Qian"),
+    as.person("Pepper Schedin"),
+    as.person("Mu-Shui Dai"),
+    as.person("Alexey V. Danilov"),
+    as.person("Joshi J. Alumkal"),
+    as.person("Andrew C. Adey"),
+    as.person("Paul T. Spellman"),
+    as.person("Zheng Xia")
+  ),
+  title = "Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data",
+  journal = "Nature Biotechnology",
+  year = "2022",
+  volume = "40",
+  pages = "527-538",
+  doi = "10.1038/s41587-021-01091-3",
+  url = "https://doi.org/10.1038/s41587-021-01091-3",
+  textVersion =
+    "Sun et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol (2022) [Scissor]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Travis S. Johnson"),
+    as.person("Christina Y. Yu"),
+    as.person("Zhi Huang"),
+    as.person("Siwen Xu"),
+    as.person("Tongxin Wang"),
+    as.person("Chuanpeng Dong"),
+    as.person("Wei Shao"),
+    as.person("Mohammad Abu Zaid"),
+    as.person("Xiaoqing Huang"),
+    as.person("Yijie Wang"),
+    as.person("Christopher Bartlett"),
+    as.person("Yan Zhang"),
+    as.person("Brian A. Walker"),
+    as.person("Yunlong Liu"),
+    as.person("Kun Huang"),
+    as.person("Jie Zhang")
+  ),
+  title = "Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease",
+  journal = "Genome Medicine",
+  year = "2022",
+  volume = "14",
+  pages = "11",
+  doi = "10.1186/s13073-022-01012-2",
+  url = "https://doi.org/10.1186/s13073-022-01012-2",
+  textVersion =
+    "Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med (2022) [DEGAS]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Qinran Zhang"),
+    as.person("Suoqin Jin"),
+    as.person("Xiufen Zou")
+  ),
+  title = "scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data",
+  journal = "Nucleic Acids Research",
+  year = "2022",
+  volume = "50",
+  number = "21",
+  pages = "12112-12130",
+  doi = "10.1093/nar/gkac1109",
+  url = "https://doi.org/10.1093/nar/gkac1109",
+  textVersion =
+    "Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Res (2022) [scAB]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Juntao Li"),
+    as.person("Hongmei Zhang"),
+    as.person("Bingyu Mu"),
+    as.person("Hongliang Zuo"),
+    as.person("Kanglei Zhou")
+  ),
+  title = "Identifying phenotype-associated subpopulations through LP_SGL",
+  journal = "Briefings in Bioinformatics",
+  year = "2024",
+  volume = "25",
+  number = "1",
+  pages = "bbad424",
+  doi = "10.1093/bib/bbad424",
+  url = "https://doi.org/10.1093/bib/bbad424",
+  textVersion =
+    "Li et al. Identifying phenotype-associated subpopulations through LP_SGL. Brief Bioinform (2024) [LP_SGL]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Dailin Gan"),
+    as.person("Yini Zhu"),
+    as.person("Xin Lu"),
+    as.person("Jun Li")
+  ),
+  title = "SCIPAC: quantitative estimation of cell-phenotype associations",
+  journal = "Genome Biology",
+  year = "2024",
+  volume = "25",
+  pages = "119",
+  doi = "10.1186/s13059-024-03263-1",
+  url = "https://doi.org/10.1186/s13059-024-03263-1",
+  textVersion =
+    "Gan et al. SCIPAC: quantitative estimation of cell-phenotype associations. Genome Biol (2024) [SCIPAC]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Xinjia Ruan"),
+    as.person("Yu Cheng"),
+    as.person("Yuqing Ye"),
+    as.person("Yuhang Wang"),
+    as.person("Xinyi Chen"),
+    as.person("Yuqing Yang"),
+    as.person("Tiantian Liu"),
+    as.person("Fangrong Yan")
+  ),
+  title = "PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data",
+  journal = "Briefings in Bioinformatics",
+  year = "2024",
+  volume = "25",
+  number = "4",
+  pages = "bbae260",
+  doi = "10.1093/bib/bbae260",
+  url = "https://doi.org/10.1093/bib/bbae260",
+  textVersion =
+    "Ruan et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Brief Bioinform (2024) [PIPET]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Aimin Xie"),
+    as.person("Hao Wang"),
+    as.person("Jiaxu Zhao"),
+    as.person("Zhaoyang Wang"),
+    as.person("Jinyuan Xu"),
+    as.person("Yan Xu")
+  ),
+  title = "scPAS: single-cell phenotype-associated subpopulation identifier",
+  journal = "Briefings in Bioinformatics",
+  year = "2025",
+  volume = "26",
+  number = "1",
+  pages = "bbae655",
+  doi = "10.1093/bib/bbae655",
+  url = "https://doi.org/10.1093/bib/bbae655",
+  textVersion =
+    "Xie et al. scPAS: single-cell phenotype-associated subpopulation identifier. Brief Bioinform (2025) [scPAS]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Yasmin Jolasun"),
+    as.person("Kailu Song"),
+    as.person("Yumin Zheng"),
+    as.person("Jingtao Wang"),
+    as.person("Gregory J. Fonseca"),
+    as.person("David H. Eidelman"),
+    as.person("Jun Ding")
+  ),
+  title = "SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation",
+  journal = "Nature Communications",
+  year = "2025",
+  volume = "16",
+  pages = "11271",
+  doi = "10.1038/s41467-025-66162-4",
+  url = "https://doi.org/10.1038/s41467-025-66162-4",
+  textVersion =
+    "Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation. Nat Commun (2025) [SIDISH]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Yin He"),
+    as.person("Rongzhuo Long"),
+    as.person("Xiaosheng Wang")
+  ),
+  title =
+    "Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells",
+  journal = "Interdisciplinary Sciences",
+  year = "2026",
+  doi = "10.1007/s12539-025-00803-6",
+  url = "https://doi.org/10.1007/s12539-025-00803-6",
+  textVersion =
+    "He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci (2026) [ScPP]"
+)
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Yuxiang Lin"),
+    as.person("Zening Huang"),
+    as.person("Ziyan Lin"),
+    as.person("Yating Lin"),
+    as.person("Jinsheng Song"),
+    as.person("Ling Luo"),
+    as.person("Jiayao Chi"),
+    as.person("Yeyang Zheng"),
+    as.person("Youxin Gao"),
+    as.person("Junjie Lin"),
+    as.person("Xinyu Li"),
+    as.person("Chenyu Liang"),
+    as.person("Lei Zhang"),
+    as.person("Xinkang Wang"),
+    as.person("Yuqin Sun"),
+    as.person("Rongshan Yu"),
+    as.person("Qiyue Chen"),
+    as.person("Mengsha Tong")
+  ),
+  title =
+    "TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery",
+  journal = "Genome Medicine",
+  year = "2026",
+  volume = "18",
+  pages = "23",
+  doi = "10.1186/s13073-026-01604-2",
+  url = "https://doi.org/10.1186/s13073-026-01604-2",
+  textVersion =
+    "Lin et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med (2026) [TiRank]"
+)
