@@ -80,8 +80,8 @@ DrawBulkPCA <- function(
     ) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
-      legend.position = c(0.95, 0.95), # 图例在右上角内部
-      legend.justification = c(1, 1) # 对齐到右上角
+      legend.position = c(0.95, 0.95), # legend inside the top-right corner
+      legend.justification = c(1, 1) # aligned to the top-right corner
     ) +
     ggforce::geom_mark_ellipse(
       ggplot2::aes(fill = group, group = group),
@@ -113,13 +113,13 @@ DrawBulkPCA <- function(
   pc1_range <- range(pca_df$PC1)
   pc2_range <- range(pca_df$PC2)
 
-  # 创建密度图 - 描边颜色与填充颜色一致
+  # create density plot - stroke color matches fill color
   density_x <- ggplot2::ggplot(
     pca_df,
     ggplot2::aes(x = PC1, fill = group, color = group)
   ) +
     ggplot2::geom_density(alpha = 0.7, bw = "nrd", adjust = 2) +
-    ggplot2::coord_cartesian(xlim = pc1_range) + # 与主图x轴范围一致
+    ggplot2::coord_cartesian(xlim = pc1_range) + # match the main plot x-axis range
     ggplot2::theme_void() +
     ggplot2::theme(legend.position = "none")
 
@@ -128,7 +128,7 @@ DrawBulkPCA <- function(
     ggplot2::aes(x = PC2, fill = group, color = group)
   ) +
     ggplot2::geom_density(alpha = 0.7, trim = FALSE, bw = "nrd", adjust = 1) +
-    ggplot2::coord_cartesian(xlim = pc2_range) + # 与主图y轴范围一致
+    ggplot2::coord_cartesian(xlim = pc2_range) + # match the main plot y-axis range
     ggplot2::coord_flip() +
     ggplot2::theme_void() +
     ggplot2::theme(legend.position = "none")

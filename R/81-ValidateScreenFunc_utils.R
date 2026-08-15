@@ -59,7 +59,7 @@ validate_explain_speaker <- function(
   prefix <- paste0(color_fun(message_name), ": ")
   prefix_width <- cli::ansi_nchar(prefix)
 
-  # 2. 处理单行消息
+  # 2. handle single-line messages
   if (length(message) <= 1) {
     cli::cli_text(paste0(prefix, message))
     return(invisible(NULL))

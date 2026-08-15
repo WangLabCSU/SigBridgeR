@@ -143,14 +143,32 @@ ValidateDEGASParams <- function(
   t_sc_mat <- Matrix::t(sc_mat[cm_genes, ])
 
   # -- build cache config ---------------------------------------------------
+  res <- list(
+    select_fraction = select_fraction,
+    min_thresh = min_thresh,
+    sc_data.pheno_colname = sc_data.pheno_colname,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    tmp_dir = tmp_dir,
+    env_params = env_params,
+    degas_params = degas_params,
+    normality_test_method = normality_test_method,
+    verbose = verbose,
+    assay = assay,
+    load_cache = load_cache,
+    save_cache = save_cache,
+    t_sc_mat = t_sc_mat,
+    cm_genes = cm_genes,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "DEGAS",
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' Train DEGAS Model and Optionally Cache
@@ -426,10 +444,24 @@ DoDEGAS <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidateDEGASParams, c(get_env_vars(), list(...)))
+  p <- ValidateDEGASParams(
+    select_fraction = select_fraction,
+    min_thresh = min_thresh,
+    matched_bulk = matched_bulk,
+    sc_data = sc_data,
+    phenotype = phenotype,
+    sc_data.pheno_colname = sc_data.pheno_colname,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    tmp_dir = tmp_dir,
+    env_params = env_params,
+    degas_params = degas_params,
+    normality_test_method = normality_test_method,
+    ...
+  )
 
   if (p$verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Starting DEGAS Screen"))
+    ts_cli$cli_alert_info(cli::col_green("Start DEGAS Screening"))
   }
 
   # -- load mode: restore cached ccModel1 ------------------------------------
@@ -536,8 +568,7 @@ DoDEGAS <- function(
   )
   sc_data <- SigBridgeRUtils::AddMisc(
     seurat_obj = sc_data,
-    DEGAS_type = label_type,
-    DEGAS_para = p$degas_params,
+    DEGAS = props(p$cache_config),
     cover = FALSE
   )
   if (p$verbose) {

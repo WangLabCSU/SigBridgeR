@@ -5,9 +5,6 @@
 \title{Validate and Prepare DoPIPET Parameters}
 \usage{
 ValidatePIPETParams(
-  matched_bulk,
-  sc_data,
-  phenotype,
   phenotype_class,
   only_pos_marker,
   group,
@@ -27,7 +24,7 @@ ValidatePIPETParams(
 )
 }
 \arguments{
-\item{matched_bulk, sc_data, phenotype, phenotype_class, only_pos_marker, group}{Forwarded from \code{\link[=DoPIPET]{DoPIPET()}}.}
+\item{phenotype_class, only_pos_marker, group}{Forwarded from \code{\link[=DoPIPET]{DoPIPET()}}.}
 
 \item{discretize_method, cutoff, label_type, marker_finder, log2FC, p_adjust}{Forwarded from \code{\link[=DoPIPET]{DoPIPET()}}.}
 

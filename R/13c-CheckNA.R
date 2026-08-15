@@ -82,11 +82,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
   chk::chk_gte(max_print, 0L)
   check_installed("methods")
 
-  is_2d_data <- is.data.frame(data) ||
-    inherits(data, "Matrix") ||
-    (!is.null(dim(data)) && length(dim(data)) == 2L)
-
-  if (!is_2d_data) {
+  if (!is_2d(data)) {
     res <- check_na_vector_cpp(data)
 
     na_count <- res$count

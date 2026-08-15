@@ -5,8 +5,6 @@
 \title{Validate and Prepare DoScissor Parameters}
 \usage{
 ValidateScissorParams(
-  matched_bulk,
-  sc_data,
   phenotype,
   label_type,
   phenotype_class = c("binary", "continuous", "survival"),
@@ -21,7 +19,7 @@ ValidateScissorParams(
 )
 }
 \arguments{
-\item{matched_bulk, sc_data, phenotype, label_type, alpha, cutoff, family}{Forwarded from \code{\link[=DoScissor]{DoScissor()}}.}
+\item{phenotype, label_type, alpha, cutoff, family}{Forwarded from \code{\link[=DoScissor]{DoScissor()}}.}
 
 \item{reliability_test, cell_evaluation}{Forwarded from \code{\link[=DoScissor]{DoScissor()}}.}
 

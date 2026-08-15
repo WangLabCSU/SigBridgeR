@@ -1,3 +1,5 @@
+# nocov start
+
 #' @title Registry of Phenotype-Associated Cell Screening Methods
 #' @family Add_Screen_method
 #' @description
@@ -50,6 +52,14 @@ ScreenStrategy <- new_environment(
       phenotype_class = c("binary", "survival", "continuous"),
       mapper = NULL
     ),
+    DEGASv2 = ScreenMethod(
+      method_name = "DEGASv2",
+      method_version = r_pkg_version("DEGASv2"),
+      executor = DoDEGASv2,
+      phenotype_class = c("binary", "survival", "continuous"),
+      mapper = NULL
+    ),
+
     LP_SGL = ScreenMethod(
       method_name = "LP_SGL",
       method_version = r_pkg_version("LPSGL"),

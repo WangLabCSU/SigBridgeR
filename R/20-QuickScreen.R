@@ -1,7 +1,5 @@
 #' @title Single-Cell Data Screening
 #'
-#' @md
-#'
 #' @description
 #' Integrates matched bulk expression data and phenotype information to identify
 #' phenotype-associated cell populations in single-cell RNA-seq data using one of
@@ -33,10 +31,12 @@
 #' - "scPAS": see also [DoscPAS()]
 #' - "scAB": see also [DoscAB()]; continuous phenotype is not supported
 #' - "DEGAS": see also [DoDEGAS()]
+#' - "DEGASv2": see also [DoDEGASv2()]
 #' - "LP_SGL": see also [DoLP_SGL()]
 #' - "PIPET": see also [DoPIPET()]
 #' - "SIDISH": see also [DoSIDISH()]
 #' - "SCIPAC": see also [DoSCIPAC()]
+#' - "TiRank": see also [DoTiRank()]
 #'
 #' @param ... Additional method-specific parameters.
 #'
@@ -119,7 +119,7 @@
 #'   rotation matrix on sc.dat. Default: FALSE.
 #' - n_pc: Integer. Number of principal components to use. Default: 60.
 #' - sc_batch_col: Character or vector. Batch variable for single-cell data.
-#'   If character, should be a column name in sc_data@metadata. If vector, should
+#'   If character, should be a column name in `sc_data@metadata`. If vector, should
 #'   match cell order. Default: NULL.
 #' - resolution: Integer. Clustering resolution for cell type identification.
 #'   Higher values produce more clusters. Default: 2.
@@ -179,6 +179,72 @@
 #'   - logFC_threshold: Numeric. Log fold-change threshold. Default: 1.
 #'   - pval_threshold: Numeric. P-value threshold. Default: 0.05.
 #'
+#' DEGASv2
+#'
+#' - top_fraction_pos: Numeric. Proportion of cells to be labelled as
+#'   "Positive". Default: 0.2.
+#' - sclab: Character or NULL. Metadata column providing supervised cell
+#'   labels. Default: NULL.
+#' - bulk_hvg: Logical. Whether to select highly variable genes from bulk
+#'   data. Default: TRUE.
+#' - bulk_de: Logical. Whether to perform differential expression analysis on
+#'   bulk data. Default: TRUE.
+#' - sc_de: Logical. Whether to perform differential expression analysis on
+#'   single-cell data. Default: TRUE.
+#' - add_genes: Character vector or NULL. Additional genes to include in the
+#'   analysis. Default: NULL.
+#' - n_hvg: Integer. Number of highly variable genes to select. Default: 250.
+#' - n_bulk_de: Integer. Number of bulk DE genes to select. Default: 250.
+#' - n_sc_de: Integer. Number of single-cell DE genes to select. Default: 200.
+#' - padj.thresh: Numeric. Adjusted p-value threshold for DE gene selection.
+#'   Default: 0.05.
+#' - only.pos: Logical. Whether to keep only positively enriched markers.
+#'   Default: FALSE.
+#' - min.pct: Numeric. Minimum fraction of cells expressing a gene for DE
+#'   analysis. Default: 0.25.
+#' - logfc.threshold: Numeric. Log fold-change threshold for DE analysis.
+#'   Default: 0.25.
+#' - n_st_classes: Integer. Number of single-cell classes. Default:
+#'   length(unique(sc_data$seurat_clusters)).
+#' - loss_type: Character. Loss function for model training. One of
+#'   "cross_entropy", "log_neg", "rank_loss". Default: "cross_entropy".
+#' - transfer_type: Character. Domain adaptation method. One of "Wasserstein",
+#'   "MMD". Default: "Wasserstein".
+#' - model_save_dir: Character. Directory to save the trained model. Default:
+#'   "DEGASv2_res".
+#' - lambda1: Numeric. Weight of the classification loss. Default: 1.
+#' - lambda2: Numeric. Weight of the domain-adaptation loss. Default: 3.
+#' - lambda3: Numeric. Weight of the reconstruction loss. Default: 3.
+#' - tot_seeds: Integer. Number of random seeds to train. Default: 10.
+#' - tot_iters: Integer. Number of training iterations. Default: 300.
+#' - extract_embs: Logical. Whether to extract cell embeddings. Default: FALSE.
+#' - random_feat: Logical. Whether to use random features. Default: FALSE.
+#' - random_perc: Numeric. Proportion of random features when random_feat =
+#'   TRUE. Default: 0.8.
+#' - early_stopping: Logical. Whether to enable early stopping. Default: FALSE.
+#'
+#' TiRank
+#'
+#' - tirank_params: List. TiRank algorithm parameters, including data
+#'   preprocessing (validation_proportion, sampling_thresh, sampling_mode,
+#'   top_var_genes, top_gene_pairs, p_value_threshold, max_cutoff, min_cutoff),
+#'   neural network architecture (nhead, nhid1, nhid2, n_output, nlayers,
+#'   n_pred, dropout, encoder_type, infer_mode), and training (n_trials,
+#'   do_reject, tolerance). See [DoTiRank()] for details. Default: list().
+#' - save_path: Character. Directory to save intermediate and final results.
+#'   Soft-deprecated; prefer passing load_cache/save_cache via ...
+#'   Default: "./TiRank_res".
+#' - load_cache: Character or NULL. Path to cached TiRank data. Soft-deprecated;
+#'   prefer passing load_cache via ... Default: NULL.
+#' - verbose: Logical. Whether to print progress messages. Default: inherits
+#'   from getFuncOption("verbose").
+#' - seed: Integer. Random seed for reproducibility. Default: inherits from
+#'   getFuncOption("seed").
+#' - assay: Character. Assay to use from sc_data. Default: "RNA".
+#' - save_cache: Character. Directory to save TiRank cache. Default: save_path.
+#' - additional_description: Character. Optional description appended to the
+#'   cache metadata.
+#'
 #' @return A list containing:
 #'
 #' - scRNA_data: A Seurat object with phenotype-associated cells labelled in a
@@ -194,19 +260,6 @@
 #' - Mismatches will trigger an error before analysis begins.
 #' - A built-in pre-run check is performed.
 #'
-#' @section Method Compatibility:
-#'
-#' | Method | Supported Phenotypes | Additional Parameters |
-#' |---|---|---|
-#' | Scissor | Binary, Continuous, Survival | alpha, cutoff, path2load_scissor_cache, path2save_scissor_inputs, reliability_test, reliability_test.n, reliability_test.nfold, cell_evaluation, cell_evaluation.benchmark_data, cell_evaluation.FDR, cell_evaluation.bootstrap_n |
-#' | scPP | Binary, Continuous, Survival | ref_group, Log2FC_cutoff, estimate_cutoff, probs |
-#' | scPAS | Binary, Continuous, Survival | n_components, assay, imputation, nfeature, alpha, network_class, permutation_times, FDR_threshold, independent |
-#' | scAB | Binary, Survival | alpha, alpha_2, maxiter, tred |
-#' | DEGAS | Binary, Continuous, Survival | sc_data.pheno_colname, select_fraction, tmp_dir, env_params, degas_params, normality_test_method |
-#' | LP_SGL | Binary, Continuous, Survival | resolution, alpha, nfold, dge_analysis |
-#' | PIPET | Binary, Continuous | group, discretize_method, cutoff, log2FC, p_adjust, show_log2FC, freq_counts, normalize, scale, nPerm, distance |
-#' | SIDISH | Survival only | sidish_params, env_params |
-#' | SCIPAC | Binary, Continuous, Survival | hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size, ncore, ci_alpha, nfold, assay |
 #'
 #' @seealso
 #' Associated functions:
@@ -220,6 +273,8 @@
 #' - [DoPIPET()]
 #' - [DoSIDISH()]
 #' - [DoSCIPAC()]
+#' - [DoTiRank()]
+#' - [DoDEGASv2()]
 #'
 #' @export
 Screen <- function(
@@ -236,8 +291,10 @@ Screen <- function(
     "DEGAS",
     "LP_SGL",
     "PIPET",
-    "rSIDISH",
-    "SCIPAC"
+    "SIDISH",
+    "SCIPAC",
+    "TiRank",
+    "DEGASv2"
   ),
   ...
 ) {

@@ -71,7 +71,7 @@
     names(new_args) <- names(expr)[-1L]
     return(as.call(c(list(expr[[1L]]), new_args)))
   }
-  expr # literal — return as-is
+  expr # literal - return as-is
 }
 
 # ---- Helper: evaluate a fully-resolved expression safely ------------------
@@ -195,10 +195,10 @@
   if (isTRUE(cond_value)) {
     .gvv_extract(expr[[3L]], def_env)
   } else if (identical(cond_value, FALSE)) {
-    # FALSE with no else → do nothing
+    # FALSE with no else -> do nothing
     if (length(expr) >= 4L) .gvv_extract(expr[[4L]], def_env)
   } else {
-    # Cannot determine branch statically — process both (conservative)
+    # Cannot determine branch statically - process both (conservative)
     .gvv_extract(expr[[3L]], def_env)
     if (length(expr) >= 4L) .gvv_extract(expr[[4L]], def_env)
   }
@@ -214,7 +214,7 @@
     return(invisible())
   }
 
-  # Function position is itself a call — namespace-qualified (pkg::fun)
+  # Function position is itself a call - namespace-qualified (pkg::fun)
   # or anonymous ((function(x) ...)(y)).
   if (is.call(expr[[1L]])) {
     ns_call <- expr[[1L]]
@@ -229,7 +229,7 @@
         return(invisible())
       }
     }
-    # Other namespace calls — no assignments inside
+    # Other namespace calls - no assignments inside
     return(invisible())
   }
 
@@ -267,7 +267,7 @@
       replacement <- as.call(c(
         list(as.symbol(paste0(as.character(lhs_expr[[1L]]), "<-"))),
         lhs_expr[[2L]], # base object (x)
-        subscripts, # indices (i, j, …)
+        subscripts, # indices (i, j, ...)
         expr[[3L]] # RHS value
       ))
       def_env[[lhs]] <- .gvv_resolve(replacement, def_env)
@@ -291,7 +291,7 @@
     "while" = .gvv_extract_while(expr, def_env),
     "repeat" = .gvv_extract_repeat(expr, def_env),
     "if" = .gvv_extract_if(expr, def_env),
-    "::" = NULL, # namespace access — keep intact
+    "::" = NULL, # namespace access - keep intact
     ":::" = NULL,
     {
       # Default: recursively traverse child expressions

@@ -39,6 +39,8 @@ Suggests:
     codetools,
     curl,
     DEGAS (>= 1.0.1),
+    DEGASv2,
+    DESeq2,
     dplyr,
     edgeR,
     furrr,

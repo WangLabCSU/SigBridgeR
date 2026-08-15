@@ -17,7 +17,7 @@ RegisterScreenMethod(
 \item{...}{Named arguments where each value is a function implementing a screening method.
 The name becomes the method identifier (e.g., \code{Scissor = DoScissor} registers
 \code{DoScissor} under the key \code{"Scissor"}). Unnamed arguments are auto-named
-using their expression (e.g., \code{Scissor} → name \code{"Scissor"}).}
+using their expression (e.g., \code{Scissor} -> name \code{"Scissor"}).}
 
 \item{supported_phenotypes}{Character vector specifying which phenotype types the method supports.
 Must be a subset of \code{c("binary", "survival", "continuous")}. Default: all three.}
@@ -46,7 +46,7 @@ Invisibly returns \code{TRUE} on successful registration.
 (binary, survival, or continuous). Each method is stored with metadata including
 supported phenotypes and an optional parameter remapping function.
 
-This function supports community-driven extension of analysis pipelines—ideal for
+This function supports community-driven extension of analysis pipelines-ideal for
 integrating novel single cell phenotypic screening methods while
 maintaining compatibility with downstream validation and execution frameworks.
 }

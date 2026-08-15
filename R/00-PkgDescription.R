@@ -17,6 +17,9 @@
 #' @section Tutorial:
 #' For a detailed tutorial, please visit: \url{https://wanglabcsu.github.io/SigBridgeR/}
 #'
+#' @section Citation:
+#' Use `citation("SigBridgeR")` to cite SigBridgeR in publications.
+#'
 #' @section License:
 #' SigBridgeR is licensed under the GPL version 3.0. Please see the LICENSE file for details.
 #'

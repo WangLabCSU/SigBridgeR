@@ -6,7 +6,7 @@
 #' Internal helper that handles deprecated argument warnings, input validation,
 #' dots processing, and default-value resolution for [DoScissor()].
 #'
-#' @param matched_bulk,sc_data,phenotype,label_type,alpha,cutoff,family
+#' @param phenotype,label_type,alpha,cutoff,family
 #'   Forwarded from [DoScissor()].
 #' @param reliability_test,cell_evaluation Forwarded from [DoScissor()].
 #' @param path2load_scissor_cache,path2save_scissor_inputs Deprecated arguments.
@@ -19,8 +19,6 @@
 #' @keywords internal
 #' @family scissor
 ValidateScissorParams <- function(
-  matched_bulk,
-  sc_data,
   phenotype,
   label_type,
   phenotype_class = c("binary", "continuous", "survival"),
@@ -79,8 +77,6 @@ ValidateScissorParams <- function(
   )
 
   # -- input validation -----------------------------------------------------
-  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
-  chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
   chk::chk_range(cutoff)
   chk::chk_list(reliability_test)
@@ -117,14 +113,30 @@ ValidateScissorParams <- function(
     glue::glue("{label_type}_{seq_len(n)}")
   }
 
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    alpha = alpha,
+    cutoff = cutoff,
+    family = family,
+    reliability_test = reliability_test,
+    cell_evaluation = cell_evaluation,
+    load_cache = load_cache,
+    save_cache = save_cache,
+    verbose = verbose,
+    seed = seed,
+    assay = assay,
+    tag = tag,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "Scissor",
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")) # contains `cache_config`
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Perform Scissor Screening Analysis
@@ -178,7 +190,7 @@ ValidateScissorParams <- function(
 #'   * **evaluation_res**: A data.frame with some supporting information for each Scissor selected cell
 #'
 #' @references
-#' Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
+#' Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527-38.
 #'
 #' @section LICENSE:
 #' Licensed under the GNU General Public License version 3 (GPL-3.0).
@@ -222,7 +234,17 @@ DoScissor <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidateScissorParams, c(get_env_vars(), list(...)))
+  p <- ValidateScissorParams(
+    phenotype = phenotype,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    alpha = alpha,
+    cutoff = cutoff,
+    family = family,
+    reliability_test = reliability_test,
+    cell_evaluation = cell_evaluation,
+    ...
+  )
 
   # -- resolve cache paths using the caching system ------------------------
   load_file <- if (!is.null(p$load_cache)) {

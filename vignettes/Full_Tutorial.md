@@ -5,7 +5,7 @@
 SigBridgeR (short for **Sig**nificant cell-to-phenotype **Bridge** in
 **R**) is an R package for screening cells highly associated with
 phenotype data using single-cell RNA-seq, bulk RNA expression and sample
-related phenotype data (e.g. patient survival, age, etc). It integrates
+related phenotype data (e.g. patient survival, age, etc). It integrates
 many single cell phenotypic screening methods ([8.
 References](#8-references)) and provides unified preprocessing,
 parameter tuning, and visualization approaches,performing as a unified
@@ -172,7 +172,7 @@ underscore and a number (e.g., `_1`, `_2`) for disambiguation.
 
 **Matrix Integration**
 
-When passing raw matrices, the function performs a “join” operation
+When passing raw matrices, the function performs a "join" operation
 based on the union of all genes. Missing values are filled with NA.
 
     # Create dummy matrices
@@ -400,7 +400,7 @@ An example using mock data
 
     ## Integrating data
 
-    ## ✔ Integration finished
+    ## v Integration finished
 
     integrated_seu
 
@@ -464,7 +464,7 @@ package.
     bulk <- SymbolConvert(bulk)
 
 You can also use other package like `org.Hs.eg.db` for gene symbol
-matching if you prefer not to use `SymbolConvert`’s built-in
+matching if you prefer not to use `SymbolConvert`'s built-in
 `IDConverter`.
 
     library(org.Hs.eg.db)
@@ -530,7 +530,7 @@ Use it just in tidyverse-like style. The difference between `PhenoMap`
 and the dplyr workflow is that `PhenoMap` is slightly faster when
 processing two-dimensional `data.frame` data, and it preserves the
 `names` attribute when processing one-dimensional vectors. Apart from
-these two points, there is no other difference — it is simply a
+these two points, there is no other difference - it is simply a
 syntactic sugar we provide.
 
     # ? if a vector
@@ -581,10 +581,10 @@ Key parameters for `Screen`:
   stored in the `Seurat_object@misc` . Default: `NULL`, meaning the name
   of metho will be used.
 - `phenotype_class`: A character value specifying the phenotype data
-  type, i.e. `"binary"`, `"survival"` or `"continuous"`.
+  type, i.e. `"binary"`, `"survival"` or `"continuous"`.
 - `screen_method`: A character value specifying the screening method,
-  i.e. “Scissor”, “scPAS”, “scAB”, “scPP”, “DEGAS”, “LP\_SGL”, or
-  “PIPET”
+  i.e. "Scissor", "scPAS", "scAB", "scPP", "DEGAS", "LP\_SGL", or
+  "PIPET"
 - `...`: Other parameters for the screening methods, see below
 
 ### 2.1 (Option A) Scissor Screening
@@ -596,7 +596,7 @@ Parameters pass to `...` when using `Scissor` method:
   intermediate files. Default:
   `Scissor_res/<cache_stamp>/Scissor_inputs.RData`
 - `load_path`: A character value specifying the path to load
-  intermediate data, e.g. `"Scissor_res/<cache_stamp>`. Default: `NULL`
+  intermediate data, e.g. `"Scissor_res/<cache_stamp>`. Default: `NULL`
 - `alpha`: Parameter used to balance the effect of the l1 norm and the
   network-based penalties. It can be a number or a searching vector. If
   alpha = NULL, a default searching vector is used. The range of alpha
@@ -691,7 +691,7 @@ Evaluations](https://sunduanchen.github.io/Scissor/vignettes/Scissor_Tutorial.ht
 ### 2.2 (Option B) scPAS Screening
 
 Parameters pass to `...` when using `scPAS` method (basically adapted
-from the `scPAS`’s documentation):
+from the `scPAS`'s documentation):
 
 - Parameters passed to `scPAS::scPAS()`
 
@@ -754,7 +754,7 @@ from the `scPAS`’s documentation):
 ### 2.3 (Option C) scAB Screening
 
 Parameters pass to `...` when using `scAB` method (basically adapted
-from the `scAB`’s documentation):
+from the `scAB`'s documentation):
 
 - `alpha`: Coefficient of phenotype regularization, default is `0.005`.
   When specified `NULL`, a default searching vector is used. A custom
@@ -842,7 +842,7 @@ Parameters pass to `...` when using `DEGAS` method
   is `list()`. Use `?DoDEGAS` to see the details.
 - `normality_test_method`: Method for normality testing:
   `"jarque-bera", "d'agostino", or "kolmogorov-smirnov"`, default is
-  “jarque-bera”.
+  "jarque-bera".
 
 <!-- -->
 
@@ -901,7 +901,7 @@ Parameters pass to `...` when using `DEGAS` method
 
 After update to v4.0.0. `Screen` does not automatically creat a python
 env for DEGAS, you need to create a python env for DEGAS before using
-`Screen`. So as to comply the R package’s principle.
+`Screen`. So as to comply the R package's principle.
 
 To obtain a template python env configuration file for DEGAS, you can
 use:
@@ -987,16 +987,16 @@ Parameters pass to `...` when using `LP_SGL` method
 Parameters pass to `...` when using `PIPET` method
 
 - **Phenotype adaptation parameters**:
-  - `discretize_method`: Character: “kmeans”/“quantile”/“custom”
-    (default: “kmeans”)
+  - `discretize_method`: Character: "kmeans"/"quantile"/"custom"
+    (default: "kmeans")
   - `cutoff`: Numeric vector for custom discretization when
-    `discretize_method` is “custom” (default: NULL)
+    `discretize_method` is "custom" (default: NULL)
 - **Marker generation parameters**:
   - `log2FC`: Numeric: log2FC threshold (default: 1)
   - `p.adjust`: Numeric: adjusted p-value threshold (default: 0.05)
 - **Single-cell annotation parameters**:
-  - `distance`: Character: “cosine”/“pearson”/“spearman” (default:
-    “cosine”)
+  - `distance`: Character: "cosine"/"pearson"/"spearman" (default:
+    "cosine")
   - `nPerm`: Integer: permutation times for statistical test (default:
     1000L)
 
@@ -1327,13 +1327,13 @@ Key parameters for `ScreenFractionPlot`:
 - `group_by`: Used to specify the column of the meta.data in
   `seurat_obj`. The plot results will be grouped by this parameter.
 - `screen_type`: Screening algorithm used before. (case-sensitive, e.g.,
-  “scissor” for Scissor results)
+  "scissor" for Scissor results)
 - `show_null`: Logical, whether to show groups with zero cells (default:
   FALSE).
 - `plot_color` Custom color palette (named vector format):
-  - Required names: “Positive”, “Negative”, “Neutral”, “Other”
-  - Default: c(“Neutral”=“\#CECECE”, “Other”=“\#CECECE”,
-    “Positive”=“\#ff3333”, “Negative”=“\#386c9b”)
+  - Required names: "Positive", "Negative", "Neutral", "Other"
+  - Default: c("Neutral"="\#CECECE", "Other"="\#CECECE",
+    "Positive"="\#ff3333", "Negative"="\#386c9b")
 
 Suppose you have already performed the `scPAS` algorithm screening on
 your Seurat object, and you want to check the proportion of positive
@@ -1473,16 +1473,16 @@ Key parameters for `ScreenUpset`:
 
 - `screened_seurat`: A Seurat object after screening.
 - `screen_type`: Screening algorithm used before. (case-sensitive, e.g.,
-  “scissor” for Scissor results)
+  "scissor" for Scissor results)
 - `n_intersections` : Number of intersections to display in the plot.
   Default: 20.
-- `x_lab` : Label for the x-axis. Default: “Screen Set Intersections”.
-- `y_lab` : Label for the y-axis. Default: “Number of Cells”.
-- `title` : Plot title. Default: “Cell Counts Across Screen Set
-  Intersections”.
-- `bar_color` : Color for the bars in the plot. Default: “\#4E79A7”.
+- `x_lab` : Label for the x-axis. Default: "Screen Set Intersections".
+- `y_lab` : Label for the y-axis. Default: "Number of Cells".
+- `title` : Plot title. Default: "Cell Counts Across Screen Set
+  Intersections".
+- `bar_color` : Color for the bars in the plot. Default: "\#4E79A7".
 - `combmatrix_point_color` : Color for points in the combination matrix.
-  Default: “black”.
+  Default: "black".
 - `...` : Additional arguments passed to `ggplot2::theme()` for
   customizing the plot appearance.
 
@@ -1562,23 +1562,23 @@ First, we use `scissor` to screen cells associated with survival.
       alpha = 0.05
     )
 
-    # ℹ [2025/09/08 17:03:20] Scissor start...
-    # ℹ [2025/09/08 17:03:20] Start from raw data...
-    # ℹ Using "RNA_snn" graph for network.
-    # ℹ [2025/09/08 17:03:20] Normalizing quantiles of data...
-    # ℹ [2025/09/08 17:03:20] Subsetting data...
-    # ℹ [2025/09/08 17:03:21] Calculating correlation...
+    # i [2025/09/08 17:03:20] Scissor start...
+    # i [2025/09/08 17:03:20] Start from raw data...
+    # i Using "RNA_snn" graph for network.
+    # i [2025/09/08 17:03:20] Normalizing quantiles of data...
+    # i [2025/09/08 17:03:20] Subsetting data...
+    # i [2025/09/08 17:03:21] Calculating correlation...
     # ----------------------------------------------------------------------------------------------------
     # Five-number summary of correlations:
 
     #         0%        25%        50%        75%       100%
     # -0.2342323  0.0594385  0.1118708  0.1642065  0.5250605
     # ----------------------------------------------------------------------------------------------------
-    # ℹ [2025/09/08 17:03:21] Perform cox regression on the given clinical outcomes:
-    # ✔ Statistics data saved to `Scissor_inputs.RData`.
-    # ℹ [2025/09/08 17:03:22] Screening...
+    # i [2025/09/08 17:03:21] Perform cox regression on the given clinical outcomes:
+    # v Statistics data saved to `Scissor_inputs.RData`.
+    # i [2025/09/08 17:03:22] Screening...
     #
-    # ── At alpha = 0.05 ──
+    # -- At alpha = 0.05 --
     #
     # Scissor identified 265 Scissor+ cells and 73 Scissor- cells.
     # The percentage of selected cell is: 30.924%
@@ -1587,7 +1587,7 @@ First, we use `scissor` to screen cells associated with survival.
     # Negative  Neutral Positive
     #       73      755      265
 
-You will see an additional “Scissor\_inputs.RData” in the working
+You will see an additional "Scissor\_inputs.RData" in the working
 directory. This is the intermediate data generated by the Scissor
 method, which we can use to save running time ( You can also set
 `path2load_scissor_cache=NULL` to suppress the saving of intermediate
@@ -1605,19 +1605,19 @@ additional reliability test.
       path2load_scissor_cache = "Scissor_inputs.RData",
       reliability_test = TRUE
     )
-    # ℹ [2025/09/08 16:07:48] Scissor start...
-    # ℹ [2025/09/08 16:07:48] Loading data from `Scissor_inputs.RData`...
-    # ℹ [2025/09/08 16:07:48] Screening...
+    # i [2025/09/08 16:07:48] Scissor start...
+    # i [2025/09/08 16:07:48] Loading data from `Scissor_inputs.RData`...
+    # i [2025/09/08 16:07:48] Screening...
     # [1] "alpha = 0.05"
     # [1] "Scissor identified 249 Scissor+ cells and 245 Scissor- cells."
     # [1] "The percentage of selected cell is: 45.197%"
 
     # --------------------------------------------------------------------------------
-    # ℹ [2025/09/08 16:07:54] Start reliability test
+    # i [2025/09/08 16:07:54] Start reliability test
 
-    # Attaching package: ‘survival’
+    # Attaching package: 'survival'
 
-    # The following object is masked from ‘package:future’:
+    # The following object is masked from 'package:future':
 
     #     cluster
 
@@ -1629,7 +1629,7 @@ additional reliability test.
     # Finished!
     # [1] "Test statistic = 0.590"
     # [1] "Reliability significance test p = 0.000"
-    # ✔ [2025/09/08 16:10:54] reliability test: Done
+    # v [2025/09/08 16:10:54] reliability test: Done
 
     scissor_result$reliability_result$statistic
     # [1] 0.5899587
@@ -1668,23 +1668,23 @@ long as you have not specified any particular parameters.
       screen_method = "scPAS",
       alpha = 0.05
     )
-    # ℹ [2025/10/20 16:24:27] Start scPAS screening.
-    # ℹ [2025/10/20 16:24:29] Quantile normalization of bulk data.
-    # ℹ [2025/10/20 16:24:29] Extracting single-cell expression profiles...
-    # ℹ [2025/10/20 16:24:29] Constructing a gene-gene similarity by single cell data...
+    # i [2025/10/20 16:24:27] Start scPAS screening.
+    # i [2025/10/20 16:24:29] Quantile normalization of bulk data.
+    # i [2025/10/20 16:24:29] Extracting single-cell expression profiles...
+    # i [2025/10/20 16:24:29] Constructing a gene-gene similarity by single cell data...
     # Building SNN based on a provided distance matrix
     # Computing SNN
-    # ℹ [2025/10/20 16:24:30] Optimizing the network-regularized sparse regression model...
-    # ℹ [2025/10/20 16:24:30] Perform cox regression on the given phenotypes...
+    # i [2025/10/20 16:24:30] Optimizing the network-regularized sparse regression model...
+    # i [2025/10/20 16:24:30] Perform cox regression on the given phenotypes...
     #
-    # ── At alpha = 0.05 ──
+    # -- At alpha = 0.05 --
     #
     # lambda = 0.776168989003421
     # scPAS identified 59 risk+ features and 61 risk- features.
     # The percentage of selected feature is: 13.73%
-    # ℹ [2025/10/20 16:24:49] Calculating quantified risk scores...
-    # ℹ [2025/10/20 16:24:49] Qualitative identification by permutation test program with 2000 times random perturbations...
-    # ✔ [2025/10/20 16:24:50] scPAS screening done.
+    # i [2025/10/20 16:24:49] Calculating quantified risk scores...
+    # i [2025/10/20 16:24:49] Qualitative identification by permutation test program with 2000 times random perturbations...
+    # v [2025/10/20 16:24:50] scPAS screening done.
 
     table(scpas_result$scRNA_data$scPAS)
 
@@ -1693,7 +1693,7 @@ long as you have not specified any particular parameters.
 
 As you can see, due to differences in data and algorithms, not every
 screening algorithm is able to screen out cells. You can adjust the
-corresponding parameters, e.g. change the `alpha` to `NULL`, this will
+corresponding parameters, e.g. change the `alpha` to `NULL`, this will
 make scPAS iterate alpha until the result is significant (or judged as
 having no significant cell subpopulations). See also [3.2 (Option B)
 scPAS Screening](#32-option-b-scpas-screening)
@@ -1708,44 +1708,44 @@ scPAS Screening](#32-option-b-scpas-screening)
       alpha = NULL,
       cutoff = 0.2
     )
-    # ℹ [2025/10/20 16:43:31] Start scPAS screening.
-    # ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.
-    # ℹ [2025/10/20 16:43:32] Extracting single-cell expression profiles...
-    # ℹ [2025/10/20 16:43:32] Constructing a gene-gene similarity by single cell data...
+    # i [2025/10/20 16:43:31] Start scPAS screening.
+    # i [2025/10/20 16:43:32] Quantile normalization of bulk data.
+    # i [2025/10/20 16:43:32] Extracting single-cell expression profiles...
+    # i [2025/10/20 16:43:32] Constructing a gene-gene similarity by single cell data...
     # Building SNN based on a provided distance matrix
     # Computing SNN
-    # ℹ [2025/10/20 16:43:33] Optimizing the network-regularized sparse regression model...
-    # ℹ [2025/10/20 16:43:33] Perform cox regression on the given phenotypes...
+    # i [2025/10/20 16:43:33] Optimizing the network-regularized sparse regression model...
+    # i [2025/10/20 16:43:33] Perform cox regression on the given phenotypes...
     #
-    # ── At alpha = 0.001 ──
+    # -- At alpha = 0.001 --
     #
     # lambda = 7.61825638357188
     # scPAS identified 315 risk+ features and 366 risk- features.
     # The percentage of selected feature is: 77.918%
     #
-    # ── At alpha = 0.005 ──
+    # -- At alpha = 0.005 --
     #
     # lambda = 3.68743152046651
     # scPAS identified 193 risk+ features and 231 risk- features.
     # The percentage of selected feature is: 48.513%
     #
-    # ── At alpha = 0.01 ──
+    # -- At alpha = 0.01 --
     #
     # lambda = 2.55333682907113
     # scPAS identified 137 risk+ features and 158 risk- features.
     # The percentage of selected feature is: 33.753%
     #
-    # ── At alpha = 0.05 ──
+    # -- At alpha = 0.05 --
     #
     # lambda = 0.776168989003421
     # scPAS identified 59 risk+ features and 61 risk- features.
     # The percentage of selected feature is: 13.73%
-    # ℹ [2025/10/20 16:44:55] Calculating quantified risk scores...
-    # ℹ [2025/10/20 16:44:55] Qualitative identification by permutation test program with 2000 times random perturbations...
-    # ✔ [2025/10/20 16:44:57] scPAS screening done.
+    # i [2025/10/20 16:44:55] Calculating quantified risk scores...
+    # i [2025/10/20 16:44:55] Qualitative identification by permutation test program with 2000 times random perturbations...
+    # v [2025/10/20 16:44:57] scPAS screening done.
 
 Generally speaking, a larger alpha means looser screening. However, it
-still won’t result in the occurence of too many false-positive cells.
+still won't result in the occurence of too many false-positive cells.
 You can also adjust the `cutoff` parameter as you like.
 
     table(scpas_result$scRNA_data$scPAS)
@@ -1762,12 +1762,12 @@ Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
       phenotype_class = "survival",
       screen_method = "scAB"
     )
-    # ℹ [2025/09/08 17:04:51] Start scAB screening.
-    # ℹ  Using "RNA_snn" graph for network.
-    # ℹ [2025/09/08 17:04:52] Selecting K...
-    # ℹ [2025/09/08 17:06:15] Run NMF with phenotype and cell-cell similarity regularization at K = 3.
-    # ℹ [2025/09/08 17:06:19] Screening cells...
-    # ℹ [2025/09/08 17:06:19] scAB screening done.
+    # i [2025/09/08 17:04:51] Start scAB screening.
+    # i  Using "RNA_snn" graph for network.
+    # i [2025/09/08 17:04:52] Selecting K...
+    # i [2025/09/08 17:06:15] Run NMF with phenotype and cell-cell similarity regularization at K = 3.
+    # i [2025/09/08 17:06:19] Screening cells...
+    # i [2025/09/08 17:06:19] scAB screening done.
 
     table(scab_result$scRNA_data$scAB)
     #    Other Positive
@@ -1781,16 +1781,16 @@ Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
       phenotype_class = "survival",
       screen_method = "scPP"
     )
-    # ℹ [2025/09/08 17:00:28] Start scPP screening.
-    # ℹ [2025/09/08 17:00:28] Finding markers...
+    # i [2025/09/08 17:00:28] Start scPP screening.
+    # i [2025/09/08 17:00:28] Finding markers...
     # Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :
     #   Loglik converged before variable  1 ; coefficient may be infinite.
-    # ℹ [2025/09/08 17:00:52] Screening...
+    # i [2025/09/08 17:00:52] Screening...
     # Genes in the gene sets NOT available in the dataset:
     #   gene_pos:   13 (6% of 230)
     #   gene_neg:   54 (12% of 446)
     # There are no genes significantly upregulated in Phenotype- compared to Phenotype+.
-    # ✔ [2025/09/08 17:00:54] scPP screening done.
+    # v [2025/09/08 17:00:54] scPP screening done.
 
     table(scpp_result$scRNA_data$scPP)
     # Negative  Neutral Positive
@@ -1805,20 +1805,20 @@ Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
       phenotype_class = "survival",
       screen_method = "DEGAS"
     )
-    # ℹ [2025/10/09 18:41:00] Starting DEGAS Screen
-    # ℹ [2025/10/09 18:41:01] Setting up Environment...
-    # ℹ [2025/10/09 18:41:08] Training DEGAS model...
-    # ℹ [2025/10/09 18:41:08] 3-layer DenseNet BlankCox DEGAS model
-    # ℹ [2025/10/09 18:41:10] Python check passed, using Python 3.9.15
-    # ℹ [2025/10/09 18:41:10] Training...
+    # i [2025/10/09 18:41:00] Starting DEGAS Screen
+    # i [2025/10/09 18:41:01] Setting up Environment...
+    # i [2025/10/09 18:41:08] Training DEGAS model...
+    # i [2025/10/09 18:41:08] 3-layer DenseNet BlankCox DEGAS model
+    # i [2025/10/09 18:41:10] Python check passed, using Python 3.9.15
+    # i [2025/10/09 18:41:10] Training...
     ###########################
     # Many output from python #
     ###########################
-    # ℹ [2025/10/10 17:35:04] Predicting and Labeling...
-    # ℹ [2025/10/10 17:35:04] Labeling screened cells...
-    # ℹ [2025/10/10 17:35:04] Searching for survival-associated cells...
-    # ℹ Scores over 0.499 are considered `Positive`.
-    # ℹ [2025/10/10 17:35:04] DEGAS Screen done.
+    # i [2025/10/10 17:35:04] Predicting and Labeling...
+    # i [2025/10/10 17:35:04] Labeling screened cells...
+    # i [2025/10/10 17:35:04] Searching for survival-associated cells...
+    # i Scores over 0.499 are considered `Positive`.
+    # i [2025/10/10 17:35:04] DEGAS Screen done.
 
     table(degas_result$scRNA_data$DEGAS)
     #    Other Positive
@@ -1833,14 +1833,14 @@ Now we use scAB, scPP, DEGAS, LP\_SGL and PIPET to screen cells.
       phenotype_class = "survival",
       screen_method = "LP_SGL"
     )
-    # ℹ [2025/11/22 21:14:29] Starting LP-SGL screening analysis
-    # ℹ [2025/11/22 21:14:29] Fetch graph from Seurat object
-    # ℹ [2025/11/22 21:14:29] Run Leiden clustering
-    # ℹ [2025/11/22 21:14:30] Calculating correlation matrix...
-    # ℹ [2025/11/22 21:14:33] Fitting SGL model with alpha = 0.5, this may take a while
-    # ℹ [2025/11/22 21:14:49] Running 5-fold cross-validation
-    # ℹ [2025/11/22 21:17:31] Optimal lambda index: 20 (error = 1380.7537932881)
-    # ℹ [2025/11/22 21:17:31] LP-SGL screening completed
+    # i [2025/11/22 21:14:29] Starting LP-SGL screening analysis
+    # i [2025/11/22 21:14:29] Fetch graph from Seurat object
+    # i [2025/11/22 21:14:29] Run Leiden clustering
+    # i [2025/11/22 21:14:30] Calculating correlation matrix...
+    # i [2025/11/22 21:14:33] Fitting SGL model with alpha = 0.5, this may take a while
+    # i [2025/11/22 21:14:49] Running 5-fold cross-validation
+    # i [2025/11/22 21:17:31] Optimal lambda index: 20 (error = 1380.7537932881)
+    # i [2025/11/22 21:17:31] LP-SGL screening completed
 
     table(lpsgl_result$scRNA_data$LP_SGL)
     # Negative  Neutral Positive
@@ -1861,7 +1861,7 @@ merged since screening methods performed on the same data.
       degas_result,
       lpsgl_result
     )
-    # ✔ Successfully merged 6 objects.
+    # v Successfully merged 6 objects.
 
     class(screen_result)
     # [1] "Seurat"
@@ -1873,7 +1873,7 @@ merged since screening methods performed on the same data.
     #  [9] "scissor"         "scAB"            "scAB_Subset1"    "Subset1_loading" "scAB_Subset2"    "Subset2_loading" "scPAS_RS"        "scPAS_NRS"
     # [17] "scPAS_Pvalue"    "scPAS_FDR"       "scPAS"           "scPP_AUCup"      "scPP_AUCdown"    "scPP"            "DEGAS"           "LP_SGL"
 
-Finally, we can visualize the screening results. Let’s start with a Venn
+Finally, we can visualize the screening results. Let's start with a Venn
 diagram to see the situation.
 
     library(ggVennDiagram)
@@ -1952,7 +1952,7 @@ cells are shown in the set plot.
 
     # * show the cell numbers of each set
     head(upset$stats)
-    # # A tibble: 6 × 3
+    # # A tibble: 6 x 3
     #   intersection    sets         count
     #   <chr>           <named list> <dbl>
     # 1 scissor         <chr [1]>      265
@@ -2016,21 +2016,21 @@ screening algorithm. The title of each plot will be appended with the
 method name as an identifier.
 
 fraction\_list  
-├── stats  
-│ ├── scissor  
-│ ├── scAB  
-│ ├── scPAS  
-│ ├── scPP  
-│ ├── DEGAS  
-│ └── LP\_SGL  
-├── plots  
-│ ├── scissor  
-│ ├── scAB  
-│ ├── scPAS  
-│ ├── scPP  
-│ ├── DEGAS  
-│ └── LP\_SGL  
-└── combined\_plot \# show 6 plots in one plot
+|-- stats  
+| |-- scissor  
+| |-- scAB  
+| |-- scPAS  
+| |-- scPP  
+| |-- DEGAS  
+| \-- LP\_SGL  
+|-- plots  
+| |-- scissor  
+| |-- scAB  
+| |-- scPAS  
+| |-- scPP  
+| |-- DEGAS  
+| \-- LP\_SGL  
+\-- combined\_plot \# show 6 plots in one plot
 
 UMAP is the most commonly used type of plot in academic literature.
 
@@ -2195,9 +2195,9 @@ preprocessing of binary phenotypic data is introduced.
     #               1               1               1               1               1               1
 
 If your phenotype is a `data.frame`, your binary variable is stored in
-the “data” column, categorized as ‘Tumor’ and ‘Normal’, we will assign
-‘Tumor’ a value of 1 and ‘Normal’ a value of 0. In this way, cells
-screened as **Positive** will be associated with ‘Tumor’. Try this to
+the "data" column, categorized as 'Tumor' and 'Normal', we will assign
+'Tumor' a value of 1 and 'Normal' a value of 0. In this way, cells
+screened as **Positive** will be associated with 'Tumor'. Try this to
 convert it to a `named vector`:
 
     pheno <- mutate(
@@ -2222,16 +2222,16 @@ the phenotype; here, we demonstrate using a binary phenotype instead.
       screen_method = "PIPET",
       label_type = "PIPET"
     )
-    #ℹ [2025/12/26 06:18:28] Starting PIPET screen
-    #ℹ [2025/12/26 06:18:28] Creating marker genes from bulk data...
-    #ℹ [2025/12/26 06:18:28] Fitting model with limma
-    #✔ [2025/12/26 06:18:28] Created 2795 marker genes
-    #ℹ [2025/12/26 06:18:28] Running PIPET correlation analysis...
-    #ℹ [2025/12/26 06:18:28] The classification of markers is: group_0: 945 and group_1: 477
-    #ℹ [2025/12/26 06:18:28] Normalize count data with CPM and log1p
-    #ℹ [2025/12/26 06:18:29] Scale features with z-score normalization
-    #ℹ [2025/12/26 06:19:49] Organize the computed results
-    #✔ [2025/12/26 06:19:49] PIPET screening done.
+    #i [2025/12/26 06:18:28] Starting PIPET screen
+    #i [2025/12/26 06:18:28] Creating marker genes from bulk data...
+    #i [2025/12/26 06:18:28] Fitting model with limma
+    #v [2025/12/26 06:18:28] Created 2795 marker genes
+    #i [2025/12/26 06:18:28] Running PIPET correlation analysis...
+    #i [2025/12/26 06:18:28] The classification of markers is: group_0: 945 and group_1: 477
+    #i [2025/12/26 06:18:28] Normalize count data with CPM and log1p
+    #i [2025/12/26 06:18:29] Scale features with z-score normalization
+    #i [2025/12/26 06:19:49] Organize the computed results
+    #v [2025/12/26 06:19:49] PIPET screening done.
 
     table(pipet_result$scRNA_data$PIPET)
     # Negative  Neutral Positive
@@ -2328,9 +2328,9 @@ Session information:
 ## 6. References
 
 > 1.  Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et
->     al. Identifying phenotype-associated subpopulations by integrating
+>     al. Identifying phenotype-associated subpopulations by integrating
 >     bulk and single-cell sequencing data. Nat Biotechnol. 2022
->     Apr;40(4):527–38.
+>     Apr;40(4):527-38.
 >
 > 2.  Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell
 >     phenotype-associated subpopulation identifier. Briefings in
@@ -2339,7 +2339,7 @@ Session information:
 > 3.  Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states
 >     with clinical significance by integrating single-cell genomics and
 >     bulk sequencing data. Nucleic Acids Research. 2022 Nov
->     28;50(21):12112–30.
+>     28;50(21):12112-30.
 >
 > 4.  He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based
 >     on the Expression Profiles of Phenotype-Associated Marker Genes in
@@ -2347,7 +2347,7 @@ Session information:
 >     28, 2026.
 >
 > 5.  Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et
->     al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible
+>     al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible
 >     deep transfer learning framework for prioritizing cells in
 >     relation to disease. Genome Med. 2022 Feb 1;14(1):11.
 >
@@ -2355,12 +2355,12 @@ Session information:
 >     phenotype-associated subpopulations through LP\_SGL. Briefings in
 >     Bioinformatics. 2023 Nov 22;25(1):bbad424.
 >
-> 7.  Ruan X, Cheng Y, Ye Y, Wang Y, Chen X, Yang Y, et al. PIPET:
+> 7.  Ruan X, Cheng Y, Ye Y, Wang Y, Chen X, Yang Y, et al. PIPET:
 >     predicting relevant subpopulations in single-cell data using
 >     phenotypic information from bulk data. Briefings in
 >     Bioinformatics. 2024 May 23;25(4):bbae260.
 >
-> 8.  Jolasun, Y. et al. SIDISH integrates single-cell and bulk
+> 8.  Jolasun, Y. et al. SIDISH integrates single-cell and bulk
 >     transcriptomics to identify high-risk cells and guide precision
 >     therapeutics through in silico perturbation. Nat Commun 16, 11271
 >     (2025).
@@ -2368,6 +2368,6 @@ Session information:
 > 9.  Gan, D., Zhu, Y., Lu, X. & Li, J. SCIPAC: Quantitative estimation
 >     of cell-phenotype associations. Genome Biol 25, 119 (2024).
 >
-> 10. Lin, Y. et al. TiRank prioritizes phenotypic niches in tumor
+> 10. Lin, Y. et al. TiRank prioritizes phenotypic niches in tumor
 >     microenvironment for clinical biomarker discovery. Genome Med 18,
 >     23 (2026).

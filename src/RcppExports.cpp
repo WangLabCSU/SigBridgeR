@@ -112,6 +112,63 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_bulk_hvg
+Rcpp::CharacterVector get_bulk_hvg(const arma::mat& patdata, const Rcpp::CharacterVector& common_genes, const int n_hvg);
+RcppExport SEXP _SigBridgeR_get_bulk_hvg(SEXP patdataSEXP, SEXP common_genesSEXP, SEXP n_hvgSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type patdata(patdataSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::CharacterVector& >::type common_genes(common_genesSEXP);
+    Rcpp::traits::input_parameter< const int >::type n_hvg(n_hvgSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_bulk_hvg(patdata, common_genes, n_hvg));
+    return rcpp_result_gen;
+END_RCPP
+}
+// normFunc_ptr
+arma::vec normFunc_ptr(const arma::vec& x);
+RcppExport SEXP _SigBridgeR_normFunc_ptr(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(normFunc_ptr(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// scaleFunc_ptr
+arma::vec scaleFunc_ptr(const arma::vec& x);
+RcppExport SEXP _SigBridgeR_scaleFunc_ptr(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(scaleFunc_ptr(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// normalizeScale_ptr
+arma::mat normalizeScale_ptr(const arma::mat& X);
+RcppExport SEXP _SigBridgeR_normalizeScale_ptr(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(normalizeScale_ptr(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// preprocessCounts_ptr
+arma::mat preprocessCounts_ptr(const arma::mat& X);
+RcppExport SEXP _SigBridgeR_preprocessCounts_ptr(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(preprocessCounts_ptr(X));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ExtractMetricsCpp
 List ExtractMetricsCpp(SEXP assay_data, SEXP counts, double low_expressed_thresh);
 RcppExport SEXP _SigBridgeR_ExtractMetricsCpp(SEXP assay_dataSEXP, SEXP countsSEXP, SEXP low_expressed_threshSEXP) {
@@ -125,6 +182,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// IsCountsMatrixImpl
+bool IsCountsMatrixImpl(const arma::mat& x, bool verbose, double integer_tol, double min_integer_fraction);
+RcppExport SEXP _SigBridgeR_IsCountsMatrixImpl(SEXP xSEXP, SEXP verboseSEXP, SEXP integer_tolSEXP, SEXP min_integer_fractionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    Rcpp::traits::input_parameter< double >::type integer_tol(integer_tolSEXP);
+    Rcpp::traits::input_parameter< double >::type min_integer_fraction(min_integer_fractionSEXP);
+    rcpp_result_gen = Rcpp::wrap(IsCountsMatrixImpl(x, verbose, integer_tol, min_integer_fraction));
+    return rcpp_result_gen;
+END_RCPP
+}
 // weighted_vote_cpp
 CharacterVector weighted_vote_cpp(CharacterMatrix vote_data, NumericVector weights, int ties_method);
 RcppExport SEXP _SigBridgeR_weighted_vote_cpp(SEXP vote_dataSEXP, SEXP weightsSEXP, SEXP ties_methodSEXP) {
@@ -135,17 +206,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< int >::type ties_method(ties_methodSEXP);
     rcpp_result_gen = Rcpp::wrap(weighted_vote_cpp(vote_data, weights, ties_method));
-    return rcpp_result_gen;
-END_RCPP
-}
-// list_to_character_recursive
-std::string list_to_character_recursive(List x);
-RcppExport SEXP _SigBridgeR_list_to_character_recursive(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(list_to_character_recursive(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -172,6 +232,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type expected_p(expected_pSEXP);
     Rcpp::traits::input_parameter< int >::type n_sd(n_sdSEXP);
     rcpp_result_gen = Rcpp::wrap(IsSkewedDynamic_cpp(x, target, expected_p, n_sd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// list_to_character_recursive
+std::string list_to_character_recursive(List x);
+RcppExport SEXP _SigBridgeR_list_to_character_recursive(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(list_to_character_recursive(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -220,11 +291,17 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_check_na_sparse_csc_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_csc_cpp, 4},
     {"_SigBridgeR_check_na_sparse_triplet_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_triplet_cpp, 4},
     {"_SigBridgeR_CountsToTPM_impl", (DL_FUNC) &_SigBridgeR_CountsToTPM_impl, 2},
+    {"_SigBridgeR_get_bulk_hvg", (DL_FUNC) &_SigBridgeR_get_bulk_hvg, 3},
+    {"_SigBridgeR_normFunc_ptr", (DL_FUNC) &_SigBridgeR_normFunc_ptr, 1},
+    {"_SigBridgeR_scaleFunc_ptr", (DL_FUNC) &_SigBridgeR_scaleFunc_ptr, 1},
+    {"_SigBridgeR_normalizeScale_ptr", (DL_FUNC) &_SigBridgeR_normalizeScale_ptr, 1},
+    {"_SigBridgeR_preprocessCounts_ptr", (DL_FUNC) &_SigBridgeR_preprocessCounts_ptr, 1},
     {"_SigBridgeR_ExtractMetricsCpp", (DL_FUNC) &_SigBridgeR_ExtractMetricsCpp, 3},
+    {"_SigBridgeR_IsCountsMatrixImpl", (DL_FUNC) &_SigBridgeR_IsCountsMatrixImpl, 4},
     {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
-    {"_SigBridgeR_list_to_character_recursive", (DL_FUNC) &_SigBridgeR_list_to_character_recursive, 1},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
     {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
+    {"_SigBridgeR_list_to_character_recursive", (DL_FUNC) &_SigBridgeR_list_to_character_recursive, 1},
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
     {"_SigBridgeR_normalize_metric", (DL_FUNC) &_SigBridgeR_normalize_metric, 2},
     {"_SigBridgeR_fast_assign_plan", (DL_FUNC) &_SigBridgeR_fast_assign_plan, 3},

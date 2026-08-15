@@ -1,3 +1,5 @@
+# nocov start
+
 #' @title Registry of Cell Type Annotation Methods
 #' @family Single_Cell_Annotation_Method
 #' @description

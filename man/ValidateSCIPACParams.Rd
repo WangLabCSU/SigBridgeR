@@ -5,9 +5,6 @@
 \title{Validate and Prepare DoSCIPAC Parameters}
 \usage{
 ValidateSCIPACParams(
-  matched_bulk,
-  sc_data,
-  phenotype,
   label_type,
   phenotype_class,
   hvg,
@@ -24,7 +21,7 @@ ValidateSCIPACParams(
 )
 }
 \arguments{
-\item{matched_bulk, sc_data, phenotype, label_type, phenotype_class}{Forwarded from \code{\link[=DoSCIPAC]{DoSCIPAC()}}.}
+\item{label_type, phenotype_class}{Forwarded from \code{\link[=DoSCIPAC]{DoSCIPAC()}}.}
 
 \item{hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size}{Forwarded from \code{\link[=DoSCIPAC]{DoSCIPAC()}}.}
 

@@ -5,9 +5,6 @@
 \title{Validate and Prepare DoTiRank Parameters}
 \usage{
 ValidateTiRankParams(
-  matched_bulk,
-  sc_data,
-  phenotype,
   label_type,
   phenotype_class,
   tirank_params,
@@ -17,7 +14,7 @@ ValidateTiRankParams(
 )
 }
 \arguments{
-\item{matched_bulk, sc_data, phenotype, label_type, phenotype_class, tirank_params}{Forwarded from \code{\link[=DoTiRank]{DoTiRank()}}.}
+\item{label_type, phenotype_class, tirank_params}{Forwarded from \code{\link[=DoTiRank]{DoTiRank()}}.}
 
 \item{save_path, load_cache}{Forwarded from \code{\link[=DoTiRank]{DoTiRank()}}.}
 

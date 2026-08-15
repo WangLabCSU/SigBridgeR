@@ -26,7 +26,7 @@ Returns a summary of registered methods or variables, with optional detailed
 introspection of function signatures, body structure, and closure properties.
 
 This utility aids in debugging, validation, and exploration of dynamically
-registered pipelines—particularly useful when developing or auditing extensible
+registered pipelines-particularly useful when developing or auditing extensible
 analysis frameworks.
 }
 \examples{

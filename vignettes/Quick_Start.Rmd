@@ -33,7 +33,7 @@ bulk_bi <- ref[[2]]
 pheno_bi <- ref[[3]]
 ```
 
-`seurat_obj` is a preprocessed single-cell RNA **Seurat** object (QC filtering, normalization, clustering, and UMAP are already included), `bulk_bi` is a bulk tissue RNA expression matrix, and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.
+`seurat_obj` is a preprocessed single-cell RNA **Seurat** object (QC filtering, normalization, clustering, and UMAP are already included), `bulk_bi` is a bulk tissue RNA expression matrix (TPM), and `pheno_bi` is the phenotypic data associated with `bulk_bi`. When using a binary or continuous phenotype, the reference phenotype data is a **named vector**.
 
 ```{r}
 #| label: binary_phenotype

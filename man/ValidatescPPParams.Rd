@@ -5,8 +5,6 @@
 \title{Validate and Prepare DoscPP Parameters}
 \usage{
 ValidatescPPParams(
-  matched_bulk,
-  sc_data,
   phenotype,
   label_type,
   phenotype_class,
@@ -18,7 +16,7 @@ ValidatescPPParams(
 )
 }
 \arguments{
-\item{matched_bulk, sc_data, phenotype, label_type, phenotype_class}{Forwarded from \code{\link[=DoscPP]{DoscPP()}}.}
+\item{phenotype, label_type, phenotype_class}{Forwarded from \code{\link[=DoscPP]{DoscPP()}}.}
 
 \item{ref_group, Log2FC_cutoff, estimate_cutoff, probs}{Forwarded from \code{\link[=DoscPP]{DoscPP()}}.}
 

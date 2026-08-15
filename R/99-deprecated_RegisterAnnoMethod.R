@@ -8,7 +8,7 @@
 #' metadata (\code{method_name} and \code{executor}) to enable dynamic dispatch in
 #' annotation pipelines.
 #'
-#' This function supports extensible cell type annotation frameworks—ideal for integrating
+#' This function supports extensible cell type annotation frameworks-ideal for integrating
 #' novel classifiers (e.g., custom SingleR wrappers, marker-based assigners, or deep
 #' learning models) while maintaining a uniform execution interface.
 #'

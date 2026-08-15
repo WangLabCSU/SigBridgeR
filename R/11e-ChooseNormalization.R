@@ -28,7 +28,7 @@
 #'   metric is omitted from scoring.
 #' @param n_hvgs Integer. Number of top highly variable genes to evaluate for marker
 #'   retention. Default: \code{2000L}. Only relevant when \code{known_hvgs} is provided.
-#' @param low_expressed_thresh Numeric (0–1). Quantile threshold for filtering lowly
+#' @param low_expressed_thresh Numeric (0-1). Quantile threshold for filtering lowly
 #'   expressed genes during variance-mean correlation calculation. Genes below this
 #'   quantile of mean expression are excluded. Default: \code{0.2} (bottom 20% excluded).
 #' @param weight Named numeric vector specifying weights for composite scoring. Must
@@ -47,7 +47,7 @@
 #'     (higher = better; NA if `known_hvgs` not provided)
 #'   * `mean_dropout_residual`: Absolute Spearman correlation between
 #'     dropout rate (from counts) and normalized means (lower = better)
-#'   * `composite_score`: Weighted combination of normalized metrics (0–1 scale)
+#'   * `composite_score`: Weighted combination of normalized metrics (0-1 scale)
 #'   * `rank`: Method ranking (1 = best)
 #' * **`recommendation`**: Character string naming the top-ranked method
 #' * **`plots`**: (Optional) Diagnostic visualizations if `ggplot2` available
@@ -66,7 +66,7 @@
 #' 6. Returns top recommendation with full diagnostic report
 #'
 #' @section Notes:
-#' * Requires *pre-normalized* Seurat objects—this function **does not**
+#' * Requires *pre-normalized* Seurat objects-this function **does not**
 #'   perform normalization itself. Users must first run `SCTransform()`,
 #'   `NormalizeData()`, etc., and store results in the `data` slot.
 #' * Marker retention metric is only computed when `known_hvgs` is provided.

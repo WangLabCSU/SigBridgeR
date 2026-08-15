@@ -90,7 +90,7 @@ GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
     return(NULL)
   }
 
-  # 移除常量列（方差为0）
+  # remove constant columns (variance = 0)
   valid_cols <- existing_cols[vapply(
     existing_cols,
     function(col) {

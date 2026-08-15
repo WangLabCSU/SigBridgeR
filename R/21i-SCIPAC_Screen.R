@@ -6,7 +6,7 @@
 #' Internal helper that handles package installation checks, input validation,
 #' family resolution, and default-value resolution for [DoSCIPAC()].
 #'
-#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class
+#' @param label_type,phenotype_class
 #'   Forwarded from [DoSCIPAC()].
 #' @param hvg,do_pca_sc,n_pc,sc_batch_col,resolution,ela_net_alpha,bt_size
 #'   Forwarded from [DoSCIPAC()].
@@ -19,9 +19,6 @@
 #' @keywords internal
 #' @family SCIPAC
 ValidateSCIPACParams <- function(
-  matched_bulk,
-  sc_data,
-  phenotype,
   label_type,
   phenotype_class,
   hvg,
@@ -78,14 +75,33 @@ ValidateSCIPACParams <- function(
   assay <- dots$assay %||% "RNA"
 
   # -- build cache config ---------------------------------------------------
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    family = family,
+    hvg = hvg,
+    do_pca_sc = do_pca_sc,
+    n_pc = n_pc,
+    sc_batch_col = sc_batch_col,
+    resolution = resolution,
+    ela_net_alpha = ela_net_alpha,
+    bt_size = bt_size,
+    ncore = ncore,
+    ci_alpha = ci_alpha,
+    nfold = nfold,
+    verbose = verbose,
+    seed = seed,
+    assay = assay,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "SCIPAC",
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Screen Single-Cell Data Using SCIPAC Algorithm
@@ -95,8 +111,8 @@ ValidateSCIPACParams <- function(
 #' to identify cell populations associated with clinical outcomes.
 #'
 #' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression
-#'   data (genes × samples). Column names must match names/IDs in \code{phenotype}.
-#' @param sc_data A matrix/Matrix (genes × cells) or a Seurat object containing
+#'   data (genes x samples). Column names must match names/IDs in \code{phenotype}.
+#' @param sc_data A matrix/Matrix (genes x cells) or a Seurat object containing
 #'   scRNA-seq data to be screened.
 #' @param phenotype Phenotype data, either:
 #'   * Named vector (names match `matched_bulk` columns)
@@ -264,7 +280,21 @@ DoSCIPAC <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidateSCIPACParams, c(get_env_vars(), list(...)))
+  p <- ValidateSCIPACParams(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    hvg = hvg,
+    do_pca_sc = do_pca_sc,
+    n_pc = n_pc,
+    sc_batch_col = sc_batch_col,
+    resolution = resolution,
+    ela_net_alpha = ela_net_alpha,
+    bt_size = bt_size,
+    ncore = ncore,
+    ci_alpha = ci_alpha,
+    nfold = nfold,
+    ...
+  )
 
   if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start SCIPAC screening"))

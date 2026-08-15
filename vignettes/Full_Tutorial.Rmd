@@ -442,7 +442,7 @@ CheckNA(mtcars)
 
 **In-place data transformation**
 
-Use it just in tidyverse-like style. The difference between `PhenoMap` and the dplyr workflow is that `PhenoMap` is slightly faster when processing two-dimensional `data.frame` data, and it preserves the `names` attribute when processing one-dimensional vectors. Apart from these two points, there is no other difference — it is simply a syntactic sugar we provide.
+Use it just in tidyverse-like style. The difference between `PhenoMap` and the dplyr workflow is that `PhenoMap` is slightly faster when processing two-dimensional `data.frame` data, and it preserves the `names` attribute when processing one-dimensional vectors. Apart from these two points, there is no other difference - it is simply a syntactic sugar we provide.
 
 ```{r}
 #| label: col_convert
@@ -1417,23 +1417,23 @@ scissor_result <- Screen(
   alpha = 0.05
 )
 
-# ℹ [2025/09/08 17:03:20] Scissor start...
-# ℹ [2025/09/08 17:03:20] Start from raw data...
-# ℹ Using "RNA_snn" graph for network.
-# ℹ [2025/09/08 17:03:20] Normalizing quantiles of data...
-# ℹ [2025/09/08 17:03:20] Subsetting data...
-# ℹ [2025/09/08 17:03:21] Calculating correlation...
+# i [2025/09/08 17:03:20] Scissor start...
+# i [2025/09/08 17:03:20] Start from raw data...
+# i Using "RNA_snn" graph for network.
+# i [2025/09/08 17:03:20] Normalizing quantiles of data...
+# i [2025/09/08 17:03:20] Subsetting data...
+# i [2025/09/08 17:03:21] Calculating correlation...
 # ----------------------------------------------------------------------------------------------------
 # Five-number summary of correlations:
 
 #         0%        25%        50%        75%       100%
 # -0.2342323  0.0594385  0.1118708  0.1642065  0.5250605
 # ----------------------------------------------------------------------------------------------------
-# ℹ [2025/09/08 17:03:21] Perform cox regression on the given clinical outcomes:
-# ✔ Statistics data saved to `Scissor_inputs.RData`.
-# ℹ [2025/09/08 17:03:22] Screening...
+# i [2025/09/08 17:03:21] Perform cox regression on the given clinical outcomes:
+# v Statistics data saved to `Scissor_inputs.RData`.
+# i [2025/09/08 17:03:22] Screening...
 #
-# ── At alpha = 0.05 ──
+# -- At alpha = 0.05 --
 #
 # Scissor identified 265 Scissor+ cells and 73 Scissor- cells.
 # The percentage of selected cell is: 30.924%
@@ -1459,19 +1459,19 @@ scissor_result <- Screen(
   path2load_scissor_cache = "Scissor_inputs.RData",
   reliability_test = TRUE
 )
-# ℹ [2025/09/08 16:07:48] Scissor start...
-# ℹ [2025/09/08 16:07:48] Loading data from `Scissor_inputs.RData`...
-# ℹ [2025/09/08 16:07:48] Screening...
+# i [2025/09/08 16:07:48] Scissor start...
+# i [2025/09/08 16:07:48] Loading data from `Scissor_inputs.RData`...
+# i [2025/09/08 16:07:48] Screening...
 # [1] "alpha = 0.05"
 # [1] "Scissor identified 249 Scissor+ cells and 245 Scissor- cells."
 # [1] "The percentage of selected cell is: 45.197%"
 
 # --------------------------------------------------------------------------------
-# ℹ [2025/09/08 16:07:54] Start reliability test
+# i [2025/09/08 16:07:54] Start reliability test
 
-# Attaching package: ‘survival’
+# Attaching package: 'survival'
 
-# The following object is masked from ‘package:future’:
+# The following object is masked from 'package:future':
 
 #     cluster
 
@@ -1483,7 +1483,7 @@ scissor_result <- Screen(
 # Finished!
 # [1] "Test statistic = 0.590"
 # [1] "Reliability significance test p = 0.000"
-# ✔ [2025/09/08 16:10:54] reliability test: Done
+# v [2025/09/08 16:10:54] reliability test: Done
 
 scissor_result$reliability_result$statistic
 # [1] 0.5899587
@@ -1524,23 +1524,23 @@ scpas_result <- Screen(
   screen_method = "scPAS",
   alpha = 0.05
 )
-# ℹ [2025/10/20 16:24:27] Start scPAS screening.
-# ℹ [2025/10/20 16:24:29] Quantile normalization of bulk data.
-# ℹ [2025/10/20 16:24:29] Extracting single-cell expression profiles...
-# ℹ [2025/10/20 16:24:29] Constructing a gene-gene similarity by single cell data...
+# i [2025/10/20 16:24:27] Start scPAS screening.
+# i [2025/10/20 16:24:29] Quantile normalization of bulk data.
+# i [2025/10/20 16:24:29] Extracting single-cell expression profiles...
+# i [2025/10/20 16:24:29] Constructing a gene-gene similarity by single cell data...
 # Building SNN based on a provided distance matrix
 # Computing SNN
-# ℹ [2025/10/20 16:24:30] Optimizing the network-regularized sparse regression model...
-# ℹ [2025/10/20 16:24:30] Perform cox regression on the given phenotypes...
+# i [2025/10/20 16:24:30] Optimizing the network-regularized sparse regression model...
+# i [2025/10/20 16:24:30] Perform cox regression on the given phenotypes...
 #
-# ── At alpha = 0.05 ──
+# -- At alpha = 0.05 --
 #
 # lambda = 0.776168989003421
 # scPAS identified 59 risk+ features and 61 risk- features.
 # The percentage of selected feature is: 13.73%
-# ℹ [2025/10/20 16:24:49] Calculating quantified risk scores...
-# ℹ [2025/10/20 16:24:49] Qualitative identification by permutation test program with 2000 times random perturbations...
-# ✔ [2025/10/20 16:24:50] scPAS screening done.
+# i [2025/10/20 16:24:49] Calculating quantified risk scores...
+# i [2025/10/20 16:24:49] Qualitative identification by permutation test program with 2000 times random perturbations...
+# v [2025/10/20 16:24:50] scPAS screening done.
 
 table(scpas_result$scRNA_data$scPAS)
 
@@ -1563,41 +1563,41 @@ scpas_result <- Screen(
   alpha = NULL,
   cutoff = 0.2
 )
-# ℹ [2025/10/20 16:43:31] Start scPAS screening.
-# ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.
-# ℹ [2025/10/20 16:43:32] Extracting single-cell expression profiles...
-# ℹ [2025/10/20 16:43:32] Constructing a gene-gene similarity by single cell data...
+# i [2025/10/20 16:43:31] Start scPAS screening.
+# i [2025/10/20 16:43:32] Quantile normalization of bulk data.
+# i [2025/10/20 16:43:32] Extracting single-cell expression profiles...
+# i [2025/10/20 16:43:32] Constructing a gene-gene similarity by single cell data...
 # Building SNN based on a provided distance matrix
 # Computing SNN
-# ℹ [2025/10/20 16:43:33] Optimizing the network-regularized sparse regression model...
-# ℹ [2025/10/20 16:43:33] Perform cox regression on the given phenotypes...
+# i [2025/10/20 16:43:33] Optimizing the network-regularized sparse regression model...
+# i [2025/10/20 16:43:33] Perform cox regression on the given phenotypes...
 #
-# ── At alpha = 0.001 ──
+# -- At alpha = 0.001 --
 #
 # lambda = 7.61825638357188
 # scPAS identified 315 risk+ features and 366 risk- features.
 # The percentage of selected feature is: 77.918%
 #
-# ── At alpha = 0.005 ──
+# -- At alpha = 0.005 --
 #
 # lambda = 3.68743152046651
 # scPAS identified 193 risk+ features and 231 risk- features.
 # The percentage of selected feature is: 48.513%
 #
-# ── At alpha = 0.01 ──
+# -- At alpha = 0.01 --
 #
 # lambda = 2.55333682907113
 # scPAS identified 137 risk+ features and 158 risk- features.
 # The percentage of selected feature is: 33.753%
 #
-# ── At alpha = 0.05 ──
+# -- At alpha = 0.05 --
 #
 # lambda = 0.776168989003421
 # scPAS identified 59 risk+ features and 61 risk- features.
 # The percentage of selected feature is: 13.73%
-# ℹ [2025/10/20 16:44:55] Calculating quantified risk scores...
-# ℹ [2025/10/20 16:44:55] Qualitative identification by permutation test program with 2000 times random perturbations...
-# ✔ [2025/10/20 16:44:57] scPAS screening done.
+# i [2025/10/20 16:44:55] Calculating quantified risk scores...
+# i [2025/10/20 16:44:55] Qualitative identification by permutation test program with 2000 times random perturbations...
+# v [2025/10/20 16:44:57] scPAS screening done.
 ```
 
 Generally speaking, a larger alpha means looser screening. However, it still won't result in the occurence of too many false-positive cells. You can also adjust the `cutoff` parameter as you like.
@@ -1623,12 +1623,12 @@ scab_result <- Screen(
   phenotype_class = "survival",
   screen_method = "scAB"
 )
-# ℹ [2025/09/08 17:04:51] Start scAB screening.
-# ℹ  Using "RNA_snn" graph for network.
-# ℹ [2025/09/08 17:04:52] Selecting K...
-# ℹ [2025/09/08 17:06:15] Run NMF with phenotype and cell-cell similarity regularization at K = 3.
-# ℹ [2025/09/08 17:06:19] Screening cells...
-# ℹ [2025/09/08 17:06:19] scAB screening done.
+# i [2025/09/08 17:04:51] Start scAB screening.
+# i  Using "RNA_snn" graph for network.
+# i [2025/09/08 17:04:52] Selecting K...
+# i [2025/09/08 17:06:15] Run NMF with phenotype and cell-cell similarity regularization at K = 3.
+# i [2025/09/08 17:06:19] Screening cells...
+# i [2025/09/08 17:06:19] scAB screening done.
 
 table(scab_result$scRNA_data$scAB)
 #    Other Positive
@@ -1646,16 +1646,16 @@ scpp_result <- Screen(
   phenotype_class = "survival",
   screen_method = "scPP"
 )
-# ℹ [2025/09/08 17:00:28] Start scPP screening.
-# ℹ [2025/09/08 17:00:28] Finding markers...
+# i [2025/09/08 17:00:28] Start scPP screening.
+# i [2025/09/08 17:00:28] Finding markers...
 # Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :
 #   Loglik converged before variable  1 ; coefficient may be infinite.
-# ℹ [2025/09/08 17:00:52] Screening...
+# i [2025/09/08 17:00:52] Screening...
 # Genes in the gene sets NOT available in the dataset:
 # 	gene_pos: 	13 (6% of 230)
 # 	gene_neg: 	54 (12% of 446)
 # There are no genes significantly upregulated in Phenotype- compared to Phenotype+.
-# ✔ [2025/09/08 17:00:54] scPP screening done.
+# v [2025/09/08 17:00:54] scPP screening done.
 
 table(scpp_result$scRNA_data$scPP)
 # Negative  Neutral Positive
@@ -1674,20 +1674,20 @@ degas_result <- Screen(
   phenotype_class = "survival",
   screen_method = "DEGAS"
 )
-# ℹ [2025/10/09 18:41:00] Starting DEGAS Screen
-# ℹ [2025/10/09 18:41:01] Setting up Environment...
-# ℹ [2025/10/09 18:41:08] Training DEGAS model...
-# ℹ [2025/10/09 18:41:08] 3-layer DenseNet BlankCox DEGAS model
-# ℹ [2025/10/09 18:41:10] Python check passed, using Python 3.9.15
-# ℹ [2025/10/09 18:41:10] Training...
+# i [2025/10/09 18:41:00] Starting DEGAS Screen
+# i [2025/10/09 18:41:01] Setting up Environment...
+# i [2025/10/09 18:41:08] Training DEGAS model...
+# i [2025/10/09 18:41:08] 3-layer DenseNet BlankCox DEGAS model
+# i [2025/10/09 18:41:10] Python check passed, using Python 3.9.15
+# i [2025/10/09 18:41:10] Training...
 ###########################
 # Many output from python #
 ###########################
-# ℹ [2025/10/10 17:35:04] Predicting and Labeling...
-# ℹ [2025/10/10 17:35:04] Labeling screened cells...
-# ℹ [2025/10/10 17:35:04] Searching for survival-associated cells...
-# ℹ Scores over 0.499 are considered `Positive`.
-# ℹ [2025/10/10 17:35:04] DEGAS Screen done.
+# i [2025/10/10 17:35:04] Predicting and Labeling...
+# i [2025/10/10 17:35:04] Labeling screened cells...
+# i [2025/10/10 17:35:04] Searching for survival-associated cells...
+# i Scores over 0.499 are considered `Positive`.
+# i [2025/10/10 17:35:04] DEGAS Screen done.
 
 table(degas_result$scRNA_data$DEGAS)
 #    Other Positive
@@ -1706,14 +1706,14 @@ lpsgl_result <- Screen(
   phenotype_class = "survival",
   screen_method = "LP_SGL"
 )
-# ℹ [2025/11/22 21:14:29] Starting LP-SGL screening analysis
-# ℹ [2025/11/22 21:14:29] Fetch graph from Seurat object
-# ℹ [2025/11/22 21:14:29] Run Leiden clustering
-# ℹ [2025/11/22 21:14:30] Calculating correlation matrix...
-# ℹ [2025/11/22 21:14:33] Fitting SGL model with alpha = 0.5, this may take a while
-# ℹ [2025/11/22 21:14:49] Running 5-fold cross-validation
-# ℹ [2025/11/22 21:17:31] Optimal lambda index: 20 (error = 1380.7537932881)
-# ℹ [2025/11/22 21:17:31] LP-SGL screening completed
+# i [2025/11/22 21:14:29] Starting LP-SGL screening analysis
+# i [2025/11/22 21:14:29] Fetch graph from Seurat object
+# i [2025/11/22 21:14:29] Run Leiden clustering
+# i [2025/11/22 21:14:30] Calculating correlation matrix...
+# i [2025/11/22 21:14:33] Fitting SGL model with alpha = 0.5, this may take a while
+# i [2025/11/22 21:14:49] Running 5-fold cross-validation
+# i [2025/11/22 21:17:31] Optimal lambda index: 20 (error = 1380.7537932881)
+# i [2025/11/22 21:17:31] LP-SGL screening completed
 
 table(lpsgl_result$scRNA_data$LP_SGL)
 # Negative  Neutral Positive
@@ -1735,7 +1735,7 @@ screen_result <- MergeResult(
   degas_result,
   lpsgl_result
 )
-# ✔ Successfully merged 6 objects.
+# v Successfully merged 6 objects.
 
 class(screen_result)
 # [1] "Seurat"
@@ -1830,7 +1830,7 @@ upset <- ScreenUpset(
 
 # * show the cell numbers of each set
 head(upset$stats)
-# # A tibble: 6 × 3
+# # A tibble: 6 x 3
 #   intersection    sets         count
 #   <chr>           <named list> <dbl>
 # 1 scissor         <chr [1]>      265
@@ -1893,21 +1893,21 @@ The `fraction_list` contains the statistical data and charts for each screening 
 
 
 fraction_list\
-    ├── stats\
-    │       ├── scissor\
-    │       ├── scAB\
-    │       ├── scPAS\
-    │       ├── scPP   \
-    │       ├── DEGAS\
-    │       └── LP_SGL\
-    ├── plots\
-    │       ├── scissor\
-    │       ├── scAB\
-    │       ├── scPAS\
-    │       ├── scPP\
-    │       ├── DEGAS\
-    │       └── LP_SGL\
-    └── combined_plot # show 6 plots in one plot
+    |-- stats\
+    |       |-- scissor\
+    |       |-- scAB\
+    |       |-- scPAS\
+    |       |-- scPP   \
+    |       |-- DEGAS\
+    |       \-- LP_SGL\
+    |-- plots\
+    |       |-- scissor\
+    |       |-- scAB\
+    |       |-- scPAS\
+    |       |-- scPP\
+    |       |-- DEGAS\
+    |       \-- LP_SGL\
+    \-- combined_plot # show 6 plots in one plot
 
 
 UMAP is the most commonly used type of plot in academic literature.
@@ -2118,16 +2118,16 @@ pipet_result <- Screen(
   screen_method = "PIPET",
   label_type = "PIPET"
 )
-#ℹ [2025/12/26 06:18:28] Starting PIPET screen
-#ℹ [2025/12/26 06:18:28] Creating marker genes from bulk data...
-#ℹ [2025/12/26 06:18:28] Fitting model with limma
-#✔ [2025/12/26 06:18:28] Created 2795 marker genes
-#ℹ [2025/12/26 06:18:28] Running PIPET correlation analysis...
-#ℹ [2025/12/26 06:18:28] The classification of markers is: group_0: 945 and group_1: 477
-#ℹ [2025/12/26 06:18:28] Normalize count data with CPM and log1p
-#ℹ [2025/12/26 06:18:29] Scale features with z-score normalization
-#ℹ [2025/12/26 06:19:49] Organize the computed results
-#✔ [2025/12/26 06:19:49] PIPET screening done.
+#i [2025/12/26 06:18:28] Starting PIPET screen
+#i [2025/12/26 06:18:28] Creating marker genes from bulk data...
+#i [2025/12/26 06:18:28] Fitting model with limma
+#v [2025/12/26 06:18:28] Created 2795 marker genes
+#i [2025/12/26 06:18:28] Running PIPET correlation analysis...
+#i [2025/12/26 06:18:28] The classification of markers is: group_0: 945 and group_1: 477
+#i [2025/12/26 06:18:28] Normalize count data with CPM and log1p
+#i [2025/12/26 06:18:29] Scale features with z-score normalization
+#i [2025/12/26 06:19:49] Organize the computed results
+#v [2025/12/26 06:19:49] PIPET screening done.
 
 table(pipet_result$scRNA_data$PIPET)
 # Negative  Neutral Positive
@@ -2153,11 +2153,11 @@ sessionInfo()
 
 ## 6. References
 
-> 1. Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
+> 1. Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527-38.
 >
 > 2. Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell phenotype-associated subpopulation identifier. Briefings in Bioinformatics. 2024 Nov 22;26(1):bbae655.
 >
-> 3. Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
+> 3. Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112-30.
 >
 > 4. He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci. Published online January 28, 2026.
 >
@@ -2172,5 +2172,4 @@ sessionInfo()
 > 9. Gan, D., Zhu, Y., Lu, X. & Li, J. SCIPAC: Quantitative estimation of cell-phenotype associations. Genome Biol 25, 119 (2024).
 > 
 > 10. Lin, Y. et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med 18, 23 (2026).
-
 

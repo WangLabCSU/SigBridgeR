@@ -1,6 +1,6 @@
 # Contributing to SigBridgeR
 
-Thank you for your interest in contributing to SigBridgeR! We welcome contributions in all forms — bug reports, feature suggestions, documentation improvements, and code contributions.
+Thank you for your interest in contributing to SigBridgeR! We welcome contributions in all forms - bug reports, feature suggestions, documentation improvements, and code contributions.
 
 Please take a moment to review this guide to make the process smooth and efficient for everyone.
 
@@ -62,7 +62,7 @@ We encourage contributions to extend SigBridgeR's functionality. The main areas 
 | **New annotation methods** | Register custom cell-type annotation algorithms. |
 | **Bug fixes & optimizations** | Fix issues or improve performance of existing code. |
 
-For detailed instructions on how to implement and register custom algorithms — including format requirements, validation, and registration — please refer to the [Extending SigBridgeR: A Guide for Custom Extensions](https://wanglabcsu.github.io/SigBridgeR/articles/Extending_ScreenMethod.html) vignette (`vignettes/Extending.Rmd`).
+For detailed instructions on how to implement and register custom algorithms - including format requirements, validation, and registration - please refer to the [Extending SigBridgeR: A Guide for Custom Extensions](https://wanglabcsu.github.io/SigBridgeR/articles/Extending_ScreenMethod.html) vignette (`vignettes/Extending.Rmd`).
 
 ## Development Setup
 

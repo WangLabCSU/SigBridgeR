@@ -175,7 +175,7 @@ modified_sc_data <- AddMisc(modified_sc_data, foo = config)
 ### If you are developing a package
 
 If you want to do more than simply write an algorithm function and instead organize your code as an R package, 
-we also welcome—and even recommend—this approach. But please add the following code to the template function:
+we also welcome-and even recommend-this approach. But please add the following code to the template function:
 
 ```{r}
 #| eval: false
@@ -259,9 +259,9 @@ Register(Foo = my_foo)
 
 Here, `mapper` can accept a function. This function must take exactly one argument, whose type must be `list`, and it must also return a `list`. The `mapper` can be used to transform certain parameters.
 
-`Register` must be passed a **key–value pair**: the key serves as the registration name, and the value is the registered entity.
+`Register` must be passed a **key-value pair**: the key serves as the registration name, and the value is the registered entity.
 
-Let’s check whether it has indeed been registered 
+Let's check whether it has indeed been registered 
 
 ```{r}
 #| label: check_registry_2

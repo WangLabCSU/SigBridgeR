@@ -1,3 +1,5 @@
+# nocov start
+
 #' @title Preprocessing Strategy Registry for Single-Cell Workflows
 #'
 #' @description
@@ -6,7 +8,7 @@
 #' that wraps a core Seurat step (e.g., normalization, PCA, clustering)
 #'
 #' This registry enables compact, composable pipeline definitions (e.g., via character
-#' strings like \code{"onvps"} for "Create → Normalize → VariableFeatures → Scale → PCA")
+#' strings like \code{"onvps"} for "Create -> Normalize -> VariableFeatures -> Scale -> PCA")
 #' and supports both standard (\code{NormalizeData}) and SCTransform-based workflows.
 #'
 #' @section Available Operations:

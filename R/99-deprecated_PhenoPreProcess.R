@@ -248,7 +248,7 @@ handle_phenotype_select <- function(
   select = NULL,
   ...
 ) {
-  # 分派执行
+  # dispatch execution
   if (is_phenotype_2d) {
     if (is.null(select)) {
       handle_case_1(
@@ -301,7 +301,7 @@ handle_case_1 <- function(
   sample_names,
   ...
 ) {
-  # TRUE, NULL: 处理逻辑
+  # TRUE, NULL: handling logic
   if (phenotype_class == "survival") {
     cli::cli_alert_info("Guess survival time and status from data")
     possible_cols <- tolower(colnames(phenotype))
@@ -379,7 +379,7 @@ handle_case_2 <- function(
   select,
   ...
 ) {
-  # TRUE, 非NULL: 处理逻辑
+  # TRUE, non-NULL: handling logic
   if (phenotype_class %chin% c("binary", "continuous")) {
     cli::cli_warn(
       "`select` is only used when `phenotype` is two-dimensional. Ignoring `select`."
@@ -410,7 +410,7 @@ handle_case_3 <- function(
   sample_names,
   ...
 ) {
-  # FALSE, NULL: 处理逻辑
+  # FALSE, NULL: handling logic
   if (phenotype_class == "survival") {
     Abort(
       "Invalid type of `phenotype`",
@@ -438,7 +438,7 @@ handle_case_4 <- function(
   select,
   ...
 ) {
-  # FALSE, 非NULL: 处理逻辑
+  # FALSE, non-NULL: handling logic
   if (phenotype_class == "survival") {
     Abort(
       "Invalid type of `phenotype`",

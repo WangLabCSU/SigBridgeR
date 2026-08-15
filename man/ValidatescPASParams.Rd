@@ -5,8 +5,6 @@
 \title{Validate and Prepare DoscPAS Parameters}
 \usage{
 ValidatescPASParams(
-  matched_bulk,
-  sc_data,
   phenotype,
   label_type,
   phenotype_class,
@@ -25,7 +23,7 @@ ValidatescPASParams(
 )
 }
 \arguments{
-\item{matched_bulk, sc_data, phenotype, label_type, phenotype_class, assay}{Forwarded from \code{\link[=DoscPAS]{DoscPAS()}}.}
+\item{phenotype, label_type, phenotype_class, assay}{Forwarded from \code{\link[=DoscPAS]{DoscPAS()}}.}
 
 \item{imputation, imputation_method, nfeature, alpha, cutoff, network_class}{Forwarded from \code{\link[=DoscPAS]{DoscPAS()}}.}
 

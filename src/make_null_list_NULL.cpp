@@ -4,19 +4,19 @@ using namespace Rcpp;
 
 static SEXP make_null_list_NULL_rec(SEXP x)
 {
-    // 不是 list，直接返回
+    // not a list, return as-is
     if (TYPEOF(x) != VECSXP)
     {
         return x;
     }
-    // 空 list() 转为 NULL
+    // empty list() becomes NULL
     if (XLENGTH(x) == 0)
     {
         return R_NilValue;
     }
     R_xlen_t n = XLENGTH(x);
     List out(n);
-    // 保留 names
+    // preserve names
     SEXP names = Rf_getAttrib(x, R_NamesSymbol);
     if (names != R_NilValue)
     {

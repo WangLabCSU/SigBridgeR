@@ -33,16 +33,36 @@ CountsToTPM_impl <- function(counts, gene_length) {
     .Call(`_SigBridgeR_CountsToTPM_impl`, counts, gene_length)
 }
 
+get_bulk_hvg <- function(patdata, common_genes, n_hvg) {
+    .Call(`_SigBridgeR_get_bulk_hvg`, patdata, common_genes, n_hvg)
+}
+
+normFunc_ptr <- function(x) {
+    .Call(`_SigBridgeR_normFunc_ptr`, x)
+}
+
+scaleFunc_ptr <- function(x) {
+    .Call(`_SigBridgeR_scaleFunc_ptr`, x)
+}
+
+normalizeScale_ptr <- function(X) {
+    .Call(`_SigBridgeR_normalizeScale_ptr`, X)
+}
+
+preprocessCounts_ptr <- function(X) {
+    .Call(`_SigBridgeR_preprocessCounts_ptr`, X)
+}
+
 ExtractMetricsCpp <- function(assay_data, counts, low_expressed_thresh = 0.2) {
     .Call(`_SigBridgeR_ExtractMetricsCpp`, assay_data, counts, low_expressed_thresh)
 }
 
-weighted_vote_cpp <- function(vote_data, weights, ties_method) {
-    .Call(`_SigBridgeR_weighted_vote_cpp`, vote_data, weights, ties_method)
+IsCountsMatrixImpl <- function(x, verbose = FALSE, integer_tol = 1e-8, min_integer_fraction = 0.95) {
+    .Call(`_SigBridgeR_IsCountsMatrixImpl`, x, verbose, integer_tol, min_integer_fraction)
 }
 
-list_to_character_recursive <- function(x) {
-    .Call(`_SigBridgeR_list_to_character_recursive`, x)
+weighted_vote_cpp <- function(vote_data, weights, ties_method) {
+    .Call(`_SigBridgeR_weighted_vote_cpp`, vote_data, weights, ties_method)
 }
 
 find_diff_in_2_lists <- function(x, y) {
@@ -51,6 +71,10 @@ find_diff_in_2_lists <- function(x, y) {
 
 IsSkewedDynamic_cpp <- function(x, target = 0.0, expected_p = 0.8, n_sd = 4L) {
     .Call(`_SigBridgeR_IsSkewedDynamic_cpp`, x, target, expected_p, n_sd)
+}
+
+list_to_character_recursive <- function(x) {
+    .Call(`_SigBridgeR_list_to_character_recursive`, x)
 }
 
 make_null_list_NULL <- function(x) {

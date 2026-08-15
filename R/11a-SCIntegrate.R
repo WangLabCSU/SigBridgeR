@@ -43,7 +43,7 @@
 #' mat2 <- matrix(rpois(120, 6), nrow = 20,
 #'                dimnames = list(paste0("G", 11:30), paste0("C", 1:6)))
 #' integrated <- SCIntegrate(mat1, mat2)
-#' dim(integrated)  # 20 genes × 11 cells
+#' dim(integrated)  # 20 genes x 11 cells
 #'
 #' # Add customed prefixes to colnames
 #' integrated <- SCIntegrate(A = mat1, B = mat2)
@@ -134,10 +134,10 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
     mat <- mats[[i]]
     prefix <- prefixes[i]
 
-    # 转换为data.table
+    # convert to data.table
     dt <- data.table::as.data.table(mat, keep.rownames = "gene")
 
-    # 给列名添加前缀(gene)
+    # prefix column names with (gene)
     col_names <- names(dt)[-1]
     data.table::setnames(dt, col_names, paste0(prefix, "_", col_names))
 
@@ -192,11 +192,11 @@ SCIntegrate.matrix <- function(..., .quos = NULL) {
       sparse = TRUE
     )
 
-    # 设置行名和列名
+    # set row and column names
     rownames(expanded_mat) <- all_genes
     colnames(expanded_mat) <- paste0(prefix, "_", current_samples)
 
-    # 填充数据
+    # fill data
     gene_idx <- match(current_genes, all_genes)
     expanded_mat[gene_idx, ] <- mat
 
@@ -307,7 +307,7 @@ SCIntegrate.Seurat <- function(
 get_names_4_ids <- function(..., .quoses = NULL) {
   dots <- list2(...)
 
-  # 如果提供了预计算的 quosures 就用它，否则当场捕获
+  # use pre-computed quosures if provided, otherwise capture on the spot
   if (is.null(.quoses)) {
     quoses <- enquos(..., .named = TRUE)
   } else {

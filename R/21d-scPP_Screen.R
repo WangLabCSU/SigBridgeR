@@ -6,7 +6,7 @@
 #' Internal helper that handles package installation checks, input validation,
 #' and default-value resolution for [DoscPP()].
 #'
-#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class
+#' @param phenotype,label_type,phenotype_class
 #'   Forwarded from [DoscPP()].
 #' @param ref_group,Log2FC_cutoff,estimate_cutoff,probs
 #'   Forwarded from [DoscPP()].
@@ -18,8 +18,6 @@
 #' @keywords internal
 #' @family scPP
 ValidatescPPParams <- function(
-  matched_bulk,
-  sc_data,
   phenotype,
   label_type,
   phenotype_class,
@@ -37,7 +35,6 @@ ValidatescPPParams <- function(
   })
 
   # -- input validation -----------------------------------------------------
-  chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
   phenotype_class <- tolower(phenotype_class)
   phenotype_class <- arg_match(
@@ -51,25 +48,7 @@ ValidatescPPParams <- function(
     chk::chk_range(probs, range = c(0, 0.5))
   }
   # scPP can't tolerate NA
-  chk::chk_not_any_na(matched_bulk)
   chk::chk_not_any_na(phenotype)
-
-  # scPP is more strict than Scissor and scPAS
-  if (phenotype_class == "survival") {
-    if (!all(rownames(phenotype) == colnames(matched_bulk))) {
-      Abort(
-        "Please check the rownames of {.var phenotype} and colnames of {.var bulk_dataset},\
-         they should be the same."
-      )
-    }
-  } else {
-    if (!all(names(phenotype) == colnames(matched_bulk))) {
-      Abort(
-        "Please check the names of {.var phenotype} and colnames of {.var bulk_dataset},\
-         they should be the same."
-      )
-    }
-  }
 
   # -- process dots ---------------------------------------------------------
   dots <- list2(...)
@@ -81,14 +60,29 @@ ValidatescPPParams <- function(
   load_cache <- dots$load_cache
 
   # -- build cache config ---------------------------------------------------
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    ref_group = ref_group,
+    Log2FC_cutoff = Log2FC_cutoff,
+    estimate_cutoff = estimate_cutoff,
+    probs = probs,
+    verbose = verbose,
+    parallel = parallel,
+    seed = seed,
+    assay = assay,
+    save_cache = save_cache,
+    load_cache = load_cache,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "scPP",
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Perform scPP screening analysis
@@ -162,7 +156,16 @@ DoscPP <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidatescPPParams, c(get_env_vars(), list(...)))
+  p <- ValidatescPPParams(
+    phenotype = phenotype,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    ref_group = ref_group,
+    Log2FC_cutoff = Log2FC_cutoff,
+    estimate_cutoff = estimate_cutoff,
+    probs = probs,
+    ...
+  )
 
   if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start scPP screening."))

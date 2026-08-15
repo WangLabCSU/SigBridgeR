@@ -5,8 +5,6 @@
 \title{Validate and Prepare DoscAB Parameters}
 \usage{
 ValidatescABParams(
-  matched_bulk,
-  sc_data,
   phenotype,
   label_type,
   phenotype_class = c("binary", "survival"),
@@ -21,7 +19,7 @@ ValidatescABParams(
 )
 }
 \arguments{
-\item{matched_bulk, sc_data, phenotype, label_type, phenotype_class}{Forwarded from \code{\link[=DoscAB]{DoscAB()}}.}
+\item{phenotype, label_type, phenotype_class}{Forwarded from \code{\link[=DoscAB]{DoscAB()}}.}
 
 \item{alpha, alpha_2, k_max, cross_k, repeat_times, maxiter, tred}{Forwarded from \code{\link[=DoscAB]{DoscAB()}}.}
 

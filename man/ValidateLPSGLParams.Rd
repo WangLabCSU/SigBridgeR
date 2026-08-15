@@ -5,9 +5,6 @@
 \title{Validate and Prepare DoLP_SGL Parameters}
 \usage{
 ValidateLPSGLParams(
-  matched_bulk,
-  sc_data,
-  phenotype,
   label_type,
   phenotype_class = c("binary", "continuous", "survival"),
   family = lifecycle::deprecated(),
@@ -19,7 +16,7 @@ ValidateLPSGLParams(
 )
 }
 \arguments{
-\item{matched_bulk, sc_data, phenotype, label_type, phenotype_class, family}{Forwarded from \code{\link[=DoLP_SGL]{DoLP_SGL()}}.}
+\item{label_type, phenotype_class, family}{Forwarded from \code{\link[=DoLP_SGL]{DoLP_SGL()}}.}
 
 \item{resolution, alpha, nfold, dge_analysis}{Forwarded from \code{\link[=DoLP_SGL]{DoLP_SGL()}}.}
 

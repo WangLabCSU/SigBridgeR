@@ -131,10 +131,10 @@ describe("SCIntegrate.matrix", {
 
     integrated <- SCIntegrate(mat1, mat2)
 
-    # Gene A only in mat1 → present in cols 1-2, 0 in cols 3-4
+    # Gene A only in mat1 -> present in cols 1-2, 0 in cols 3-4
     expect_equal(as.numeric(integrated["A", 1:2]), as.numeric(mat1["A", ]))
     expect_equal(as.numeric(integrated["A", 3:4]), c(0, 0))
-    # Gene D only in mat2 → 0 in cols 1-2, present in cols 3-4
+    # Gene D only in mat2 -> 0 in cols 1-2, present in cols 3-4
     expect_equal(as.numeric(integrated["D", 1:2]), c(0, 0))
     expect_equal(as.numeric(integrated["D", 3:4]), as.numeric(mat2["D", ]))
   })
@@ -285,7 +285,8 @@ describe("SCIntegrate.Seurat - integration", {
     # Use a non-function method to skip integration pipeline
     suppressWarnings(
       merged <- SCIntegrate(
-        seu1, seu2,
+        seu1,
+        seu2,
         method = "skip",
         add.cell.ids = c("Batch1", "Batch2")
       )
@@ -304,7 +305,8 @@ describe("SCIntegrate.Seurat - integration", {
 
     suppressWarnings(
       merged <- SCIntegrate(
-        seu1, seu2,
+        seu1,
+        seu2,
         method = "skip",
         merge.data = FALSE,
         merge.dr = NA,

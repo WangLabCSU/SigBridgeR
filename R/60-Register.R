@@ -11,9 +11,9 @@
 #' `RegisterImpl()` for each. `RegisterImpl` is an S7 generic that dispatches
 #' based on the class of the value:
 #'
-#' * [ScreenMethod] → registered into [ScreenStrategy].
-#' * [AnnotationMethod] → registered into [SCAnnotateStrategy].
-#' * `function` → validated as a Seurat/SeuratObject function and
+#' * [ScreenMethod] -> registered into [ScreenStrategy].
+#' * [AnnotationMethod] -> registered into [SCAnnotateStrategy].
+#' * `function` -> validated as a Seurat/SeuratObject function and
 #'   registered into [SCPreProcessStrategy].
 #'
 #' If the method name already exists in the target registry, the function

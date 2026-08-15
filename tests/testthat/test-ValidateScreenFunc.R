@@ -1,10 +1,10 @@
 test_that("`ValidateScreenFunc` works", {
   func <- \(x) {
     z <- x + 1
-    # 中文
+    # Chinese
     b
     s(z)
-    ~`×`
+    ~`x`
     list(scRNA = 1, z = z)
   }
 

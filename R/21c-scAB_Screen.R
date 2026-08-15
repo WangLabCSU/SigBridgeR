@@ -6,7 +6,7 @@
 #' Internal helper that handles package installation checks, input validation,
 #' and default-value resolution for [DoscAB()].
 #'
-#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class
+#' @param phenotype,label_type,phenotype_class
 #'   Forwarded from [DoscAB()].
 #' @param alpha,alpha_2,k_max,cross_k,repeat_times,maxiter,tred
 #'   Forwarded from [DoscAB()].
@@ -18,8 +18,6 @@
 #' @keywords internal
 #' @family scAB
 ValidatescABParams <- function(
-  matched_bulk,
-  sc_data,
   phenotype,
   label_type,
   phenotype_class = c("binary", "survival"),
@@ -39,29 +37,12 @@ ValidatescABParams <- function(
   })
 
   # -- input validation -----------------------------------------------------
-  chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
   phenotype_class <- arg_match(phenotype_class)
   chk::chk_number(maxiter)
   chk::chk_number(tred)
   # scAB can't tolerate NA
-  chk::chk_not_any_na(matched_bulk)
   chk::chk_not_any_na(phenotype)
-
-  # scAB is more strict than Scissor and scPAS
-  if (phenotype_class == "survival") {
-    if (!all(rownames(phenotype) == colnames(matched_bulk))) {
-      Abort(
-        "Please check the rownames of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
-      )
-    }
-  } else {
-    if (!all(names(phenotype) == colnames(matched_bulk))) {
-      Abort(
-        "Please check the names of {.var phenotype} and colnames of {.var bulk_dataset}, they should be the same."
-      )
-    }
-  }
 
   # -- process dots ---------------------------------------------------------
   dots <- list2(...)
@@ -73,14 +54,32 @@ ValidatescABParams <- function(
   save_cache <- dots$save_cache
 
   # -- build cache config ---------------------------------------------------
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    alpha = alpha,
+    alpha_2 = alpha_2,
+    k_max = k_max,
+    cross_k = cross_k,
+    repeat_times = repeat_times,
+    maxiter = maxiter,
+    tred = tred,
+    verbose = verbose,
+    seed = seed,
+    parallel = parallel,
+    assay = assay,
+    load_cache = load_cache,
+    save_cache = save_cache,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "scAB",
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Perform scAB Screening Analysis
@@ -118,7 +117,7 @@ ValidatescABParams <- function(
 #' * **scAB_result**: scAB screening result
 #'
 #' @references
-#' Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
+#' Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112-30.
 #'
 #' @section LICENSE:
 #' Licensed under the GNU General Public License version 3 (GPL-3.0).
@@ -160,7 +159,19 @@ DoscAB <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidatescABParams, c(get_env_vars(), list(...)))
+  p <- ValidatescABParams(
+    phenotype = phenotype,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    alpha = alpha,
+    alpha_2 = alpha_2,
+    k_max = k_max,
+    cross_k = cross_k,
+    repeat_times = repeat_times,
+    maxiter = maxiter,
+    tred = tred,
+    ...
+  )
 
   # -- load mode: restore cached scAB_obj and k ------------------------------
   if (!is.null(p$load_cache)) {

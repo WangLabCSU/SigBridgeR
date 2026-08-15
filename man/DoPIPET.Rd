@@ -27,7 +27,7 @@ DoPIPET(
 )
 }
 \arguments{
-\item{matched_bulk}{Normalized bulk expression matrix (features × samples).
+\item{matched_bulk}{Normalized bulk expression matrix (features x samples).
 Column names must match \code{phenotype} identifiers.}
 
 \item{sc_data}{Seurat object containing single-cell RNA-seq data.}

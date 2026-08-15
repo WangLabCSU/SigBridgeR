@@ -6,7 +6,7 @@
 #' Internal helper that handles package installation checks, mode resolution,
 #' and default-value resolution for [DoTiRank()].
 #'
-#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class,tirank_params
+#' @param label_type,phenotype_class,tirank_params
 #'   Forwarded from [DoTiRank()].
 #' @param save_path,load_cache Forwarded from [DoTiRank()].
 #' @param ... Additional dots forwarded from [DoTiRank()].
@@ -17,9 +17,6 @@
 #' @keywords internal
 #' @family TiRank
 ValidateTiRankParams <- function(
-  matched_bulk,
-  sc_data,
-  phenotype,
   label_type,
   phenotype_class,
   tirank_params,
@@ -53,15 +50,28 @@ ValidateTiRankParams <- function(
   save_cache <- dots$save_cache %||% save_path
 
   # -- build cache config ---------------------------------------------------
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    mode = mode,
+    tirank_params = tirank_params,
+    save_path = save_path,
+    load_cache = load_cache,
+    verbose = verbose,
+    seed = seed,
+    assay = assay,
+    save_cache = save_cache,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "TiRank",
     method_version = utils::packageVersion("rTIRank"),
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Perform TiRank Screening Analysis
@@ -223,13 +233,20 @@ DoTiRank <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidateTiRankParams, c(get_env_vars(), list(...)))
+  p <- ValidateTiRankParams(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    tirank_params = tirank_params,
+    save_path = save_path,
+    load_cache = load_cache,
+    ...
+  )
 
   set.seed(p$seed)
   rTiRank::setup_seed(p$seed)
 
   if (p$verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Starting TiRank Screen"))
+    ts_cli$cli_alert_info(cli::col_green("Start TiRank Screening"))
   }
 
   # -- cache load / normal flow ----------------------------------------------

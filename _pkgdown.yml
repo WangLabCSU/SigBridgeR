@@ -36,6 +36,7 @@ reference:
           - PhenoPreProcess
           - PhenoMap
           - CountsToTPM
+          - IsCountsMatrix
           - IsSkewedDynamic
 
     - title: Result Integration & Visualization
@@ -152,7 +153,7 @@ reference:
           - Property-visitor
           - list_to_chr
 
-# 导航栏配置
+# Navbar configuration
 navbar:
     structure:
         left:

@@ -56,15 +56,25 @@ ValidateSIDISHParams <- function(
   # -- resolve sidish defaults ----------------------------------------------
   sidish_params <- SIDISHParamSet(sidish_params = sidish_params)
 
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    sidish_params = sidish_params,
+    verbose = verbose,
+    seed = seed,
+    assay = assay,
+    env_params = env_params,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "SIDISH",
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     method_version = as.character(utils::packageVersion("rSIDISH")),
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Perform SIDISH Screening Analysis
@@ -142,7 +152,15 @@ DoSIDISH <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidateSIDISHParams, c(get_env_vars(), list(...)))
+  p <- ValidateSIDISHParams(
+    matched_bulk = matched_bulk,
+    sc_data = sc_data,
+    phenotype = phenotype,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    sidish_params = sidish_params,
+    ...
+  )
 
   res <- rSIDISH::sidish(
     matched_bulk = matched_bulk,

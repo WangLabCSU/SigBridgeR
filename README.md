@@ -158,7 +158,7 @@ pak::pak(c(
 ```
 &#10;| Name | Author | Status | Repo Link |
 |------|--------|--------|-----------|
-| *Coming soon* | Be the first to contribute! | — | - |
+| *Coming soon* | Be the first to contribute! | - | - |
 &#10;To contribute your own plugin, refer to the
 [vignette on extending SigBridgeR](https://wanglabcsu.github.io/SigBridgeR/articles/extending.html).
 -->
@@ -225,6 +225,6 @@ citation("SigBridgeR")
 
 [scPrognosis](https://github.com/XiaomeiLi1/scPrognosis): scRNA-seq count matrix (imputed by MAGIC + filtered for low coverage/expression) + bulk RNA-seq expression matrix (with matched survival time and event status) -\> breast cancer prognostic gene signatures and Cox PH risk prediction model
 
-[SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq expression matrix + target scRNA-seq expression matrix + (optional) bulk RNA-seq expression matrix with paired survival data -\> cell embeddings, cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived risk scores with survival probability curves for individual cell subpopulations.
+[SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq expression matrix + target scRNA-seq expression matrix + (optional) bulk RNA-seq expression matrix with paired survival data -\> cell embeddings, cluster assignments, UMAP visualizations, and phenotype-algebra-derived risk scores with survival probability curves for individual cell subpopulations.
 
 [scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data + bulk RNA-seq data + celltype annotation (optional batch labels) -\> phenotype-associated cell populations

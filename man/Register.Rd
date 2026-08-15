@@ -31,9 +31,9 @@ is dispatched to the appropriate \code{RegisterImpl} method.
 \code{RegisterImpl()} for each. \code{RegisterImpl} is an S7 generic that dispatches
 based on the class of the value:
 \itemize{
-\item \link{ScreenMethod} → registered into \link{ScreenStrategy}.
-\item \link{AnnotationMethod} → registered into \link{SCAnnotateStrategy}.
-\item \code{function} → validated as a Seurat/SeuratObject function and
+\item \link{ScreenMethod} -> registered into \link{ScreenStrategy}.
+\item \link{AnnotationMethod} -> registered into \link{SCAnnotateStrategy}.
+\item \code{function} -> validated as a Seurat/SeuratObject function and
 registered into \link{SCPreProcessStrategy}.
 }
 

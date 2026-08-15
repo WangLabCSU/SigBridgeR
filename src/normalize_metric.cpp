@@ -13,7 +13,7 @@ NumericVector normalize_metric(NumericVector x, bool invert = false)
     int count = 0;
     double xmin = R_PosInf;
     double xmax = R_NegInf;
-    // 一次遍历：计算 sum、sumsq、min、max，忽略 NA/NaN
+    // single pass: compute sum, sumsq, min, max, ignoring NA/NaN
     for (int i = 0; i < n; ++i)
     {
         double xi = x[i];
@@ -28,8 +28,8 @@ NumericVector normalize_metric(NumericVector x, bool invert = false)
         if (xi > xmax) xmax = xi;
     }
     NumericVector out(n);
-    // 对应 stats::sd(x, na.rm = TRUE)
-    // 当非 NA 数量 <= 1 时，sd 为 NA；这里按无法归一化处理为 0.5
+    // corresponds to stats::sd(x, na.rm = TRUE)
+    // when the number of non-NA values <= 1, sd is NA; treat as non-normalizable -> 0.5
     if (count <= 1)
     {
         std::fill(out.begin(), out.end(), 0.5);
@@ -37,7 +37,7 @@ NumericVector normalize_metric(NumericVector x, bool invert = false)
     }
     double mean = sum / count;
     double variance = (sumsq - count * mean * mean) / (count - 1);
-    // 防止浮点误差导致极小负数
+    // prevent tiny negative values caused by floating-point error
     if (variance < 0.0 && variance > -1e-15)
     {
         variance = 0.0;

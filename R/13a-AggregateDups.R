@@ -29,7 +29,7 @@
 #' | --- | --- |
 #' | `matrix` | `matrix` |
 #' | `data.frame` | `data.frame` |
-#' | S4 `Matrix` | `matrix` (dense) — S4 attributes dropped for generality |
+#' | S4 `Matrix` | `matrix` (dense) - S4 attributes dropped for generality |
 #'
 #' Row/column order in output follows *first occurrence* of each unique name in \code{rownames(x)} / \code{colnames(x)}.
 #'

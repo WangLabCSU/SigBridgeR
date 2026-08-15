@@ -6,7 +6,7 @@
 #' Internal helper that handles package installation checks, input validation,
 #' and default-value resolution for [DoPIPET()].
 #'
-#' @param matched_bulk,sc_data,phenotype,phenotype_class,only_pos_marker,group
+#' @param phenotype_class,only_pos_marker,group
 #'   Forwarded from [DoPIPET()].
 #' @param discretize_method,cutoff,label_type,marker_finder,log2FC,p_adjust
 #'   Forwarded from [DoPIPET()].
@@ -21,9 +21,6 @@
 #' @keywords internal
 #' @family PIPET
 ValidatePIPETParams <- function(
-  matched_bulk,
-  sc_data,
-  phenotype,
   phenotype_class,
   only_pos_marker,
   group,
@@ -48,8 +45,6 @@ ValidatePIPETParams <- function(
   })
 
   # -- input validation -----------------------------------------------------
-  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
-  chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
   phenotype_class <- SigBridgeRUtils::MatchArg(
     phenotype_class,
@@ -91,14 +86,27 @@ ValidatePIPETParams <- function(
   save_cache <- dots$save_cache
 
   # -- build cache config ---------------------------------------------------
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    marker_finder = marker_finder,
+    distance = distance,
+    verbose = verbose,
+    seed = seed,
+    parallel = parallel,
+    assay = assay,
+    load_cache = load_cache,
+    save_cache = save_cache,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "PIPET",
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Perform PIPET Screening Analysis
@@ -109,7 +117,7 @@ ValidatePIPETParams <- function(
 #' testing for significance assessment.
 #'
 #'
-#' @param matched_bulk Normalized bulk expression matrix (features × samples).
+#' @param matched_bulk Normalized bulk expression matrix (features x samples).
 #'        Column names must match `phenotype` identifiers.
 #' @param sc_data Seurat object containing single-cell RNA-seq data.
 #' @param phenotype Clinical outcome data. Can be:
@@ -179,10 +187,27 @@ DoPIPET <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidatePIPETParams, c(get_env_vars(), list(...)))
+  p <- ValidatePIPETParams(
+    phenotype_class = phenotype_class,
+    only_pos_marker = only_pos_marker,
+    group = group,
+    discretize_method = discretize_method,
+    cutoff = cutoff,
+    label_type = label_type,
+    marker_finder = marker_finder,
+    log2FC = log2FC,
+    p_adjust = p_adjust,
+    show_log2FC = show_log2FC,
+    freq_counts = freq_counts,
+    normalize = normalize,
+    scale = scale,
+    nPerm = nPerm,
+    distance = distance,
+    ...
+  )
 
   if (p$verbose) {
-    ts_cli$cli_alert_info(cli::col_green("Starting PIPET screen"))
+    ts_cli$cli_alert_info(cli::col_green("Start PIPET screening"))
   }
 
   # -- load mode: restore cached markers ------------------------------------

@@ -6,7 +6,7 @@
 #' Internal helper that handles package installation checks, deprecated argument
 #' warnings, input validation, and default-value resolution for [DoLP_SGL()].
 #'
-#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class,family
+#' @param label_type,phenotype_class,family
 #'   Forwarded from [DoLP_SGL()].
 #' @param resolution,alpha,nfold,dge_analysis Forwarded from [DoLP_SGL()].
 #' @param ... Additional dots forwarded from [DoLP_SGL()].
@@ -17,9 +17,6 @@
 #' @keywords internal
 #' @family LP_SGL
 ValidateLPSGLParams <- function(
-  matched_bulk,
-  sc_data,
-  phenotype,
   label_type,
   phenotype_class = c("binary", "continuous", "survival"),
   family = lifecycle::deprecated(),
@@ -36,8 +33,6 @@ ValidateLPSGLParams <- function(
   })
 
   # -- input validation -----------------------------------------------------
-  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
-  chk::chk_is(sc_data, c("Seurat"))
   chk::chk_list(dge_analysis)
   phenotype_class <- arg_match(phenotype_class)
 
@@ -70,15 +65,28 @@ ValidateLPSGLParams <- function(
   assay <- dots$assay %||% "RNA"
 
   # -- build cache config ---------------------------------------------------
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    family = family,
+    resolution = resolution,
+    alpha = alpha,
+    nfold = nfold,
+    dge_analysis = dge_analysis,
+    verbose = verbose,
+    seed = seed,
+    assay = assay,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "LP_SGL",
     method_version = r_pkg_version("LPSGL"),
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Perform LP-SGL Screening Analysis
@@ -159,7 +167,16 @@ DoLP_SGL <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidateLPSGLParams, c(get_env_vars(), list(...)))
+  p <- ValidateLPSGLParams(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    family = family,
+    resolution = resolution,
+    alpha = alpha,
+    nfold = nfold,
+    dge_analysis = dge_analysis,
+    ...
+  )
 
   if (ncol(sc_data) > 5e4) {
     cli::cli_warn(
@@ -171,7 +188,7 @@ DoLP_SGL <- function(
   # * Start
   if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green(
-      "Starting LP-SGL screen"
+      "Start LP-SGL screening"
     ))
   }
   # * Run Leiden clustering

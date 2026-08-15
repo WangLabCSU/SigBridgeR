@@ -7,7 +7,7 @@
 #' introspection of function signatures, body structure, and closure properties.
 #'
 #' This utility aids in debugging, validation, and exploration of dynamically
-#' registered pipelines—particularly useful when developing or auditing extensible
+#' registered pipelines-particularly useful when developing or auditing extensible
 #' analysis frameworks.
 #'
 #' @param strategy Character/Environment. strategy environment to inspect.

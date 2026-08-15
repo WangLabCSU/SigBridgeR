@@ -6,7 +6,7 @@
 #' Internal helper that handles package installation checks, deprecated argument
 #' warnings, input validation, and default-value resolution for [DoscPAS()].
 #'
-#' @param matched_bulk,sc_data,phenotype,label_type,phenotype_class,assay
+#' @param phenotype,label_type,phenotype_class,assay
 #'   Forwarded from [DoscPAS()].
 #' @param imputation,imputation_method,nfeature,alpha,cutoff,network_class
 #'   Forwarded from [DoscPAS()].
@@ -20,8 +20,6 @@
 #' @keywords internal
 #' @family scPAS
 ValidatescPASParams <- function(
-  matched_bulk,
-  sc_data,
   phenotype,
   label_type,
   phenotype_class,
@@ -46,8 +44,6 @@ ValidatescPASParams <- function(
   })
 
   # -- input validation -----------------------------------------------------
-  chk::chk_is(matched_bulk, c("matrix", "data.frame"))
-  chk::chk_is(sc_data, "Seurat")
   chk::chk_character(label_type)
   chk::chk_flag(imputation)
   chk::chk_flag(independent)
@@ -96,14 +92,34 @@ ValidatescPASParams <- function(
   load_cache <- dots$load_cache
   save_cache <- dots$save_cache
 
+  res <- list(
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    family = family,
+    assay = assay,
+    imputation = imputation,
+    imputation_method = imputation_method,
+    nfeature = nfeature,
+    alpha = alpha,
+    cutoff = cutoff,
+    network_class = network_class,
+    permutation_times = permutation_times,
+    FDR_threshold = FDR_threshold,
+    independent = independent,
+    verbose = verbose,
+    seed = seed,
+    load_cache = load_cache,
+    save_cache = save_cache,
+    dots = dots
+  )
   cache_config <- ScreenMethodConfig(
     method_name = "scPAS",
-    param = get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype")),
+    param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
   )
 
-  get_env_vars(exclude = c("matched_bulk", "sc_data", "phenotype"))
+  c(res, list(cache_config = cache_config))
 }
 
 #' @title Perform scPAS Screening Analysis
@@ -161,7 +177,23 @@ DoscPAS <- function(
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------
-  p <- do.call(ValidatescPASParams, c(get_env_vars(), list(...)))
+  p <- ValidatescPASParams(
+    phenotype = phenotype,
+    label_type = label_type,
+    phenotype_class = phenotype_class,
+    assay = assay,
+    imputation = imputation,
+    imputation_method = imputation_method,
+    nfeature = nfeature,
+    alpha = alpha,
+    cutoff = cutoff,
+    network_class = network_class,
+    family = family,
+    permutation_times = permutation_times,
+    FDR_threshold = FDR_threshold,
+    independent = independent,
+    ...
+  )
 
   set.seed(p$seed)
 

@@ -67,7 +67,7 @@ setThreads <- function(
   verbose = getFuncOption("verbose"),
   ...
 ) {
-  # ===== 1. 参数验证与默认值 =====
+  # ===== 1. Parameter validation and defaults =====
 
   chk::chk_integer(threads)
   chk::chk_list(tf_config)
@@ -88,7 +88,7 @@ setThreads <- function(
 
   verbose <- verbose %||% TRUE
 
-  # ===== 2. 各后端独立配置，统一收集结果 =====
+  # ===== 2. Per-backend configuration, results aggregated uniformly =====
   results <- c(
     config_openmp_threads(openmp),
     config_qs2_threads(qs2),
@@ -101,7 +101,7 @@ setThreads <- function(
     )
   )
 
-  # ===== 3. 统一打印输出 =====
+  # ===== 3. Unified print output =====
   if (isTRUE(verbose)) {
     print_thread_config(results)
   }

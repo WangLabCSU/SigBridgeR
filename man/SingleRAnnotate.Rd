@@ -37,7 +37,7 @@ Default: inherits from package option \code{getOption("SigBridgeR.verbose")}.}
 \item A \code{SingleCellExperiment} object containing pre-labeled reference cells.
 }
 
-Note: The placeholder option \code{"custom"} is not valid—users must provide an actual reference object.
+Note: The placeholder option \code{"custom"} is not valid-users must provide an actual reference object.
 
 A numeric matrix of (usually normalized and log-transformed) expression values from a reference dataset, or a SummarizedExperiment object containing such a matrix; see \code{SingleR::trainSingleR} for details.
 Alternatively, a list or List of SummarizedExperiment objects or numeric matrices containing multiple references. Row names may be different across entries but only the intersection will be used,}

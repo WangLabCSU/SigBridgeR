@@ -22,7 +22,7 @@ library(SigBridgeR)
 
 # Extend Cell Type Annotation Methods
 
-By default, SigBridgeR includes three built-in cell type annotation algorithms: **SingleR**, **CellTypist**, and **mLLMCelltype**—all of which require additional installation and dependencies (See [README](https://wanglabcsu.github.io/SigBridgeR/index.html)). They can all be invoked through the unified interface function `SCAnnotate`.
+By default, SigBridgeR includes three built-in cell type annotation algorithms: **SingleR**, **CellTypist**, and **mLLMCelltype**-all of which require additional installation and dependencies (See [README](https://wanglabcsu.github.io/SigBridgeR/index.html)). They can all be invoked through the unified interface function `SCAnnotate`.
 
 Extending cell annotation method is easy:
 

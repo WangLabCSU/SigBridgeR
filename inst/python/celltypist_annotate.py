@@ -20,14 +20,14 @@ LogLevel = Literal["info", "success", "warning", "error", "debug"]
 
 def get_dirname(path_str: str) -> str:
     """
-    获取路径的 dirname（目录名）
+    Get the dirname of a path (directory name).
 
     Returns:
-        str: 路径中的目录部分，纯文件名则返回空字符串
+        str: The directory part of the path, or an empty string for a bare filename.
     """
     path = Path(path_str)
 
-    # 如果是纯文件名（没有父目录），返回空字符串
+    # If it is a bare filename (no parent directory), return an empty string
     if path.parent == Path("."):
         return ""
 
@@ -36,10 +36,10 @@ def get_dirname(path_str: str) -> str:
 
 def is_path(input_str: str) -> bool:
     """
-    检查输入字符串是否是文件路径
+    Check whether the input string is a file path.
 
     Returns:
-        bool: True 如果是路径，False 如果是纯名称
+        bool: True if it is a path, False if it is a plain name.
     """
     path = Path(input_str)
     return (
@@ -56,12 +56,13 @@ def ts_print(
     color: bool = True,
 ) -> None:
     """
-    带时间戳的信息输出函数
+    Timestamped message output function.
 
     Args:
-        message: 要输出的消息内容
-        symbol: CLI 符号类型，可选值: 'info', 'success', 'warning', 'error', 'debug'，默认无符号
-        color: 是否启用 ANSI 颜色输出（默认 True）
+        message: The message content to output.
+        symbol: CLI symbol type, one of: 'info', 'success',
+                'warning', 'error', 'debug'. Default: no symbol.
+        color: Whether to enable ANSI color output (default True).
     """
     timestamp = datetime.datetime.now(tz=datetime.timezone.utc).strftime(
         "[%Y/%m/%d %H:%M:%S]"
@@ -292,4 +293,4 @@ download_all_models = download_models  # backward-compatible alias
 
 if __name__ == "__main__":
     raise SystemExit("This module is intended to be called from R via reticulate.")
-# R 端模块
+# R-side module

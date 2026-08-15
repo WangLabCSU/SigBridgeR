@@ -20,7 +20,7 @@ library(SigBridgeR)
 
 # Extend Seurat Methods
 
-In general, any Seurat function can be registered for use within `SCPreProcess`. However, due to the character-length limitation of the pipeline code string, at most **52** functions can be registered—one for each uppercase and lowercase letter (A–Z, a–z).  
+In general, any Seurat function can be registered for use within `SCPreProcess`. However, due to the character-length limitation of the pipeline code string, at most **52** functions can be registered-one for each uppercase and lowercase letter (A-Z, a-z).  
 
 By default, the registry is defined as follows:
 

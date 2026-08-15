@@ -78,9 +78,9 @@ spatials <- RunPCA(spatials) |>
 # SeuratObject::SaveSeuratRds(spatials, "seurat.rds")
 ```
 
-In theory, this workflow could be simplified using `SCPreProcess`; however, due to the performance issue reported in [Seurat #10153](https://github.com/satijalab/seurat/issues/10153)—where `SCTransform` hangs or slows down significantly when called via `do.call` (as `SCPreProcess` does internally)—we instead use a custom workflow here to avoid the slowdown.
+In theory, this workflow could be simplified using `SCPreProcess`; however, due to the performance issue reported in [Seurat #10153](https://github.com/satijalab/seurat/issues/10153)-where `SCTransform` hangs or slows down significantly when called via `do.call` (as `SCPreProcess` does internally)-we instead use a custom workflow here to avoid the slowdown.
 
-(It hasn’t been fixed yet. If it gets resolved, please kindly notify me in the issue—thank you! :))
+(It hasn't been fixed yet. If it gets resolved, please kindly notify me in the issue-thank you! :))
 
 ### Bulk RNA Seq & Survival
 
@@ -152,8 +152,8 @@ spatials <- SCAnnotate(
 ```{r}
 #| label: celltype_anno_output
 #| eval: false
-# ℹ [2026/02/09 11:26:14] [mLLMCelltype] Start annotating cell types
-# ℹ [2026/02/09 11:26:14] Find marker genes for each clusters
+# i [2026/02/09 11:26:14] [mLLMCelltype] Start annotating cell types
+# i [2026/02/09 11:26:14] Find marker genes for each clusters
 # Calculating cluster 0
 # Calculating cluster 1
 # Calculating cluster 2
@@ -179,11 +179,11 @@ spatials <- SCAnnotate(
 # Calculating cluster 22
 # Calculating cluster 23
 # Calculating cluster 24
-# ℹ [2026/02/09 11:28:42] Large language models cell type Annotating
+# i [2026/02/09 11:28:42] Large language models cell type Annotating
 # ###
 # # LLM Output
 # ###
-# ✔ [2026/02/09 11:28:46] Annotation Finished
+# v [2026/02/09 11:28:46] Annotation Finished
 ```
 
 ```{r}
@@ -227,37 +227,37 @@ res <- Screen(
 ```{r}
 #| label: screen_output
 #| eval: false
-# ℹ `label_type` not specified or not of length 1, using "Scissor"
-# ℹ [2026/02/09 15:40:19] Scissor start...
-# ℹ [2026/02/09 15:40:19] Start from raw data...
-# ℹ Using "SCT_snn" graph for network.
-# ℹ [2026/02/09 15:40:24] Normalizing quantiles of data
-# ℹ [2026/02/09 15:41:21] Subsetting data
-# ℹ [2026/02/09 15:41:27] Calculating correlation
+# i `label_type` not specified or not of length 1, using "Scissor"
+# i [2026/02/09 15:40:19] Scissor start...
+# i [2026/02/09 15:40:19] Start from raw data...
+# i Using "SCT_snn" graph for network.
+# i [2026/02/09 15:40:24] Normalizing quantiles of data
+# i [2026/02/09 15:41:21] Subsetting data
+# i [2026/02/09 15:41:27] Calculating correlation
 # -------------------------------------------------------------
 # Five-number summary of correlations:
 # 0.220832 0.388996 0.414044 0.433624 0.47267
 # -------------------------------------------------------------
-# ℹ [2026/02/09 15:41:39] Perform cox regression on the given clinical outcomes...
-# ✔ [2026/02/09 15:42:43] Statistics data saved to Scissor_inputs.RData.
-# ℹ [2026/02/09 15:42:47] Screening...
+# i [2026/02/09 15:41:39] Perform cox regression on the given clinical outcomes...
+# v [2026/02/09 15:42:43] Statistics data saved to Scissor_inputs.RData.
+# i [2026/02/09 15:42:47] Screening...
 
-# ── At alpha = 0.05 ──
+# -- At alpha = 0.05 --
 
 # Scissor identified 1789 Scissor+ cells and 1617 Scissor- cells.
 # The percentage of selected cell is: 14.533%
-# ℹ [2026/02/09 15:45:05] Scissor Ended.
+# i [2026/02/09 15:45:05] Scissor Ended.
 ```
 
 ### data
 
-The returned structure is a `list`, where the first slot—`scRNA_data`—contains the Seurat object. Additional slots in the list store intermediate data generated during the process.
+The returned structure is a `list`, where the first slot-`scRNA_data`-contains the Seurat object. Additional slots in the list store intermediate data generated during the process.
 
 A new column named `Scissor` will be added to the `meta.data` of the Seurat object, with three possible labels:
 
-- **Positive** denotes cells whose abundance or activity is **positively correlated** with the phenotype of interest—specifically, those associated with **poor prognosis**.  
+- **Positive** denotes cells whose abundance or activity is **positively correlated** with the phenotype of interest-specifically, those associated with **poor prognosis**.  
 - **Negative** denotes cells that are **negatively correlated** with the phenotype (i.e., potentially protective or associated with better outcomes).  
-- **Neutral** cells can be interpreted as **background** or **non-informative** cells—those showing little to no association with the phenotype.
+- **Neutral** cells can be interpreted as **background** or **non-informative** cells-those showing little to no association with the phenotype.
 
 ### files
 

@@ -205,7 +205,7 @@ seurat <- mLLMCellTypeAnnotate(
     
     Example: `list(openai = "sk-...", anthropic = "sk-ant-...")`.
     
-    **Note**: Default placeholder keys (`"your-xxx-key"`) will fail—users must supply valid keys.
+    **Note**: Default placeholder keys (`"your-xxx-key"`) will fail-users must supply valid keys.
 
 
 **Returns**:
@@ -493,78 +493,3 @@ To copy `get_var_value` into your own package, run:
 #| eval: false
 usethis::use_standalone("WangLabCSU/SigBridgeR", "standalone-get_var_value.R")
 ```
-
-### get_env_vars
-
-`get_env_vars` is a **standalone script** that captures every binding
-(including hidden variables whose names start with `.`) from a given
-environment and returns them as a **named list**. It is self-contained
-(only uses `base` functions) and can be sourced independently or imported
-via `source()` / `box::use()` without pulling in additional package
-dependencies.
-
-Internally, it calls `ls(envir = env, all.names = all.names)` to list the
-variable names, then `mget(vars, envir = env, inherits = FALSE)` to
-retrieve the corresponding values. `inherits = FALSE` ensures that only
-bindings directly defined in `env` are returned, not those inherited from
-enclosing frames. By default, `env = parent.frame()`, which captures the
-caller's environment — the most common use case inside a function body.
-
-Typical use cases:
-
-- **Debugging**: snapshot the current local environment state.
-- **Metaprogramming**: capture all objects created inside a function's body.
-- **Caching / reproducibility**: serialise the environment to disk for later
-  inspection or replay.
-
-#### Parameters
-
-- `env`: An environment whose bindings should be captured. Defaults to
-  `parent.frame()`, i.e. the calling environment.
-- `all.names`: Logical. If `TRUE`, all object names are returned; if
-  `FALSE`, names which begin with a `.` are omitted. Default is `FALSE`.
-- `exclude`: A character vector of variable names to exclude from the
-  result. Default is `character(0)` (no exclusion).
-
-#### Example
-
-```{r}
-#| label: get_env_vars_example
-#| eval: false
-source("R/standalone-get_env_vars.R")
-
-f <- function() {
-  x <- 1
-  y <- "hello"
-  .hidden <- "not shown by default"
-  get_env_vars()
-}
-f()
-# $x
-# [1] 1
-#
-# $y
-# [1] "hello"
-
-# Also capture hidden variables starting with "."
-g <- function() {
-  x <- 1
-  .hidden <- "shown"
-  get_env_vars(all.names = TRUE)
-}
-g()
-# $x
-# [1] 1
-#
-# $.hidden
-# [1] "shown"
-```
-
-To copy `get_env_vars` into your own package, run:
-
-```{r}
-#| label: usethis_use_standalone_get_env_vars
-#| eval: false
-usethis::use_standalone("WangLabCSU/SigBridgeR", "standalone-get_env_vars.R")
-```
-

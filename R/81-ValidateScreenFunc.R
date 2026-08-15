@@ -342,14 +342,14 @@ ValidateReturn <- function(func, ...) {
 ValidateDirName <- function(func, ...) {
   func_body <- fn_body(func)
 
-  # 递归查找所有 dir.create 调用
+  # recursively find all dir.create calls
   find_dir_create_calls <- function(expr) {
     calls <- list()
     if (is_call(expr)) {
       if (call_name(expr) == "dir.create") {
         calls <- list(expr)
       }
-      # 递归遍历子表达式
+      # recursively traverse sub-expressions
       for (arg in call_args(expr)) {
         calls <- c(calls, find_dir_create_calls(arg))
       }
@@ -369,23 +369,23 @@ ValidateDirName <- function(func, ...) {
 
   note <- 0L
 
-  # 检查每个 dir.create 调用的文件夹名
+  # check the folder name of each dir.create call
   for (call in dir_create_calls) {
     folder_arg <- call_args(call)[[1]]
 
-    # 尝试获取文件夹名
+    # try to get the folder name
     if (is_syntactic_literal(folder_arg)) {
       folder_name <- as.character(folder_arg)
     } else if (is_symbol(folder_arg)) {
       # cli::cli_inform("folder_arg: {folder_arg}") # * for debug
 
-      # 如果是符号，尝试获取变量名
+      # if it is a symbol, try to get the variable name
       folder_name <- get_var_value(
         var_name = as.character(folder_arg),
         func = func
       )
     } else {
-      # 对于复杂表达式，记录警告但继续
+      # for complex expressions, record a warning and continue
       cli::cli_warn("Failed to get folder name for dir.create call")
       next
     }

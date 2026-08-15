@@ -1,3 +1,5 @@
+# nocov start
+
 #' @title Python Module Registry
 #'
 #' @description
@@ -36,7 +38,6 @@ py_module_names <- function() {
     return(character())
   }
 
-  # * 模块名 = 相对 inst/python 的路径（去 .py 后缀，目录分隔符转为 .）
   modules <- substring(files, nchar(python_dir) + 2L)
   modules <- sub("[.]py$", "", modules)
   sort(gsub("/", ".", modules, fixed = TRUE))
