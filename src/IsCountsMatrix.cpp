@@ -3,9 +3,9 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 bool IsCountsMatrixImpl(const arma::mat& x,
-                       bool verbose = false,
-                       double integer_tol = 1e-8,
-                       double min_integer_fraction = 0.95)
+                        bool verbose = false,
+                        double integer_tol = 1e-8,
+                        double min_integer_fraction = 0.95)
 {
     const arma::uword n = x.n_elem;
     if (n == 0)
@@ -66,14 +66,16 @@ bool IsCountsMatrixImpl(const arma::mat& x,
                 << "Integer fraction: " << integer_fraction << "\n"
                 << "Zero fraction: " << zero_fraction << "\n"
                 << "Library sizes: ";
-        for (arma::uword j = 0; j < library_sizes.n_elem; ++j)
+        for (arma::uword j = 0; j < library_sizes.n_elem && j < 10; ++j)
         {
             Rcpp::Rcout << library_sizes[j];
             if (j + 1 < library_sizes.n_elem)
                 Rcpp::Rcout << ", ";
+            if (j == 9 && j + 1 < library_sizes.n_elem)
+                Rcpp::Rcout << " ...";
         }
         Rcpp::Rcout
-                << "\\nResult: TRUE; matrix is likely a counts matrix.\n";
+                << "\nResult: TRUE; matrix is likely a counts matrix.\n";
     }
     return true;
 }

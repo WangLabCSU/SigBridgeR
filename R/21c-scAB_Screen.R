@@ -180,7 +180,7 @@ DoscAB <- function(
       path = p$load_cache,
       cache = p$cache_config,
       verbose = p$verbose,
-      timestamp = p$dots$timestamp,
+      timestamp = p$dots$timestamp
     )
 
     scAB_obj <- cache$scAB_obj

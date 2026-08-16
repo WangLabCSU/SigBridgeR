@@ -215,7 +215,7 @@ mLLMCelltypeAnnotate <- function(
       top_gene_count = top_gene_count,
       debug = debug,
       base_urls = base_urls,
-      return_reasoning = return_reasoning,
+      return_reasoning = return_reasoning
     )
 
     sc$mllmcelltype_cell_type <- dplyr::recode_values(

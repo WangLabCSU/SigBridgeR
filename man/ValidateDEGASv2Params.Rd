@@ -5,6 +5,7 @@
 \title{Validate and Prepare DoDEGASv2 Parameters}
 \usage{
 ValidateDEGASv2Params(
+  matched_bulk,
   phenotype,
   label_type = NULL,
   phenotype_class = c("binary", "survival", "continuous"),
@@ -38,7 +39,7 @@ ValidateDEGASv2Params(
 )
 }
 \arguments{
-\item{phenotype, label_type, phenotype_class}{Forwarded from \code{\link[=DoDEGASv2]{DoDEGASv2()}}.}
+\item{matched_bulk, phenotype, label_type, phenotype_class}{Forwarded from \code{\link[=DoDEGASv2]{DoDEGASv2()}}.}
 
 \item{top_fraction_pos, sclab, bulk_hvg, bulk_de, sc_de, add_genes}{Forwarded from \code{\link[=DoDEGASv2]{DoDEGASv2()}}.}
 

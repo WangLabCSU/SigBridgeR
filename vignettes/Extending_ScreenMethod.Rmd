@@ -326,9 +326,29 @@ If you still have questions, please use GitHub [Issues](https://github.com/WangL
 
 ## Other development guideline
 
-In addition to the code formatting and interface requirements described above, there are several additional requirements:
+In addition to the code formatting and interface requirements described above, there are several tips for developing a new algorithm:
 
-- If non-temporary, meaningful intermediate or analysis files need to be written, organize them in a `{method_name}_res` directory.
+- **CODE STYLE**: [tidyverse style](https://style.tidyverse.org/index.html) is recommended.
+
+- **PARAMETER**: Instead of passing raw arguments directly into your algorithm, **construct a dedicated parameter object** and perform validation and preprocessing inside that object's builder. Doing the checks and normalization up front keeps your algorithm clean and prevents malformed inputs from reaching the screening logic. Only after the parameter object has been validated should you proceed to run the algorithm.
+
+- **PERFORMANCE**: If your algorithm is computationally expensive, **prioritize optimizing the code itself before reaching for parallelization**. Parallelization can multiply resource usage and complexity, and it often masks inefficiencies that a better implementation would remove. Consider the following strategies, roughly in order: 
+    1. Use high-performance R packages and functions;
+       - Packages:
+         - [cheapr](https://github.com/NicChr/cheapr)
+         - [data.table](https://github.com/Rdatatable/data.table)
+         - [matrixStats](https://github.com/HenrikBengtsson/matrixStats)
+         - [sparseMatrixStats](https://github.com/const-ae/sparseMatrixStats)
+         - [qs2](https://github.com/qsbase/qs2)
+         - [matrixTests](https://github.com/karoliskoncevicius/matrixTests)
+       - Functions: 
+         - `stats::cor` -> `[WGCNA](https://github.com/cran/WGCNA)::cor`
+    2. Rewrite the hot path in a high-performance language such as C++, Rust, or Julia;
+    3. Consider hardware accelerators such as GPU or TPU.
+
+- **FILE STORE**: If non-temporary, meaningful intermediate or analysis files need to be written, organize them in a `{method_name}_res` directory.
+
+- **RESULT REPORT**: The result returned by your algorithm **should assign a specific label** to every cell. This can be delivered as a simple vector (if you favor a lightweight, minimal development) or as a data.frame (more comprehensive and easier to extend and reuse). Avoid returning only a phenotype-association score, because a bare score is difficult to apply directly in concrete studies. Such a score is not suitable as research material on its own; on the contrary, it requires the results of a study to corroborate it.
 
 ## Session Info
 

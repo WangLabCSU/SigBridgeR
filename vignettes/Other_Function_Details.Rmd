@@ -214,6 +214,10 @@ A Seurat object with the cell type annotation added as metadata columns.
 
 helpful link: [https://github.com/cafferychen777/mLLMCelltype](https://github.com/cafferychen777/mLLMCelltype)
 
+**Privacy**
+
+All data is read from your local input and processed in official mLLMCelltype — nothing is stored on any servers.
+
 ## SingleR Annotation
 
 ```{r}

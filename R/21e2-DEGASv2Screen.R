@@ -6,7 +6,7 @@
 #' Internal helper that handles package installation checks, input validation,
 #' and default-value resolution for [DoDEGASv2()].
 #'
-#' @param phenotype,label_type,phenotype_class
+#' @param matched_bulk,phenotype,label_type,phenotype_class
 #'   Forwarded from [DoDEGASv2()].
 #' @param top_fraction_pos,sclab,bulk_hvg,bulk_de,sc_de,add_genes
 #'   Forwarded from [DoDEGASv2()].
@@ -26,6 +26,7 @@
 #' @keywords internal
 #' @family DEGASv2
 ValidateDEGASv2Params <- function(
+  matched_bulk,
   phenotype,
   label_type = NULL,
   phenotype_class = c("binary", "survival", "continuous"),
@@ -73,6 +74,7 @@ ValidateDEGASv2Params <- function(
   if (!is.null(sclab)) {
     chk::chk_character(sclab)
   }
+  chk::chk_matrix(matched_bulk)
   chk::chk_flag(bulk_hvg)
   chk::chk_flag(bulk_de)
   chk::chk_flag(sc_de)
@@ -87,7 +89,9 @@ ValidateDEGASv2Params <- function(
   chk::chk_flag(only.pos)
   chk::chk_range(min.pct)
   chk::chk_number(logfc.threshold)
-  chk::chk_integer(n_st_classes)
+  if (!is.null(n_st_classes)) {
+    chk::chk_integer(n_st_classes)
+  }
   loss_type <- arg_match(loss_type)
   transfer_type <- arg_match(transfer_type)
   chk::chk_string(model_save_dir)
@@ -214,7 +218,6 @@ DoDEGASv2 <- function(
   # -- validate & prepare all parameters -----------------------------------
   p <- ValidateDEGASv2Params(
     matched_bulk = matched_bulk,
-    sc_data = sc_data,
     phenotype = phenotype,
     label_type = label_type,
     phenotype_class = phenotype_class,
@@ -284,6 +287,8 @@ DoDEGASv2 <- function(
     ts_cli$cli_alert_info("Training DEGASv2 model")
   }
 
+  # purrr::iwalk(data, ~ cli::cli_alert_info("dim of {.y}: {dim(.x)}"))
+
   degas_sc_results <- DEGASv2::run_DEGAS_SCST(
     data_list = data,
     model_type = model_type,
@@ -305,10 +310,19 @@ DoDEGASv2 <- function(
   hazard_df <- as.data.frame(degas_sc_results)
   colnames(hazard_df) <- paste0("DEGASv2_", colnames(hazard_df))
 
-  top_fraction <- stats::quantile(hazard_df$hazard, 1 - top_fraction_pos)
+  top_fraction <- stats::quantile(
+    hazard_df$DEGASv2_hazard,
+    1 - top_fraction_pos
+  )
   hazard_df <- dplyr::mutate(
     hazard_df,
-    DEGASv2 = ifelse(hazard_df$hazard > top_fraction, "Positive", "Other")
+    DEGASv2_index = NULL,
+    DEGASv2_pos_thresh = top_fraction,
+    DEGASv2 = ifelse(
+      hazard_df$DEGASv2_hazard > top_fraction,
+      "Positive",
+      "Other"
+    )
   )
 
   sc_data <- Seurat::AddMetaData(
@@ -347,11 +361,12 @@ DEGAS_preprocessing <- function(
   only.pos = FALSE,
   min.pct = 0.25,
   logfc.threshold = 0.25,
+  verbose = TRUE,
   ...
 ) {
   gene_list <- select_genes2(
     scdata = scst_list,
-    sclab = sclab,
+    # sclab = sclab,
     patdata = patdata,
     phenotype = phenotype,
     add_genes = add_genes,
@@ -362,8 +377,16 @@ DEGAS_preprocessing <- function(
     n_bulk_de = n_bulk_de,
     n_sc_de = n_sc_de,
     padj.thresh = padj.thresh,
-    model_type = model_type
+    model_type = model_type,
+    verbose = verbose,
+    ...
   )
+
+  if (verbose) {
+    ts_cli$cli_alert_info(
+      "Normalizing data"
+    )
+  }
 
   norm_out <- normalize_counts_with_selected_genes(
     bulk_dataset = patdata,
@@ -383,9 +406,9 @@ DEGAS_preprocessing <- function(
   }
 
   list(
-    patDat = norm_out$patDat,
+    patDat = norm_out$patDat, # transposed
     phenotype = phenotype,
-    scstDat = norm_out$scstDat,
+    scstDat = norm_out$scstDat, # transposed
     scstName = norm_out$scstName,
     sclab = sclab
   )
@@ -394,7 +417,7 @@ DEGAS_preprocessing <- function(
 
 select_genes2 <- function(
   scdata,
-  sclab,
+  # sclab,
   patdata,
   phenotype,
   add_genes = NULL,
@@ -406,12 +429,17 @@ select_genes2 <- function(
   n_sc_de = 200L,
   padj_thresh = 0.05,
   model_type = c("category", "survival"),
+  verbose = TRUE,
   ...
 ) {
   genes <- c()
 
   # * Bulk HVG
   if (isTRUE(bulk_hvg)) {
+    if (verbose) {
+      ts_cli$cli_alert_info("Finding highly variable genes in bulk data")
+    }
+
     # cpp fn
     bulk_hvgs <- get_bulk_hvg(
       patdata = patdata,
@@ -424,10 +452,15 @@ select_genes2 <- function(
   # * Bulk DE
   if (isTRUE(bulk_de)) {
     if (!IsCountsMatrix(patdata, verbose = FALSE)) {
-      cli::cli_alert_warning(
+      cli::cli_alert_warning(cli::col_yellow(
         "Bulk data is not a counts matrix, skipping bulk differential expression analysis"
-      )
+      ))
     } else {
+      if (verbose) {
+        ts_cli$cli_alert_info(
+          "Finding differentially expressed genes in bulk data"
+        )
+      }
       bulk_de_genes <- get_bulk_deg(
         patdata = patdata,
         phenotype = phenotype,
@@ -438,13 +471,19 @@ select_genes2 <- function(
   }
 
   # * SC DE
-  if (isTRUE(bulk_de)) {
+  if (isTRUE(sc_de)) {
+    if (verbose) {
+      ts_cli$cli_alert_info(
+        "Finding differentially expressed genes in single-cell data"
+      )
+    }
     sc_de_genes <- get_sc_deg(
       obj = scdata,
       only.pos = FALSE,
       min.pct = 0.25,
       logfc.threshold = 0.25,
       n_sc_de = n_sc_de,
+      verbose = verbose,
       ...
     )
     genes <- union(genes, sc_de_genes)
@@ -478,7 +517,6 @@ get_bulk_deg <- function(
   high_diff_genes <- tryCatch(
     {
       patdata[patdata < 0L] <- 0L
-      patdata <- as.integer(patdata)
 
       dds <- DESeq2::DESeqDataSetFromMatrix(
         countData = patdata,
@@ -488,12 +526,12 @@ get_bulk_deg <- function(
       dds <- DESeq2::DESeq(dds)
       res <- stats::na.omit(DESeq2::results(dds))
       res <- res[order(res$padj), ]
-      res <- res[res$padj < padj_thresh, ]
+      res <- res[res$padj < padj_thresh & !is.na(res$padj), ]
 
       rownames(res)[seq_len(min(n_bulk_de, nrow(res)))]
     },
     error = function(e) {
-      warning("Bulk DEG selection failed and will be skipped: ", e$message, )
+      warning("Bulk DEG selection failed and will be skipped: ", e$message)
       return(NULL)
     }
   )
@@ -530,18 +568,32 @@ normalize_counts_with_selected_genes <- function(
   gene_list # a chr vec
 ) {
   # normalize bulk
-  bulk_dataset <- bulk_dataset[gene_list, ]
-  st_counts <- scst_list[gene_list, ] # single cell expr counts
+  bulk_dataset <- bulk_dataset[rownames(bulk_dataset) %chin% gene_list, ]
+  st_counts <- SeuratObject::LayerData(
+    scst_list,
+    assay = "RNA",
+    layer = "counts"
+  )
+  st_counts <- st_counts[rownames(st_counts) %chin% gene_list, ] # single cell expr counts
+
+  common_genes <- intersect(rownames(bulk_dataset), rownames(scst_list))
+  bulk_dataset <- bulk_dataset[common_genes, ]
+  st_counts <- st_counts[common_genes, ]
+  st_counts <- as.matrix(st_counts) # S4Matrix -> matrix
 
   pat_dat <- preprocessCounts_ptr(bulk_dataset) # cpp fn
+  colnames(pat_dat) <- rownames(bulk_dataset)
+  rownames(pat_dat) <- colnames(bulk_dataset)
 
   scst_expr_mat <- preprocessCounts_ptr(st_counts)
+  colnames(scst_expr_mat) <- rownames(st_counts)
+  rownames(scst_expr_mat) <- colnames(st_counts)
 
-  scst_names <- c(rep(paste0("Dataset", 1L), ncol(st_counts)))
+  scst_names <- rep("Dataset1", ncol(st_counts)) # number of genes
 
   return(list(
-    patDat = pat_dat,
-    scstDat = scst_expr_mat,
+    patDat = pat_dat, # transposed
+    scstDat = scst_expr_mat, # transposed
     scstName = scst_names
   ))
 }
