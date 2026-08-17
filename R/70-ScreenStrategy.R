@@ -59,7 +59,6 @@ ScreenStrategy <- new_environment(
       phenotype_class = c("binary", "survival", "continuous"),
       mapper = NULL
     ),
-
     LP_SGL = ScreenMethod(
       method_name = "LP_SGL",
       method_version = r_pkg_version("LPSGL"),

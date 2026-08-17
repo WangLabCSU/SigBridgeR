@@ -496,6 +496,18 @@ select_genes2 <- function(
   }
   genes <- unique(genes[!is.na(genes)])
 
+  if (verbose) {
+    ts_cli$cli_alert_info(
+      "Found {.val {length(genes)}} genes"
+    )
+  }
+  if (length(genes) == 0) {
+    Abort(
+      "No genes found",
+      "Check biological relationship between bulk and single-cell data"
+    )
+  }
+
   genes
 }
 
