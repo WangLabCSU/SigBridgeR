@@ -1,3 +1,13 @@
+# SigBridgeR 4.0.0-beta-4
+
+## NEW FEATURES
+
+* Added screening methods for DEGASv2 and TiRank.
+
+## BUG FIXES
+
+* Corrected DEGASv2 preprocessing and validation, including handling of zero-gene selections.
+
 # SigBridgeR 4.0.0-beta-3-release
 
 ## NEW FEATURES
