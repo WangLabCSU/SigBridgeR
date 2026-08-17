@@ -18,18 +18,19 @@ SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data
 
 **Current Status**
 
-|  Algorithm  |          Supported Phenotypes          | Cache Support |  License   |
-|:-----------:|:--------------------------------------:|:-------------:|:----------:|
-| **Scissor** | `binary`<br>`survival`<br>`continuous` |      ✅       |   GPL-3    |
-|  **scPAS**  | `binary`<br>`survival`<br>`continuous` |               |   GPL-3    |
-|  **scAB**   |         `binary`<br>`survival`         |      ✅       |   GPL-3    |
-|  **scPP**   | `binary`<br>`survival`<br>`continuous` |               |   GPL-3    |
-|  **DEGAS**  | `binary`<br>`survival`<br>`continuous` |               |    MIT     |
-| **LP-SGL**  | `binary`<br>`survival`<br>`continuous` |               | No License |
-|  **PIPET**  | `binary`<br>`survival`<br>`continuous` |               |   GPL-3    |
-| **SIDISH**  |               `survival`               |               |    MIT     |
-| **SCIPAC**  | `binary`<br>`survival`<br>`continuous` |               |    MIT     |
-| **TiRank**  | `binary`<br>`survival`<br>`continuous` |               |    MIT     |
+| Algorithm | Supported Phenotypes | Cache Support | License | Note |
+|:--:|:--:|:--:|:--:|:--:|
+| **Scissor** | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
+| **scPAS** | `binary` `survival` `continuous` |  | GPL-3 |  |
+| **scAB** | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
+| **scPP** | `binary` `survival` `continuous` |  | GPL-3 |  |
+| **DEGAS** | `binary` `survival` `continuous` |  | MIT |  |
+| **DEGASv2** | `binary` `survival` `continuous` |  | MIT | Bulk raw counts matrix perferred |
+| **LP-SGL** | `binary` `survival` `continuous` |  | No License |  |
+| **PIPET** | `binary` `survival` `continuous` |  | GPL-3 | Bulk raw counts matrix perferred |
+| **SIDISH** | `survival` |  | MIT |  |
+| **SCIPAC** | `binary` `survival` `continuous` |  | MIT |  |
+| **TiRank** | `binary` `survival` `continuous` |  | MIT |  |
 
 ## 🔧 Installatation
 
@@ -156,9 +157,9 @@ pak::pak(c(
   # Example: "username/sigbridger-plugin-example"
 ))
 ```
-&#10;| Name | Author | Status | Repo Link |
-|------|--------|--------|-----------|
-| *Coming soon* | Be the first to contribute! | - | - |
+&#10;| Name           | Author                     | Status | Repo Link |
+|:-------------:|:---------------------------:|:------:|:---------:|
+| *Coming soon* | Be the first to contribute! |   -    |     -     |
 &#10;To contribute your own plugin, refer to the
 [vignette on extending SigBridgeR](https://wanglabcsu.github.io/SigBridgeR/articles/extending.html).
 -->
@@ -181,40 +182,22 @@ If you use SigBridgeR in your work, please cite the corresponding papers:
 
 ``` r
 citation("SigBridgeR")
-#> Please cite the following publications when using this package.
+#> To cite package 'SigBridgeR' in publications use:
 #> 
-#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and
-#>   Bulk Data_. R package version 4.0.0, <https://wanglabcsu.github.io/sigbridger>.
+#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
+#>   Subpopulations via scRNA-seq and Bulk Data_. R package version 4.0.0,
+#>   <https://wanglabcsu.github.io/sigbridger>.
 #> 
-#>   Sun et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat
-#>   Biotechnol (2022) [Scissor]
+#> A BibTeX entry for LaTeX users is
 #> 
-#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for
-#>   prioritizing cells in relation to disease. Genome Med (2022) [DEGAS]
-#> 
-#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics
-#>   and bulk sequencing data. Nucleic Acids Res (2022) [scAB]
-#> 
-#>   Li et al. Identifying phenotype-associated subpopulations through LP_SGL. Brief Bioinform (2024) [LP_SGL]
-#> 
-#>   Gan et al. SCIPAC: quantitative estimation of cell-phenotype associations. Genome Biol (2024) [SCIPAC]
-#> 
-#>   Ruan et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data.
-#>   Brief Bioinform (2024) [PIPET]
-#> 
-#>   Xie et al. scPAS: single-cell phenotype-associated subpopulation identifier. Brief Bioinform (2025) [scPAS]
-#> 
-#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision
-#>   therapeutics through in silico perturbation. Nat Commun (2025) [SIDISH]
-#> 
-#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in
-#>   Bulks and Single Cells. Interdiscip Sci (2026) [ScPP]
-#> 
-#>   Lin et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med
-#>   (2026) [TiRank]
-#> 
-#> To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
-#> 'options(citation.bibtex.max=999)'.
+#>   @Manual{,
+#>     title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
+#> Subpopulations via scRNA-seq and Bulk Data},
+#>     author = {Yuxi Yang and Shixiang Wang},
+#>     year = {2026},
+#>     note = {R package version 4.0.0},
+#>     url = {https://wanglabcsu.github.io/sigbridger},
+#>   }
 ```
 
 ## 🗺️ Similar Projects
