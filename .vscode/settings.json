@@ -20,5 +20,8 @@
   "r.rpath.linux": "/opt/R/4.5.1/lib/R/bin/R",
   "r.rterm.linux": "/opt/R/4.5.1/lib/R/bin/R",
   "todo-tree.tree.disableCompactFolders": true,
-  "todo-tree.tree.showBadges": true
+  "todo-tree.tree.showBadges": true,
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}"
+  ]
 }

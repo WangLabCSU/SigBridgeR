@@ -43,3 +43,4 @@ index_files/
 tests/testthat/testthat-problems.rds
 /.uvr/library/
 /.uvr/activate*
+.clangd

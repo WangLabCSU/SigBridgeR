@@ -182,6 +182,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// FPKMToTPM_impl
+Rcpp::NumericMatrix FPKMToTPM_impl(const Rcpp::NumericMatrix& fpkm, bool na_as_zero, bool verbose);
+RcppExport SEXP _SigBridgeR_FPKMToTPM_impl(SEXP fpkmSEXP, SEXP na_as_zeroSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type fpkm(fpkmSEXP);
+    Rcpp::traits::input_parameter< bool >::type na_as_zero(na_as_zeroSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(FPKMToTPM_impl(fpkm, na_as_zero, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gtf_file_to_gene_length
+NumericVector gtf_file_to_gene_length(std::string path, bool verbose);
+RcppExport SEXP _SigBridgeR_gtf_file_to_gene_length(SEXP pathSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(gtf_file_to_gene_length(path, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// r_gtf_lines_to_gene_length
+NumericVector r_gtf_lines_to_gene_length(CharacterVector lines, bool verbose);
+RcppExport SEXP _SigBridgeR_r_gtf_lines_to_gene_length(SEXP linesSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type lines(linesSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(r_gtf_lines_to_gene_length(lines, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // IsCountsMatrixImpl
 bool IsCountsMatrixImpl(const arma::mat& x, bool verbose, double integer_tol, double min_integer_fraction);
 RcppExport SEXP _SigBridgeR_IsCountsMatrixImpl(SEXP xSEXP, SEXP verboseSEXP, SEXP integer_tolSEXP, SEXP min_integer_fractionSEXP) {
@@ -297,6 +334,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_normalizeScale_ptr", (DL_FUNC) &_SigBridgeR_normalizeScale_ptr, 1},
     {"_SigBridgeR_preprocessCounts_ptr", (DL_FUNC) &_SigBridgeR_preprocessCounts_ptr, 1},
     {"_SigBridgeR_ExtractMetricsCpp", (DL_FUNC) &_SigBridgeR_ExtractMetricsCpp, 3},
+    {"_SigBridgeR_FPKMToTPM_impl", (DL_FUNC) &_SigBridgeR_FPKMToTPM_impl, 3},
+    {"_SigBridgeR_gtf_file_to_gene_length", (DL_FUNC) &_SigBridgeR_gtf_file_to_gene_length, 2},
+    {"_SigBridgeR_r_gtf_lines_to_gene_length", (DL_FUNC) &_SigBridgeR_r_gtf_lines_to_gene_length, 2},
     {"_SigBridgeR_IsCountsMatrixImpl", (DL_FUNC) &_SigBridgeR_IsCountsMatrixImpl, 4},
     {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
