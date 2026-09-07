@@ -47,14 +47,16 @@ PhenoMap <- function(data, ..., .default = NA) {
   if (length(rules) == 0) {
     Abort(
       "Condition is empty",
-      tips = "Format e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}"
+      tips = "Format e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}",
+      type = "[ARG ERROR]"
     )
   }
 
   if (!all(vapply(X = rules, FUN = is.call, FUN.VALUE = logical(1)))) {
     Abort(
       "Not all conditions are formula",
-      tips = "Use e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}"
+      tips = "Use e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}",
+      type = "[TYPE ERROR]"
     )
   }
 
@@ -83,7 +85,8 @@ PhenoMap <- function(data, ..., .default = NA) {
   if (is.na(col) || !col %in% names(dt)) {
     Abort(
       "Cannot determine target column from the first condition",
-      tips = "Use e.g.: {.code mpg > 15 ~ 1, mpg <= 15 ~ 0}"
+      tips = "Use e.g.: {.code mpg > 15 ~ 1, mpg <= 15 ~ 0}",
+      type = "[COLUMN ERROR]"
     )
   }
 

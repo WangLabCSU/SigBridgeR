@@ -73,7 +73,8 @@ RegisterAnnoMethod <- function(
     if (exists_already && !overwrite) {
       Abort(
         "Method already exists: {.val {method_name}}",
-        info = "Registered methods: {.val {names(registry)}}\nUse {.code overwrite = TRUE} to force replacement"
+        info = "Registered methods: {.val {names(registry)}}\nUse {.code overwrite = TRUE} to force replacement",
+        type = "[METHOD ERROR]"
       )
     }
 

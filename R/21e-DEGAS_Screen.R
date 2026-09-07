@@ -49,7 +49,8 @@ ValidateDEGASParams <- function(
   if (!chk::vld_is(sc_data, c("Seurat", "Matrix", "matrix"))) {
     Abort(
       "{.arg sc_data} cannot be of type {.cls {class(sc_data)}}",
-      "Available types: {.cls {c('Seurat', 'Matrix', 'matrix')}}"
+      "Available types: {.cls {c('Seurat', 'Matrix', 'matrix')}}",
+      type = "[TYPE ERROR]"
     )
   }
   chk::chk_character(label_type)
@@ -75,7 +76,8 @@ ValidateDEGASParams <- function(
   # DEGAS path must contain "/"
   if (is.null(tmp_dir)) {
     Abort(
-      "{.arg tmp_dir} must be specified."
+      "{.arg tmp_dir} must be specified.",
+      type = "[ARG ERROR]"
     )
   }
   if (!endsWith(tmp_dir, "/")) {
@@ -136,7 +138,8 @@ ValidateDEGASParams <- function(
   if (length(cm_genes) == 0) {
     Abort(
       "No common genes found between single cell data and bulk data",
-      "Please check the inputs"
+      "Please check the inputs",
+      type = "[DATA ERROR]"
     )
   }
 
@@ -207,7 +210,8 @@ TrainDEGASModel <- function(
   ) {
     Abort(
       "Python is not available.",
-      "Please configure python executable path with `reticulate::use_python(path)`"
+      "Please configure python executable path with `reticulate::use_python(path)`",
+      type = "[SYSTEM ERROR]"
     )
   } else {
     py <- reticulate::py_config()$python
@@ -607,7 +611,8 @@ DEGASModelDetect <- function(
   }
   if (model_type.first == "Blank" && model_type.last == "Blank") {
     Abort(
-      "Please specify at least one phenotype, currently both are {.val NULL}"
+      "Please specify at least one phenotype, currently both are {.val NULL}",
+      type = "[ARG ERROR]"
     )
   }
   paste0(model_type.first, model_type.last)

@@ -109,7 +109,8 @@ save_impl <- function(
     Abort(
       "Recursive caching is not supported.",
       "{.path {path}} already contains {.file cache_config.json}.",
-      "Specify a root-level or parent-level path."
+      "Specify a root-level or parent-level path.",
+      type = "[CACHE ERROR]"
     )
   }
 
@@ -130,7 +131,8 @@ save_impl <- function(
   if (dir.exists(cache_dir)) {
     Abort(
       "Cache directory already exists: {.path {cache_dir}}",
-      "Choose a different path or delete the existing cache."
+      "Choose a different path or delete the existing cache.",
+      type = "[CACHE ERROR]"
     )
   }
 
@@ -147,13 +149,13 @@ load_impl <- function(path, layer, root_dir_name) {
   if (layer == "root") {
     # root layer -- delegate to ChooseCache
     if (!dir.exists(path)) {
-      Abort("Root directory not found: {.path {path}}")
+      Abort("Root directory not found: {.path {path}}", type = "[PATH ERROR]")
     }
     ChooseCache(path)
   } else if (layer == "cache") {
     # cache layer -- return as-is
     if (!dir.exists(path)) {
-      Abort("Cache directory not found: {.path {path}}")
+      Abort("Cache directory not found: {.path {path}}", type = "[PATH ERROR]")
     }
     path
   } else {
@@ -162,7 +164,8 @@ load_impl <- function(path, layer, root_dir_name) {
     if (!dir.exists(root_dir)) {
       Abort(
         "No cache root directory found under {.path {path}}.",
-        "Expected a directory named {.val {root_dir_name}}."
+        "Expected a directory named {.val {root_dir_name}}.",
+        type = "[PATH ERROR]"
       )
     }
     ChooseCache(root_dir)

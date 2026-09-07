@@ -130,7 +130,8 @@ ScreenFractionPlot <- function(
   if (!group_by %chin% all_screen_types) {
     Abort(
       "Grouping variable not found in metadata.",
-      tips = "Current: {.val {group_by}}\nAvailable grouping variables: {.val {all_screen_types}}"
+      tips = "Current: {.val {group_by}}\nAvailable grouping variables: {.val {all_screen_types}}",
+      type = "[COLUMN ERROR]"
     )
   }
   # Check available screen types in the Seurat object
@@ -147,7 +148,8 @@ ScreenFractionPlot <- function(
     # We don't use `available_screens` for the sake of compatibility to other groups
     Abort(
       "Screen type(s) not found in metadata.",
-      tips = "Available screen types: {.val {available_screens}}"
+      tips = "Available screen types: {.val {available_screens}}",
+      type = "[COLUMN ERROR]"
     )
   }
 

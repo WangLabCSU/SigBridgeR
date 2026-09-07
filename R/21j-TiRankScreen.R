@@ -37,7 +37,8 @@ ValidateTiRankParams <- function(
     "survival" = "Cox",
     "continuous" = "Regression",
     Abort(
-      "`phenotype_class` must be one of 'binary', 'survival', or 'continuous'"
+      "`phenotype_class` must be one of 'binary', 'survival', or 'continuous'",
+      type = "[VALUE ERROR]"
     )
   )
 

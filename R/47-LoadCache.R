@@ -42,7 +42,8 @@ LoadCache <- function(file) {
     csv = data.table::fread(file),
     Abort(
       "Unsupported file extension: {.val {ext}}",
-      "Supported extensions: {.val {c('qs2', 'qdata', 'RData', 'rds', 'csv')}}"
+      "Supported extensions: {.val {c('qs2', 'qdata', 'RData', 'rds', 'csv')}}",
+      type = "[FILE ERROR]"
     )
   )
 }

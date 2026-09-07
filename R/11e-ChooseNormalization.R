@@ -280,7 +280,8 @@ ChooseNormalizationCheck <- function(
     ~ if (!nzchar(.x, keepNA = TRUE)) {
       Abort(
         "Options must be named",
-        "e.g., SCT = sct_obj, Log = log_obj"
+        "e.g., SCT = sct_obj, Log = log_obj",
+        type = "[ARG ERROR]"
       )
     }
   )
@@ -302,12 +303,14 @@ ChooseNormalizationCheck <- function(
     ) {
       if (is.null(layer)) {
         Abort(
-          "All objects must contain normalized data in {.cls {assay}} assay {.cls data} slot"
+          "All objects must contain normalized data in {.cls {assay}} assay {.cls data} slot",
+          type = "[DATA ERROR]"
         )
       }
 
       Abort(
-        "All objects must contain normalized data in {.cls {assay}} assay {.cls {layer}} {.cls data} slot"
+        "All objects must contain normalized data in {.cls {assay}} assay {.cls {layer}} {.cls data} slot",
+        type = "[DATA ERROR]"
       )
     }
   )
@@ -315,7 +318,8 @@ ChooseNormalizationCheck <- function(
   if (length(unique(n_cells)) > 1) {
     Abort(
       "Seurat objects contain different cell counts. Ensure comparable subsets",
-      tips = "Detected: {n_cells}"
+      tips = "Detected: {n_cells}",
+      type = "[DATA ERROR]"
     )
   }
   chk::chk_range(low_expressed_thresh)
@@ -326,7 +330,7 @@ ChooseNormalizationCheck <- function(
   chk::chk_vector(weight)
   chk::chk_length(weight, 3)
   if (sum(weight) != 1) {
-    Abort("weight must sum to 1")
+    Abort("weight must sum to 1", type = "[VALUE ERROR]")
   }
 }
 

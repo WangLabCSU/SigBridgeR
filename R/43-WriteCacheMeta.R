@@ -75,7 +75,8 @@ method(WriteCacheMeta, class_any) <- function(
   expected_cls <- c("ScreenMethodConfig", "ScreenMethodCache")
   Abort(
     "cache_config must be a class of {.cls {expected_cls}}",
-    "Current class is {.cls {cls_cache}}"
+    "Current class is {.cls {cls_cache}}",
+    type = "[TYPE ERROR]"
   )
 }
 

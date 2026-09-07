@@ -302,12 +302,13 @@ check_model_key <- function(models = vector(), api_keys = vector()) {
   if (length(models) != length(api_keys)) {
     Abort(
       "[mLLMCelltypeAnnotate()] Number of models does not match number of API keys",
-      "Length of models: {length(models)}\nLength of api_keys: {length(api_keys)}"
+      "Length of models: {length(models)}\nLength of api_keys: {length(api_keys)}",
+      type = "[VALUE ERROR]"
     )
   }
 
   api_keys <- unlist(api_keys)
   if (length(api_keys) == 0L) {
-    Abort("[mLLMCelltypeAnnotate()] API keys not provided")
+    Abort("[mLLMCelltypeAnnotate()] API keys not provided", type = "[ARG ERROR]")
   }
 }

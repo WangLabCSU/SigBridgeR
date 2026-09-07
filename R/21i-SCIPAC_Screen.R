@@ -64,7 +64,8 @@ ValidateSCIPACParams <- function(
     "survival" = "cox",
     "continuous" = "gaussian",
     Abort(
-      "phenotype_class must be one of 'binary', 'survival', or 'continuous'"
+      "phenotype_class must be one of 'binary', 'survival', or 'continuous'",
+      type = "[VALUE ERROR]"
     )
   )
 
@@ -393,7 +394,8 @@ OverLapSCBulk <- function(sc_data, bulk, hvg = 1000L, assay = "RNA") {
 
   if (length(cm_genes) == 0L) {
     Abort(
-      "No overlapping genes between single cell data and bulk data"
+      "No overlapping genes between single cell data and bulk data",
+      type = "[DATA ERROR]"
     )
   }
 

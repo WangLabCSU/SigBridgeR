@@ -62,7 +62,8 @@ method(CheckCache, class_any) <- function(cache_config, ...) {
   expected_cls <- c("ScreenMethodConfig", "ScreenMethodCache")
   Abort(
     "cache_config must be a class of {.cls {expected_cls}}",
-    "Current class is {.cls {cls_cache}}"
+    "Current class is {.cls {cls_cache}}",
+    type = "[TYPE ERROR]"
   )
 }
 
@@ -77,7 +78,8 @@ CheckCache.ScreenMethodConfig <- function(cache_config, path, ...) {
   } else {
     Abort(
       "Unsupported path: {.file {path}}",
-      "`path` must be either a path to {.file cache_config.json} , or a folder containing it"
+      "`path` must be either a path to {.file cache_config.json} , or a folder containing it",
+      type = "[PATH ERROR]"
     )
   }
   # * a list, NULL value became a NULL list
@@ -105,7 +107,8 @@ CheckCache.ScreenMethodConfig <- function(cache_config, path, ...) {
 
   Abort(
     "Cache config is not consistent with the current parameters",
-    "Parameter:{.field {arg_name}}, provided: {.val {user_val}}, actual: {.val {actual_val}}"
+    "Parameter:{.field {arg_name}}, provided: {.val {user_val}}, actual: {.val {actual_val}}",
+    type = "[CONFIG ERROR]"
   )
 }
 

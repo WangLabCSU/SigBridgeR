@@ -92,7 +92,8 @@ ScreenUpset <- function(
   if (!all(screen_type %chin% all_screen_types)) {
     Abort(
       "Screen type(s) not found in metadata.",
-      "{.val {screen_type[!screen_type %chin% all_screen_types]}}"
+      "{.val {screen_type[!screen_type %chin% all_screen_types]}}",
+      type = "[COLUMN ERROR]"
     )
   }
 

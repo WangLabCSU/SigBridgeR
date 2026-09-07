@@ -60,14 +60,15 @@ RegisterSeuratMethod <- function(
     letter <- method_names[i]
 
     if (nchar(letter) != 1) {
-      Abort("Method key name must be a single character")
+      Abort("Method key name must be a single character", type = "[VALUE ERROR]")
     }
 
     lookup <- letter %chin% names(registry)
     if (lookup && !overwrite) {
       Abort(
         "Method already exists: {.val {letter}}",
-        tips = "Registered letters: {.val {names(registry)}}\nUse `overwrite = TRUE` to force replacement"
+        tips = "Registered letters: {.val {names(registry)}}\nUse `overwrite = TRUE` to force replacement",
+        type = "[METHOD ERROR]"
       )
     }
     executor <- dots[[i]]
@@ -86,7 +87,8 @@ RegisterSeuratMethod <- function(
       executor
     } else {
       Abort(
-        "Provided function must be a function object or character function name."
+        "Provided function must be a function object or character function name.",
+        type = "[TYPE ERROR]"
       )
     }
 

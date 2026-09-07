@@ -94,7 +94,7 @@ IsSkewedDynamic <- function(
   n_sd = 4L
 ) {
   if (anyNA(x)) {
-    Abort("x contains {.val NA}")
+    Abort("x contains {.val NA}", type = "[DATA ERROR]")
   }
   IsSkewedDynamic_cpp(x, target, expected_p, n_sd)
 }

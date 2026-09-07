@@ -278,7 +278,8 @@ ListCellTypistModels <- function(
   if (!dir.exists(path)) {
     Abort(
       "CellTypist models directory not found: {.path {path}}.",
-      "Run {.fn DownloadCellTypistModels} to download the models first."
+      "Run {.fn DownloadCellTypistModels} to download the models first.",
+      type = "[FILE ERROR]"
     )
   }
 

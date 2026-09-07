@@ -311,7 +311,8 @@ DoPIPET <- function(
   if (is.null(pipet_result)) {
     Abort(
       "PIPET screening failed.",
-      "Try different parameters, like `log2FC`"
+      "Try different parameters, like `log2FC`",
+      type = "[METHOD ERROR]"
     )
   }
 

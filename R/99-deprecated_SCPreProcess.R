@@ -171,7 +171,7 @@ SCPreProcess.default <- function(
 
   unknown <- setdiff(steps, steps_to_run)
   if (length(unknown) != 0) {
-    Abort("[{.fun SCPreProcess}]: Unknown pipeline steps: {.val {unknown}}")
+    Abort("[{.fun SCPreProcess}]: Unknown pipeline steps: {.val {unknown}}", type = "[METHOD ERROR]")
   }
   if (steps_to_run[[1]] == "o" && !is.null(sc)) {
     sc_seurat <- if (!is.null(params$o$counts)) {
@@ -311,17 +311,19 @@ SCPreProcess.R6 <- function(
   }
   if (steps_to_run[[1]] != "o") {
     Abort(
-      "[{.fun SCPreProcess}]: The first step of {.arg pipeline} must be 'o' for CreateSeuratObject"
+      "[{.fun SCPreProcess}]: The first step of {.arg pipeline} must be 'o' for CreateSeuratObject",
+      type = "[METHOD ERROR]"
     )
   }
   if (!is.null(params$o$counts)) {
     Abort(
-      "[{.fun SCPreProcess}]: The parameter {.arg params$o$counts} is deprecated, please use {.arg sc} instead"
+      "[{.fun SCPreProcess}]: The parameter {.arg params$o$counts} is deprecated, please use {.arg sc} instead",
+      type = "[DEPRECATED]"
     )
   }
 
   if (is.null(sc$X)) {
-    Abort("[{.fun SCPreProcess}]: {.arg sc} must contain $X matrix")
+    Abort("[{.fun SCPreProcess}]: {.arg sc} must contain $X matrix", type = "[DATA ERROR]")
   }
   if (verbose) {
     cli::cli_text(
@@ -381,7 +383,8 @@ SCPreProcess.R6 <- function(
   } else {
     Abort(
       "{.arg sc} must be an anndata or anndataR object",
-      tips = "Current input is of class {.cls {class(sc)}}"
+      tips = "Current input is of class {.cls {class(sc)}}",
+      type = "[TYPE ERROR]"
     )
   }
   rm(sc)

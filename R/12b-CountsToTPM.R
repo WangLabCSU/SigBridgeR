@@ -37,15 +37,15 @@ CountsToTPM <- function(counts, gene_length) {
   gl_names <- names(gene_length)
 
   if (is.null(gl_names)) {
-    Abort("`gene_length` must be named.")
+    Abort("`gene_length` must be named.", type = "[INPUT ERROR]")
   }
 
   if (!all(nzchar(names(gene_length)))) {
-    Abort("`gene_length` contains {.val NA} or {.val empty names}.")
+    Abort("`gene_length` contains {.val NA} or {.val empty names}.", type = "[INPUT ERROR]")
   }
 
   if (any(!is.finite(gene_length) | gene_length <= 0)) {
-    Abort("`gene_length` must contain positive finite gene lengths in bp.")
+    Abort("`gene_length` must contain positive finite gene lengths in bp.", type = "[INPUT ERROR]")
   }
 
   if (is.data.frame(counts)) {
@@ -56,7 +56,8 @@ CountsToTPM <- function(counts, gene_length) {
     cls_counts <- class(counts)
     Abort(
       "Expected `counts` to be a {.cls matrix/dgCMatrix/dgeMatrix}",
-      "Current input is {.cls {cls_counts}}"
+      "Current input is {.cls {cls_counts}}",
+      type = "[TYPE ERROR]"
     )
   }
   CountsToTPM_impl(counts, gene_length)

@@ -48,7 +48,7 @@ ValidateLPSGLParams <- function(
       "binomial" = "binary",
       "cox" = "survival",
       "gaussian" = "continuous",
-      Abort("Invalid family")
+      Abort("Invalid family", type = "[VALUE ERROR]")
     )
   }
   family <- switch(

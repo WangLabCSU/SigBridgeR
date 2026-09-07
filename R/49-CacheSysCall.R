@@ -88,7 +88,8 @@ CacheSysCall <- function(
     if (mode == "save") {
       Abort(
         "cache is a {.cls ScreenMethodConfig}, but mode is {.val save}.",
-        "Try passing a {.cls ScreenMethodCache} instead."
+        "Try passing a {.cls ScreenMethodCache} instead.",
+        type = "[CONFIG ERROR]"
       )
     }
     cache
@@ -96,7 +97,8 @@ CacheSysCall <- function(
     cache@screen_method_config
   } else {
     Abort(
-      "cache is not a {.cls ScreenMethodConfig} or {.cls ScreenMethodCache}"
+      "cache is not a {.cls ScreenMethodConfig} or {.cls ScreenMethodCache}",
+      type = "[TYPE ERROR]"
     )
   }
 
@@ -137,7 +139,7 @@ CacheSysCall.load <- function(
   param_names <- names(cache_config)
 
   if (length(param_names) == 0L) {
-    Abort("param_names is empty, nothing to load")
+    Abort("param_names is empty, nothing to load", type = "[ARG ERROR]")
   }
 
   load_fn <- purrr::in_parallel(\(param_name) {

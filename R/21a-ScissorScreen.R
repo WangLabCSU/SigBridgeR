@@ -65,7 +65,7 @@ ValidateScissorParams <- function(
       "binomial" = "binary",
       "cox" = "survival",
       "gaussian" = "continuous",
-      Abort("Invalid family: {.val {family}}")
+      Abort("Invalid family: {.val {family}}", type = "[VALUE ERROR]")
     )
   }
   family <- switch(
@@ -73,7 +73,7 @@ ValidateScissorParams <- function(
     "binary" = "binomial",
     "survival" = "cox",
     "continuous" = "gaussian",
-    Abort("Invalid phenotype_class: {.val {phenotype_class}}")
+    Abort("Invalid phenotype_class: {.val {phenotype_class}}", type = "[VALUE ERROR]")
   )
 
   # -- input validation -----------------------------------------------------

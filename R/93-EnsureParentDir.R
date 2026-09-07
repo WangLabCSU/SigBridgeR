@@ -14,7 +14,7 @@ EnsureParentDir <- function(path) {
   )
 
   if (!tolower(ans) %in% c("y", "yes")) {
-    Abort("Canceled by user")
+    Abort("Canceled by user", type = "[CANCELED]")
   }
 
   dir.create(parent, recursive = TRUE, showWarnings = FALSE)

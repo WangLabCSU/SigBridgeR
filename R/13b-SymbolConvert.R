@@ -21,14 +21,11 @@ SymbolConvert <- function(
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
   ...
 ) {
-  check_installed("IDConverter")
-  genome_build <- SigBridgeRUtils::MatchArg(
-    genome_build,
-    c("hg38", "hg19", "mm10", "mm9")
-  )
+  check_installed(c("IDConverter", "glue"))
+  genome_build <- arg_match(genome_build, c("hg38", "hg19", "mm10", "mm9"))
   row_names <- gsub("\\..*$", "", rownames(data))
   if (is.null(row_names)) {
-    Abort("Row names are missing in the data")
+    Abort("Row names are missing in the data", type = "[DATA ERROR]")
   }
 
   gene_symbols <- IDConverter::convert_hm_genes(
@@ -39,15 +36,24 @@ SymbolConvert <- function(
   # * replace NA with unknown_format
   na_count <- sum(is.na(gene_symbols))
   if (na_count > 0) {
-    cli::cli_warn(c(
-      "Found {.val {na_count}} NA values in gene symbols during conversion."
-    ))
-
-    k <- which(is.na(gene_symbols))
+    k <- if (is_installed("cheapr")) {
+      cheapr::which_na(gene_symbols)
+    } else {
+      which(is.na(gene_symbols))
+    }
     gene_symbols[k] <- glue::glue(unknown_format)
     cli::cli_warn(
-      "Replaced {.val {na_count}} NA values with {.code {unknown_format}} format."
+      "Found {.val {na_count}} NA values in gene symbols during conversion. Replaced them with {.code {unknown_format}} format."
     )
+  }
+
+  is_duplicated <- duplicated(gene_symbols)
+  if (any(is_duplicated)) {
+    where_duplicated <- which(is_duplicated)
+    cli::cli_warn(
+      "Found duplicated gene symbols during conversion ({.val {where_duplicated}}). Return them as is."
+    )
+    gene_symbols[where_duplicated] <- rownames(data)[where_duplicated]
   }
 
   # * update to latest symbol

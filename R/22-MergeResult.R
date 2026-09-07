@@ -118,7 +118,7 @@ MergeResult <- function(
   ..vote_cols <- NULL # suppress checking NOTE
 
   if (length(args) == 0) {
-    Abort("Input objects must be provided.")
+    Abort("Input objects must be provided.", type = "[ARG ERROR]")
   }
   # Extract Seurat objects
   seurat_objects <- lapply(args, function(x) {
@@ -138,7 +138,7 @@ MergeResult <- function(
   seurat_objects <- Filter(Negate(is.null), seurat_objects)
 
   if (length(seurat_objects) == 0) {
-    Abort("No valid Seurat objects found in inputs.")
+    Abort("No valid Seurat objects found in inputs.", type = "[TYPE ERROR]")
   }
 
   # extract metadata

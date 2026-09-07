@@ -392,7 +392,8 @@ QCFilter <- function(
   all_conds <- c(list(nfeat_condition, ncount_condition), qc_conds)
   if (length(all_conds) == 0) {
     Abort(
-      "[{.fun QCFilter}]: No valid filtering conditions generated."
+      "[{.fun QCFilter}]: No valid filtering conditions generated.",
+      type = "[DATA ERROR]"
     )
   }
 
@@ -406,7 +407,8 @@ QCFilter <- function(
 
   if (!is.logical(logical_vec) || length(logical_vec) != nrow(meta)) {
     Abort(
-      "[{.fun QCFilter}]: filtering condition did not produce a logical vector of length {.val {nrow(meta)}}."
+      "[{.fun QCFilter}]: filtering condition did not produce a logical vector of length {.val {nrow(meta)}}.",
+      type = "[DATA ERROR]"
     )
   }
 

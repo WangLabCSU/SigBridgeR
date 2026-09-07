@@ -76,7 +76,8 @@ method(generic = RegisterImpl, class_any) <- function(
   expected_cls <- c("ScreenMethod", "AnnotationMethod", "function")
   Abort(
     "Unsupported class: {.cls {cls_method}}",
-    "Expected {.cls {expected_cls}}"
+    "Expected {.cls {expected_cls}}",
+    type = "[TYPE ERROR]"
   )
 }
 
@@ -106,7 +107,8 @@ method(generic = RegisterImpl, ScreenMethod) <- function(
   if (x@method_name %chin% names(ScreenStrategy) && !overwrite) {
     Abort(
       "Method {.field {x@method_name}} already exists",
-      "Please use `overwrite = {.val TRUE}` to overwrite"
+      "Please use `overwrite = {.val TRUE}` to overwrite",
+      type = "[METHOD ERROR]"
     )
   }
 
@@ -140,7 +142,8 @@ method(generic = RegisterImpl, AnnotationMethod) <- function(
   if (x@method_name %chin% names(SCAnnotateStrategy) && !overwrite) {
     Abort(
       "Method {.field {x@method_name}} already exists",
-      "Please use `overwrite = {.val TRUE}` to overwrite"
+      "Please use `overwrite = {.val TRUE}` to overwrite",
+      type = "[METHOD ERROR]"
     )
   }
   SCAnnotateStrategy[[name]] <- x
@@ -166,7 +169,8 @@ method(generic = RegisterImpl, class_function) <- function(
       "Name (key) must be a single letter",
       "Current Name (key): {.val {name}}",
       "If you intend to register a screen method or annotation method,\
-       please create a {.cls ScreenMethod} or {.cls AnnotationMethod} object"
+       please create a {.cls ScreenMethod} or {.cls AnnotationMethod} object",
+      type = "[VALUE ERROR]"
     )
   }
 
@@ -176,14 +180,16 @@ method(generic = RegisterImpl, class_function) <- function(
       "Please check typo",
       "Package version:\
        {.pkg Seurat}: {r_pkg_version('Seurat')},\
-       {.pkg SeuratObject}: {r_pkg_version('SeuratObject')}"
+       {.pkg SeuratObject}: {r_pkg_version('SeuratObject')}",
+      type = "[METHOD ERROR]"
     )
   }
 
   if (name %chin% names(SCPreProcessStrategy) && !overwrite) {
     Abort(
       "Method {.field {name}} already exists",
-      "Please use `overwrite = {.val TRUE}` to overwrite"
+      "Please use `overwrite = {.val TRUE}` to overwrite",
+      type = "[METHOD ERROR]"
     )
   }
 

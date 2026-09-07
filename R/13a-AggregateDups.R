@@ -54,7 +54,7 @@ AggregateDupRows <- function(
 
   row_names <- rownames(x)
   if (is.null(row_names)) {
-    Abort("Input must have row names")
+    Abort("Input must have row names", type = "[DATA ERROR]")
   }
 
   if (!anyDuplicated(row_names) > 0L) {
@@ -104,7 +104,7 @@ AggregateDupCols <- function(
   col_names <- colnames(x)
 
   if (is.null(col_names)) {
-    Abort("Input must have column names.")
+    Abort("Input must have column names.", type = "[DATA ERROR]")
   }
 
   if (!anyDuplicated(col_names)) {

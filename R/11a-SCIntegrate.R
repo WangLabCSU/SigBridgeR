@@ -76,7 +76,7 @@ SCIntegrate <- function(
   # ! don't use genric
   dots <- list2(...)
   if (length(dots) == 0) {
-    Abort("[{.fun SCIntegrate}]: No arguments provided.")
+    Abort("[{.fun SCIntegrate}]: No arguments provided.", type = "[ARG ERROR]")
   }
   .quos <- enquos(...)
   if (is.data.frame(dots[[1L]])) {
@@ -102,7 +102,8 @@ SCIntegrate <- function(
   cls <- c("Seurat", "matrix", "Matrix", "data.frame")
   Abort(
     "[{.fun SCIntegrate}]: No implementation for class {.cls {class(dots[[1L]])}}",
-    "Available classes: {.cls {cls}}"
+    "Available classes: {.cls {cls}}",
+    type = "[TYPE ERROR]"
   )
 }
 
@@ -263,7 +264,8 @@ SCIntegrate.Seurat <- function(
   if (length(unknown) != 0) {
     Abort(
       "[{.fun SCIntegrate.Seurat}]: Unknown pipeline steps: {.val {unknown}}",
-      "Current pipeline registered: {.val {names(SCPreProcessStrategy)}}"
+      "Current pipeline registered: {.val {names(SCPreProcessStrategy)}}",
+      type = "[METHOD ERROR]"
     )
   }
 

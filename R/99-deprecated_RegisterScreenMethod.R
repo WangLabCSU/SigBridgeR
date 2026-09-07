@@ -94,7 +94,8 @@ RegisterScreenMethod <- function(
   if (!all(supported_phenotypes %chin% c("binary", "survival", "continuous"))) {
     Abort(
       "unsupported phenotype class when registering screen method",
-      tips = "Current supported phenotypes are: binary, survival, continuous\nProvided phenotypes are: {supported_phenotypes}"
+      tips = "Current supported phenotypes are: binary, survival, continuous\nProvided phenotypes are: {supported_phenotypes}",
+      type = "[VALUE ERROR]"
     )
   }
   chk::chk_logical(verbose)
@@ -119,7 +120,8 @@ RegisterScreenMethod <- function(
     if (exists_already && !overwrite) {
       Abort(
         "Method already exists: {.val {method_name}}",
-        info = "Registered methods: {.val {names(registry)}}\nUse {.code overwrite = TRUE} to force replacement"
+        info = "Registered methods: {.val {names(registry)}}\nUse {.code overwrite = TRUE} to force replacement",
+        type = "[METHOD ERROR]"
       )
     }
 

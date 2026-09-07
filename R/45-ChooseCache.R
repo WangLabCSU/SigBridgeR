@@ -34,16 +34,17 @@ ChooseCache <- function(directory) {
   if (!basename(directory) %chin% expected_dir_name) {
     Abort(
       "{.path {directory}} is not a cache directory",
-      "Expected directory name is {.file {expected_dir_name}}"
+      "Expected directory name is {.file {expected_dir_name}}",
+      type = "[CACHE ERROR]"
     )
   }
 
   if (!dir.exists(directory)) {
-    Abort("{.path {directory}} not exists")
+    Abort("{.path {directory}} not exists", type = "[PATH ERROR]")
   }
   cache_dirs <- list.dirs(directory, recursive = FALSE)
   if (length(cache_dirs) == 0) {
-    Abort("no cache found in {.path {directory}}")
+    Abort("no cache found in {.path {directory}}", type = "[CACHE ERROR]")
   } else if (length(cache_dirs) == 1L) {
     return(cache_dirs[[1L]])
   }
@@ -60,7 +61,8 @@ ChooseCache <- function(directory) {
   if (!is.numeric(choice) || choice < 1 || choice > n_cache_dirs) {
     Abort(
       "Invalid choice: {.val {choice}}",
-      "Expected a number between 1 and {n_cache_dirs}"
+      "Expected a number between 1 and {n_cache_dirs}",
+      type = "[VALUE ERROR]"
     )
   }
 

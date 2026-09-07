@@ -80,7 +80,8 @@ SCAnnotate.default <- function(sc, ...) {
   cls_sc <- class(sc)
   Abort(
     "Unsupported class of sc",
-    "Expected a {.cls Seurat}, but got a {.cls {cls_sc}}"
+    "Expected a {.cls Seurat}, but got a {.cls {cls_sc}}",
+    type = "[TYPE ERROR]"
   )
 }
 
@@ -107,7 +108,8 @@ SCAnnotate.Seurat <- function(
     )
     if (length(method) != 1) {
       Abort(
-        "Cannot auto-find a suitable method, please specify a method"
+        "Cannot auto-find a suitable method, please specify a method",
+        type = "[METHOD ERROR]"
       )
     } else if (verbose) {
       cli::cli_alert_info(
@@ -148,7 +150,8 @@ SCAnnotate.Seurat <- function(
       Abort(
         "Please specify a python environment or a conda environment for CellTypist",
         "Use {.code conda = \"env\"} or {.code python = \"env\"} to specify a python env",
-        "Available python envs: {existing_envs$name}"
+        "Available python envs: {existing_envs$name}",
+        type = "[SYSTEM ERROR]"
       )
     }
 
@@ -179,6 +182,6 @@ SCAnnotate.Seurat <- function(
       !!!SigBridgeRUtils::FilterArgs4Func(dots, celltypist.annotate)
     )
   } else {
-    Abort("Unsupported method: {method}")
+    Abort("Unsupported method: {method}", type = "[METHOD ERROR]")
   }
 }

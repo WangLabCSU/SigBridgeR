@@ -155,12 +155,13 @@ PhenoPreProcess <- function(
   if (!is_2d(bulk)) {
     Abort(
       "`bulk` must be a 2-dimensional matrix",
-      tips = "Current type is {.cls {class(bulk)}}"
+      tips = "Current type is {.cls {class(bulk)}}",
+      type = "[TYPE ERROR]"
     )
   }
   n_samples <- ncol(bulk)
   if (n_samples < 2L) {
-    Abort("`bulk` must have at least 2 samples (columns)")
+    Abort("`bulk` must have at least 2 samples (columns)", type = "[DATA ERROR]")
   }
 
   bulk <- as.matrix(bulk)
@@ -199,7 +200,8 @@ PhenoPreProcess <- function(
     if (length(common_samples) == 0L) {
       Abort(
         "No common sample names between `bulk` and `phenotype`",
-        tips = "Check the colnames of `bulk` and rownames of `phenotype`"
+        tips = "Check the colnames of `bulk` and rownames of `phenotype`",
+        type = "[DATA ERROR]"
       )
     }
   } else {
@@ -215,7 +217,8 @@ PhenoPreProcess <- function(
     if (length(common_samples) == 0L) {
       Abort(
         "No common sample names between `bulk` and `phenotype`",
-        tips = "Check the colnames of `bulk` and names of `phenotype`"
+        tips = "Check the colnames of `bulk` and names of `phenotype`",
+        type = "[DATA ERROR]"
       )
     }
   }
@@ -311,7 +314,8 @@ handle_case_1 <- function(
     if (length(time_col) > 1 || length(status_col) > 1) {
       Abort(
         "Unable to guess time and status columns, multiple columns found",
-        tips = "Try specify them"
+        tips = "Try specify them",
+        type = "[COLUMN ERROR]"
       )
     }
 
@@ -320,7 +324,8 @@ handle_case_1 <- function(
     if (length(unique(unlist(phenotype[status_col]))) != 2L) {
       Abort(
         "Status column must have exactly 2 unique values",
-        tips = "Current guessed columns: {.val {time_col}} {.val {status_col}}"
+        tips = "Current guessed columns: {.val {time_col}} {.val {status_col}}",
+        type = "[DATA ERROR]"
       )
     }
 
@@ -333,24 +338,26 @@ handle_case_1 <- function(
     if (phenotype_class == "binary" && col_val_count > 2L) {
       Abort(
         "Binary phenotype must have exactly 2 unique values",
-        tips = "Currenly has {col_val_count} unique values"
+        tips = "Currenly has {col_val_count} unique values",
+        type = "[DATA ERROR]"
       )
     }
 
     if (phenotype_class == "continuous" && col_val_count == 2L) {
       Abort(
         "Continuous phenotype must have more than 2 unique values",
-        tips = "Currenly has exactly 2 unique values, if data is correct, specify {.code phenotype_class = \"binary\"}"
+        tips = "Currenly has exactly 2 unique values, if data is correct, specify {.code phenotype_class = \"binary\"}",
+        type = "[DATA ERROR]"
       )
     }
 
     if (col_val_count == 1L) {
-      Abort("Only one unique value found")
+      Abort("Only one unique value found", type = "[DATA ERROR]")
     }
 
     col_val_class <- col_class(phenotype, 1)
     if (col_val_class == "character") {
-      Abort("Must be numeric")
+      Abort("Must be numeric", type = "[TYPE ERROR]")
     } else if (col_val_class == "logical") {
       return(stats::setNames(
         as.numeric(unlist(phenotype[sample_names, 1])),
@@ -366,7 +373,8 @@ handle_case_1 <- function(
   } else {
     Abort(
       "Multiple columns found but `select` is NULL",
-      tips = "Use `select = <colname>` to clearly specified"
+      tips = "Use `select = <colname>` to clearly specified",
+      type = "[VALUE ERROR]"
     )
   }
 }
@@ -396,7 +404,8 @@ handle_case_2 <- function(
   col_exists <- select %chin% colnames(phenotype)
   if (!all(col_exists)) {
     Abort(
-      "Column {.val {colnames(phenotype)[!col_exists]}} not found in `phenotype`"
+      "Column {.val {colnames(phenotype)[!col_exists]}} not found in `phenotype`",
+      type = "[COLUMN ERROR]"
     )
   }
 
@@ -414,7 +423,8 @@ handle_case_3 <- function(
   if (phenotype_class == "survival") {
     Abort(
       "Invalid type of `phenotype`",
-      tips = "Current type: {.cls {class(phenotype)}}, expect: {.cls {c('surv', 'data.frame')}}"
+      tips = "Current type: {.cls {class(phenotype)}}, expect: {.cls {c('surv', 'data.frame')}}",
+      type = "[TYPE ERROR]"
     )
   }
 
@@ -422,7 +432,8 @@ handle_case_3 <- function(
   if (length(val_class) > 1 || val_class == "character") {
     Abort(
       "Invalid type of `phenotype`",
-      tips = "Current type: {.cls {val_class}}, expect: {.cls {c('numeric', 'integer')}}"
+      tips = "Current type: {.cls {val_class}}, expect: {.cls {c('numeric', 'integer')}}",
+      type = "[TYPE ERROR]"
     )
   }
 
@@ -442,7 +453,8 @@ handle_case_4 <- function(
   if (phenotype_class == "survival") {
     Abort(
       "Invalid type of `phenotype`",
-      tips = "Current type: {.cls {class(phenotype)}}"
+      tips = "Current type: {.cls {class(phenotype)}}",
+      type = "[TYPE ERROR]"
     )
   }
 

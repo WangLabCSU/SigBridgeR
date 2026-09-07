@@ -50,7 +50,7 @@ WeightedVote <- function(
   chk::chk_numeric(weights)
 
   if (is.null(voter_cols)) {
-    Abort("`vote_data` must have column names.")
+    Abort("`vote_data` must have column names.", type = "[DATA ERROR]")
   }
 
   if (
@@ -62,7 +62,8 @@ WeightedVote <- function(
     Abort(
       "The `weights` must have the same names as `vote_data`",
       "Colnames of `vote_data`: {.val {voter_cols}}",
-      "Colnames of `weights`: {.val {weight_names}}"
+      "Colnames of `weights`: {.val {weight_names}}",
+      type = "[VALUE ERROR]"
     )
   }
 

@@ -26,7 +26,7 @@ NULL
 #' @export
 `+.SigBridgeR::ScreenMethodResult` <- function(x, y) {
   if (!S7_inherits(y, "ScreenMethodResult")) {
-    Abort("`y` must be a {.cls ScreenMethodResult} object")
+    Abort("`y` must be a {.cls ScreenMethodResult} object", type = "[TYPE ERROR]")
   }
   MergeResult(x@scRNA_data, y@scRNA_data)
 }

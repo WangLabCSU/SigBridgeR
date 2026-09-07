@@ -37,7 +37,8 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
     if (!nzchar(col_name_i) && is.vector(dots[[i]])) {
       Abort(
         "Column name is empty, please provide a name for the metadata.",
-        "E.g, col_name = rep('type', {length(feature_names)})"
+        "E.g, col_name = rep('type', {length(feature_names)})",
+        type = "[ARG ERROR]"
       )
     }
     if (is.null(names(metadata_i))) {
@@ -46,7 +47,8 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
       )
       if (length(feature_names) != length(metadata_i)) {
         Abort(
-          "Metadata length does not match feature length, please check the input"
+          "Metadata length does not match feature length, please check the input",
+          type = "[VALUE ERROR]"
         )
       }
       names(metadata_i) <- feature_names

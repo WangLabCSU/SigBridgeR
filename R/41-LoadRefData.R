@@ -103,7 +103,8 @@ LoadRefData <- function(
             Abort(
               cli::col_red("All download attempts failed."),
               "Please check your internet connection or try again later.",
-              "Error from last attempt: {e$message}"
+              "Error from last attempt: {e$message}",
+              type = "[DOWNLOAD ERROR]"
             )
           }
           FALSE

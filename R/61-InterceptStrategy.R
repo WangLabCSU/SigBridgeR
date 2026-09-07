@@ -49,7 +49,7 @@ InterceptStrategy <- function(
 
   var_names <- names(env)
   if (is.null(var_names)) {
-    Abort("Found empty strategy environment: {.val {var_names}}")
+    Abort("Found empty strategy environment: {.val {var_names}}", type = "[CONFIG ERROR]")
   }
   info <- purrr::map(var_names, function(var_name) {
     var <- env[[var_name]]

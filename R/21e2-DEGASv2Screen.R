@@ -504,7 +504,8 @@ select_genes2 <- function(
   if (length(genes) == 0) {
     Abort(
       "No genes found",
-      "Check biological relationship between bulk and single-cell data"
+      "Check biological relationship between bulk and single-cell data",
+      type = "[DATA ERROR]"
     )
   }
 

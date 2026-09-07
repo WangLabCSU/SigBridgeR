@@ -58,7 +58,8 @@ TemplateScreenFunc <- function(
     if (!rstudioapi::isAvailable()) {
       Abort(
         "{.pkg rstudioapi} is not available. This function requires RStudio or Positron session when specified filename as `current`.",
-        "Please specify a filename directly instead of `current`"
+        "Please specify a filename directly instead of `current`",
+        type = "[ENV ERROR]"
       )
     }
 
@@ -70,7 +71,8 @@ TemplateScreenFunc <- function(
     # * Validate filename is character and has .R extension
     if (!grepl("\\.R$", filename, ignore.case = TRUE)) {
       Abort(
-        "`filename` must have a {.path .R} extension (case-insensitive)."
+        "`filename` must have a {.path .R} extension (case-insensitive).",
+        type = "[FILE ERROR]"
       )
     }
   }
@@ -78,7 +80,8 @@ TemplateScreenFunc <- function(
   # * validate function name
   if (!grepl("^[a-zA-Z][a-zA-Z0-9._]*$", func_name)) {
     Abort(
-      "Invalid `func_name`: {.val {func_name}}"
+      "Invalid `func_name`: {.val {func_name}}",
+      type = "[VALUE ERROR]"
     )
   }
 
@@ -91,7 +94,7 @@ TemplateScreenFunc <- function(
     response <- utils::askYesNo("Overwrite existing content? ")
 
     if (!isTRUE(response)) {
-      Abort("Operation cancelled by user.")
+      Abort("Operation cancelled by user.", type = "[CANCELED]")
     }
   }
 

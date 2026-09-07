@@ -169,7 +169,7 @@ NULL
 #' @export
 #' @rawNamespace S3method(`names<-`,"SigBridgeR::SigBridgeRBase")
 `names<-.SigBridgeR::SigBridgeRBase` <- function(x, value) {
-  Abort("Modification is restricted", "Please reconstruct a new object")
+  Abort("Modification is restricted", "Please reconstruct a new object", type = "[RESTRICTED]")
 }
 
 #' Format a SigBridgeR base object
@@ -256,7 +256,8 @@ NULL
 `as.character.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
   Abort(
     "cannot coerce type {.cls SigBridgeRBase} to vector of type {.cls character}",
-    "Maybe you want to use {.fun format}?"
+    "Maybe you want to use {.fun format}?",
+    type = "[TYPE ERROR]"
   )
 }
 

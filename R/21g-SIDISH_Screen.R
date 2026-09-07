@@ -34,7 +34,7 @@ ValidateSIDISHParams <- function(
   chk::chk_is(sc_data, "Seurat")
   # Validate phenotype_class parameter
   if (phenotype_class != "survival") {
-    Abort("Currently phenotype_class must be {.val survival}")
+    Abort("Currently phenotype_class must be {.val survival}", type = "[VALUE ERROR]")
   }
 
   # -- process dots ---------------------------------------------------------
