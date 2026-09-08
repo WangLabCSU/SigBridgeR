@@ -8,6 +8,7 @@ SymbolConvert(
   data,
   unknown_format = "unknown_{k}",
   genome_build = c("hg38", "hg19", "mm10", "mm9"),
+  update_symbol = TRUE,
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
   ...
 )
@@ -21,9 +22,14 @@ Default: \code{"unknown_{k}"}.}
 
 \item{genome_build}{Genome build of the data. Default: \code{"hg38"}.}
 
+\item{update_symbol}{Whether to update gene symbol to latest version. Default: \code{TRUE}.}
+
 \item{verbose}{Whether to print verbose messages. Default: \code{TRUE}.}
 
 \item{...}{No usage}
+}
+\value{
+Data with rownames converted to gene symbols
 }
 \description{
 Preprocess bulk expression data: convert Ensembles version IDs and TCGA version IDs to genes. NA values are replaced with \code{unknown_k} format (k stands for the position of the NA value in the row).

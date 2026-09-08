@@ -8,8 +8,11 @@
 #'     k must be wrapped in curly braces, stands for the position of the NA value in the row.
 #'     Default: `"unknown_{k}"`.
 #' @param genome_build Genome build of the data. Default: `"hg38"`.
+#' @param update_symbol Whether to update gene symbol to latest version. Default: `TRUE`.
 #' @param verbose Whether to print verbose messages. Default: `TRUE`.
 #' @param ... No usage
+#'
+#' @return Data with rownames converted to gene symbols
 #'
 #' @export
 #' @family input_preprocess
@@ -18,10 +21,16 @@ SymbolConvert <- function(
   data,
   unknown_format = "unknown_{k}",
   genome_build = c("hg38", "hg19", "mm10", "mm9"),
+  update_symbol = TRUE,
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
   ...
 ) {
+  chk::chk_flag(update_symbol)
+  chk::chk_flag(verbose)
+  chk::chk_character(unknown_format)
+
   check_installed(c("IDConverter", "glue"))
+
   genome_build <- arg_match(genome_build, c("hg38", "hg19", "mm10", "mm9"))
   row_names <- gsub("\\..*$", "", rownames(data))
   if (is.null(row_names)) {
@@ -56,26 +65,27 @@ SymbolConvert <- function(
     gene_symbols[where_duplicated] <- rownames(data)[where_duplicated]
   }
 
-  # * update to latest symbol
-  if (verbose) {
-    ts_cli$cli_alert_info("Updating gene symbols to latest version")
-  }
-
-  gene_symbols <- if (is_installed("scCustomize")) {
-    if (grepl("hg|HG", genome_build)) {
-      scCustomize::Updated_HGNC_Symbols(
-        gene_symbols,
-        case_check_as_warn = TRUE,
-        verbose = verbose
-      )$Output_Features
-    } else {
-      scCustomize::Updated_MGI_Symbols(
-        gene_symbols,
-        verbose = verbose
-      )$Output_Features
+  if (update_symbol) {
+    # * update to latest symbol
+    if (verbose) {
+      ts_cli$cli_alert_info("Updating gene symbols to latest version")
     }
-  } else {
-    Seurat::UpdateSymbolList(gene_symbols, verbose = verbose)
+    gene_symbols <- if (is_installed("scCustomize")) {
+      if (grepl("hg|HG", genome_build)) {
+        scCustomize::Updated_HGNC_Symbols(
+          gene_symbols,
+          case_check_as_warn = TRUE,
+          verbose = verbose
+        )$Output_Features
+      } else {
+        scCustomize::Updated_MGI_Symbols(
+          gene_symbols,
+          verbose = verbose
+        )$Output_Features
+      }
+    } else {
+      Seurat::UpdateSymbolList(gene_symbols, verbose = verbose)
+    }
   }
 
   rownames(data) <- gene_symbols
