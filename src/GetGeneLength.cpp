@@ -253,13 +253,6 @@ inline bool get_gene_id_fast(const Field &attr, string &gene_id) {
 
   gene_id.assign(quote1 + 1, static_cast<size_t>(quote2 - quote1 - 1));
 
-  // strip the Ensembl gene ID version suffix
-  const size_t dot = gene_id.find('.');
-
-  if (dot != string::npos) {
-    gene_id.resize(dot);
-  }
-
   return !gene_id.empty();
 }
 
@@ -269,7 +262,7 @@ inline bool get_gene_id_fast(const Field &attr, string &gene_id) {
 // ============================================================
 
 inline void add_gtf_line_fast(const char *line, size_t line_size,
-                              GroupMap &groups) {
+                              GroupMap &groups, bool canonical_chr_only) {
 
   if (line == nullptr || line_size == 0) {
     return;
@@ -325,7 +318,7 @@ inline void add_gtf_line_fast(const char *line, size_t line_size,
   // column 1: chromosome
   const Field &chr = fields[0];
 
-  if (!valid_chr_fast(chr)) {
+  if (canonical_chr_only && !valid_chr_fast(chr)) {
     return;
   }
 
@@ -376,7 +369,8 @@ inline void add_gtf_line_fast(const char *line, size_t line_size,
 // Reads and processes line by line; does not store all GTF lines.
 // ============================================================
 
-void read_gtf_lines(const string &path, GroupMap &groups, bool verbose) {
+void read_gtf_lines(const string &path, GroupMap &groups, bool verbose,
+                    bool canonical_chr_only) {
 
   LineReader reader(path);
   string line;
@@ -385,7 +379,7 @@ void read_gtf_lines(const string &path, GroupMap &groups, bool verbose) {
 
   while (reader.next(line)) {
 
-    add_gtf_line_fast(line.data(), line.size(), groups);
+    add_gtf_line_fast(line.data(), line.size(), groups, canonical_chr_only);
 
     ++n;
 
@@ -495,7 +489,7 @@ NumericVector finalize_gene_lengths(GroupMap &groups, bool verbose) {
 // ============================================================
 
 NumericVector gene_length_from_r_lines(const CharacterVector &lines,
-                                       bool verbose) {
+                                       bool verbose, bool canonical_chr_only) {
 
   const R_xlen_t n = lines.size();
 
@@ -519,7 +513,7 @@ NumericVector gene_length_from_r_lines(const CharacterVector &lines,
     const char *line = CHAR(element);
     const size_t line_size = strlen(line);
 
-    add_gtf_line_fast(line, line_size, groups);
+    add_gtf_line_fast(line, line_size, groups, canonical_chr_only);
 
     if ((i & 131071) == 0) {
       checkUserInterrupt();
@@ -539,14 +533,15 @@ NumericVector gene_length_from_r_lines(const CharacterVector &lines,
 // ============================================================
 
 // [[Rcpp::export]]
-NumericVector gtf_file_to_gene_length(std::string path, bool verbose = true) {
+NumericVector gtf_file_to_gene_length(std::string path, bool verbose = true,
+                                      bool canonical_chr_only = false) {
 
   GroupMap groups;
 
   groups.reserve(65536);
 
   // read and process line by line internally
-  read_gtf_lines(path, groups, verbose);
+  read_gtf_lines(path, groups, verbose, canonical_chr_only);
 
   return finalize_gene_lengths(groups, verbose);
 }
@@ -563,7 +558,8 @@ NumericVector gtf_file_to_gene_length(std::string path, bool verbose = true) {
 
 // [[Rcpp::export]]
 NumericVector r_gtf_lines_to_gene_length(CharacterVector lines,
-                                         bool verbose = true) {
+                                         bool verbose = true,
+                                         bool canonical_chr_only = false) {
 
-  return gene_length_from_r_lines(lines, verbose);
+  return gene_length_from_r_lines(lines, verbose, canonical_chr_only);
 }

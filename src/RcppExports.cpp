@@ -196,26 +196,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // gtf_file_to_gene_length
-NumericVector gtf_file_to_gene_length(std::string path, bool verbose);
-RcppExport SEXP _SigBridgeR_gtf_file_to_gene_length(SEXP pathSEXP, SEXP verboseSEXP) {
+NumericVector gtf_file_to_gene_length(std::string path, bool verbose, bool canonical_chr_only);
+RcppExport SEXP _SigBridgeR_gtf_file_to_gene_length(SEXP pathSEXP, SEXP verboseSEXP, SEXP canonical_chr_onlySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(gtf_file_to_gene_length(path, verbose));
+    Rcpp::traits::input_parameter< bool >::type canonical_chr_only(canonical_chr_onlySEXP);
+    rcpp_result_gen = Rcpp::wrap(gtf_file_to_gene_length(path, verbose, canonical_chr_only));
     return rcpp_result_gen;
 END_RCPP
 }
 // r_gtf_lines_to_gene_length
-NumericVector r_gtf_lines_to_gene_length(CharacterVector lines, bool verbose);
-RcppExport SEXP _SigBridgeR_r_gtf_lines_to_gene_length(SEXP linesSEXP, SEXP verboseSEXP) {
+NumericVector r_gtf_lines_to_gene_length(CharacterVector lines, bool verbose, bool canonical_chr_only);
+RcppExport SEXP _SigBridgeR_r_gtf_lines_to_gene_length(SEXP linesSEXP, SEXP verboseSEXP, SEXP canonical_chr_onlySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type lines(linesSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(r_gtf_lines_to_gene_length(lines, verbose));
+    Rcpp::traits::input_parameter< bool >::type canonical_chr_only(canonical_chr_onlySEXP);
+    rcpp_result_gen = Rcpp::wrap(r_gtf_lines_to_gene_length(lines, verbose, canonical_chr_only));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -335,8 +337,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_preprocessCounts_ptr", (DL_FUNC) &_SigBridgeR_preprocessCounts_ptr, 1},
     {"_SigBridgeR_ExtractMetricsCpp", (DL_FUNC) &_SigBridgeR_ExtractMetricsCpp, 3},
     {"_SigBridgeR_FPKMToTPM_impl", (DL_FUNC) &_SigBridgeR_FPKMToTPM_impl, 3},
-    {"_SigBridgeR_gtf_file_to_gene_length", (DL_FUNC) &_SigBridgeR_gtf_file_to_gene_length, 2},
-    {"_SigBridgeR_r_gtf_lines_to_gene_length", (DL_FUNC) &_SigBridgeR_r_gtf_lines_to_gene_length, 2},
+    {"_SigBridgeR_gtf_file_to_gene_length", (DL_FUNC) &_SigBridgeR_gtf_file_to_gene_length, 3},
+    {"_SigBridgeR_r_gtf_lines_to_gene_length", (DL_FUNC) &_SigBridgeR_r_gtf_lines_to_gene_length, 3},
     {"_SigBridgeR_IsCountsMatrixImpl", (DL_FUNC) &_SigBridgeR_IsCountsMatrixImpl, 4},
     {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},

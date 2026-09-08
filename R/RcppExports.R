@@ -61,12 +61,12 @@ FPKMToTPM_impl <- function(fpkm, na_as_zero = TRUE, verbose = TRUE) {
     .Call(`_SigBridgeR_FPKMToTPM_impl`, fpkm, na_as_zero, verbose)
 }
 
-gtf_file_to_gene_length <- function(path, verbose = TRUE) {
-    .Call(`_SigBridgeR_gtf_file_to_gene_length`, path, verbose)
+gtf_file_to_gene_length <- function(path, verbose = TRUE, canonical_chr_only = FALSE) {
+    .Call(`_SigBridgeR_gtf_file_to_gene_length`, path, verbose, canonical_chr_only)
 }
 
-r_gtf_lines_to_gene_length <- function(lines, verbose = TRUE) {
-    .Call(`_SigBridgeR_r_gtf_lines_to_gene_length`, lines, verbose)
+r_gtf_lines_to_gene_length <- function(lines, verbose = TRUE, canonical_chr_only = FALSE) {
+    .Call(`_SigBridgeR_r_gtf_lines_to_gene_length`, lines, verbose, canonical_chr_only)
 }
 
 IsCountsMatrixImpl <- function(x, verbose = FALSE, integer_tol = 1e-8, min_integer_fraction = 0.95) {

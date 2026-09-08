@@ -6,11 +6,11 @@
 \alias{GetGeneLength.character}
 \title{Compute Gene Lengths from a GTF File or GTF Lines}
 \usage{
-GetGeneLength(x, verbose = TRUE, ...)
+GetGeneLength(x, verbose = TRUE, canonical_chr_only = FALSE, ...)
 
-\method{GetGeneLength}{default}(x, verbose = TRUE, ...)
+\method{GetGeneLength}{default}(x, verbose = TRUE, canonical_chr_only = FALSE, ...)
 
-\method{GetGeneLength}{character}(x, verbose = TRUE, ...)
+\method{GetGeneLength}{character}(x, verbose = TRUE, canonical_chr_only = FALSE, ...)
 }
 \arguments{
 \item{x}{The object to dispatch on:
@@ -22,6 +22,11 @@ GetGeneLength(x, verbose = TRUE, ...)
 \item{verbose}{A logical flag. If \code{TRUE} (default), cli-style progress
 messages (with ANSI colors) are printed while reading, parsing, and
 merging the exon intervals.}
+
+\item{canonical_chr_only}{A logical flag. If \code{TRUE}, only \code{exon} records
+located on canonical chromosomes (autosomes \code{1-22}, and chromosomes \code{X},
+\code{Y}, \code{MT}) are retained; exons on any other contig/scaffold are ignored.
+If \code{FALSE} (default), exons on every chromosome are considered.}
 
 \item{...}{Reserved for future use.}
 }
@@ -45,11 +50,15 @@ never loaded fully into memory.
 themselves (e.g. the output of \code{\link[=readLines]{readLines()}}).
 }
 
-Only \code{exon} features located on autosomes \code{1-22} or chromosomes \code{X}, \code{Y},
-and \code{MT} are considered. Overlapping or adjacent exon intervals are merged
-within each (\code{gene_id}, chromosome, strand) group, and the length of the
-merged span is reported. Ensembl \code{gene_id} version suffixes (e.g. \code{.15})
-are stripped so identifiers from different Ensembl builds map together.
+Overlapping or adjacent exon intervals are merged within each (\code{gene_id},
+chromosome, strand) group, and the length of the merged span is reported.
+Ensembl \code{gene_id} version suffixes (e.g. \code{ENSG00000139618.15}) are preserved,
+so gene identifiers from different annotation builds remain distinct.
+
+By default, exon records on \strong{every} chromosome are kept. Set
+\code{canonical_chr_only = TRUE} to restrict the analysis to canonical
+chromosomes (autosomes \code{1-22} and chromosomes \code{X}, \code{Y}, and \code{MT}) and ignore
+any other contigs or scaffolds present in the annotation.
 }
 \examples{
 \dontrun{

@@ -13,11 +13,15 @@
 #' * A **multi-element** character vector `x` is treated as the GTF lines
 #'   themselves (e.g. the output of [readLines()]).
 #'
-#' Only `exon` features located on autosomes `1-22` or chromosomes `X`, `Y`,
-#' and `MT` are considered. Overlapping or adjacent exon intervals are merged
-#' within each (`gene_id`, chromosome, strand) group, and the length of the
-#' merged span is reported. Ensembl `gene_id` version suffixes (e.g. `.15`)
-#' are stripped so identifiers from different Ensembl builds map together.
+#' Overlapping or adjacent exon intervals are merged within each (`gene_id`,
+#' chromosome, strand) group, and the length of the merged span is reported.
+#' Ensembl `gene_id` version suffixes (e.g. `ENSG00000139618.15`) are preserved,
+#' so gene identifiers from different annotation builds remain distinct.
+#'
+#' By default, exon records on **every** chromosome are kept. Set
+#' `canonical_chr_only = TRUE` to restrict the analysis to canonical
+#' chromosomes (autosomes `1-22` and chromosomes `X`, `Y`, and `MT`) and ignore
+#' any other contigs or scaffolds present in the annotation.
 #'
 #' @param x The object to dispatch on:
 #'   * A length-1 character string: path to a GTF or GTF.GZ file.
@@ -25,6 +29,10 @@
 #' @param verbose A logical flag. If `TRUE` (default), cli-style progress
 #'   messages (with ANSI colors) are printed while reading, parsing, and
 #'   merging the exon intervals.
+#' @param canonical_chr_only A logical flag. If `TRUE`, only `exon` records
+#'   located on canonical chromosomes (autosomes `1-22`, and chromosomes `X`,
+#'   `Y`, `MT`) are retained; exons on any other contig/scaffold are ignored.
+#'   If `FALSE` (default), exons on every chromosome are considered.
 #' @param ... Reserved for future use.
 #'
 #' @return A named numeric vector of gene lengths, one entry per gene, with
@@ -42,15 +50,21 @@
 #' }
 #'
 #' @export
-GetGeneLength <- function(x, verbose = TRUE, ...) {
+GetGeneLength <- function(x, verbose = TRUE, canonical_chr_only = FALSE, ...) {
   chk::chk_flag(verbose)
+  chk::chk_flag(canonical_chr_only)
   UseMethod("GetGeneLength")
 }
 
 
 #' @rdname GetGeneLength
 #' @export
-GetGeneLength.default <- function(x, verbose = TRUE, ...) {
+GetGeneLength.default <- function(
+  x,
+  verbose = TRUE,
+  canonical_chr_only = FALSE,
+  ...
+) {
   available_methods <- gsub(
     "^GetGeneLength\\.",
     "",
@@ -65,14 +79,34 @@ GetGeneLength.default <- function(x, verbose = TRUE, ...) {
 
 #' @rdname GetGeneLength
 #' @export
-GetGeneLength.character <- function(x, verbose = TRUE, ...) {
+GetGeneLength.character <- function(
+  x,
+  verbose = TRUE,
+  canonical_chr_only = FALSE,
+  ...
+) {
   if (length(x) == 1L) {
-    return(GetGeneLength_file_impl(x = x, verbose = verbose, ...))
+    return(GetGeneLength_file_impl(
+      x = x,
+      verbose = verbose,
+      canonical_chr_only = canonical_chr_only,
+      ...
+    ))
   }
-  GetGeneLength_lines_impl(x = x, verbose = verbose, ...)
+  GetGeneLength_lines_impl(
+    x = x,
+    verbose = verbose,
+    canonical_chr_only = canonical_chr_only,
+    ...
+  )
 }
 
-GetGeneLength_file_impl <- function(x, verbose = TRUE, ...) {
+GetGeneLength_file_impl <- function(
+  x,
+  verbose = TRUE,
+  canonical_chr_only = FALSE,
+  ...
+) {
   check_dots_empty()
   if (!file.exists(x)) {
     Abort("{.file {x}} is not found", type = "[FILE ERROR]")
@@ -83,11 +117,24 @@ GetGeneLength_file_impl <- function(x, verbose = TRUE, ...) {
       type = "[FILE FORMAT]"
     )
   }
-  gtf_file_to_gene_length(path = x, verbose = verbose)
+  gtf_file_to_gene_length(
+    path = x,
+    verbose = verbose,
+    canonical_chr_only = canonical_chr_only
+  )
 }
 
 
-GetGeneLength_lines_impl <- function(x, verbose = TRUE, ...) {
+GetGeneLength_lines_impl <- function(
+  x,
+  verbose = TRUE,
+  canonical_chr_only = FALSE,
+  ...
+) {
   check_dots_empty()
-  r_gtf_lines_to_gene_length(lines = x, verbose = verbose)
+  r_gtf_lines_to_gene_length(
+    lines = x,
+    verbose = verbose,
+    canonical_chr_only = canonical_chr_only
+  )
 }
