@@ -30,6 +30,11 @@
 #'
 #' @export
 CountsToTPM <- function(counts, gene_length) {
+  row_names <- rownames(counts)
+  if (is.null(row_names)) {
+    Abort("`counts` must have rownames.", type = "[INPUT ERROR]")
+  }
+
   if (is.list(gene_length)) {
     gene_length <- unlist(gene_length, recursive = TRUE, use.names = TRUE)
   }
@@ -37,28 +42,51 @@ CountsToTPM <- function(counts, gene_length) {
   gl_names <- names(gene_length)
 
   if (is.null(gl_names)) {
-    Abort("`gene_length` must be named.", type = "[INPUT ERROR]")
+    Abort("`gene_length` must be a named vector.", type = "[INPUT ERROR]")
   }
 
   if (!all(nzchar(names(gene_length)))) {
-    Abort("`gene_length` contains {.val NA} or {.val empty names}.", type = "[INPUT ERROR]")
+    Abort(
+      "`gene_length` contains {.val NA} or {.val empty names}.",
+      type = "[INPUT ERROR]"
+    )
   }
 
   if (any(!is.finite(gene_length) | gene_length <= 0)) {
-    Abort("`gene_length` must contain positive finite gene lengths in bp.", type = "[INPUT ERROR]")
+    Abort(
+      "`gene_length` must contain positive finite gene lengths in bp.",
+      type = "[INPUT ERROR]"
+    )
   }
 
   if (is.data.frame(counts)) {
     counts <- as.matrix(counts)
   }
 
-  if (!inherits(counts, c("matrix", "dgCMatrix", "dgeMatrix"))) {
+  was_s4mat <- if (inherits(counts, "Matrix")) {
+    TRUE
+  } else {
+    FALSE
+  }
+
+  if (!is_2d(counts)) {
     cls_counts <- class(counts)
     Abort(
-      "Expected `counts` to be a {.cls matrix/dgCMatrix/dgeMatrix}",
+      "Expected `counts` to be a {.cls matrix-like} object",
       "Current input is {.cls {cls_counts}}",
       type = "[TYPE ERROR]"
     )
   }
-  CountsToTPM_impl(counts, gene_length)
+  result <- counts_to_tpm_cpp(
+    beachmat::initializeCpp(counts),
+    row_names,
+    gene_length
+  )
+  dimnames(result) <- dimnames(counts)
+
+  if (was_s4mat) {
+    result <- Matrix::Matrix(result)
+  }
+
+  result
 }

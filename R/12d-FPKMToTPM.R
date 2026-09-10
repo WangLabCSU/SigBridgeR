@@ -14,9 +14,10 @@
 #' (\code{na_as_zero = TRUE}, the default) or trigger an error
 #' (\code{na_as_zero = FALSE}).
 #'
-#' @param data A matrix or data frame of FPKM values. Rows are genes, columns
-#'   are samples. Data frames are coerced with [as.matrix()] and must contain
-#'   only numeric columns. Values must be non-negative and finite.
+#' @param data A two-dimensional matrix-like object of FPKM values (a base
+#'   matrix, a data frame, or an S4 \code{Matrix}). Rows are genes, columns are
+#'   samples. Data frames are coerced and must contain only numeric columns.
+#'   Values must be non-negative and finite.
 #' @param na_as_zero A logical flag. If \code{TRUE} (default), missing values
 #'   are replaced by zero before normalization. If \code{FALSE}, an error is
 #'   raised when \code{data} contains missing values.
@@ -26,9 +27,9 @@
 #'   contains missing values and \code{verbose} is \code{TRUE} (for example
 #'   \code{max_print}).
 #'
-#' @return A numeric TPM matrix with the same dimensions as \code{data}. Each
-#'   column sums to \eqn{10^6} unless the corresponding FPKM column sums to
-#'   zero.
+#' @return A numeric TPM matrix with the same dimensions and \code{dimnames} as
+#'   \code{data}. Each column sums to \eqn{10^6} unless the corresponding FPKM
+#'   column sums to zero.
 #'
 #' @examples
 #' \dontrun{
@@ -54,12 +55,17 @@ FPKMToTPM <- function(data, na_as_zero = TRUE, verbose = TRUE, ...) {
   chk::chk_flag(na_as_zero)
   chk::chk_flag(verbose)
 
-  if (!is.matrix(data)) {
-    data <- as.matrix(data)
+  if (!is_2d(data)) {
+    Abort(
+      "`data` must be a 2D matrix-like object",
+      type = "[VALUE ERROR]"
+    )
   }
 
-  if (!is.numeric(data)) {
-    Abort("`data` must be a numeric FPKM matrix", type = "[TYPE ERROR]")
+  # is.infinite()/is.finite() have no method for lists, so a data frame has to
+  # be coerced before the finite-value guard below.
+  if (is.data.frame(data)) {
+    data <- as.matrix(data)
   }
 
   if (any(is.infinite(data), na.rm = TRUE)) {
@@ -89,5 +95,12 @@ FPKMToTPM <- function(data, na_as_zero = TRUE, verbose = TRUE, ...) {
     }
   }
 
-  FPKMToTPM_impl(fpkm = data, na_as_zero = na_as_zero, verbose = verbose)
+  result <- fpkm_to_tpm_cpp(
+    beachmat::initializeCpp(data),
+    na_as_zero = na_as_zero,
+    verbose = verbose
+  )
+
+  dimnames(result) <- dimnames(data)
+  return(result)
 }

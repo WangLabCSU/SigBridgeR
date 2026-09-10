@@ -76,9 +76,8 @@ For detailed instructions on how to implement and register custom algorithms - i
 2. **Install development dependencies** (recommended):
 
    code formatting: [air](https://github.com/posit-dev/air)   
-   lints for R (choose one): 
+   lints for R: 
       - [flir](https://github.com/etiennebacher/flir)
-      - [lintr](https://github.com/r-lib/lintr)
       - [jarl](https://github.com/etiennebacher/jarl)
   
    install R code tools:

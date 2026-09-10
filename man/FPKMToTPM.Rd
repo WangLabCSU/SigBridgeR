@@ -7,9 +7,10 @@
 FPKMToTPM(data, na_as_zero = TRUE, verbose = TRUE, ...)
 }
 \arguments{
-\item{data}{A matrix or data frame of FPKM values. Rows are genes, columns
-are samples. Data frames are coerced with \code{\link[=as.matrix]{as.matrix()}} and must contain
-only numeric columns. Values must be non-negative and finite.}
+\item{data}{A two-dimensional matrix-like object of FPKM values (a base
+matrix, a data frame, or an S4 \code{Matrix}). Rows are genes, columns are
+samples. Data frames are coerced and must contain only numeric columns.
+Values must be non-negative and finite.}
 
 \item{na_as_zero}{A logical flag. If \code{TRUE} (default), missing values
 are replaced by zero before normalization. If \code{FALSE}, an error is
@@ -23,9 +24,9 @@ contains missing values and \code{verbose} is \code{TRUE} (for example
 \code{max_print}).}
 }
 \value{
-A numeric TPM matrix with the same dimensions as \code{data}. Each
-column sums to \eqn{10^6} unless the corresponding FPKM column sums to
-zero.
+A numeric TPM matrix with the same dimensions and \code{dimnames} as
+\code{data}. Each column sums to \eqn{10^6} unless the corresponding FPKM
+column sums to zero.
 }
 \description{
 Converts a gene-level FPKM matrix to TPM (Transcripts Per Million). Because

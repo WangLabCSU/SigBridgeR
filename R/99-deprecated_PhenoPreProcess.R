@@ -161,7 +161,10 @@ PhenoPreProcess <- function(
   }
   n_samples <- ncol(bulk)
   if (n_samples < 2L) {
-    Abort("`bulk` must have at least 2 samples (columns)", type = "[DATA ERROR]")
+    Abort(
+      "`bulk` must have at least 2 samples (columns)",
+      type = "[DATA ERROR]"
+    )
   }
 
   bulk <- as.matrix(bulk)
@@ -395,7 +398,7 @@ handle_case_2 <- function(
     return(handle_case_1(
       phenotype_class = phenotype_class,
       phenotype = phenotype,
-      sample_names = sample_names,
+      sample_names = sample_names
     ))
   }
 
@@ -465,7 +468,7 @@ handle_case_4 <- function(
     return(handle_case_3(
       phenotype_class = phenotype_class,
       phenotype = phenotype,
-      sample_names = sample_names,
+      sample_names = sample_names
     ))
   }
 }

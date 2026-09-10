@@ -160,7 +160,7 @@ describe("CountsToTPM - dgCMatrix input", {
 
     result <- CountsToTPM(counts, gene_length)
 
-    expect_s4_class(result, "dgCMatrix")
+    expect_s4_class(result, "Matrix")
     expect_equal(dim(result), c(3, 2))
   })
 
@@ -232,7 +232,7 @@ describe("CountsToTPM - gene_length validation", {
 
     expect_error(
       CountsToTPM(counts, c(1000, 2000)),
-      "must be named"
+      "must be a named vector"
     )
   })
 
@@ -329,7 +329,7 @@ describe("CountsToTPM - counts validation", {
 
     expect_error(
       CountsToTPM(c(100, 200), gene_length),
-      "Expected.*counts"
+      "must have rownames"
     )
   })
 

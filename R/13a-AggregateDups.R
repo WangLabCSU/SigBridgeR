@@ -57,26 +57,19 @@ AggregateDupRows <- function(
     Abort("Input must have row names", type = "[DATA ERROR]")
   }
 
-  if (!anyDuplicated(row_names) > 0L) {
+  if (!anyDuplicated(row_names)) {
     if (verbose) {
       cli::cli_alert_info("No duplicated row names found.")
     }
     return(x)
   }
 
-  if (is.data.frame(x)) {
-    x <- as.matrix(x)
-  }
-
   was_df <- is.data.frame(x)
 
-  mat <- to_numeric_matrix(x)
-
-  row_names <- rownames(mat)
-  col_names <- colnames(mat)
+  col_names <- colnames(x)
 
   res <- aggregate_dup_rows_cpp(
-    x = mat,
+    initialized_matrix = beachmat::initializeCpp(x),
     row_names = row_names,
     method = method
   )
@@ -116,13 +109,10 @@ AggregateDupCols <- function(
 
   was_df <- is.data.frame(x)
 
-  mat <- to_numeric_matrix(x)
-
-  row_names <- rownames(mat)
-  col_names <- colnames(mat)
+  row_names <- rownames(x)
 
   res <- aggregate_dup_cols_cpp(
-    x = mat,
+    initialized_matrix = beachmat::initializeCpp(x),
     col_names = col_names,
     method = method
   )
@@ -131,6 +121,12 @@ AggregateDupCols <- function(
 
   if (was_df) {
     res <- as.data.frame(res, check.names = FALSE)
+    # as.data.frame() silently uniquifies duplicated row names (e.g. "G1" ->
+    # "G1.1"), which would hide them from a subsequent AggregateDupRows() call
+    # in AggregateDups(). Restore the original row names to keep the contract.
+    if (!is.null(row_names)) {
+      attr(res, "row.names") <- row_names
+    }
   }
 
   res
@@ -168,7 +164,7 @@ AggregateDups <- function(
     c("max", "sum", "mean", "median", "first")
   )
   col_method <- arg_match(
-    row_method,
+    col_method,
     c("max", "sum", "mean", "median", "first")
   )
   x <- AggregateDupCols(
@@ -184,28 +180,4 @@ AggregateDups <- function(
     verbose = verbose,
     ...
   )
-}
-
-
-to_numeric_matrix <- function(x) {
-  if (is.data.frame(x)) {
-    x <- as.matrix(x)
-  } else if (inherits(x, "Matrix")) {
-    x <- as.matrix(x)
-  } else if (!is.matrix(x)) {
-    x <- as.matrix(x)
-  }
-
-  if (!is.numeric(x)) {
-    stop(
-      "Input must be numeric or coercible to a numeric matrix.",
-      call. = FALSE
-    )
-  }
-
-  if (!is.double(x)) {
-    storage.mode(x) <- "double"
-  }
-
-  x
 }

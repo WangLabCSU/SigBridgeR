@@ -101,46 +101,48 @@ export(setThreads)
 if (getRversion() < "4.3.0") importFrom("S7", "@")
 import(S7)
 importFrom(Rcpp,evalCpp)
-importFrom(data.table,`%chin%`)
-importFrom(data.table,`.I`)
-importFrom(data.table,`.N`)
-importFrom(data.table,`.SD`)
-importFrom(data.table,`:=`)
-importFrom(data.table,as.data.table)
-importFrom(data.table,fcase)
+importFrom(data.table,
+  "%chin%",
+  ":=",
+  .I,
+  .N,
+  .SD
+)
 importFrom(ggplot2,autoplot)
-importFrom(rlang,abort)
-importFrom(rlang,arg_match)
-importFrom(rlang,call_args)
-importFrom(rlang,call_name)
-importFrom(rlang,caller_call)
-importFrom(rlang,caller_env)
-importFrom(rlang,check_dots_empty)
-importFrom(rlang,check_installed)
-importFrom(rlang,current_env)
-importFrom(rlang,enquo)
-importFrom(rlang,enquos)
-importFrom(rlang,eval_tidy)
-importFrom(rlang,exec)
-importFrom(rlang,expr)
-importFrom(rlang,f_name)
-importFrom(rlang,fn_body)
-importFrom(rlang,fn_fmls)
-importFrom(rlang,fn_fmls_names)
-importFrom(rlang,get_expr)
-importFrom(rlang,is_call)
-importFrom(rlang,is_function)
-importFrom(rlang,is_installed)
-importFrom(rlang,is_interactive)
-importFrom(rlang,is_named)
-importFrom(rlang,is_named2)
-importFrom(rlang,is_pairlist)
-importFrom(rlang,is_symbol)
-importFrom(rlang,is_syntactic_literal)
-importFrom(rlang,list2)
-importFrom(rlang,names2)
-importFrom(rlang,new_environment)
-importFrom(rlang,quo_name)
-importFrom(rlang,try_fetch)
-importFrom(rlang,warn)
+importFrom(rlang,
+  abort,
+  arg_match,
+  call_args,
+  call_name,
+  caller_call,
+  caller_env,
+  check_dots_empty,
+  check_installed,
+  current_env,
+  enquo,
+  enquos,
+  eval_tidy,
+  exec,
+  expr,
+  f_name,
+  fn_body,
+  fn_fmls,
+  fn_fmls_names,
+  get_expr,
+  is_call,
+  is_function,
+  is_installed,
+  is_interactive,
+  is_named,
+  is_named2,
+  is_pairlist,
+  is_symbol,
+  is_syntactic_literal,
+  list2,
+  names2,
+  new_environment,
+  quo_name,
+  try_fetch,
+  warn
+)
 useDynLib(SigBridgeR, .registration = TRUE)

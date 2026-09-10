@@ -14,6 +14,7 @@ URL: https://wanglabcsu.github.io/sigbridger
 BugReports: https://github.com/WangLabCSU/SigBridgeR/issues
 Roxygen: list(markdown = TRUE)
 Imports: 
+    beachmat,
     chk,
     cli,
     data.table (>= 1.9.8),
@@ -46,6 +47,7 @@ Suggests:
     furrr,
     future,
     future.mirai,
+    GenomicRanges,
     ggforce,
     ggupset,
     ggVennDiagram,
@@ -74,6 +76,7 @@ Suggests:
     rSIDISH (>= 0.0.2),
     rstudioapi,
     rTiRank,
+    rtracklayer,
     scAB (>= 1.0.4),
     scCustomize,
     SCIPAC,
@@ -96,6 +99,8 @@ Config/testthat/parallel: true
 Config/testthat/start-first: watcher, parallel*
 LinkingTo: 
     Rcpp,
-    RcppArmadillo (>= 0.12.4.0.0)
-SystemRequirements: C++14
-Config/roxygen2/version: 8.0.0
+    RcppArmadillo (>= 0.12.4.0.0),
+    assorthead,
+    beachmat
+SystemRequirements: C++17
+Config/roxygen2/version: 8.1.0

@@ -12,28 +12,39 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // aggregate_dup_cols_cpp
-NumericMatrix aggregate_dup_cols_cpp(NumericMatrix x, CharacterVector col_names, std::string method);
-RcppExport SEXP _SigBridgeR_aggregate_dup_cols_cpp(SEXP xSEXP, SEXP col_namesSEXP, SEXP methodSEXP) {
+NumericMatrix aggregate_dup_cols_cpp(SEXP initialized_matrix, CharacterVector col_names, std::string method);
+RcppExport SEXP _SigBridgeR_aggregate_dup_cols_cpp(SEXP initialized_matrixSEXP, SEXP col_namesSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type initialized_matrix(initialized_matrixSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type col_names(col_namesSEXP);
     Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(aggregate_dup_cols_cpp(x, col_names, method));
+    rcpp_result_gen = Rcpp::wrap(aggregate_dup_cols_cpp(initialized_matrix, col_names, method));
     return rcpp_result_gen;
 END_RCPP
 }
 // aggregate_dup_rows_cpp
-NumericMatrix aggregate_dup_rows_cpp(NumericMatrix x, CharacterVector row_names, std::string method);
-RcppExport SEXP _SigBridgeR_aggregate_dup_rows_cpp(SEXP xSEXP, SEXP row_namesSEXP, SEXP methodSEXP) {
+NumericMatrix aggregate_dup_rows_cpp(SEXP initialized_matrix, CharacterVector row_names, std::string method);
+RcppExport SEXP _SigBridgeR_aggregate_dup_rows_cpp(SEXP initialized_matrixSEXP, SEXP row_namesSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type initialized_matrix(initialized_matrixSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type row_names(row_namesSEXP);
     Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(aggregate_dup_rows_cpp(x, row_names, method));
+    rcpp_result_gen = Rcpp::wrap(aggregate_dup_rows_cpp(initialized_matrix, row_names, method));
+    return rcpp_result_gen;
+END_RCPP
+}
+// check_na_beachmat_matrix_cpp
+List check_na_beachmat_matrix_cpp(SEXP initialized_matrix);
+RcppExport SEXP _SigBridgeR_check_na_beachmat_matrix_cpp(SEXP initialized_matrixSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type initialized_matrix(initialized_matrixSEXP);
+    rcpp_result_gen = Rcpp::wrap(check_na_beachmat_matrix_cpp(initialized_matrix));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -45,18 +56,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(check_na_vector_cpp(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// check_na_dense2d_cpp
-List check_na_dense2d_cpp(SEXP x, IntegerVector dim);
-RcppExport SEXP _SigBridgeR_check_na_dense2d_cpp(SEXP xSEXP, SEXP dimSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(check_na_dense2d_cpp(x, dim));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -72,43 +71,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// check_na_sparse_csc_cpp
-List check_na_sparse_csc_cpp(SEXP x, IntegerVector i, IntegerVector p, IntegerVector dim);
-RcppExport SEXP _SigBridgeR_check_na_sparse_csc_cpp(SEXP xSEXP, SEXP iSEXP, SEXP pSEXP, SEXP dimSEXP) {
+// counts_to_tpm_cpp
+NumericMatrix counts_to_tpm_cpp(SEXP initialized_counts, CharacterVector row_names, NumericVector gene_length);
+RcppExport SEXP _SigBridgeR_counts_to_tpm_cpp(SEXP initialized_countsSEXP, SEXP row_namesSEXP, SEXP gene_lengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type i(iSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type p(pSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(check_na_sparse_csc_cpp(x, i, p, dim));
-    return rcpp_result_gen;
-END_RCPP
-}
-// check_na_sparse_triplet_cpp
-List check_na_sparse_triplet_cpp(SEXP x, IntegerVector i, IntegerVector j, IntegerVector dim);
-RcppExport SEXP _SigBridgeR_check_na_sparse_triplet_cpp(SEXP xSEXP, SEXP iSEXP, SEXP jSEXP, SEXP dimSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type i(iSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type j(jSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(check_na_sparse_triplet_cpp(x, i, j, dim));
-    return rcpp_result_gen;
-END_RCPP
-}
-// CountsToTPM_impl
-SEXP CountsToTPM_impl(SEXP counts, NumericVector gene_length);
-RcppExport SEXP _SigBridgeR_CountsToTPM_impl(SEXP countsSEXP, SEXP gene_lengthSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type counts(countsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type initialized_counts(initialized_countsSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type row_names(row_namesSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gene_length(gene_lengthSEXP);
-    rcpp_result_gen = Rcpp::wrap(CountsToTPM_impl(counts, gene_length));
+    rcpp_result_gen = Rcpp::wrap(counts_to_tpm_cpp(initialized_counts, row_names, gene_length));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -182,16 +154,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// FPKMToTPM_impl
-Rcpp::NumericMatrix FPKMToTPM_impl(const Rcpp::NumericMatrix& fpkm, bool na_as_zero, bool verbose);
-RcppExport SEXP _SigBridgeR_FPKMToTPM_impl(SEXP fpkmSEXP, SEXP na_as_zeroSEXP, SEXP verboseSEXP) {
+// fpkm_to_tpm_cpp
+NumericMatrix fpkm_to_tpm_cpp(SEXP initialized_fpkm, bool na_as_zero, bool verbose);
+RcppExport SEXP _SigBridgeR_fpkm_to_tpm_cpp(SEXP initialized_fpkmSEXP, SEXP na_as_zeroSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type fpkm(fpkmSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type initialized_fpkm(initialized_fpkmSEXP);
     Rcpp::traits::input_parameter< bool >::type na_as_zero(na_as_zeroSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(FPKMToTPM_impl(fpkm, na_as_zero, verbose));
+    rcpp_result_gen = Rcpp::wrap(fpkm_to_tpm_cpp(initialized_fpkm, na_as_zero, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -221,17 +193,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// IsCountsMatrixImpl
-bool IsCountsMatrixImpl(const arma::mat& x, bool verbose, double integer_tol, double min_integer_fraction);
-RcppExport SEXP _SigBridgeR_IsCountsMatrixImpl(SEXP xSEXP, SEXP verboseSEXP, SEXP integer_tolSEXP, SEXP min_integer_fractionSEXP) {
+// is_counts_matrix_cpp
+bool is_counts_matrix_cpp(SEXP initialized_matrix, bool verbose, double integer_tol, double min_integer_fraction);
+RcppExport SEXP _SigBridgeR_is_counts_matrix_cpp(SEXP initialized_matrixSEXP, SEXP verboseSEXP, SEXP integer_tolSEXP, SEXP min_integer_fractionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type initialized_matrix(initialized_matrixSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< double >::type integer_tol(integer_tolSEXP);
     Rcpp::traits::input_parameter< double >::type min_integer_fraction(min_integer_fractionSEXP);
-    rcpp_result_gen = Rcpp::wrap(IsCountsMatrixImpl(x, verbose, integer_tol, min_integer_fraction));
+    rcpp_result_gen = Rcpp::wrap(is_counts_matrix_cpp(initialized_matrix, verbose, integer_tol, min_integer_fraction));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -324,22 +296,20 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_aggregate_dup_cols_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_cols_cpp, 3},
     {"_SigBridgeR_aggregate_dup_rows_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_rows_cpp, 3},
+    {"_SigBridgeR_check_na_beachmat_matrix_cpp", (DL_FUNC) &_SigBridgeR_check_na_beachmat_matrix_cpp, 1},
     {"_SigBridgeR_check_na_vector_cpp", (DL_FUNC) &_SigBridgeR_check_na_vector_cpp, 1},
-    {"_SigBridgeR_check_na_dense2d_cpp", (DL_FUNC) &_SigBridgeR_check_na_dense2d_cpp, 2},
     {"_SigBridgeR_check_na_dataframe_cpp", (DL_FUNC) &_SigBridgeR_check_na_dataframe_cpp, 2},
-    {"_SigBridgeR_check_na_sparse_csc_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_csc_cpp, 4},
-    {"_SigBridgeR_check_na_sparse_triplet_cpp", (DL_FUNC) &_SigBridgeR_check_na_sparse_triplet_cpp, 4},
-    {"_SigBridgeR_CountsToTPM_impl", (DL_FUNC) &_SigBridgeR_CountsToTPM_impl, 2},
+    {"_SigBridgeR_counts_to_tpm_cpp", (DL_FUNC) &_SigBridgeR_counts_to_tpm_cpp, 3},
     {"_SigBridgeR_get_bulk_hvg", (DL_FUNC) &_SigBridgeR_get_bulk_hvg, 3},
     {"_SigBridgeR_normFunc_ptr", (DL_FUNC) &_SigBridgeR_normFunc_ptr, 1},
     {"_SigBridgeR_scaleFunc_ptr", (DL_FUNC) &_SigBridgeR_scaleFunc_ptr, 1},
     {"_SigBridgeR_normalizeScale_ptr", (DL_FUNC) &_SigBridgeR_normalizeScale_ptr, 1},
     {"_SigBridgeR_preprocessCounts_ptr", (DL_FUNC) &_SigBridgeR_preprocessCounts_ptr, 1},
     {"_SigBridgeR_ExtractMetricsCpp", (DL_FUNC) &_SigBridgeR_ExtractMetricsCpp, 3},
-    {"_SigBridgeR_FPKMToTPM_impl", (DL_FUNC) &_SigBridgeR_FPKMToTPM_impl, 3},
+    {"_SigBridgeR_fpkm_to_tpm_cpp", (DL_FUNC) &_SigBridgeR_fpkm_to_tpm_cpp, 3},
     {"_SigBridgeR_gtf_file_to_gene_length", (DL_FUNC) &_SigBridgeR_gtf_file_to_gene_length, 3},
     {"_SigBridgeR_r_gtf_lines_to_gene_length", (DL_FUNC) &_SigBridgeR_r_gtf_lines_to_gene_length, 3},
-    {"_SigBridgeR_IsCountsMatrixImpl", (DL_FUNC) &_SigBridgeR_IsCountsMatrixImpl, 4},
+    {"_SigBridgeR_is_counts_matrix_cpp", (DL_FUNC) &_SigBridgeR_is_counts_matrix_cpp, 4},
     {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
     {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},

@@ -129,7 +129,10 @@ describe("CheckNA - 2D data input", {
     expect_equal(result$count, 3)
     expect_s3_class(result$positions, "data.frame")
     expect_equal(nrow(result$positions), 3)
-    expect_equal(colnames(result$positions), c("row", "col", "row_name", "col_name"))
+    expect_equal(
+      colnames(result$positions),
+      c("row", "col", "row_name", "col_name")
+    )
   })
 
   it("detects NAs in data.frame without explicit row/col names", {
@@ -140,7 +143,10 @@ describe("CheckNA - 2D data input", {
 
     expect_equal(result$count, 2)
     expect_equal(nrow(result$positions), 2)
-    expect_equal(colnames(result$positions), c("row", "col", "row_name", "col_name"))
+    expect_equal(
+      colnames(result$positions),
+      c("row", "col", "row_name", "col_name")
+    )
     expect_equal(result$positions$row_name, c("2", "1"))
     expect_equal(result$positions$col_name, c("a", "b"))
   })
@@ -175,8 +181,10 @@ describe("CheckNA - 2D data input", {
     result <- CheckNA(df)
 
     # data.frame always has colnames, so col_name is present too
-    expect_equal(colnames(result$positions),
-                 c("row", "col", "row_name", "col_name"))
+    expect_equal(
+      colnames(result$positions),
+      c("row", "col", "row_name", "col_name")
+    )
     expect_equal(result$positions$row_name, c("R2", "R1"))
     expect_equal(result$positions$col_name, c("a", "b"))
   })
@@ -186,8 +194,10 @@ describe("CheckNA - 2D data input", {
     result <- CheckNA(df)
 
     # data.frame always has auto row names and col names
-    expect_equal(colnames(result$positions),
-                 c("row", "col", "row_name", "col_name"))
+    expect_equal(
+      colnames(result$positions),
+      c("row", "col", "row_name", "col_name")
+    )
     expect_equal(result$positions$row_name, c("2", "1"))
     expect_equal(result$positions$col_name, c("a", "b"))
   })

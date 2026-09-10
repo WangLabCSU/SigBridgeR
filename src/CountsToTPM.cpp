@@ -1,236 +1,225 @@
-#include <RcppArmadillo.h>
-#include <cmath>
-#include <unordered_map>
+#include <R_ext/Arith.h>
+#include <Rcpp.h>
+#include "Rtatami.h"
 
-// [[Rcpp::depends(RcppArmadillo)]]
+#include <climits>
+#include <cmath>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+// [[Rcpp::depends(beachmat, assorthead)]]
+// [[Rcpp::plugins(cpp17)]]
 
 using namespace Rcpp;
 
-static CharacterVector get_rownames(SEXP counts) {
-  if (Rf_isS4(counts)) {
-    S4 obj(counts);
-    if (!obj.hasSlot("Dimnames")) {
-      return CharacterVector();
-    }
-    SEXP dnS = obj.slot("Dimnames");
-    if (Rf_isNull(dnS)) {
-      return CharacterVector();
-    }
-    List dn(dnS);
-    if (dn.size() < 1) {
-      return CharacterVector();
-    }
-    SEXP rnS = dn[0];
-    if (Rf_isNull(rnS)) {
-      return CharacterVector();
-    }
-    return as<CharacterVector>(rnS);
-  } else {
-    SEXP dnS = Rf_getAttrib(counts, R_DimNamesSymbol);
-    if (Rf_isNull(dnS)) {
-      return CharacterVector();
-    }
-    List dn(dnS);
-    if (dn.size() < 1) {
-      return CharacterVector();
-    }
-    SEXP rnS = dn[0];
-    if (Rf_isNull(rnS)) {
-      return CharacterVector();
-    }
-    return as<CharacterVector>(rnS);
+/*
+ * 根据 counts 的行名生成每个基因的 1 / gene_length。
+ */
+static std::vector<double> make_inv_gene_length(CharacterVector row_names,
+                                                NumericVector gene_length,
+                                                std::size_t nrow) {
+  if (row_names.size() != static_cast<R_xlen_t>(nrow)) {
+    stop("counts must have rownames, and length(rownames(counts)) "
+         "must equal nrow(counts).");
   }
-}
 
-static arma::vec make_inv_gene_length(CharacterVector rownames,
-                                      NumericVector gene_length, int nrow) {
-  if (rownames.size() != nrow) {
-    stop("counts must have rownames, and length(rownames(counts)) must equal "
-         "nrow(counts).");
-  }
-  SEXP namesS = gene_length.attr("names");
-  if (Rf_isNull(namesS)) {
+  SEXP names_sexp = gene_length.attr("names");
+
+  if (Rf_isNull(names_sexp)) {
     stop("gene_length must be a named numeric vector.");
   }
-  CharacterVector gl_names(namesS);
-  if (gl_names.size() != gene_length.size()) {
+
+  CharacterVector gene_length_names(names_sexp);
+
+  if (gene_length_names.size() != gene_length.size()) {
     stop("gene_length names are invalid.");
   }
-  std::unordered_map<std::string, double> len_map;
-  len_map.reserve(static_cast<size_t>(gene_length.size()));
-  for (R_xlen_t i = 0; i < gene_length.size(); ++i) {
-    SEXP nmS = STRING_ELT(gl_names, i);
-    if (nmS == NA_STRING) {
+
+  std::unordered_map<std::string, double> length_map;
+
+  length_map.reserve(static_cast<std::size_t>(gene_length.size()));
+
+  for (R_xlen_t k = 0; k < gene_length.size(); ++k) {
+    SEXP name_sexp = STRING_ELT(gene_length_names, k);
+
+    if (name_sexp == NA_STRING) {
       stop("gene_length contains NA names.");
     }
-    std::string nm(CHAR(nmS));
-    if (nm.empty()) {
+
+    const char *name_chars = Rf_translateCharUTF8(name_sexp);
+
+    std::string gene_name(name_chars);
+
+    if (gene_name.empty()) {
       stop("gene_length contains empty names.");
     }
-    double len = gene_length[i];
-    if (!std::isfinite(len) || len <= 0.0) {
-      stop("gene_length must contain positive finite gene lengths in bp.");
+
+    const double length = gene_length[k];
+
+    if (!std::isfinite(length) || length <= 0.0) {
+      stop("gene_length must contain positive finite "
+           "gene lengths in bp.");
     }
-    auto inserted = len_map.emplace(nm, len);
+
+    const auto inserted = length_map.emplace(gene_name, length);
+
     if (!inserted.second) {
-      stop("gene_length contains duplicated gene name: %s", nm);
+      stop("gene_length contains duplicated gene name: %s", gene_name);
     }
   }
-  arma::vec inv_len(nrow);
-  for (int i = 0; i < nrow; ++i) {
-    SEXP rnS = STRING_ELT(rownames, i);
-    if (rnS == NA_STRING) {
+
+  std::vector<double> inv_length(nrow);
+
+  for (std::size_t i = 0; i < nrow; ++i) {
+    SEXP row_name_sexp = STRING_ELT(row_names, static_cast<R_xlen_t>(i));
+
+    if (row_name_sexp == NA_STRING) {
       stop("counts rownames contain NA.");
     }
-    std::string gene(CHAR(rnS));
-    auto it = len_map.find(gene);
-    if (it == len_map.end()) {
-      stop("gene_length misses gene: %s", gene);
+
+    const char *row_name_chars = Rf_translateCharUTF8(row_name_sexp);
+
+    std::string gene_name(row_name_chars);
+
+    auto it = length_map.find(gene_name);
+
+    if (it == length_map.end()) {
+      stop("gene_length misses gene: %s", gene_name);
     }
-    inv_len[i] = 1.0 / it->second;
+
+    inv_length[i] = 1.0 / it->second;
   }
-  return inv_len;
+
+  return inv_length;
 }
 
-static NumericVector compute_tpm_dense(double *x_ptr, int nrow, int ncol,
-                                       const arma::vec &inv_len) {
-  arma::mat X(x_ptr, static_cast<arma::uword>(nrow),
-              static_cast<arma::uword>(ncol), false, true);
-  if (!X.is_finite()) {
-    stop("counts contains NA, NaN, or Inf.");
-  }
-  if (X.min() < 0.0) {
-    stop("counts must be non-negative.");
-  }
-  R_xlen_t n_elem = static_cast<R_xlen_t>(nrow) * static_cast<R_xlen_t>(ncol);
-  NumericVector out(n_elem);
-  arma::mat Y(out.begin(), static_cast<arma::uword>(nrow),
-              static_cast<arma::uword>(ncol), false, true);
-  arma::rowvec denom = inv_len.t() * X;
-  for (int j = 0; j < ncol; ++j) {
-    double d = denom[j];
-    if (!std::isfinite(d) || d < 0.0) {
-      stop("invalid TPM denominator.");
-    }
-    if (d == 0.0) {
-      Y.col(j).zeros();
-    } else {
-      Y.col(j) = (X.col(j) % inv_len) * (1e6 / d);
-    }
-  }
-  return out;
-}
-
-static NumericVector compute_tpm_dgC(IntegerVector i_slot, IntegerVector p_slot,
-                                     NumericVector x_slot, int nrow, int ncol,
-                                     const arma::vec &inv_len) {
-  if (p_slot.size() != ncol + 1) {
-    stop("invalid dgCMatrix: length(p) must equal ncol + 1.");
-  }
-  if (i_slot.size() != x_slot.size()) {
-    stop("invalid dgCMatrix: length(i) must equal length(x).");
-  }
-  NumericVector out = clone(x_slot);
-  std::vector<double> denom(ncol, 0.0);
-  for (int col = 0; col < ncol; ++col) {
-    int start = p_slot[col];
-    int end = p_slot[col + 1];
-    for (int k = start; k < end; ++k) {
-      int row = i_slot[k];
-      if (row < 0 || row >= nrow) {
-        stop("invalid dgCMatrix row index.");
-      }
-      double val = x_slot[k];
-      if (!std::isfinite(val)) {
-        stop("counts contains NA, NaN, or Inf.");
-      }
-      if (val < 0.0) {
-        stop("counts must be non-negative.");
-      }
-      denom[col] += val * inv_len[row];
-    }
-  }
-  for (int col = 0; col < ncol; ++col) {
-    double d = denom[col];
-    if (!std::isfinite(d) || d < 0.0) {
-      stop("invalid TPM denominator.");
-    }
-    double factor = d == 0.0 ? 0.0 : 1e6 / d;
-    int start = p_slot[col];
-    int end = p_slot[col + 1];
-    for (int k = start; k < end; ++k) {
-      int row = i_slot[k];
-      out[k] = x_slot[k] * inv_len[row] * factor;
-    }
-  }
-  return out;
-}
-
+/*
+ * 通过 beachmat/tatami 读取矩阵，并转换为 TPM。
+ *
+ * initialized_counts 必须是 R 端：
+ *
+ *     beachmat::initializeCpp(counts)
+ *
+ * 返回的 external pointer。
+ *
+ * row_names 由 R 端传入，因为 beachmat external pointer
+ * 主要负责矩阵数据访问，并不负责 dimnames。
+ */
 // [[Rcpp::export]]
-SEXP CountsToTPM_impl(SEXP counts, NumericVector gene_length) {
-  if (Rf_isS4(counts)) {
-    S4 obj(counts);
-    if (!obj.hasSlot("Dim")) {
-      stop("S4 Matrix object must have slot 'Dim'.");
-    }
-    IntegerVector dim = obj.slot("Dim");
-    if (dim.size() != 2) {
-      stop("counts must be a 2D matrix.");
-    }
-    int nrow = dim[0];
-    int ncol = dim[1];
-    if (nrow <= 0 || ncol <= 0) {
-      stop("counts must have positive nrow and ncol.");
-    }
-    CharacterVector rn = get_rownames(counts);
-    arma::vec inv_len = make_inv_gene_length(rn, gene_length, nrow);
-    if (Rf_inherits(counts, "dgeMatrix")) {
-      NumericVector x_slot = obj.slot("x");
-      R_xlen_t expected =
-          static_cast<R_xlen_t>(nrow) * static_cast<R_xlen_t>(ncol);
-      if (x_slot.size() != expected) {
-        stop("invalid dgeMatrix: length(x) != nrow * ncol.");
-      }
-      NumericVector out_x =
-          compute_tpm_dense(x_slot.begin(), nrow, ncol, inv_len);
-      S4 ans = clone(obj);
-      ans.slot("x") = out_x;
-      if (ans.hasSlot("factors")) {
-        ans.slot("factors") = List::create();
-      }
-      return ans;
-    }
-    if (Rf_inherits(counts, "dgCMatrix")) {
-      IntegerVector i_slot = obj.slot("i");
-      IntegerVector p_slot = obj.slot("p");
-      NumericVector x_slot = obj.slot("x");
-      NumericVector out_x =
-          compute_tpm_dgC(i_slot, p_slot, x_slot, nrow, ncol, inv_len);
-      S4 ans = clone(obj);
-      ans.slot("x") = out_x;
-      if (ans.hasSlot("factors")) {
-        ans.slot("factors") = List::create();
-      }
-      return ans;
-    }
-    stop("S4 counts must be dgeMatrix or dgCMatrix after R-side coercion.");
-  }
-  if (!Rf_isMatrix(counts)) {
-    stop("counts must be a base matrix or an S4 Matrix object.");
-  }
-  NumericMatrix X = as<NumericMatrix>(counts);
-  int nrow = X.nrow();
-  int ncol = X.ncol();
-  if (nrow <= 0 || ncol <= 0) {
+NumericMatrix counts_to_tpm_cpp(SEXP initialized_counts,
+                                CharacterVector row_names,
+                                NumericVector gene_length) {
+  /*
+   * 将 R 端的 external pointer 解析成 tatami 数值矩阵。
+   */
+  Rtatami::BoundNumericPointer parsed(initialized_counts);
+
+  /*
+   * 使用局部 shared pointer。
+   */
+  auto matrix = parsed->ptr;
+
+  const std::size_t nrow = static_cast<std::size_t>(matrix->nrow());
+
+  const std::size_t ncol = static_cast<std::size_t>(matrix->ncol());
+
+  if (nrow == 0 || ncol == 0) {
     stop("counts must have positive nrow and ncol.");
   }
-  CharacterVector rn = get_rownames(counts);
-  arma::vec inv_len = make_inv_gene_length(rn, gene_length, nrow);
-  NumericVector out = compute_tpm_dense(X.begin(), nrow, ncol, inv_len);
-  out.attr("dim") = IntegerVector::create(nrow, ncol);
-  SEXP dnS = Rf_getAttrib(counts, R_DimNamesSymbol);
-  if (!Rf_isNull(dnS)) {
-    out.attr("dimnames") = dnS;
+
+  /*
+   * NumericMatrix 的维度使用 int。
+   */
+  if (nrow > static_cast<std::size_t>(INT_MAX) ||
+      ncol > static_cast<std::size_t>(INT_MAX)) {
+    stop("counts dimensions exceed R integer dimension limits.");
   }
-  return out;
+
+  const std::vector<double> inv_length =
+      make_inv_gene_length(row_names, gene_length, nrow);
+
+  /*
+   * 第一次遍历：计算每个样本的 TPM 分母。
+   *
+   * TPM 的计算公式：
+   *
+   *   RPK_i = count_i / gene_length_i
+   *   TPM_i = RPK_i / sum(RPK) * 1e6
+   *
+   * denom[j] = sum_i(count[i,j] * inv_length[i])
+   */
+  std::vector<double> denominator(ncol, 0.0);
+
+  std::vector<double> buffer(nrow);
+
+  /*
+   * 使用列访问器。
+   *
+   * 对于稀疏矩阵，未存储的位置会以 0 返回；
+   * 对于 DelayedMatrix，fetch() 会请求对应列的数据。
+   */
+  auto accessor = matrix->dense_column();
+
+  for (std::size_t col = 0; col < ncol; ++col) {
+    auto values = accessor->fetch(col, buffer.data());
+
+    double denom = 0.0;
+
+    for (std::size_t row = 0; row < nrow; ++row) {
+      const double value = values[row];
+
+      if (!std::isfinite(value)) {
+        stop("counts contains NA, NaN, or Inf.");
+      }
+
+      if (value < 0.0) {
+        stop("counts must be non-negative.");
+      }
+
+      denom += value * inv_length[row];
+    }
+
+    denominator[col] = denom;
+  }
+
+  /*
+   * 第二次遍历：生成输出矩阵。
+   *
+   * 输出为普通 dense NumericMatrix。
+   */
+  NumericMatrix output(static_cast<int>(nrow), static_cast<int>(ncol));
+
+  for (std::size_t col = 0; col < ncol; ++col) {
+    const double denom = denominator[col];
+
+    if (!std::isfinite(denom) || denom < 0.0) {
+      stop("invalid TPM denominator.");
+    }
+
+    auto values = accessor->fetch(col, buffer.data());
+
+    /*
+     * 如果某个样本的所有 counts 都为 0，
+     * 则该样本的 TPM 全部设为 0。
+     */
+    if (denom == 0.0) {
+      for (std::size_t row = 0; row < nrow; ++row) {
+        output(static_cast<int>(row), static_cast<int>(col)) = 0.0;
+      }
+
+      continue;
+    }
+
+    const double factor = 1e6 / denom;
+
+    for (std::size_t row = 0; row < nrow; ++row) {
+      const double value = values[row];
+
+      output(static_cast<int>(row), static_cast<int>(col)) =
+          value * inv_length[row] * factor;
+    }
+  }
+
+  return output;
 }

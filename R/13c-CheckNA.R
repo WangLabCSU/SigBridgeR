@@ -99,13 +99,13 @@ CheckNA <- function(data, max_print = 5L, ...) {
     }
 
     cli::cli_alert_warning(
-      "Found {na_count} NA value{if (na_count == 1) '' else 's'}"
+      "Found {na_count} NA value{?s}"
     )
 
     if (max_print > 0L) {
       n_show <- min(max_print, length(na_positions))
       cli::cli_text(
-        "Positions: {paste(na_positions[seq_len(n_show)], collapse = ', ')}"
+        "Positions: {toString(na_positions[seq_len(n_show)])}"
       )
 
       if (na_count > n_show) {
@@ -132,7 +132,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
 
   na_count <- res$count
 
-  if (na_count == 0) {
+  if (na_count == 0L) {
     na_info <- list(
       count = na_count,
       positions = data.frame(row = integer(), col = integer())
@@ -166,13 +166,13 @@ CheckNA <- function(data, max_print = 5L, ...) {
   )
 
   cli::cli_alert_warning(
-    "Found {na_count} NA value{if (na_count == 1) '' else 's'} in data"
+    "Found {na_count} NA value{?s} in data"
   )
 
   if (max_print > 0L) {
     n_show <- min(max_print, nrow(pos))
 
-    cli::cli_text("First {n_show} position{if (n_show == 1) '' else 's'}:")
+    cli::cli_text("First {n_show} position{?s}:")
 
     for (i in seq_len(n_show)) {
       r <- pos$row[i]
@@ -208,50 +208,5 @@ scan_na_2d <- function(data) {
     return(check_na_dataframe_cpp(data, nrow(data)))
   }
 
-  if (is.matrix(data)) {
-    return(check_na_dense2d_cpp(data, dim(data)))
-  }
-
-  if (inherits(data, "Matrix")) {
-    slots <- methods::slotNames(data)
-    d <- methods::slot(data, "Dim")
-
-    if (inherits(data, "sparseMatrix")) {
-      if (all(c("p", "i") %in% slots)) {
-        if (!("x" %in% slots)) {
-          return(list(count = 0, row = integer(), col = integer()))
-        }
-
-        return(check_na_sparse_csc_cpp(
-          methods::slot(data, "x"),
-          methods::slot(data, "i"),
-          methods::slot(data, "p"),
-          d
-        ))
-      }
-
-      if (all(c("i", "j", "x") %in% slots)) {
-        return(check_na_sparse_triplet_cpp(
-          methods::slot(data, "x"),
-          methods::slot(data, "i"),
-          methods::slot(data, "j"),
-          d
-        ))
-      }
-    }
-
-    if (all(c("x", "Dim") %in% slots)) {
-      xslot <- methods::slot(data, "x")
-      if (length(xslot) == prod(d)) {
-        return(check_na_dense2d_cpp(xslot, d))
-      }
-    }
-
-    # fallback for special Matrix classes
-    m <- as.matrix(data)
-    return(check_na_dense2d_cpp(m, dim(m)))
-  }
-
-  m <- as.matrix(data)
-  check_na_dense2d_cpp(m, dim(m))
+  check_na_beachmat_matrix_cpp(beachmat::initializeCpp(data))
 }

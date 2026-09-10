@@ -60,14 +60,17 @@ IsCountsMatrix <- function(
   integer_tol = 1e-8,
   min_integer_fraction = 0.95
 ) {
-  chk::chk_matrix(x, x_name = "RNA expression matrix")
-  chk::chk_logical(verbose, x_name = "verbose")
+  if (!is_2d(x)) {
+    Abort("x must be a 2d matrix", type = "[INPUT ERROR]")
+  }
+
+  chk::chk_flag(verbose, x_name = "verbose")
   chk::chk_range(integer_tol, x_name = "integer_tol")
   chk::chk_range(min_integer_fraction, x_name = "min_integer_fraction")
-  IsCountsMatrixImpl(
-    x = x,
-    verbose = verbose,
-    integer_tol = integer_tol,
-    min_integer_fraction = min_integer_fraction
+  is_counts_matrix_cpp(
+    beachmat::initializeCpp(x),
+    verbose,
+    integer_tol,
+    min_integer_fraction
   )
 }

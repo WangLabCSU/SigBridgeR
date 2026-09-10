@@ -109,6 +109,7 @@ setThreads <- function(
   invisible(results)
 }
 
+
 config_openmp_threads <- function(openmp = NULL) {
   if (!is.numeric(openmp)) {
     return(list())
