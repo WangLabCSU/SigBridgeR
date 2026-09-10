@@ -72,7 +72,7 @@ jobs:
             -d "$(jq -n \
               --arg prompt "$PROMPT" \
               '{
-                model: "deepseek-v4-pro",
+                model: "deepseek-flash",
                 messages: [
                   {role: "user", content: $prompt}
                 ],
