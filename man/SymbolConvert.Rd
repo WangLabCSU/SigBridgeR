@@ -14,7 +14,7 @@ SymbolConvert(
 )
 }
 \arguments{
-\item{data}{bulk expression data (matrix or data.frame)}
+\item{data}{RNA expression data with rownames as Ensembles version IDs or TCGA version IDs(matrix or data.frame)}
 
 \item{unknown_format}{A glue pattern containing \code{{k}} for replace the NA value during conversion.
 k must be wrapped in curly braces, stands for the position of the NA value in the row.
@@ -32,7 +32,7 @@ Default: \code{"unknown_{k}"}.}
 Data with rownames converted to gene symbols
 }
 \description{
-Preprocess bulk expression data: convert Ensembles version IDs and TCGA version IDs to genes. NA values are replaced with \code{unknown_k} format (k stands for the position of the NA value in the row).
+Convert Ensembles version IDs and TCGA version IDs to genes. NA values are replaced with \code{unknown_k} format (k stands for the position of the NA value in the row).
 }
 \seealso{
 Other input_preprocess:

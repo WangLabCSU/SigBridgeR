@@ -1,9 +1,9 @@
 #' @title Convert Ensembles Version IDs & TCGA Version IDs to Genes in Bulk Expression Data
 #'
 #' @description
-#' Preprocess bulk expression data: convert Ensembles version IDs and TCGA version IDs to genes. NA values are replaced with `unknown_k` format (k stands for the position of the NA value in the row).
+#' Convert Ensembles version IDs and TCGA version IDs to genes. NA values are replaced with `unknown_k` format (k stands for the position of the NA value in the row).
 #'
-#' @param data bulk expression data (matrix or data.frame)
+#' @param data RNA expression data with rownames as Ensembles version IDs or TCGA version IDs(matrix or data.frame)
 #' @param unknown_format A glue pattern containing `{k}` for replace the NA value during conversion.
 #'     k must be wrapped in curly braces, stands for the position of the NA value in the row.
 #'     Default: `"unknown_{k}"`.
