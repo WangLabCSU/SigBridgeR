@@ -38,6 +38,7 @@ Suggests:
     celldex,
     cheapr,
     codetools,
+    covr,
     curl,
     DEGAS (>= 1.0.1),
     DEGASv2,

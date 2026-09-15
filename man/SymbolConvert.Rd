@@ -6,25 +6,30 @@
 \usage{
 SymbolConvert(
   data,
-  unknown_format = "unknown_{k}",
-  genome_build = c("hg38", "hg19", "mm10", "mm9"),
+  genome_build = c("hg38", "hg19", "mm10", "mm9", "ce11", "T2T"),
   update_symbol = TRUE,
+  update_symbol_method = c("auto", "scCustomize", "Seurat"),
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
+  unknown_format = lifecycle::deprecated(),
   ...
 )
 }
 \arguments{
 \item{data}{RNA expression data with rownames as Ensembles version IDs or TCGA version IDs(matrix or data.frame)}
 
-\item{unknown_format}{A glue pattern containing \code{{k}} for replace the NA value during conversion.
-k must be wrapped in curly braces, stands for the position of the NA value in the row.
-Default: \code{"unknown_{k}"}.}
-
 \item{genome_build}{Genome build of the data. Default: \code{"hg38"}.}
 
 \item{update_symbol}{Whether to update gene symbol to latest version. Default: \code{TRUE}.}
 
+\item{update_symbol_method}{Method used to update gene symbols, one of \code{"auto"},
+\code{"scCustomize"} or \code{"Seurat"}. \code{"auto"} prefers \code{scCustomize} when it is
+installed, otherwise falls back to \code{Seurat}. Only used when
+\code{update_symbol = TRUE}. Default: \code{"auto"}.}
+
 \item{verbose}{Whether to print verbose messages. Default: \code{TRUE}.}
+
+\item{unknown_format}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} This argument is deprecated and
+ignored. NA values are now replaced with the original unconverted IDs.}
 
 \item{...}{No usage}
 }
@@ -32,7 +37,8 @@ Default: \code{"unknown_{k}"}.}
 Data with rownames converted to gene symbols
 }
 \description{
-Convert Ensembles version IDs and TCGA version IDs to genes. NA values are replaced with \code{unknown_k} format (k stands for the position of the NA value in the row).
+Convert Ensembles version IDs and TCGA version IDs to genes. NA values (unmatched IDs)
+are replaced with the original unconverted IDs (Ensembl version IDs or TCGA version IDs).
 }
 \seealso{
 Other input_preprocess:

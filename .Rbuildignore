@@ -99,3 +99,4 @@ SigBridgeR_workflow.png
 ^uvr\.toml$
 ^uvr\.lock$
 ^\.uvr$
+^\.covrignore$

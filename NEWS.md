@@ -3,6 +3,8 @@
 ## NEW FEATURES
 
 * Added screening methods for DEGASv2 and TiRank.
+* `SymbolConvert()` gains an `update_symbol_method` argument to choose between `"scCustomize"` and `"Seurat"` for updating gene symbols (`"auto"` prefers `scCustomize` when installed).
+* `SymbolConvert()` now replaces unmatched IDs (NA gene symbols) with the original Ensembl/TCGA IDs; the `unknown_format` argument is deprecated and ignored.
 
 ## BUG FIXES
 
