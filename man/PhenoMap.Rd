@@ -51,9 +51,9 @@ df <- PhenoMap(
 \seealso{
 \code{\link[data.table]{fcase}}, \code{\link[dplyr]{case_when}}
 
-Other input_preprocess: 
-\code{\link{BulkPreProcess}()},
-\code{\link{PhenoPreProcess}()},
-\code{\link{SCPreProcess}()}
+Other input_preprocess:
+\code{\link[=BulkPreProcess]{BulkPreProcess()}},
+\code{\link[=PhenoPreProcess]{PhenoPreProcess()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}}
 }
 \concept{input_preprocess}

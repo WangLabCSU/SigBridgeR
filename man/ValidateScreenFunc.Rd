@@ -44,9 +44,9 @@ ValidateScreenFunc(my_screen)
 }
 }
 \seealso{
-Other Add_Screen_method: 
-\code{\link{RegisterScreenMethod}()},
+Other Add_Screen_method:
+\code{\link[=RegisterScreenMethod]{RegisterScreenMethod()}},
 \code{\link{ScreenStrategy}},
-\code{\link{TemplateScreenFunc}()}
+\code{\link[=TemplateScreenFunc]{TemplateScreenFunc()}}
 }
 \concept{Add_Screen_method}

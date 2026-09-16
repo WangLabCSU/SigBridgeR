@@ -61,10 +61,14 @@ export(getFuncOption)
 export(mLLMCelltypeAnnotate)
 export(setFuncOption)
 export(setThreads)
-importFrom(data.table,`%chin%`)
-importFrom(data.table,`.I`)
-importFrom(data.table,`.N`)
-importFrom(data.table,`.SD`)
-importFrom(data.table,`:=`)
-importFrom(dplyr,`%>%`)
-importFrom(dplyr,`.data`)
+importFrom(data.table,
+  "%chin%",
+  ":=",
+  .I,
+  .N,
+  .SD
+)
+importFrom(dplyr,
+  "%>%",
+  .data
+)

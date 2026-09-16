@@ -149,8 +149,18 @@ DoScissor <- function(
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
   assay <- dots$assay %||% "RNA"
-  load_cache <- dots$load_cache %||% dirname(dots$path2load_scissor_cache) # compatible with old version
-  save_cache <- dots$save_cache %||% dirname(dots$path2save_scissor_inputs)
+  load_cache <- dots$load_cache %||%
+    if (is.null(dots$path2load_scissor_cache)) {
+      NULL
+    } else {
+      dirname(dots$path2load_scissor_cache)
+    } # compatible with old version
+  save_cache <- dots$save_cache %||%
+    if (is.null(dots$path2save_scissor_inputs)) {
+      NULL
+    } else {
+      dirname(dots$path2save_scissor_inputs)
+    }
 
   # * default setting for `reliability_test` & `cell_evaluation`
   default_reliability_test <- list(

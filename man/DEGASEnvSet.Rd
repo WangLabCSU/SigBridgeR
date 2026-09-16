@@ -10,10 +10,10 @@ DEGASEnvSet(user_list)
 Set Default Values for Environment Configuration.
 }
 \seealso{
-Other DEGAS: 
-\code{\link{DEGASModelDetect}()},
-\code{\link{DEGASParamSet}()},
-\code{\link{DoDEGAS}()}
+Other DEGAS:
+\code{\link[=DEGASModelDetect]{DEGASModelDetect()}},
+\code{\link[=DEGASParamSet]{DEGASParamSet()}},
+\code{\link[=DoDEGAS]{DoDEGAS()}}
 }
 \concept{DEGAS}
 \keyword{internal}

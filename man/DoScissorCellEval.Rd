@@ -34,9 +34,9 @@ Evaluates the significance of Scissor-identified cells using benchmark data
 and bootstrap resampling.
 }
 \seealso{
-Other scissor: 
-\code{\link{DoScissor}()},
-\code{\link{DoScissorRelTest}()}
+Other scissor:
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoScissorRelTest]{DoScissorRelTest()}}
 }
 \concept{scissor}
 \keyword{internal}

@@ -28,11 +28,11 @@ cache_path <- ChooseCache("./Scissor_res")
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other cache_config: 
-\code{\link{CacheSetHere}()},
-\code{\link{CheckCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCache}()},
-\code{\link{WriteCacheMeta}()}
+Other cache_config:
+\code{\link[=CacheSetHere]{CacheSetHere()}},
+\code{\link[=CheckCache]{CheckCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCache]{WriteCache()}},
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}
 }
 \concept{cache_config}

@@ -98,10 +98,10 @@ annotated <- CellTypistAnnotate(
 }
 }
 \seealso{
-Other Single_Cell_Annotation_Method: 
-\code{\link{RegisterAnnoMethod}()},
+Other Single_Cell_Annotation_Method:
+\code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
 \code{\link{SCAnnotateStrategy}},
-\code{\link{SingleRAnnotate}()},
-\code{\link{mLLMCelltypeAnnotate}()}
+\code{\link[=SingleRAnnotate]{SingleRAnnotate()}},
+\code{\link[=mLLMCelltypeAnnotate]{mLLMCelltypeAnnotate()}}
 }
 \concept{Single_Cell_Annotation_Method}

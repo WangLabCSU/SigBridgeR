@@ -19,21 +19,29 @@ DoscPP(
 }
 \arguments{
 \item{matched_bulk}{Bulk expression data (genes × samples) where:
-- Column names must match \code{phenotype} row names}
+\itemize{
+\item Column names must match \code{phenotype} row names
+}}
 
 \item{sc_data}{Seurat object containing preprocessed single-cell data:
-- Normalized counts in \code{RNA} assay}
+\itemize{
+\item Normalized counts in \code{RNA} assay
+}}
 
 \item{phenotype}{Data frame or tibble or named vector with:
-- Rownames matching \code{matched_bulk} columns
-- For survival: must contain time and status columns}
+\itemize{
+\item Rownames matching \code{matched_bulk} columns
+\item For survival: must contain time and status columns
+}}
 
 \item{label_type}{Character specifying phenotype label type (e.g., "SBS1"), stored in \code{scRNA_data@misc}}
 
 \item{phenotype_class}{Analysis type (case-sensitive):
-- \code{"Binary"}: Case-control studies (e.g., tumor/normal)
-- \code{"Continuous"}: Quantitative traits (e.g., drug response)
-- \code{"Survival"}: Time-to-event data (requires time/status columns)}
+\itemize{
+\item \code{"Binary"}: Case-control studies (e.g., tumor/normal)
+\item \code{"Continuous"}: Quantitative traits (e.g., drug response)
+\item \code{"Survival"}: Time-to-event data (requires time/status columns)
+}}
 
 \item{ref_group}{Reference group or baseline for \strong{binary} comparisons, e.g. "Normal" for Tumor/Normal studies and 0 for 0/1 case-control studies. (default: 0)}
 
@@ -103,16 +111,16 @@ surv_res <- DoscPP(
 
 }
 \seealso{
-Other screen_method: 
-\code{\link{DoDEGAS}()},
-\code{\link{DoLP_SGL}()},
-\code{\link{DoPIPET}()},
-\code{\link{DoSCIPAC}()},
-\code{\link{DoSIDISH}()},
-\code{\link{DoScissor}()},
-\code{\link{DoTiRank}()},
-\code{\link{DoscAB}()},
-\code{\link{DoscPAS}()}
+Other screen_method:
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoSCIPAC]{DoSCIPAC()}},
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoTiRank]{DoTiRank()}},
+\code{\link[=DoscAB]{DoscAB()}},
+\code{\link[=DoscPAS]{DoscPAS()}}
 }
 \concept{scPP}
 \concept{screen_method}

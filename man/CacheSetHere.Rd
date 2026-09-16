@@ -53,11 +53,11 @@ CacheSetHere("Scissor_res/survival_202512011212", "Scissor", "survival", mode = 
 }
 }
 \seealso{
-Other cache_config: 
-\code{\link{CheckCache}()},
-\code{\link{ChooseCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCache}()},
-\code{\link{WriteCacheMeta}()}
+Other cache_config:
+\code{\link[=CheckCache]{CheckCache()}},
+\code{\link[=ChooseCache]{ChooseCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCache]{WriteCache()}},
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}
 }
 \concept{cache_config}

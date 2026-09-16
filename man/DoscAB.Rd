@@ -22,20 +22,26 @@ DoscAB(
 }
 \arguments{
 \item{matched_bulk}{Normalized bulk expression matrix (genes × samples) where:
-- Columns match \code{phenotype} row names
-- Genes match features in \code{sc_data}}
+\itemize{
+\item Columns match \code{phenotype} row names
+\item Genes match features in \code{sc_data}
+}}
 
 \item{sc_data}{Seurat object containing preprocessed single-cell data:}
 
 \item{phenotype}{Data frame with clinical annotations where:
-- Rows correspond to \code{matched_bulk} columns
-- For survival: contains \code{time} and \code{status} columns}
+\itemize{
+\item Rows correspond to \code{matched_bulk} columns
+\item For survival: contains \code{time} and \code{status} columns
+}}
 
 \item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time"), stored in \code{scRNA_data@misc}}
 
 \item{phenotype_class}{Analysis mode:
-- \code{"binary"}: Case-control design (e.g., responder/non-responder)
-- \code{"survival"}: Time-to-event analysis data.frame}
+\itemize{
+\item \code{"binary"}: Case-control design (e.g., responder/non-responder)
+\item \code{"survival"}: Time-to-event analysis data.frame
+}}
 
 \item{alpha}{Coefficient of phenotype regularization (default=\code{0.005}).}
 
@@ -104,16 +110,16 @@ result <- DoscAB(
 Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
 }
 \seealso{
-Other screen_method: 
-\code{\link{DoDEGAS}()},
-\code{\link{DoLP_SGL}()},
-\code{\link{DoPIPET}()},
-\code{\link{DoSCIPAC}()},
-\code{\link{DoSIDISH}()},
-\code{\link{DoScissor}()},
-\code{\link{DoTiRank}()},
-\code{\link{DoscPAS}()},
-\code{\link{DoscPP}()}
+Other screen_method:
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoSCIPAC]{DoSCIPAC()}},
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoTiRank]{DoTiRank()}},
+\code{\link[=DoscPAS]{DoscPAS()}},
+\code{\link[=DoscPP]{DoscPP()}}
 }
 \concept{scAB}
 \concept{screen_method}

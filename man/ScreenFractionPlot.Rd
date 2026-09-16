@@ -35,8 +35,10 @@ Must match metadata column(s) (case-sensitive, e.g., "scissor" for Scissor resul
 \item{show_null}{Logical whether to show groups with zero cells (default: FALSE).}
 
 \item{plot_color}{Custom color palette (named vector format):
-- Required names: "Positive", "Negative", "Neutral"
-- Default: c("Neutral"="#CECECE", "Other"="#CECECE", Positive"="#ff3333", "Negative"="#386c9b")}
+\itemize{
+\item Required names: "Positive", "Negative", "Neutral"
+\item Default: c("Neutral"="#CECECE", "Other"="#CECECE", Positive"="#ff3333", "Negative"="#386c9b")
+}}
 
 \item{show_plot}{Logical to immediately display plot (default: TRUE).}
 
@@ -112,7 +114,7 @@ multi_res <- ScreenFractionPlot(
 
 }
 \seealso{
-Other visualization_function: 
-\code{\link{ScreenUpset}()}
+Other visualization_function:
+\code{\link[=ScreenUpset]{ScreenUpset()}}
 }
 \concept{visualization_function}

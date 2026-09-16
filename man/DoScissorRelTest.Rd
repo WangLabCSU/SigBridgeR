@@ -40,9 +40,9 @@ Performs reliability testing for Scissor results to assess the stability
 and robustness of identified phenotype-associated cells.
 }
 \seealso{
-Other scissor: 
-\code{\link{DoScissor}()},
-\code{\link{DoScissorCellEval}()}
+Other scissor:
+\code{\link[=DoScissor]{DoScissor()}},
+\code{\link[=DoScissorCellEval]{DoScissorCellEval()}}
 }
 \concept{scissor}
 \keyword{internal}

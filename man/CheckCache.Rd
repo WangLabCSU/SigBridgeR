@@ -40,11 +40,11 @@ This function reads a cache metadata JSON file and compares it with the
 provided screen method, phenotype class, label type, and parameters.
 }
 \seealso{
-Other cache_config: 
-\code{\link{CacheSetHere}()},
-\code{\link{ChooseCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCache}()},
-\code{\link{WriteCacheMeta}()}
+Other cache_config:
+\code{\link[=CacheSetHere]{CacheSetHere()}},
+\code{\link[=ChooseCache]{ChooseCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCache]{WriteCache()}},
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}
 }
 \concept{cache_config}

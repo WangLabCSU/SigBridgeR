@@ -62,11 +62,11 @@ WriteCacheMeta(
 }
 }
 \seealso{
-Other cache_config: 
-\code{\link{CacheSetHere}()},
-\code{\link{CheckCache}()},
-\code{\link{ChooseCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCache}()}
+Other cache_config:
+\code{\link[=CacheSetHere]{CacheSetHere()}},
+\code{\link[=CheckCache]{CheckCache()}},
+\code{\link[=ChooseCache]{ChooseCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCache]{WriteCache()}}
 }
 \concept{cache_config}

@@ -139,9 +139,9 @@ result <- PhenoPreProcess(
 \seealso{
 \code{\link[=PhenoMap]{PhenoMap()}}
 
-Other input_preprocess: 
-\code{\link{BulkPreProcess}()},
-\code{\link{PhenoMap}()},
-\code{\link{SCPreProcess}()}
+Other input_preprocess:
+\code{\link[=BulkPreProcess]{BulkPreProcess()}},
+\code{\link[=PhenoMap]{PhenoMap()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}}
 }
 \concept{input_preprocess}

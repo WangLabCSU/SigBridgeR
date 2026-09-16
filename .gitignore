@@ -47,3 +47,6 @@ Rplots.pdf
 index_files/
 *index.html
 pkgdown/*_files
+_problems
+\.clangd
+tests/testthat/testthat-problems.rds

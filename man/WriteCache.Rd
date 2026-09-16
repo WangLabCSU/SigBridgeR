@@ -57,11 +57,11 @@ WriteCache(small_df, "Scissor_res/survival_2025_01_01/feature_table.csv")
 }
 }
 \seealso{
-Other cache_config: 
-\code{\link{CacheSetHere}()},
-\code{\link{CheckCache}()},
-\code{\link{ChooseCache}()},
-\code{\link{LoadCache}()},
-\code{\link{WriteCacheMeta}()}
+Other cache_config:
+\code{\link[=CacheSetHere]{CacheSetHere()}},
+\code{\link[=CheckCache]{CheckCache()}},
+\code{\link[=ChooseCache]{ChooseCache()}},
+\code{\link[=LoadCache]{LoadCache()}},
+\code{\link[=WriteCacheMeta]{WriteCacheMeta()}}
 }
 \concept{cache_config}

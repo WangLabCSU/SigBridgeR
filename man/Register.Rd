@@ -80,9 +80,9 @@ Register(my_annot2 = AnotherAnnotator)
 \code{\link{SCAnnotateStrategy}}
 \code{\link{ScreenStrategy}}
 
-Other Registering: 
-\code{\link{RegisterAnnoMethod}()},
-\code{\link{RegisterScreenMethod}()},
-\code{\link{RegisterSeuratMethod}()}
+Other Registering:
+\code{\link[=RegisterAnnoMethod]{RegisterAnnoMethod()}},
+\code{\link[=RegisterScreenMethod]{RegisterScreenMethod()}},
+\code{\link[=RegisterSeuratMethod]{RegisterSeuratMethod()}}
 }
 \concept{Registering}

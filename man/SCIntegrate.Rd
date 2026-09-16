@@ -92,16 +92,16 @@ integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsfpi")
 
 }
 \seealso{
-Other single_cell_preprocess: 
-\code{\link{FilterTumorCell}()},
-\code{\link{FindRobustElbow}()},
-\code{\link{Pattern2Colname}()},
-\code{\link{QCPatternDetect}()},
-\code{\link{RegisterSeuratMethod}()},
-\code{\link{SCAnnotate}()},
-\code{\link{SCPreProcess}()},
+Other single_cell_preprocess:
+\code{\link[=FilterTumorCell]{FilterTumorCell()}},
+\code{\link[=FindRobustElbow]{FindRobustElbow()}},
+\code{\link[=Pattern2Colname]{Pattern2Colname()}},
+\code{\link[=QCPatternDetect]{QCPatternDetect()}},
+\code{\link[=RegisterSeuratMethod]{RegisterSeuratMethod()}},
+\code{\link[=SCAnnotate]{SCAnnotate()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}},
 \code{\link{SCPreProcessStrategy}},
-\code{\link{compatible_with_3.0.2}()}
+\code{\link[=compatible_with_3.0.2]{compatible_with_3.0.2()}}
 }
 \concept{single_cell_preprocess}
 \keyword{internal}

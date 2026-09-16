@@ -59,9 +59,9 @@ TemplateScreenFunc(filename = "current", func_name = "QuickFilter")
 }
 }
 \seealso{
-Other Add_Screen_method: 
-\code{\link{RegisterScreenMethod}()},
+Other Add_Screen_method:
+\code{\link[=RegisterScreenMethod]{RegisterScreenMethod()}},
 \code{\link{ScreenStrategy}},
-\code{\link{ValidateScreenFunc}()}
+\code{\link[=ValidateScreenFunc]{ValidateScreenFunc()}}
 }
 \concept{Add_Screen_method}

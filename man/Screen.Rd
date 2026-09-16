@@ -22,15 +22,19 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 \item{sc_data}{A Seurat object containing scRNA-seq data to be screened.}
 
 \item{phenotype}{Phenotype data, either:
-- Named vector (names match \code{matched_bulk} columns), or
-- Patient survival Data frame with row names matching \code{matched_bulk} columns, colnames named "time" and "status"}
+\itemize{
+\item Named vector (names match \code{matched_bulk} columns), or
+\item Patient survival Data frame with row names matching \code{matched_bulk} columns, colnames named "time" and "status"
+}}
 
 \item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time")}
 
 \item{phenotype_class}{Type of phenotypic outcome (must be consistent with input data):
-- \code{"binary"}: Binary traits (e.g., case/control)
-- \code{"continuous"}: Continuous measurements
-- \code{"survival"}: Survival infomation}
+\itemize{
+\item \code{"binary"}: Binary traits (e.g., case/control)
+\item \code{"continuous"}: Continuous measurements
+\item \code{"survival"}: Survival infomation
+}}
 
 \item{screen_method}{Screening algorithm to use, there are nine options:
 \itemize{

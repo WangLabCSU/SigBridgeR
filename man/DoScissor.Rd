@@ -33,8 +33,10 @@ Column names must match \code{phenotype} identifiers.}
 \item{sc_data}{Seurat object containing single-cell RNA-seq data.}
 
 \item{phenotype}{Clinical outcome data. Can be:
-- Vector: named with sample IDs
-- Data frame: with row names matching bulk columns}
+\itemize{
+\item Vector: named with sample IDs
+\item Data frame: with row names matching bulk columns
+}}
 
 \item{label_type}{Character specifying phenotype label type (e.g., "SBS1", "time"), stored in \code{scRNA_data@misc}}
 
@@ -44,9 +46,11 @@ Column names must match \code{phenotype} identifiers.}
 Higher values increase specificity.}
 
 \item{family}{Model family for outcome type:
-- "gaussian": Continuous outcomes
-- "binomial": Binary outcomes (default)
-- "cox": Survival outcomes}
+\itemize{
+\item "gaussian": Continuous outcomes
+\item "binomial": Binary outcomes (default)
+\item "cox": Survival outcomes
+}}
 
 \item{reliability_test}{List controlling reliability testing:
 \itemize{
@@ -129,20 +133,20 @@ res <- DoScissor(
 Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
 }
 \seealso{
-Other screen_method: 
-\code{\link{DoDEGAS}()},
-\code{\link{DoLP_SGL}()},
-\code{\link{DoPIPET}()},
-\code{\link{DoSCIPAC}()},
-\code{\link{DoSIDISH}()},
-\code{\link{DoTiRank}()},
-\code{\link{DoscAB}()},
-\code{\link{DoscPAS}()},
-\code{\link{DoscPP}()}
+Other screen_method:
+\code{\link[=DoDEGAS]{DoDEGAS()}},
+\code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoSCIPAC]{DoSCIPAC()}},
+\code{\link[=DoSIDISH]{DoSIDISH()}},
+\code{\link[=DoTiRank]{DoTiRank()}},
+\code{\link[=DoscAB]{DoscAB()}},
+\code{\link[=DoscPAS]{DoscPAS()}},
+\code{\link[=DoscPP]{DoscPP()}}
 
-Other scissor: 
-\code{\link{DoScissorCellEval}()},
-\code{\link{DoScissorRelTest}()}
+Other scissor:
+\code{\link[=DoScissorCellEval]{DoScissorCellEval()}},
+\code{\link[=DoScissorRelTest]{DoScissorRelTest()}}
 }
 \concept{scissor}
 \concept{screen_method}

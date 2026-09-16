@@ -119,9 +119,9 @@ Samples are retained if:
 \code{\link[stats]{cor}} for correlation analysis,
 \code{\link[SigBridgeR]{SymbolConvert}} for gene symbol conversion
 
-Other input_preprocess: 
-\code{\link{PhenoMap}()},
-\code{\link{PhenoPreProcess}()},
-\code{\link{SCPreProcess}()}
+Other input_preprocess:
+\code{\link[=PhenoMap]{PhenoMap()}},
+\code{\link[=PhenoPreProcess]{PhenoPreProcess()}},
+\code{\link[=SCPreProcess]{SCPreProcess()}}
 }
 \concept{input_preprocess}
