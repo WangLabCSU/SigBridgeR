@@ -1066,7 +1066,7 @@ Parameters passed to `...` when using `SIDISH` method:
       phenotype_class = "survival", # Currently only survival phenotype is supported
 
       # SIDISH algorithm parameters
-      sidish_param = list(
+      sidish_params = list(
         # Preprocessing parameters
         patient_id = "Sample",
         celltype_name = "celltype_major",
@@ -1149,6 +1149,11 @@ To obtain the default parameters for SIDISH, use
 
     # Get default SIDISH algorithm parameters
     sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
+
+Environment configuration has been replaced by `reticulate::use_*`,
+which is more flexible and easier to use. So conda environments are no
+longer created by `SigBridgeR:::SIDISHEnvSet()`, left here for
+reference:
 
     # Get default environment parameters (CPU version)
     env_default_cpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cpu")
