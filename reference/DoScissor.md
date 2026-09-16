@@ -44,8 +44,11 @@ DoScissor(
 
 - phenotype:
 
-  Clinical outcome data. Can be: - Vector: named with sample IDs - Data
-  frame: with row names matching bulk columns
+  Clinical outcome data. Can be:
+
+  - Vector: named with sample IDs
+
+  - Data frame: with row names matching bulk columns
 
 - label_type:
 
@@ -66,8 +69,13 @@ DoScissor(
 
 - family:
 
-  Model family for outcome type: - "gaussian": Continuous outcomes -
-  "binomial": Binary outcomes (default) - "cox": Survival outcomes
+  Model family for outcome type:
+
+  - "gaussian": Continuous outcomes
+
+  - "binomial": Binary outcomes (default)
+
+  - "cox": Survival outcomes
 
 - reliability_test:
 

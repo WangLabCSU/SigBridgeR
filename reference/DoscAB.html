@@ -13,7 +13,7 @@ for phenotype association and cell-cell similarity."><meta property="og:image" c
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,9 +83,9 @@ for phenotype association and cell-cell similarity.</p>
 
 
 <dl><dt id="arg-matched-bulk">matched_bulk<a class="anchor" aria-label="anchor" href="#arg-matched-bulk"></a></dt>
-<dd><p>Normalized bulk expression matrix (genes × samples) where:
-- Columns match <code>phenotype</code> row names
-- Genes match features in <code>sc_data</code></p></dd>
+<dd><p>Normalized bulk expression matrix (genes × samples) where:</p><ul><li><p>Columns match <code>phenotype</code> row names</p></li>
+<li><p>Genes match features in <code>sc_data</code></p></li>
+</ul></dd>
 
 
 <dt id="arg-sc-data">sc_data<a class="anchor" aria-label="anchor" href="#arg-sc-data"></a></dt>
@@ -93,9 +93,9 @@ for phenotype association and cell-cell similarity.</p>
 
 
 <dt id="arg-phenotype">phenotype<a class="anchor" aria-label="anchor" href="#arg-phenotype"></a></dt>
-<dd><p>Data frame with clinical annotations where:
-- Rows correspond to <code>matched_bulk</code> columns
-- For survival: contains <code>time</code> and <code>status</code> columns</p></dd>
+<dd><p>Data frame with clinical annotations where:</p><ul><li><p>Rows correspond to <code>matched_bulk</code> columns</p></li>
+<li><p>For survival: contains <code>time</code> and <code>status</code> columns</p></li>
+</ul></dd>
 
 
 <dt id="arg-label-type">label_type<a class="anchor" aria-label="anchor" href="#arg-label-type"></a></dt>
@@ -103,9 +103,9 @@ for phenotype association and cell-cell similarity.</p>
 
 
 <dt id="arg-phenotype-class">phenotype_class<a class="anchor" aria-label="anchor" href="#arg-phenotype-class"></a></dt>
-<dd><p>Analysis mode:
-- <code>"binary"</code>: Case-control design (e.g., responder/non-responder)
-- <code>"survival"</code>: Time-to-event analysis data.frame</p></dd>
+<dd><p>Analysis mode:</p><ul><li><p><code>"binary"</code>: Case-control design (e.g., responder/non-responder)</p></li>
+<li><p><code>"survival"</code>: Time-to-event analysis data.frame</p></li>
+</ul></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>

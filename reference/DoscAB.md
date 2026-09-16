@@ -30,8 +30,11 @@ DoscAB(
 
 - matched_bulk:
 
-  Normalized bulk expression matrix (genes × samples) where: - Columns
-  match `phenotype` row names - Genes match features in `sc_data`
+  Normalized bulk expression matrix (genes × samples) where:
+
+  - Columns match `phenotype` row names
+
+  - Genes match features in `sc_data`
 
 - sc_data:
 
@@ -39,9 +42,11 @@ DoscAB(
 
 - phenotype:
 
-  Data frame with clinical annotations where: - Rows correspond to
-  `matched_bulk` columns - For survival: contains `time` and `status`
-  columns
+  Data frame with clinical annotations where:
+
+  - Rows correspond to `matched_bulk` columns
+
+  - For survival: contains `time` and `status` columns
 
 - label_type:
 
@@ -50,9 +55,11 @@ DoscAB(
 
 - phenotype_class:
 
-  Analysis mode: - `"binary"`: Case-control design (e.g.,
-  responder/non-responder) - `"survival"`: Time-to-event analysis
-  data.frame
+  Analysis mode:
+
+  - `"binary"`: Case-control design (e.g., responder/non-responder)
+
+  - `"survival"`: Time-to-event analysis data.frame
 
 - alpha:
 

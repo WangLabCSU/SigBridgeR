@@ -8,10 +8,6 @@ An environment storing methods for annotating cell types.
 SCAnnotateStrategy
 ```
 
-## Format
-
-An object of class `environment` of length 3.
-
 ## Details
 
 Storing structure - named list

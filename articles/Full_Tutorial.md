@@ -1103,7 +1103,7 @@ sidish_result <- Screen(
   phenotype_class = "survival", # Currently only survival phenotype is supported
 
   # SIDISH algorithm parameters
-  sidish_param = list(
+  sidish_params = list(
     # Preprocessing parameters
     patient_id = "Sample",
     celltype_name = "celltype_major",
@@ -1189,6 +1189,14 @@ To obtain the default parameters for SIDISH, use
 
 # Get default SIDISH algorithm parameters
 sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
+```
+
+Environment configuration has been replaced by `reticulate::use_*`,
+which is more flexible and easier to use. So conda environments are no
+longer created by `SigBridgeR:::SIDISHEnvSet()`, left here for
+reference:
+
+``` r
 
 # Get default environment parameters (CPU version)
 env_default_cpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cpu")
@@ -2586,7 +2594,7 @@ sessionInfo()
 
     ## R version 4.6.1 (2026-06-24)
     ## Platform: x86_64-pc-linux-gnu
-    ## Running under: Ubuntu 24.04.4 LTS
+    ## Running under: Ubuntu 24.04.5 LTS
     ## 
     ## Matrix products: default
     ## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
@@ -2606,10 +2614,10 @@ sessionInfo()
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] digest_0.6.39     desc_1.4.3        R6_2.6.1          fastmap_1.2.0    
-    ##  [5] xfun_0.60         cachem_1.1.0      knitr_1.51        htmltools_0.5.9  
-    ##  [9] rmarkdown_2.31    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      
+    ##  [5] xfun_0.60         cachem_1.1.0      knitr_1.52        htmltools_0.5.9  
+    ##  [9] rmarkdown_2.32    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      
     ## [13] pkgdown_2.2.1     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2
-    ## [17] compiler_4.6.1    tools_4.6.1       ragg_1.5.2        bslib_0.11.0     
+    ## [17] compiler_4.6.1    tools_4.6.1       ragg_1.5.2        bslib_0.12.0     
     ## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        jsonlite_2.0.0   
     ## [25] rlang_1.3.0       fs_2.1.0          htmlwidgets_1.6.4
 

@@ -16,10 +16,6 @@ VariableFeatures → Scale → PCA") and supports both standard
 SCPreProcessStrategy
 ```
 
-## Format
-
-An object of class `environment` of length 11.
-
 ## Available Operations
 
 - `o`:

@@ -13,7 +13,7 @@ before analysis."><meta property="og:image" content="https://wanglabcsu.github.i
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,9 +87,9 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 
 
 <dt id="arg-phenotype">phenotype<a class="anchor" aria-label="anchor" href="#arg-phenotype"></a></dt>
-<dd><p>Phenotype data, either:
-- Named vector (names match <code>matched_bulk</code> columns), or
-- Patient survival Data frame with row names matching <code>matched_bulk</code> columns, colnames named "time" and "status"</p></dd>
+<dd><p>Phenotype data, either:</p><ul><li><p>Named vector (names match <code>matched_bulk</code> columns), or</p></li>
+<li><p>Patient survival Data frame with row names matching <code>matched_bulk</code> columns, colnames named "time" and "status"</p></li>
+</ul></dd>
 
 
 <dt id="arg-label-type">label_type<a class="anchor" aria-label="anchor" href="#arg-label-type"></a></dt>
@@ -97,10 +97,10 @@ data (genes x samples). Column names must match names/IDs in <code>phenotype</co
 
 
 <dt id="arg-phenotype-class">phenotype_class<a class="anchor" aria-label="anchor" href="#arg-phenotype-class"></a></dt>
-<dd><p>Type of phenotypic outcome (must be consistent with input data):
-- <code>"binary"</code>: Binary traits (e.g., case/control)
-- <code>"continuous"</code>: Continuous measurements
-- <code>"survival"</code>: Survival infomation</p></dd>
+<dd><p>Type of phenotypic outcome (must be consistent with input data):</p><ul><li><p><code>"binary"</code>: Binary traits (e.g., case/control)</p></li>
+<li><p><code>"continuous"</code>: Continuous measurements</p></li>
+<li><p><code>"survival"</code>: Survival infomation</p></li>
+</ul></dd>
 
 
 <dt id="arg-screen-method">screen_method<a class="anchor" aria-label="anchor" href="#arg-screen-method"></a></dt>

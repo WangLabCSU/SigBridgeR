@@ -51,9 +51,12 @@ ScreenFractionPlot(
 
 - plot_color:
 
-  Custom color palette (named vector format): - Required names:
-  "Positive", "Negative", "Neutral" - Default: c("Neutral"="#CECECE",
-  "Other"="#CECECE", Positive"="#ff3333", "Negative"="#386c9b")
+  Custom color palette (named vector format):
+
+  - Required names: "Positive", "Negative", "Neutral"
+
+  - Default: c("Neutral"="#CECECE", "Other"="#CECECE",
+    Positive"="#ff3333", "Negative"="#386c9b")
 
 - show_plot:
 

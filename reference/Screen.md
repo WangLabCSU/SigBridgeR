@@ -33,9 +33,12 @@ Screen(
 
 - phenotype:
 
-  Phenotype data, either: - Named vector (names match `matched_bulk`
-  columns), or - Patient survival Data frame with row names matching
-  `matched_bulk` columns, colnames named "time" and "status"
+  Phenotype data, either:
+
+  - Named vector (names match `matched_bulk` columns), or
+
+  - Patient survival Data frame with row names matching `matched_bulk`
+    columns, colnames named "time" and "status"
 
 - label_type:
 
@@ -43,9 +46,13 @@ Screen(
 
 - phenotype_class:
 
-  Type of phenotypic outcome (must be consistent with input data): -
-  `"binary"`: Binary traits (e.g., case/control) - `"continuous"`:
-  Continuous measurements - `"survival"`: Survival infomation
+  Type of phenotypic outcome (must be consistent with input data):
+
+  - `"binary"`: Binary traits (e.g., case/control)
+
+  - `"continuous"`: Continuous measurements
+
+  - `"survival"`: Survival infomation
 
 - screen_method:
 

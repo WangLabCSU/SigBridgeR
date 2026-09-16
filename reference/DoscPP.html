@@ -9,7 +9,7 @@ It supports binary, continuous, and survival phenotype types."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,19 +74,19 @@ It supports binary, continuous, and survival phenotype types.</p>
 
 
 <dl><dt id="arg-matched-bulk">matched_bulk<a class="anchor" aria-label="anchor" href="#arg-matched-bulk"></a></dt>
-<dd><p>Bulk expression data (genes × samples) where:
-- Column names must match <code>phenotype</code> row names</p></dd>
+<dd><p>Bulk expression data (genes × samples) where:</p><ul><li><p>Column names must match <code>phenotype</code> row names</p></li>
+</ul></dd>
 
 
 <dt id="arg-sc-data">sc_data<a class="anchor" aria-label="anchor" href="#arg-sc-data"></a></dt>
-<dd><p>Seurat object containing preprocessed single-cell data:
-- Normalized counts in <code>RNA</code> assay</p></dd>
+<dd><p>Seurat object containing preprocessed single-cell data:</p><ul><li><p>Normalized counts in <code>RNA</code> assay</p></li>
+</ul></dd>
 
 
 <dt id="arg-phenotype">phenotype<a class="anchor" aria-label="anchor" href="#arg-phenotype"></a></dt>
-<dd><p>Data frame or tibble or named vector with:
-- Rownames matching <code>matched_bulk</code> columns
-- For survival: must contain time and status columns</p></dd>
+<dd><p>Data frame or tibble or named vector with:</p><ul><li><p>Rownames matching <code>matched_bulk</code> columns</p></li>
+<li><p>For survival: must contain time and status columns</p></li>
+</ul></dd>
 
 
 <dt id="arg-label-type">label_type<a class="anchor" aria-label="anchor" href="#arg-label-type"></a></dt>
@@ -94,10 +94,10 @@ It supports binary, continuous, and survival phenotype types.</p>
 
 
 <dt id="arg-phenotype-class">phenotype_class<a class="anchor" aria-label="anchor" href="#arg-phenotype-class"></a></dt>
-<dd><p>Analysis type (case-sensitive):
-- <code>"Binary"</code>: Case-control studies (e.g., tumor/normal)
-- <code>"Continuous"</code>: Quantitative traits (e.g., drug response)
-- <code>"Survival"</code>: Time-to-event data (requires time/status columns)</p></dd>
+<dd><p>Analysis type (case-sensitive):</p><ul><li><p><code>"Binary"</code>: Case-control studies (e.g., tumor/normal)</p></li>
+<li><p><code>"Continuous"</code>: Quantitative traits (e.g., drug response)</p></li>
+<li><p><code>"Survival"</code>: Time-to-event data (requires time/status columns)</p></li>
+</ul></dd>
 
 
 <dt id="arg-ref-group">ref_group<a class="anchor" aria-label="anchor" href="#arg-ref-group"></a></dt>

@@ -45,14 +45,21 @@ DoPIPET(
 
 - phenotype:
 
-  Clinical outcome data. Can be: - Vector: named with sample IDs - Data
-  frame: with row names matching bulk columns
+  Clinical outcome data. Can be:
+
+  - Vector: named with sample IDs
+
+  - Data frame: with row names matching bulk columns
 
 - phenotype_class:
 
-  Analysis mode: - `"binary"`: Case-control design (e.g.,
-  responder/non-responder) - `"continuous"`: Continuous outcome (e.g.,
-  age, size) - `"survival"`: Patient survival
+  Analysis mode:
+
+  - `"binary"`: Case-control design (e.g., responder/non-responder)
+
+  - `"continuous"`: Continuous outcome (e.g., age, size)
+
+  - `"survival"`: Patient survival
 
 - only_pos_marker:
 

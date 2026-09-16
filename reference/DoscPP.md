@@ -25,19 +25,23 @@ DoscPP(
 
 - matched_bulk:
 
-  Bulk expression data (genes × samples) where: - Column names must
-  match `phenotype` row names
+  Bulk expression data (genes × samples) where:
+
+  - Column names must match `phenotype` row names
 
 - sc_data:
 
-  Seurat object containing preprocessed single-cell data: - Normalized
-  counts in `RNA` assay
+  Seurat object containing preprocessed single-cell data:
+
+  - Normalized counts in `RNA` assay
 
 - phenotype:
 
-  Data frame or tibble or named vector with: - Rownames matching
-  `matched_bulk` columns - For survival: must contain time and status
-  columns
+  Data frame or tibble or named vector with:
+
+  - Rownames matching `matched_bulk` columns
+
+  - For survival: must contain time and status columns
 
 - label_type:
 
@@ -46,10 +50,13 @@ DoscPP(
 
 - phenotype_class:
 
-  Analysis type (case-sensitive): - `"Binary"`: Case-control studies
-  (e.g., tumor/normal) - `"Continuous"`: Quantitative traits (e.g., drug
-  response) - `"Survival"`: Time-to-event data (requires time/status
-  columns)
+  Analysis type (case-sensitive):
+
+  - `"Binary"`: Case-control studies (e.g., tumor/normal)
+
+  - `"Continuous"`: Quantitative traits (e.g., drug response)
+
+  - `"Survival"`: Time-to-event data (requires time/status columns)
 
 - ref_group:
 

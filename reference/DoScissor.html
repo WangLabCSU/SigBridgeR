@@ -13,7 +13,7 @@ associated with phenotypic outcomes."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">SigBridgeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,9 +98,9 @@ Column names must match <code>phenotype</code> identifiers.</p></dd>
 
 
 <dt id="arg-phenotype">phenotype<a class="anchor" aria-label="anchor" href="#arg-phenotype"></a></dt>
-<dd><p>Clinical outcome data. Can be:
-- Vector: named with sample IDs
-- Data frame: with row names matching bulk columns</p></dd>
+<dd><p>Clinical outcome data. Can be:</p><ul><li><p>Vector: named with sample IDs</p></li>
+<li><p>Data frame: with row names matching bulk columns</p></li>
+</ul></dd>
 
 
 <dt id="arg-label-type">label_type<a class="anchor" aria-label="anchor" href="#arg-label-type"></a></dt>
@@ -117,10 +117,10 @@ Higher values increase specificity.</p></dd>
 
 
 <dt id="arg-family">family<a class="anchor" aria-label="anchor" href="#arg-family"></a></dt>
-<dd><p>Model family for outcome type:
-- "gaussian": Continuous outcomes
-- "binomial": Binary outcomes (default)
-- "cox": Survival outcomes</p></dd>
+<dd><p>Model family for outcome type:</p><ul><li><p>"gaussian": Continuous outcomes</p></li>
+<li><p>"binomial": Binary outcomes (default)</p></li>
+<li><p>"cox": Survival outcomes</p></li>
+</ul></dd>
 
 
 <dt id="arg-reliability-test">reliability_test<a class="anchor" aria-label="anchor" href="#arg-reliability-test"></a></dt>

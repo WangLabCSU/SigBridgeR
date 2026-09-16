@@ -8,10 +8,6 @@ An environment storing methods for screening phenotype-associated cells.
 ScreenStrategy
 ```
 
-## Format
-
-An object of class `environment` of length 10.
-
 ## Details
 
 Storing structure - named list
