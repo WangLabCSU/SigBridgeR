@@ -50,7 +50,11 @@ ValidateScissorParams <- function(
       "DoScissor(path2save_scissor_inputs = )",
       "DoScissor(save_cache = )"
     )
-    dirname(dots$path2save_scissor_inputs)
+    if (!is.null(dots$path2save_scissor_inputs)) {
+      dirname(dots$path2save_scissor_inputs)
+    } else {
+      NULL
+    }
   } else {
     dots$save_cache
   }
@@ -73,7 +77,10 @@ ValidateScissorParams <- function(
     "binary" = "binomial",
     "survival" = "cox",
     "continuous" = "gaussian",
-    Abort("Invalid phenotype_class: {.val {phenotype_class}}", type = "[VALUE ERROR]")
+    Abort(
+      "Invalid phenotype_class: {.val {phenotype_class}}",
+      type = "[VALUE ERROR]"
+    )
   )
 
   # -- input validation -----------------------------------------------------
