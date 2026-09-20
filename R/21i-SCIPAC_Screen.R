@@ -6,8 +6,7 @@
 #'
 #' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression
 #'   data (genes × samples). Column names must match names/IDs in \code{phenotype}.
-#' @param sc_data A matrix/Matrix (genes × cells) or a Seurat object containing
-#'   scRNA-seq data to be screened.
+#' @param sc_data A Seurat object containing scRNA-seq data to be screened.
 #' @param phenotype Phenotype data, either:
 #'   \itemize{
 #'     \item Named vector (names match \code{matched_bulk} columns)
@@ -185,18 +184,21 @@ DoSCIPAC <- function(
   ...
 ) {
   CheckInstalled("Exceret/SCIPAC")
+
   # Validate phenotype_class parameter
-  purrr::walk(
-    .x = c(hvg, n_pc, bt_size, ncore, nfold),
-    .f = chk::chk_integer,
-  )
-  purrr::walk(
-    .x = c(ela_net_alpha, ci_alpha),
-    .f = chk::chk_numeric,
-  )
+  chk::chk_integer(hvg)
+  chk::chk_integer(n_pc)
+  chk::chk_integer(bt_size)
+  chk::chk_integer(ncore)
+  chk::chk_integer(nfold)
+  chk::chk_numeric(ela_net_alpha)
+  chk::chk_numeric(ci_alpha)
   chk::chk_numeric(resolution)
   chk::chk_chr(label_type)
   chk::chk_chr(phenotype_class)
+  if (!inherits(sc_data, "Seurat")) {
+    cli::cli_abort("sc_data must be a {.cls Seurat} object")
+  }
   if (!is.null(sc_batch_col)) {
     chk::chk_character(sc_batch_col)
   }
@@ -218,6 +220,8 @@ DoSCIPAC <- function(
   seed <- dots$seed %||% getFuncOption("seed") %||% 123L
   assay <- dots$assay %||% "RNA"
 
+  set.seed(seed)
+
   if (verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start SCIPAC screening"))
     ts_cli$cli_alert_info("Find common variable geme (hvg = {.val {hvg}})")
@@ -234,6 +238,12 @@ DoSCIPAC <- function(
       sc_data[[sc_batch_col]]
     } else {
       sc_batch_col
+    }
+
+    if (is.null(sc_batch_col)) {
+      cli::cli_abort(c(
+        "x" = "`sc_batch_col` provided, but no batch information found in `sc_data`. This may result from typo or data missing "
+      ))
     }
   }
 
@@ -260,7 +270,7 @@ DoSCIPAC <- function(
 
   phenotype <- switch(
     family,
-    "binomial" = ,
+    "binomial" = as.numeric(phenotype),
     "gaussian" = as.factor(phenotype),
     "cox" = as.matrix(phenotype)
   )
@@ -280,9 +290,6 @@ DoSCIPAC <- function(
     CI.alpha = ci_alpha,
     nfold = nfold
   )
-
-  colnames(SCIPAC_res) <- paste0("SCIPAC_", colnames(SCIPAC_res))
-  SCIPAC_res <- dplyr::rename(SCIPAC_res, SCIPAC = "SCIPAC_sig")
 
   modified_sc_data <- SeuratObject::AddMetaData(
     object = sc_data,
