@@ -300,7 +300,7 @@ Screen <- function(
 ) {
   on.exit(gc(verbose = FALSE))
 
-  if (is.null(label_type) || length(label_type) != 1) {
+  if (is.null(label_type) || length(label_type) != 1L) {
     cli::cli_alert_info(c(
       "i" = "{.var label_type} not specified or not of length 1, using {.val {screen_method}}"
     ))

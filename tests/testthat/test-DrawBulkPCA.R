@@ -1,10 +1,10 @@
 test_that("DrawBulkPCA returns invisible plot object", {
-  set.seed(123)
+  set.seed(123L)
 
   n_genes <- 50L
   n_samples <- 30L
   bulk <- matrix(
-    rnorm(n_genes * n_samples, mean = 10, sd = 2),
+    rnorm(n_genes * n_samples, mean = 10L, sd = 2L),
     nrow = n_genes,
     ncol = n_samples,
     dimnames = list(
@@ -21,12 +21,12 @@ test_that("DrawBulkPCA returns invisible plot object", {
 })
 
 test_that("DrawBulkPCA works with batch argument", {
-  set.seed(123)
+  set.seed(123L)
 
   n_genes <- 20L
   n_samples <- 20L
   bulk <- matrix(
-    rnorm(n_genes * n_samples, mean = 10, sd = 2),
+    rnorm(n_genes * n_samples, mean = 10L, sd = 2L),
     nrow = n_genes,
     ncol = n_samples,
     dimnames = list(
@@ -48,7 +48,7 @@ test_that("DrawBulkPCA works with batch argument", {
 })
 
 test_that("DrawBulkPCA errors when batch has too many levels", {
-  set.seed(123)
+  set.seed(123L)
 
   n_genes <- 10L
   n_samples <- 10L

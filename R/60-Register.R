@@ -164,7 +164,7 @@ method(generic = RegisterImpl, class_function) <- function(
 ) {
   # Seurat
   chk::chk_character(name, "name")
-  if (nchar(name) != 1) {
+  if (nchar(name) != 1L) {
     Abort(
       "Name (key) must be a single letter",
       "Current Name (key): {.val {name}}",

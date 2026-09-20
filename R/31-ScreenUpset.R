@@ -60,7 +60,7 @@ ScreenUpset <- function(
   screen_type = NULL,
   order_by = c("freq", "degree"),
   show_plot = FALSE,
-  n_intersections = 20,
+  n_intersections = 20L,
   bar_color = "#5189bb",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
@@ -109,13 +109,13 @@ ScreenUpset <- function(
           vapply(
             X = combs,
             FUN = function(comb) {
-              if (length(comb) == 1) {
+              if (length(comb) == 1L) {
                 comb
               } else {
                 paste(comb, collapse = " & ")
               }
             },
-            FUN.VALUE = character(1)
+            FUN.VALUE = character(1L)
           )
         )
       }
@@ -141,7 +141,7 @@ ScreenUpset <- function(
 
       sum(row_matches, na.rm = TRUE)
     },
-    FUN.VALUE = numeric(1)
+    FUN.VALUE = numeric(1L)
   )
 
   # Create result data frame

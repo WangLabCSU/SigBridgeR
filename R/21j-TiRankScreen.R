@@ -441,8 +441,8 @@ DoTiRank <- function(
 
   data.table::setnames(
     meta_to_add,
-    old = names(meta_to_add)[1:2],
-    new = paste0("TiRank_", names(meta_to_add)[1:2])
+    old = names(meta_to_add)[1L:2L],
+    new = paste0("TiRank_", names(meta_to_add)[1L:2L])
   )
 
   sc_data <- SeuratObject::AddMetaData(

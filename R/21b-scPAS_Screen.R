@@ -276,15 +276,15 @@ DoscPAS <- function(
   }
 
   # Network construction
-  cor.m[cor.m < 0] <- 0
+  cor.m[cor.m < 0L] <- 0L
   SNN <- Seurat::FindNeighbors(
-    1 - cor.m,
+    1L - cor.m,
     distance.matrix = TRUE,
     verbose = p$verbose
   )
   Network <- as.matrix(SNN$snn)
-  diag(Network) <- 0
-  Network <- (Network > 0.2) * 1 # binarization
+  diag(Network) <- 0L
+  Network <- (Network > 0.2) * 1L # binarization
 
   # Clean up
   rm(cor.m, SNN)
@@ -326,7 +326,7 @@ DoscPAS <- function(
     Expression_cell,
     display_progress = FALSE
   )
-  scaled_exp[is.na(scaled_exp)] <- 0
+  scaled_exp[is.na(scaled_exp)] <- 0L
   scaled_exp <- Matrix::Matrix(scaled_exp) # Probably a dgCMatrix
   # Matrix multiplication for risk scores
   risk_score <- Matrix::crossprod(scaled_exp, model$Coefs)

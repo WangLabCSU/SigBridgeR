@@ -43,7 +43,7 @@ ChooseCache <- function(directory) {
     Abort("{.path {directory}} not exists", type = "[PATH ERROR]")
   }
   cache_dirs <- list.dirs(directory, recursive = FALSE)
-  if (length(cache_dirs) == 0) {
+  if (length(cache_dirs) == 0L) {
     Abort("no cache found in {.path {directory}}", type = "[CACHE ERROR]")
   } else if (length(cache_dirs) == 1L) {
     return(cache_dirs[[1L]])
@@ -58,7 +58,7 @@ ChooseCache <- function(directory) {
   )
 
   n_cache_dirs <- length(cache_dirs)
-  if (!is.numeric(choice) || choice < 1 || choice > n_cache_dirs) {
+  if (!is.numeric(choice) || choice < 1L || choice > n_cache_dirs) {
     Abort(
       "Invalid choice: {.val {choice}}",
       "Expected a number between 1 and {n_cache_dirs}",

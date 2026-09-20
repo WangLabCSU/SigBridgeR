@@ -101,9 +101,9 @@ ValidateArgsInputs <- function(func, ...) {
 
   # Check required parameters
   missing_args <- setdiff(required_args, func_args)
-  if (length(missing_args) == 0) {
+  if (length(missing_args) == 0L) {
     validate_success("All input arguments explicitly specified")
-    return(list(error = 0))
+    return(list(error = 0L))
   }
 
   validate_error("Missing required arguments")
@@ -128,7 +128,7 @@ ValidateArgsInputs <- function(func, ...) {
   )
   cli::cli_div(
     id = "missing_args",
-    theme = list(div = list("margin-left" = 2))
+    theme = list(div = list("margin-left" = 2L))
   )
   purrr::walk(
     missing_args,
@@ -140,7 +140,7 @@ ValidateArgsInputs <- function(func, ...) {
   )
   cli::cli_end(id = "missing_args")
 
-  list(error = 1)
+  list(error = 1L)
 }
 
 #' @keywords internal
@@ -157,7 +157,7 @@ ValidateArgsVerbose <- function(func, ...) {
     validate_explain(
       "Consider adding `verbose` control to ease error tracing"
     )
-    return(list(note = 1))
+    return(list(note = 1L))
   } else if (!verbose_used) {
     validate_warn("Verbose control supported but not used")
     if (has_dots) {
@@ -165,7 +165,7 @@ ValidateArgsVerbose <- function(func, ...) {
         "{cli::symbol$bullet} When using `...` to accept extra arguments, also support `verbose`"
       )
     }
-    return(list(warn = 1))
+    return(list(warn = 1L))
   }
 
   validate_success("Verbose control supported")
@@ -193,10 +193,10 @@ ValidateArgsSyntax <- function(func, ...) {
       }
       cli::cli_end()
 
-      error <- 1
+      error <- 1L
     } else {
       validate_success("Syntax check passed")
-      error <- 0
+      error <- 0L
     }
 
     globals <- codetools::findGlobals(func)
@@ -213,19 +213,19 @@ ValidateArgsSyntax <- function(func, ...) {
       ".External"
     ))
     suspicious_globals <- setdiff(globals, safe_symbols)
-    if (length(suspicious_globals) != 0) {
+    if (length(suspicious_globals) != 0L) {
       validate_warn("Suspicious global variables")
       validate_explain("Undefined variables detected in function:")
 
       cli::cli_div(
-        theme = list(div = list("margin-left" = 4))
+        theme = list(div = list("margin-left" = 4L))
       )
       cli::cli_text("{.val {suspicious_globals}}")
       cli::cli_end()
-      warn <- 1
+      warn <- 1L
     } else {
       validate_success("No suspicious global variables")
-      warn <- 0
+      warn <- 0L
     }
 
     return(list(error = error, warn = warn))
@@ -246,18 +246,18 @@ ValidateReturn <- function(func, ...) {
       expr
     }
 
-    if (as.character(expr[[1]]) == "return") {
-      return(expr[[2]])
+    if (as.character(expr[[1L]]) == "return") {
+      return(expr[[2L]])
     }
 
-    if (as.character(expr[[1]]) == "{") {
+    if (as.character(expr[[1L]]) == "{") {
       last_expr <- expr[[length(expr)]]
       return(find_last_return(last_expr))
     }
 
-    if (as.character(expr[[1]]) == "if") {
-      if (length(expr) >= 3) {
-        return(find_last_return(expr[[3]]))
+    if (as.character(expr[[1L]]) == "if") {
+      if (length(expr) >= 3L) {
+        return(find_last_return(expr[[3L]]))
       }
     }
 
@@ -270,18 +270,18 @@ ValidateReturn <- function(func, ...) {
   has_scRNA_data <- FALSE
 
   if (is.call(last_return)) {
-    func_name <- as.character(last_return[[1]])
+    func_name <- as.character(last_return[[1L]])
 
     if (func_name == "list") {
       is_list_creation <- TRUE
 
-      arg_names <- names(last_return)[-1]
+      arg_names <- names(last_return)[-1L]
 
       if (is.null(arg_names) || all(arg_names == "")) {
-        for (i in 2:length(last_return)) {
+        for (i in 2L:length(last_return)) {
           arg <- last_return[[i]]
-          if (is.call(arg) && as.character(arg[[1]]) == "=") {
-            arg_name <- as.character(arg[[2]])
+          if (is.call(arg) && as.character(arg[[1L]]) == "=") {
+            arg_name <- as.character(arg[[2L]])
             if (arg_name == "scRNA_data") {
               has_scRNA_data <- TRUE
               break
@@ -299,7 +299,7 @@ ValidateReturn <- function(func, ...) {
 
     cli::cli_div(
       id = "missing_return",
-      theme = list(div = list("margin-left" = 2))
+      theme = list(div = list("margin-left" = 2L))
     )
 
     validate_explain_speaker(
@@ -313,13 +313,13 @@ ValidateReturn <- function(func, ...) {
 
     cli::cli_end(id = "missing_return")
 
-    return(list(error = 1))
+    return(list(error = 1L))
   } else if (!has_scRNA_data) {
     validate_error("Return value does not have `scRNA_data` slot")
 
     cli::cli_div(
       id = "missing_return",
-      theme = list(div = list("margin-left" = 2))
+      theme = list(div = list("margin-left" = 2L))
     )
 
     validate_explain_speaker(
@@ -330,7 +330,7 @@ ValidateReturn <- function(func, ...) {
 
     cli::cli_end(id = "missing_return")
 
-    return(list(error = 1))
+    return(list(error = 1L))
   } else {
     validate_success("Return value is a list with `scRNA_data` slot")
   }
@@ -363,7 +363,7 @@ ValidateDirName <- function(func, ...) {
 
   dir_create_calls <- find_dir_create_calls(func_body)
 
-  if (length(dir_create_calls) == 0) {
+  if (length(dir_create_calls) == 0L) {
     return(invisible())
   }
 
@@ -371,7 +371,7 @@ ValidateDirName <- function(func, ...) {
 
   # check the folder name of each dir.create call
   for (call in dir_create_calls) {
-    folder_arg <- call_args(call)[[1]]
+    folder_arg <- call_args(call)[[1L]]
 
     # try to get the folder name
     if (is_syntactic_literal(folder_arg)) {
@@ -398,7 +398,7 @@ ValidateDirName <- function(func, ...) {
         startsWith(x = tolower(suggested_folder_name), prefix = "do")
       ) {
         paste0(
-          substr(suggested_folder_name, 3, nchar(suggested_folder_name)),
+          substr(suggested_folder_name, 3L, nchar(suggested_folder_name)),
           "_res"
         )
       } else {
@@ -421,7 +421,7 @@ ValidateDirName <- function(func, ...) {
     }
   }
 
-  if (note > 0) {
+  if (note > 0L) {
     return(list(note = note))
   }
   invisible()
@@ -437,7 +437,7 @@ ValidateBadge <- function(...) {
     lists <- lapply(lists, function(x) {
       missing <- setdiff(all_names, names(x))
       if (length(missing)) {
-        x[missing] <- 0
+        x[missing] <- 0L
       }
       x[all_names]
     })
@@ -450,15 +450,15 @@ ValidateBadge <- function(...) {
     t <- cli::symbol$tick
     x <- cli::symbol$cross
 
-    if (value == 0) {
+    if (value == 0L) {
       cli::cli_fmt(cli::cli_text(cli::col_green("{value} {name} {t}")))
     } else if (name == "note") {
-      if (value == 1) {
+      if (value == 1L) {
         cli::cli_fmt(cli::cli_text(cli::col_blue("{value} {name} {x}")))
       } else {
         cli::cli_fmt(cli::cli_text(cli::col_blue("{value} {name}s {x}")))
       }
-    } else if (value == 1) {
+    } else if (value == 1L) {
       cli::cli_fmt(cli::cli_text(cli::col_red("{value} {name} {x}")))
     } else {
       cli::cli_fmt(cli::cli_text(cli::col_red("{value} {name}s {x}")))

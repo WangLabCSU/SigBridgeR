@@ -130,7 +130,7 @@ ScreenMethod <- new_class(
 
     if (is.function(self@mapper)) {
       mapper_fml <- fn_fmls_names(self@mapper)
-      if (length(mapper_fml) > 1) {
+      if (length(mapper_fml) > 1L) {
         return(cli::cli_fmt(cli::cli_text(
           "Mapper function must have only one argument"
         )))

@@ -11,9 +11,9 @@ new_test_mat <- function(
 ) {
   n <- length(ids)
   matrix(
-    seq_len(n * 2),
+    seq_len(n * 2L),
     nrow = n,
-    ncol = 2,
+    ncol = 2L,
     dimnames = list(ids, c("S1", "S2"))
   )
 }
@@ -26,7 +26,7 @@ describe("SymbolConvert - conversion", {
 
     expect_identical(rownames(result), c("TSPAN6", "DPM1", "SCYL3"))
     expect_identical(colnames(result), c("S1", "S2"))
-    expect_equal(dim(result), c(3, 2))
+    expect_equal(dim(result), c(3L, 2L))
   })
 
   it("converts a vector of IDs to gene symbols", {
@@ -253,7 +253,7 @@ describe("SymbolConvert - input validation", {
   })
 
   it("aborts when matrix has no rownames", {
-    mat <- matrix(1:4, nrow = 2)
+    mat <- matrix(1L:4L, nrow = 2L)
     expect_error(
       SymbolConvert(mat, update_symbol = FALSE, verbose = FALSE),
       "Genes are missing"

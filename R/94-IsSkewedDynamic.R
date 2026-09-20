@@ -89,7 +89,7 @@
 #' @export
 IsSkewedDynamic <- function(
   x,
-  target = 0,
+  target = 0L,
   expected_p = 0.8,
   n_sd = 4L
 ) {

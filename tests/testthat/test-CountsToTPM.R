@@ -3,29 +3,29 @@
 describe("CountsToTPM - base matrix input", {
   it("converts simple matrix to TPM (columns sum to 1e6)", {
     counts <- matrix(
-      c(100, 200, 300, 150, 250, 350),
-      nrow = 3,
-      ncol = 2,
+      c(100L, 200L, 300L, 150L, 250L, 350L),
+      nrow = 3L,
+      ncol = 2L,
       dimnames = list(c("G1", "G2", "G3"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000, G3 = 1500)
+    gene_length <- c(G1 = 1000L, G2 = 2000L, G3 = 1500L)
 
     result <- CountsToTPM(counts, gene_length)
 
-    expect_equal(dim(result), c(3, 2))
-    expect_equal(colSums(result), c(S1 = 1e6, S2 = 1e6), tolerance = 1)
+    expect_equal(dim(result), c(3L, 2L))
+    expect_equal(colSums(result), c(S1 = 1e6, S2 = 1e6), tolerance = 1L)
     expect_equal(rownames(result), c("G1", "G2", "G3"))
     expect_equal(colnames(result), c("S1", "S2"))
   })
 
   it("returns numeric matrix output", {
     counts <- matrix(
-      c(100, 200, 150, 250),
-      nrow = 2,
-      ncol = 2,
+      c(100L, 200L, 150L, 250L),
+      nrow = 2L,
+      ncol = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000)
+    gene_length <- c(G1 = 1000L, G2 = 2000L)
 
     result <- CountsToTPM(counts, gene_length)
 
@@ -35,12 +35,12 @@ describe("CountsToTPM - base matrix input", {
 
   it("gene with longer length gets lower TPM for same count", {
     counts <- matrix(
-      c(100, 100),
-      nrow = 2,
-      ncol = 1,
+      c(100L, 100L),
+      nrow = 2L,
+      ncol = 1L,
       dimnames = list(c("short", "long"), "S1")
     )
-    gene_length <- c(short = 1000, long = 10000)
+    gene_length <- c(short = 1000L, long = 10000L)
 
     result <- CountsToTPM(counts, gene_length)
 
@@ -50,74 +50,74 @@ describe("CountsToTPM - base matrix input", {
 
   it("handles single gene", {
     counts <- matrix(
-      c(100, 200),
-      nrow = 1,
-      ncol = 2,
+      c(100L, 200L),
+      nrow = 1L,
+      ncol = 2L,
       dimnames = list("G1", c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000)
+    gene_length <- c(G1 = 1000L)
 
     result <- CountsToTPM(counts, gene_length)
 
-    expect_equal(dim(result), c(1, 2))
+    expect_equal(dim(result), c(1L, 2L))
     # Each column should sum to 1e6 (only one gene)
-    expect_equal(unname(colSums(result)), c(1e6, 1e6), tolerance = 1)
+    expect_equal(unname(colSums(result)), c(1e6, 1e6), tolerance = 1L)
   })
 
   it("handles single sample", {
     counts <- matrix(
-      c(100, 200, 300),
-      nrow = 3,
-      ncol = 1,
+      c(100L, 200L, 300L),
+      nrow = 3L,
+      ncol = 1L,
       dimnames = list(c("G1", "G2", "G3"), "S1")
     )
-    gene_length <- c(G1 = 1000, G2 = 2000, G3 = 1500)
+    gene_length <- c(G1 = 1000L, G2 = 2000L, G3 = 1500L)
 
     result <- CountsToTPM(counts, gene_length)
 
-    expect_equal(dim(result), c(3, 1))
-    expect_equal(sum(result), 1e6, tolerance = 1)
+    expect_equal(dim(result), c(3L, 1L))
+    expect_equal(sum(result), 1e6, tolerance = 1L)
   })
 
   it("handles all-zero column (returns zeros for that column)", {
     counts <- matrix(
-      c(0, 0, 100, 200),
-      nrow = 2,
-      ncol = 2,
+      c(0L, 0L, 100L, 200L),
+      nrow = 2L,
+      ncol = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000)
+    gene_length <- c(G1 = 1000L, G2 = 2000L)
 
     result <- CountsToTPM(counts, gene_length)
 
     # Column S1: all zeros -> zero denominator -> all zeros
-    expect_equal(result[, "S1"], c(G1 = 0, G2 = 0))
+    expect_equal(result[, "S1"], c(G1 = 0L, G2 = 0L))
     # Column S2: should still sum to 1e6
-    expect_equal(sum(result[, "S2"]), 1e6, tolerance = 1)
+    expect_equal(sum(result[, "S2"]), 1e6, tolerance = 1L)
   })
 
   it("accepts gene_length as a named list", {
     counts <- matrix(
-      c(100, 200),
-      nrow = 2,
-      ncol = 1,
+      c(100L, 200L),
+      nrow = 2L,
+      ncol = 1L,
       dimnames = list(c("G1", "G2"), "S1")
     )
-    gene_length <- list(G1 = 1000, G2 = 2000)
+    gene_length <- list(G1 = 1000L, G2 = 2000L)
 
     result <- CountsToTPM(counts, gene_length)
 
-    expect_equal(sum(result), 1e6, tolerance = 1)
+    expect_equal(sum(result), 1e6, tolerance = 1L)
   })
 
   it("preserves dimnames in output", {
     counts <- matrix(
-      c(100, 200, 150, 250),
-      nrow = 2,
-      ncol = 2,
+      c(100L, 200L, 150L, 250L),
+      nrow = 2L,
+      ncol = 2L,
       dimnames = list(c("GeneA", "GeneB"), c("SampleX", "SampleY"))
     )
-    gene_length <- c(GeneA = 1000, GeneB = 2000)
+    gene_length <- c(GeneA = 1000L, GeneB = 2000L)
 
     result <- CountsToTPM(counts, gene_length)
 
@@ -131,16 +131,16 @@ describe("CountsToTPM - base matrix input", {
 describe("CountsToTPM - data.frame input", {
   it("converts data.frame to matrix and computes TPM", {
     counts <- data.frame(
-      S1 = c(100, 200),
-      S2 = c(150, 250),
+      S1 = c(100L, 200L),
+      S2 = c(150L, 250L),
       row.names = c("G1", "G2")
     )
-    gene_length <- c(G1 = 1000, G2 = 2000)
+    gene_length <- c(G1 = 1000L, G2 = 2000L)
 
     result <- CountsToTPM(counts, gene_length)
 
-    expect_equal(dim(result), c(2, 2))
-    expect_equal(unname(colSums(result)), c(1e6, 1e6), tolerance = 1)
+    expect_equal(dim(result), c(2L, 2L))
+    expect_equal(unname(colSums(result)), c(1e6, 1e6), tolerance = 1L)
   })
 })
 
@@ -150,46 +150,46 @@ describe("CountsToTPM - dgCMatrix input", {
   it("converts dgCMatrix to TPM and returns dgCMatrix", {
     skip_if_not_installed("Matrix")
     counts <- Matrix::Matrix(
-      c(100, 0, 200, 0, 300, 0),
-      nrow = 3,
-      ncol = 2,
+      c(100L, 0L, 200L, 0L, 300L, 0L),
+      nrow = 3L,
+      ncol = 2L,
       sparse = TRUE,
       dimnames = list(c("G1", "G2", "G3"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000, G3 = 1500)
+    gene_length <- c(G1 = 1000L, G2 = 2000L, G3 = 1500L)
 
     result <- CountsToTPM(counts, gene_length)
 
     expect_s4_class(result, "Matrix")
-    expect_equal(dim(result), c(3, 2))
+    expect_equal(dim(result), c(3L, 2L))
   })
 
   it("dgCMatrix columns sum to 1e6 (non-zero columns)", {
     skip_if_not_installed("Matrix")
     counts <- Matrix::Matrix(
-      c(100, 200, 300, 150, 250, 350),
-      nrow = 3,
-      ncol = 2,
+      c(100L, 200L, 300L, 150L, 250L, 350L),
+      nrow = 3L,
+      ncol = 2L,
       sparse = TRUE,
       dimnames = list(c("G1", "G2", "G3"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000, G3 = 1500)
+    gene_length <- c(G1 = 1000L, G2 = 2000L, G3 = 1500L)
 
     result <- CountsToTPM(counts, gene_length)
 
-    expect_equal(unname(Matrix::colSums(result)), c(1e6, 1e6), tolerance = 1)
+    expect_equal(unname(Matrix::colSums(result)), c(1e6, 1e6), tolerance = 1L)
   })
 
   it("dgCMatrix preserves sparsity structure", {
     skip_if_not_installed("Matrix")
     counts <- Matrix::Matrix(
-      c(100, 0, 200, 0, 300, 0),
-      nrow = 3,
-      ncol = 2,
+      c(100L, 0L, 200L, 0L, 300L, 0L),
+      nrow = 3L,
+      ncol = 2L,
       sparse = TRUE,
       dimnames = list(c("G1", "G2", "G3"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000, G3 = 1500)
+    gene_length <- c(G1 = 1000L, G2 = 2000L, G3 = 1500L)
 
     result <- CountsToTPM(counts, gene_length)
 
@@ -204,19 +204,19 @@ describe("CountsToTPM - dgeMatrix input", {
   it("converts dgeMatrix to TPM", {
     skip_if_not_installed("Matrix")
     counts <- Matrix::Matrix(
-      c(100, 200, 150, 250),
-      nrow = 2,
-      ncol = 2,
+      c(100L, 200L, 150L, 250L),
+      nrow = 2L,
+      ncol = 2L,
       sparse = FALSE,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000)
+    gene_length <- c(G1 = 1000L, G2 = 2000L)
 
     result <- CountsToTPM(counts, gene_length)
 
     expect_s4_class(result, "dgeMatrix")
-    expect_equal(dim(result), c(2, 2))
-    expect_equal(Matrix::colSums(result), c(S1 = 1e6, S2 = 1e6), tolerance = 1)
+    expect_equal(dim(result), c(2L, 2L))
+    expect_equal(Matrix::colSums(result), c(S1 = 1e6, S2 = 1e6), tolerance = 1L)
   })
 })
 
@@ -225,24 +225,24 @@ describe("CountsToTPM - dgeMatrix input", {
 describe("CountsToTPM - gene_length validation", {
   it("aborts when gene_length is unnamed", {
     counts <- matrix(
-      1:4,
-      nrow = 2,
+      1L:4L,
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
 
     expect_error(
-      CountsToTPM(counts, c(1000, 2000)),
+      CountsToTPM(counts, c(1000L, 2000L)),
       "must be a named vector"
     )
   })
 
   it("aborts when gene_length has empty names", {
     counts <- matrix(
-      1:4,
-      nrow = 2,
+      1L:4L,
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, 2000) # second has empty name
+    gene_length <- c(G1 = 1000L, 2000L) # second has empty name
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -252,11 +252,11 @@ describe("CountsToTPM - gene_length validation", {
 
   it("aborts when gene_length has non-positive values", {
     counts <- matrix(
-      1:4,
-      nrow = 2,
+      1L:4L,
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 0, G2 = 2000)
+    gene_length <- c(G1 = 0L, G2 = 2000L)
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -266,11 +266,11 @@ describe("CountsToTPM - gene_length validation", {
 
   it("aborts when gene_length has negative values", {
     counts <- matrix(
-      1:4,
-      nrow = 2,
+      1L:4L,
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = -100, G2 = 2000)
+    gene_length <- c(G1 = -100L, G2 = 2000L)
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -280,11 +280,11 @@ describe("CountsToTPM - gene_length validation", {
 
   it("aborts when gene_length has NA values", {
     counts <- matrix(
-      1:4,
-      nrow = 2,
+      1L:4L,
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = NA_real_, G2 = 2000)
+    gene_length <- c(G1 = NA_real_, G2 = 2000L)
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -294,11 +294,11 @@ describe("CountsToTPM - gene_length validation", {
 
   it("aborts when gene_length has Inf values", {
     counts <- matrix(
-      1:4,
-      nrow = 2,
+      1L:4L,
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = Inf, G2 = 2000)
+    gene_length <- c(G1 = Inf, G2 = 2000L)
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -308,11 +308,11 @@ describe("CountsToTPM - gene_length validation", {
 
   it("aborts when gene_length missing a gene in counts", {
     counts <- matrix(
-      1:4,
-      nrow = 2,
+      1L:4L,
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000) # G2 missing
+    gene_length <- c(G1 = 1000L) # G2 missing
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -325,17 +325,17 @@ describe("CountsToTPM - gene_length validation", {
 
 describe("CountsToTPM - counts validation", {
   it("aborts when counts is not matrix/dgCMatrix/dgeMatrix", {
-    gene_length <- c(G1 = 1000, G2 = 2000)
+    gene_length <- c(G1 = 1000L, G2 = 2000L)
 
     expect_error(
-      CountsToTPM(c(100, 200), gene_length),
+      CountsToTPM(c(100L, 200L), gene_length),
       "must have rownames"
     )
   })
 
   it("aborts when counts has no rownames", {
-    counts <- matrix(1:4, nrow = 2, ncol = 2)
-    gene_length <- c(G1 = 1000, G2 = 2000)
+    counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
+    gene_length <- c(G1 = 1000L, G2 = 2000L)
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -345,12 +345,12 @@ describe("CountsToTPM - counts validation", {
 
   it("aborts when counts contains NA values", {
     counts <- matrix(
-      c(100, NA, 150, 250),
-      nrow = 2,
-      ncol = 2,
+      c(100L, NA, 150L, 250L),
+      nrow = 2L,
+      ncol = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000)
+    gene_length <- c(G1 = 1000L, G2 = 2000L)
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -360,12 +360,12 @@ describe("CountsToTPM - counts validation", {
 
   it("aborts when counts contains negative values", {
     counts <- matrix(
-      c(100, -5, 150, 250),
-      nrow = 2,
-      ncol = 2,
+      c(100L, -5L, 150L, 250L),
+      nrow = 2L,
+      ncol = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 2000)
+    gene_length <- c(G1 = 1000L, G2 = 2000L)
 
     expect_error(
       CountsToTPM(counts, gene_length),
@@ -379,40 +379,40 @@ describe("CountsToTPM - counts validation", {
 describe("CountsToTPM - TPM properties", {
   it("each column sums to 1e6", {
     counts <- matrix(
-      c(50, 150, 250, 80, 200, 320),
-      nrow = 3,
-      ncol = 2,
+      c(50L, 150L, 250L, 80L, 200L, 320L),
+      nrow = 3L,
+      ncol = 2L,
       dimnames = list(c("G1", "G2", "G3"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 500, G2 = 1500, G3 = 2500)
+    gene_length <- c(G1 = 500L, G2 = 1500L, G3 = 2500L)
 
     result <- CountsToTPM(counts, gene_length)
 
-    expect_equal(colSums(result), c(S1 = 1e6, S2 = 1e6), tolerance = 1)
+    expect_equal(colSums(result), c(S1 = 1e6, S2 = 1e6), tolerance = 1L)
   })
 
   it("TPM values are proportional to counts/length", {
     counts <- matrix(
-      c(100, 100, 200, 200),
-      nrow = 2,
-      ncol = 2,
+      c(100L, 100L, 200L, 200L),
+      nrow = 2L,
+      ncol = 2L,
       dimnames = list(c("G1", "G2"), c("S1", "S2"))
     )
-    gene_length <- c(G1 = 1000, G2 = 1000)
+    gene_length <- c(G1 = 1000L, G2 = 1000L)
 
     result <- CountsToTPM(counts, gene_length)
 
     # Same length, count ratio 1:2 -> TPM ratio 1:2
-    expect_equal(result["G2", "S1"] / result["G1", "S1"], 1)
-    expect_equal(result["G2", "S2"] / result["G1", "S2"], 1)
+    expect_equal(result["G2", "S1"] / result["G1", "S1"], 1L)
+    expect_equal(result["G2", "S2"] / result["G1", "S2"], 1L)
   })
 
   it("larger counts matrix still works correctly", {
-    set.seed(42)
-    n_genes <- 100
-    n_samples <- 5
+    set.seed(42L)
+    n_genes <- 100L
+    n_samples <- 5L
     counts <- matrix(
-      rpois(n_genes * n_samples, lambda = 100),
+      rpois(n_genes * n_samples, lambda = 100L),
       nrow = n_genes,
       ncol = n_samples,
       dimnames = list(
@@ -421,13 +421,13 @@ describe("CountsToTPM - TPM properties", {
       )
     )
     gene_length <- setNames(
-      runif(n_genes, 500, 5000),
+      runif(n_genes, 500L, 5000L),
       paste0("G", seq_len(n_genes))
     )
 
     result <- CountsToTPM(counts, gene_length)
 
     expect_equal(dim(result), c(n_genes, n_samples))
-    expect_equal(unname(colSums(result)), rep(1e6, n_samples), tolerance = 1)
+    expect_equal(unname(colSums(result)), rep(1e6, n_samples), tolerance = 1L)
   })
 })

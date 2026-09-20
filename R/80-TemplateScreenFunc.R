@@ -87,7 +87,7 @@ TemplateScreenFunc <- function(
 
   # * Check file existence and content
   file_exists <- file.exists(filename)
-  file_not_empty <- file_exists && (file.info(filename)$size > 0)
+  file_not_empty <- file_exists && (file.info(filename)$size > 0L)
 
   # * Interactive confirmation for overwriting non-empty files
   if (!append && file_not_empty) {

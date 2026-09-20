@@ -410,7 +410,7 @@ DoScissorRelTest <- function(
   }
 
   # indicate that Y has two levels, both Pos and Neg cells exist
-  if (length(table(scissor_res$Y)) < 2) {
+  if (length(table(scissor_res$Y)) < 2L) {
     cli::cli_warn(c(
       "x" = "Only one level detected in Scissor result. Skipping reliability test."
     ))
@@ -479,7 +479,7 @@ DoScissorCellEval <- function(
     ))
     return(NULL)
   }
-  if (FDR_cutoff <= 0 || FDR_cutoff >= 1) {
+  if (FDR_cutoff <= 0L || FDR_cutoff >= 1L) {
     cli::cli_warn(c(
       'x' = '`FDR_cutoff` must be between 0 and 1. Skipping cell evaluation',
       '>' = 'Current `FDR_cutoff`: {class(FDR_cutoff)} {.val {FDR_cutoff}}'

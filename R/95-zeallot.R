@@ -19,8 +19,8 @@ compile_lhs <- function(expr, path = integer()) {
     return(list(list(type = "assign", name = nm, path = path)))
   }
 
-  if (is.call(expr) && identical(expr[[1]], as.name("c"))) {
-    args <- as.list(expr[-1])
+  if (is.call(expr) && identical(expr[[1L]], as.name("c"))) {
+    args <- as.list(expr[-1L])
     out <- list()
 
     for (i in seq_along(args)) {

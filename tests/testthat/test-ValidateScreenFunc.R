@@ -1,18 +1,18 @@
 test_that("`ValidateScreenFunc` works", {
   func <- \(x) {
-    z <- x + 1
+    z <- x + 1L
     # Chinese
     b
     s(z)
     ~`x`
-    list(scRNA = 1, z = z)
+    list(scRNA = 1L, z = z)
   }
 
   expect_error(ValidateScreenFunc(func))
 
   func2 <- \(x) {
-    z <- x + 1
-    list(scRNA = 1, z = z)
+    z <- x + 1L
+    list(scRNA = 1L, z = z)
   }
 
   ValidateScreenFunc(func2)

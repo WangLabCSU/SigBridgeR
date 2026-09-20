@@ -295,7 +295,7 @@ describe("autoplot.Seurat", {
 
     autoplot(seurat)
     expect_false(captured$label)
-    expect_equal(captured$label.size, 4)
+    expect_equal(captured$label.size, 4L)
   })
 
   it("uses 'umap' as default reduction", {

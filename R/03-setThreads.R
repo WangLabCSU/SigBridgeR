@@ -78,12 +78,12 @@ setThreads <- function(
 
   if (!is.null(tf_config$inter_op)) {
     chk::chk_integer(tf_config$inter_op)
-    chk::chk_range(tf_config$inter_op, c(0, Inf))
+    chk::chk_range(tf_config$inter_op, c(0L, Inf))
   }
 
   if (!is.null(tf_config$intra_op)) {
     chk::chk_integer(tf_config$intra_op)
-    chk::chk_range(tf_config$intra_op, c(0, Inf))
+    chk::chk_range(tf_config$intra_op, c(0L, Inf))
   }
 
   verbose <- verbose %||% TRUE
@@ -276,7 +276,7 @@ config_tf_threads <- function(
 
 
 print_thread_config <- function(results) {
-  if (length(results) == 0) {
+  if (length(results) == 0L) {
     return(invisible(NULL))
   }
 

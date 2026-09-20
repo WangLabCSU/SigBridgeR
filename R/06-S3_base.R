@@ -54,7 +54,7 @@ NULL
 #' @rawNamespace S3method(print,"SigBridgeR::SigBridgeRBase")
 #' @export
 `print.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
-  cls_x <- gsub(".*:", "", class(x)[1])
+  cls_x <- gsub(".*:", "", class(x)[1L])
   properties <- props(x)
   nms_properties <- names(properties)
 
@@ -78,7 +78,7 @@ NULL
     name <- nms_properties[i]
     key <- properties[[i]]
 
-    cls_key <- class(key)[1] # class(NULL) -> NULL
+    cls_key <- class(key)[1L] # class(NULL) -> NULL
 
     key <- if (is_function(key)) {
       fn_fmls_names(key)
@@ -190,7 +190,7 @@ NULL
 #' @export
 #' @rawNamespace S3method(format,"SigBridgeR::SigBridgeRBase")
 `format.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
-  cls_x <- sub("^.*::", "", class(x)[1])
+  cls_x <- sub("^.*::", "", class(x)[1L])
 
   properties <- props(x)
   nms_properties <- names(properties)

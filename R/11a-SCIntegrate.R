@@ -75,7 +75,7 @@ SCIntegrate <- function(
 ) {
   # ! don't use genric
   dots <- list2(...)
-  if (length(dots) == 0) {
+  if (length(dots) == 0L) {
     Abort("[{.fun SCIntegrate}]: No arguments provided.", type = "[ARG ERROR]")
   }
   .quos <- enquos(...)
@@ -115,7 +115,7 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
   is_mat <- vapply(
     dots,
     \(x) !is.matrix(x) & !inherits(x, "Matrix"),
-    logical(1)
+    logical(1L)
   )
   # * remove dups
   mats <- purrr::map(dots[is_mat], \(x) {
@@ -139,7 +139,7 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
     dt <- data.table::as.data.table(mat, keep.rownames = "gene")
 
     # prefix column names with (gene)
-    col_names <- names(dt)[-1]
+    col_names <- names(dt)[-1L]
     data.table::setnames(dt, col_names, paste0(prefix, "_", col_names))
 
     dt_list[[i]] <- dt
@@ -151,7 +151,7 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
     },
     dt_list
   )
-  result_mat <- as.matrix(result_dt[, -1])
+  result_mat <- as.matrix(result_dt[, -1L])
   rownames(result_mat) <- result_dt$gene
 
   result_mat
@@ -163,7 +163,7 @@ SCIntegrate.matrix <- function(..., .quos = NULL) {
   dots <- list2(...)
   .quos <- .quos %||% enquos(...)
 
-  is_mat <- vapply(dots, \(x) inherits(x, "Matrix") | is.matrix(x), logical(1))
+  is_mat <- vapply(dots, \(x) inherits(x, "Matrix") | is.matrix(x), logical(1L))
   mats <- purrr::map(dots[is_mat], \(x) {
     exec(
       AggregateDups,
@@ -187,7 +187,7 @@ SCIntegrate.matrix <- function(..., .quos = NULL) {
     current_samples <- colnames(mat)
 
     expanded_mat <- Matrix::Matrix(
-      0,
+      0L,
       nrow = length(all_genes),
       ncol = ncol(mat),
       sparse = TRUE
@@ -229,14 +229,14 @@ SCIntegrate.Seurat <- function(
     SigBridgeRUtils::getFuncOption("verbose") %||%
     TRUE
 
-  is_seurat <- vapply(dots, \(x) inherits(x, "Seurat"), logical(1))
+  is_seurat <- vapply(dots, \(x) inherits(x, "Seurat"), logical(1L))
 
   # * merge
   if (verbose) {
     cli::cli_text("Start merging Seurat objects")
   }
   first_seurat <- dots[[1L]]
-  other_seurat <- unlist(dots[is_seurat][-1])
+  other_seurat <- unlist(dots[is_seurat][-1L])
   merged <- merge(
     x = first_seurat,
     y = other_seurat,
@@ -261,7 +261,7 @@ SCIntegrate.Seurat <- function(
   steps_to_run <- steps[steps %chin% names(SCPreProcessStrategy)] # letters
 
   unknown <- setdiff(steps, steps_to_run)
-  if (length(unknown) != 0) {
+  if (length(unknown) != 0L) {
     Abort(
       "[{.fun SCIntegrate.Seurat}]: Unknown pipeline steps: {.val {unknown}}",
       "Current pipeline registered: {.val {names(SCPreProcessStrategy)}}",
@@ -322,7 +322,7 @@ get_names_4_ids <- function(..., .quoses = NULL) {
   }
   unnamed <- which(var_names == "")
 
-  if (length(unnamed) > 0) {
+  if (length(unnamed) > 0L) {
     var_names[unnamed] <- purrr::map_chr(quoses[unnamed], rlang::as_label)
   }
 

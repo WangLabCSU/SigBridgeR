@@ -10,7 +10,7 @@
 #'   Forwarded from [DoSCIPAC()].
 #' @param hvg,do_pca_sc,n_pc,sc_batch_col,resolution,ela_net_alpha,bt_size
 #'   Forwarded from [DoSCIPAC()].
-#' @param ncore,ci_alpha,nfold Forwarded from [DoSCIPAC()].
+#' @param ncore,ci_alpha,nfold,sc_data Forwarded from [DoSCIPAC()].
 #' @param ... Additional dots forwarded from [DoSCIPAC()].
 #'
 #' @return A named list with elements: `phenotype_class`, `family`, `verbose`,
@@ -31,6 +31,7 @@ ValidateSCIPACParams <- function(
   ncore,
   ci_alpha,
   nfold,
+  sc_data,
   ...
 ) {
   # -- package checks -------------------------------------------------------
@@ -41,17 +42,17 @@ ValidateSCIPACParams <- function(
   })
 
   # -- input validation -----------------------------------------------------
-  purrr::walk(
-    .x = c(hvg, n_pc, bt_size, ncore, nfold),
-    .f = chk::chk_integer
-  )
-  purrr::walk(
-    .x = c(ela_net_alpha, ci_alpha),
-    .f = chk::chk_numeric
-  )
+  chk::chk_integer(hvg)
+  chk::chk_integer(n_pc)
+  chk::chk_integer(bt_size)
+  chk::chk_integer(ncore)
+  chk::chk_integer(nfold)
+  chk::chk_numeric(ela_net_alpha)
+  chk::chk_numeric(ci_alpha)
   chk::chk_numeric(resolution)
   chk::chk_chr(label_type)
   chk::chk_chr(phenotype_class)
+  chk::chk_is(sc_data, "Seurat")
   if (!is.null(sc_batch_col)) {
     chk::chk_character(sc_batch_col)
   }
@@ -113,7 +114,7 @@ ValidateSCIPACParams <- function(
 #'
 #' @param matched_bulk Matrix or data frame of preprocessed bulk RNA-seq expression
 #'   data (genes x samples). Column names must match names/IDs in \code{phenotype}.
-#' @param sc_data A matrix/Matrix (genes x cells) or a Seurat object containing
+#' @param sc_data A Seurat object containing
 #'   scRNA-seq data to be screened.
 #' @param phenotype Phenotype data, either:
 #'   * Named vector (names match `matched_bulk` columns)
@@ -297,6 +298,8 @@ DoSCIPAC <- function(
     ...
   )
 
+  set.seed(p$seed)
+
   if (p$verbose) {
     ts_cli$cli_alert_info(cli::col_green("Start SCIPAC screening"))
     ts_cli$cli_alert_info("Find common variable geme (hvg = {.val {hvg}})")
@@ -339,7 +342,7 @@ DoSCIPAC <- function(
 
   phenotype <- switch(
     p$family,
-    "binomial" = ,
+    "binomial" = as.numeric(phenotype),
     "gaussian" = as.factor(phenotype),
     "cox" = as.matrix(phenotype)
   )
@@ -359,9 +362,6 @@ DoSCIPAC <- function(
     CI.alpha = ci_alpha,
     nfold = nfold
   )
-
-  colnames(SCIPAC_res) <- paste0("SCIPAC_", colnames(SCIPAC_res))
-  SCIPAC_res <- dplyr::rename(SCIPAC_res, SCIPAC = "SCIPAC_sig")
 
   modified_sc_data <- SeuratObject::AddMetaData(
     object = sc_data,

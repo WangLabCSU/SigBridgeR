@@ -170,10 +170,10 @@ SCPreProcess.default <- function(
   steps_to_run <- steps[steps %chin% names(SCPreProcessStrategy)] # a vector
 
   unknown <- setdiff(steps, steps_to_run)
-  if (length(unknown) != 0) {
+  if (length(unknown) != 0L) {
     Abort("[{.fun SCPreProcess}]: Unknown pipeline steps: {.val {unknown}}", type = "[METHOD ERROR]")
   }
-  if (steps_to_run[[1]] == "o" && !is.null(sc)) {
+  if (steps_to_run[[1L]] == "o" && !is.null(sc)) {
     sc_seurat <- if (!is.null(params$o$counts)) {
       cli::cli_warn(
         "[{.fun SCPreProcess}]: The parameter `params$o$counts` is not NULL, `sc` will be ignored."
@@ -194,7 +194,7 @@ SCPreProcess.default <- function(
     if (verbose) {
       cli::cli_inform("Use custom method to create Seurat object")
     }
-    letter <- steps_to_run[[1]]
+    letter <- steps_to_run[[1L]]
 
     if (!is.null(sc)) {
       cli::cli_warn(
@@ -220,12 +220,12 @@ SCPreProcess.default <- function(
   if (is_filtering(data_filter)) {
     # first 2 numbers will be used
     chk::chk_lt(
-      data_filter$nFeature_thresh[1],
-      data_filter$nFeature_thresh[2]
+      data_filter$nFeature_thresh[1L],
+      data_filter$nFeature_thresh[2L]
     )
     chk::chk_lt(
-      data_filter$nCount_thresh[1],
-      data_filter$nCount_thresh[2]
+      data_filter$nCount_thresh[1L],
+      data_filter$nCount_thresh[2L]
     )
     sc_seurat <- QCFilter(
       seurat_obj = sc_seurat,
@@ -235,7 +235,7 @@ SCPreProcess.default <- function(
   }
 
   # the first step is CreateSeuratObject("o")
-  for (step in 2:length(steps_to_run)) {
+  for (step in 2L:length(steps_to_run)) {
     # step: an index
     letter <- steps_to_run[[step]]
     step_fun <- SCPreProcessStrategy[[letter]] # function
@@ -304,12 +304,12 @@ SCPreProcess.R6 <- function(
   steps_to_run <- steps[steps %chin% names(SCPreProcessStrategy)] # a vector
 
   unknown <- setdiff(steps, steps_to_run)
-  if (length(unknown) != 0) {
+  if (length(unknown) != 0L) {
     cli::cli_warn(
       "[{.fun SCPreProcess}]: Unknown pipeline steps: {.val {unknown}}"
     )
   }
-  if (steps_to_run[[1]] != "o") {
+  if (steps_to_run[[1L]] != "o") {
     Abort(
       "[{.fun SCPreProcess}]: The first step of {.arg pipeline} must be 'o' for CreateSeuratObject",
       type = "[METHOD ERROR]"
@@ -339,17 +339,17 @@ SCPreProcess.R6 <- function(
       chk::chk_data(params$o$meta.data)
       seurat <- SeuratObject::AddMetaData(seurat, params$o$meta.data)
     }
-    if (params$o$min.cells != 0) {
+    if (params$o$min.cells != 0L) {
       chk::chk_whole_number(params$o$min.cells)
       gene_cell_counts <- SigBridgeRUtils::rowSums3(
-        SeuratObject::LayerData(seurat, layer = "counts") > 0
+        SeuratObject::LayerData(seurat, layer = "counts") > 0L
       )
       seurat <- seurat[gene_cell_counts >= params$o$min.cells, ]
     }
-    if (params$o$min.features != 0) {
+    if (params$o$min.features != 0L) {
       chk::chk_whole_number(params$o$min.features)
       cell_gene_counts <- SigBridgeRUtils::colSums3(
-        SeuratObject::LayerData(seurat, layer = "counts") > 0
+        SeuratObject::LayerData(seurat, layer = "counts") > 0L
       )
       seurat <- seurat[, cell_gene_counts >= params$o$min.features]
     }
@@ -376,7 +376,7 @@ SCPreProcess.R6 <- function(
       !!!params$o
     )
 
-    if (ncol(sc$var) != 0) {
+    if (ncol(sc$var) != 0L) {
       seurat <- AddMetaFeature(seurat, sc$var)
     }
     seurat
@@ -401,12 +401,12 @@ SCPreProcess.R6 <- function(
   if (is_filtering(data_filter)) {
     # first 2 numbers will be used
     chk::chk_lt(
-      data_filter$nFeature_thresh[1],
-      data_filter$nFeature_thresh[2]
+      data_filter$nFeature_thresh[1L],
+      data_filter$nFeature_thresh[2L]
     )
     chk::chk_lt(
-      data_filter$nCount_thresh[1],
-      data_filter$nCount_thresh[2]
+      data_filter$nCount_thresh[1L],
+      data_filter$nCount_thresh[2L]
     )
     sc_seurat <- QCFilter(
       seurat_obj = sc_seurat,
@@ -420,7 +420,7 @@ SCPreProcess.R6 <- function(
 
   # the first stop is CreateSeuratObject("o")
   # step: an index
-  for (step in 2:length(steps_to_run)) {
+  for (step in 2L:length(steps_to_run)) {
     # step_fun: a function
     step_fun <- execution_queue[[step]]
     sc_seurat <- exec(

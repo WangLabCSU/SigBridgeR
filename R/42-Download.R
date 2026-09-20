@@ -6,7 +6,7 @@ fileDownload <- function(
   quiet = !SigBridgeRUtils::getFuncOption("verbose"),
   mode = "wb",
   retries = 3L,
-  timeout = 600
+  timeout = 600L
 ) {
   check_installed("curl")
   dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
@@ -21,7 +21,7 @@ fileDownload <- function(
 
   h <- curl::new_handle(
     followlocation = TRUE,
-    connecttimeout = 20,
+    connecttimeout = 20L,
     timeout = timeout,
     useragent = sprintf(
       "R/%s R (%s)",
@@ -81,7 +81,7 @@ fileDownload <- function(
       )
     }
 
-    Sys.sleep(min(2^i, 10))
+    Sys.sleep(min(2L^i, 10L))
   }
 
   stop(

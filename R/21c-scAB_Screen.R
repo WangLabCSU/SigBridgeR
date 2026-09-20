@@ -207,7 +207,7 @@ DoscAB <- function(
       assay = p$assay
     )
 
-    if (any(scAB_obj$X < 0)) {
+    if (any(scAB_obj$X < 0L)) {
       cli::cli_warn(
         "Found negative values in `X` after correlation, truncating to 0"
       )
@@ -255,8 +255,8 @@ DoscAB <- function(
   if (
     is.null(alpha) ||
       is.null(alpha_2) ||
-      length(alpha) > 1 ||
-      length(alpha_2) > 1
+      length(alpha) > 1L ||
+      length(alpha_2) > 1L
   ) {
     para_list <- scAB::select_alpha.optimized(
       Object = scAB_obj,
@@ -280,7 +280,7 @@ DoscAB <- function(
     alpha = alpha,
     alpha_2 = alpha_2,
     maxiter = maxiter,
-    convergence_threshold = 1e-05
+    convergence_threshold = 1e-05L
   )
 
   if (p$verbose) {

@@ -6,7 +6,7 @@ has_pattern <- function(qc_list) {
   if (!is.list(qc_list)) {
     return(FALSE)
   }
-  !is.null(qc_list) && !is.null(qc_list$pattern) && length(qc_list$pattern) > 0
+  !is.null(qc_list) && !is.null(qc_list$pattern) && length(qc_list$pattern) > 0L
 }
 
 #' @keywords internal
@@ -82,7 +82,7 @@ GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
 
   existing_cols <- qc_cols[qc_cols %chin% colnames(meta)]
 
-  if (length(existing_cols) == 0) {
+  if (length(existing_cols) == 0L) {
     cli::cli_warn(
       "[{.fun GetVars2Regress}]: No matching QC columns found in seurat@meta.data Returning {.val NULL}."
     )
@@ -95,19 +95,19 @@ GetVars2Regress <- function(seurat_obj, verbose = TRUE) {
     existing_cols,
     function(col) {
       x <- meta[[col]]
-      !all(is.na(x)) && stats::var(x, na.rm = TRUE) > 0
+      !all(is.na(x)) && stats::var(x, na.rm = TRUE) > 0L
     },
     logical(1L)
   )]
 
-  if (length(valid_cols) == 0) {
+  if (length(valid_cols) == 0L) {
     cli::cli_warn(
       "[{.fun GetVars2Regress}]: All QC columns are constant, skipping regression. Returning {.val NULL}."
     )
     return(NULL)
   }
 
-  if (verbose && length(valid_cols) > 0) {
+  if (verbose && length(valid_cols) > 0L) {
     cli::cli_text(
       "Using QC columns {valid_cols} for regression in {.fun SCTransform}"
     )
@@ -165,7 +165,7 @@ FilterTumorCell <- function(
     )
   }
 
-  labels <- obj[[column2only_tumor]][[1]]
+  labels <- obj[[column2only_tumor]][[1L]]
   tumor_cells <- grepl(
     "^[Tt]umo.?r|[Cc]ancer[Mm]alignant|[Nn]eoplasm|[Tt]um|1",
     labels
@@ -301,7 +301,7 @@ QCFilter <- function(
   chk::chk_list(data_filter.thresh)
 
   defaults <- list(
-    assay = names(seurat_obj@assays)[[1]],
+    assay = names(seurat_obj@assays)[[1L]],
     nFeature_thresh = c(200L, 6000L),
     nCount_thresh = c(500L, 50000L),
     percent.mt = 20L,
@@ -318,8 +318,8 @@ QCFilter <- function(
   }
 
   # * Ensure nFeature_thresh is length-2 integer
-  chk::chk_length(thresh$nFeature_thresh, 2)
-  chk::chk_length(thresh$nCount_thresh, 2)
+  chk::chk_length(thresh$nFeature_thresh, 2L)
+  chk::chk_length(thresh$nCount_thresh, 2L)
 
   thresh$nFeature_thresh <- as.integer(thresh$nFeature_thresh)
   thresh$nCount_thresh <- as.integer(thresh$nCount_thresh)
@@ -328,13 +328,13 @@ QCFilter <- function(
   # which is used to subset the Seurat object
   nfeat_condition <- expr(
     !!as.symbol(paste0("nFeature_", thresh$assay)) >
-      !!thresh$nFeature_thresh[1] &
+      !!thresh$nFeature_thresh[1L] &
       !!as.symbol(paste0("nFeature_", thresh$assay)) <
-        !!thresh$nFeature_thresh[2]
+        !!thresh$nFeature_thresh[2L]
   )
   ncount_condition <- expr(
-    !!as.symbol(paste0("nCount_", thresh$assay)) > !!thresh$nCount_thresh[1] &
-      !!as.symbol(paste0("nCount_", thresh$assay)) < !!thresh$nCount_thresh[2]
+    !!as.symbol(paste0("nCount_", thresh$assay)) > !!thresh$nCount_thresh[1L] &
+      !!as.symbol(paste0("nCount_", thresh$assay)) < !!thresh$nCount_thresh[2L]
   )
 
   # see `QCPatternDetect()` for the column names generation
@@ -342,13 +342,13 @@ QCFilter <- function(
   if ("qc_colnames" %chin% names(seurat_obj@misc)) {
     qc_colnames <- unlist(seurat_obj@misc$qc_colnames, use.names = FALSE)
   }
-  if (is.null(qc_colnames) || length(qc_colnames) == 0) {
-    qc_colnames <- character(0)
+  if (is.null(qc_colnames) || length(qc_colnames) == 0L) {
+    qc_colnames <- character(0L)
   }
 
   # --- Validate QC columns and build conditions -------------------------------
   get_qc_condition <- function(qc_colnames, meta, thresh) {
-    if (length(qc_colnames) == 0) {
+    if (length(qc_colnames) == 0L) {
       return(NULL)
     }
 
@@ -358,11 +358,11 @@ QCFilter <- function(
       X = present_cols,
       FUN = function(col) {
         x <- meta[[col]]
-        has_vals <- any(!is.na(x) & x >= 0, na.rm = TRUE)
+        has_vals <- any(!is.na(x) & x >= 0L, na.rm = TRUE)
         non_0_var <- if (is_installed("cheapr")) {
-          cheapr::var_(x, na.rm = TRUE) > 0
+          cheapr::var_(x, na.rm = TRUE) > 0L
         } else {
-          stats::var(x, na.rm = TRUE) > 0
+          stats::var(x, na.rm = TRUE) > 0L
         }
 
         has_vals & non_0_var
@@ -370,7 +370,7 @@ QCFilter <- function(
       FUN.VALUE = logical(1L)
     )]
 
-    if (length(valid_cols) == 0) {
+    if (length(valid_cols) == 0L) {
       return(NULL)
     }
 
@@ -390,7 +390,7 @@ QCFilter <- function(
   qc_conds <- get_qc_condition(qc_colnames, meta, thresh)
 
   all_conds <- c(list(nfeat_condition, ncount_condition), qc_conds)
-  if (length(all_conds) == 0) {
+  if (length(all_conds) == 0L) {
     Abort(
       "[{.fun QCFilter}]: No valid filtering conditions generated.",
       type = "[DATA ERROR]"
@@ -417,7 +417,7 @@ QCFilter <- function(
   if (verbose) {
     n_kept <- length(keep_cells)
     n_total <- nrow(meta)
-    pct_off <- if (n_total > 0) 100 * (1 - n_kept / n_total) else 0
+    pct_off <- if (n_total > 0L) 100L * (1L - n_kept / n_total) else 0L
     cli::cli_text(sprintf(
       "Kept  %d/%d (%.2f%% off) cells after filtering",
       n_kept,
@@ -466,7 +466,7 @@ Pattern2Colname <- function(pat) {
 
   if (grepl("\\|", pat_lower)) {
     # Handle combined patterns (with | separator)
-    parts <- strsplit(pat_lower, "|", fixed = TRUE)[[1]]
+    parts <- strsplit(pat_lower, "|", fixed = TRUE)[[1L]]
     names <- purrr::map_chr(parts, function(p) {
       dplyr::case_when(
         grepl("mt", p) ~ "mt",

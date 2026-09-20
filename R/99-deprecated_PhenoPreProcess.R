@@ -135,12 +135,12 @@ PhenoPreProcess <- function(
   is_phenotype_2d <- is_2d(phenotype)
 
   dots <- list2(...)
-  if (length(dots) > 0) {
+  if (length(dots) > 0L) {
     phenotype <- PhenoMap(phenotype, ...)
 
     if (is_phenotype_2d) {
-      conditions <- lapply(dots, `[[`, 2)
-      select <- all.vars(conditions[[1]])[1]
+      conditions <- lapply(dots, `[[`, 2L)
+      select <- all.vars(conditions[[1L]])[1L]
     }
   }
 
@@ -314,7 +314,7 @@ handle_case_1 <- function(
     time_col <- grepv("time", possible_cols)
     status_col <- grepv("status|censor|event", possible_cols)
 
-    if (length(time_col) > 1 || length(status_col) > 1) {
+    if (length(time_col) > 1L || length(status_col) > 1L) {
       Abort(
         "Unable to guess time and status columns, multiple columns found",
         tips = "Try specify them",
@@ -336,7 +336,7 @@ handle_case_1 <- function(
   }
 
   # "binary", "continuous"
-  if (ncol(phenotype) == 1) {
+  if (ncol(phenotype) == 1L) {
     col_val_count <- col_count(phenotype, 1L)
     if (phenotype_class == "binary" && col_val_count > 2L) {
       Abort(
@@ -358,19 +358,19 @@ handle_case_1 <- function(
       Abort("Only one unique value found", type = "[DATA ERROR]")
     }
 
-    col_val_class <- col_class(phenotype, 1)
+    col_val_class <- col_class(phenotype, 1L)
     if (col_val_class == "character") {
       Abort("Must be numeric", type = "[TYPE ERROR]")
     } else if (col_val_class == "logical") {
       return(stats::setNames(
-        as.numeric(unlist(phenotype[sample_names, 1])),
+        as.numeric(unlist(phenotype[sample_names, 1L])),
         sample_names
       ))
     }
 
     # vec
     return(stats::setNames(
-      unlist(phenotype[sample_names, 1]),
+      unlist(phenotype[sample_names, 1L]),
       sample_names
     ))
   } else {
@@ -403,7 +403,7 @@ handle_case_2 <- function(
   }
 
   # * survival
-  chk::chk_length(select, 2)
+  chk::chk_length(select, 2L)
   col_exists <- select %chin% colnames(phenotype)
   if (!all(col_exists)) {
     Abort(
@@ -431,8 +431,8 @@ handle_case_3 <- function(
     )
   }
 
-  val_class <- unique(vapply(phenotype, class, character(1)))
-  if (length(val_class) > 1 || val_class == "character") {
+  val_class <- unique(vapply(phenotype, class, character(1L)))
+  if (length(val_class) > 1L || val_class == "character") {
     Abort(
       "Invalid type of `phenotype`",
       tips = "Current type: {.cls {val_class}}, expect: {.cls {c('numeric', 'integer')}}",

@@ -107,7 +107,7 @@ RegisterScreenMethod <- function(
   is_fun <- vapply(
     X = dots,
     FUN = \(x) rlang::is_function(x),
-    FUN.VALUE = logical(1)
+    FUN.VALUE = logical(1L)
   )
   method_names <- get_names_4_ids(..., .quoses = rlang::enquos(...))[is_fun]
 

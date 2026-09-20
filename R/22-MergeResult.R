@@ -117,7 +117,7 @@ MergeResult <- function(
   args <- rlang::list2(...)
   ..vote_cols <- NULL # suppress checking NOTE
 
-  if (length(args) == 0) {
+  if (length(args) == 0L) {
     Abort("Input objects must be provided.", type = "[ARG ERROR]")
   }
   # Extract Seurat objects
@@ -137,7 +137,7 @@ MergeResult <- function(
   })
   seurat_objects <- Filter(Negate(is.null), seurat_objects)
 
-  if (length(seurat_objects) == 0) {
+  if (length(seurat_objects) == 0L) {
     Abort("No valid Seurat objects found in inputs.", type = "[TYPE ERROR]")
   }
 
@@ -150,7 +150,7 @@ MergeResult <- function(
     function(x, y) {
       duplicate_cols <- setdiff(intersect(names(x), names(y)), "cell_id")
 
-      if (length(duplicate_cols) > 0) {
+      if (length(duplicate_cols) > 0L) {
         y <- y[, !..duplicate_cols]
       }
 
@@ -194,7 +194,7 @@ MergeResult <- function(
   common_cells <- merged_meta$cell_id
   # check if all cells are present, ignore it if data are identical
   common_cells_len <- length(common_cells)
-  first_seurat_cells <- ncol(seurat_objects[[1]])
+  first_seurat_cells <- ncol(seurat_objects[[1L]])
   if (common_cells_len != first_seurat_cells) {
     cli::cli_warn(
       c(
@@ -205,7 +205,7 @@ MergeResult <- function(
       )
     )
 
-    merged_obj <- subset(seurat_objects[[1]], cells = common_cells)
+    merged_obj <- subset(seurat_objects[[1L]], cells = common_cells)
     merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
 
     # merge slots
@@ -223,13 +223,13 @@ MergeResult <- function(
     )
   } else {
     # all same, just use the first one as base
-    merged_obj <- seurat_objects[[1]]
+    merged_obj <- seurat_objects[[1L]]
     merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
   }
 
   # merge misc
   all_keys <- unique(unlist(lapply(seurat_objects, function(obj) {
-    if (!is.null(obj@misc)) names(obj@misc) else character(0)
+    if (!is.null(obj@misc)) names(obj@misc) else character(0L)
   })))
 
   misc_list <- stats::setNames(vector("list", length(all_keys)), all_keys)
@@ -243,9 +243,9 @@ MergeResult <- function(
       }
     })
 
-    values <- values[!vapply(X = values, FUN = is.null, FUN.VALUE = logical(1))]
+    values <- values[!vapply(X = values, FUN = is.null, FUN.VALUE = logical(1L))]
 
-    misc_list[[key]] <- if (length(values) == 1) values[[1]] else values
+    misc_list[[key]] <- if (length(values) == 1L) values[[1L]] else values
   }
 
   merged_obj <- AddMisc(merged_obj, misc_list, cover = TRUE)
@@ -271,7 +271,7 @@ GetSlotNames <- function(obj, slot_type) {
     "graphs" = names(obj@graphs),
     "reductions" = names(obj@reductions),
     "images" = names(obj@images),
-    character(0)
+    character(0L)
   )
 }
 
@@ -284,7 +284,7 @@ GetSlotNames <- function(obj, slot_type) {
 MergeSlot <- function(slot_type, merged_obj, seurat_objects, common_cells) {
   base_names <- GetSlotNames(merged_obj, slot_type)
   # The first object is the base object
-  for (i in seq_along(seurat_objects)[-1]) {
+  for (i in seq_along(seurat_objects)[-1L]) {
     current_obj <- seurat_objects[[i]]
     current_names <- GetSlotNames(current_obj, slot_type)
 
@@ -310,7 +310,7 @@ MergeSlot <- function(slot_type, merged_obj, seurat_objects, common_cells) {
           rownames(item),
           common_cells
         )
-        if (length(valid_cells) > 0) {
+        if (length(valid_cells) > 0L) {
           item <- item[valid_cells, ]
           merged_obj@reductions[[name]] <- item
         }

@@ -52,7 +52,7 @@ CountsToTPM <- function(counts, gene_length) {
     )
   }
 
-  if (any(!is.finite(gene_length) | gene_length <= 0)) {
+  if (any(!is.finite(gene_length) | gene_length <= 0L)) {
     Abort(
       "`gene_length` must contain positive finite gene lengths in bp.",
       type = "[INPUT ERROR]"

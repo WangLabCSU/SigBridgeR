@@ -59,7 +59,7 @@ RegisterSeuratMethod <- function(
   for (i in seq_len(length(dots))) {
     letter <- method_names[i]
 
-    if (nchar(letter) != 1) {
+    if (nchar(letter) != 1L) {
       Abort("Method key name must be a single character", type = "[VALUE ERROR]")
     }
 
@@ -74,10 +74,10 @@ RegisterSeuratMethod <- function(
     executor <- dots[[i]]
 
     executor <- if (is.character(executor)) {
-      parts <- strsplit(executor, "::", fixed = TRUE)[[1]]
-      if (length(parts) == 2) {
-        pkg <- parts[1]
-        fun_name <- parts[2]
+      parts <- strsplit(executor, "::", fixed = TRUE)[[1L]]
+      if (length(parts) == 2L) {
+        pkg <- parts[1L]
+        fun_name <- parts[2L]
         rlang::check_installed(pkg)
         getExportedValue(pkg, fun_name)
       } else {

@@ -267,7 +267,7 @@ DoPIPET <- function(
     }
 
     if (only_pos_marker) {
-      markers <- markers[markers$log2FoldChange > 0, ]
+      markers <- markers[markers$log2FoldChange > 0L, ]
     }
 
     # -- save mode: persist markers to cache --------------------------------

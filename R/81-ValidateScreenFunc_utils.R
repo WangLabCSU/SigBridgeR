@@ -60,11 +60,11 @@ validate_explain_speaker <- function(
   prefix_width <- cli::ansi_nchar(prefix)
 
   # 2. handle single-line messages
-  if (length(message) <= 1) {
+  if (length(message) <= 1L) {
     cli::cli_text(paste0(prefix, message))
     return(invisible(NULL))
   }
-  cli::cli_text(paste0(prefix, message[1]))
+  cli::cli_text(paste0(prefix, message[1L]))
 
   cli::cli_div(
     id = "validate_explain_speaker",
@@ -72,7 +72,7 @@ validate_explain_speaker <- function(
   )
   on.exit(cli::cli_end(id = "validate_explain_speaker"), add = TRUE)
 
-  for (msg in message[-1]) {
+  for (msg in message[-1L]) {
     cli::cli_ul(msg)
   }
 }

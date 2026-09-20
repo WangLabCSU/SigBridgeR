@@ -57,7 +57,7 @@
 IsCountsMatrix <- function(
   x,
   verbose = TRUE,
-  integer_tol = 1e-8,
+  integer_tol = 1e-8L,
   min_integer_fraction = 0.95
 ) {
   if (!is_2d(x)) {

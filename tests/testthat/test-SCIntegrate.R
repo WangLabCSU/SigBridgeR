@@ -4,7 +4,7 @@
 new_test_matrix <- function(n_genes = 10L, n_cells = 5L, seed = 42L) {
   withr::local_seed(seed)
   matrix(
-    rpois(n_genes * n_cells, 5),
+    rpois(n_genes * n_cells, 5L),
     nrow = n_genes,
     dimnames = list(
       paste0("Gene", seq_len(n_genes)),
@@ -31,7 +31,7 @@ describe("SCIntegrate - dispatch", {
 
   it("aborts for unsupported class input", {
     expect_error(
-      SCIntegrate(list(a = 1)),
+      SCIntegrate(list(a = 1L)),
       "No implementation for class"
     )
   })
@@ -44,7 +44,7 @@ describe("SCIntegrate.matrix", {
     mat1 <- new_test_matrix(10L, 5L)
     mat2 <- new_test_matrix(10L, 6L)
     # Shift gene names so there's partial overlap
-    rownames(mat2) <- paste0("Gene", 6:15)
+    rownames(mat2) <- paste0("Gene", 6L:15L)
 
     integrated <- SCIntegrate(mat1, mat2)
 
@@ -109,8 +109,8 @@ describe("SCIntegrate.matrix", {
 
     integrated <- SCIntegrate(SampleA = mat1, SampleB = mat2)
 
-    expect_true(all(grepl("^SampleA_", colnames(integrated)[1:3])))
-    expect_true(all(grepl("^SampleB_", colnames(integrated)[4:5])))
+    expect_true(all(grepl("^SampleA_", colnames(integrated)[1L:3L])))
+    expect_true(all(grepl("^SampleB_", colnames(integrated)[4L:5L])))
   })
 
   it("infers prefixes from variable names when unnamed", {
@@ -119,8 +119,8 @@ describe("SCIntegrate.matrix", {
 
     integrated <- SCIntegrate(mat1, mat2)
 
-    expect_true(all(grepl("^mat1_", colnames(integrated)[1:3])))
-    expect_true(all(grepl("^mat2_", colnames(integrated)[4:5])))
+    expect_true(all(grepl("^mat1_", colnames(integrated)[1L:3L])))
+    expect_true(all(grepl("^mat2_", colnames(integrated)[4L:5L])))
   })
 
   it("fills missing gene values with 0 (sparse Matrix)", {
@@ -132,32 +132,32 @@ describe("SCIntegrate.matrix", {
     integrated <- SCIntegrate(mat1, mat2)
 
     # Gene A only in mat1 -> present in cols 1-2, 0 in cols 3-4
-    expect_equal(as.numeric(integrated["A", 1:2]), as.numeric(mat1["A", ]))
-    expect_equal(as.numeric(integrated["A", 3:4]), c(0, 0))
+    expect_equal(as.numeric(integrated["A", 1L:2L]), as.numeric(mat1["A", ]))
+    expect_equal(as.numeric(integrated["A", 3L:4L]), c(0L, 0L))
     # Gene D only in mat2 -> 0 in cols 1-2, present in cols 3-4
-    expect_equal(as.numeric(integrated["D", 1:2]), c(0, 0))
-    expect_equal(as.numeric(integrated["D", 3:4]), as.numeric(mat2["D", ]))
+    expect_equal(as.numeric(integrated["D", 1L:2L]), c(0L, 0L))
+    expect_equal(as.numeric(integrated["D", 3L:4L]), as.numeric(mat2["D", ]))
   })
 
   it("preserves data integrity after integration", {
     mat1 <- matrix(
-      c(1, 2, 3, 4),
-      nrow = 2,
+      c(1L, 2L, 3L, 4L),
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("C1", "C2"))
     )
     mat2 <- matrix(
-      c(5, 6, 7, 8),
-      nrow = 2,
+      c(5L, 6L, 7L, 8L),
+      nrow = 2L,
       dimnames = list(c("G1", "G2"), c("C3", "C4"))
     )
 
     integrated <- SCIntegrate(mat1, mat2)
 
     # colnames get prefixed with argument name
-    expect_equal(as.numeric(integrated["G1", "mat1_C1"]), 1)
-    expect_equal(as.numeric(integrated["G2", "mat1_C2"]), 4)
-    expect_equal(as.numeric(integrated["G1", "mat2_C3"]), 5)
-    expect_equal(as.numeric(integrated["G2", "mat2_C4"]), 8)
+    expect_equal(as.numeric(integrated["G1", "mat1_C1"]), 1L)
+    expect_equal(as.numeric(integrated["G2", "mat1_C2"]), 4L)
+    expect_equal(as.numeric(integrated["G1", "mat2_C3"]), 5L)
+    expect_equal(as.numeric(integrated["G2", "mat2_C4"]), 8L)
   })
 })
 
@@ -167,13 +167,13 @@ describe("SCIntegrate.data.frame", {
   it("integrates two data.frame inputs", {
     # data.frame: rows = genes (rownames), columns = samples
     df1 <- data.frame(
-      SampleA = 1:3,
-      SampleB = 4:6,
+      SampleA = 1L:3L,
+      SampleB = 4L:6L,
       row.names = c("Gene1", "Gene2", "Gene3")
     )
     df2 <- data.frame(
-      SampleC = 7:9,
-      SampleD = 10:12,
+      SampleC = 7L:9L,
+      SampleD = 10L:12L,
       row.names = c("Gene1", "Gene3", "Gene4")
     )
 
@@ -188,8 +188,8 @@ describe("SCIntegrate.data.frame", {
 
   it("returns a matrix with NA-filled missing genes", {
     # gene A only in df1, gene B only in df2
-    df1 <- data.frame(S1 = 1:2, row.names = c("A", "C"))
-    df2 <- data.frame(S2 = 3:4, row.names = c("B", "C"))
+    df1 <- data.frame(S1 = 1L:2L, row.names = c("A", "C"))
+    df2 <- data.frame(S2 = 3L:4L, row.names = c("B", "C"))
 
     integrated <- SCIntegrate(df1, df2)
 
@@ -200,8 +200,8 @@ describe("SCIntegrate.data.frame", {
   })
 
   it("respects named arguments as prefixes in colnames", {
-    df1 <- data.frame(S1 = 1:2, row.names = c("X", "Y"))
-    df2 <- data.frame(S2 = 3:4, row.names = c("X", "Y"))
+    df1 <- data.frame(S1 = 1L:2L, row.names = c("X", "Y"))
+    df2 <- data.frame(S2 = 3L:4L, row.names = c("X", "Y"))
 
     integrated <- SCIntegrate(First = df1, Second = df2)
 
@@ -248,7 +248,7 @@ describe("SCIntegrate.Seurat - validation", {
     seu2 <- new_test_seurat(5L, 5L)
 
     expect_error(
-      SCIntegrate(seu1, seu2, pipeline = 123),
+      SCIntegrate(seu1, seu2, pipeline = 123L),
     )
   })
 })
@@ -268,8 +268,8 @@ describe("SCIntegrate.Seurat - integration", {
       seu2,
       method = Seurat::CCAIntegration,
       pipeline = "nsvpi",
-      dims = 1:5,
-      k.weight = 30
+      dims = 1L:5L,
+      k.weight = 30L
     )
 
     expect_s4_class(integrated, "Seurat")
@@ -292,8 +292,8 @@ describe("SCIntegrate.Seurat - integration", {
       )
     )
 
-    expect_true(all(grepl("^Batch1_", colnames(merged)[1:5])))
-    expect_true(all(grepl("^Batch2_", colnames(merged)[6:10])))
+    expect_true(all(grepl("^Batch1_", colnames(merged)[1L:5L])))
+    expect_true(all(grepl("^Batch2_", colnames(merged)[6L:10L])))
   })
 
   it("handles merge.data and merge.dr parameters", {
@@ -337,14 +337,14 @@ describe("SCIntegrate.Seurat - integration", {
 
 describe("get_names_4_ids", {
   it("returns named arguments as-is", {
-    result <- get_names_4_ids(a = 1, b = 2, c = 3)
+    result <- get_names_4_ids(a = 1L, b = 2L, c = 3L)
 
     expect_equal(result, c("a", "b", "c"))
   })
 
   it("infers names from variable names for unnamed arguments", {
-    foo <- 1
-    bar <- 2
+    foo <- 1L
+    bar <- 2L
 
     result <- get_names_4_ids(foo, bar)
 
@@ -352,8 +352,8 @@ describe("get_names_4_ids", {
   })
 
   it("handles mixed named and unnamed arguments", {
-    x <- 1
-    result <- get_names_4_ids(a = 1, x, c = 3)
+    x <- 1L
+    result <- get_names_4_ids(a = 1L, x, c = 3L)
 
     expect_equal(result, c("a", "x", "c"))
   })
@@ -361,12 +361,12 @@ describe("get_names_4_ids", {
   it("returns character(0) for empty input", {
     result <- get_names_4_ids()
 
-    expect_equal(result, character(0))
+    expect_equal(result, character(0L))
   })
 
   it("accepts .quoses parameter for unnamed args", {
-    x <- 1
-    y <- 2
+    x <- 1L
+    y <- 2L
     quos <- rlang::quos(x, y)
     result <- get_names_4_ids(x, y, .quoses = quos)
 
@@ -374,17 +374,17 @@ describe("get_names_4_ids", {
   })
 
   it("uses .quoses for unnamed arguments when length matches dots", {
-    x <- 1
+    x <- 1L
     # .quoses must have same length as dots (2 elements: a named, x unnamed)
     quos <- rlang::quos(a, x)
-    result <- get_names_4_ids(a = 1, x, .quoses = quos)
+    result <- get_names_4_ids(a = 1L, x, .quoses = quos)
 
     # Named arg "a" takes precedence; unnamed uses quosure label "x"
     expect_equal(result, c("a", "x"))
   })
 
   it("infers names correctly for single unnamed argument", {
-    my_var <- 42
+    my_var <- 42L
     result <- get_names_4_ids(my_var)
 
     expect_equal(result, "my_var")

@@ -109,7 +109,7 @@ ScreenFractionPlot <- function(
 ) {
   chk::chk_is(screened_seurat, "Seurat")
   chk::chk_character(group_by)
-  chk::chk_length(group_by, 1)
+  chk::chk_length(group_by, 1L)
   chk::chk_flag(show_null)
   if (!is.null(plot_color)) {
     chk::chk_vector(plot_color)
@@ -177,7 +177,7 @@ ScreenFractionPlot <- function(
       dplyr::mutate(Total = sum(`n`)) |>
       dplyr::ungroup() |>
       dplyr::mutate(
-        Fraction = ifelse(Total == 0, 0, `n` / Total)
+        Fraction = ifelse(Total == 0L, 0L, `n` / Total)
       )
 
     plot_order <- stats_df |>
@@ -190,7 +190,7 @@ ScreenFractionPlot <- function(
       glue::glue("{single_screen_type}_type"),
       names(screened_seurat@misc),
       value = TRUE
-    )[1]]]
+    )[1L]]]
 
     if (is.null(label_type)) {
       label_type <- single_screen_type
@@ -198,14 +198,14 @@ ScreenFractionPlot <- function(
 
     # Filter null records
     plot_df <- if (!show_null) {
-      dplyr::filter(stats_df, Fraction > 0)
+      dplyr::filter(stats_df, Fraction > 0L)
     } else {
       stats_df
     }
 
     # Create plot title
     current_title <- if (
-      length(plot_title) > 1 && length(plot_title) == length(screen_type)
+      length(plot_title) > 1L && length(plot_title) == length(screen_type)
     ) {
       plot_title[which(screen_type == single_screen_type)]
     } else if (title_suffix != "") {
@@ -225,8 +225,8 @@ ScreenFractionPlot <- function(
       ggplot2::geom_col(position = "stack", width = stack_width) +
       ggplot2::scale_y_continuous(
         labels = function(x) paste0(round(x * 100L, 0L), "%"),
-        expand = c(0, 0),
-        breaks = seq(0, 1, 0.1)
+        expand = c(0L, 0L),
+        breaks = seq(0L, 1L, 0.1)
       ) +
       ggplot2::scale_fill_manual(
         values = plot_color
@@ -241,8 +241,8 @@ ScreenFractionPlot <- function(
       ggplot2::theme(
         axis.text.x = ggplot2::element_text(
           angle = x_text_angle,
-          hjust = 1,
-          vjust = 1
+          hjust = 1L,
+          vjust = 1L
         ),
         axis.text = ggplot2::element_text(color = "black"),
         axis.line = ggplot2::element_line(linewidth = axis_linewidth),
@@ -253,7 +253,7 @@ ScreenFractionPlot <- function(
   }
 
   # Process single or multiple screen types
-  if (length(screen_type) == 1) {
+  if (length(screen_type) == 1L) {
     # Single screen type - maintain backward compatibility
     result <- SinglePlot(screen_type)
 
@@ -306,7 +306,7 @@ ScreenFractionPlot <- function(
 #' Otherwise, uses `expand.grid()` and `dplyr::left_join()` to achieve the same result.
 #'
 #' @keywords internal
-complete_counts <- function(data, ..., fill = list(n = 0)) {
+complete_counts <- function(data, ..., fill = list(n = 0L)) {
   cols <- rlang::enquos(...)
   col_names <- purrr::map_chr(cols, rlang::quo_name)
 

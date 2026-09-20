@@ -93,7 +93,7 @@ CheckNA <- function(data, max_print = 5L, ...) {
       positions = na_positions
     )
 
-    if (na_count == 0) {
+    if (na_count == 0L) {
       cli::cli_alert_success("No NA values found in the data")
       return(invisible(na_info))
     }

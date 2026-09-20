@@ -37,5 +37,5 @@ test_that("Compare computation accuracy", {
     "/data/resource/wanglab/GRCh37/gene_length_cpp_computed.qs2"
   )
 
-  expect_lt(max(gene_length$gene_length - gene_length_cpp$gene_length), 1e-6)
+  expect_lt(max(gene_length$gene_length - gene_length_cpp$gene_length), 1e-6L)
 })

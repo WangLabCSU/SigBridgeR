@@ -259,15 +259,15 @@ SIDISHParamSet <- function(sidish_params = list()) {
     phase1_layer_dims = c(512L, 128L), # R vector -> py list
     phase1_batch_size = 256L,
     phase1_optimizer = "Adam",
-    phase1_lr = 1e-4,
-    phase1_lr_3 = 1e-4,
+    phase1_lr = 1e-4L,
+    phase1_lr_3 = 1e-4L,
     phase1_dropout = 0L,
     phase1_type = "Dense", # or "Normal"
 
     # Phase 2: Deep Cox training
     phase2_epochs = 500L,
     phase2_hidden = 128L,
-    phase2_lr = 1e-4,
+    phase2_lr = 1e-4L,
     phase2_dropout = 0L,
     phase2_test_size = 0.2,
     phase2_batch_size_bulk = 256L,

@@ -44,7 +44,7 @@ PhenoMap <- function(data, ..., .default = NA) {
   check_installed("dplyr")
   rules <- list2(...)
 
-  if (length(rules) == 0) {
+  if (length(rules) == 0L) {
     Abort(
       "Condition is empty",
       tips = "Format e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}",
@@ -52,7 +52,7 @@ PhenoMap <- function(data, ..., .default = NA) {
     )
   }
 
-  if (!all(vapply(X = rules, FUN = is.call, FUN.VALUE = logical(1)))) {
+  if (!all(vapply(X = rules, FUN = is.call, FUN.VALUE = logical(1L)))) {
     Abort(
       "Not all conditions are formula",
       tips = "Use e.g.: {.code col > 10 ~ 1, col <= 10 ~ 0}",
@@ -60,10 +60,10 @@ PhenoMap <- function(data, ..., .default = NA) {
     )
   }
 
-  conditions <- lapply(rules, `[[`, 2)
-  values <- lapply(rules, `[[`, 3)
+  conditions <- lapply(rules, `[[`, 2L)
+  values <- lapply(rules, `[[`, 3L)
 
-  col <- all.vars(conditions[[1]])[1]
+  col <- all.vars(conditions[[1L]])[1L]
 
   if (!is_2d(data)) {
     original_names <- names(data)

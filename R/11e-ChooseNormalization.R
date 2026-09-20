@@ -123,7 +123,7 @@ ChooseNormalization <- function(
   is_seurat <- vapply(
     X = dots,
     FUN = \(x) inherits(x, "Seurat"),
-    FUN.VALUE = logical(1)
+    FUN.VALUE = logical(1L)
   )
   method_objects <- dots[is_seurat]
   method_names <- names(method_objects)[is_seurat]
@@ -148,8 +148,8 @@ ChooseNormalization <- function(
   set.seed(seed)
 
   # * subset seurat objects
-  if (is.null(subset_size) || length(subset_size) == 0) {
-    subset_size <- min(n_cells, 10000)
+  if (is.null(subset_size) || length(subset_size) == 0L) {
+    subset_size <- min(n_cells, 10000L)
 
     if (verbose) {
       cli::cli_alert_info("Using {subset_size} cells")
@@ -209,25 +209,25 @@ ChooseNormalization <- function(
   ]
 
   data.table::setorder(metrics, -composite_score)
-  metrics[, rank := 1:.N] # Rank methods
+  metrics[, rank := 1L:.N] # Rank methods
 
   # ===== 6. Report results =====
   if (verbose) {
-    best_method <- metrics$method[1]
+    best_method <- metrics$method[1L]
 
     cli::cli_h3("Method Ranking (Composite Score)")
     cli::cli_text(paste0(
       "Top method: {.field {best_method}} "
     ))
 
-    purrr::walk(1:min(5, nrow(metrics)), function(i) {
+    purrr::walk(1L:min(5L, nrow(metrics)), function(i) {
       cli::cli_text(
         "{.strong [{i}]} {metrics$method[i]}: {.val {round(metrics$composite_score[i], 3)}}"
       )
     })
     # Highlight key differentiators
     best_metrics <- metrics[method == best_method]
-    runner_up <- if (nrow(metrics) > 1) metrics$method[2] else NULL
+    runner_up <- if (nrow(metrics) > 1L) metrics$method[2L] else NULL
 
     if (!is.null(runner_up)) {
       diff_vm <- abs(
@@ -315,7 +315,7 @@ ChooseNormalizationCheck <- function(
     }
   )
   # same cell number
-  if (length(unique(n_cells)) > 1) {
+  if (length(unique(n_cells)) > 1L) {
     Abort(
       "Seurat objects contain different cell counts. Ensure comparable subsets",
       tips = "Detected: {n_cells}",
@@ -328,8 +328,8 @@ ChooseNormalizationCheck <- function(
     x_name = c("variance_stability", "marker_signal", "dropout_robustness")
   )
   chk::chk_vector(weight)
-  chk::chk_length(weight, 3)
-  if (sum(weight) != 1) {
+  chk::chk_length(weight, 3L)
+  if (sum(weight) != 1L) {
     Abort("weight must sum to 1", type = "[VALUE ERROR]")
   }
 }
@@ -341,7 +341,7 @@ ExtractMetrics <- function(
   low_expressed_thresh = 0.2,
   method_name = character(),
   ground_truth_markers = NULL,
-  n_hvgs = 2000,
+  n_hvgs = 2000L,
   ...
 ) {
   dots <- list2(...)
@@ -372,7 +372,7 @@ ExtractMetrics <- function(
     )
     n_hvgs_detected <- length(hvgs_detected)
     hvgs <- utils::head(hvgs_detected, n_hvgs)
-    marker_retention <- if (length(hvgs) > 0) {
+    marker_retention <- if (length(hvgs) > 0L) {
       length(intersect(hvgs, all_markers)) / length(hvgs)
     } else {
       NA_real_
@@ -426,10 +426,10 @@ ChooseNormalizationViz <- function(metrics_df) {
       y = "Pearson correlation",
       x = NULL
     ) +
-    ggplot2::theme_minimal(base_size = 11) +
+    ggplot2::theme_minimal(base_size = 11L) +
     ggplot2::theme(
       legend.position = "none",
-      axis.text.x = ggplot2::element_text(angle = 30, hjust = 1, size = 10)
+      axis.text.x = ggplot2::element_text(angle = 30L, hjust = 1L, size = 10L)
     )
 
   # 2. Composite score radar (simplified bar version)
@@ -448,11 +448,11 @@ ChooseNormalizationViz <- function(metrics_df) {
       y = "Normalized score (0-1)",
       x = NULL
     ) +
-    ggplot2::theme_minimal(base_size = 11) +
+    ggplot2::theme_minimal(base_size = 11L) +
     ggplot2::theme(
       legend.position = "none",
-      axis.text.x = ggplot2::element_text(angle = 30, hjust = 1, size = 10)
+      axis.text.x = ggplot2::element_text(angle = 30L, hjust = 1L, size = 10L)
     )
 
-  patchwork::wrap_plots(vm_plot, score_plot, ncol = 2)
+  patchwork::wrap_plots(vm_plot, score_plot, ncol = 2L)
 }

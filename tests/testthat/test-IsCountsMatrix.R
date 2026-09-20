@@ -28,7 +28,7 @@
 # from the documented contract instead of hand-computed constants.
 ref_is_counts_matrix <- function(
   x,
-  integer_tol = 1e-8,
+  integer_tol = 1e-8L,
   min_integer_fraction = 0.95
 ) {
   x <- as.matrix(x)
@@ -40,14 +40,14 @@ ref_is_counts_matrix <- function(
   if (any(!is.finite(x))) {
     return(FALSE)
   }
-  if (any(x < 0)) {
+  if (any(x < 0L)) {
     return(FALSE)
   }
   if (mean(abs(x - round(x)) <= integer_tol) < min_integer_fraction) {
     return(FALSE)
   }
 
-  all(colSums(x) > 0)
+  all(colSums(x) > 0L)
 }
 
 # ---- accepted input ---------------------------------------------------------
@@ -55,9 +55,9 @@ ref_is_counts_matrix <- function(
 describe("IsCountsMatrix - accepted input", {
   it("accepts a typical bulk counts matrix", {
     counts <- matrix(
-      c(100, 200, 300, 150, 250, 350),
-      nrow = 3,
-      ncol = 2,
+      c(100L, 200L, 300L, 150L, 250L, 350L),
+      nrow = 3L,
+      ncol = 2L,
       dimnames = list(c("G1", "G2", "G3"), c("S1", "S2"))
     )
 
@@ -65,7 +65,7 @@ describe("IsCountsMatrix - accepted input", {
   })
 
   it("returns a single unnamed logical value", {
-    counts <- matrix(1:4, nrow = 2, ncol = 2)
+    counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
 
     result <- IsCountsMatrix(counts, verbose = FALSE)
 
@@ -75,14 +75,14 @@ describe("IsCountsMatrix - accepted input", {
   })
 
   it("accepts an integer matrix", {
-    counts <- matrix(1:4, nrow = 2, ncol = 2)
+    counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
 
     expect_type(counts, "integer")
     expect_true(IsCountsMatrix(counts, verbose = FALSE))
   })
 
   it("accepts a double matrix holding whole numbers", {
-    counts <- matrix(c(10, 20, 30, 40), nrow = 2, ncol = 2)
+    counts <- matrix(c(10L, 20L, 30L, 40L), nrow = 2L, ncol = 2L)
 
     expect_type(counts, "double")
     expect_true(IsCountsMatrix(counts, verbose = FALSE))
@@ -90,27 +90,27 @@ describe("IsCountsMatrix - accepted input", {
 
   it("accepts a logical matrix", {
     # A 0/1 matrix is still a valid count matrix.
-    counts <- matrix(c(TRUE, FALSE, TRUE, TRUE), nrow = 2, ncol = 2)
+    counts <- matrix(c(TRUE, FALSE, TRUE, TRUE), nrow = 2L, ncol = 2L)
 
     expect_true(IsCountsMatrix(counts, verbose = FALSE))
   })
 
   it("accepts a single gene or a single sample", {
-    expect_true(IsCountsMatrix(matrix(c(5, 7), nrow = 1), verbose = FALSE))
-    expect_true(IsCountsMatrix(matrix(c(5, 7, 11), ncol = 1), verbose = FALSE))
+    expect_true(IsCountsMatrix(matrix(c(5L, 7L), nrow = 1L), verbose = FALSE))
+    expect_true(IsCountsMatrix(matrix(c(5L, 7L, 11L), ncol = 1L), verbose = FALSE))
   })
 
   it("accepts a matrix with a small fraction of non-integer values", {
     # 4 non-integer values out of 100 -> integer fraction 0.96 >= 0.95.
-    counts <- matrix(rep(1, 100), nrow = 10, ncol = 10)
-    counts[1:4] <- c(0.5, 1.5, 2.5, 3.5)
+    counts <- matrix(rep(1L, 100L), nrow = 10L, ncol = 10L)
+    counts[1L:4L] <- c(0.5, 1.5, 2.5, 3.5)
 
     expect_true(IsCountsMatrix(counts, verbose = FALSE))
   })
 
   it("agrees with a base R reference implementation", {
-    withr::local_seed(42)
-    counts <- matrix(rpois(300, lambda = 50), nrow = 20, ncol = 15)
+    withr::local_seed(42L)
+    counts <- matrix(rpois(300L, lambda = 50L), nrow = 20L, ncol = 15L)
 
     expect_true(IsCountsMatrix(counts, verbose = FALSE))
     expect_equal(
@@ -126,9 +126,9 @@ describe("IsCountsMatrix - Matrix and data.frame input", {
   it("accepts a dgCMatrix", {
     skip_if_not_installed("Matrix")
     counts <- Matrix::Matrix(
-      c(100, 0, 200, 0, 300, 0),
-      nrow = 3,
-      ncol = 2,
+      c(100L, 0L, 200L, 0L, 300L, 0L),
+      nrow = 3L,
+      ncol = 2L,
       sparse = TRUE
     )
 
@@ -139,9 +139,9 @@ describe("IsCountsMatrix - Matrix and data.frame input", {
   it("accepts a dgeMatrix", {
     skip_if_not_installed("Matrix")
     counts <- Matrix::Matrix(
-      c(100, 200, 300, 150, 250, 350),
-      nrow = 3,
-      ncol = 2,
+      c(100L, 200L, 300L, 150L, 250L, 350L),
+      nrow = 3L,
+      ncol = 2L,
       sparse = FALSE
     )
 
@@ -153,9 +153,9 @@ describe("IsCountsMatrix - Matrix and data.frame input", {
     skip_if_not_installed("Matrix")
     counts <- methods::as(
       Matrix::Matrix(
-        c(100, 0, 200, 0, 300, 0),
-        nrow = 3,
-        ncol = 2,
+        c(100L, 0L, 200L, 0L, 300L, 0L),
+        nrow = 3L,
+        ncol = 2L,
         sparse = TRUE
       ),
       "TsparseMatrix"
@@ -165,7 +165,7 @@ describe("IsCountsMatrix - Matrix and data.frame input", {
   })
 
   it("accepts a data.frame of numeric columns", {
-    counts <- data.frame(S1 = c(1, 2), S2 = c(3, 4))
+    counts <- data.frame(S1 = c(1L, 2L), S2 = c(3L, 4L))
 
     expect_true(suppressMessages(IsCountsMatrix(counts, verbose = FALSE)))
   })
@@ -176,37 +176,37 @@ describe("IsCountsMatrix - Matrix and data.frame input", {
 describe("IsCountsMatrix - rejection reasons", {
   it("rejects an empty matrix", {
     expect_false(
-      IsCountsMatrix(matrix(numeric(0), nrow = 0, ncol = 0), verbose = FALSE)
+      IsCountsMatrix(matrix(numeric(0L), nrow = 0L, ncol = 0L), verbose = FALSE)
     )
     expect_false(
-      IsCountsMatrix(matrix(numeric(0), nrow = 3, ncol = 0), verbose = FALSE)
+      IsCountsMatrix(matrix(numeric(0L), nrow = 3L, ncol = 0L), verbose = FALSE)
     )
   })
 
   it("rejects a matrix containing NA", {
-    counts <- matrix(c(1, NA, 3, 4), nrow = 2, ncol = 2)
+    counts <- matrix(c(1L, NA, 3L, 4L), nrow = 2L, ncol = 2L)
 
     expect_false(IsCountsMatrix(counts, verbose = FALSE))
   })
 
   it("rejects a matrix containing NaN", {
-    counts <- matrix(c(1, NaN, 3, 4), nrow = 2, ncol = 2)
+    counts <- matrix(c(1L, NaN, 3L, 4L), nrow = 2L, ncol = 2L)
 
     expect_false(IsCountsMatrix(counts, verbose = FALSE))
   })
 
   it("rejects a matrix containing infinite values", {
     expect_false(
-      IsCountsMatrix(matrix(c(1, Inf, 3, 4), nrow = 2), verbose = FALSE)
+      IsCountsMatrix(matrix(c(1L, Inf, 3L, 4L), nrow = 2L), verbose = FALSE)
     )
     expect_false(
-      IsCountsMatrix(matrix(c(1, -Inf, 3, 4), nrow = 2), verbose = FALSE)
+      IsCountsMatrix(matrix(c(1L, -Inf, 3L, 4L), nrow = 2L), verbose = FALSE)
     )
   })
 
   it("rejects a matrix containing negative values", {
     # Column 1 still sums to 4, so negativity is the only violated rule.
-    counts <- matrix(c(5, -1, 3, 4), nrow = 2, ncol = 2)
+    counts <- matrix(c(5L, -1L, 3L, 4L), nrow = 2L, ncol = 2L)
 
     expect_false(IsCountsMatrix(counts, verbose = FALSE))
   })
@@ -214,7 +214,7 @@ describe("IsCountsMatrix - rejection reasons", {
   it("rejects a matrix whose integer fraction is too low", {
     # Every column sums to a positive value, so only the integer-like rule is
     # violated.
-    counts <- matrix(c(0.1, 0.2, 0.3, 0.4), nrow = 2, ncol = 2)
+    counts <- matrix(c(0.1, 0.2, 0.3, 0.4), nrow = 2L, ncol = 2L)
 
     expect_false(IsCountsMatrix(counts, verbose = FALSE))
   })
@@ -222,10 +222,10 @@ describe("IsCountsMatrix - rejection reasons", {
   it("rejects a matrix with a non-positive library size", {
     # Column 1 is all zeros.
     expect_false(
-      IsCountsMatrix(matrix(c(0, 0, 3, 4), nrow = 2, ncol = 2), verbose = FALSE)
+      IsCountsMatrix(matrix(c(0L, 0L, 3L, 4L), nrow = 2L, ncol = 2L), verbose = FALSE)
     )
     # Every column is all zeros.
-    expect_false(IsCountsMatrix(matrix(0, nrow = 2, ncol = 2), verbose = FALSE))
+    expect_false(IsCountsMatrix(matrix(0L, nrow = 2L, ncol = 2L), verbose = FALSE))
   })
 })
 
@@ -233,7 +233,7 @@ describe("IsCountsMatrix - rejection reasons", {
 
 describe("IsCountsMatrix - integer_tol and min_integer_fraction", {
   it("uses integer_tol to decide which values are integer-like", {
-    counts <- matrix(c(0.1, 0.2, 0.3, 0.4), nrow = 2, ncol = 2)
+    counts <- matrix(c(0.1, 0.2, 0.3, 0.4), nrow = 2L, ncol = 2L)
 
     expect_false(IsCountsMatrix(counts, verbose = FALSE))
     # Every value is within 0.5 of an integer.
@@ -241,24 +241,24 @@ describe("IsCountsMatrix - integer_tol and min_integer_fraction", {
   })
 
   it("accepts any non-negative matrix when min_integer_fraction is 0", {
-    counts <- matrix(c(0.1, 0.2, 0.3, 0.4), nrow = 2, ncol = 2)
+    counts <- matrix(c(0.1, 0.2, 0.3, 0.4), nrow = 2L, ncol = 2L)
 
     expect_true(
-      IsCountsMatrix(counts, verbose = FALSE, min_integer_fraction = 0)
+      IsCountsMatrix(counts, verbose = FALSE, min_integer_fraction = 0L)
     )
   })
 
   it("requires every value to be integer-like when min_integer_fraction is 1", {
-    counts <- matrix(c(1, 2.5, 3, 4), nrow = 2, ncol = 2)
+    counts <- matrix(c(1L, 2.5, 3L, 4L), nrow = 2L, ncol = 2L)
 
     expect_false(
-      IsCountsMatrix(counts, verbose = FALSE, min_integer_fraction = 1)
+      IsCountsMatrix(counts, verbose = FALSE, min_integer_fraction = 1L)
     )
   })
 
   it("accepts a threshold exactly equal to the integer fraction", {
     # 3 of 4 values are integer-like -> fraction 0.75.
-    counts <- matrix(c(1, 2, 0.5, 4), nrow = 2, ncol = 2)
+    counts <- matrix(c(1L, 2L, 0.5, 4L), nrow = 2L, ncol = 2L)
 
     expect_true(
       IsCountsMatrix(counts, verbose = FALSE, min_integer_fraction = 0.75)
@@ -271,24 +271,24 @@ describe("IsCountsMatrix - integer_tol and min_integer_fraction", {
 describe("IsCountsMatrix - argument validation", {
   it("aborts when x is not a 2-D matrix-like object", {
     expect_error(IsCountsMatrix(NULL), "x must be a 2d matrix")
-    expect_error(IsCountsMatrix(1:4), "x must be a 2d matrix")
+    expect_error(IsCountsMatrix(1L:4L), "x must be a 2d matrix")
     expect_error(IsCountsMatrix("not a matrix"), "x must be a 2d matrix")
-    expect_error(IsCountsMatrix(list(a = 1)), "x must be a 2d matrix")
+    expect_error(IsCountsMatrix(list(a = 1L)), "x must be a 2d matrix")
     expect_error(
-      IsCountsMatrix(array(1:8, dim = c(2, 2, 2))),
+      IsCountsMatrix(array(1L:8L, dim = c(2L, 2L, 2L))),
       "x must be a 2d matrix"
     )
   })
 
   it("checks the shape of x before the remaining arguments", {
-    expect_error(IsCountsMatrix(1:4, verbose = "yes"), "x must be a 2d matrix")
+    expect_error(IsCountsMatrix(1L:4L, verbose = "yes"), "x must be a 2d matrix")
   })
 
   it("aborts when verbose is not a flag", {
-    counts <- matrix(1:4, nrow = 2, ncol = 2)
+    counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
 
     expect_error(IsCountsMatrix(counts, verbose = "yes"), class = "chk_error")
-    expect_error(IsCountsMatrix(counts, verbose = 1), class = "chk_error")
+    expect_error(IsCountsMatrix(counts, verbose = 1L), class = "chk_error")
     expect_error(IsCountsMatrix(counts, verbose = NULL), class = "chk_error")
     expect_error(
       IsCountsMatrix(counts, verbose = c(TRUE, FALSE)),
@@ -297,14 +297,14 @@ describe("IsCountsMatrix - argument validation", {
   })
 
   it("aborts when integer_tol is outside [0, 1]", {
-    counts <- matrix(1:4, nrow = 2, ncol = 2)
+    counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
 
     expect_error(IsCountsMatrix(counts, integer_tol = -0.1), class = "chk_error")
     expect_error(IsCountsMatrix(counts, integer_tol = 1.1), class = "chk_error")
   })
 
   it("aborts when min_integer_fraction is outside [0, 1]", {
-    counts <- matrix(1:4, nrow = 2, ncol = 2)
+    counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
 
     expect_error(
       IsCountsMatrix(counts, min_integer_fraction = -0.5),
@@ -317,7 +317,7 @@ describe("IsCountsMatrix - argument validation", {
   })
 
   it("rejects a non-numeric tolerance", {
-    counts <- matrix(1:4, nrow = 2, ncol = 2)
+    counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
 
     # chk_range() may reject the type itself or let it fall through to the
     # backend, so the condition class is deliberately not pinned here.
@@ -325,7 +325,7 @@ describe("IsCountsMatrix - argument validation", {
   })
 
   it("rejects a missing tolerance in the backend", {
-    counts <- matrix(1:4, nrow = 2, ncol = 2)
+    counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
 
     # NA_real_ slips through chk_range(), which ignores missing values, and is
     # caught by the C++ guards instead.
@@ -344,36 +344,36 @@ describe("IsCountsMatrix - argument validation", {
 
 describe("IsCountsMatrix - verbose reporting", {
   it("reports the diagnostic fractions when the matrix is accepted", {
-    counts <- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+    counts <- matrix(c(1L, 2L, 3L, 4L), nrow = 2L, ncol = 2L)
 
     expect_message(IsCountsMatrix(counts), "likely a counts matrix")
   })
 
   it("reports the reason for each rejection", {
     expect_message(
-      IsCountsMatrix(matrix(numeric(0), nrow = 0, ncol = 0)),
+      IsCountsMatrix(matrix(numeric(0L), nrow = 0L, ncol = 0L)),
       "matrix is empty"
     )
     expect_message(
-      IsCountsMatrix(matrix(c(1, NA, 3, 4), nrow = 2, ncol = 2)),
+      IsCountsMatrix(matrix(c(1L, NA, 3L, 4L), nrow = 2L, ncol = 2L)),
       "NA, NaN, or Inf"
     )
     expect_message(
-      IsCountsMatrix(matrix(c(5, -1, 3, 4), nrow = 2, ncol = 2)),
+      IsCountsMatrix(matrix(c(5L, -1L, 3L, 4L), nrow = 2L, ncol = 2L)),
       "contains negative values"
     )
     expect_message(
-      IsCountsMatrix(matrix(c(0.1, 0.2, 0.3, 0.4), nrow = 2, ncol = 2)),
+      IsCountsMatrix(matrix(c(0.1, 0.2, 0.3, 0.4), nrow = 2L, ncol = 2L)),
       "insufficient integer-like values"
     )
     expect_message(
-      IsCountsMatrix(matrix(c(0, 0, 3, 4), nrow = 2, ncol = 2)),
+      IsCountsMatrix(matrix(c(0L, 0L, 3L, 4L), nrow = 2L, ncol = 2L)),
       "library size"
     )
   })
 
   it("stays silent when verbose = FALSE", {
-    counts <- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+    counts <- matrix(c(1L, 2L, 3L, 4L), nrow = 2L, ncol = 2L)
 
     expect_no_message(IsCountsMatrix(counts, verbose = FALSE))
   })

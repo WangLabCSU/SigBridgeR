@@ -18,7 +18,7 @@ autoplot.Seurat <- function(
   reduction = "umap",
   group.by = NULL,
   label = FALSE,
-  label.size = 4,
+  label.size = 4L,
   pt.size = NULL,
   cols = NULL,
   ...
@@ -66,7 +66,7 @@ autoplot.Seurat <- function(
   object,
   group.by = NULL,
   label = TRUE,
-  label.size = 4,
+  label.size = 4L,
   pt.size = 0.5,
   cols = NULL,
   ...

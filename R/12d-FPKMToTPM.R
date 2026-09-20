@@ -75,7 +75,7 @@ FPKMToTPM <- function(data, na_as_zero = TRUE, verbose = TRUE, ...) {
     )
   }
 
-  if (any(data < 0, na.rm = TRUE)) {
+  if (any(data < 0L, na.rm = TRUE)) {
     Abort(
       "`data` contains negative values",
       type = "[VALUE ERROR]"

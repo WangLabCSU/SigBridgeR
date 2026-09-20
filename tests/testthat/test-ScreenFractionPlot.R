@@ -22,39 +22,39 @@ describe("complete_counts", {
     df <- data.frame(
       group = c("A", "A", "B"),
       status = c("Positive", "Negative", "Positive"),
-      n = c(3, 2, 1)
+      n = c(3L, 2L, 1L)
     )
     result <- complete_counts(df, group, status)
 
     # Should have all 4 combos (A/B x Positive/Negative)
-    expect_equal(nrow(result), 4)
+    expect_equal(nrow(result), 4L)
     # B-Negative should be filled with n=0
     b_neg <- result[result$group == "B" & result$status == "Negative", ]
-    expect_equal(b_neg$n, 0)
+    expect_equal(b_neg$n, 0L)
   })
 
   it("preserves existing counts", {
     df <- data.frame(
       group = c("A", "A"),
       status = c("Positive", "Negative"),
-      n = c(5, 3)
+      n = c(5L, 3L)
     )
     result <- complete_counts(df, group, status)
 
     a_pos <- result[result$group == "A" & result$status == "Positive", ]
-    expect_equal(a_pos$n, 5)
+    expect_equal(a_pos$n, 5L)
     a_neg <- result[result$group == "A" & result$status == "Negative", ]
-    expect_equal(a_neg$n, 3)
+    expect_equal(a_neg$n, 3L)
   })
 
   it("handles single column completion", {
     df <- data.frame(
       group = c("A", "B"),
-      n = c(1, 2)
+      n = c(1L, 2L)
     )
     result <- complete_counts(df, group)
 
-    expect_equal(nrow(result), 2)
+    expect_equal(nrow(result), 2L)
     expect_setequal(result$group, c("A", "B"))
   })
 
@@ -63,7 +63,7 @@ describe("complete_counts", {
       group = c("A", "A", "B"),
       status = c("Positive", "Positive", "Negative"),
       batch = c("X", "Y", "X"),
-      n = c(1, 2, 3)
+      n = c(1L, 2L, 3L)
     )
     result <- complete_counts(df, group, status, batch)
 
@@ -73,14 +73,14 @@ describe("complete_counts", {
     a_px <- result[
       result$group == "A" & result$status == "Positive" & result$batch == "X",
     ]
-    expect_equal(a_px$n, 1)
+    expect_equal(a_px$n, 1L)
   })
 
   it("works without tidyr installed (expand.grid fallback)", {
     df <- data.frame(
       group = c("A", "B"),
       status = c("Positive", "Negative"),
-      n = c(3, 1)
+      n = c(3L, 1L)
     )
     local_mocked_bindings(
       is_installed = function(...) FALSE,
@@ -88,7 +88,7 @@ describe("complete_counts", {
     )
     result <- complete_counts(df, group, status)
 
-    expect_equal(nrow(result), 4)
+    expect_equal(nrow(result), 4L)
   })
 
   it("works with tidyr installed", {
@@ -96,24 +96,24 @@ describe("complete_counts", {
     df <- data.frame(
       group = c("A", "B"),
       status = c("Positive", "Negative"),
-      n = c(3, 1)
+      n = c(3L, 1L)
     )
     result <- complete_counts(df, group, status)
 
-    expect_equal(nrow(result), 4)
+    expect_equal(nrow(result), 4L)
     a_neg <- result[result$group == "A" & result$status == "Negative", ]
-    expect_equal(a_neg$n, 0)
+    expect_equal(a_neg$n, 0L)
   })
 
   it("handles empty input", {
     df <- data.frame(
-      group = character(0),
-      status = character(0),
-      n = integer(0)
+      group = character(0L),
+      status = character(0L),
+      n = integer(0L)
     )
     result <- complete_counts(df, group, status)
 
-    expect_equal(nrow(result), 0)
+    expect_equal(nrow(result), 0L)
   })
 })
 
@@ -134,7 +134,7 @@ describe("ScreenFractionPlot - input validation", {
     seurat <- new_test_seurat(2L)
 
     expect_error(
-      ScreenFractionPlot(seurat, group_by = 123),
+      ScreenFractionPlot(seurat, group_by = 123L),
       class = "chk_error"
     )
   })
@@ -240,12 +240,12 @@ describe("ScreenFractionPlot - single screen type", {
     stats <- result$stats
     # Group A: 2 Positive, 1 Negative -> 2/3, 1/3
     a_pos <- stats[stats$Source == "A" & stats$scissor == "Positive", ]
-    expect_equal(a_pos$Fraction, 2 / 3, tolerance = 1e-8)
+    expect_equal(a_pos$Fraction, 2L / 3L, tolerance = 1e-8L)
     a_neg <- stats[stats$Source == "A" & stats$scissor == "Negative", ]
-    expect_equal(a_neg$Fraction, 1 / 3, tolerance = 1e-8)
+    expect_equal(a_neg$Fraction, 1L / 3L, tolerance = 1e-8L)
     # Group B: 1 Positive -> 1
     b_pos <- stats[stats$Source == "B" & stats$scissor == "Positive", ]
-    expect_equal(b_pos$Fraction, 1)
+    expect_equal(b_pos$Fraction, 1L)
   })
 
   it("respects show_null = FALSE (default)", {
@@ -265,7 +265,7 @@ describe("ScreenFractionPlot - single screen type", {
     )
 
     plot_data <- result$plot$data
-    expect_true(all(plot_data$Fraction > 0))
+    expect_true(all(plot_data$Fraction > 0L))
   })
 
   it("show_null = TRUE includes zero-fraction groups", {
@@ -287,8 +287,8 @@ describe("ScreenFractionPlot - single screen type", {
     b_pos <- plot_data[
       plot_data$Source == "B" & plot_data$scissor == "Positive",
     ]
-    expect_equal(nrow(b_pos), 1)
-    expect_equal(b_pos$Fraction, 0)
+    expect_equal(nrow(b_pos), 1L)
+    expect_equal(b_pos$Fraction, 0L)
   })
 
   it("show_plot = FALSE returns result without displaying", {
@@ -415,7 +415,7 @@ describe("ScreenFractionPlot - multiple screen types", {
     result <- ScreenFractionPlot(
       seurat,
       screen_type = c("scissor", "scPAS"),
-      ncol = 1
+      ncol = 1L
     )
 
     expect_s3_class(result$combined_plot, "patchwork")
@@ -505,8 +505,8 @@ describe("ScreenFractionPlot - edge cases", {
 
     stats <- result$stats
     a_pos <- stats[stats$Source == "A" & stats$scissor == "Positive", ]
-    expect_equal(a_pos$Fraction, 1)
-    expect_equal(a_pos$n, 2)
+    expect_equal(a_pos$Fraction, 1L)
+    expect_equal(a_pos$n, 2L)
   })
 
   it("handles group with zero cells (all Neutral/Other)", {
@@ -523,10 +523,10 @@ describe("ScreenFractionPlot - edge cases", {
     stats <- result$stats
     # Group A: 1 Neutral -> Fraction for Positive=0, Negative=0
     a_pos <- stats[stats$Source == "A" & stats$scissor == "Positive", ]
-    expect_equal(a_pos$Fraction, 0)
+    expect_equal(a_pos$Fraction, 0L)
     # Group B: 2 Positive -> 1.0
     b_pos <- stats[stats$Source == "B" & stats$scissor == "Positive", ]
-    expect_equal(b_pos$Fraction, 1)
+    expect_equal(b_pos$Fraction, 1L)
   })
 
   it("passes extra arguments to ggplot2::theme via ...", {

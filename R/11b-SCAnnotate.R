@@ -98,7 +98,7 @@ SCAnnotate.Seurat <- function(
 
   set.seed(seed)
 
-  if (length(method) > 1) {
+  if (length(method) > 1L) {
     method <- SigBridgeRUtils::MatchFunc2Args(
       dots,
       mLLMCelltypeAnnotate,
@@ -106,7 +106,7 @@ SCAnnotate.Seurat <- function(
       CellTypistAnnotate,
       name_only = TRUE
     )
-    if (length(method) != 1) {
+    if (length(method) != 1L) {
       Abort(
         "Cannot auto-find a suitable method, please specify a method",
         type = "[METHOD ERROR]"
@@ -169,7 +169,7 @@ SCAnnotate.Seurat <- function(
       use_GPU,
       min_prop
     ) {
-      1
+      1L
     }
 
     # * default args

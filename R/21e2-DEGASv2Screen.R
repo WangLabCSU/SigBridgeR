@@ -47,9 +47,9 @@ ValidateDEGASv2Params <- function(
   loss_type = c("cross_entropy", "log_neg", "rank_loss"),
   transfer_type = c("Wasserstein", "MMD"),
   model_save_dir = "DEGASv2_res",
-  lambda1 = 1,
-  lambda2 = 3,
-  lambda3 = 3,
+  lambda1 = 1L,
+  lambda2 = 3L,
+  lambda3 = 3L,
   tot_seeds = 10L,
   tot_iters = 300L,
   extract_embs = FALSE,
@@ -204,9 +204,9 @@ DoDEGASv2 <- function(
   loss_type = c("cross_entropy", "log_neg", "rank_loss"),
   transfer_type = c("Wasserstein", "MMD"),
   model_save_dir = "DEGASv2_res",
-  lambda1 = 1,
-  lambda2 = 3,
-  lambda3 = 3,
+  lambda1 = 1L,
+  lambda2 = 3L,
+  lambda3 = 3L,
   tot_seeds = 10L,
   tot_iters = 300L,
   extract_embs = FALSE,
@@ -312,7 +312,7 @@ DoDEGASv2 <- function(
 
   top_fraction <- stats::quantile(
     hazard_df$DEGASv2_hazard,
-    1 - top_fraction_pos
+    1L - top_fraction_pos
   )
   hazard_df <- dplyr::mutate(
     hazard_df,
@@ -397,11 +397,11 @@ DEGAS_preprocessing <- function(
   # clean phenotype
   if (model_type != "survival") {
     phenotype <- as.factor(phenotype)
-    phenotype <- as.integer(phenotype) - 1
+    phenotype <- as.integer(phenotype) - 1L
   }
 
   if (!is.null(sclab)) {
-    sclab <- as.integer(as.factor(sclab)) - 1
+    sclab <- as.integer(as.factor(sclab)) - 1L
     message("sclab: ", toString(unique(sclab)), "\n")
   }
 
@@ -501,7 +501,7 @@ select_genes2 <- function(
       "Found {.val {length(genes)}} genes"
     )
   }
-  if (length(genes) == 0) {
+  if (length(genes) == 0L) {
     Abort(
       "No genes found",
       "Check biological relationship between bulk and single-cell data",

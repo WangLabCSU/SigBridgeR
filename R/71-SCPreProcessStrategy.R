@@ -46,7 +46,7 @@ SCPreProcessStrategy <- new_environment(
       if (is.null(dots$features)) {
         return(Seurat::RunPCA(...))
       } else if (dots$features == "all") {
-        dots$features <- rownames(dots[[1]])
+        dots$features <- rownames(dots[[1L]])
       }
       do.call(Seurat::RunPCA, dots)
     },

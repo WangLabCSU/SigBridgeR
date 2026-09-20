@@ -221,7 +221,7 @@ DoLP_SGL <- function(
   dge_res <- NULL
   default_dge_analysis <- list(
     run = FALSE,
-    logFC_threshold = 1,
+    logFC_threshold = 1L,
     pval_threshold = 0.05
   )
   dge_analysis <- utils::modifyList(default_dge_analysis, dge_analysis)

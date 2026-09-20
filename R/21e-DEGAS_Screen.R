@@ -94,7 +94,7 @@ ValidateDEGASParams <- function(
   }
 
   degas_params$DEGAS.model_type <- if (
-    length(degas_params$DEGAS.model_type) != 1
+    length(degas_params$DEGAS.model_type) != 1L
   ) {
     # model.type auto-detection
     DEGASModelDetect(
@@ -135,7 +135,7 @@ ValidateDEGASParams <- function(
   }
   cm_genes <- intersect(rownames(matched_bulk), rownames(sc_mat))
 
-  if (length(cm_genes) == 0) {
+  if (length(cm_genes) == 0L) {
     Abort(
       "No common genes found between single cell data and bulk data",
       "Please check the inputs",
@@ -676,7 +676,7 @@ DEGASParamSet <- function(user_list) {
     path.data = '',
     path.result = '',
     DEGAS.pyloc = NULL, # location of python executable
-    DEGAS.toolsPath = file.path(.libPaths()[1], "DEGAS/DEGAS_tools/"),
+    DEGAS.toolsPath = file.path(.libPaths()[1L], "DEGAS/DEGAS_tools/"),
     DEGAS.train_steps = 2000L,
     DEGAS.scbatch_sz = 200L,
     DEGAS.patbatch_sz = 50L,

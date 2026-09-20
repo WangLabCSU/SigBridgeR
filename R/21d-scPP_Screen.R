@@ -45,7 +45,7 @@ ValidatescPPParams <- function(
   chk::chk_range(Log2FC_cutoff)
   chk::chk_range(estimate_cutoff)
   if (!is.null(probs)) {
-    chk::chk_range(probs, range = c(0, 0.5))
+    chk::chk_range(probs, range = c(0L, 0.5))
   }
   # scPP can't tolerate NA
   chk::chk_not_any_na(phenotype)
@@ -178,7 +178,7 @@ DoscPP <- function(
     # keep the same input and output format with scPP
     phenotype <- as.data.frame(phenotype) |>
       SigBridgeRUtils::Rownames2Col("Sample") |>
-      dplyr::rename("Feature" = 2) |>
+      dplyr::rename("Feature" = 2L) |>
       dplyr::mutate(Feature = as.numeric(`Feature`))
   }
 
@@ -249,7 +249,7 @@ DoscPP <- function(
     l <- lapply(gene_list, length)
     pos_null <- if ("gene_pos" %chin% names(l)) {
       # Cannot combine the conditions due to the feature of `gene_list`
-      if (l[["gene_pos"]] == 0) {
+      if (l[["gene_pos"]] == 0L) {
         cli::cli_warn("No significant positive genes found")
         TRUE
       }
@@ -258,7 +258,7 @@ DoscPP <- function(
       FALSE
     }
     neg_null <- if ("gene_neg" %chin% names(l)) {
-      if (l[["gene_neg"]] == 0) {
+      if (l[["gene_neg"]] == 0L) {
         cli::cli_warn("No significant negative genes found")
         TRUE
       }

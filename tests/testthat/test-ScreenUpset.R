@@ -58,7 +58,7 @@ describe("ScreenUpset - input validation", {
     seurat <- new_test_seurat(2L)
 
     expect_error(
-      ScreenUpset(seurat, screen_type = 123),
+      ScreenUpset(seurat, screen_type = 123L),
       class = "chk_error"
     )
   })
@@ -115,7 +115,7 @@ describe("ScreenUpset - basic functionality", {
     result <- ScreenUpset(seurat, screen_type = c("scissor", "scPAS"))
 
     # 2 types -> 3 combinations: scissor alone, scPAS alone, scissor & scPAS
-    expect_equal(nrow(result$stats), 3)
+    expect_equal(nrow(result$stats), 3L)
   })
 
   it("counts all possible intersections for 3 screen types", {
@@ -134,7 +134,7 @@ describe("ScreenUpset - basic functionality", {
     )
 
     # 3 types -> 7 combos (C(3,1)=3 + C(3,2)=3 + C(3,3)=1)
-    expect_equal(nrow(result$stats), 7)
+    expect_equal(nrow(result$stats), 7L)
   })
 })
 
@@ -160,11 +160,11 @@ describe("ScreenUpset - intersection counts", {
 
     # scissor alone: 3 cells have scissor="Positive"
     scissor_row <- result$stats[result$stats$intersection == "scissor", ]
-    expect_equal(unname(scissor_row$count), 3)
+    expect_equal(unname(scissor_row$count), 3L)
 
     # scPAS alone: 2 cells have scPAS="Positive"
     scpas_row <- result$stats[result$stats$intersection == "scPAS", ]
-    expect_equal(unname(scpas_row$count), 2)
+    expect_equal(unname(scpas_row$count), 2L)
   })
 
   it("correctly counts intersection of two screen types", {
@@ -196,7 +196,7 @@ describe("ScreenUpset - intersection counts", {
     both_row <- result$stats[
       result$stats$intersection == "scissor & scPAS",
     ]
-    expect_equal(unname(both_row$count), 3)
+    expect_equal(unname(both_row$count), 3L)
   })
 
   it("handles case with no intersections (all disjoint)", {
@@ -215,7 +215,7 @@ describe("ScreenUpset - intersection counts", {
     both_row <- result$stats[
       result$stats$intersection == "scissor & scPAS",
     ]
-    expect_equal(unname(both_row$count), 0)
+    expect_equal(unname(both_row$count), 0L)
   })
 
   it("handles case where all cells are positive for all types", {
@@ -233,7 +233,7 @@ describe("ScreenUpset - intersection counts", {
     both_row <- result$stats[
       result$stats$intersection == "scissor & scPAS",
     ]
-    expect_equal(unname(both_row$count), 3)
+    expect_equal(unname(both_row$count), 3L)
   })
 })
 
@@ -253,7 +253,7 @@ describe("ScreenUpset - screen_type auto-detection", {
 
     expect_type(result, "list")
     expect_true("stats" %in% names(result))
-    expect_true(nrow(result$stats) > 0)
+    expect_true(nrow(result$stats) > 0L)
   })
 
   it("auto-detection finds registered screen types matching pattern", {
@@ -349,11 +349,11 @@ describe("ScreenUpset - plot parameters", {
     result <- ScreenUpset(
       seurat,
       screen_type = c("scissor", "scPAS", "scAB"),
-      n_intersections = 5
+      n_intersections = 5L
     )
 
     # Stats still have all 7 rows, but plot only shows top 5
-    expect_equal(nrow(result$stats), 7)
+    expect_equal(nrow(result$stats), 7L)
     expect_s3_class(result$plot, "ggplot")
   })
 
@@ -371,7 +371,7 @@ describe("ScreenUpset - plot parameters", {
     result <- ScreenUpset(
       seurat,
       screen_type = c("scissor", "scPAS"),
-      plot.title = ggplot2::element_text(size = 20)
+      plot.title = ggplot2::element_text(size = 20L)
     )
 
     expect_s3_class(result$plot, "ggplot")
@@ -392,10 +392,10 @@ describe("ScreenUpset - edge cases", {
     result <- ScreenUpset(seurat, screen_type = "scissor")
 
     # 1 type -> C(1,1)=1 combination
-    expect_equal(nrow(result$stats), 1)
+    expect_equal(nrow(result$stats), 1L)
     expect_equal(result$stats$intersection, "scissor")
     # 2 Positive cells
-    expect_equal(unname(result$stats$count), 2)
+    expect_equal(unname(result$stats$count), 2L)
   })
 
   it("handles data with no Positive cells", {
@@ -410,7 +410,7 @@ describe("ScreenUpset - edge cases", {
     result <- ScreenUpset(seurat, screen_type = c("scissor", "scPAS"))
 
     # All counts should be 0
-    expect_true(all(result$stats$count == 0))
+    expect_true(all(result$stats$count == 0L))
   })
 
   it("returns intersection names with & separator for combos", {
@@ -449,9 +449,9 @@ describe("ScreenUpset - edge cases", {
     skip_if_not_installed("Seurat")
     skip_if_not_installed("tibble")
 
-    n_cells <- 50
+    n_cells <- 50L
     seurat <- new_test_seurat(n_cells)
-    set.seed(42)
+    set.seed(42L)
     labels <- c("Positive", "Negative", "Neutral", "Other")
     seurat$scissor <- sample(labels, n_cells, replace = TRUE)
     seurat$scPAS <- sample(labels, n_cells, replace = TRUE)
@@ -463,9 +463,9 @@ describe("ScreenUpset - edge cases", {
     )
 
     # 3 types -> 7 combinations
-    expect_equal(nrow(result$stats), 7)
+    expect_equal(nrow(result$stats), 7L)
     # All counts should be non-negative and sum to <= n_cells * 3 (overlapping)
-    expect_true(all(result$stats$count >= 0))
+    expect_true(all(result$stats$count >= 0L))
   })
 
   it("verbose = TRUE prints completion message", {

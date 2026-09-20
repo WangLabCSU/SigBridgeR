@@ -13,7 +13,7 @@ describe("WeightedVote - basic voting", {
       V2 = "Positive",
       V3 = "Positive"
     )
-    weights <- c(V1 = 1, V2 = 1, V3 = 1)
+    weights <- c(V1 = 1L, V2 = 1L, V3 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -26,7 +26,7 @@ describe("WeightedVote - basic voting", {
       V2 = "Neutral",
       V3 = "Other"
     )
-    weights <- c(V1 = 1, V2 = 1, V3 = 1)
+    weights <- c(V1 = 1L, V2 = 1L, V3 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -39,7 +39,7 @@ describe("WeightedVote - basic voting", {
       V2 = c("Positive", "Neutral", "Negative"),
       V3 = c("Negative", "Positive", "Positive")
     )
-    weights <- c(V1 = 1, V2 = 1, V3 = 1)
+    weights <- c(V1 = 1L, V2 = 1L, V3 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -55,7 +55,7 @@ describe("WeightedVote - basic voting", {
       V2 = c("Neutral", "Negative", "Other"),
       V3 = c("Other", "Neutral", "Neutral")
     )
-    weights <- c(V1 = 1, V2 = 1, V3 = 1)
+    weights <- c(V1 = 1L, V2 = 1L, V3 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -69,7 +69,7 @@ describe("WeightedVote - basic voting", {
     vote_data <- data.frame(
       Expert = c("Positive", "Negative", "Neutral", "Other")
     )
-    weights <- c(Expert = 1)
+    weights <- c(Expert = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -82,7 +82,7 @@ describe("WeightedVote - basic voting", {
       V2 = "Negative",
       V3 = "Neutral"
     )
-    weights <- c(V1 = 1, V2 = 1, V3 = 1)
+    weights <- c(V1 = 1L, V2 = 1L, V3 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -95,12 +95,12 @@ describe("WeightedVote - basic voting", {
       V1 = c("Positive", "Negative"),
       V2 = c("Positive", "Positive")
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
     expect_type(result, "character")
-    expect_equal(length(result), 2)
+    expect_equal(length(result), 2L)
   })
 })
 
@@ -119,7 +119,7 @@ describe("WeightedVote - weighted scoring", {
       V3 = c("Negative", "Positive")
     )
     # V1 has much higher weight
-    weights <- c(V1 = 100, V2 = 1, V3 = 1)
+    weights <- c(V1 = 100L, V2 = 1L, V3 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -147,7 +147,7 @@ describe("WeightedVote - weighted scoring", {
       V1 = c("Positive", "Negative"),
       V2 = c("Negative", "Negative")
     )
-    weights <- c(V1 = 0, V2 = 1)
+    weights <- c(V1 = 0L, V2 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -162,7 +162,7 @@ describe("WeightedVote - weighted scoring", {
       Expert2 = c("Negative", "Negative")
     )
     # weights in reverse column order
-    weights <- c(Expert2 = 100, Expert1 = 1)
+    weights <- c(Expert2 = 100L, Expert1 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -175,7 +175,7 @@ describe("WeightedVote - weighted scoring", {
       V1 = c("Positive"),
       V2 = c("Negative")
     )
-    weights <- c(V1 = 1e-10, V2 = 1e-11)
+    weights <- c(V1 = 1e-10L, V2 = 1e-11L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -197,7 +197,7 @@ describe("WeightedVote - ties.method", {
       V1 = c("Positive", "Negative"),
       V2 = c("Negative", "Positive")
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     result <- WeightedVote(vote_data, weights, ties.method = "first")
 
@@ -211,7 +211,7 @@ describe("WeightedVote - ties.method", {
       V1 = c("Positive", "Negative"),
       V2 = c("Negative", "Positive")
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     result <- WeightedVote(vote_data, weights, ties.method = "last")
 
@@ -224,18 +224,18 @@ describe("WeightedVote - ties.method", {
       V1 = c("Positive", "Negative"),
       V2 = c("Negative", "Positive")
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     result <- WeightedVote(vote_data, weights, ties.method = "random")
 
     # Output should be either Positive or Other
     expect_true(all(result %in% c("Positive", "Other")))
-    expect_equal(length(result), 2)
+    expect_equal(length(result), 2L)
   })
 
   it("ties.method is case-sensitive and rejects wrong case", {
     vote_data <- data.frame(V1 = c("Positive"), V2 = c("Negative"))
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     expect_error(
       WeightedVote(vote_data, weights, ties.method = "Random"),
@@ -245,7 +245,7 @@ describe("WeightedVote - ties.method", {
 
   it("invalid ties.method aborts", {
     vote_data <- data.frame(V1 = c("Positive"), V2 = c("Negative"))
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     expect_error(
       WeightedVote(vote_data, weights, ties.method = "unknown"),
@@ -268,7 +268,7 @@ describe("WeightedVote - row names", {
       Expert2 = c("Positive", "Neutral", "Other"),
       row.names = c("Cell1", "Cell2", "Cell3")
     )
-    weights <- c(Expert1 = 1, Expert2 = 1)
+    weights <- c(Expert1 = 1L, Expert2 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -283,11 +283,11 @@ describe("WeightedVote - row names", {
     # Use matrix without dimnames to avoid auto row names from data.frame
     vote_mat <- matrix(
       c("Positive", "Negative", "Positive", "Positive"),
-      nrow = 2,
-      ncol = 2
+      nrow = 2L,
+      ncol = 2L
     )
     colnames(vote_mat) <- c("V1", "V2")
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     result <- WeightedVote(vote_mat, weights)
 
@@ -297,11 +297,11 @@ describe("WeightedVote - row names", {
   it("matrix input with row names preserves them", {
     vote_mat <- matrix(
       c("Positive", "Negative", "Neutral", "Other"),
-      nrow = 2,
-      ncol = 2,
+      nrow = 2L,
+      ncol = 2L,
       dimnames = list(c("R1", "R2"), c("V1", "V2"))
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     result <- WeightedVote(vote_mat, weights)
 
@@ -322,7 +322,7 @@ describe("WeightedVote - edge cases", {
       V1 = c("Negative", "Neutral"),
       V2 = c("Other", "Negative")
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -334,7 +334,7 @@ describe("WeightedVote - edge cases", {
       V1 = c("Positive", "Positive"),
       V2 = c("Positive", "Positive")
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -348,7 +348,7 @@ describe("WeightedVote - edge cases", {
       V3 = c("Positive", "Positive")
     )
     mat <- as.matrix(df)
-    weights <- c(V1 = 1, V2 = 1, V3 = 1)
+    weights <- c(V1 = 1L, V2 = 1L, V3 = 1L)
 
     result_df <- WeightedVote(df, weights)
     result_mat <- WeightedVote(mat, weights)
@@ -361,7 +361,7 @@ describe("WeightedVote - edge cases", {
       V1 = c("Positive", NA),
       V2 = c("Negative", "Positive")
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     # Use first to avoid non-deterministic random tie-breaking
     result <- WeightedVote(vote_data, weights, ties.method = "first")
@@ -376,7 +376,7 @@ describe("WeightedVote - edge cases", {
       V1 = c("Positive"),
       V2 = c("Negative")
     )
-    weights <- c(V1 = NaN, V2 = 1)
+    weights <- c(V1 = NaN, V2 = 1L)
 
     result <- WeightedVote(vote_data, weights)
 
@@ -389,7 +389,7 @@ describe("WeightedVote - edge cases", {
       V1 = c("Positive"),
       V2 = c("Negative")
     )
-    weights <- c(V1 = 0, V2 = 0)
+    weights <- c(V1 = 0L, V2 = 0L)
 
     result <- WeightedVote(vote_data, weights, ties.method = "first")
 
@@ -402,7 +402,7 @@ describe("WeightedVote - edge cases", {
       V1 = c("Positive"),
       V2 = c("Negative")
     )
-    weights <- c(V1 = 0, V2 = 0)
+    weights <- c(V1 = 0L, V2 = 0L)
 
     result <- WeightedVote(vote_data, weights, ties.method = "last")
 
@@ -411,9 +411,9 @@ describe("WeightedVote - edge cases", {
   })
 
   it("many rows and voters works", {
-    n_rows <- 50
-    n_voters <- 10
-    set.seed(42)
+    n_rows <- 50L
+    n_voters <- 10L
+    set.seed(42L)
 
     labels <- c("Positive", "Negative", "Neutral", "Other")
     vote_data <- as.data.frame(
@@ -424,7 +424,7 @@ describe("WeightedVote - edge cases", {
       )
     )
     colnames(vote_data) <- paste0("V", seq_len(n_voters))
-    weights <- setNames(rep(1, n_voters), paste0("V", seq_len(n_voters)))
+    weights <- setNames(rep(1L, n_voters), paste0("V", seq_len(n_voters)))
 
     result <- WeightedVote(vote_data, weights)
 
@@ -442,9 +442,9 @@ describe("WeightedVote - input validation", {
   )
 
   it("aborts when vote_data has no column names", {
-    vote_data <- matrix(c("Positive", "Negative"), nrow = 1)
+    vote_data <- matrix(c("Positive", "Negative"), nrow = 1L)
     # matrix without dimnames
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     expect_error(
       WeightedVote(vote_data, weights),
@@ -457,7 +457,7 @@ describe("WeightedVote - input validation", {
       Expert1 = c("Positive", "Negative"),
       Expert2 = c("Negative", "Positive")
     )
-    weights <- c(Wrong1 = 1, Wrong2 = 1)
+    weights <- c(Wrong1 = 1L, Wrong2 = 1L)
 
     expect_error(
       WeightedVote(vote_data, weights),
@@ -471,7 +471,7 @@ describe("WeightedVote - input validation", {
       V2 = c("Negative", "Positive"),
       V3 = c("Positive", "Positive")
     )
-    weights <- c(V1 = 1, V2 = 1)
+    weights <- c(V1 = 1L, V2 = 1L)
 
     expect_error(
       WeightedVote(vote_data, weights),
@@ -484,7 +484,7 @@ describe("WeightedVote - input validation", {
       V1 = c("Positive"),
       V2 = c("Negative")
     )
-    weights <- c(V1 = 1, V1 = 2)
+    weights <- c(V1 = 1L, V1 = 2L)
 
     expect_error(
       WeightedVote(vote_data, weights),

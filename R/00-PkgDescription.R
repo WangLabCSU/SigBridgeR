@@ -37,7 +37,7 @@ rd_authors <- function() {
   # Read Authors@R from DESCRIPTION dynamically using base R
   # roxygen2 runs in the package root, so DESCRIPTION is in the working dir
   dcf <- read.dcf("DESCRIPTION")
-  authors <- eval(parse(text = dcf[1, "Authors@R"]))
+  authors <- eval(parse(text = dcf[1L, "Authors@R"]))
 
   # Format each author as a roxygen @author entry
   lines <- vapply(
@@ -55,7 +55,7 @@ rd_authors <- function() {
       }
       name
     },
-    character(1)
+    character(1L)
   )
 
   paste(lines, collapse = "\n")

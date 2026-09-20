@@ -42,8 +42,8 @@ FindRobustElbow <- function(
   stdev <- obj[["pca"]]@stdev[seq_len(ndims)]
 
   # Calculate variance metrics
-  variance <- stdev^2
-  pct_variance <- variance / sum(variance) * 100
+  variance <- stdev^2L
+  pct_variance <- variance / sum(variance) * 100L
   cumulative_variance <- cumsum(pct_variance)
 
   # Method 1: Variance-based heuristics
@@ -51,7 +51,7 @@ FindRobustElbow <- function(
     method1_results <- list()
 
     # 1A: Cumulative variance > 90%
-    dims_90pct <- which(cumulative_variance > 90)[1]
+    dims_90pct <- which(cumulative_variance > 90L)[1L]
     method1_results$cumulative_90 <- ifelse(
       is.na(dims_90pct),
       ndims,
@@ -59,7 +59,7 @@ FindRobustElbow <- function(
     )
 
     # 1B: Cumulative variance > 80%
-    dims_80pct <- which(cumulative_variance > 80)[1]
+    dims_80pct <- which(cumulative_variance > 80L)[1L]
     method1_results$cumulative_80 <- ifelse(
       is.na(dims_80pct),
       ndims,
@@ -69,18 +69,18 @@ FindRobustElbow <- function(
     # 1C: PCs explaining more than mean variance
     dims_above_mean <- which(pct_variance > mean(pct_variance))
     method1_results$above_mean <- ifelse(
-      length(dims_above_mean) > 0,
+      length(dims_above_mean) > 0L,
       max(dims_above_mean),
-      10
+      10L
     )
 
     # 1D: PCs explaining more than 2*SD of variance
-    threshold_2sd <- 2 * stats::sd(pct_variance)
+    threshold_2sd <- 2L * stats::sd(pct_variance)
     dims_above_2sd <- which(pct_variance > threshold_2sd)
     method1_results$above_2sd <- ifelse(
-      length(dims_above_2sd) > 0,
+      length(dims_above_2sd) > 0L,
       max(dims_above_2sd),
-      10
+      10L
     )
 
     return(method1_results)
@@ -91,7 +91,7 @@ FindRobustElbow <- function(
   FindElbowDeriv <- function(variance, ndims) {
     first_deriv <- diff(variance)
     second_deriv <- diff(first_deriv)
-    elbow_point <- which.max(abs(second_deriv)) + 1
+    elbow_point <- which.max(abs(second_deriv)) + 1L
     return(min(elbow_point, ndims))
   }
 
@@ -100,7 +100,7 @@ FindRobustElbow <- function(
   # Method 3: Robust distance-based elbow detection
   FindElbowDist <- function(variance, ndims) {
     # Calculate distances from each point to the line connecting first and last points
-    line_start <- c(1, variance[1])
+    line_start <- c(1L, variance[1L])
     line_end <- c(ndims, variance[ndims])
 
     distances <- vapply(
@@ -109,19 +109,19 @@ FindRobustElbow <- function(
         point <- c(i, variance[i])
         # Calculate perpendicular distance from point to line
         numerator <- abs(
-          (line_end[2] - line_start[2]) *
-            point[1] -
-            (line_end[1] - line_start[1]) * point[2] +
-            line_end[1] * line_start[2] -
-            line_end[2] * line_start[1]
+          (line_end[2L] - line_start[2L]) *
+            point[1L] -
+            (line_end[1L] - line_start[1L]) * point[2L] +
+            line_end[1L] * line_start[2L] -
+            line_end[2L] * line_start[1L]
         )
         denominator <- sqrt(
-          (line_end[2] - line_start[2])^2 +
-            (line_end[1] - line_start[1])^2
+          (line_end[2L] - line_start[2L])^2L +
+            (line_end[1L] - line_start[1L])^2L
         )
         numerator / denominator
       },
-      FUN.VALUE = numeric(1)
+      FUN.VALUE = numeric(1L)
     )
 
     elbow_point <- which.max(distances)
@@ -134,15 +134,15 @@ FindRobustElbow <- function(
     unlist(method1_results),
     method2_final,
     method3_final,
-    10,
-    15,
-    20,
-    25,
-    30,
-    35
+    10L,
+    15L,
+    20L,
+    25L,
+    30L,
+    35L
   )
   # Second largest value is the final recommended dimension
-  final_dims <- sort(all_methods, decreasing = TRUE)[2]
+  final_dims <- sort(all_methods, decreasing = TRUE)[2L]
 
   if (verbose) {
     cli::cli_h3(cli::col_green("Method Results"))
@@ -260,7 +260,7 @@ FindRobustElbow <- function(
           label = "Variance > 2*SD",
           color = "#193db3ff",
           hjust = -0.1,
-          size = 4,
+          size = 4L,
           fontface = "bold"
         ) +
         ggplot2::annotate(
@@ -270,7 +270,7 @@ FindRobustElbow <- function(
           label = "Second Derivative",
           color = "#15b915ff",
           hjust = -0.1,
-          size = 4,
+          size = 4L,
           fontface = "bold"
         ) +
         ggplot2::annotate(
@@ -280,7 +280,7 @@ FindRobustElbow <- function(
           label = "Distance-based",
           color = "#ffac30ff",
           hjust = -0.1,
-          size = 4,
+          size = 4L,
           fontface = "bold"
         ) +
         ggplot2::labs(
