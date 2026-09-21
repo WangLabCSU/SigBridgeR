@@ -3,7 +3,7 @@
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v3.8.3 loaded
+#> ✔ SigBridgeR v3.8.4 loaded
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
@@ -422,17 +422,17 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_5.5.1       SeuratObject_5.4.0 sp_2.2-3           SigBridgeR_3.8.3  
+#> [1] Seurat_5.5.1       SeuratObject_5.4.0 sp_2.2-3           SigBridgeR_3.8.4  
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] deldir_2.0-4           pbapply_1.7-5          gridExtra_2.3.1       
 #>   [4] rlang_1.3.0            magrittr_2.0.5         RcppAnnoy_0.0.23      
-#>   [7] otel_0.2.0             spatstat.geom_3.8-2    matrixStats_1.5.0     
+#>   [7] otel_0.2.0             spatstat.geom_3.8-3    matrixStats_1.5.0     
 #>  [10] ggridges_0.5.7         compiler_4.6.1         png_0.1-9             
 #>  [13] systemfonts_1.3.2      vctrs_0.7.3            reshape2_1.4.5        
 #>  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         
 #>  [19] promises_1.5.0         rmarkdown_2.32         ragg_1.5.2            
-#>  [22] purrr_1.2.2            xfun_0.60              cachem_1.1.0          
+#>  [22] purrr_1.2.2            xfun_0.61              cachem_1.1.0          
 #>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.8           
 #>  [28] spatstat.utils_3.2-5   irlba_2.3.7            parallel_4.6.1        
 #>  [31] cluster_2.1.8.2        R6_2.6.1               ica_1.0-3             
