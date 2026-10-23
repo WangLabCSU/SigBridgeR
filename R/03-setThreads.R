@@ -50,7 +50,7 @@
 #' setThreads(dt = 4L , verbose = FALSE)
 #' }
 setThreads <- function(
-  threads = 2L,
+  threads = getFuncOption("nthreads"),
   dt = threads,
   cheapr = threads,
   qs2 = threads,
@@ -228,7 +228,7 @@ config_tf_threads <- function(
     intra_op = c(1L, NULL)
   )
 
-  tf_config <- utils::modifyList(tf_config_default, tf_config)
+  tf_config <- modify_list(tf_config_default, tf_config)
 
   tf_config$xla_device <- tf_config$xla_device %||% 1L
 

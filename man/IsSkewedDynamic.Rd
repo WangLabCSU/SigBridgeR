@@ -4,7 +4,7 @@
 \alias{IsSkewedDynamic}
 \title{Test Whether the Proportion of a Target Value Is Highly Skewed}
 \usage{
-IsSkewedDynamic(x, target = 0, expected_p = 0.8, n_sd = 4L)
+IsSkewedDynamic(x, target = 0L, expected_p = 0.8, n_sd = 4L)
 }
 \arguments{
 \item{x}{A vector to be tested. Must be numeric, integer, or logical.

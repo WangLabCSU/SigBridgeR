@@ -384,7 +384,7 @@ bulk <- read.csv(
 bulk <- SymbolConvert(bulk)
 ```
 
-You can also use other package like `org.Hs.eg.db`  for gene symbol matching if you prefer not to use `SymbolConvert`'s built-in `IDConverter`.
+You can also use other package like `org.Hs.eg.db` or `SeuratExtend`  for gene symbol matching if you prefer not to use `SymbolConvert`'s built-in `IDConverter`.
 
 ```{r}
 #| label: symbol_convert_example2
@@ -404,6 +404,27 @@ gene_symbols <- mapIds(
   column = "SYMBOL",
   keytype = "ENSEMBL",
   multiVals = "first"
+)
+
+rownames(bulk) <- gene_symbols
+```
+
+```{r}
+#| label: symbol_convert_example3
+#| eval: false
+library(SeuratExtend)
+
+bulk <- read.csv(
+  "path_to_your_file.csv",
+  header = TRUE,
+  row.names = 1
+)
+
+ensembl_ids <- sub("\\..*", "", rownames(bulk))
+gene_symbols <- EnsemblToGenesymbol(
+  org.Hs.eg.db,
+  spe = "human",
+  keep.seq = TRUE
 )
 
 rownames(bulk) <- gene_symbols

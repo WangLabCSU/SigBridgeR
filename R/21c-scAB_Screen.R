@@ -280,7 +280,7 @@ DoscAB <- function(
     alpha = alpha,
     alpha_2 = alpha_2,
     maxiter = maxiter,
-    convergence_threshold = 1e-05L
+    convergence_threshold = 1e-5
   )
 
   if (p$verbose) {

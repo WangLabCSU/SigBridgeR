@@ -240,9 +240,9 @@ describe("ScreenFractionPlot - single screen type", {
     stats <- result$stats
     # Group A: 2 Positive, 1 Negative -> 2/3, 1/3
     a_pos <- stats[stats$Source == "A" & stats$scissor == "Positive", ]
-    expect_equal(a_pos$Fraction, 2L / 3L, tolerance = 1e-8L)
+    expect_equal(a_pos$Fraction, 2L / 3L, tolerance = 1e-8)
     a_neg <- stats[stats$Source == "A" & stats$scissor == "Negative", ]
-    expect_equal(a_neg$Fraction, 1L / 3L, tolerance = 1e-8L)
+    expect_equal(a_neg$Fraction, 1L / 3L, tolerance = 1e-8)
     # Group B: 1 Positive -> 1
     b_pos <- stats[stats$Source == "B" & stats$scissor == "Positive", ]
     expect_equal(b_pos$Fraction, 1L)

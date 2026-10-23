@@ -61,7 +61,7 @@ r_gtf_lines_to_gene_length <- function(lines, verbose = TRUE, canonical_chr_only
     .Call(`_SigBridgeR_r_gtf_lines_to_gene_length`, lines, verbose, canonical_chr_only)
 }
 
-is_counts_matrix_cpp <- function(initialized_matrix, verbose = FALSE, integer_tol = 1e-8L, min_integer_fraction = 0.95) {
+is_counts_matrix_cpp <- function(initialized_matrix, verbose = FALSE, integer_tol = 1e-8, min_integer_fraction = 0.95) {
     .Call(`_SigBridgeR_is_counts_matrix_cpp`, initialized_matrix, verbose, integer_tol, min_integer_fraction)
 }
 
@@ -85,11 +85,11 @@ make_null_list_NULL <- function(x) {
     .Call(`_SigBridgeR_make_null_list_NULL`, x)
 }
 
-normalize_metric <- function(x, invert = FALSE) {
-    .Call(`_SigBridgeR_normalize_metric`, x, invert)
+modify_list <- function(x, val, keep_null = TRUE) {
+    .Call(`_SigBridgeR_modify_list`, x, val, keep_null)
 }
 
-fast_assign_plan <- function(plan, rhs, env) {
-    invisible(.Call(`_SigBridgeR_fast_assign_plan`, plan, rhs, env))
+normalize_metric <- function(x, invert = FALSE) {
+    .Call(`_SigBridgeR_normalize_metric`, x, invert)
 }
 

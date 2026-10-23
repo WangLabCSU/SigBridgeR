@@ -2,22 +2,29 @@
 
 # ? Package startup messages
 .onAttach <- function(libname, pkgname) {
-  pkg_version <- utils::packageVersion(pkgname)
-
-  startup_spinner(
-    expr = invisible(),
-    pkgname = pkgname,
-    pkg_version = pkg_version
-  )
+  if (startup_message_allowed()) {
+    pkg_version <- utils::packageVersion(pkgname)
+    end <- Sys.time()
+    elapsed <- cli_timestamp_formatter(as.numeric(end - .time_record$start))
+    cli::cli_alert_success(sprintf(
+      "{.pkg {pkgname}} v{pkg_version} loaded {cli::col_grey('[%s]')}",
+      elapsed
+    ))
+  }
 }
 
 .onLoad <- function(libname, pkgname) {
+  if (startup_message_allowed()) {
+    .time_record$start <- Sys.time()
+  }
+
   # * default options
   op <- options()
   op_pkg <- list(
     SigBridgeR.verbose = TRUE,
     SigBridgeR.seed = 123L,
     SigBridgeR.timeout = 180L,
+    SigBridgeR.nthreads = 2L,
     IDConverter.datapath = system.file("extdata", package = "IDConverter")
   )
 
@@ -51,27 +58,33 @@
   invisible()
 }
 
-`%||%` <- function(x, y) if (is.null(x)) y else x
+.time_record <- new.env()
 
-startup_spinner <- function(expr, pkgname, pkg_version) {
-  if (!is_interactive() || !startup_message_allowed()) {
-    return(force(expr))
+cli_timestamp_formatter <- function(x) {
+  stopifnot(
+    length(x) == 1L,
+    is.numeric(x),
+    !is.na(x),
+    x >= 0L
+  )
+
+  if (x < 1L) {
+    sprintf("%.2f ms", x * 1000L)
+  } else if (x < 60L) {
+    sprintf("%.2f s", x)
+  } else if (x < 3600L) {
+    sprintf("%d min %.2f s", floor(x / 60L), x %% 60L)
+  } else {
+    sprintf(
+      "%d h %02d min %.2f s",
+      floor(x / 3600L),
+      floor((x %% 3600L) / 60L),
+      x %% 60L
+    )
   }
-
-  id <- cli::cli_progress_step(
-    msg = "{.pkg {pkgname}} v{pkg_version} loading",
-    msg_done = "{.pkg {pkgname}} v{pkg_version} loaded",
-    msg_failed = "{.pkg {pkgname}} v{pkg_version} fail to load",
-    spinner = TRUE
-  )
-
-  on.exit(
-    cli::cli_progress_done(id = id),
-    add = TRUE
-  )
-
-  force(expr)
 }
+
+`%||%` <- function(x, y) if (is.null(x)) y else x
 
 startup_message_allowed <- function() {
   allowed <- FALSE

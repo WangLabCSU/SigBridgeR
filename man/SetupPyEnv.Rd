@@ -53,6 +53,6 @@ SetupPyEnv("venv")
 }
 }
 \seealso{
-\code{\link[reticulate:conda-tools]{reticulate::conda_create()}}, \code{\link[reticulate:virtualenv-tools]{reticulate::virtualenv_create()}} for
+\code{\link[reticulate:conda_create]{reticulate::conda_create()}}, \code{\link[reticulate:virtualenv_create]{reticulate::virtualenv_create()}} for
 underlying environment creation functions.
 }

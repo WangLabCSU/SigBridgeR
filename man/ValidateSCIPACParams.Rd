@@ -17,6 +17,7 @@ ValidateSCIPACParams(
   ncore,
   ci_alpha,
   nfold,
+  sc_data,
   ...
 )
 }
@@ -25,7 +26,7 @@ ValidateSCIPACParams(
 
 \item{hvg, do_pca_sc, n_pc, sc_batch_col, resolution, ela_net_alpha, bt_size}{Forwarded from \code{\link[=DoSCIPAC]{DoSCIPAC()}}.}
 
-\item{ncore, ci_alpha, nfold}{Forwarded from \code{\link[=DoSCIPAC]{DoSCIPAC()}}.}
+\item{ncore, ci_alpha, nfold, sc_data}{Forwarded from \code{\link[=DoSCIPAC]{DoSCIPAC()}}.}
 
 \item{...}{Additional dots forwarded from \code{\link[=DoSCIPAC]{DoSCIPAC()}}.}
 }

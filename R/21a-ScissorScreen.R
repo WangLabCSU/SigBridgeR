@@ -95,11 +95,11 @@ ValidateScissorParams <- function(
   assay <- dots$assay %||% "RNA"
 
   # -- fill defaults for reliability_test & cell_evaluation -----------------
-  reliability_test <- utils::modifyList(
+  reliability_test <- modify_list(
     list(run = FALSE, n = 10L, nfold = 10L),
     reliability_test
   )
-  cell_evaluation <- utils::modifyList(
+  cell_evaluation <- modify_list(
     list(
       run = FALSE,
       benchmark_data = "path_to_file.RData",

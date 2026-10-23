@@ -224,7 +224,7 @@ DoLP_SGL <- function(
     logFC_threshold = 1L,
     pval_threshold = 0.05
   )
-  dge_analysis <- utils::modifyList(default_dge_analysis, dge_analysis)
+  dge_analysis <- modify_list(default_dge_analysis, dge_analysis)
 
   if (dge_analysis$run) {
     rlang::check_installed('limma')

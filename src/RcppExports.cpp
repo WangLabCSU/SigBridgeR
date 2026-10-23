@@ -268,6 +268,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// modify_list
+List modify_list(List x, List val, bool keep_null);
+RcppExport SEXP _SigBridgeR_modify_list(SEXP xSEXP, SEXP valSEXP, SEXP keep_nullSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type val(valSEXP);
+    Rcpp::traits::input_parameter< bool >::type keep_null(keep_nullSEXP);
+    rcpp_result_gen = Rcpp::wrap(modify_list(x, val, keep_null));
+    return rcpp_result_gen;
+END_RCPP
+}
 // normalize_metric
 NumericVector normalize_metric(NumericVector x, bool invert);
 RcppExport SEXP _SigBridgeR_normalize_metric(SEXP xSEXP, SEXP invertSEXP) {
@@ -278,18 +291,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type invert(invertSEXP);
     rcpp_result_gen = Rcpp::wrap(normalize_metric(x, invert));
     return rcpp_result_gen;
-END_RCPP
-}
-// fast_assign_plan
-void fast_assign_plan(List plan, SEXP rhs, Environment env);
-RcppExport SEXP _SigBridgeR_fast_assign_plan(SEXP planSEXP, SEXP rhsSEXP, SEXP envSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type plan(planSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type rhs(rhsSEXP);
-    Rcpp::traits::input_parameter< Environment >::type env(envSEXP);
-    fast_assign_plan(plan, rhs, env);
-    return R_NilValue;
 END_RCPP
 }
 
@@ -315,8 +316,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
     {"_SigBridgeR_list_to_character_recursive", (DL_FUNC) &_SigBridgeR_list_to_character_recursive, 1},
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
+    {"_SigBridgeR_modify_list", (DL_FUNC) &_SigBridgeR_modify_list, 3},
     {"_SigBridgeR_normalize_metric", (DL_FUNC) &_SigBridgeR_normalize_metric, 2},
-    {"_SigBridgeR_fast_assign_plan", (DL_FUNC) &_SigBridgeR_fast_assign_plan, 3},
     {NULL, NULL, 0}
 };
 

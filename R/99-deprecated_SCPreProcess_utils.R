@@ -26,7 +26,7 @@ modifyList2 <- function(x, val) {
 
   purrr::imap(val, function(v_val, key) {
     if (key %chin% names(x) && is.list(x[[key]]) && is.list(v_val)) {
-      return(utils::modifyList(x[[key]], v_val))
+      return(modify_list(x[[key]], v_val))
     }
     v_val
   })
@@ -307,7 +307,7 @@ QCFilter <- function(
     percent.mt = 20L,
     percent.rp = 60L
   )
-  thresh <- utils::modifyList(defaults, data_filter.thresh)
+  thresh <- modify_list(defaults, data_filter.thresh)
 
   if (verbose) {
     feature_name <- paste0("nFeature_", thresh$assay)

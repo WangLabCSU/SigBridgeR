@@ -11,7 +11,7 @@
   reduction = "umap",
   group.by = NULL,
   label = FALSE,
-  label.size = 4,
+  label.size = 4L,
   pt.size = NULL,
   cols = NULL,
   ...
@@ -21,7 +21,7 @@
   object,
   group.by = NULL,
   label = TRUE,
-  label.size = 4,
+  label.size = 4L,
   pt.size = 0.5,
   cols = NULL,
   ...

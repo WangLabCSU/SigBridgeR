@@ -649,7 +649,7 @@ DEGASEnvSet <- function(user_list = list()) {
     env.use_conda_forge = TRUE,
     env.verbose = getFuncOption("verbose")
   )
-  utils::modifyList(default_env_params, user_list)
+  modify_list(default_env_params, user_list)
 }
 
 #' @title Set Default Parameter Values for DEGAS
@@ -687,5 +687,5 @@ DEGASParamSet <- function(user_list) {
     DEGAS.lambda3 = 3.0,
     DEGAS.seed = SigBridgeRUtils::getFuncOption("seed")
   )
-  utils::modifyList(default_degas_params, user_list)
+  modify_list(default_degas_params, user_list)
 }

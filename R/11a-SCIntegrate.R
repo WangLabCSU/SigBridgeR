@@ -272,7 +272,7 @@ SCIntegrate.Seurat <- function(
   # step: a letter (input)
   # steps_to_run[[step]]: a letter (run)
   args_for_fn <- c(dots[!is_seurat], method = method)
-  args_integrate <- utils::modifyList(
+  args_integrate <- modify_list(
     SigBridgeRUtils::FilterArgs4Func(args_for_fn, method),
     SigBridgeRUtils::FilterArgs4Func(args_for_fn, Seurat::IntegrateLayers)
   )

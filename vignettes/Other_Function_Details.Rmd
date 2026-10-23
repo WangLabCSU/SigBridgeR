@@ -381,7 +381,7 @@ mydata[[3]] |> head()
 # TCGA-44-2655 43.50      0
 ```
 
-We recommend using the `zeallot` package's `%<-%` function to assign values and rename them simultaneously.
+We recommend using the `zeallot` `%<-%` function to assign values and rename them simultaneously.
 
 ```{r}
 #| label: load_ref_data_example_2

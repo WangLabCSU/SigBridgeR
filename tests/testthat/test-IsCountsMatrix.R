@@ -28,7 +28,7 @@
 # from the documented contract instead of hand-computed constants.
 ref_is_counts_matrix <- function(
   x,
-  integer_tol = 1e-8L,
+  integer_tol = 1e-8,
   min_integer_fraction = 0.95
 ) {
   x <- as.matrix(x)
@@ -97,7 +97,10 @@ describe("IsCountsMatrix - accepted input", {
 
   it("accepts a single gene or a single sample", {
     expect_true(IsCountsMatrix(matrix(c(5L, 7L), nrow = 1L), verbose = FALSE))
-    expect_true(IsCountsMatrix(matrix(c(5L, 7L, 11L), ncol = 1L), verbose = FALSE))
+    expect_true(IsCountsMatrix(
+      matrix(c(5L, 7L, 11L), ncol = 1L),
+      verbose = FALSE
+    ))
   })
 
   it("accepts a matrix with a small fraction of non-integer values", {
@@ -222,10 +225,16 @@ describe("IsCountsMatrix - rejection reasons", {
   it("rejects a matrix with a non-positive library size", {
     # Column 1 is all zeros.
     expect_false(
-      IsCountsMatrix(matrix(c(0L, 0L, 3L, 4L), nrow = 2L, ncol = 2L), verbose = FALSE)
+      IsCountsMatrix(
+        matrix(c(0L, 0L, 3L, 4L), nrow = 2L, ncol = 2L),
+        verbose = FALSE
+      )
     )
     # Every column is all zeros.
-    expect_false(IsCountsMatrix(matrix(0L, nrow = 2L, ncol = 2L), verbose = FALSE))
+    expect_false(IsCountsMatrix(
+      matrix(0L, nrow = 2L, ncol = 2L),
+      verbose = FALSE
+    ))
   })
 })
 
@@ -281,7 +290,10 @@ describe("IsCountsMatrix - argument validation", {
   })
 
   it("checks the shape of x before the remaining arguments", {
-    expect_error(IsCountsMatrix(1L:4L, verbose = "yes"), "x must be a 2d matrix")
+    expect_error(
+      IsCountsMatrix(1L:4L, verbose = "yes"),
+      "x must be a 2d matrix"
+    )
   })
 
   it("aborts when verbose is not a flag", {
@@ -299,7 +311,10 @@ describe("IsCountsMatrix - argument validation", {
   it("aborts when integer_tol is outside [0, 1]", {
     counts <- matrix(1L:4L, nrow = 2L, ncol = 2L)
 
-    expect_error(IsCountsMatrix(counts, integer_tol = -0.1), class = "chk_error")
+    expect_error(
+      IsCountsMatrix(counts, integer_tol = -0.1),
+      class = "chk_error"
+    )
     expect_error(IsCountsMatrix(counts, integer_tol = 1.1), class = "chk_error")
   })
 

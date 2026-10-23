@@ -5,7 +5,7 @@
 \title{Configure Parallel Execution Backends}
 \usage{
 setThreads(
-  threads = 2L,
+  threads = getFuncOption("nthreads"),
   dt = threads,
   cheapr = threads,
   qs2 = threads,

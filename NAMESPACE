@@ -101,6 +101,7 @@ export(setThreads)
 if (getRversion() < "4.3.0") importFrom("S7", "@")
 import(S7)
 importFrom(Rcpp,evalCpp)
+importFrom(SigBridgeRUtils,"%<-%")
 importFrom(data.table,
   "%chin%",
   ":=",

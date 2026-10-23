@@ -4,7 +4,7 @@
 \alias{complete_counts}
 \title{A Function to Replace \code{tidyr::complete()}}
 \usage{
-complete_counts(data, ..., fill = list(n = 0))
+complete_counts(data, ..., fill = list(n = 0L))
 }
 \description{
 Detects if \code{tidyr::complete()} is available and uses it if so.

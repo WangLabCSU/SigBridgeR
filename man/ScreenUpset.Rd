@@ -9,7 +9,7 @@ ScreenUpset(
   screen_type = NULL,
   order_by = c("freq", "degree"),
   show_plot = FALSE,
-  n_intersections = 20,
+  n_intersections = 20L,
   bar_color = "#5189bb",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
