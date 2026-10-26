@@ -107,6 +107,7 @@ GetGeneLength_file_impl <- function(
   canonical_chr_only = FALSE,
   ...
 ) {
+  x <- normalizePath(x)
   check_dots_empty()
   if (!file.exists(x)) {
     Abort("{.file {x}} is not found", type = "[FILE ERROR]")

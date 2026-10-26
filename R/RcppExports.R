@@ -49,8 +49,8 @@ ExtractMetricsCpp <- function(assay_data, counts, low_expressed_thresh = 0.2) {
     .Call(`_SigBridgeR_ExtractMetricsCpp`, assay_data, counts, low_expressed_thresh)
 }
 
-fpkm_to_tpm_cpp <- function(initialized_fpkm, na_as_zero = TRUE, verbose = TRUE) {
-    .Call(`_SigBridgeR_fpkm_to_tpm_cpp`, initialized_fpkm, na_as_zero, verbose)
+fpkm_to_tpm_cpp <- function(initialized_fpkm, na_as_zero = TRUE) {
+    .Call(`_SigBridgeR_fpkm_to_tpm_cpp`, initialized_fpkm, na_as_zero)
 }
 
 gtf_file_to_gene_length <- function(path, verbose = TRUE, canonical_chr_only = FALSE) {

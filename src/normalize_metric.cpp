@@ -1,61 +1,50 @@
 #include <Rcpp.h>
-#include <limits>
+#include <cmath>
 
 using namespace Rcpp;
 
-// Min-max normalization
+// Min-max normalization.
+// - NA / NaN / +-Inf 视为缺失：不参与 min/max，输出 NA
+// - 有效值全部相同（或仅 1 个有效值）：有效位置输出 0.5
 // [[Rcpp::export]]
-NumericVector normalize_metric(NumericVector x, bool invert = false) {
-  int n = x.size();
-  double sum = 0.0;
-  double sumsq = 0.0;
-  int count = 0;
+NumericVector normalize_metric(const NumericVector &x, bool invert = false) {
+  const R_xlen_t n = x.size();
+  const double *px = x.begin();
+
   double xmin = R_PosInf;
   double xmax = R_NegInf;
-  // single pass: compute sum, sumsq, min, max, ignoring NA/NaN
-  for (int i = 0; i < n; ++i) {
-    double xi = x[i];
-    if (NumericVector::is_na(xi) || R_IsNaN(xi)) {
+  for (R_xlen_t i = 0; i < n; ++i) {
+    const double xi = px[i];
+    if (!std::isfinite(xi))
       continue;
-    }
-    sum += xi;
-    sumsq += xi * xi;
-    count++;
     if (xi < xmin)
       xmin = xi;
     if (xi > xmax)
       xmax = xi;
   }
-  NumericVector out(n);
-  // corresponds to stats::sd(x, na.rm = TRUE)
-  // when the number of non-NA values <= 1, sd is NA; treat as non-normalizable
-  // -> 0.5
-  if (count <= 1) {
-    std::fill(out.begin(), out.end(), 0.5);
+
+  NumericVector out = no_init(n);
+  double *po = out.begin();
+
+  // 无有效值 / 仅一个有效值 / 全部相同
+  if (!(xmax > xmin)) {
+    for (R_xlen_t i = 0; i < n; ++i) {
+      po[i] = std::isfinite(px[i]) ? 0.5 : NA_REAL;
+    }
     return out;
   }
-  double mean = sum / count;
-  double variance = (sumsq - count * mean * mean) / (count - 1);
-  // prevent tiny negative values caused by floating-point error
-  if (variance < 0.0 && variance > -1e-15) {
-    variance = 0.0;
-  }
-  double sd1 = std::sqrt(variance);
-  if (sd1 < std::numeric_limits<double>::epsilon()) {
-    std::fill(out.begin(), out.end(), 0.5);
-    return out;
-  }
-  double range = xmax - xmin;
-  for (int i = 0; i < n; ++i) {
-    double xi = x[i];
-    if (NumericVector::is_na(xi) || R_IsNaN(xi)) {
-      out[i] = NA_REAL;
-    } else {
-      double val = (xi - xmin) / range;
-      out[i] = invert ? 1.0 - val : val;
+
+  const double range = xmax - xmin;
+  if (invert) {
+    for (R_xlen_t i = 0; i < n; ++i) {
+      const double xi = px[i];
+      po[i] = std::isfinite(xi) ? (xmax - xi) / range : NA_REAL;
+    }
+  } else {
+    for (R_xlen_t i = 0; i < n; ++i) {
+      const double xi = px[i];
+      po[i] = std::isfinite(xi) ? (xi - xmin) / range : NA_REAL;
     }
   }
   return out;
 }
-
-// -----------------------------------------------------------------------------

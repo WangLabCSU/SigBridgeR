@@ -56,51 +56,98 @@ FPKMToTPM <- function(data, na_as_zero = TRUE, verbose = TRUE, ...) {
   chk::chk_flag(verbose)
 
   if (!is_2d(data)) {
-    Abort(
-      "`data` must be a 2D matrix-like object",
-      type = "[VALUE ERROR]"
-    )
+    Abort("`data` must be a 2D matrix-like object", type = "[VALUE ERROR]")
   }
 
-  # is.infinite()/is.finite() have no method for lists, so a data frame has to
-  # be coerced before the finite-value guard below.
   if (is.data.frame(data)) {
     data <- as.matrix(data)
   }
 
-  if (any(is.infinite(data), na.rm = TRUE)) {
+  # 含非数值列的 data frame 会在这里变成字符矩阵
+  if (is.matrix(data) && !is.numeric(data)) {
     Abort(
-      "`data` contains infinite values",
+      "`data` must contain only numeric values",
       type = "[VALUE ERROR]"
     )
   }
 
-  if (any(data < 0L, na.rm = TRUE)) {
-    Abort(
-      "`data` contains negative values",
-      type = "[VALUE ERROR]"
-    )
+  # 逐元素校验全部在 C++ 的单趟扫描中完成
+  res <- fpkm_to_tpm_cpp(
+    beachmat::initializeCpp(data),
+    na_as_zero = na_as_zero
+  )
+
+  # NA 报告：保持原行为（verbose 且存在 NA 时展示）
+  if (verbose && (res$status == 1L || res$na_count > 0)) {
+    CheckNA(data = data, ...)
   }
 
-  if (anyNA(data)) {
-    if (verbose) {
-      CheckNA(data = data, ...)
-    }
-    if (!na_as_zero) {
-      Abort(
+  if (res$status != 0L) {
+    where <- get_cell_position(data, res$row, res$col)
+    switch(
+      as.character(res$status),
+      "1" = Abort(
         "`data` contains missing values",
         "Set `na_as_zero = TRUE` to replace them with zero",
         type = "[VALUE ERROR]"
+      ),
+      "2" = Abort(
+        paste0("`data` contains negative values (first at {where})"),
+        type = "[VALUE ERROR]"
+      ),
+      "3" = Abort(
+        paste0("`data` contains infinite values (first at {where})"),
+        type = "[VALUE ERROR]"
+      ),
+      "4" = Abort(
+        paste0("The FPKM total overflows ({where})"),
+        type = "[VALUE ERROR]"
+      ),
+      "5" = Abort(
+        paste0("The FPKM total is too small to normalize ({where})"),
+        type = "[VALUE ERROR]"
       )
-    }
+    )
   }
 
-  result <- fpkm_to_tpm_cpp(
-    beachmat::initializeCpp(data),
-    na_as_zero = na_as_zero,
-    verbose = verbose
-  )
-
+  result <- res$tpm
   dimnames(result) <- dimnames(data)
-  return(result)
+
+  n_zero <- length(res$zero_cols)
+  if (n_zero > 0L) {
+    shown <- utils::head(res$zero_cols, 5L)
+    cn <- colnames(data)
+    lab <- if (is.null(cn)) shown else cn[shown]
+    cli::cli_warn(c(
+      "{n_zero} sample{?s} ha{?s/ve} a total FPKM of zero.",
+      i = "Their TPM values are set to zero (e.g. {.val {lab}})."
+    ))
+  }
+
+  if (verbose) {
+    if (res$na_count > 0) {
+      cli::cli_alert_info(
+        "Replacing {res$na_count} missing value{?s} with zero"
+      )
+    }
+    cli::cli_alert_success(
+      "TPM conversion completed: {nrow(result)} genes x {ncol(result)} samples"
+    )
+  }
+
+  result
+}
+
+get_cell_position <- function(data, i, j) {
+  esc <- function(x) gsub("([{}])", "\\1\\1", x)
+  rn <- rownames(data)
+  cn <- colnames(data)
+  paste0(
+    "row ",
+    if (i > 0L) i else "?",
+    if (i > 0L && !is.null(rn)) paste0(" '", esc(rn[i]), "'"),
+    ", column ",
+    j,
+    if (!is.null(cn)) paste0(" '", esc(cn[j]), "'")
+  )
 }

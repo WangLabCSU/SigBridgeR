@@ -35,166 +35,110 @@ bool is_counts_matrix_cpp(SEXP initialized_matrix, bool verbose = false,
   if (!std::isfinite(integer_tol) || integer_tol < 0.0) {
     stop("integer_tol must be a finite non-negative number.");
   }
-
   if (!std::isfinite(min_integer_fraction) || min_integer_fraction < 0.0 ||
       min_integer_fraction > 1.0) {
     stop("min_integer_fraction must be between 0 and 1.");
   }
 
-  /*
-   * Parse the beachmat external pointer.
-   */
   Rtatami::BoundNumericPointer parsed(initialized_matrix);
-  auto matrix = parsed->ptr;
+  const auto &matrix = parsed->ptr;
+  const auto nr = matrix->nrow();
+  const auto nc = matrix->ncol();
 
-  const std::size_t nr = static_cast<std::size_t>(matrix->nrow());
-
-  const std::size_t nc = static_cast<std::size_t>(matrix->ncol());
-
-  const std::size_t total_values = nr * nc;
-
-  if (total_values == 0) {
-    if (verbose) {
-      cli_emit("info", "Result: FALSE; matrix is empty");
-    }
-
+  auto fail = [&](const char *msg) {
+    if (verbose)
+      cli_emit("info", std::string(msg));
     return false;
-  }
+  };
 
-  /*
-   * Library size of each sample.
-   */
-  std::vector<double> library_sizes(nc, 0.0);
+  if (nr == 0 || nc == 0)
+    return fail("Result: FALSE; matrix is empty");
 
-  std::size_t nonnegative_count = 0;
-  std::size_t integer_like_count = 0;
-  std::size_t zero_count = 0;
+  std::size_t nonzero = 0;      // 非零元素数
+  std::size_t integer_like = 0; // 非零元素中接近整数的个数
 
-  /*
-   * Read column by column.
-   *
-   * For sparse matrices, dense_column() returns unstored elements as 0;
-   * for a DelayedMatrix it requests the data of the corresponding column.
-   */
-  auto accessor = matrix->dense_column();
-  std::vector<double> buffer(nr);
+  // 返回 0 = 正常；1 = 非有限；2 = 负值。零值最先短路。
+  auto classify = [&](double v) -> int {
+    if (v == 0.0)
+      return 0;
+    if (!std::isfinite(v))
+      return 1;
+    if (v < 0.0)
+      return 2;
+    ++nonzero;
+    if (std::fabs(v - std::nearbyint(v)) <= integer_tol)
+      ++integer_like;
+    return 0;
+  };
 
-  for (std::size_t col = 0; col < nc; ++col) {
-    auto values = accessor->fetch(col, buffer.data());
+  auto reject = [&](int code) {
+    return code == 1 ? fail("Result: FALSE; matrix contains NA, NaN, or Inf")
+                     : fail("Result: FALSE; matrix contains negative values");
+  };
 
-    double sample_sum = 0.0;
+  // 值非负且有限时，library size > 0 等价于该列至少有一个正值
+  std::size_t empty_cols = 0;
 
-    for (std::size_t row = 0; row < nr; ++row) {
-      const double value = values[row];
+  if (matrix->is_sparse()) {
+    tatami::Options opt;
+    opt.sparse_extract_index = false; // 只需要值
+    auto ext = matrix->sparse_column(opt);
+    std::vector<double> vbuf(static_cast<std::size_t>(nr));
 
-      /*
-       * std::isfinite() excludes all of:
-       * - NA_real_
-       * - NaN
-       * - +Inf
-       * - -Inf
-       */
-      if (!std::isfinite(value)) {
-        if (verbose) {
-          cli_emit("info", "Result: FALSE; matrix contains NA, NaN, or Inf");
-        }
-
-        return false;
+    for (int c = 0; c < nc; ++c) {
+      if ((c & 0xFF) == 0)
+        Rcpp::checkUserInterrupt();
+      auto range = ext->fetch(c, vbuf.data(), nullptr);
+      std::size_t before = nonzero;
+      for (int k = 0; k < range.number; ++k) {
+        if (int code = classify(range.value[k]))
+          return reject(code);
       }
-
-      if (value >= 0.0) {
-        ++nonnegative_count;
-      }
-
-      if (value == 0.0) {
-        ++zero_count;
-      }
-
-      /*
-       * Use fabs(value - round(value)) to test whether the value is close to
-       * an integer.
-       */
-      const double rounded = std::round(value);
-
-      if (std::fabs(value - rounded) <= integer_tol) {
-        ++integer_like_count;
-      }
-
-      /*
-       * Keep the semantics of the original implementation:
-       * the library size is the sum of all values in each column.
-       */
-      sample_sum += value;
+      if (nonzero == before)
+        ++empty_cols;
     }
+  } else {
+    auto ext = matrix->dense_column();
+    std::vector<double> buf(static_cast<std::size_t>(nr));
 
-    library_sizes[col] = sample_sum;
-  }
-
-  /*
-   * Check non-negativity.
-   */
-  const double nonnegative_fraction = static_cast<double>(nonnegative_count) /
-                                      static_cast<double>(total_values);
-
-  if (nonnegative_fraction < 1.0) {
-    if (verbose) {
-      cli_emit("info", "Result: FALSE; matrix contains negative values");
+    for (int c = 0; c < nc; ++c) {
+      if ((c & 0xFF) == 0)
+        Rcpp::checkUserInterrupt();
+      const double *values = ext->fetch(c, buf.data());
+      std::size_t before = nonzero;
+      for (int r = 0; r < nr; ++r) {
+        if (int code = classify(values[r]))
+          return reject(code);
+      }
+      if (nonzero == before)
+        ++empty_cols;
     }
-
-    return false;
   }
 
-  /*
-   * Check the fraction of integer-like values.
-   */
-  const double integer_fraction = static_cast<double>(integer_like_count) /
-                                  static_cast<double>(total_values);
+  if (empty_cols > 0) {
+    return fail("Result: FALSE; at least one sample has a library size <= 0");
+  }
 
+  // nonzero > 0 在这里必然成立（每列至少有一个正值）
+  const double integer_fraction =
+      static_cast<double>(integer_like) / static_cast<double>(nonzero);
   if (integer_fraction < min_integer_fraction) {
     if (verbose) {
-      cli_emit("info", "Result: FALSE; insufficient integer-like values "
-                       "(integer fraction " +
+      cli_emit("info", "Result: FALSE; insufficient integer-like values among "
+                       "non-zero entries (integer fraction " +
                            std::to_string(integer_fraction) + " < threshold " +
                            std::to_string(min_integer_fraction) + ")");
     }
-
     return false;
   }
 
-  /*
-   * Check the library size of each sample.
-   *
-   * Since Inf/NaN have already been excluded above, this mainly checks for:
-   * - total <= 0;
-   * - non-finite results, which should not occur in theory.
-   */
-  for (std::size_t col = 0; col < nc; ++col) {
-    const double library_size = library_sizes[col];
-
-    if (!std::isfinite(library_size) || library_size <= 0.0) {
-      if (verbose) {
-        cli_emit("info", "Result: FALSE; at least one sample has a "
-                         "library size <= 0");
-      }
-
-      return false;
-    }
-  }
-
-  /*
-   * Success.
-   */
   if (verbose) {
-    const double zero_fraction =
-        static_cast<double>(zero_count) / static_cast<double>(total_values);
-
-    cli_emit("success",
-             "Result: TRUE; matrix is likely a counts matrix "
-             "(non-negative fraction " +
-                 std::to_string(nonnegative_fraction) + ", integer fraction " +
-                 std::to_string(integer_fraction) + ", zero fraction " +
-                 std::to_string(zero_fraction) + ")");
+    const double density = static_cast<double>(nonzero) /
+                           (static_cast<double>(nr) * static_cast<double>(nc));
+    cli_emit("success", "Result: TRUE; matrix is likely a counts matrix "
+                        "(integer fraction among non-zero " +
+                            std::to_string(integer_fraction) + ", density " +
+                            std::to_string(density) + ")");
   }
-
   return true;
 }

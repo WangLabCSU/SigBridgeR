@@ -103,5 +103,7 @@ LinkingTo:
     RcppArmadillo (>= 0.12.4.0.0),
     assorthead,
     beachmat
-SystemRequirements: C++17
+SystemRequirements: 
+    C++17,
+    zlib (>= 1.2.4)
 Config/roxygen2/version: 8.1.0

@@ -1,0 +1,20 @@
+# jarl configuration file
+# Reference: https://jarl.etiennebacher.com/reference/config-file
+
+[lint]
+# Rules enabled on top of jarl's default rule set. The `TESTTHAT` group is
+# opt-in, so it has to be requested explicitly.
+extend-select = ["TESTTHAT"]
+
+# Files or directories that jarl should not lint.
+exclude = ["R/vendor-*.R"]
+
+# Also lint the R code inside `@examples` and `@examplesIf` tags
+# (the default).
+check-roxygen = true
+
+# Rules that `jarl check --fix` is allowed to fix (all rules by default).
+# fixable = ["PERF"]
+
+# Rules that `jarl check --fix` must leave untouched.
+# unfixable = ["undesirable_function"]

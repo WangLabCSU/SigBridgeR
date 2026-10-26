@@ -1,192 +1,106 @@
-#include <Rcpp.h>
 #include "Rtatami.h"
+#include <Rcpp.h>
 
 #include <cmath>
 #include <cstddef>
-#include <string>
+#include <limits>
 #include <vector>
-
-#include "SigBridgeR.h"
-
-// [[Rcpp::depends(beachmat, assorthead)]]
-// [[Rcpp::plugins(cpp17)]]
 
 using namespace Rcpp;
 
-/*
- * FPKM to TPM conversion.
- *
- * The initialized_fpkm passed from R must be the external pointer produced by
- *
- *     beachmat::initializeCpp(fpkm)
- *
- * The beachmat backend is only used for reading, so the output is always a
- * new dense NumericMatrix.
- */
+namespace {
+constexpr int kOk = 0;
+constexpr int kNaNotAllowed = 1; // 遇到 NA 且 na_as_zero = FALSE
+constexpr int kNegative = 2;
+constexpr int kInfinite = 3;
+constexpr int kTotalOverflow = 4; // 列总和溢出为 Inf
+constexpr int kTotalTooSmall = 5; // 1e6 / total 溢出
+} // namespace
+
+// 返回 list(tpm, status, row, col, na_count, zero_cols)
+// status != 0 时 tpm 为 NULL，row/col 为首个问题位置（1-based，col 可能无 row）
 // [[Rcpp::export]]
-NumericMatrix fpkm_to_tpm_cpp(SEXP initialized_fpkm, bool na_as_zero = true,
-                              bool verbose = true) {
-  /*
-   * Parse the beachmat/tatami external pointer.
-   */
+List fpkm_to_tpm_cpp(SEXP initialized_fpkm, bool na_as_zero = true) {
   Rtatami::BoundNumericPointer parsed(initialized_fpkm);
-  auto matrix = parsed->ptr;
+  const auto &matrix = parsed->ptr;
+  const int nr = matrix->nrow();
+  const int nc = matrix->ncol();
 
-  const std::size_t nr = static_cast<std::size_t>(matrix->nrow());
+  NumericMatrix output(no_init(nr, nc));
+  double *const out_base = output.begin();
 
-  const std::size_t nc = static_cast<std::size_t>(matrix->ncol());
+  int status = kOk;
+  int bad_row = 0;
+  int bad_col = 0;
+  double na_count = 0.0;      // 用 double 计数，避免超过 2^31 个 NA 时溢出
+  std::vector<int> zero_cols; // 总和为 0 的列（1-based）
 
-  if (nr > static_cast<std::size_t>(INT_MAX) ||
-      nc > static_cast<std::size_t>(INT_MAX)) {
-    stop("Matrix dimensions exceed R integer limits.");
-  }
+  if (nr > 0 && nc > 0) {
+    constexpr double kMax = std::numeric_limits<double>::max();
+    auto ext = matrix->dense_column();
+    std::vector<double> buffer(static_cast<std::size_t>(nr));
 
-  /*
-   * Output matrix.
-   *
-   * beachmat handles reading the input matrix; the output is created by Rcpp.
-   */
-  NumericMatrix output(static_cast<int>(nr), static_cast<int>(nc));
+    // 单趟：读一次 -> 校验 -> 写入输出列 -> 原地缩放（该列仍在缓存中）
+    for (int c = 0; c < nc; ++c) {
+      if ((c & 0xFF) == 0) {
+        checkUserInterrupt();
+      }
 
-  /*
-   * FPKM total for each sample.
-   */
-  std::vector<double> sample_sums(nc, 0.0);
+      const double *values = ext->fetch(c, buffer.data());
+      double *const out = out_base + static_cast<R_xlen_t>(c) * nr;
+      double total = 0.0;
 
-  R_xlen_t na_count = 0;
-
-  /*
-   * Access the matrix column by column.
-   *
-   * For sparse matrices, unstored positions are returned as 0;
-   * for DelayedMatrix, fetch() reads or computes the corresponding column.
-   */
-  auto accessor = matrix->dense_column();
-
-  std::vector<double> buffer(nr);
-
-  /*
-   * First pass:
-   *
-   * - check for NA/NaN;
-   * - decide whether to treat them as 0 according to na_as_zero;
-   * - compute the FPKM total for each sample.
-   *
-   * Because the beachmat backend is usually read-only, values cannot be
-   * modified in place, so this pass only records the totals and the second
-   * pass writes into output.
-   */
-  for (std::size_t col = 0; col < nc; ++col) {
-    auto values = accessor->fetch(col, buffer.data());
-
-    double total = 0.0;
-
-    for (std::size_t row = 0; row < nr; ++row) {
-      const double value = values[row];
-
-      /*
-       * std::isnan detects both NA_real_ and NaN.
-       */
-      if (std::isnan(value)) {
-        ++na_count;
-
-        if (!na_as_zero) {
-          stop("The input matrix contains missing values. "
-               "Set na_as_zero = TRUE to replace them with zero.");
+      for (int r = 0; r < nr; ++r) {
+        const double v = values[r];
+        if (!(v >= 0.0 && v <= kMax)) { // NaN / 负值 / ±Inf，一次比较搞定热路径
+          if (std::isnan(v)) {
+            if (!na_as_zero) {
+              status = kNaNotAllowed;
+              bad_row = r + 1;
+              bad_col = c + 1;
+              break;
+            }
+            ++na_count;
+            out[r] = 0.0;
+            continue;
+          }
+          status = std::isinf(v) ? kInfinite : kNegative;
+          bad_row = r + 1;
+          bad_col = c + 1;
+          break;
         }
-
-        /*
-         * When na_as_zero = TRUE, NA/NaN is not added to total.
-         */
-        continue;
+        out[r] = v;
+        total += v;
+      }
+      if (status != kOk) {
+        break;
       }
 
-      total += value;
-    }
-
-    sample_sums[col] = total;
-  }
-
-  /*
-   * Emit the NA replacement message.
-   *
-   * cli_emit() must be called on the R main thread.
-   */
-  if (verbose && na_count > 0) {
-    cli_emit("info",
-             "Replacing " +
-                 std::to_string(static_cast<unsigned long long>(na_count)) +
-                 " missing value(s) with zero");
-  }
-
-  /*
-   * Second pass:
-   *
-   * TPM_i = FPKM_i / sum(FPKM) * 1e6
-   */
-  int zero_sum_samples = 0;
-
-  for (std::size_t col = 0; col < nc; ++col) {
-    const double total = sample_sums[col];
-
-    if (!std::isfinite(total)) {
-      stop("Input contains a non-finite sample total.");
-    }
-
-    auto values = accessor->fetch(col, buffer.data());
-
-    if (total > 0.0) {
-      const double scale = 1e6 / total;
-
-      for (std::size_t row = 0; row < nr; ++row) {
-        const double value = values[row];
-
-        if (std::isnan(value)) {
-          /*
-           * When na_as_zero = TRUE, NA/NaN is written out as 0.
-           * When na_as_zero = FALSE, the first pass has already stopped.
-           */
-          output(static_cast<int>(row), static_cast<int>(col)) = 0.0;
-        } else {
-          output(static_cast<int>(row), static_cast<int>(col)) = value * scale;
+      if (!std::isfinite(total)) {
+        status = kTotalOverflow;
+        bad_col = c + 1;
+        break;
+      }
+      if (total > 0.0) {
+        const double scale = 1e6 / total;
+        if (!std::isfinite(scale)) {
+          status = kTotalTooSmall;
+          bad_col = c + 1;
+          break;
         }
-      }
-    } else if (total == 0.0) {
-      ++zero_sum_samples;
-
-      /*
-       * For a sample whose total is 0, all of its TPM values are 0.
-       */
-      for (std::size_t row = 0; row < nr; ++row) {
-        output(static_cast<int>(row), static_cast<int>(col)) = 0.0;
-      }
-    } else {
-      /*
-       * Keep consistent with the original implementation:
-       * no normalization is performed when total < 0.
-       *
-       * FPKM values are normally non-negative, so checking this on the R
-       * side beforehand is recommended.
-       */
-      for (std::size_t row = 0; row < nr; ++row) {
-        const double value = values[row];
-
-        output(static_cast<int>(row), static_cast<int>(col)) =
-            std::isnan(value) ? 0.0 : value;
+        for (int r = 0; r < nr; ++r) {
+          out[r] *= scale;
+        }
+      } else {
+        // 全部非负且总和为 0：整列已经是 0（NA 也已写成 0）
+        zero_cols.push_back(c + 1);
       }
     }
   }
 
-  if (zero_sum_samples > 0) {
-    warning("%d sample(s) have a total FPKM of zero; "
-            "their TPM values will be set to zero.",
-            zero_sum_samples);
-  }
-
-  if (verbose) {
-    cli_emit("success", "TPM conversion completed: " + std::to_string(nr) +
-                            " genes x " + std::to_string(nc) + " samples");
-  }
-
-  return output;
+  return List::create(
+      Named("tpm") = (status == kOk ? static_cast<SEXP>(output) : R_NilValue),
+      Named("status") = status, Named("row") = bad_row, Named("col") = bad_col,
+      Named("na_count") = na_count,
+      Named("zero_cols") = IntegerVector(zero_cols.begin(), zero_cols.end()));
 }
