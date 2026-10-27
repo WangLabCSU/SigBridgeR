@@ -6,7 +6,7 @@
 \usage{
 CacheSysCall(
   mode = c("load", "save"),
-  path = if (mode == "save") cache@cache_path else NULL,
+  path = NULL,
   cache,
   verbose = TRUE,
   timestamp = NULL,
@@ -16,9 +16,10 @@ CacheSysCall(
 \arguments{
 \item{mode}{\code{character}. Either \code{"load"} or \code{"save"}.}
 
-\item{path}{\code{character} or \code{NULL}. User-specified path. In save mode,
-defaults to \code{cache@cache_path}. In load mode, defaults to \code{NULL} (user
-will be prompted to choose).}
+\item{path}{\code{character} or \code{NULL}. Path passed to \code{\link[=CacheSetHere]{CacheSetHere()}}. In
+save mode a \code{NULL} value falls back to \code{cache@cache_path}. In load mode
+it is mandatory: a \code{NULL} value aborts, no cache is looked up
+implicitly. Default: \code{NULL}.}
 
 \item{cache}{A \code{ScreenMethodConfig} or \code{ScreenMethodCache} S7 object.
 For save mode, a \code{ScreenMethodCache} is required (contains the data to
@@ -80,7 +81,11 @@ cache <- ScreenMethodCache(
     param = list(alpha = 0.05)
   )
 )
-result <- CacheSysCall("load", cache = cache)
+result <- CacheSysCall(
+  "load",
+  path = "Scissor_res/survival_2025_01_01",
+  cache = cache
+)
 
 # Save results to cache
 cache <- ScreenMethodCache(

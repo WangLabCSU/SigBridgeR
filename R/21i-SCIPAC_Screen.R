@@ -50,8 +50,8 @@ ValidateSCIPACParams <- function(
   chk::chk_numeric(ela_net_alpha)
   chk::chk_numeric(ci_alpha)
   chk::chk_numeric(resolution)
-  chk::chk_chr(label_type)
-  chk::chk_chr(phenotype_class)
+  chk::chk_scalar(label_type)
+  chk::chk_scalar(phenotype_class)
   chk::chk_is(sc_data, "Seurat")
   if (!is.null(sc_batch_col)) {
     chk::chk_character(sc_batch_col)

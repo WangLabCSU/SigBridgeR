@@ -149,7 +149,7 @@ ScreenMethodCache <- new_class(
     }
     EnsureParentDir(self@cache_config_path)
 
-    if (!endsWith(path, "cache_config.json")) {
+    if (!endsWith(self@cache_config_path, "cache_config.json")) {
       return(cli::cli_fmt(cli::cli_text(
         "@cache_config_path ({.file {self@cache_config_path}}) must end with {.file cache_config.json}"
       )))

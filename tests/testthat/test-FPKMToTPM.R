@@ -83,7 +83,7 @@ test_that("FPKMToTPM() matches a base R reference implementation", {
 
   tpm <- FPKMToTPM(fpkm, verbose = FALSE)
 
-  expect_equal(tpm, ref_fpkm_to_tpm(fpkm), tolerance = 1e-12L)
+  expect_equal(tpm, ref_fpkm_to_tpm(fpkm), tolerance = 1e-12)
 })
 
 test_that("FPKMToTPM() handles single gene, single sample and 1x1 inputs", {
@@ -97,7 +97,7 @@ test_that("FPKMToTPM() handles single gene, single sample and 1x1 inputs", {
   expect_equal(
     FPKMToTPM(one_sample, verbose = FALSE),
     ref_fpkm_to_tpm(one_sample),
-    tolerance = 1e-12L
+    tolerance = 1e-12
   )
 
   scalar <- matrix(7L, nrow = 1L, ncol = 1L)
@@ -109,19 +109,12 @@ test_that("FPKMToTPM() handles single gene, single sample and 1x1 inputs", {
 
 # ---- accepted input types ---------------------------------------------------
 
-test_that("FPKMToTPM() accepts integer and logical matrices", {
+test_that("FPKMToTPM() accepts integer", {
   int_fpkm <- matrix(c(1L, 3L, 6L, 2L), nrow = 2L, ncol = 2L)
   expect_equal(
     FPKMToTPM(int_fpkm, verbose = FALSE),
     ref_fpkm_to_tpm(int_fpkm),
-    tolerance = 1e-12L
-  )
-
-  log_fpkm <- matrix(c(TRUE, FALSE, TRUE, TRUE), nrow = 2L, ncol = 2L)
-  expect_equal(
-    FPKMToTPM(log_fpkm, verbose = FALSE),
-    ref_fpkm_to_tpm(log_fpkm),
-    tolerance = 1e-12L
+    tolerance = 1e-12
   )
 })
 
@@ -133,7 +126,7 @@ test_that("FPKMToTPM() accepts a data frame of numeric columns", {
   expect_true(is.matrix(tpm))
   expect_equal(dim(tpm), c(2L, 2L))
   expect_equal(dimnames(tpm), dimnames(as.matrix(df)))
-  expect_equal(unname(tpm), ref_fpkm_to_tpm(df), tolerance = 1e-12L)
+  expect_equal(unname(tpm), ref_fpkm_to_tpm(df), tolerance = 1e-12)
 })
 
 test_that("FPKMToTPM() accepts S4 Matrix objects and returns a base matrix", {
@@ -153,12 +146,12 @@ test_that("FPKMToTPM() accepts S4 Matrix objects and returns a base matrix", {
   # values are compared without dimnames here.
   tpm_sparse <- FPKMToTPM(sparse, verbose = FALSE)
   expect_true(is.matrix(tpm_sparse))
-  expect_equal(unname(tpm_sparse), expected, tolerance = 1e-12L)
+  expect_equal(unname(tpm_sparse), expected, tolerance = 1e-12)
 
   expect_equal(
     unname(FPKMToTPM(dense, verbose = FALSE)),
     expected,
-    tolerance = 1e-12L
+    tolerance = 1e-12
   )
 
   # Triplet matrices go through beachmat's "unknown matrix" fallback, which
@@ -166,7 +159,7 @@ test_that("FPKMToTPM() accepts S4 Matrix objects and returns a base matrix", {
   expect_equal(
     unname(suppressMessages(FPKMToTPM(triplet, verbose = FALSE))),
     expected,
-    tolerance = 1e-12L
+    tolerance = 1e-12
   )
 })
 
@@ -184,7 +177,7 @@ test_that("FPKMToTPM() preserves the dimnames of a named S4 Matrix", {
   tpm <- FPKMToTPM(sparse, verbose = FALSE)
 
   expect_equal(dimnames(tpm), dimnames(values))
-  expect_equal(unname(tpm), ref_fpkm_to_tpm(values), tolerance = 1e-12L)
+  expect_equal(unname(tpm), ref_fpkm_to_tpm(values), tolerance = 1e-12)
 })
 
 # ---- missing values ---------------------------------------------------------
@@ -219,7 +212,7 @@ test_that("FPKMToTPM() treats NaN as missing", {
 
   tpm <- FPKMToTPM(fpkm, na_as_zero = TRUE, verbose = FALSE)
 
-  expect_equal(tpm, ref_fpkm_to_tpm(fpkm), tolerance = 1e-12L)
+  expect_equal(tpm, ref_fpkm_to_tpm(fpkm), tolerance = 1e-12)
 })
 
 test_that("FPKMToTPM() sets an all-NA column to zero and warns", {

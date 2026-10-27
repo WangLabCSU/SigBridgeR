@@ -46,11 +46,13 @@
 #' \dontrun{
 #' # Example: Register a custom screen method for survival data
 #' DoMyScreen <- function(...) {
+#'   # Implement your method here
 #'   stop("Not implemented")
 #' }
 #'
 #' RegisterScreenMethod(
 #'   # Key = function
+#'   # jarl-ignore unreachable_code: example
 #'   MyCox = DoMyScreen,
 #'   # If `continuous` phenotype is not supported
 #'   supported_phenotypes = c("survival", "binary"),

@@ -73,7 +73,7 @@ setThreads <- function(
   chk::chk_list(tf_config)
 
   if (!is.null(tf_config$xla_flag)) {
-    chk::chk_chr(tf_config$xla_flag)
+    chk::chk_scalar(tf_config$xla_flag)
   }
 
   if (!is.null(tf_config$inter_op)) {

@@ -96,12 +96,15 @@ method(WriteCache, class_any) <- function(
 method(WriteCache, ScreenMethodConfig) <- function(
   cache,
   ...,
+  file,
   additional_description = NULL,
   verbose = TRUE
 ) {
+  chk::chk_scalar(file)
+
   WriteCacheMeta(
-    cache_config = cache@screen_method_config,
-    file = cache@cache_config_path,
+    cache_config = cache,
+    file = file,
     additional_description = additional_description,
     verbose = verbose,
     ...
@@ -120,7 +123,7 @@ method(WriteCache, ScreenMethodCache) <- function(
   cache_path <- cache@cache_path
   cache_data <- cache@cache_data
 
-  chk::chk_chr(cache_path)
+  chk::chk_scalar(cache_path)
   chk::chk_count(max_rows)
   chk::chk_count(max_cols)
 
@@ -163,11 +166,13 @@ method(WriteCache, ScreenMethodCache) <- function(
   dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 
   # -- file names -----------------------------------------------------------
+  # * "rdata" is written with saveRDS(), so the extension must be `.rds`
+  cache_ext <- c(csv = "csv", qs2 = "qs2", qdata = "qdata", rdata = "rds")
   cache_names <- names(cache_data)
 
   files <- file.path(
     cache_dir,
-    paste0(cache_names, formats)
+    paste0(cache_names, ".", unname(cache_ext[formats]))
   )
 
   # -- batch write ----------------------------------------------------------

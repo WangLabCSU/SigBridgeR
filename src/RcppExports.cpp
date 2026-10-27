@@ -12,39 +12,42 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // aggregate_dup_cols_cpp
-NumericMatrix aggregate_dup_cols_cpp(SEXP initialized_matrix, CharacterVector col_names, std::string method);
-RcppExport SEXP _SigBridgeR_aggregate_dup_cols_cpp(SEXP initialized_matrixSEXP, SEXP col_namesSEXP, SEXP methodSEXP) {
+NumericMatrix aggregate_dup_cols_cpp(SEXP initialized_matrix, IntegerVector group_id, int n_groups, std::string method);
+RcppExport SEXP _SigBridgeR_aggregate_dup_cols_cpp(SEXP initialized_matrixSEXP, SEXP group_idSEXP, SEXP n_groupsSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type initialized_matrix(initialized_matrixSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type col_names(col_namesSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type group_id(group_idSEXP);
+    Rcpp::traits::input_parameter< int >::type n_groups(n_groupsSEXP);
     Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(aggregate_dup_cols_cpp(initialized_matrix, col_names, method));
+    rcpp_result_gen = Rcpp::wrap(aggregate_dup_cols_cpp(initialized_matrix, group_id, n_groups, method));
     return rcpp_result_gen;
 END_RCPP
 }
 // aggregate_dup_rows_cpp
-NumericMatrix aggregate_dup_rows_cpp(SEXP initialized_matrix, CharacterVector row_names, std::string method);
-RcppExport SEXP _SigBridgeR_aggregate_dup_rows_cpp(SEXP initialized_matrixSEXP, SEXP row_namesSEXP, SEXP methodSEXP) {
+NumericMatrix aggregate_dup_rows_cpp(SEXP initialized_matrix, IntegerVector group_id, int n_groups, std::string method);
+RcppExport SEXP _SigBridgeR_aggregate_dup_rows_cpp(SEXP initialized_matrixSEXP, SEXP group_idSEXP, SEXP n_groupsSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type initialized_matrix(initialized_matrixSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type row_names(row_namesSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type group_id(group_idSEXP);
+    Rcpp::traits::input_parameter< int >::type n_groups(n_groupsSEXP);
     Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(aggregate_dup_rows_cpp(initialized_matrix, row_names, method));
+    rcpp_result_gen = Rcpp::wrap(aggregate_dup_rows_cpp(initialized_matrix, group_id, n_groups, method));
     return rcpp_result_gen;
 END_RCPP
 }
 // check_na_beachmat_matrix_cpp
-List check_na_beachmat_matrix_cpp(SEXP initialized_matrix);
-RcppExport SEXP _SigBridgeR_check_na_beachmat_matrix_cpp(SEXP initialized_matrixSEXP) {
+List check_na_beachmat_matrix_cpp(SEXP initialized_matrix, double max_store);
+RcppExport SEXP _SigBridgeR_check_na_beachmat_matrix_cpp(SEXP initialized_matrixSEXP, SEXP max_storeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type initialized_matrix(initialized_matrixSEXP);
-    rcpp_result_gen = Rcpp::wrap(check_na_beachmat_matrix_cpp(initialized_matrix));
+    Rcpp::traits::input_parameter< double >::type max_store(max_storeSEXP);
+    rcpp_result_gen = Rcpp::wrap(check_na_beachmat_matrix_cpp(initialized_matrix, max_store));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -72,15 +75,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // counts_to_tpm_cpp
-NumericMatrix counts_to_tpm_cpp(SEXP initialized_counts, CharacterVector row_names, NumericVector gene_length);
-RcppExport SEXP _SigBridgeR_counts_to_tpm_cpp(SEXP initialized_countsSEXP, SEXP row_namesSEXP, SEXP gene_lengthSEXP) {
+Rcpp::NumericMatrix counts_to_tpm_cpp(SEXP initialized_counts, const Rcpp::NumericVector& inv_length);
+RcppExport SEXP _SigBridgeR_counts_to_tpm_cpp(SEXP initialized_countsSEXP, SEXP inv_lengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type initialized_counts(initialized_countsSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type row_names(row_namesSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type gene_length(gene_lengthSEXP);
-    rcpp_result_gen = Rcpp::wrap(counts_to_tpm_cpp(initialized_counts, row_names, gene_length));
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type inv_length(inv_lengthSEXP);
+    rcpp_result_gen = Rcpp::wrap(counts_to_tpm_cpp(initialized_counts, inv_length));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -293,12 +295,12 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_SigBridgeR_aggregate_dup_cols_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_cols_cpp, 3},
-    {"_SigBridgeR_aggregate_dup_rows_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_rows_cpp, 3},
-    {"_SigBridgeR_check_na_beachmat_matrix_cpp", (DL_FUNC) &_SigBridgeR_check_na_beachmat_matrix_cpp, 1},
+    {"_SigBridgeR_aggregate_dup_cols_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_cols_cpp, 4},
+    {"_SigBridgeR_aggregate_dup_rows_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_rows_cpp, 4},
+    {"_SigBridgeR_check_na_beachmat_matrix_cpp", (DL_FUNC) &_SigBridgeR_check_na_beachmat_matrix_cpp, 2},
     {"_SigBridgeR_check_na_vector_cpp", (DL_FUNC) &_SigBridgeR_check_na_vector_cpp, 1},
     {"_SigBridgeR_check_na_dataframe_cpp", (DL_FUNC) &_SigBridgeR_check_na_dataframe_cpp, 2},
-    {"_SigBridgeR_counts_to_tpm_cpp", (DL_FUNC) &_SigBridgeR_counts_to_tpm_cpp, 3},
+    {"_SigBridgeR_counts_to_tpm_cpp", (DL_FUNC) &_SigBridgeR_counts_to_tpm_cpp, 2},
     {"_SigBridgeR_get_bulk_hvg", (DL_FUNC) &_SigBridgeR_get_bulk_hvg, 3},
     {"_SigBridgeR_normFunc_ptr", (DL_FUNC) &_SigBridgeR_normFunc_ptr, 1},
     {"_SigBridgeR_scaleFunc_ptr", (DL_FUNC) &_SigBridgeR_scaleFunc_ptr, 1},

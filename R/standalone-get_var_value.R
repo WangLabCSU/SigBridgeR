@@ -331,6 +331,7 @@
 #' g <- function(a = 1, b = 2){
 #'   c <- a * 2 + b * 3
 #'   d = c^2
+#'   # jarl-ignore undesirable_operator: example
 #'   e <<- d - 1
 #'   e
 #' }
@@ -339,6 +340,7 @@
 #' h <- function(a = "A", ...){
 #'   a <- 1
 #'   return(a)
+#'   # jarl-ignore unreachable_code: example
 #'   a <- 2
 #'   a
 #' }

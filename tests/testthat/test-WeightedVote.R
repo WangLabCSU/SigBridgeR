@@ -175,7 +175,7 @@ describe("WeightedVote - weighted scoring", {
       V1 = c("Positive"),
       V2 = c("Negative")
     )
-    weights <- c(V1 = 1e-10L, V2 = 1e-11L)
+    weights <- c(V1 = 1e-10, V2 = 1e-11)
 
     result <- WeightedVote(vote_data, weights)
 

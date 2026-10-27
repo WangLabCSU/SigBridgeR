@@ -29,9 +29,10 @@
 #' 3. Returns the cache data invisibly.
 #'
 #' @param mode `character`. Either `"load"` or `"save"`.
-#' @param path `character` or `NULL`. User-specified path. In save mode,
-#'   defaults to `cache@cache_path`. In load mode, defaults to `NULL` (user
-#'   will be prompted to choose).
+#' @param path `character` or `NULL`. Path passed to [CacheSetHere()]. In
+#'   save mode a `NULL` value falls back to `cache@cache_path`. In load mode
+#'   it is mandatory: a `NULL` value aborts, no cache is looked up
+#'   implicitly. Default: `NULL`.
 #' @param cache A `ScreenMethodConfig` or `ScreenMethodCache` S7 object.
 #'   For save mode, a `ScreenMethodCache` is required (contains the data to
 #'   write). For load mode, either class is accepted.
@@ -61,7 +62,11 @@
 #'     param = list(alpha = 0.05)
 #'   )
 #' )
-#' result <- CacheSysCall("load", cache = cache)
+#' result <- CacheSysCall(
+#'   "load",
+#'   path = "Scissor_res/survival_2025_01_01",
+#'   cache = cache
+#' )
 #'
 #' # Save results to cache
 #' cache <- ScreenMethodCache(
@@ -77,14 +82,14 @@
 #' }
 CacheSysCall <- function(
   mode = c("load", "save"),
-  path = if (mode == "save") cache@cache_path else NULL,
+  path = NULL,
   cache,
   verbose = TRUE,
   timestamp = NULL,
   ...
 ) {
   mode <- arg_match(mode)
-  cache_config <- if (S7_inherits(cache, "ScreenMethodConfig")) {
+  cache_config <- if (S7_inherits(cache, ScreenMethodConfig)) {
     if (mode == "save") {
       Abort(
         "cache is a {.cls ScreenMethodConfig}, but mode is {.val save}.",
@@ -93,13 +98,28 @@ CacheSysCall <- function(
       )
     }
     cache
-  } else if (S7_inherits(cache, "ScreenMethodCache")) {
+  } else if (S7_inherits(cache, ScreenMethodCache)) {
     cache@screen_method_config
   } else {
     Abort(
       "cache is not a {.cls ScreenMethodConfig} or {.cls ScreenMethodCache}",
       type = "[TYPE ERROR]"
     )
+  }
+
+  # * no implicit cache lookup: load mode requires an explicit path
+  if (is.null(path)) {
+    if (mode == "load") {
+      root_name <- paste0(cache_config@method_name, "_res")
+      Abort(
+        "`path` must be supplied in {.val load} mode",
+        "Point it to a cache directory, a {.file {root_name}} root,\
+         or their parent directory.",
+        type = "[ARG ERROR]"
+      )
+    }
+
+    path <- cache@cache_path
   }
 
   path <- CacheSetHere(
@@ -136,33 +156,44 @@ CacheSysCall.load <- function(
   verbose = TRUE
 ) {
   CheckCache(cache_config = cache_config, path = path)
-  param_names <- names(cache_config)
 
-  if (length(param_names) == 0L) {
-    Abort("param_names is empty, nothing to load", type = "[ARG ERROR]")
+  cache_files <- list.files(
+    path = path,
+    pattern = "\\.(csv|qs2|qdata|rds|RData)$",
+    full.names = TRUE
+  )
+
+  if (length(cache_files) == 0L) {
+    Abort(
+      "No cached data found in {.path {path}}",
+      "Run {.fn CacheSysCall} in {.val save} mode first.",
+      type = "[CACHE ERROR]"
+    )
   }
 
-  load_fn <- purrr::in_parallel(\(param_name) {
-    file <- file.path(path, param_name)
-    if (!file.exists(file)) {
-      return(NULL)
-    }
-    LoadCache(file = file)
-  })
-  purrr::map(
-    param_names,
+  load_fn <- purrr::in_parallel(\(file) LoadCache(file = file))
+
+  loaded <- purrr::map(
+    cache_files,
     load_fn,
-    .progress = if (verbose) {
+    .progress = if (isTRUE(verbose)) {
       "Loading cache"
     } else {
       FALSE
     }
   )
-  # A LIST
+
+  # * name each element after its cache file, e.g. `markers.csv` -> `markers`
+  stats::setNames(loaded, tools::file_path_sans_ext(basename(cache_files)))
 }
 
 CacheSysCall.save <- function(path, cache, verbose = TRUE, ...) {
   EnsureParentDir(path)
+
+  # * `path` is resolved by CacheSetHere(), it overrides the paths in `cache`
+  cache@cache_path <- path
+  cache@cache_config_path <- file.path(path, "cache_config.json")
+
   WriteCache(
     cache,
     # format = c("auto", "qs2", "qdata", "rdata", "csv"),

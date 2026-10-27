@@ -31,33 +31,58 @@
 #' @export
 CountsToTPM <- function(counts, gene_length) {
   row_names <- rownames(counts)
-  if (is.null(row_names)) {
-    Abort("`counts` must have rownames.", type = "[INPUT ERROR]")
+  if (is.null(row_names) || anyNA(row_names)) {
+    Abort("`counts` must have non-NA rownames.", type = "[INPUT ERROR]")
   }
-
+  if (!is_2d(counts)) {
+    cls_counts <- class(counts)
+    Abort(
+      "Expected `counts` to be a {.cls matrix-like} object",
+      "Current input is {.cls {cls_counts}}",
+      type = "[TYPE ERROR]"
+    )
+  }
   if (is.list(gene_length)) {
+    if (any(lengths(gene_length) != 1L)) {
+      Abort(
+        "Each element of `gene_length` must be a scalar.",
+        type = "[INPUT ERROR]"
+      )
+    }
     gene_length <- unlist(gene_length, recursive = TRUE, use.names = TRUE)
   }
 
   gl_names <- names(gene_length)
-
-  if (is.null(gl_names)) {
-    Abort("`gene_length` must be a named vector.", type = "[INPUT ERROR]")
-  }
-
-  if (!all(nzchar(names(gene_length)))) {
+  if (is.null(gl_names) || anyNA(gl_names) || !all(nzchar(gl_names))) {
     Abort(
-      "`gene_length` contains {.val NA} or {.val empty names}.",
+      "`gene_length` must be a named vector, without {.val NA} or empty names.",
       type = "[INPUT ERROR]"
     )
   }
-
   if (any(!is.finite(gene_length) | gene_length <= 0L)) {
     Abort(
       "`gene_length` must contain positive finite gene lengths in bp.",
       type = "[INPUT ERROR]"
     )
   }
+  if (anyDuplicated(gl_names)) {
+    dup <- unique(gl_names[duplicated(gl_names)])
+    Abort(
+      "`gene_length` has duplicated names, e.g. {.val {utils::head(dup, 5)}}",
+      type = "[INPUT ERROR]"
+    )
+  }
+
+  idx <- match(row_names, gl_names)
+  if (anyNA(idx)) {
+    missing_genes <- utils::head(row_names[is.na(idx)], 5)
+    n_missing <- sum(is.na(idx))
+    Abort(
+      "`gene_length` misses {n_missing} gene(s), e.g. {.val {missing_genes}}",
+      type = "[INPUT ERROR]"
+    )
+  }
+  inv_length <- 1 / as.double(gene_length)[idx]
 
   if (is.data.frame(counts)) {
     counts <- as.matrix(counts)
@@ -69,18 +94,9 @@ CountsToTPM <- function(counts, gene_length) {
     FALSE
   }
 
-  if (!is_2d(counts)) {
-    cls_counts <- class(counts)
-    Abort(
-      "Expected `counts` to be a {.cls matrix-like} object",
-      "Current input is {.cls {cls_counts}}",
-      type = "[TYPE ERROR]"
-    )
-  }
   result <- counts_to_tpm_cpp(
     beachmat::initializeCpp(counts),
-    row_names,
-    gene_length
+    inv_length
   )
   dimnames(result) <- dimnames(counts)
 

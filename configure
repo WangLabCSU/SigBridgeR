@@ -1,0 +1,2 @@
+#!/bin/sh
+"${R_HOME}/bin/Rscript" --vanilla tools/check_subpkgs.R || true

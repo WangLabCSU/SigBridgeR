@@ -93,7 +93,7 @@ WriteCacheMeta.ScreenMethodConfig <- function(
   if (!is.null(additional_description)) {
     chk::chk_string(additional_description)
   }
-  chk::chk_chr(file)
+  chk::chk_scalar(file)
 
   cache_meta <- list(
     general = list2(

@@ -168,6 +168,24 @@ static inline void append_matrix_position(std::vector<int> &rows,
   cols.push_back(static_cast<int>(col + 1));
 }
 
+template <typename Add>
+static inline void scan_doubles(const double *p, R_xlen_t n, Add add) {
+  constexpr R_xlen_t B = 1024;
+  for (R_xlen_t s = 0; s < n; s += B) {
+    const R_xlen_t e = std::min<R_xlen_t>(n, s + B);
+    int hit = 0;
+    for (R_xlen_t k = s; k < e; ++k) {
+      hit |= std::isnan(p[k]); // 无分支，可向量化
+    }
+    if (hit) {
+      for (R_xlen_t k = s; k < e; ++k) {
+        if (std::isnan(p[k]))
+          add(k);
+      }
+    }
+  }
+}
+
 /*
  * Scan a beachmat/tatami matrix.
  *
@@ -181,44 +199,63 @@ static inline void append_matrix_position(std::vector<int> &rows,
  *
  * For sparse matrices, unstored positions are returned as the numeric 0;
  * stored NAs are returned as NA/NaN.
+ *
+ * max_store caps how many positions are kept in the result. A negative value
+ * (the default) means "no cap". It has to be written as a plain numeric
+ * literal because Rcpp::compileAttributes() cannot translate R_PosInf into an
+ * R default value.
  */
 // [[Rcpp::export]]
-List check_na_beachmat_matrix_cpp(SEXP initialized_matrix) {
+List check_na_beachmat_matrix_cpp(SEXP initialized_matrix,
+                                  double max_store = -1.0) {
+  const double store_cap = (max_store < 0) ? R_PosInf : max_store;
   Rtatami::BoundNumericPointer parsed(initialized_matrix);
   const auto &matrix = parsed->ptr;
 
-  const std::size_t nr = static_cast<std::size_t>(matrix->nrow());
+  const int nr = matrix->nrow();
+  const int nc = matrix->ncol();
 
-  const std::size_t nc = static_cast<std::size_t>(matrix->ncol());
+  std::vector<int> rows, cols;
+  double count = 0;
 
-  std::vector<int> rows;
-  std::vector<int> cols;
+  auto record = [&](int r, int c) {
+    ++count;
+    if (static_cast<double>(rows.size()) < store_cap) {
+      rows.push_back(r + 1);
+      cols.push_back(c + 1);
+    }
+  };
 
-  /*
-   * Access column by column.
-   *
-   * For a dense matrix, the buffer usually does not cause an extra data
-   * copy; for sparse or DelayedMatrix backends, the buffer receives the
-   * materialized column.
-   */
-  auto accessor = matrix->dense_column();
-  std::vector<double> buffer(nr);
+  tatami::Options opt;
 
-  for (std::size_t col = 0; col < nc; ++col) {
-    auto values = accessor->fetch(col, buffer.data());
+  if (matrix->is_sparse()) {
+    opt.sparse_extract_value = true;
+    opt.sparse_extract_index = true;
+    auto ext = matrix->sparse_column(opt);
+    std::vector<double> vbuf(nr);
+    std::vector<int> ibuf(nr);
 
-    for (std::size_t row = 0; row < nr; ++row) {
-      /*
-       * ISNAN detects both NA_real_ and NaN,
-       * consistent with the REALSXP behavior in the original code.
-       */
-      if (ISNAN(values[row])) {
-        append_matrix_position(rows, cols, row, col);
+    for (int c = 0; c < nc; ++c) {
+      auto range = ext->fetch(c, vbuf.data(), ibuf.data());
+      for (int k = 0; k < range.number; ++k) {
+        if (std::isnan(range.value[k])) {
+          record(range.index[k], c);
+        }
       }
+      if ((c & 0xFF) == 0)
+        Rcpp::checkUserInterrupt();
+    }
+  } else {
+    auto ext = matrix->dense_column(opt);
+    std::vector<double> buf(nr);
+
+    for (int c = 0; c < nc; ++c) {
+      const double *v = ext->fetch(c, buf.data());
+      scan_doubles(v, nr, [&](R_xlen_t r) { record(static_cast<int>(r), c); });
+      if ((c & 0xFF) == 0)
+        Rcpp::checkUserInterrupt();
     }
   }
-
-  const double count = static_cast<double>(rows.size());
 
   return List::create(_["count"] = count, _["row"] = wrap(rows),
                       _["col"] = wrap(cols));

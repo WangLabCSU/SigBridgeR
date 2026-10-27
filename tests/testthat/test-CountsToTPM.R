@@ -316,7 +316,7 @@ describe("CountsToTPM - gene_length validation", {
 
     expect_error(
       CountsToTPM(counts, gene_length),
-      "misses gene"
+      "gene_length"
     )
   })
 })
@@ -329,7 +329,7 @@ describe("CountsToTPM - counts validation", {
 
     expect_error(
       CountsToTPM(c(100L, 200L), gene_length),
-      "must have rownames"
+      "must have non-NA rownames"
     )
   })
 
@@ -354,7 +354,7 @@ describe("CountsToTPM - counts validation", {
 
     expect_error(
       CountsToTPM(counts, gene_length),
-      "NA"
+      "be finite and non-negative"
     )
   })
 

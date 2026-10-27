@@ -50,3 +50,5 @@ py_module_inventory <- function() {
   }
   paste0("* `", modules, "`", collapse = "\n")
 }
+
+# nocov end

@@ -2,260 +2,247 @@
 #include <Rcpp.h>
 
 #include <algorithm>
+#include <cmath>
 #include <string>
-#include <unordered_map>
 #include <vector>
-
-// [[Rcpp::depends(beachmat, assorthead)]]
-// [[Rcpp::plugins(cpp17)]]
 
 using namespace Rcpp;
 
-enum AggMethod { AGG_MAX, AGG_SUM, AGG_MEAN, AGG_MEDIAN, AGG_FIRST };
+enum class AggMethod { Max, Sum, Mean, Median, First };
 
-static AggMethod parse_method(const std::string &method) {
-  if (method == "max")
-    return AGG_MAX;
-  if (method == "sum")
-    return AGG_SUM;
-  if (method == "mean")
-    return AGG_MEAN;
-  if (method == "median")
-    return AGG_MEDIAN;
-  if (method == "first")
-    return AGG_FIRST;
-  stop("Unsupported method: " + method);
-  return AGG_MAX;
+static AggMethod parse_method(const std::string &m) {
+  if (m == "max")
+    return AggMethod::Max;
+  if (m == "sum")
+    return AggMethod::Sum;
+  if (m == "mean")
+    return AggMethod::Mean;
+  if (m == "median")
+    return AggMethod::Median;
+  if (m == "first")
+    return AggMethod::First;
+  stop("Unsupported method: " + m);
+  return AggMethod::Max;
 }
 
-static std::string name_key(SEXP s) {
-  if (s == NA_STRING) {
-    return std::string("\001NA");
-  }
-  return std::string("\002") + Rf_translateCharUTF8(s);
-}
-
+// CSR 布局：组 g 的成员为 member[offset[g] .. offset[g+1])，组内保持原始升序
 struct Groups {
-  std::vector<std::vector<int>> index;
-  std::vector<int> first_pos;
+  std::vector<int> offset;
+  std::vector<int> member;
 };
 
-static Groups make_groups(CharacterVector names) {
-  std::unordered_map<std::string, int> seen;
-  Groups groups;
-
-  const int n = names.size();
+static Groups build_groups(const IntegerVector &gid, int n, int ng) {
+  if (gid.size() != n) {
+    stop("Length of group ids must match the dimension being aggregated.");
+  }
+  Groups g;
+  g.offset.assign(static_cast<size_t>(ng) + 1, 0);
 
   for (int i = 0; i < n; ++i) {
-    std::string key = name_key(STRING_ELT(names, i));
-
-    auto it = seen.find(key);
-
-    if (it == seen.end()) {
-      int gid = groups.index.size();
-
-      seen[key] = gid;
-      groups.index.emplace_back();
-      groups.first_pos.push_back(i);
-      groups.index[gid].push_back(i);
-    } else {
-      groups.index[it->second].push_back(i);
+    const int k = gid[i];
+    if (k == NA_INTEGER || k < 1 || k > ng) {
+      stop("Invalid group id.");
     }
+    ++g.offset[k]; // 先把 "组 k-1 的个数" 记在 k 位置
+  }
+  for (int k = 0; k < ng; ++k) {
+    g.offset[k + 1] += g.offset[k];
   }
 
-  return groups;
+  std::vector<int> cursor(g.offset.begin(), g.offset.end() - 1);
+  g.member.resize(n);
+  for (int i = 0; i < n; ++i) {
+    g.member[cursor[gid[i] - 1]++] = i;
+  }
+  return g;
 }
 
-static double median_no_na(std::vector<double> &values) {
-  if (values.empty()) {
+static inline double median_inplace(std::vector<double> &v) {
+  if (v.empty())
     return NA_REAL;
-  }
-
-  std::sort(values.begin(), values.end());
-
-  const int n = values.size();
-
-  if (n % 2 == 1) {
-    return values[n / 2];
-  }
-
-  return (values[n / 2 - 1] + values[n / 2]) / 2.0;
+  const size_t n = v.size(), mid = n / 2;
+  std::nth_element(v.begin(), v.begin() + mid, v.end());
+  const double hi = v[mid];
+  if (n & 1)
+    return hi;
+  const double lo = *std::max_element(v.begin(), v.begin() + mid);
+  return (lo + hi) / 2.0;
 }
 
-static double aggregate_values(const std::vector<double> &values,
-                               const std::vector<int> &indices,
-                               AggMethod method) {
-  if (indices.empty()) {
-    return NA_REAL;
+// 对 v[idx[0..k)] 聚合（rows 版使用，tmp 供 median 复用）
+static inline double aggregate_gather(const double *v, const int *idx, int k,
+                                      AggMethod m, std::vector<double> &tmp) {
+  switch (m) {
+  case AggMethod::First:
+    return v[idx[0]];
+  case AggMethod::Sum: {
+    double s = 0.0;
+    for (int t = 0; t < k; ++t) {
+      const double x = v[idx[t]];
+      if (!std::isnan(x))
+        s += x;
+    }
+    return s;
   }
-
-  if (method == AGG_FIRST) {
-    return values[indices[0]];
-  }
-
-  if (method == AGG_SUM) {
-    double sum = 0.0;
-
-    for (int i : indices) {
-      double value = values[i];
-
-      if (!ISNAN(value)) {
-        sum += value;
+  case AggMethod::Mean: {
+    double s = 0.0;
+    int cnt = 0;
+    for (int t = 0; t < k; ++t) {
+      const double x = v[idx[t]];
+      if (!std::isnan(x)) {
+        s += x;
+        ++cnt;
       }
     }
-
-    return sum;
+    return cnt == 0 ? R_NaN : s / cnt;
   }
-
-  if (method == AGG_MEAN) {
-    double sum = 0.0;
-    int count = 0;
-
-    for (int i : indices) {
-      double value = values[i];
-
-      if (!ISNAN(value)) {
-        sum += value;
-        ++count;
-      }
+  case AggMethod::Max: {
+    double best = NA_REAL;
+    for (int t = 0; t < k; ++t) {
+      const double x = v[idx[t]];
+      if (!std::isnan(x) && (std::isnan(best) || x > best))
+        best = x;
     }
-
-    return count == 0 ? R_NaN : sum / count;
+    return best;
   }
-
-  if (method == AGG_MAX) {
-    double best = R_NegInf;
-    bool found = false;
-
-    for (int i : indices) {
-      double value = values[i];
-
-      if (!ISNAN(value)) {
-        if (!found || value > best) {
-          best = value;
-        }
-        found = true;
-      }
+  case AggMethod::Median: {
+    tmp.clear();
+    for (int t = 0; t < k; ++t) {
+      const double x = v[idx[t]];
+      if (!std::isnan(x))
+        tmp.push_back(x);
     }
-
-    return found ? best : NA_REAL;
+    return median_inplace(tmp);
   }
-
-  // median
-  std::vector<double> selected;
-  selected.reserve(indices.size());
-
-  for (int i : indices) {
-    double value = values[i];
-
-    if (!ISNAN(value)) {
-      selected.push_back(value);
-    }
   }
-
-  return median_no_na(selected);
+  return NA_REAL;
 }
 
 // [[Rcpp::export]]
 NumericMatrix aggregate_dup_cols_cpp(SEXP initialized_matrix,
-                                     CharacterVector col_names,
+                                     IntegerVector group_id, int n_groups,
                                      std::string method) {
   Rtatami::BoundNumericPointer parsed(initialized_matrix);
-  const auto &matrix = parsed->ptr;
+  const auto &mat = parsed->ptr;
+  const int nr = mat->nrow();
+  const int nc = mat->ncol();
 
-  const int nr = matrix->nrow();
-  const int nc = matrix->ncol();
+  const AggMethod agg = parse_method(method);
+  const Groups grp = build_groups(group_id, nc, n_groups);
 
-  if (col_names.size() != nc) {
-    stop("Length of col_names must equal ncol(x).");
-  }
+  NumericMatrix output(Rcpp::no_init(nr, n_groups));
+  double *out = REAL(output);
 
-  AggMethod agg = parse_method(method);
-  Groups groups = make_groups(col_names);
+  auto ext = mat->dense_column();
+  std::vector<double> buf(nr);
+  std::vector<int> cnt;           // mean 用
+  std::vector<double> block, tmp; // median 用
 
-  const int ng = groups.index.size();
-  NumericMatrix output(nr, ng);
+  for (int g = 0; g < n_groups; ++g) {
+    if ((g & 0xFF) == 0)
+      Rcpp::checkUserInterrupt();
 
-  auto accessor = matrix->dense_column();
+    double *dst = out + static_cast<size_t>(g) * nr;
+    const int *mb = grp.member.data() + grp.offset[g];
+    const int k = grp.offset[g + 1] - grp.offset[g];
 
-  std::vector<std::vector<double>> columns(nc, std::vector<double>(nr));
-
-  std::vector<double> buffer(nr);
-
-  for (int j = 0; j < nc; ++j) {
-    auto values = accessor->fetch(j, buffer.data());
-
-    for (int i = 0; i < nr; ++i) {
-      columns[j][i] = values[i];
+    // 单例 / first：原样拷贝，行为与 rows 版一致
+    if (k == 1 || agg == AggMethod::First) {
+      const double *p = ext->fetch(mb[0], buf.data());
+      std::copy(p, p + nr, dst);
+      continue;
     }
-  }
 
-  std::vector<double> values(nc);
-
-  for (int g = 0; g < ng; ++g) {
-    const std::vector<int> &indices = groups.index[g];
-
-    for (int i = 0; i < nr; ++i) {
-      for (int j = 0; j < nc; ++j) {
-        values[j] = columns[j][i];
+    switch (agg) {
+    case AggMethod::Sum: {
+      std::fill(dst, dst + nr, 0.0);
+      for (int t = 0; t < k; ++t) {
+        const double *p = ext->fetch(mb[t], buf.data());
+        for (int i = 0; i < nr; ++i)
+          if (!std::isnan(p[i]))
+            dst[i] += p[i];
       }
-
-      output(i, g) = aggregate_values(values, indices, agg);
+      break;
+    }
+    case AggMethod::Mean: {
+      std::fill(dst, dst + nr, 0.0);
+      cnt.assign(nr, 0);
+      for (int t = 0; t < k; ++t) {
+        const double *p = ext->fetch(mb[t], buf.data());
+        for (int i = 0; i < nr; ++i)
+          if (!std::isnan(p[i])) {
+            dst[i] += p[i];
+            ++cnt[i];
+          }
+      }
+      for (int i = 0; i < nr; ++i)
+        dst[i] = cnt[i] ? dst[i] / cnt[i] : R_NaN;
+      break;
+    }
+    case AggMethod::Max: {
+      std::fill(dst, dst + nr, NA_REAL);
+      for (int t = 0; t < k; ++t) {
+        const double *p = ext->fetch(mb[t], buf.data());
+        for (int i = 0; i < nr; ++i)
+          if (!std::isnan(p[i]) && (std::isnan(dst[i]) || p[i] > dst[i]))
+            dst[i] = p[i];
+      }
+      break;
+    }
+    case AggMethod::Median: {
+      block.resize(static_cast<size_t>(k) * nr);
+      for (int t = 0; t < k; ++t) {
+        const double *p = ext->fetch(mb[t], buf.data());
+        std::copy(p, p + nr, block.begin() + static_cast<size_t>(t) * nr);
+      }
+      for (int i = 0; i < nr; ++i) {
+        tmp.clear();
+        for (int t = 0; t < k; ++t) {
+          const double x = block[static_cast<size_t>(t) * nr + i];
+          if (!std::isnan(x))
+            tmp.push_back(x);
+        }
+        dst[i] = median_inplace(tmp);
+      }
+      break;
+    }
+    case AggMethod::First:
+      break; // 已在上面处理
     }
   }
-
   return output;
 }
 
 // [[Rcpp::export]]
 NumericMatrix aggregate_dup_rows_cpp(SEXP initialized_matrix,
-                                     CharacterVector row_names,
+                                     IntegerVector group_id, int n_groups,
                                      std::string method) {
   Rtatami::BoundNumericPointer parsed(initialized_matrix);
-  const auto &matrix = parsed->ptr;
+  const auto &mat = parsed->ptr;
+  const int nr = mat->nrow();
+  const int nc = mat->ncol();
 
-  const int nr = matrix->nrow();
-  const int nc = matrix->ncol();
+  const AggMethod agg = parse_method(method);
+  const Groups grp = build_groups(group_id, nr, n_groups);
 
-  if (row_names.size() != nr) {
-    stop("Length of row_names must equal nrow(x).");
-  }
+  NumericMatrix output(Rcpp::no_init(n_groups, nc));
+  double *out = REAL(output);
 
-  AggMethod agg = parse_method(method);
-  Groups groups = make_groups(row_names);
-
-  const int ng = groups.index.size();
-  NumericMatrix output(ng, nc);
-
-  auto accessor = matrix->dense_column();
-  std::vector<double> buffer(nr);
+  auto ext = mat->dense_column();
+  std::vector<double> buf(nr), tmp;
 
   for (int j = 0; j < nc; ++j) {
-    auto values = accessor->fetch(j, buffer.data());
+    if ((j & 0xFF) == 0)
+      Rcpp::checkUserInterrupt();
 
-    for (int g = 0; g < ng; ++g) {
-      const std::vector<int> &indices = groups.index[g];
+    const double *v = ext->fetch(j, buf.data());
+    double *dst = out + static_cast<size_t>(j) * n_groups;
 
-      std::vector<double> selected;
-      selected.reserve(indices.size());
-
-      for (int i : indices) {
-        selected.push_back(values[i]);
-      }
-
-      if (indices.size() == 1 || agg == AGG_FIRST) {
-        output(g, j) = values[indices[0]];
-      } else {
-        std::vector<int> local_indices(selected.size());
-
-        for (size_t k = 0; k < selected.size(); ++k) {
-          local_indices[k] = k;
-        }
-
-        output(g, j) = aggregate_values(selected, local_indices, agg);
-      }
+    for (int g = 0; g < n_groups; ++g) {
+      const int *mb = grp.member.data() + grp.offset[g];
+      const int k = grp.offset[g + 1] - grp.offset[g];
+      dst[g] = (k == 1) ? v[mb[0]] : aggregate_gather(v, mb, k, agg, tmp);
     }
   }
-
   return output;
 }

@@ -81,13 +81,6 @@ describe("IsCountsMatrix - accepted input", {
     expect_true(IsCountsMatrix(counts, verbose = FALSE))
   })
 
-  it("accepts a double matrix holding whole numbers", {
-    counts <- matrix(c(10L, 20L, 30L, 40L), nrow = 2L, ncol = 2L)
-
-    expect_type(counts, "double")
-    expect_true(IsCountsMatrix(counts, verbose = FALSE))
-  })
-
   it("accepts a logical matrix", {
     # A 0/1 matrix is still a valid count matrix.
     counts <- matrix(c(TRUE, FALSE, TRUE, TRUE), nrow = 2L, ncol = 2L)

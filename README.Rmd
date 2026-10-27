@@ -56,7 +56,7 @@ data, performing as a bridge to existing tools.
 |  **DEGAS**  | `binary` `survival` `continuous` |               |    MIT     |                                  |
 | **DEGASv2** | `binary` `survival` `continuous` |               |    MIT     | Bulk raw counts matrix perferred |
 | **LP-SGL**  | `binary` `survival` `continuous` |               | No License |                                  |
-|  **PIPET**  | `binary` `survival` `continuous` |               |   GPL-3    | Bulk raw counts matrix perferred |
+|  **PIPET**  | `binary` `survival` `continuous` |       ✅      |   GPL-3    | Bulk raw counts matrix perferred |
 | **SIDISH**  |            `survival`            |               |    MIT     |                                  |
 | **SCIPAC**  | `binary` `survival` `continuous` |               |    MIT     |                                  |
 | **TiRank**  | `binary` `survival` `continuous` |               |    MIT     |                                  |
@@ -106,7 +106,7 @@ pak::pak(
   # better gene symbol conversion
   "scCustomize",
   "WGCNA"
-))
+)
 ```
 
 </details>

@@ -53,11 +53,12 @@ AggregateDupRows <- function(
   method <- arg_match(method)
 
   row_names <- rownames(x)
+  unique_row_names <- unique(row_names)
   if (is.null(row_names)) {
     Abort("Input must have row names", type = "[DATA ERROR]")
   }
 
-  if (!anyDuplicated(row_names)) {
+  if (length(unique_row_names) == length(row_names)) {
     if (verbose) {
       cli::cli_alert_info("No duplicated row names found.")
     }
@@ -70,11 +71,12 @@ AggregateDupRows <- function(
 
   res <- aggregate_dup_rows_cpp(
     initialized_matrix = beachmat::initializeCpp(x),
-    row_names = row_names,
+    group_id = match(row_names, unique_row_names),
+    n_groups = length(unique_row_names),
     method = method
   )
 
-  dimnames(res) <- list(unique(row_names), col_names)
+  dimnames(res) <- list(unique_row_names, col_names)
 
   if (was_df) {
     res <- as.data.frame(res, check.names = FALSE)
@@ -95,12 +97,13 @@ AggregateDupCols <- function(
   method <- arg_match(method)
 
   col_names <- colnames(x)
+  unique_col_names <- unique(col_names)
 
   if (is.null(col_names)) {
     Abort("Input must have column names.", type = "[DATA ERROR]")
   }
 
-  if (!anyDuplicated(col_names)) {
+  if (length(unique_col_names) == length(col_names)) {
     if (isTRUE(verbose)) {
       cli::cli_alert_info("No duplicated column names found.")
     }
@@ -113,11 +116,12 @@ AggregateDupCols <- function(
 
   res <- aggregate_dup_cols_cpp(
     initialized_matrix = beachmat::initializeCpp(x),
-    col_names = col_names,
+    group_id = match(col_names, unique_col_names),
+    n_groups = length(unique_col_names),
     method = method
   )
 
-  dimnames(res) <- list(row_names, unique(col_names))
+  dimnames(res) <- list(row_names, unique_col_names)
 
   if (was_df) {
     res <- as.data.frame(res, check.names = FALSE)
