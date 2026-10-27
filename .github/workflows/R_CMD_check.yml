@@ -154,20 +154,20 @@ jobs:
                   LDFLAGS: ${{ env.LDFLAGS }}
                   CPPFLAGS: ${{ env.CPPFLAGS }}
               with:
+                  # 只安装 Depends / Imports / LinkingTo：'"hard"' 让 setup-r-dependencies
+                  # 不去安装 Suggests 里的 GitHub-only 包，检查才能在无法拉取
+                  # GitHub 的环境（r-universe / CRAN）下通过。
+                  # Suggests 中的 CRAN / Bioconductor 包由下一步
+                  # tools/install_cran_bioc_deps.R 从 DESCRIPTION 自动解析安装，
+                  # 因此 DESCRIPTION 变更后无需再改本工作流。
                   extra-packages: |
                       any::rcmdcheck
-                      any::zeallot
-                      any::testthat
                       any::pak
-                      any::remotes
-                      any::tidydr
-                      any::ggupset
-                      any::ggplot2
-                      any::ggforce
-                      any::patchwork
-                      any::tibble
                   dependencies: '"hard"'
                   needs: check
+
+            - name: Installing CRAN / Bioconductor dependencies from DESCRIPTION
+              run: Rscript tools/install_cran_bioc_deps.R
 
             - name: Running R CMD check
               uses: r-lib/actions/check-r-package@v2
