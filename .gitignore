@@ -10,7 +10,6 @@ inst/doc
 Tmp/**
 *.qs
 docs/
-SKILL.md
 .codebuddy/
 
 .Rapp.history

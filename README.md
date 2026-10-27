@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![License:GPL3](https://img.shields.io/badge/license-GPL3-blue.svg)](https://cran.r-project.org/web/licenses/GPL3) [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) [![code_size](https://img.shields.io/github/languages/code-size/https://github.com/WangLabCSU/SigBridgeR.svg)](https://github.com/WangLabCSU/SigBridgeR) <!-- badges: end -->
+[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) <!-- badges: end -->
 
 ## 🌐 Overview
 
@@ -27,7 +27,7 @@ SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data
 | **DEGAS** | `binary` `survival` `continuous` |  | MIT |  |
 | **DEGASv2** | `binary` `survival` `continuous` |  | MIT | Bulk raw counts matrix perferred |
 | **LP-SGL** | `binary` `survival` `continuous` |  | No License |  |
-| **PIPET** | `binary` `survival` `continuous` |  | GPL-3 | Bulk raw counts matrix perferred |
+| **PIPET** | `binary` `survival` `continuous` | ✅ | GPL-3 | Bulk raw counts matrix perferred |
 | **SIDISH** | `survival` |  | MIT |  |
 | **SCIPAC** | `binary` `survival` `continuous` |  | MIT |  |
 | **TiRank** | `binary` `survival` `continuous` |  | MIT |  |
@@ -54,6 +54,7 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 <details>
 
 <summary>
+
 For better performance:
 </summary>
 
@@ -70,7 +71,7 @@ pak::pak(
   # better gene symbol conversion
   "scCustomize",
   "WGCNA"
-))
+)
 ```
 
 </details>
@@ -78,6 +79,7 @@ pak::pak(
 <details>
 
 <summary>
+
 For seamless integration with single-cell RNA-seq data stored in `.h5ad`:
 </summary>
 
@@ -92,6 +94,7 @@ pak::pak("anndataR") # both are supported
 <details>
 
 <summary>
+
 For visualization:
 </summary>
 
@@ -111,6 +114,7 @@ pak::pak(c(
 <details>
 
 <summary>
+
 To use the built-in cell annotation methods:
 </summary>
 
@@ -133,6 +137,7 @@ pak::pak(c(
 <details>
 
 <summary>
+
 To add custom extension functions to SigBridgeR:
 </summary>
 
@@ -176,28 +181,81 @@ If you encounter problems, please check:
 
 Let us know if you have ideas to make this project better. Pull requests are welcome!
 
+## 🧩 Agent Skills
+
+SigBridgeR ships a set of [Agent Skills](https://skills.sh/) that teach AI coding agents how to drive the package correctly. They live in the standalone [`skills/`](skills) folder and are installable with the [`skills`](https://www.npmjs.com/package/skills) CLI (Node.js \>= 22).
+
+| Skill | What it covers |
+|:---|:---|
+| `sigbridger-quickstart` | Minimal end-to-end run: `LoadRefData()` -\> `Screen()` -\> `MergeResult()` -\> plots |
+| `sigbridger-results-plots` | Reading `ScreenMethodResult`, `MergeResult()`, `WeightedVote()`, `ScreenFractionPlot()`, `ScreenUpset()`, `autoplot()` |
+| `sigbridger-extend` | Plugging in custom algorithms via `TemplateScreenFunc()`, `ScreenMethod`, `AnnotationMethod` and `Register()` |
+| `sigbridger-utilities` | Helper toolkit: `SCIntegrate()`, `ChooseNormalization()`, `SymbolConvert()`, `AddMisc()`, `SCAnnotate()`, `setThreads()` |
+
+Install every skill (interactive: pick the skills and the target agents):
+
+``` bash
+npx skills add WangLabCSU/SigBridgeR
+```
+
+Install one skill non-interactively, into a specific agent:
+
+``` bash
+npx skills add WangLabCSU/SigBridgeR --skill sigbridger-quickstart -a codebuddy
+```
+
+Install globally so the skills are available in every project on the machine:
+
+``` bash
+npx skills add WangLabCSU/SigBridgeR -g
+```
+
+Manage the installed set:
+
+``` bash
+npx skills list      # what is installed and where
+npx skills check     # are updates available
+npx skills update    # pull the latest version
+npx skills remove    # uninstall
+```
+
 ## 📚 Citation
 
 If you use SigBridgeR in your work, please cite the corresponding papers:
 
 ``` r
 citation("SigBridgeR")
-#> To cite package 'SigBridgeR' in publications use:
+#> Please cite the following publications when using this package.
 #> 
-#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
-#>   Subpopulations via scRNA-seq and Bulk Data_. R package version 4.0.0,
-#>   <https://wanglabcsu.github.io/sigbridger>.
+#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R package
+#>   version 4.0.0, <https://wanglabcsu.github.io/sigbridger>.
 #> 
-#> A BibTeX entry for LaTeX users is
+#>   Sun et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol (2022) [Scissor]
 #> 
-#>   @Manual{,
-#>     title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell
-#> Subpopulations via scRNA-seq and Bulk Data},
-#>     author = {Yuxi Yang and Shixiang Wang},
-#>     year = {2026},
-#>     note = {R package version 4.0.0},
-#>     url = {https://wanglabcsu.github.io/sigbridger},
-#>   }
+#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to
+#>   disease. Genome Med (2022) [DEGAS]
+#> 
+#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data.
+#>   Nucleic Acids Res (2022) [scAB]
+#> 
+#>   Li et al. Identifying phenotype-associated subpopulations through LP_SGL. Brief Bioinform (2024) [LP_SGL]
+#> 
+#>   Gan et al. SCIPAC: quantitative estimation of cell-phenotype associations. Genome Biol (2024) [SCIPAC]
+#> 
+#>   Ruan et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Brief Bioinform (2024)
+#>   [PIPET]
+#> 
+#>   Xie et al. scPAS: single-cell phenotype-associated subpopulation identifier. Brief Bioinform (2025) [scPAS]
+#> 
+#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in
+#>   silico perturbation. Nat Commun (2025) [SIDISH]
+#> 
+#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells.
+#>   Interdiscip Sci (2026) [ScPP]
+#> 
+#>   Lin et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med (2026) [TiRank]
+#> 
+#> To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set 'options(citation.bibtex.max=999)'.
 ```
 
 ## 🗺️ Similar Projects

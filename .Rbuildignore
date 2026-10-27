@@ -50,6 +50,9 @@ CONTRICUTING.md
 ^\.positai$
 ^\.claude$
 
+# Agent skills (not part of the R package)
+^skills$
+
 # CI/CD
 ^\.github$
 ^codecov\.yml$
