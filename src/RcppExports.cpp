@@ -168,6 +168,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// find_robust_elbow_cpp
+Rcpp::List find_robust_elbow_cpp(SEXP initialized_matrix, int ndims);
+RcppExport SEXP _SigBridgeR_find_robust_elbow_cpp(SEXP initialized_matrixSEXP, SEXP ndimsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type initialized_matrix(initialized_matrixSEXP);
+    Rcpp::traits::input_parameter< int >::type ndims(ndimsSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_robust_elbow_cpp(initialized_matrix, ndims));
+    return rcpp_result_gen;
+END_RCPP
+}
 // gtf_file_to_gene_length
 NumericVector gtf_file_to_gene_length(const std::string& path, bool verbose, bool canonical_chr_only);
 RcppExport SEXP _SigBridgeR_gtf_file_to_gene_length(SEXP pathSEXP, SEXP verboseSEXP, SEXP canonical_chr_onlySEXP) {
@@ -308,6 +320,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_preprocessCounts_ptr", (DL_FUNC) &_SigBridgeR_preprocessCounts_ptr, 1},
     {"_SigBridgeR_ExtractMetricsCpp", (DL_FUNC) &_SigBridgeR_ExtractMetricsCpp, 3},
     {"_SigBridgeR_fpkm_to_tpm_cpp", (DL_FUNC) &_SigBridgeR_fpkm_to_tpm_cpp, 2},
+    {"_SigBridgeR_find_robust_elbow_cpp", (DL_FUNC) &_SigBridgeR_find_robust_elbow_cpp, 2},
     {"_SigBridgeR_gtf_file_to_gene_length", (DL_FUNC) &_SigBridgeR_gtf_file_to_gene_length, 3},
     {"_SigBridgeR_r_gtf_lines_to_gene_length", (DL_FUNC) &_SigBridgeR_r_gtf_lines_to_gene_length, 3},
     {"_SigBridgeR_is_counts_matrix_cpp", (DL_FUNC) &_SigBridgeR_is_counts_matrix_cpp, 4},

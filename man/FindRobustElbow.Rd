@@ -11,12 +11,15 @@ FindRobustElbow(
 )
 }
 \arguments{
-\item{obj}{A Seurat object that has PCA computed (after \code{RunPCA})}
+\item{obj}{A Seurat object that has PCA computed (after \code{RunPCA}) or a numeric matrix
+of cell embeddings (cells x PCs).}
 
 \item{verbose}{Logical, if TRUE outputs detailed method results and creates
 visualization plot. If \code{FALSE} returns only the final dimension.}
 
-\item{ndims}{Integer, maximum number of dimensions to consider (default: \code{50L})}
+\item{ndims}{Integer, maximum number of dimensions to consider (default: \code{50L}).
+Values exceeding the number of PCs stored in the \code{"pca"} reduction are
+capped at the available number of PCs.}
 }
 \value{
 Integer, the recommended number of PCA dimensions for downstream analysis
@@ -26,6 +29,37 @@ This function combines multiple statistical approaches to automatically determin
 the optimal number of principal components (PCs) for downstream single-cell analysis.
 It integrates variance-based heuristics, elbow detection algorithms, and provides
 comprehensive visualization for result validation.
+}
+\details{
+The numerical work is delegated to the C++ routine \code{find_robust_elbow_cpp()},
+which receives the PCA cell embeddings as an S4-aware matrix view created by
+\code{beachmat::initializeCpp()}. Columns are streamed through \code{tatami} (see
+\code{Rtatami.h}), so the embeddings are never coerced into a dense base \code{matrix}
+and only the requested \code{ndims} columns are touched. For each of those PCs the
+routine computes the standard deviation, the explained variance, the
+percentage of explained variance, and the cumulative percentage, which are
+then fed into the six heuristics described below.
+
+The recommended dimension is the second largest value among the following
+candidates:
+\itemize{
+\item cumulative variance above 90\\%;
+\item cumulative variance above 80\\%;
+\item last PC explaining more variance than the mean;
+\item last PC explaining more than two standard deviations of the variance;
+\item maximum second derivative of the variance curve;
+\item largest distance between the variance curve and the chord joining the first
+and the last PC;
+\item the fixed anchors 10, 15, 20, 25, 30 and 35.
+}
+
+The fixed anchors are independent of the data, so the raw recommendation can
+exceed the number of PCs that were actually computed. The final value is
+therefore capped at the number of available PCs (i.e. \code{ndims}).
+
+When \code{verbose = TRUE} and the session is interactive, the per-method
+candidates are plotted on top of the variance curve by the internal helper
+\code{plot_robust_elbow()}.
 }
 \examples{
 \dontrun{

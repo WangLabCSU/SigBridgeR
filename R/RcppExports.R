@@ -53,6 +53,10 @@ fpkm_to_tpm_cpp <- function(initialized_fpkm, na_as_zero = TRUE) {
     .Call(`_SigBridgeR_fpkm_to_tpm_cpp`, initialized_fpkm, na_as_zero)
 }
 
+find_robust_elbow_cpp <- function(initialized_matrix, ndims) {
+    .Call(`_SigBridgeR_find_robust_elbow_cpp`, initialized_matrix, ndims)
+}
+
 gtf_file_to_gene_length <- function(path, verbose = TRUE, canonical_chr_only = FALSE) {
     .Call(`_SigBridgeR_gtf_file_to_gene_length`, path, verbose, canonical_chr_only)
 }
