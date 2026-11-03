@@ -171,7 +171,10 @@ SCPreProcess.default <- function(
 
   unknown <- setdiff(steps, steps_to_run)
   if (length(unknown) != 0L) {
-    Abort("[{.fun SCPreProcess}]: Unknown pipeline steps: {.val {unknown}}", type = "[METHOD ERROR]")
+    Abort(
+      "[{.fun SCPreProcess}]: Unknown pipeline steps: {.val {unknown}}",
+      type = "[METHOD ERROR]"
+    )
   }
   if (steps_to_run[[1L]] == "o" && !is.null(sc)) {
     sc_seurat <- if (!is.null(params$o$counts)) {
@@ -323,7 +326,10 @@ SCPreProcess.R6 <- function(
   }
 
   if (is.null(sc$X)) {
-    Abort("[{.fun SCPreProcess}]: {.arg sc} must contain $X matrix", type = "[DATA ERROR]")
+    Abort(
+      "[{.fun SCPreProcess}]: {.arg sc} must contain $X matrix",
+      type = "[DATA ERROR]"
+    )
   }
   if (verbose) {
     cli::cli_text(
@@ -500,3 +506,5 @@ SCPreProcess.Seurat <- function(
     verbose = verbose
   )
 }
+
+# nocov end

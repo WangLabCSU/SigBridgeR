@@ -207,6 +207,18 @@ To contribute your own plugin, refer to the
 
 ## 📓 Get Started
 
+```r
+library(SigBridgeR)
+res <- Screen(
+  bulk, # bulk RNA expression data
+  seurat_obj,
+  pheno, # named vector label/survival time data.frame
+  screen_method = "scAB", # Algorithm
+  phenotype_class = "binary" # or "survival"/"continuous"
+)
+```
+
+
 -   View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
 -   Use `?SigBridgeR::function_name` to access the help documents in R.
 

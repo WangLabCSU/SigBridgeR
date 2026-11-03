@@ -21,3 +21,5 @@ EnsureParentDir <- function(path) {
 
   invisible(TRUE)
 }
+
+# nocov end

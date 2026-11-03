@@ -243,7 +243,9 @@ MergeResult <- function(
       }
     })
 
-    values <- values[!vapply(X = values, FUN = is.null, FUN.VALUE = logical(1L))]
+    values <- values[
+      !vapply(X = values, FUN = is.null, FUN.VALUE = logical(1L))
+    ]
 
     misc_list[[key]] <- if (length(values) == 1L) values[[1L]] else values
   }

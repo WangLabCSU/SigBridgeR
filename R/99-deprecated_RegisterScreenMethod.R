@@ -145,3 +145,5 @@ RegisterScreenMethod <- function(
 
   invisible(TRUE)
 }
+
+# nocov end

@@ -472,3 +472,5 @@ handle_case_4 <- function(
     ))
   }
 }
+
+# nocov end

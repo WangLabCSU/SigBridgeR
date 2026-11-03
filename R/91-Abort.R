@@ -22,3 +22,5 @@ Abort <- function(
     .frame = .envir
   )
 }
+
+# nocov end

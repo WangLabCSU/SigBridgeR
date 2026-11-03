@@ -89,7 +89,11 @@ DrawBulkPCA <- function(
       expand = ggplot2::unit(3L, "mm"),
       show.legend = FALSE
     ) +
-    ggplot2::geom_hline(yintercept = 0L, color = "gray70", linetype = "dashed") +
+    ggplot2::geom_hline(
+      yintercept = 0L,
+      color = "gray70",
+      linetype = "dashed"
+    ) +
     ggplot2::geom_vline(xintercept = 0L, color = "gray70", linetype = "dashed")
 
   if ("batch" %chin% colnames(pca_df)) {

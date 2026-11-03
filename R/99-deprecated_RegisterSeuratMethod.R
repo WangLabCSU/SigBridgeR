@@ -60,7 +60,10 @@ RegisterSeuratMethod <- function(
     letter <- method_names[i]
 
     if (nchar(letter) != 1L) {
-      Abort("Method key name must be a single character", type = "[VALUE ERROR]")
+      Abort(
+        "Method key name must be a single character",
+        type = "[VALUE ERROR]"
+      )
     }
 
     lookup <- letter %chin% names(registry)
@@ -110,3 +113,5 @@ RegisterSeuratMethod <- function(
 
   invisible(TRUE)
 }
+
+# nocov end

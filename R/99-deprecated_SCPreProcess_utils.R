@@ -489,3 +489,5 @@ Pattern2Colname <- function(pat) {
     }
   )
 }
+
+# nocov end

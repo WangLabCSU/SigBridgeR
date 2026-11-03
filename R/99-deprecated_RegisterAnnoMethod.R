@@ -94,3 +94,5 @@ RegisterAnnoMethod <- function(
 
   invisible(TRUE)
 }
+
+# nocov end

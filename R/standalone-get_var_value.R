@@ -381,3 +381,5 @@ get_var_value <- function(var_name, func, .env = rlang::current_env()) {
   # 5. Evaluate and return
   eval(resolved, envir = .env)
 }
+
+# nocov end

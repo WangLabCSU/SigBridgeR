@@ -309,6 +309,9 @@ check_model_key <- function(models = vector(), api_keys = vector()) {
 
   api_keys <- unlist(api_keys)
   if (length(api_keys) == 0L) {
-    Abort("[mLLMCelltypeAnnotate()] API keys not provided", type = "[ARG ERROR]")
+    Abort(
+      "[mLLMCelltypeAnnotate()] API keys not provided",
+      type = "[ARG ERROR]"
+    )
   }
 }

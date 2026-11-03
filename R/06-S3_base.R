@@ -169,7 +169,11 @@ NULL
 #' @export
 #' @rawNamespace S3method(`names<-`,"SigBridgeR::SigBridgeRBase")
 `names<-.SigBridgeR::SigBridgeRBase` <- function(x, value) {
-  Abort("Modification is restricted", "Please reconstruct a new object", type = "[RESTRICTED]")
+  Abort(
+    "Modification is restricted",
+    "Please reconstruct a new object",
+    type = "[RESTRICTED]"
+  )
 }
 
 #' Format a SigBridgeR base object

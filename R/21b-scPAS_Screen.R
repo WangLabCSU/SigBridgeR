@@ -81,7 +81,10 @@ ValidatescPASParams <- function(
     "binary" = "binomial",
     "continuous" = "gaussian",
     "survival" = "cox",
-    Abort("Invalid phenotype_class: {.val {phenotype_class}}", type = "[VALUE ERROR]")
+    Abort(
+      "Invalid phenotype_class: {.val {phenotype_class}}",
+      type = "[VALUE ERROR]"
+    )
   )
   label_type <- paste0(label_type, c("_Positive", "_Negative"))
 
