@@ -31,6 +31,11 @@ ValidateScissorParams <- function(
   path2save_scissor_inputs = lifecycle::deprecated(),
   ...
 ) {
+  check_installed("Scissor", action = \(pkg, ...) {
+    check_installed("pak")
+    pak::pak("Exceret/Scissor")
+  })
+
   dots <- rlang::list2(...)
 
   # -- deprecated-argument warnings -----------------------------------------
@@ -267,7 +272,11 @@ DoScissor <- function(
       cache_config = p$cache_config
     )
 
-    file.path(load_cache_dir, "Scissor_inputs.RData")
+    if (utils::packageVersion("Scissor") < "2.1.0") {
+      file.path(load_cache_dir, "Scissor_inputs.RData")
+    } else {
+      file.path(load_cache_dir, "Scissor_inputs.qs2")
+    }
   } else {
     NULL
   }

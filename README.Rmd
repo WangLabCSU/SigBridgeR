@@ -39,25 +39,25 @@ data, performing as a bridge to existing tools.
 
 <p align="center">
 
-<img src="SigBridgeR_workflow.png" />
+<img src="man/figures/SigBridgeR_workflow.png" alt="SigBridgeR workflow" width="100%" />
 
 </p>
 
 **Current Status**
 
-|  Algorithm  |       Supported Phenotypes       | Cache Support |  License   |                Note              |  
-|:-----------:|:--------------------------------:|:-------------:|:----------:|:--------------------------------:|
-| **Scissor** | `binary` `survival` `continuous` |       ✅      |   GPL-3    |                                  |
-|  **scPAS**  | `binary` `survival` `continuous` |               |   GPL-3    |                                  |
-|  **scAB**   | `binary` `survival` `continuous` |       ✅      |   GPL-3    |                                  |
-|  **scPP**   | `binary` `survival` `continuous` |               |   GPL-3    |                                  |
-|  **DEGAS**  | `binary` `survival` `continuous` |               |    MIT     |                                  |
-| **DEGASv2** | `binary` `survival` `continuous` |               |    MIT     | Bulk raw counts matrix perferred |
-| **LP-SGL**  | `binary` `survival` `continuous` |               | No License |                                  |
-|  **PIPET**  | `binary` `survival` `continuous` |       ✅      |   GPL-3    | Bulk raw counts matrix perferred |
-| **SIDISH**  |            `survival`            |               |    MIT     |                                  |
-| **SCIPAC**  | `binary` `survival` `continuous` |               |    MIT     |                                  |
-| **TiRank**  | `binary` `survival` `continuous` |               |    MIT     |                                  |
+|  Algorithm  | Fork Version |       Supported Phenotypes       | Cache Support |  License   |                Note              |  
+|:-----------:|:------------:|:--------------------------------:|:-------------:|:----------:|:--------------------------------:|
+| **Scissor** |  v2.1.0 | `binary` `survival` `continuous` |       ✅      |   GPL-3    |                                  |
+|  **scPAS**  |  v0.2.1 | `binary` `survival` `continuous` |               |   GPL-3    |                                  |
+|  **scAB**   |  v1.0.5 | `binary` `survival` `continuous` |       ✅      |   GPL-3    |                                  |
+|  **scPP**   |  v0.0.2 | `binary` `survival` `continuous` |               |   GPL-3    |                                  |
+|  **DEGAS**  |  v1.0.1 | `binary` `survival` `continuous` |               |    MIT     |                                  |
+| **DEGASv2** |  v1.0.0 | `binary` `survival` `continuous` |               |    MIT     | Bulk raw counts matrix perferred |
+| **LP-SGL**  |  v0.0.2 | `binary` `survival` `continuous` |               | No License |                                  |
+|  **PIPET**  |  v0.1.7 | `binary` `survival` `continuous` |       ✅      |   GPL-3    | Bulk raw counts matrix perferred |
+| **SIDISH**  |  v0.0.2 |            `survival`            |               |    MIT     |                                  |
+| **SCIPAC**  |  v0.1.1 | `binary` `survival` `continuous` |               |    MIT     |                                  |
+| **TiRank**  |  v0.0.1 | `binary` `survival` `continuous` |               |    MIT     |                                  |
 
 ## 🔧 Installatation
 

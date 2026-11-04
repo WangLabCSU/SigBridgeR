@@ -1,10 +1,10 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# SigBridgeR <a href="https://wanglabcsu.github.io/SigBridgeR/"></a>
+# SigBridgeR <a href="https://wanglabcsu.github.io/SigBridgeR/"><img src="man/figures/logo_white.png" alt="sigbridger website" align="right" height="139"/></a>
 
 <!-- badges: start -->
 
-[![Project_Status:<span data-type=](https://www.repostatus.org/badges/latest/active.svg)\_Active&#34; /&gt;](https://www.repostatus.org/#active) [![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![Devel_version](<https://img.shields.io/badge/devel%20version-4.0.0-blue.svg>)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) 
+[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask_DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) <!-- badges: end -->
 
 ## 🌐 Overview
 
@@ -12,40 +12,40 @@ SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data
 
 <p align="center">
 
-<img src="SigBridgeR_workflow.png" />
+<img src="man/figures/SigBridgeR_workflow.png" alt="SigBridgeR workflow" width="100%" />
 
 </p>
 
 **Current Status**
 
-|     Algorithm     |          Supported Phenotypes          | Cache Support |  License  |               Note               |
-| :---------------: | :------------------------------------: | :-----------: | :--------: | :------------------------------: |
-| **Scissor** | `binary` `survival` `continuous` |      ✅      |   GPL-3   |                                  |
-|  **scPAS**  | `binary` `survival` `continuous` |              |   GPL-3   |                                  |
-|  **scAB**  | `binary` `survival` `continuous` |      ✅      |   GPL-3   |                                  |
-|  **scPP**  | `binary` `survival` `continuous` |              |   GPL-3   |                                  |
-|  **DEGAS**  | `binary` `survival` `continuous` |              |    MIT    |                                  |
-| **DEGASv2** | `binary` `survival` `continuous` |              |    MIT    | Bulk raw counts matrix perferred |
-| **LP-SGL** | `binary` `survival` `continuous` |              | No License |                                  |
-|  **PIPET**  | `binary` `survival` `continuous` |      ✅      |   GPL-3   | Bulk raw counts matrix perferred |
-| **SIDISH** |              `survival`              |              |    MIT    |                                  |
-| **SCIPAC** | `binary` `survival` `continuous` |              |    MIT    |                                  |
-| **TiRank** | `binary` `survival` `continuous` |              |    MIT    |                                  |
+| Algorithm | Fork Version | Supported Phenotypes | Cache Support | License | Note |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| **Scissor** | v2.1.0 | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
+| **scPAS** | v0.2.1 | `binary` `survival` `continuous` |  | GPL-3 |  |
+| **scAB** | v1.0.5 | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
+| **scPP** | v0.0.2 | `binary` `survival` `continuous` |  | GPL-3 |  |
+| **DEGAS** | v1.0.1 | `binary` `survival` `continuous` |  | MIT |  |
+| **DEGASv2** | v1.0.0 | `binary` `survival` `continuous` |  | MIT | Bulk raw counts matrix perferred |
+| **LP-SGL** | v0.0.2 | `binary` `survival` `continuous` |  | No License |  |
+| **PIPET** | v0.1.7 | `binary` `survival` `continuous` | ✅ | GPL-3 | Bulk raw counts matrix perferred |
+| **SIDISH** | v0.0.2 | `survival` |  | MIT |  |
+| **SCIPAC** | v0.1.1 | `binary` `survival` `continuous` |  | MIT |  |
+| **TiRank** | v0.0.1 | `binary` `survival` `continuous` |  | MIT |  |
 
 ## 🔧 Installatation
 
 Usually we recommend installing the latest release from GitHub because of the latest features and bug fixes.
 
-1. Install the development version from GitHub:
+1.  Install the development version from GitHub:
 
-```r
+``` r
 # install.packages("pak")
 pak::pak("WangLabCSU/SigBridgeR")
 ```
 
-2. Install from r-universe:
+2.  Install from r-universe:
 
-```r
+``` r
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
@@ -56,10 +56,9 @@ install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 <summary>
 
 For better performance:
-
 </summary>
 
-```r
+``` r
 pak::pak(
   # faster computation
   "sparseMatrixStats",
@@ -82,10 +81,9 @@ pak::pak(
 <summary>
 
 For seamless integration with single-cell RNA-seq data stored in `.h5ad`:
-
 </summary>
 
-```r
+``` r
 pak::pak("anndata")
 # or
 pak::pak("anndataR") # both are supported
@@ -98,10 +96,9 @@ pak::pak("anndataR") # both are supported
 <summary>
 
 For visualization:
-
 </summary>
 
-```r
+``` r
 pak::pak(c(
   "ggplot2",
   "randomcoloR", # or RColorBrewer
@@ -119,10 +116,9 @@ pak::pak(c(
 <summary>
 
 To use the built-in cell annotation methods:
-
 </summary>
 
-```r
+``` r
 pak::pak(c(
   # SingleR
   "SingleR-inc/SingleR",
@@ -143,10 +139,9 @@ pak::pak(c(
 <summary>
 
 To add custom extension functions to SigBridgeR:
-
 </summary>
 
-```r
+``` r
 pak::pak(c(
   "tictoc",
   "codetools",
@@ -159,28 +154,24 @@ pak::pak(c(
 
 <!-- 
 ## 🤝 Community
-
-SigBridgeR allows the community developers to integrate new algorithms without modifying the core package. The following community-developed plugins are maintained by their respective authors.
-
-
+&#10;SigBridgeR allows the community developers to integrate new algorithms without modifying the core package. The following community-developed plugins are maintained by their respective authors.
+&#10;
 ``` r
 # Install community plugins via pak:
 pak::pak(c(
   # Example: "username/sigbridger-plugin-example"
 ))
 ```
-
-| Name           | Author                     | Status | Repo Link |
+&#10;| Name           | Author                     | Status | Repo Link |
 |:-------------:|:---------------------------:|:------:|:---------:|
 | *Coming soon* | Be the first to contribute! |   -    |     -     |
-
-To contribute your own plugin, refer to the
+&#10;To contribute your own plugin, refer to the
 [vignette on extending SigBridgeR](https://wanglabcsu.github.io/SigBridgeR/articles/extending.html).
 -->
 
 ## 📓 Get Started
 
-```r
+``` r
 library(SigBridgeR)
 res <- Screen(
   bulk, # bulk RNA expression data
@@ -205,34 +196,34 @@ Let us know if you have ideas to make this project better. Pull requests are wel
 
 SigBridgeR ships a set of [Agent Skills](https://skills.sh/) that teach AI coding agents how to drive the package correctly. They live in the standalone [`skills/`](skills) folder and are installable with the [`skills`](https://www.npmjs.com/package/skills) CLI (Node.js \>= 22).
 
-| Skill                        | What it covers                                                                                                                       |
-| :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
-| `sigbridger-quickstart`    | Minimal end-to-end run: `LoadRefData()` -\> `Screen()` -\> `MergeResult()` -\> plots                                           |
-| `sigbridger-results-plots` | Reading `ScreenMethodResult`, `MergeResult()`, `WeightedVote()`, `ScreenFractionPlot()`, `ScreenUpset()`, `autoplot()`   |
-| `sigbridger-extend`        | Plugging in custom algorithms via `TemplateScreenFunc()`, `ScreenMethod`, `AnnotationMethod` and `Register()`                |
-| `sigbridger-utilities`     | Helper toolkit: `SCIntegrate()`, `ChooseNormalization()`, `SymbolConvert()`, `AddMisc()`, `SCAnnotate()`, `setThreads()` |
+| Skill | What it covers |
+|:---|:---|
+| `sigbridger-quickstart` | Minimal end-to-end run: `LoadRefData()` -\> `Screen()` -\> `MergeResult()` -\> plots |
+| `sigbridger-results-plots` | Reading `ScreenMethodResult`, `MergeResult()`, `WeightedVote()`, `ScreenFractionPlot()`, `ScreenUpset()`, `autoplot()` |
+| `sigbridger-extend` | Plugging in custom algorithms via `TemplateScreenFunc()`, `ScreenMethod`, `AnnotationMethod` and `Register()` |
+| `sigbridger-utilities` | Helper toolkit: `SCIntegrate()`, `ChooseNormalization()`, `SymbolConvert()`, `AddMisc()`, `SCAnnotate()`, `setThreads()` |
 
 Install every skill (interactive: pick the skills and the target agents):
 
-```bash
+``` bash
 npx skills add WangLabCSU/SigBridgeR
 ```
 
 Install one skill non-interactively, into a specific agent:
 
-```bash
+``` bash
 npx skills add WangLabCSU/SigBridgeR --skill sigbridger-quickstart -a codebuddy
 ```
 
 Install globally so the skills are available in every project on the machine:
 
-```bash
+``` bash
 npx skills add WangLabCSU/SigBridgeR -g
 ```
 
 Manage the installed set:
 
-```bash
+``` bash
 npx skills list      # what is installed and where
 npx skills check     # are updates available
 npx skills update    # pull the latest version
@@ -243,7 +234,7 @@ npx skills remove    # uninstall
 
 If you use SigBridgeR in your work, please cite the corresponding papers:
 
-```r
+``` r
 citation("SigBridgeR")
 #> Please cite the following publications when using this package.
 #> 

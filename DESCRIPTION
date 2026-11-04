@@ -86,6 +86,7 @@ Suggests:
     ScPP,
     SingleR,
     sparseMatrixStats,
+    spelling,
     testthat (>= 3.0.0),
     tibble,
     tictoc,
@@ -107,3 +108,4 @@ SystemRequirements:
     C++17,
     zlib (>= 1.2.4)
 Config/roxygen2/version: 8.1.0
+Language: en-US

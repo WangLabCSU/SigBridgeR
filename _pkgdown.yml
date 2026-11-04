@@ -36,6 +36,8 @@ reference:
           - PhenoPreProcess
           - PhenoMap
           - CountsToTPM
+          - FPKMToTPM
+          - GetGeneLength
           - IsCountsMatrix
           - IsSkewedDynamic
 
