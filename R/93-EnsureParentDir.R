@@ -9,7 +9,7 @@ EnsureParentDir <- function(path) {
 
   ans <- utils::askYesNo(
     cli::cli_fmt(cli::cli_inform(
-      "{cli::symbol$menu} Create parent directory {.file {parent}}?"
+      "{cli_symbol$menu} Create parent directory {.file {parent}}?"
     ))
   )
 

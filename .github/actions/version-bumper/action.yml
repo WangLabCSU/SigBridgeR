@@ -1,0 +1,27 @@
+name: "R Package Version Bumper"
+description: "Automatically bump the R package version, sync the Rust crate version in src/rust/Cargo.toml, and update development badges. Bumps are skipped when the new version is higher than the highest version in NEWS.md."
+author: "Exceret"
+branding:
+  icon: "package"
+  color: "blue"
+
+inputs:
+  version_type:
+    description: "Bump type: major, minor, patch, or custom. Auto-detects from commit message if not specified."
+    required: false
+    default: "patch"
+  custom_version:
+    description: "Custom version (e.g., 2.1.0). Overrides version_type."
+    required: false
+
+outputs:
+  old_version:
+    description: "Previous version"
+  new_version:
+    description: "New version after bump"
+  bumped:
+    description: "Whether version was bumped (true/false)"
+
+runs:
+  using: "node20"
+  main: "dist/index.js"

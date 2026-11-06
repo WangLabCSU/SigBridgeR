@@ -1,220 +1,76 @@
 name: Update R Package Version
 
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: "Version bump type"
+        required: false
+        default: "patch"
+        type: choice
+        options: [major, minor, patch, custom]
+      custom_version:
+        description: "Custom version (e.g. 1.2.3)"
+        required: false
+        type: string
 
-    # 添加手动触发器
-    workflow_dispatch:
-        inputs:
-            version_type:
-                description: "Version bump type"
-                required: false
-                default: "patch"
-                type: choice
-                options:
-                    - major
-                    - minor
-                    - patch
-            custom_version:
-                description: "Custom version (optional, overrides version_type)"
-                required: false
-                type: string
+permissions:
+  contents: write
+
+concurrency:
+  group: version-update-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-    update-version:
-        runs-on: ubuntu-latest
-        concurrency:
-            group: ${{ github.workflow }}-${{ github.ref }}
-            cancel-in-progress: true
-        permissions:
-            contents: write
+  update-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  fetch-depth: 0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            # 缓存R包依赖
-            - name: Cache R packages
-              uses: actions/cache@v3
-              with:
-                  path: |
-                      ~/R/Library
-                      /usr/local/lib/R/site-library
-                      /usr/lib/R/site-library
-                  key: ${{ runner.os }}-r-packages-${{ hashFiles('**/DESCRIPTION') }}
-                  restore-keys: |
-                      ${{ runner.os }}-r-packages-
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
 
-            - name: Setup R
-              uses: r-lib/actions/setup-r@v2
+      - name: Install desc
+        run: Rscript -e "install.packages('desc')"
 
-            # 只在缓存未命中时安装desc包
-            - name: Install required packages
-              run: |
-                  if [ ! -d "~/R/Library/desc" ]; then
-                    Rscript -e 'install.packages("desc")'
-                  fi
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-            - name: Configure Git user
-              run: |
-                  git config user.name "GitHub Actions"
-                  git config user.email "actions@github.com"
+      - name: Bump version
+        id: version_bump
+        uses: ./.github/actions/version-bumper
+        with:
+          version_type: "${{ github.event.inputs.version_type || 'patch' }}"
+          custom_version: "${{ github.event.inputs.custom_version }}"
 
-            - name: Get commit message
-              id: commit_msg
-              run: |
-                  if command -v jq &> /dev/null; then
-                    msg=$(git log -1 --pretty=%B | jq -sR . | sed 's/^"//;s/"$//')
-                  else
-                    msg=$(git log -1 --pretty=%B | sed 's/"/\\"/g' | tr '\n' ' ')
-                  fi
-                  echo "msg=$msg" >> $GITHUB_OUTPUT
+      - name: Commit and tag
+        if: steps.version_bump.outputs.bumped == 'true'
+        run: |
+          for f in DESCRIPTION README.md README.Rmd src/rust/Cargo.toml; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
 
-            - name: Determine version bump type
-              id: version_bump
-              run: |
-                  # 1. 优先使用 workflow_dispatch 输入（手动触发）
-                  INPUT_TYPE="${{ github.event.inputs.version_type }}"
-                  CUSTOM_VERSION="${{ github.event.inputs.custom_version }}"
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
 
-                  BUMP_TYPE="none"
+          NEW_VER="${{ steps.version_bump.outputs.new_version }}"
+          git commit -m "chore: bump version to ${NEW_VER}"
+          git tag -a "v${NEW_VER}" -m "Release v${NEW_VER}"
 
-                  if [ -n "$CUSTOM_VERSION" ]; then
-                  echo "Using custom version: $CUSTOM_VERSION"
-                  echo "type=custom" >> $GITHUB_OUTPUT
-                  echo "custom_version=$CUSTOM_VERSION" >> $GITHUB_OUTPUT
-                  exit 0
-                  elif [ -n "$INPUT_TYPE" ] && [ "$INPUT_TYPE" != "none" ]; then
-                  BUMP_TYPE="$INPUT_TYPE"
-                  echo "Bump type from input: $BUMP_TYPE"
-                  else
-                  # 2. fallback: 从 commit message 推断（仅适用于 push/PR）
-                  commit_msg=$(git log -1 --pretty=%B 2>/dev/null | tr '[:upper:]' '[:lower:]')
+          git push origin "${{ github.ref_name }}"
+          git push origin "v${NEW_VER}"
 
-                  if echo "$commit_msg" | grep -qE '\<(major|breaking)\>|feat!'; then
-                      BUMP_TYPE="major"
-                  elif echo "$commit_msg" | grep -qE '\<(feat|feature|minor)\>'; then
-                      BUMP_TYPE="minor"
-                  elif echo "$commit_msg" | grep -qE '\<(patch|fix|bug)\>'; then
-                      BUMP_TYPE="patch"
-                  fi
-                  echo "Bump type from commit message: $BUMP_TYPE"
-                  fi
-
-                  echo "type=$BUMP_TYPE" >> $GITHUB_OUTPUT
-
-            - name: Update version in DESCRIPTION
-              id: update_version
-              if: steps.version_bump.outputs.type != 'none'
-              run: |
-                  CURRENT_VERSION=$(Rscript -e 'cat(as.character(desc::desc_get_version()))')
-                  echo "Current version: $CURRENT_VERSION"
-
-                  BUMP_TYPE="${{ steps.version_bump.outputs.type }}"
-                  CUSTOM_VERSION="${{ steps.version_bump.outputs.custom_version }}"
-
-                  if [ "$BUMP_TYPE" = "custom" ] && [ -n "$CUSTOM_VERSION" ]; then
-                  NEW_VERSION="$CUSTOM_VERSION"
-                  echo "Using custom version: $NEW_VERSION"
-                  elif [ "$BUMP_TYPE" = "major" ]; then
-                  NEW_VERSION=$(Rscript -e '
-                      v <- as.character(desc::desc_get_version())
-                      parts <- as.integer(unlist(strsplit(v, "\\.")[1:3]))
-                      parts[1] <- parts[1] + 1
-                      parts[2] <- 0
-                      parts[3] <- 0
-                      cat(paste(parts, collapse = "."))
-                  ')
-                  elif [ "$BUMP_TYPE" = "minor" ]; then
-                  NEW_VERSION=$(Rscript -e '
-                      v <- as.character(desc::desc_get_version())
-                      parts <- as.integer(unlist(strsplit(v, "\\.")[1:3]))
-                      parts[2] <- parts[2] + 1
-                      parts[3] <- 0
-                      cat(paste(parts, collapse = "."))
-                  ')
-                  elif [ "$BUMP_TYPE" = "patch" ]; then
-                  NEW_VERSION=$(Rscript -e '
-                      v <- as.character(desc::desc_get_version())
-                      parts <- as.integer(unlist(strsplit(v, "\\.")[1:3]))
-                      parts[3] <- parts[3] + 1
-                      cat(paste(parts, collapse = "."))
-                  ')
-                  else
-                  echo "Unknown bump type: $BUMP_TYPE"
-                  exit 1
-                  fi
-
-                  echo "New version: $NEW_VERSION"
-                  Rscript -e "desc::desc_set_version('$NEW_VERSION')"
-                  echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-
-            - name: Update version badge in README.md
-              if: steps.version_bump.outputs.type != 'none'
-              run: |
-                  if [ -f README.md ]; then
-                  sed -i "s/\(badge\/devel%20version-\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1$NEW_VERSION/g" README.md
-                  echo "Updated README.md version badge to $NEW_VERSION"
-                  else
-                  echo "README.md not found, skipping..."
-                  fi
-
-            - name: Update version badge in README.Rmd
-              if: steps.version_bump.outputs.type != 'none'
-              run: |
-                  if [ -f README.Rmd ]; then
-                  sed -i "s/\(badge\/devel%20version-\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1$NEW_VERSION/g" README.Rmd
-                  echo "Updated README.Rmd version badge to $NEW_VERSION"
-                  else
-                  echo "README.Rmd not found, skipping..."
-                  fi
-
-            - name: Pull latest changes
-              if: steps.version_bump.outputs.type != 'none'
-              run: |
-                  git fetch origin      # 先获取远程更新
-                  git merge origin/main # 将远程更改合并到当前分支
-                  echo "Pulled latest changes"
-
-            - name: Commit all version updates
-              if: steps.version_bump.outputs.type != 'none'
-              run: |
-                  git add DESCRIPTION
-
-                  if [ -f README.md ]; then
-                  git add README.md
-                  fi
-
-                  if [ -f README.Rmd ]; then
-                  git add README.Rmd
-                  fi
-
-                  if git diff --staged --quiet; then
-                  echo "No changes to commit."
-                  exit 0
-                  fi
-
-                  git commit -m "Bump version to $NEW_VERSION [ci skip]"
-
-                  if git show-ref --tags "v$NEW_VERSION"; then
-                  echo "Tag v$NEW_VERSION already exists, skipping creation."
-                  else
-                  git tag -a "v$NEW_VERSION" -m "Version $NEW_VERSION"
-                  fi
-
-            - name: Push changes and tags
-              if: steps.version_bump.outputs.type != 'none'
-              run: |
-                  git push origin main
-
-                  if git show-ref --tags "v$NEW_VERSION"; then
-                    git push origin "v$NEW_VERSION"
-                  else
-                    echo "No new tag to push."
-                  fi
+          echo "🎉 Released v${NEW_VER}"

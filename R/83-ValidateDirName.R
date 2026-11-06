@@ -46,8 +46,8 @@ ValidateDirName <- function(func, ...) {
     validate_note("Folder name does not end with '_res'")
     validate_explain(
       c(
-        "{cli::symbol$bullet} Current folder name: '{folder_name}'",
-        "{cli::symbol$bullet} Recommended: '{suggested_folder_name}'",
+        "{cli_symbol$bullet} Current folder name: '{folder_name}'",
+        "{cli_symbol$bullet} Recommended: '{suggested_folder_name}'",
         "Result ('_res') folders stay apart from source code"
       ),
       .envir = current_env()

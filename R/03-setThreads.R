@@ -282,7 +282,7 @@ print_thread_config <- function(results) {
 
   purrr::walk(results, function(cfg) {
     cli::cli_text(
-      "{cli::symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
+      "{cli_symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
     )
   })
 

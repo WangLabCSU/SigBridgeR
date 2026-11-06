@@ -53,7 +53,7 @@ ChooseCache <- function(directory) {
   choice <- utils::menu(
     cache_dirs,
     title = cli::cli_fmt(cli::cli_inform(
-      "{cli::symbol$menu} Which cache do you want to use?"
+      "{cli_symbol$menu} Which cache do you want to use?"
     ))
   )
 

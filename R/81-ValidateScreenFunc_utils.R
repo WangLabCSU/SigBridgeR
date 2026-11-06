@@ -2,7 +2,7 @@
 validate_warn <- function(message, ...) {
   cli::cli_inform(
     cli::col_magenta(paste(
-      cli::symbol$pointer,
+      cli_symbol$pointer,
       message,
       "... WARNING"
     )),
@@ -14,7 +14,7 @@ validate_warn <- function(message, ...) {
 validate_error <- function(message, ...) {
   cli::cli_inform(
     cli::col_red(paste(
-      cli::symbol$pointer,
+      cli_symbol$pointer,
       message,
       "... ERROR"
     )),
@@ -26,7 +26,7 @@ validate_error <- function(message, ...) {
 validate_note <- function(message, ...) {
   cli::cli_inform(
     cli::col_blue(paste(
-      cli::symbol$pointer,
+      cli_symbol$pointer,
       message,
       "... NOTE"
     )),

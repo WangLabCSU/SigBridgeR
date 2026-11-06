@@ -16,7 +16,7 @@ ValidateArgsVerbose <- function(func, ...) {
     validate_warn("Verbose control supported but not used")
     if (has_dots) {
       validate_explain(
-        "{cli::symbol$bullet} When using `...` to accept extra arguments, also support `verbose`"
+        "{cli_symbol$bullet} When using `...` to accept extra arguments, also support `verbose`"
       )
     }
     return(list(warn = 1L))

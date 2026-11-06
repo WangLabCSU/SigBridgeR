@@ -10,7 +10,7 @@ ValidateReturn <- function(func, ...) {
 
   failed <- FALSE
 
-  if (any(!is_list)) {
+  if (!all(is_list)) {
     validate_error("Return value is not a list")
 
     cli::cli_div(

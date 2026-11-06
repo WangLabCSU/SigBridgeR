@@ -69,17 +69,21 @@ cli_timestamp_formatter <- function(x) {
   )
 
   if (x < 1L) {
-    sprintf("%.2f ms", x * 1000L)
+    sprintf("%d ms", as.integer(x * 1000L))
   } else if (x < 60L) {
-    sprintf("%.2f s", x)
+    sprintf("%d s", as.integer(x))
   } else if (x < 3600L) {
-    sprintf("%d min %.2f s", floor(x / 60L), x %% 60L)
+    sprintf(
+      "%d min %d s",
+      as.integer(floor(x / 60L)),
+      as.integer(x %% 60L)
+    )
   } else {
     sprintf(
-      "%d h %02d min %.2f s",
-      floor(x / 3600L),
-      floor((x %% 3600L) / 60L),
-      x %% 60L
+      "%d h %d min %d s",
+      as.integer(floor(x / 3600L)),
+      as.integer(floor((x %% 3600L) / 60L)),
+      as.integer(x %% 60L)
     )
   }
 }
@@ -106,3 +110,5 @@ startup_message_allowed <- function() {
 
   allowed
 }
+
+# nocov end

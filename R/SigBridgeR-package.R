@@ -51,4 +51,6 @@ getFuncOption <- SigBridgeRUtils::getFuncOption
 #' @export
 setFuncOption <- SigBridgeRUtils::setFuncOption
 
+cli_symbol <- cli::symbol
+
 # nocov end
