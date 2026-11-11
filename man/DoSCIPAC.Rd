@@ -27,8 +27,7 @@ DoSCIPAC(
 \item{matched_bulk}{Matrix or data frame of preprocessed bulk RNA-seq expression
 data (genes × samples). Column names must match names/IDs in \code{phenotype}.}
 
-\item{sc_data}{A matrix/Matrix (genes × cells) or a Seurat object containing
-scRNA-seq data to be screened.}
+\item{sc_data}{A Seurat object containing scRNA-seq data to be screened.}
 
 \item{phenotype}{Phenotype data, either:
 \itemize{

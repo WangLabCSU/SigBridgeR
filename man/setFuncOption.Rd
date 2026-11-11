@@ -43,6 +43,7 @@ This function performs the following validations:
 \describe{
 \item{verbose}{Must be single logical values (TRUE/FALSE)}
 \item{timeout, seed}{Must be single integer values}
+\item{nthreads}{Must be a single positive integer value}
 }
 
 The function is automatically called by setFuncOption to ensure all
@@ -55,6 +56,7 @@ configuration options are valid before they are set.
 \item \code{verbose}: A logical value indicating whether to print verbose messages, defaults to \code{TRUE}
 \item \code{timeout}: An integer specifying the timeout in seconds for parallel processing, defaults to `180L``
 \item \code{seed}: An integer specifying the random seed for reproducible results, defaults to `123L``
+\item \code{nthreads}: An integer specifying the number of threads for parallel processing, defaults to `1L``
 }
 
 }

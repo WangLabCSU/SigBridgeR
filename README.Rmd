@@ -216,15 +216,11 @@ If you encounter problems, please check:
 
 Let us know if you have ideas to make this project better. Pull requests are welcome!
 
-<!-- ## 📚 Citation
+## 📚 Citation
 
-```r
+```{r}
 citation("SigBridgeR")
 ```
-
-```text
-
-``` -->
 
 
 ## 🗺️ Similar Projects
