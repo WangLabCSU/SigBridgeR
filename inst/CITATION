@@ -1,15 +1,28 @@
 citHeader("Please cite the following publications when using this package.")
 
 bibentry(
-  bibtype = "Manual",
-  title = "SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data",
+  bibtype = "article",
+  title = "SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell Transcriptomics",
   author = c(
     as.person("Yuxi Yang"),
+    as.person("Hongqian Qian"),
+    as.person("Zeyu Yan"),
+    as.person("Chunyang Wang"),
+    as.person("Liping Du"),
+    as.person("Xiaoxiao Shen"),
+    as.person("Yun Peng"),
+    as.person("Xiaoyun Bu"),
+    as.person("Ting Li"),
+    as.person("Jian-Guo Zhou"),
     as.person("Shixiang Wang")
   ),
+  journal = "GigaScience",
   year = "2026",
-  note = "R package version 4.0.0",
-  url = "https://wanglabcsu.github.io/sigbridger"
+  pages = "giag100",
+  doi = "10.1093/gigascience/giag100",
+  url = "https://doi.org/10.1093/gigascience/giag100",
+  textVersion =
+    "Yang et al. SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell Transcriptomics. GigaScience (2026) [SigBridgeR]"
 )
 
 

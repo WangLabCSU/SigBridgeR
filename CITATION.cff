@@ -1,0 +1,143 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: SigBridgeR
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Yuxi
+    family-names: Yang
+    email: 15364051195@163.com
+    affiliation: >-
+      Department of Gastroenterology, Hunan Cancer
+      Hospital/The Affiliated Cancer Hospital of Xiangya
+      School of Medicine, Central South University,
+      Changsha, China
+    orcid: 'https://orcid.org/0009-0006-1329-1224'
+  - given-names: Hongqian
+    family-names: Qian
+    orcid: 'https://orcid.org/0009-0000-9086-247X'
+    affiliation: >-
+      Department of Biomedical Informatics, School of Life
+      Sciences, Central South University, Changsha, China.
+  - given-names: Zeyu
+    family-names: Yan
+    affiliation: >-
+      Department of Biomedical Informatics, School of Life
+      Sciences, Central South University, Changsha, China.
+  - given-names: Chunyang
+    family-names: Wang
+    affiliation: >-
+      Department of Biomedical Informatics, School of Life
+      Sciences, Central South University, Changsha, China.
+  - given-names: ' Liping'
+    family-names: Du
+    affiliation: >-
+      Department of Biomedical Informatics, School of Life
+      Sciences, Central South University, Changsha, China.
+  - given-names: Xiaoxiao
+    family-names: Shen
+    affiliation: ' Department of Trauma Medical Center, Daping Hospital, State Key Laboratory of Trauma and Chemical Poisoning, Army Medical University, Chongqing, China.'
+  - given-names: ' Yun'
+    family-names: Peng
+    orcid: 'https://orcid.org/0000-0003-2801-3332'
+    affiliation: >-
+      Department of Urology, Peking University People’s
+      hospital, Beijing, China
+  - given-names: Xiaoyun
+    family-names: Bu
+    orcid: 'https://orcid.org/0000-0001-6455-1774'
+    affiliation: >-
+      Department of Colorectal Surgery, Hunan Cancer
+      Hospital/The Affiliated Cancer Hospital of Xiangya
+      School of Medicine, Central South University,
+      Changsha, China
+  - given-names: Ting
+    family-names: Li
+    email: liting2761@hnca.org.cn
+    affiliation: >-
+      Department of Gastroenterology, Hunan Cancer
+      Hospital/The Affiliated Cancer Hospital of Xiangya
+      School of Medicine, Central South University,
+      Changsha, China
+    orcid: 'https://orcid.org/0009-0006-3790-761X'
+  - given-names: Jian-Guo
+    family-names: Zhou
+    email: jianguo.zhou@zmu.edu.cn
+    affiliation: >-
+      Department of Oncology, The Second Affiliated Hospital
+      of Zunyi Medical University, Zunyi, China
+    orcid: 'https://orcid.org/0000-0002-5021-3739'
+  - orcid: 'https://orcid.org/0000-0001-9855-7357'
+    given-names: Shixiang
+    family-names: Wang
+    email: wangshx@csu.edu.cn
+    affiliation: >-
+      Department of Biomedical Informatics, School of Life
+      Sciences, Central South University, Changsha, China
+identifiers:
+  - type: doi
+    value: 10.1093/gigascience/giag100
+repository-code: 'https://github.com/WangLabCSU/SigBridgeR'
+url: 'https://wanglabcsu.github.io/SigBridgeR/'
+abstract: >-
+  Background
+
+  Single-cell RNA sequencing (scRNA-seq) has revolutionized
+  our understanding of cellular heterogeneity, yet linking
+  specific cell subpopulations to clinically relevant
+  phenotypes remains a major challenge. Although multiple
+  computational methods have been developed to integrate
+  bulk transcriptomic and single-cell data for
+  phenotype-associated cell identification, differences in
+  algorithmic strategies, parameter configurations, software
+  implementations, and output formats make it difficult to
+  compare methods fairly, reproduce analyses, and determine
+  which approach is most suitable for a given biological
+  question.
+
+
+  Results
+
+  Here, we present SigBridgeR, an extensible R framework
+  that integrates eight representative phenotype-associated
+  cell subpopulation identification algorithms within a
+  unified workflow. Using paired bulk RNA-seq and scRNA-seq
+  datasets from four cancer types under both binary and
+  survival phenotypes, we performed a comprehensive
+  benchmark combining positive and negative control
+  experiments, accuracy evaluation, Hallmark pathway
+  enrichment analysis, parameter sensitivity analysis, and
+  computational performance profiling. The benchmark
+  revealed substantial differences in algorithm robustness,
+  biological consistency, computational efficiency, and
+  parameter sensitivity. Across multiple evaluation
+  criteria, Scissor and scAB consistently achieved the most
+  balanced overall performance, whereas several methods
+  exhibited important limitations, including poor
+  scalability, high parameter sensitivity, or unstable
+  phenotype detection.
+
+
+  Conclusions
+
+  SigBridgeR provides standardized preprocessing, unified
+  algorithm interfaces, and an extensible registry-based
+  architecture for phenotype-associated cell subpopulation
+  analysis. By integrating systematic benchmarking and
+  optimized implementations into a single platform,
+  SigBridgeR facilitates reliable evaluation of existing
+  methods, simplifies multi-algorithm analyses, and supports
+  the development of improved phenotype-guided single-cell
+  analysis methods for precision medicine.
+keywords:
+  - single-cell RNA sequencing
+  - phenotype-associated subpopulation
+  - bulk transcriptomics
+  - computational benchmarking
+  - R package
+  - precision medicine
+license: GPL-3.0
