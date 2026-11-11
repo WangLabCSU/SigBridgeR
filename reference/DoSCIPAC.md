@@ -37,8 +37,7 @@ DoSCIPAC(
 
 - sc_data:
 
-  A matrix/Matrix (genes × cells) or a Seurat object containing
-  scRNA-seq data to be screened.
+  A Seurat object containing scRNA-seq data to be screened.
 
 - phenotype:
 

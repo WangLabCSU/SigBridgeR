@@ -56,6 +56,10 @@ This function performs the following validations:
 
   Must be single integer values
 
+- nthreads:
+
+  Must be a single positive integer value
+
 The function is automatically called by setFuncOption to ensure all
 configuration options are valid before they are set.
 
@@ -69,6 +73,9 @@ configuration options are valid before they are set.
 
 - `seed`: An integer specifying the random seed for reproducible
   results, defaults to \`123L“
+
+- `nthreads`: An integer specifying the number of threads for parallel
+  processing, defaults to \`1L“
 
 ## Examples
 

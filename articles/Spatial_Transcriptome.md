@@ -3,18 +3,28 @@
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v3.8.4 loaded
+#> ✔ SigBridgeR v3.8.5 loaded
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
 #> 'SeuratObject' was built under R 4.6.0 but the current version is
-#> 4.6.1; it is recomended that you reinstall 'SeuratObject' as the ABI
+#> 4.6.2; it is recomended that you reinstall 'SeuratObject' as the ABI
 #> for R may have changed
+#> 'SeuratObject' was built with package 'Matrix' 1.7.5 but the current
+#> version is 1.7.6; it is recomended that you reinstall 'SeuratObject' as
+#> the ABI for 'Matrix' may have changed
 #> 
 #> Attaching package: 'SeuratObject'
 #> The following objects are masked from 'package:base':
 #> 
 #>     intersect, t
+#> v6.0 adds significant improvements in speed and efficiency, particularly for large datasets.
+#> For more information, see https://satijalab.org/seurat/articles/announcements.
+#> 
+#> Attaching package: 'Seurat'
+#> The following object is masked from 'package:SigBridgeR':
+#> 
+#>     setThreads
 ```
 
 ## Load Data
@@ -401,13 +411,13 @@ result
 ``` r
 
 sessionInfo()
-#> R version 4.6.1 (2026-06-24)
+#> R version 4.6.2 (2026-10-29)
 #> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.5 LTS
+#> Running under: Ubuntu 26.04.1 LTS
 #> 
 #> Matrix products: default
 #> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.32.so;  LAPACK version 3.12.0
 #> 
 #> locale:
 #>  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
@@ -422,46 +432,36 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_5.5.1       SeuratObject_5.4.0 sp_2.2-3           SigBridgeR_3.8.4  
+#> [1] Seurat_6.0.0       SeuratObject_5.4.0 sp_2.2-4           SigBridgeR_3.8.5  
 #> 
 #> loaded via a namespace (and not attached):
-#>   [1] deldir_2.0-4           pbapply_1.7-5          gridExtra_2.3.1       
-#>   [4] rlang_1.3.0            magrittr_2.0.5         RcppAnnoy_0.0.23      
-#>   [7] otel_0.2.0             spatstat.geom_3.8-3    matrixStats_1.5.0     
-#>  [10] ggridges_0.5.7         compiler_4.6.1         png_0.1-9             
-#>  [13] systemfonts_1.3.2      vctrs_0.7.3            reshape2_1.4.5        
-#>  [16] stringr_1.6.0          pkgconfig_2.0.3        fastmap_1.2.0         
-#>  [19] promises_1.5.0         rmarkdown_2.32         ragg_1.5.2            
-#>  [22] purrr_1.2.2            xfun_0.61              cachem_1.1.0          
-#>  [25] jsonlite_2.0.0         goftest_1.2-3          later_1.4.8           
-#>  [28] spatstat.utils_3.2-5   irlba_2.3.7            parallel_4.6.1        
-#>  [31] cluster_2.1.8.2        R6_2.6.1               ica_1.0-3             
-#>  [34] spatstat.data_3.1-9    bslib_0.12.0           stringi_1.8.9         
-#>  [37] RColorBrewer_1.1-3     reticulate_1.47.0      spatstat.univar_3.2-0 
-#>  [40] parallelly_1.48.0      lmtest_0.9-40          jquerylib_0.1.4       
-#>  [43] scattermore_1.2        Rcpp_1.1.2             knitr_1.52            
-#>  [46] tensor_1.5.1           future.apply_1.20.2    zoo_1.9-0             
-#>  [49] sctransform_0.4.3      httpuv_1.6.17          Matrix_1.7-5          
-#>  [52] splines_4.6.1          igraph_2.3.3           tidyselect_1.2.1      
-#>  [55] abind_1.4-8            yaml_2.3.12            spatstat.random_3.5-1 
-#>  [58] spatstat.explore_3.8-2 codetools_0.2-20       miniUI_0.1.2          
-#>  [61] listenv_1.0.0          lattice_0.22-9         tibble_3.3.1          
-#>  [64] plyr_1.8.9             shiny_1.14.0           S7_0.2.2              
-#>  [67] ROCR_1.0-12            evaluate_1.0.5         Rtsne_0.17            
-#>  [70] future_1.75.0          fastDummies_1.7.6      desc_1.4.3            
-#>  [73] survival_3.8-6         polyclip_1.10-7        fitdistrplus_1.2-6    
-#>  [76] pillar_1.11.1          KernSmooth_2.23-26     plotly_4.12.1         
-#>  [79] generics_0.1.4         RcppHNSW_0.7.0         ggplot2_4.0.3         
-#>  [82] scales_1.4.0           globals_0.19.1         xtable_1.8-8          
-#>  [85] glue_1.8.1             tools_4.6.1            data.table_1.18.6.1   
-#>  [88] RSpectra_0.16-2        RANN_2.6.3             fs_2.1.0              
-#>  [91] dotCall64_1.2          cowplot_1.2.0          grid_4.6.1            
-#>  [94] tidyr_1.3.2            nlme_3.1-169           patchwork_1.3.2       
-#>  [97] cli_3.6.6              spatstat.sparse_3.2-0  textshaping_1.0.5     
-#> [100] spam_2.11-4            viridisLite_0.4.3      dplyr_1.2.1           
-#> [103] uwot_0.2.5             gtable_0.3.6           sass_0.4.10           
-#> [106] digest_0.6.39          progressr_1.0.0        ggrepel_0.9.8         
-#> [109] htmlwidgets_1.6.4      farver_2.1.2           htmltools_0.5.9       
-#> [112] pkgdown_2.2.1          lifecycle_1.0.5        httr_1.4.9            
-#> [115] mime_0.13              MASS_7.3-65
+#>  [1] tidyselect_1.2.1    dplyr_1.2.1         farver_2.1.2       
+#>  [4] S7_0.2.2            fastmap_1.2.0       RANN_2.6.3         
+#>  [7] digest_0.6.39       dotCall64_1.2       lifecycle_1.0.5    
+#> [10] cluster_2.1.8.3     magrittr_2.0.5      compiler_4.6.2     
+#> [13] rlang_1.3.0         sass_0.4.10         tools_4.6.2        
+#> [16] igraph_2.3.4        yaml_2.3.12         data.table_1.18.6.1
+#> [19] knitr_1.52          plyr_1.8.9          RColorBrewer_1.1-3 
+#> [22] KernSmooth_2.23-27  Rtsne_0.17          desc_1.4.3         
+#> [25] grid_4.6.2          RcppHNSW_0.7.0      fastDummies_1.7.6  
+#> [28] future_1.82.0       progressr_1.1.0     ggplot2_4.0.3      
+#> [31] globals_0.20.0      scales_1.4.0        MASS_7.3-66        
+#> [34] ggridges_0.5.7      cli_3.6.6           rmarkdown_2.32     
+#> [37] ragg_1.5.2          generics_0.1.4      otel_0.3.0         
+#> [40] ica_1.0-3           future.apply_1.21.0 RSpectra_0.16-2    
+#> [43] sctransform_0.4.3   httr_1.4.9          reshape2_1.4.5     
+#> [46] pbapply_1.7-5       cachem_1.1.0        stringr_1.6.0      
+#> [49] parallel_4.6.2      matrixStats_1.5.0   vctrs_0.7.3        
+#> [52] Matrix_1.7-6        jsonlite_2.0.0      patchwork_1.3.2    
+#> [55] ggrepel_0.9.8       irlba_2.4.1         scattermore_1.2    
+#> [58] listenv_1.1.0       systemfonts_1.3.2   jquerylib_0.1.4    
+#> [61] pls_2.9-0           glue_1.8.1          parallelly_1.50.0  
+#> [64] spam_2.11-4         pkgdown_2.2.1       codetools_0.2-20   
+#> [67] uwot_0.2.5          cowplot_1.2.0       RcppAnnoy_0.0.23   
+#> [70] stringi_1.8.9       gtable_0.3.6        tibble_3.3.1       
+#> [73] pillar_1.11.1       htmltools_0.5.9     R6_2.6.1           
+#> [76] textshaping_1.0.5   evaluate_1.0.5      lattice_0.23-1     
+#> [79] png_0.1-9           bslib_0.12.0        Rcpp_1.1.2         
+#> [82] gridExtra_2.3.1     xfun_0.62           fs_2.1.0           
+#> [85] pkgconfig_2.0.3
 ```

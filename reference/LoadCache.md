@@ -3,7 +3,8 @@
 Reads a cached R object from disk. The file format is determined by the
 file extension:
 
-- `.qs2`: loaded via `qs2::qs_read()`
+- `.qs2`: loaded via
+  [`qs2::qs_read()`](https://rdrr.io/pkg/qs2/man/qs_read.html)
 
 - `.RData` / `.rds`: loaded via
   [`readRDS()`](https://rdrr.io/r/base/readRDS.html)
