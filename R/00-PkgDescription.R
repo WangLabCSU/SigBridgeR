@@ -60,3 +60,5 @@ rd_authors <- function() {
 
   paste(lines, collapse = "\n")
 }
+
+# nocov end

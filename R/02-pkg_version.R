@@ -93,3 +93,5 @@ py_pkg_version <- function(pkg_name, conda_env) {
   }
   NULL
 }
+
+# nocov end

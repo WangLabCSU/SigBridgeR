@@ -9,7 +9,8 @@ setThreads(
   dt = threads,
   cheapr = threads,
   qs2 = threads,
-  WGCNA = threads,
+  wgcna = threads,
+  seurat = threads,
   openmp = NULL,
   tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
     NULL, inter_op = NULL, intra_op = c(1L, NULL)),
@@ -27,7 +28,11 @@ Default: \code{2L}}
 
 \item{qs2}{Integer. Thread count for qs2 (default: inherited from \code{threads}).}
 
-\item{WGCNA}{Integer. Thread count for WGCNA (default: inherited from \code{threads}).}
+\item{wgcna}{Integer. Thread count for WGCNA (default: inherited from \code{threads}).}
+
+\item{seurat}{Integer. Thread count for Seurat (default: inherited from \code{threads}).
+Only applied when \pkg{Seurat} >= 6.0.0 is installed, as
+\code{Seurat::setThreads()} is not available in earlier versions.}
 
 \item{openmp}{Integer. Thread count for OpenMP (default: inherited from \code{threads}).}
 

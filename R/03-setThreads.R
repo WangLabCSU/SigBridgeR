@@ -14,7 +14,10 @@
 #' @param cheapr Integer. Thread count for cheapr (default: inherited from \code{threads}).
 #' @param qs2 Integer. Thread count for qs2 (default: inherited from \code{threads}).
 #' @param openmp Integer. Thread count for OpenMP (default: inherited from \code{threads}).
-#' @param WGCNA Integer. Thread count for WGCNA (default: inherited from \code{threads}).
+#' @param wgcna Integer. Thread count for WGCNA (default: inherited from \code{threads}).
+#' @param seurat  Integer. Thread count for Seurat (default: inherited from \code{threads}).
+#'   Only applied when \pkg{Seurat} >= 6.0.0 is installed, as
+#'   \code{Seurat::setThreads()} is not available in earlier versions.
 #' @param tf_config Named list for TensorFlow-specific configuration:
 #'   * `xla_flag`: Character. XLA JIT compilation flags (default: auto-optimized)
 #'   * `xla_device`: Integer. XLA device ID (default: `1L`)
@@ -54,7 +57,8 @@ setThreads <- function(
   dt = threads,
   cheapr = threads,
   qs2 = threads,
-  WGCNA = threads,
+  wgcna = threads,
+  seurat = threads,
   openmp = NULL,
   tf_config = list(
     xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit",
@@ -94,7 +98,8 @@ setThreads <- function(
     config_qs2_threads(qs2),
     config_dt_threads(dt, ...),
     config_cheapr_threads(cheapr),
-    config_wgcna_threads(WGCNA),
+    config_wgcna_threads(wgcna),
+    config_seurat_threads(seurat),
     config_tf_threads(
       threads = threads,
       tf_config = tf_config
@@ -192,21 +197,49 @@ config_cheapr_threads <- function(cheapr = NULL) {
   )
 }
 
-config_wgcna_threads <- function(WGCNA = NULL) {
-  if (!is.numeric(WGCNA)) {
+config_wgcna_threads <- function(wgcna = NULL) {
+  if (!is.numeric(wgcna)) {
     return(list())
   }
 
   check_installed("WGCNA")
 
   old_wgcna <- WGCNA::WGCNAnThreads()
-  WGCNA::enableWGCNAThreads(WGCNA)
+  WGCNA::enableWGCNAThreads(wgcna)
 
   list(
     WGCNA = list(
       name = "WGCNA",
       old = old_wgcna,
-      new = WGCNA
+      new = wgcna
+    )
+  )
+}
+
+
+config_seurat_threads <- function(seurat = NULL) {
+  if (!is.numeric(seurat)) {
+    return(list())
+  }
+
+  # * Seurat::setThreads() is only available in Seurat >= 6.0.0
+  if (!is_installed("Seurat", version = "6.0.0")) {
+    installed_version <- r_pkg_version("Seurat") %||% "not installed"
+    cli::cli_warn(c(
+      "x" = "Skipping Seurat thread configuration: {.pkg Seurat} >= 6.0.0 is required.",
+      ">" = "Installed version: {installed_version}."
+    ))
+    return(list())
+  }
+
+  old_seurat <- Seurat::getThreads(verbose = FALSE)
+  Seurat::setThreads(n = seurat, verbose = FALSE)
+
+  list(
+    seurat = list(
+      name = "Seurat",
+      old = old_seurat %||% "unset",
+      new = seurat
     )
   )
 }
@@ -281,8 +314,8 @@ print_thread_config <- function(results) {
   }
 
   purrr::walk(results, function(cfg) {
-    cli::cli_text(
-      "{cli_symbol$bullet} {.field {cfg$name}}: {cfg$old} -> {cfg$new}"
+    cli::cli_li(
+      "{.pkg {cfg$name}}: {cfg$old} -> {.field {cfg$new}}"
     )
   })
 

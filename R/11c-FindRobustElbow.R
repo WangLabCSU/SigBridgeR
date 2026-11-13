@@ -72,7 +72,7 @@ FindRobustElbow <- function(
     if (!"pca" %chin% names(obj)) {
       Abort(
         "PCA has not been computed on this Seurat object.",
-        "Please run {.code RunPCA()} first.",
+        "Please run {.code Seurat::RunPCA()} first.",
         type = "[DATA ERROR]"
       )
     }
