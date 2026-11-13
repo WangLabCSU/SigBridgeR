@@ -96,6 +96,8 @@ CONTRICUTING.md
 ^index_files$
 SigBridgeR_workflow.png
 \.clangd$
+^\.mcp.json$
+^AGENTS\.md$
 
 # flir files
 ^flir$

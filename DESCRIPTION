@@ -16,7 +16,7 @@ Roxygen: list(markdown = TRUE)
 Imports: 
     beachmat,
     chk,
-    cli,
+    cli (>= 3.0.0),
     data.table (>= 1.9.8),
     ggplot2,
     lifecycle,

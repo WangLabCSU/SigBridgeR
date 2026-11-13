@@ -23,13 +23,23 @@ autoplot.Seurat <- function(
   cols = NULL,
   ...
 ) {
-  check_installed(c("tidydr", "ggplot2"))
+  rlang::check_installed(c("tidydr", "ggplot2"))
+
+  available_group_by <- names(ScreenStrategy)
+  group.by <- group.by %||% available_group_by
+  if (length(group.by) > 1L) {
+    choice <- utils::menu(
+      group.by,
+      title = cli::cli_text("{cli_symbol$square_small} Choose a {.field group.by} to Seurat::DimPlot()")
+    )
+    if (choice == 0L) {
+      stop("Cancelled")
+    }
+    group.by <- group.by[choice]
+  }
 
   cluster_color <- cols %||%
-    if (
-      !is.null(group.by) &&
-        tolower(group.by) %chin% tolower(names(ScreenStrategy))
-    ) {
+    if (!is.null(group.by) && group.by %chin% available_group_by) {
       c(
         "Other" = "#CECECE",
         "Neutral" = "#CECECE",

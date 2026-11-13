@@ -96,7 +96,6 @@ NULL
   }
 
   cli::cli_end()
-  cli::cli_end()
 
   invisible(x)
 }
