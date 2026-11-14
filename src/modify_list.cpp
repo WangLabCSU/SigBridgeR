@@ -1,272 +1,134 @@
-#include <Rcpp.h>
-#include <cstring>
+#include "SigBridgeR.h"
 
 // [[Rcpp::plugins(cpp17)]]
 
 using namespace Rcpp;
 
-// Check whether x inherits the "data.frame" class.
-static bool is_data_frame(SEXP x) {
-  SEXP cls = Rf_getAttrib(x, R_ClassSymbol);
-
-  if (cls == R_NilValue || TYPEOF(cls) != STRSXP) {
-    return false;
-  }
-
-  for (R_xlen_t i = 0; i < XLENGTH(cls); ++i) {
-    SEXP name = STRING_ELT(cls, i);
-
-    if (name != NA_STRING && std::strcmp(CHAR(name), "data.frame") == 0) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-// Check whether x is a plain list.
-static bool is_plain_list(SEXP x) {
-  return TYPEOF(x) == VECSXP && !is_data_frame(x);
-}
-
-// Check whether a name is neither NA nor empty.
-static bool is_valid_name(SEXP name) {
-  return name != NA_STRING && CHAR(name)[0] != '\0';
-}
-
-// Find the first matching name.
-static R_xlen_t find_name(SEXP names, SEXP key) {
-  if (names == R_NilValue || TYPEOF(names) != STRSXP || key == NA_STRING) {
-    return -1;
-  }
-
-  const char *k = CHAR(key);
-
-  for (R_xlen_t i = 0; i < XLENGTH(names); ++i) {
-    SEXP name = STRING_ELT(names, i);
-
-    if (name == NA_STRING) {
-      continue;
-    }
-
-    if (std::strcmp(CHAR(name), k) == 0) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-// Get a valid name at position i.
-static bool get_valid_name_at(SEXP names, R_xlen_t i, SEXP *key) {
-  if (names == R_NilValue || TYPEOF(names) != STRSXP || i >= XLENGTH(names)) {
-    return false;
-  }
-
-  SEXP name = STRING_ELT(names, i);
-
-  if (!is_valid_name(name)) {
-    return false;
-  }
-
-  *key = name;
-  return true;
-}
-
-// Create a shallow copy of a plain list.
-// Only names and class are retained, matching the original behavior.
-static List shallow_copy_list(SEXP x) {
-  const R_xlen_t n = is_plain_list(x) ? XLENGTH(x) : 0;
-
-  List out(n);
-
-  for (R_xlen_t i = 0; i < n; ++i) {
-    out[i] = VECTOR_ELT(x, i);
-  }
-
-  if (is_plain_list(x)) {
-    SEXP names = Rf_getAttrib(x, R_NamesSymbol);
-
-    if (names != R_NilValue) {
-      out.attr("names") = names;
-    }
-  }
-
-  SEXP cls = Rf_getAttrib(x, R_ClassSymbol);
-
-  if (cls != R_NilValue) {
-    out.attr("class") = cls;
-  }
-
-  return out;
-}
-
-// Append one value to a list.
-static List append_value(SEXP x, SEXP key, SEXP value, bool has_key) {
-  const R_xlen_t n = XLENGTH(x);
-
-  List out(n + 1);
-  SEXP old_names = Rf_getAttrib(x, R_NamesSymbol);
-
-  const bool make_names = has_key || old_names != R_NilValue;
-
-  CharacterVector out_names;
-
-  if (make_names) {
-    out_names = CharacterVector(n + 1);
-
-    for (R_xlen_t i = 0; i < n; ++i) {
-      if (old_names != R_NilValue && i < XLENGTH(old_names)) {
-        out_names[i] = STRING_ELT(old_names, i);
-      } else {
-        out_names[i] = "";
-      }
-    }
-
-    out_names[n] = has_key ? key : Rf_mkChar("");
-  }
-
-  for (R_xlen_t i = 0; i < n; ++i) {
-    out[i] = VECTOR_ELT(x, i);
-  }
-
-  out[n] = value;
-
-  if (make_names) {
-    out.attr("names") = out_names;
-  }
-
-  SEXP cls = Rf_getAttrib(x, R_ClassSymbol);
-
-  if (cls != R_NilValue) {
-    out.attr("class") = cls;
-  }
-
-  return out;
-}
-
-// Remove the element at position idx.
-static List remove_at(SEXP x, R_xlen_t idx) {
-  const R_xlen_t n = XLENGTH(x);
-
-  if (idx < 0 || idx >= n) {
-    return shallow_copy_list(x);
-  }
-
-  List out(n - 1);
-  SEXP old_names = Rf_getAttrib(x, R_NamesSymbol);
-
-  const bool has_names = old_names != R_NilValue;
-  CharacterVector out_names;
-
-  if (has_names) {
-    out_names = CharacterVector(n - 1);
-  }
-
-  R_xlen_t j = 0;
-
-  for (R_xlen_t i = 0; i < n; ++i) {
-    if (i == idx) {
-      continue;
-    }
-
-    out[j] = VECTOR_ELT(x, i);
-
-    if (has_names) {
-      if (i < XLENGTH(old_names)) {
-        out_names[j] = STRING_ELT(old_names, i);
-      } else {
-        out_names[j] = "";
-      }
-    }
-
-    ++j;
-  }
-
-  if (has_names) {
-    out.attr("names") = out_names;
-  }
-
-  SEXP cls = Rf_getAttrib(x, R_ClassSymbol);
-
-  if (cls != R_NilValue) {
-    out.attr("class") = cls;
-  }
-
-  return out;
-}
-
-// Recursive implementation.
-static List modify_list_rec(SEXP x, SEXP val, bool keep_null) {
-  if (!is_plain_list(x)) {
-    stop("`x` must be a list.");
-  }
-
-  if (!is_plain_list(val)) {
-    stop("`val` must be a list.");
-  }
-
-  List out = shallow_copy_list(x);
-
-  SEXP val_names = Rf_getAttrib(val, R_NamesSymbol);
-
-  for (R_xlen_t i = 0; i < XLENGTH(val); ++i) {
-    SEXP key = R_NilValue;
-
-    const bool has_key = get_valid_name_at(val_names, i, &key);
-
-    SEXP value = VECTOR_ELT(val, i);
-
-    // Unnamed elements are appended without matching.
-    if (!has_key) {
-      if (value == R_NilValue && !keep_null) {
-        continue;
-      }
-
-      out = append_value(out, key, value, false);
-      continue;
-    }
-
-    SEXP out_names = Rf_getAttrib(out, R_NamesSymbol);
-    const R_xlen_t pos = find_name(out_names, key);
-
-    // NULL deletes the first matching element.
-    if (value == R_NilValue && !keep_null) {
-      if (pos >= 0) {
-        out = remove_at(out, pos);
-      }
-
-      continue;
-    }
-
-    // Recursively merge when both elements are plain lists.
-    if (pos >= 0 && is_plain_list(VECTOR_ELT(out, pos)) &&
-        is_plain_list(value)) {
-
-      List merged = modify_list_rec(VECTOR_ELT(out, pos), value, keep_null);
-
-      out[pos] = merged;
-
-    } else if (pos >= 0) {
-      out[pos] = value;
-
-    } else {
-      out = append_value(out, key, value, true);
-    }
-  }
-
-  return out;
-}
-
+//' Faster modifyList()
+//' 
+//' @inherit base::modifyList
 // [[Rcpp::export]]
 List modify_list(List x, List val, bool keep_null = true) {
-  if (!is_plain_list(x)) {
-    stop("`x` must be a list.");
+  return sigbridger::modify_list(x, val, keep_null);
+}
+
+//' Merge Matching Sub-lists of `val` Against `x`
+//'
+//' For every element of `val`, if `x` has an element with the same name and
+//' both are lists, the two are merged recursively with `modify_list()`;
+//' otherwise the element of `val` is used unchanged.
+//'
+//' Note that the result is built from `val` only: its length and names are
+//' those of `val`, and elements of `x` whose names do not appear in `val`
+//' are **not** carried over. This differs from [utils::modifyList()].
+//'
+//' @details
+//' * Names are matched exactly (case-sensitive). If `x` has duplicated names,
+//'   the first match is used.
+//' * Elements of `val` that are unnamed, have an `NA` name or an empty name
+//'   are passed through unchanged.
+//' * Unmodified elements are shared with the inputs, not deep-copied.
+//' * Only the `names` attribute of `val` is kept on the result.
+//'
+//' @param x A list. Provides the base values for matching sub-lists.
+//' @param val A list. Provides the new values.
+//'
+//' @return A list with the same length and names as `val`.
+//'
+//' @examples
+//' \dontrun{
+//' x <- list(
+//'   a = list(p = 1, q = 2),
+//'   b = 1,
+//'   c = list(z = 0)
+//' )
+//' val <- list(
+//'   a = list(q = 20, r = 30), # both lists: merged recursively
+//'   b = list(new = TRUE),     # `x$b` is not a list: replaced by `val$b`
+//'   d = 4                     # not in `x`: kept as is
+//' )
+//'
+//' res <- SigBridgeR:::modify_list2(x, val)
+//' str(res)
+//' # res$a: p = 1, q = 20, r = 30
+//' # res$b: list(new = TRUE)
+//' # res$d: 4
+//' # `x$c` is not in `val`, so it is not in the result
+//' names(res)
+//'
+//' # unnamed elements are passed through
+//' SigBridgeR:::modify_list2(list(1), list(list(a = 1), 2))
+//'
+//' # non-list inputs are rejected
+//' try(SigBridgeR:::modify_list2(1:3, list()))
+//' }
+//' @keywords internal
+//'
+// [[Rcpp::export]]
+Rcpp::List modify_list2(SEXP x, SEXP val) {
+  // 用 TYPEOF 而不是 Rcpp::List 形参，避免非 list 被 Rcpp 静默转换
+  if (!sigbridger::is_plain_list(x)) {
+    Rcpp::stop("`x` must be a list.");
+  }
+  if (!sigbridger::is_plain_list(val)) {
+    Rcpp::stop("`val` must be a list.");
   }
 
-  if (!is_plain_list(val)) {
-    stop("`val` must be a list.");
+  const R_xlen_t n = Rf_xlength(val);
+  Rcpp::List out(n);
+
+  SEXP val_nms = Rf_getAttrib(val, R_NamesSymbol);
+  SEXP x_nms = Rf_getAttrib(x, R_NamesSymbol);
+
+  // 任何一方没有名字或为空，就不可能发生匹配
+  const bool can_match =
+      n > 0 && !Rf_isNull(val_nms) && !Rf_isNull(x_nms) && Rf_xlength(x) > 0;
+
+  // 惰性构建 x 的名字索引：只有真正遇到 list 类型的 val 元素时才建
+  std::unordered_map<std::string, R_xlen_t> index;
+  bool index_built = false;
+
+  for (R_xlen_t i = 0; i < n; ++i) {
+    SEXP v = VECTOR_ELT(val, i);
+
+    if (can_match && TYPEOF(v) == VECSXP) {
+      SEXP key = STRING_ELT(val_nms, i);
+
+      if (key != NA_STRING && CHAR(key)[0] != '\0') {
+        if (!index_built) {
+          const R_xlen_t xn = Rf_xlength(x_nms);
+          index.reserve(static_cast<size_t>(xn));
+          for (R_xlen_t j = 0; j < xn; ++j) {
+            SEXP nm = STRING_ELT(x_nms, j);
+            if (nm == NA_STRING || CHAR(nm)[0] == '\0') {
+              continue;
+            }
+            // emplace 不会覆盖已有键，因此保留首次出现，与 x[[key]] 一致
+            index.emplace(Rf_translateCharUTF8(nm), j);
+          }
+          index_built = true;
+        }
+
+        auto it = index.find(Rf_translateCharUTF8(key));
+        if (it != index.end()) {
+          SEXP cur = VECTOR_ELT(x, it->second);
+          if (TYPEOF(cur) == VECSXP) {
+            // Rcpp::List(SEXP) 只是句柄，不复制数据
+            Rcpp::List merged =
+                sigbridger::modify_list(Rcpp::List(cur), Rcpp::List(v));
+            SET_VECTOR_ELT(out, i, merged);
+            continue;
+          }
+        }
+      }
+    }
+
+    SET_VECTOR_ELT(out, i, v); // 共享引用，不做深拷贝
   }
 
-  return modify_list_rec(x, val, keep_null);
+  if (!Rf_isNull(val_nms)) {
+    Rf_setAttrib(out, R_NamesSymbol, val_nms);
+  }
+
+  return out;
 }

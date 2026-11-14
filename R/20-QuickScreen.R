@@ -307,13 +307,13 @@ Screen <- function(
     label_type <- screen_method
   }
 
-  screen_method <- arg_match(
+  screen_method <- rlang::arg_match(
     screen_method,
     names(ScreenStrategy)
   )
   method_config <- ScreenStrategy[[screen_method]]
 
-  phenotype_class <- arg_match(
+  phenotype_class <- rlang::arg_match(
     phenotype_class,
     method_config@phenotype_class
   )

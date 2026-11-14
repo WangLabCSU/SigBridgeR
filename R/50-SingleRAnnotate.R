@@ -73,7 +73,7 @@ SingleRAnnotate <- function(
   labels = NULL,
   ...
 ) {
-  check_installed("SingleR", action = \(pkg, ...) pak::pak("dviraran/SingleR"))
+  rlang::check_installed("SingleR", action = \(pkg, ...) pak::pak("dviraran/SingleR"))
 
   orginally_seurat <- inherits(sc, "Seurat")
   sce_obj <- if (orginally_seurat) {
@@ -85,7 +85,7 @@ SingleRAnnotate <- function(
   chk::chk_length(ref)
   if (ref == "HPCA") {
     # Human Primary Cell Atlas but not the `SingleCellExperiment` object.
-    check_installed("celldex")
+    rlang::check_installed("celldex")
     ref <- celldex::HumanPrimaryCellAtlasData(
       ensembl = ensembl,
       cell.ont = cell.ont,

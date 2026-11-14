@@ -8,7 +8,7 @@ fileDownload <- function(
   retries = 3L,
   timeout = 600L
 ) {
-  check_installed("curl")
+  rlang::check_installed("curl")
   dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
 
   tmp <- paste0(destfile, ".tmp")

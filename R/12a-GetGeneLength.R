@@ -108,7 +108,7 @@ GetGeneLength_file_impl <- function(
   ...
 ) {
   x <- normalizePath(x)
-  check_dots_empty()
+  rlang::check_dots_empty()
   if (!file.exists(x)) {
     Abort("{.file {x}} is not found", type = "[FILE ERROR]")
   } else if (!endsWith(x, ".gz")) {
@@ -132,7 +132,7 @@ GetGeneLength_lines_impl <- function(
   canonical_chr_only = FALSE,
   ...
 ) {
-  check_dots_empty()
+  rlang::check_dots_empty()
   r_gtf_lines_to_gene_length(
     lines = x,
     verbose = verbose,

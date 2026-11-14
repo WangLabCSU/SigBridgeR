@@ -80,7 +80,7 @@
 CheckNA <- function(data, max_print = 5L, ...) {
   chk::chk_integer(max_print)
   chk::chk_gte(max_print, 0L)
-  check_installed("methods")
+  rlang::check_installed("methods")
 
   if (!is_2d(data)) {
     res <- check_na_vector_cpp(data)

@@ -24,7 +24,7 @@ LoadRefData <- function(
   timeout = SigBridgeRUtils::getFuncOption("timeout"),
   ...
 ) {
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   chk::chk_whole_number(timeout)
 
@@ -83,7 +83,7 @@ LoadRefData <- function(
         cli::cli_alert_info("Trying {source_name}...")
       }
 
-      success <- try_fetch(
+      success <- rlang::try_fetch(
         {
           fileDownload(
             url = data_url,

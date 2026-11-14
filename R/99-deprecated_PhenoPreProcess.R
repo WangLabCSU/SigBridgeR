@@ -127,14 +127,14 @@ PhenoPreProcess <- function(
     "PhenoMap()",
     details = "PhenoPreProcess() will be deprecated because of ambiguous functionality."
   )
-  check_installed("tibble")
+  rlang::check_installed("tibble")
   if (!is.null(select)) {
     chk::chk_character(select)
   }
 
   is_phenotype_2d <- is_2d(phenotype)
 
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   if (length(dots) > 0L) {
     phenotype <- PhenoMap(phenotype, ...)
 
@@ -311,8 +311,8 @@ handle_case_1 <- function(
   if (phenotype_class == "survival") {
     cli::cli_alert_info("Guess survival time and status from data")
     possible_cols <- tolower(colnames(phenotype))
-    time_col <- grepv("time", possible_cols)
-    status_col <- grepv("status|censor|event", possible_cols)
+    time_col <- grep("time", possible_cols, value = TRUE)
+    status_col <- grep("status|censor|event", possible_cols, value = TRUE)
 
     if (length(time_col) > 1L || length(status_col) > 1L) {
       Abort(

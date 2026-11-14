@@ -80,8 +80,8 @@ NULL
 
     cls_key <- class(key)[1L] # class(NULL) -> NULL
 
-    key <- if (is_function(key)) {
-      fn_fmls_names(key)
+    key <- if (rlang::is_function(key)) {
+      rlang::fn_fmls_names(key)
     } else if (is.list(key)) {
       list_to_chr(key)
     } else if (typeof(key) %chin% c("S3", "S4", "S7", "R6")) {
@@ -200,7 +200,7 @@ NULL
 
   value_to_chr <- function(value) {
     if (is.function(value)) {
-      toString(fn_fmls_names(value))
+      toString(rlang::fn_fmls_names(value))
     } else if (is.null(value)) {
       "NULL"
     } else if (length(value) == 0L) {

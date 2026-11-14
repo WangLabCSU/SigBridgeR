@@ -2,7 +2,7 @@ ValidateArgsVerbose <- function(func, ...) {
   func_formals <- formals(func)
   func_args <- names(func_formals)
 
-  verbose_used <- any(grepl("verbose", as.character(fn_body(func))))
+  verbose_used <- any(grepl("verbose", as.character(rlang::fn_body(func))))
   has_dots <- "..." %chin% func_args
   has_verbose <- "verbose" %chin% func_args || has_dots
 

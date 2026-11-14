@@ -160,7 +160,7 @@ SCPreProcess.default <- function(
   purrr::walk(params, ~ chk::chk_list)
 
   # * dots arguments, to be compatible last version
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
 
   params <- handle_usr_params(params) # combine with default params
@@ -181,12 +181,12 @@ SCPreProcess.default <- function(
       cli::cli_warn(
         "[{.fun SCPreProcess}]: The parameter `params$o$counts` is not NULL, `sc` will be ignored."
       )
-      exec(
+      rlang::exec(
         SeuratObject::CreateSeuratObject,
         !!!params$o
       )
     } else {
-      exec(
+      rlang::exec(
         SeuratObject::CreateSeuratObject,
         counts = sc,
         !!!params$o
@@ -205,7 +205,7 @@ SCPreProcess.default <- function(
       )
     }
 
-    sc_seurat <- exec(
+    sc_seurat <- rlang::exec(
       SCPreProcessStrategy[[letter]],
       sc,
       !!!params[[letter]]
@@ -243,7 +243,7 @@ SCPreProcess.default <- function(
     letter <- steps_to_run[[step]]
     step_fun <- SCPreProcessStrategy[[letter]] # function
 
-    sc_seurat <- exec(step_fun, sc_seurat, !!!params[[letter]])
+    sc_seurat <- rlang::exec(step_fun, sc_seurat, !!!params[[letter]])
   }
 
   FilterTumorCell(
@@ -285,7 +285,7 @@ SCPreProcess.R6 <- function(
   ),
   column2only_tumor = NULL
 ) {
-  check_installed("dplyr")
+  rlang::check_installed("dplyr")
   # Both `anndata` and `anndataR` are based on R6
 
   # * check
@@ -297,7 +297,7 @@ SCPreProcess.R6 <- function(
   purrr::walk(params, ~ chk::chk_list)
 
   # * dots arguments, to be compatible last version
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
 
   params <- handle_usr_params(params) # combine with default params
@@ -376,7 +376,7 @@ SCPreProcess.R6 <- function(
       )
     }
 
-    seurat <- exec(
+    seurat <- rlang::exec(
       SeuratObject::CreateSeuratObject,
       counts = count_mat,
       !!!params$o
@@ -429,7 +429,7 @@ SCPreProcess.R6 <- function(
   for (step in 2L:length(steps_to_run)) {
     # step_fun: a function
     step_fun <- execution_queue[[step]]
-    sc_seurat <- exec(
+    sc_seurat <- rlang::exec(
       step_fun,
       sc_seurat,
       # steps_to_run[[step]]: a letter
@@ -453,7 +453,7 @@ SCPreProcess.Seurat <- function(
   column2only_tumor = NULL,
   ...
 ) {
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
 
   if (verbose) {

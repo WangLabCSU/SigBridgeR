@@ -50,7 +50,7 @@ AggregateDupRows <- function(
   verbose = TRUE,
   ...
 ) {
-  method <- arg_match(method)
+  method <- rlang::arg_match(method)
 
   row_names <- rownames(x)
   unique_row_names <- unique(row_names)
@@ -94,7 +94,7 @@ AggregateDupCols <- function(
   verbose = TRUE,
   ...
 ) {
-  method <- arg_match(method)
+  method <- rlang::arg_match(method)
 
   col_names <- colnames(x)
   unique_col_names <- unique(col_names)
@@ -163,11 +163,11 @@ AggregateDups <- function(
   verbose = TRUE,
   ...
 ) {
-  row_method <- arg_match(
+  row_method <- rlang::arg_match(
     row_method,
     c("max", "sum", "mean", "median", "first")
   )
-  col_method <- arg_match(
+  col_method <- rlang::arg_match(
     col_method,
     c("max", "sum", "mean", "median", "first")
   )

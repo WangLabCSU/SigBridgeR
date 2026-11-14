@@ -35,7 +35,7 @@
 #'
 #' @family single_cell_preprocess
 #' @export
-SCPreProcessStrategy <- new_environment(
+SCPreProcessStrategy <- rlang::new_environment(
   list(
     o = SeuratObject::CreateSeuratObject,
     n = Seurat::NormalizeData,

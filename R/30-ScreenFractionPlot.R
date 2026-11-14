@@ -115,7 +115,7 @@ ScreenFractionPlot <- function(
     chk::chk_vector(plot_color)
     chk::chk_named(plot_color)
   }
-  check_installed(c("ggplot2", "patchwork", "dplyr"))
+  rlang::check_installed(c("ggplot2", "patchwork", "dplyr"))
 
   dots <- rlang::list2(...)
   theme_args <- SigBridgeRUtils::FilterArgs4Func(dots, ggplot2::theme)

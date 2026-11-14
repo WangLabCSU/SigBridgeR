@@ -15,7 +15,7 @@
 #'     - `mapper`: A function that transforms the parameters passed to the `Screen` function before forwarding them to the executor; both input and output must be of type `list`.
 #'
 #' @export
-ScreenStrategy <- new_environment(
+ScreenStrategy <- rlang::new_environment(
   list(
     Scissor = ScreenMethod(
       method_name = "Scissor",

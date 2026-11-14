@@ -88,7 +88,7 @@ CacheSysCall <- function(
   timestamp = NULL,
   ...
 ) {
-  mode <- arg_match(mode)
+  mode <- rlang::arg_match(mode)
   cache_config <- if (S7_inherits(cache, ScreenMethodConfig)) {
     if (mode == "save") {
       Abort(
@@ -129,7 +129,7 @@ CacheSysCall <- function(
     timestamp = timestamp
   )
 
-  dots <- list2(...)
+  dots <- rlang::list2(...)
 
   switch(
     mode,
@@ -140,7 +140,7 @@ CacheSysCall <- function(
       verbose = verbose
     ),
     # * Return a list containing the saved data invisibly
-    save = exec(
+    save = rlang::exec(
       CacheSysCall.save,
       path = path,
       cache = cache,

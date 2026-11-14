@@ -5,7 +5,7 @@ Abort <- function(
   tips = NULL,
   info = NULL,
   type = NULL,
-  .envir = caller_env()
+  .envir = rlang::caller_env()
 ) {
   if (!is.null(type)) {
     error_msg <- paste0(cli::col_red(type), " ", error_msg)

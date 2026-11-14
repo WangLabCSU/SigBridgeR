@@ -25,8 +25,8 @@ ValidateTiRankParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("rTIRank", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("rTIRank", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/rTIRank")
   })
 

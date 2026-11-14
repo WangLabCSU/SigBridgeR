@@ -112,7 +112,7 @@ ScreenMethod <- new_class(
     )
   },
   validator = \(self) {
-    param_names <- fn_fmls_names(self@executor)
+    param_names <- rlang::fn_fmls_names(self@executor)
     expected_args <- c(
       "matched_bulk",
       "sc_data",
@@ -123,17 +123,17 @@ ScreenMethod <- new_class(
     if (!all(expected_args %chin% param_names)) {
       missing_args <- setdiff(expected_args, param_names)
 
-      return(cli::cli_fmt(cli::cli_text(
+      return(cli::format_inline(
         "Missing arguments in screening function: {.arg {missing_args}}"
-      )))
+      ))
     }
 
     if (is.function(self@mapper)) {
-      mapper_fml <- fn_fmls_names(self@mapper)
+      mapper_fml <- rlang::fn_fmls_names(self@mapper)
       if (length(mapper_fml) > 1L) {
-        return(cli::cli_fmt(cli::cli_text(
+        return(cli::format_inline(
           "Mapper function must have only one argument"
-        )))
+        ))
       }
     }
   }

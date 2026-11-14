@@ -31,8 +31,8 @@ ValidateScissorParams <- function(
   path2save_scissor_inputs = lifecycle::deprecated(),
   ...
 ) {
-  check_installed("Scissor", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("Scissor", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/Scissor")
   })
 

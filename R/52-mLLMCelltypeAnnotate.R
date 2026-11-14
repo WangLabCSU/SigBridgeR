@@ -165,14 +165,14 @@ mLLMCelltypeAnnotate <- function(
   force_rerun = FALSE,
   ...
 ) {
-  check_installed(c("mLLMCelltype", "dplyr"))
+  rlang::check_installed(c("mLLMCelltype", "dplyr"))
   chk::chk_is(sc, "Seurat")
   chk::chk_vector(api_keys)
   chk::chk_vector(models)
   chk::chk_named(api_keys)
   check_model_key(models = models, api_keys = api_keys)
 
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$seed %||% getFuncOption("seed")
   set.seed(seed)
@@ -188,7 +188,7 @@ mLLMCelltypeAnnotate <- function(
     if (verbose) {
       ts_cli$cli_alert_info("Find marker genes for each clusters")
     }
-    seurat_obj_markers <- exec(
+    seurat_obj_markers <- rlang::exec(
       Seurat::FindAllMarkers,
       object = sc,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::FindAllMarkers)
@@ -206,7 +206,7 @@ mLLMCelltypeAnnotate <- function(
 
   if (length(models) == 1L) {
     # One model prediction
-    single_model_results <- exec(
+    single_model_results <- rlang::exec(
       mLLMCelltype::annotate_cell_types,
       input = seurat_obj_markers,
       tissue_name = tissue_name,
@@ -231,7 +231,7 @@ mLLMCelltypeAnnotate <- function(
   }
 
   # Multiple model prediction
-  consensus_results <- exec(
+  consensus_results <- rlang::exec(
     mLLMCelltype::interactive_consensus_annotation,
     input = seurat_obj_markers,
     tissue_name = tissue_name, # Provide organizational context.

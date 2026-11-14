@@ -59,17 +59,17 @@ ValidateDEGASv2Params <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("DEGASv2", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("DEGASv2", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/DEGASv2")
   })
-  check_installed("dplyr")
+  rlang::check_installed("dplyr")
 
   # -- input validation -----------------------------------------------------
   if (!is.null(label_type)) {
     chk::chk_character(label_type)
   }
-  phenotype_class <- arg_match(phenotype_class)
+  phenotype_class <- rlang::arg_match(phenotype_class)
   chk::chk_range(top_fraction_pos)
   if (!is.null(sclab)) {
     chk::chk_character(sclab)
@@ -92,8 +92,8 @@ ValidateDEGASv2Params <- function(
   if (!is.null(n_st_classes)) {
     chk::chk_integer(n_st_classes)
   }
-  loss_type <- arg_match(loss_type)
-  transfer_type <- arg_match(transfer_type)
+  loss_type <- rlang::arg_match(loss_type)
+  transfer_type <- rlang::arg_match(transfer_type)
   chk::chk_string(model_save_dir)
   purrr::walk(c(lambda1, lambda2, lambda3), chk::chk_number)
   chk::chk_integer(c(tot_seeds, tot_iters))
@@ -103,7 +103,7 @@ ValidateDEGASv2Params <- function(
   chk::chk_flag(early_stopping)
 
   # -- process dots ---------------------------------------------------------
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$seed %||% getFuncOption("seed")
 
@@ -559,7 +559,7 @@ get_sc_deg <- function(
   n_sc_de = 200L,
   ...
 ) {
-  check_installed(c("dplyr", "DESeq2"))
+  rlang::check_installed(c("dplyr", "DESeq2"))
   p_val_adj <- avg_log2FC <- gene <- NULL # suppress checking NOTE
 
   sc_markers <- Seurat::FindAllMarkers(

@@ -138,7 +138,7 @@ config_qs2_threads <- function(qs2 = NULL) {
     return(list())
   }
 
-  check_installed("qs2")
+  rlang::check_installed("qs2")
 
   old_qs2 <- qs2::qopt("nthreads")
   qs2::qopt(parameter = "nthreads", value = qs2)
@@ -160,7 +160,7 @@ config_dt_threads <- function(dt = NULL, ...) {
 
   old_dt <- data.table::getDTthreads(verbose = FALSE)
 
-  exec(
+  rlang::exec(
     .fn = data.table::setDTthreads,
     threads = dt,
     !!!SigBridgeRUtils::FilterArgs4Func(
@@ -183,7 +183,7 @@ config_cheapr_threads <- function(cheapr = NULL) {
     return(list())
   }
 
-  check_installed("cheapr")
+  rlang::check_installed("cheapr")
 
   old_chpr <- cheapr::get_threads()
   cheapr::set_threads(cheapr)
@@ -202,7 +202,7 @@ config_wgcna_threads <- function(wgcna = NULL) {
     return(list())
   }
 
-  check_installed("WGCNA")
+  rlang::check_installed("WGCNA")
 
   old_wgcna <- WGCNA::WGCNAnThreads()
   WGCNA::enableWGCNAThreads(wgcna)
@@ -223,7 +223,7 @@ config_seurat_threads <- function(seurat = NULL) {
   }
 
   # * Seurat::setThreads() is only available in Seurat >= 6.0.0
-  if (!is_installed("Seurat", version = "6.0.0")) {
+  if (!rlang::is_installed("Seurat", version = "6.0.0")) {
     installed_version <- r_pkg_version("Seurat") %||% "not installed"
     cli::cli_warn(c(
       "x" = "Skipping Seurat thread configuration: {.pkg Seurat} >= 6.0.0 is required.",

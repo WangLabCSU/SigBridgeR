@@ -305,6 +305,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// resolve_param_case
+Rcpp::List resolve_param_case(const Rcpp::List& dots, const Rcpp::CharacterVector& canonical, Rcpp::Environment env, bool lower_inner);
+RcppExport SEXP _SigBridgeR_resolve_param_case(SEXP dotsSEXP, SEXP canonicalSEXP, SEXP envSEXP, SEXP lower_innerSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type dots(dotsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::CharacterVector& >::type canonical(canonicalSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Environment >::type env(envSEXP);
+    Rcpp::traits::input_parameter< bool >::type lower_inner(lower_innerSEXP);
+    rcpp_result_gen = Rcpp::wrap(resolve_param_case(dots, canonical, env, lower_inner));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_aggregate_dup_cols_cpp", (DL_FUNC) &_SigBridgeR_aggregate_dup_cols_cpp, 4},
@@ -331,6 +345,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
     {"_SigBridgeR_modify_list", (DL_FUNC) &_SigBridgeR_modify_list, 3},
     {"_SigBridgeR_normalize_metric", (DL_FUNC) &_SigBridgeR_normalize_metric, 2},
+    {"_SigBridgeR_resolve_param_case", (DL_FUNC) &_SigBridgeR_resolve_param_case, 4},
     {NULL, NULL, 0}
 };
 

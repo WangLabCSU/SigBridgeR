@@ -97,3 +97,7 @@ normalize_metric <- function(x, invert = FALSE) {
     .Call(`_SigBridgeR_normalize_metric`, x, invert)
 }
 
+resolve_param_case <- function(dots, canonical, env, lower_inner = FALSE) {
+    .Call(`_SigBridgeR_resolve_param_case`, dots, canonical, env, lower_inner)
+}
+

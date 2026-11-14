@@ -150,7 +150,7 @@ method(WriteCache, ScreenMethodCache) <- function(
   }
 
   if (any(c("qs2", "qdata") %chin% formats)) {
-    check_installed(
+    rlang::check_installed(
       pkg = "qs2",
       reason = "to write cache in qs2/qdata format"
     )
@@ -206,9 +206,9 @@ detect_format <- function(x, max_rows, max_cols) {
 
   if (is_small_df) {
     "csv"
-  } else if (is_installed("qs2") && is_qdata_allowed) {
+  } else if (rlang::is_installed("qs2") && is_qdata_allowed) {
     "qdata"
-  } else if (is_installed("qs2")) {
+  } else if (rlang::is_installed("qs2")) {
     "qs2"
   } else {
     "rdata"

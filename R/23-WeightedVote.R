@@ -43,7 +43,7 @@ WeightedVote <- function(
   weights = double(),
   ties.method = c("random", "first", "last")
 ) {
-  ties.method <- arg_match(ties.method)
+  ties.method <- rlang::arg_match(ties.method)
   voter_cols <- colnames(vote_data)
   weight_names <- names(weights)
 

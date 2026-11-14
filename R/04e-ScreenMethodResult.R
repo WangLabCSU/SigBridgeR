@@ -46,15 +46,15 @@ ScreenMethodResult <- new_class(
   ),
   validator = \(self) {
     if (!prop_exists(self, "scRNA_data")) {
-      return(cli::cli_fmt(cli::cli_text(
+      return(cli::format_inline(
         "{.val scRNA_data} is required"
-      )))
+      ))
     }
 
     if (!inherits(self@scRNA_data, "Seurat")) {
-      return(cli::cli_fmt(cli::cli_text(
+      return(cli::format_inline(
         "{.val scRNA_data} must be a {.cls Seurat} object"
-      )))
+      ))
     }
   },
   constructor = \(scRNA_data, ..., sigbridger_version = get_pkg_version()) {

@@ -23,12 +23,12 @@ AddMetaFeature <- function(seurat_obj, ..., assay = "RNA") {
   assay_obj <- Seurat::GetAssay(object = seurat_obj, assay = assay)
   feature_names <- rownames(assay_obj)
 
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   if (length(dots) == 0L) {
     cli::cli_warn("No inputs were provided.")
     return(seurat_obj)
   }
-  dots_names <- names2(dots)
+  dots_names <- rlang::names2(dots)
 
   for (i in seq_along(dots)) {
     col_name_i <- dots_names[[i]]

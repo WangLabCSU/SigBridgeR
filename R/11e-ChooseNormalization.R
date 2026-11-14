@@ -119,7 +119,7 @@ ChooseNormalization <- function(
     dropout_robustness = 0.25
   )
 ) {
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   is_seurat <- vapply(
     X = dots,
     FUN = \(x) inherits(x, "Seurat"),
@@ -341,7 +341,7 @@ ExtractMetrics <- function(
   n_hvgs = 2000L,
   ...
 ) {
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   # 1. Variance-mean correlation on normalized data + Dropout residual analysis
   assay_data <- SeuratObject::LayerData(
     object = obj,
@@ -362,7 +362,7 @@ ExtractMetrics <- function(
   # 2. Marker gene retention in HVGs
   if (!is.null(ground_truth_markers)) {
     all_markers <- unique(unlist(ground_truth_markers))
-    hvgs_detected <- exec(
+    hvgs_detected <- rlang::exec(
       Seurat::VariableFeatures,
       object = obj,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
@@ -375,7 +375,7 @@ ExtractMetrics <- function(
       NA_real_
     }
   } else {
-    n_hvgs_detected <- length(exec(
+    n_hvgs_detected <- length(rlang::exec(
       Seurat::VariableFeatures,
       object = obj,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, Seurat::VariableFeatures)
@@ -397,7 +397,7 @@ ExtractMetrics <- function(
 
 #' @keywords internal
 ChooseNormalizationViz <- function(metrics_df) {
-  check_installed(c("ggplot2", "patchwork"))
+  rlang::check_installed(c("ggplot2", "patchwork"))
 
   method <- variance_mean_cor <- composite_score <- NULL # ease checking NOTE
   # 1. Variance-mean correlation comparison

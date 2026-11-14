@@ -36,8 +36,8 @@ ValidateDEGASParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("DEGAS", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("DEGAS", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/DEGAS")
   })
 
@@ -119,7 +119,7 @@ ValidateDEGASParams <- function(
   )
 
   # -- process dots ---------------------------------------------------------
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||%
     SigBridgeRUtils::getFuncOption("verbose") %||%
     TRUE
@@ -203,7 +203,7 @@ TrainDEGASModel <- function(
   }
 
   # * Check if environment exists and locate python
-  check_installed("reticulate")
+  rlang::check_installed("reticulate")
   p$degas_params$DEGAS.pyloc <- if (
     !reticulate::py_available(initialize = FALSE)
   ) {
@@ -595,7 +595,7 @@ DoDEGAS <- function(
 DEGASModelDetect <- function(
   sc_pheno_colname,
   bulk_pheno,
-  call = caller_env()
+  call = rlang::caller_env()
 ) {
   # model.type auto-detection
   model_type.first <- ifelse(

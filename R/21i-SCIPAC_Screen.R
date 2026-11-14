@@ -35,9 +35,9 @@ ValidateSCIPACParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("dplyr")
-  check_installed("SCIPAC", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("dplyr")
+  rlang::check_installed("SCIPAC", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/SCIPAC")
   })
 
@@ -71,7 +71,7 @@ ValidateSCIPACParams <- function(
   )
 
   # -- process dots ---------------------------------------------------------
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose") %||% TRUE
   seed <- dots$seed %||% getFuncOption("seed") %||% 123L
   assay <- dots$assay %||% "RNA"

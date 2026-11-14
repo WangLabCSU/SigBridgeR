@@ -69,9 +69,9 @@ property_phenotype_class <- new_property(
     valid_val <- c("binary", "continuous", "survival")
 
     if (!all(value %chin% valid_val)) {
-      cli::cli_fmt(cli::cli_text(
+      cli::format_inline(
         "`phenotype_class` must be one or more of {.val {valid_val}}"
-      ))
+      )
     }
   },
   default = c("binary", "continuous", "survival")
@@ -92,7 +92,7 @@ property_fn <- new_property(class = class_function)
 #' `NA`) with unique names. Duplicate names are not allowed.
 property_list <- new_property(class = class_list, validator = \(value) {
   # NULL, NA & list() are invalid
-  if (!is_named(value)) {
+  if (!rlang::is_named(value)) {
     "`list` must be named or not NULL."
   }
 
@@ -112,9 +112,9 @@ property_list <- new_property(class = class_list, validator = \(value) {
 #' accepted to indicate no mapper is configured.
 property_mapper_fn <- new_property(class = class_any, validator = \(value) {
   if (!is.function(value) && !is.null(value)) {
-    cli::cli_fmt(cli::cli_text(
+    cli::format_inline(
       "mapper function must be a {.cls function} or {.val NULL}."
-    ))
+    )
   }
 })
 
@@ -128,9 +128,9 @@ property_py_env <- new_property(
   class = class_any,
   validator = \(value) {
     if (!is.null(value) && !is.character(value)) {
-      cli::cli_fmt(cli::cli_text(
+      cli::format_inline(
         "`value` must be a {.cls character} or {.val NULL}."
-      ))
+      )
     }
   }
 )
@@ -146,7 +146,7 @@ property_py_env <- new_property(
 #' data storage.
 property_data_list <- new_property(class = class_list, validator = \(value) {
   # NULL, NA & list() are valid
-  if (!is_named2(value)) {
+  if (!rlang::is_named2(value)) {
     "`data_list` must be named."
   }
 
@@ -170,10 +170,58 @@ property_seurat <- new_property(
   class = class_any,
   validator = \(value) {
     if (!inherits(value, "Seurat")) {
-      cli::cli_fmt(cli::cli_text("value must be a {.cls Seurat} object"))
+      cli::format_inline("value must be a {.cls Seurat} object")
     }
   }
 )
+
+# * Benchmark target: either a Seurat object or a ScreenMethodResult
+property_bench_obj <- new_property(
+  class = class_any,
+  validator = \(value) {
+    if (!inherits(value, c("Seurat", "ScreenMethodResult"))) {
+      cli::format_inline(
+        "value must be a {.cls Seurat} or a {.cls ScreenMethodResult} object."
+      )
+    }
+  }
+)
+
+# * Bulk expression matrix: genes x samples
+property_bench_bulk <- new_property(
+  class = class_any,
+  validator = \(value) {
+    if (!is.matrix(value) && !is.data.frame(value)) {
+      cli::format_inline(
+        "value must be a {.cls matrix} or a {.cls data.frame}."
+      )
+    }
+  }
+)
+
+# * Phenotype label type: character or NULL (resolved by the benchmark itself)
+property_bench_label_type <- new_property(
+  class = class_any,
+  validator = \(value) {
+    if (!is.null(value) && !is.character(value)) {
+      cli::format_inline(
+        "value must be a {.cls character} or {.val NULL}."
+      )
+    }
+  }
+)
+
+# * Benchmark iterations: a single positive integer
+property_bench_iterations <- new_property(
+  class = class_integer,
+  validator = \(value) {
+    if (length(value) != 1L || is.na(value) || value < 1L) {
+      "value must be a single positive integer."
+    }
+  },
+  default = 1L
+)
+
 
 # --------------------------------------------------------------------------------
 

@@ -28,16 +28,16 @@ ValidatescPPParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("dplyr")
-  check_installed("scPAS", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("dplyr")
+  rlang::check_installed("scPAS", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/scPP")
   })
 
   # -- input validation -----------------------------------------------------
   chk::chk_character(label_type)
   phenotype_class <- tolower(phenotype_class)
-  phenotype_class <- arg_match(
+  phenotype_class <- rlang::arg_match(
     phenotype_class,
     c("binary", "continuous", "survival")
   )
@@ -51,7 +51,7 @@ ValidatescPPParams <- function(
   chk::chk_not_any_na(phenotype)
 
   # -- process dots ---------------------------------------------------------
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   parallel <- (dots$parallel %||% FALSE)
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")

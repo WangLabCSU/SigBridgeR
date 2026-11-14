@@ -37,9 +37,9 @@ ValidatescPASParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("dplyr")
-  check_installed("scPAS", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("dplyr")
+  rlang::check_installed("scPAS", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/scPAS")
   })
 
@@ -54,12 +54,12 @@ ValidatescPASParams <- function(
   chk::chk_length(label_type)
 
   if (imputation) {
-    imputation_method <- arg_match(imputation_method)
+    imputation_method <- rlang::arg_match(imputation_method)
   }
   if (!is.null(alpha)) {
     chk::chk_range(alpha)
   }
-  network_class <- arg_match(network_class)
+  network_class <- rlang::arg_match(network_class)
 
   # -- handle deprecated `family` -------------------------------------------
   if (lifecycle::is_present(family)) {
@@ -89,7 +89,7 @@ ValidatescPASParams <- function(
   label_type <- paste0(label_type, c("_Positive", "_Negative"))
 
   # -- process dots ---------------------------------------------------------
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
   load_cache <- dots$load_cache

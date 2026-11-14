@@ -42,7 +42,7 @@ ValidateScreenFunc <- function(
 ) {
   cli::cli_h1(cli::col_cyan("Screening Function Validation"))
 
-  if (is_installed("tictoc")) {
+  if (rlang::is_installed("tictoc")) {
     tictoc::tic()
   }
 
@@ -67,7 +67,7 @@ ValidateScreenFunc <- function(
   dir_name_check <- ValidateDirName(func, ...)
   cli::cat_line()
 
-  if (is_installed("tictoc")) {
+  if (rlang::is_installed("tictoc")) {
     end_time <- tictoc::toc(quiet = TRUE)
     cli::cli_text(tictoc::toc.outmsg(end_time$tic, end_time$toc, "Duration"))
     cli::cat_line()

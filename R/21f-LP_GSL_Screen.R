@@ -27,14 +27,14 @@ ValidateLPSGLParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("LPSGL", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("LPSGL", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/LPSGL")
   })
 
   # -- input validation -----------------------------------------------------
   chk::chk_list(dge_analysis)
-  phenotype_class <- arg_match(phenotype_class)
+  phenotype_class <- rlang::arg_match(phenotype_class)
 
   # -- handle deprecated `family` -------------------------------------------
   if (lifecycle::is_present(family)) {

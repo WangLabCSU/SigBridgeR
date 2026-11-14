@@ -57,7 +57,7 @@ data, performing as a bridge to existing tools.
 |  **PIPET**  |  v0.1.7 | `binary` `survival` `continuous` |       ✅      |   GPL-3    | Bulk raw counts matrix perferred |
 | **SIDISH**  |  v0.0.2 |            `survival`            |               |    MIT     |                                  |
 | **SCIPAC**  |  v0.1.1 | `binary` `survival` `continuous` |               |    MIT     |                                  |
-| **TiRank**  |  v0.0.1 | `binary` `survival` `continuous` |               |    MIT     |                                  |
+| **TiRank**  |  v0.0.1 | `binary` `survival` `continuous` |       ✅      |    MIT     |                                  |
 
 ## 🔧 Installatation
 

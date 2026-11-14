@@ -31,21 +31,21 @@ ValidatescABParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("scAB", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("scAB", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/scAB")
   })
 
   # -- input validation -----------------------------------------------------
   chk::chk_character(label_type)
-  phenotype_class <- arg_match(phenotype_class)
+  phenotype_class <- rlang::arg_match(phenotype_class)
   chk::chk_number(maxiter)
   chk::chk_number(tred)
   # scAB can't tolerate NA
   chk::chk_not_any_na(phenotype)
 
   # -- process dots ---------------------------------------------------------
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% SigBridgeRUtils::getFuncOption("verbose")
   seed <- dots$seed %||% SigBridgeRUtils::getFuncOption("seed")
   parallel <- dots$parallel %||% FALSE

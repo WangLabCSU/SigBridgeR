@@ -120,7 +120,7 @@ FindRobustElbow <- function(
     )
 
     # Create comprehensive visualization
-    if (is_interactive()) {
+    if (rlang::is_interactive()) {
       print(plot_robust_elbow(res))
     }
 

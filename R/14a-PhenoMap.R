@@ -41,8 +41,8 @@
 #'
 #' @seealso \code{\link[data.table]{fcase}}, \code{\link[dplyr]{case_when}}
 PhenoMap <- function(data, ..., .default = NA) {
-  check_installed("dplyr")
-  rules <- list2(...)
+  rlang::check_installed("dplyr")
+  rules <- rlang::list2(...)
 
   if (length(rules) == 0L) {
     Abort(

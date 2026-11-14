@@ -88,15 +88,15 @@ WriteCacheMeta.ScreenMethodConfig <- function(
   verbose = TRUE,
   ...
 ) {
-  check_dots_empty()
-  check_installed("jsonlite")
+  rlang::check_dots_empty()
+  rlang::check_installed("jsonlite")
   if (!is.null(additional_description)) {
     chk::chk_string(additional_description)
   }
   chk::chk_scalar(file)
 
   cache_meta <- list(
-    general = list2(
+    general = rlang::list2(
       file = file.path(getwd(), file),
       os = get_os_info(),
       time = get_time(),

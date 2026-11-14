@@ -39,8 +39,8 @@ ValidatePIPETParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  check_installed("PIPET", action = \(pkg, ...) {
-    check_installed("pak")
+  rlang::check_installed("PIPET", action = \(pkg, ...) {
+    rlang::check_installed("pak")
     pak::pak("Exceret/PIPET")
   })
 
@@ -77,7 +77,7 @@ ValidatePIPETParams <- function(
   )
 
   # -- process dots ---------------------------------------------------------
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$seed %||% getFuncOption("seed")
   parallel <- (dots$parallel %||% FALSE)

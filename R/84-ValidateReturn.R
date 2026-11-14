@@ -1,5 +1,5 @@
 ValidateReturn <- function(func, ...) {
-  values <- .vr_collect_return_values(fn_body(func))
+  values <- .vr_collect_return_values(rlang::fn_body(func))
 
   if (length(values) == 0L) {
     values <- list(NULL)
@@ -66,7 +66,7 @@ ValidateReturn <- function(func, ...) {
 # @return A list of expressions (`NULL` stands for a missing return value).
 # @keywords internal
 .vr_collect_return_values <- function(expr) {
-  if (!is_call(expr)) {
+  if (!rlang::is_call(expr)) {
     return(list(expr))
   }
 
@@ -131,7 +131,7 @@ ValidateReturn <- function(func, ...) {
 # Nested function definitions are skipped, their `return()` belongs to them.
 # @keywords internal
 .vr_explicit_returns_in <- function(expr) {
-  if (!is_call(expr)) {
+  if (!rlang::is_call(expr)) {
     return(list())
   }
 
@@ -158,7 +158,7 @@ ValidateReturn <- function(func, ...) {
 
 # @keywords internal
 .vr_is_list_creation <- function(expr) {
-  is_call(expr) && identical(safe_call_name(expr), "list")
+  rlang::is_call(expr) && identical(safe_call_name(expr), "list")
 }
 
 # @keywords internal
@@ -178,7 +178,7 @@ ValidateReturn <- function(func, ...) {
   any(vapply(
     args,
     function(arg) {
-      is_call(arg) &&
+      rlang::is_call(arg) &&
         identical(safe_call_name(arg), "=") &&
         length(arg) >= 3L &&
         identical(as.character(arg[[2L]]), "scRNA_data")
@@ -190,10 +190,10 @@ ValidateReturn <- function(func, ...) {
 
 #' @keywords internal
 safe_call_name <- function(expr) {
-  tryCatch(call_name(expr), error = function(e) NULL)
+  tryCatch(rlang::call_name(expr), error = function(e) NULL)
 }
 
 #' @keywords internal
 safe_call_args <- function(expr) {
-  tryCatch(call_args(expr), error = function(e) list())
+  tryCatch(rlang::call_args(expr), error = function(e) list())
 }

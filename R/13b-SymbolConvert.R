@@ -34,7 +34,7 @@ SymbolConvert <- function(
   chk::chk_flag(verbose)
   dots <- list(...)
 
-  update_symbol_method <- arg_match(
+  update_symbol_method <- rlang::arg_match(
     update_symbol_method,
     c("auto", "scCustomize", "Seurat")
   )
@@ -48,9 +48,9 @@ SymbolConvert <- function(
     )
   }
 
-  check_installed("IDConverter")
+  rlang::check_installed("IDConverter")
 
-  genome_build <- arg_match(genome_build)
+  genome_build <- rlang::arg_match(genome_build)
 
   is_datalike <- is_2d(data)
   original_ids <- if (is_datalike) {
@@ -79,13 +79,13 @@ SymbolConvert <- function(
   )
 
   # * replace NA with original unconverted IDs
-  na_count <- if (is_installed("cheapr")) {
+  na_count <- if (rlang::is_installed("cheapr")) {
     cheapr::na_count(gene_symbols)
   } else {
     sum(is.na(gene_symbols))
   }
   if (na_count > 0L) {
-    k <- if (is_installed("cheapr")) {
+    k <- if (rlang::is_installed("cheapr")) {
       cheapr::which_na(gene_symbols)
     } else {
       which(is.na(gene_symbols))
@@ -115,14 +115,14 @@ SymbolConvert <- function(
     use_scCustomize <- switch(
       update_symbol_method,
       "scCustomize" = {
-        check_installed(
+        rlang::check_installed(
           "scCustomize",
           reason = "to update gene symbols with `update_symbol_method = \"scCustomize\"`."
         )
         TRUE
       },
       "Seurat" = FALSE,
-      is_installed("scCustomize")
+      rlang::is_installed("scCustomize")
     )
     gene_symbols <- if (use_scCustomize) {
       if (grepl("hg|HG", genome_build)) {

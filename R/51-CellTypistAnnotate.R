@@ -103,7 +103,7 @@ CellTypistAnnotate <- function(
   assay = "RNA",
   ...
 ) {
-  check_installed("anndataR")
+  rlang::check_installed("anndataR")
   chk::chk_is(sc, "Seurat")
   if (!is.null(model)) {
     chk::chk_character(model)
@@ -111,7 +111,7 @@ CellTypistAnnotate <- function(
       model <- paste0(model, ".pkl")
     }
   }
-  mode <- arg_match(mode)
+  mode <- rlang::arg_match(mode)
   chk::chk_logical(download)
   chk::chk_logical(force_update)
   chk::chk_logical(majority_voting)

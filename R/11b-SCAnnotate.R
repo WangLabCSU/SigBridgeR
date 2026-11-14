@@ -92,7 +92,7 @@ SCAnnotate.Seurat <- function(
   method = c("CellTypist", "SingleR", "mLLMCelltype"),
   ...
 ) {
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   verbose <- dots$verbose %||% getFuncOption("verbose")
   seed <- dots$verbose %||% getFuncOption("seed")
 
@@ -175,7 +175,7 @@ SCAnnotate.Seurat <- function(
     # * default args
     dots$majority_voting <- dots$majority_voting %||% TRUE
 
-    exec(
+    rlang::exec(
       anno_func,
       sc = sc,
       !!!SigBridgeRUtils::FilterArgs4Func(dots, anno_func),

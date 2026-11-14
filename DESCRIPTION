@@ -30,7 +30,7 @@ Imports:
     SeuratObject (>= 5.0.0),
     SigBridgeRUtils (>= 0.2.5)
 Depends: 
-    R (>= 4.1.0)
+    R (>= 4.2.0)
 Suggests: 
     anndata,
     anndataR,

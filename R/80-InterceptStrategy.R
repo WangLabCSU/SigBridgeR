@@ -34,8 +34,8 @@ InterceptStrategy <- function(
   ),
   ...
 ) {
-  check_dots_empty()
-  check_installed("dplyr")
+  rlang::check_dots_empty()
+  rlang::check_installed("dplyr")
   env <- if (is.character(strategy)) {
     strategy <- SigBridgeRUtils::MatchArg(
       strategy,
@@ -68,7 +68,7 @@ get_strategy_info <- new_generic("get_strategy_info", "x")
 method(get_strategy_info, SigBridgeRBase) <- function(x, name) {
   properties <- props(x)
   if (!is.null(properties$executor)) {
-    properties$executor <- list(fn_fmls_names(properties$executor))
+    properties$executor <- list(rlang::fn_fmls_names(properties$executor))
   }
   if (!is.null(properties$phenotype_class)) {
     properties$phenotype_class <- list(properties$phenotype_class)
@@ -76,6 +76,7 @@ method(get_strategy_info, SigBridgeRBase) <- function(x, name) {
   properties$name <- name
   properties
 }
+
 method(get_strategy_info, class_function) <- function(x, name) {
-  list(name = name, args = list(fn_fmls_names(x)))
+  list(name = name, args = list(rlang::fn_fmls_names(x)))
 }

@@ -74,11 +74,11 @@ SCIntegrate <- function(
   project = "Integrated Seurat"
 ) {
   # ! don't use genric
-  dots <- list2(...)
+  dots <- rlang::list2(...)
   if (length(dots) == 0L) {
     Abort("[{.fun SCIntegrate}]: No arguments provided.", type = "[ARG ERROR]")
   }
-  .quos <- enquos(...)
+  .quos <- rlang::enquos(...)
   if (is.data.frame(dots[[1L]])) {
     return(SCIntegrate.data.frame(..., .quos = .quos))
   }
@@ -110,8 +110,8 @@ SCIntegrate <- function(
 #' @rdname SCIntegrate
 #' @keywords internal
 SCIntegrate.data.frame <- function(..., .quos = NULL) {
-  dots <- list2(...)
-  .quos <- .quos %||% enquos(...)
+  dots <- rlang::list2(...)
+  .quos <- .quos %||% rlang::enquos(...)
   is_mat <- vapply(
     dots,
     \(x) !is.matrix(x) & !inherits(x, "Matrix"),
@@ -119,7 +119,7 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
   )
   # * remove dups
   mats <- purrr::map(dots[is_mat], \(x) {
-    exec(
+    rlang::exec(
       AggregateDups,
       x = x,
       verbose = FALSE,
@@ -160,12 +160,12 @@ SCIntegrate.data.frame <- function(..., .quos = NULL) {
 #' @keywords internal
 #' @rdname SCIntegrate
 SCIntegrate.matrix <- function(..., .quos = NULL) {
-  dots <- list2(...)
-  .quos <- .quos %||% enquos(...)
+  dots <- rlang::list2(...)
+  .quos <- .quos %||% rlang::enquos(...)
 
   is_mat <- vapply(dots, \(x) inherits(x, "Matrix") | is.matrix(x), logical(1L))
   mats <- purrr::map(dots[is_mat], \(x) {
-    exec(
+    rlang::exec(
       AggregateDups,
       x = x,
       verbose = FALSE,
@@ -204,7 +204,7 @@ SCIntegrate.matrix <- function(..., .quos = NULL) {
     mat_list[[i]] <- expanded_mat
   }
 
-  exec(Matrix::cbind2, !!!mat_list)
+  rlang::exec(Matrix::cbind2, !!!mat_list)
 }
 
 #' @rdname SCIntegrate
@@ -223,8 +223,8 @@ SCIntegrate.Seurat <- function(
   chk::chk_character(pipeline)
   chk::chk_length(pipeline)
   # * parameters
-  dots <- list2(...)
-  .quos <- .quos %||% enquos(...)
+  dots <- rlang::list2(...)
+  .quos <- .quos %||% rlang::enquos(...)
   verbose <- dots$verbose %||%
     SigBridgeRUtils::getFuncOption("verbose") %||%
     TRUE
@@ -279,13 +279,13 @@ SCIntegrate.Seurat <- function(
   for (step in steps_to_run) {
     step_fun <- SCPreProcessStrategy[[step]] # a function
     merged <- if (step != "i") {
-      exec(
+      rlang::exec(
         .fn = step_fun,
         merged,
         !!!SigBridgeRUtils::FilterArgs4Func(args_for_fn, step_fun)
       )
     } else {
-      exec(
+      rlang::exec(
         .fn = step_fun,
         merged,
         !!!args_integrate
@@ -307,11 +307,11 @@ SCIntegrate.Seurat <- function(
 #' @return Character vector of names.
 #' @keywords internal
 get_names_4_ids <- function(..., .quoses = NULL) {
-  dots <- list2(...)
+  dots <- rlang::list2(...)
 
   # use pre-computed quosures if provided, otherwise capture on the spot
   if (is.null(.quoses)) {
-    quoses <- enquos(..., .named = TRUE)
+    quoses <- rlang::enquos(..., .named = TRUE)
   } else {
     quoses <- .quoses
   }

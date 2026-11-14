@@ -20,20 +20,6 @@ is_filtering <- function(filter_list) {
 
 #' @keywords internal
 #' @family single_cell_preprocess
-modifyList2 <- function(x, val) {
-  chk::chk_list(x)
-  chk::chk_list(val)
-
-  purrr::imap(val, function(v_val, key) {
-    if (key %chin% names(x) && is.list(x[[key]]) && is.list(v_val)) {
-      return(modify_list(x[[key]], v_val))
-    }
-    v_val
-  })
-}
-
-#' @keywords internal
-#' @family single_cell_preprocess
 handle_usr_params <- function(usr_params) {
   default <- list(
     # * CreateSeuratObject
@@ -62,7 +48,7 @@ handle_usr_params <- function(usr_params) {
     # * SCTransform
     # r = list()
   )
-  modifyList2(default, usr_params)
+  modify_list2(default, usr_params) # cpp
 }
 
 
@@ -296,7 +282,7 @@ QCFilter <- function(
   verbose = TRUE,
   ...
 ) {
-  check_installed("dplyr")
+  rlang::check_installed("dplyr")
   chk::chk_is(seurat_obj, "Seurat")
   chk::chk_list(data_filter.thresh)
 
@@ -326,13 +312,11 @@ QCFilter <- function(
 
   # filter expr is a string of the form
   # which is used to subset the Seurat object
-  nfeat_condition <- expr(
-    !!as.symbol(paste0("nFeature_", thresh$assay)) >
-      !!thresh$nFeature_thresh[1L] &
-      !!as.symbol(paste0("nFeature_", thresh$assay)) <
-        !!thresh$nFeature_thresh[2L]
+  nfeat_condition <- rlang::expr(
+    !!as.symbol(paste0("nFeature_", thresh$assay)) > !!thresh$nFeature_thresh[1L] &
+      !!as.symbol(paste0("nFeature_", thresh$assay)) < !!thresh$nFeature_thresh[2L]
   )
-  ncount_condition <- expr(
+  ncount_condition <- rlang::expr(
     !!as.symbol(paste0("nCount_", thresh$assay)) > !!thresh$nCount_thresh[1L] &
       !!as.symbol(paste0("nCount_", thresh$assay)) < !!thresh$nCount_thresh[2L]
   )
@@ -359,7 +343,7 @@ QCFilter <- function(
       FUN = function(col) {
         x <- meta[[col]]
         has_vals <- any(!is.na(x) & x >= 0L, na.rm = TRUE)
-        non_0_var <- if (is_installed("cheapr")) {
+        non_0_var <- if (rlang::is_installed("cheapr")) {
           cheapr::var_(x, na.rm = TRUE) > 0L
         } else {
           stats::var(x, na.rm = TRUE) > 0L
@@ -381,7 +365,7 @@ QCFilter <- function(
         )
         return(NULL)
       }
-      expr(!!dplyr::sym(col) < !!thresh[[col]])
+      rlang::expr(!!dplyr::sym(col) < !!thresh[[col]])
     }) |>
       purrr::compact()
   }
@@ -399,11 +383,11 @@ QCFilter <- function(
 
   full_expr <- purrr::reduce(
     all_conds,
-    .f = function(x, y) expr(!!x & !!y)
+    .f = function(x, y) rlang::expr(!!x & !!y)
   )
 
   # Evaluate safely
-  logical_vec <- base::with(data = meta, expr = eval_tidy(full_expr))
+  logical_vec <- base::with(data = meta, expr = rlang::eval_tidy(full_expr))
 
   if (!is.logical(logical_vec) || length(logical_vec) != nrow(meta)) {
     Abort(

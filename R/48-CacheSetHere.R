@@ -64,9 +64,9 @@ CacheSetHere <- function(
   timestamp = NULL,
   ...
 ) {
-  check_dots_empty()
+  rlang::check_dots_empty()
   chk::chk_string(path)
-  mode <- arg_match(mode)
+  mode <- rlang::arg_match(mode)
   phenotype_class <- cache_config@phenotype_class
   screen_method <- cache_config@method_name
 

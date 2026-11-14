@@ -1,5 +1,5 @@
 ValidateDirName <- function(func, ...) {
-  dir_create_calls <- .vdn_find_dir_create_calls(fn_body(func))
+  dir_create_calls <- .vdn_find_dir_create_calls(rlang::fn_body(func))
 
   if (length(dir_create_calls) == 0L) {
     return(invisible())
@@ -34,7 +34,7 @@ ValidateDirName <- function(func, ...) {
     if (.vdn_has_res_suffix(folder_name)) {
       validate_success(
         "Folder name '{folder_name}' ends with '_res'",
-        .envir = current_env()
+        .envir = rlang::current_env()
       )
 
       next
@@ -50,7 +50,7 @@ ValidateDirName <- function(func, ...) {
         "{cli_symbol$bullet} Recommended: '{suggested_folder_name}'",
         "Result ('_res') folders stay apart from source code"
       ),
-      .envir = current_env()
+      .envir = rlang::current_env()
     )
     note <- note + 1L
   }
@@ -68,7 +68,7 @@ ValidateDirName <- function(func, ...) {
 .vdn_find_dir_create_calls <- function(expr) {
   calls <- list()
 
-  if (is_call(expr)) {
+  if (rlang::is_call(expr)) {
     if (identical(safe_call_name(expr), "dir.create")) {
       calls <- list(expr)
     }
@@ -76,7 +76,7 @@ ValidateDirName <- function(func, ...) {
     for (arg in safe_call_args(expr)) {
       calls <- c(calls, .vdn_find_dir_create_calls(arg))
     }
-  } else if (is_pairlist(expr)) {
+  } else if (rlang::is_pairlist(expr)) {
     for (elt in expr) {
       calls <- c(calls, .vdn_find_dir_create_calls(elt))
     }
@@ -119,9 +119,9 @@ ValidateDirName <- function(func, ...) {
 # @param func The function being validated, used to evaluate variables.
 # @return A length-1 character, or `NULL` when the name cannot be determined.
 .vdn_folder_name <- function(path_arg, func) {
-  folder_name <- if (is_syntactic_literal(path_arg)) {
+  folder_name <- if (rlang::is_syntactic_literal(path_arg)) {
     path_arg
-  } else if (is_symbol(path_arg)) {
+  } else if (rlang::is_symbol(path_arg)) {
     # the folder name may be stored in a variable of the function
     tryCatch(
       get_var_value(var_name = as.character(path_arg), func = func),

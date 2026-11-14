@@ -57,18 +57,16 @@ ScreenMethodConfig <- new_class(
 
     valid_phenotype_class <- c("binary", "continuous", "survival")
     if (!any(self@phenotype_class %chin% valid_phenotype_class)) {
-      return(cli::cli_fmt(cli::cli_text(
-        "@phenotype_class must be one of {.val {valid_phenotype_class}},\
-         but got {.val {self@phenotype_class}}"
-      )))
+      return(cli::format_inline(
+        "@phenotype_class must be one of {.val {valid_phenotype_class}}, but got {.val {self@phenotype_class}}"
+      ))
     }
 
     valid_method_name <- names(ScreenStrategy)
     if (!any(self@method_name %chin% valid_method_name)) {
-      return(cli::cli_fmt(cli::cli_text(
-        "@method_name must be one of {.val {valid_method_name}},\
-         but got {.val {self@method_name}}"
-      )))
+      return(cli::format_inline(
+        "@method_name must be one of {.val {valid_method_name}}, but got {.val {self@method_name}}"
+      ))
     }
     invisible()
   },
@@ -143,16 +141,16 @@ ScreenMethodCache <- new_class(
   ),
   validator = \(self) {
     if (!dir.exists(self@cache_path)) {
-      return(cli::cli_fmt(cli::cli_text(
+      return(cli::format_inline(
         "@cache_path ({.file {self@cache_path}}) does not exist"
-      )))
+      ))
     }
     EnsureParentDir(self@cache_config_path)
 
     if (!endsWith(self@cache_config_path, "cache_config.json")) {
-      return(cli::cli_fmt(cli::cli_text(
+      return(cli::format_inline(
         "@cache_config_path ({.file {self@cache_config_path}}) must end with {.file cache_config.json}"
-      )))
+      ))
     }
     invisible()
   },

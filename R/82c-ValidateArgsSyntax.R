@@ -1,5 +1,5 @@
 ValidateArgsSyntax <- function(func, ...) {
-  if (is_installed("codetools")) {
+  if (rlang::is_installed("codetools")) {
     code_report <- utils::capture.output(
       codetools::checkUsage(
         func,

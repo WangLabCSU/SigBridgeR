@@ -1,6 +1,6 @@
 ValidateBadge <- function(...) {
   merge_check_res <- function(...) {
-    lists <- list2(...)
+    lists <- rlang::list2(...)
 
     all_names <- c("error", "warn", "note")
     lists <- lapply(lists, function(x) {

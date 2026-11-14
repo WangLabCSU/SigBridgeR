@@ -55,7 +55,7 @@ DrawBulkPCA <- function(
   show_plot = TRUE,
   ...
 ) {
-  check_installed(c("ggplot2", "ggforce", "patchwork", "tibble"))
+  rlang::check_installed(c("ggplot2", "ggforce", "patchwork", "tibble"))
 
   pca <- stats::prcomp(Matrix::t(bulk), scale. = TRUE)
   percent_var <- pca$sdev^2L / sum(pca$sdev^2L)

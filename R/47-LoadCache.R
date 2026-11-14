@@ -34,7 +34,7 @@ LoadCache <- function(file) {
     ext,
     "qs2" = ,
     "qdata" = {
-      check_installed("qs2")
+      rlang::check_installed("qs2")
       qs2::qs_read(file)
     },
     RData = readRDS(file),

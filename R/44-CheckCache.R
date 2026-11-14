@@ -69,8 +69,8 @@ method(CheckCache, class_any) <- function(cache_config, ...) {
 
 
 CheckCache.ScreenMethodConfig <- function(cache_config, path, ...) {
-  check_dots_empty()
-  check_installed("jsonlite")
+  rlang::check_dots_empty()
+  rlang::check_installed("jsonlite")
   meta_json <- if (!endsWith(path, "cache_config.json") && dir.exists(path)) {
     file.path(path, "cache_config.json")
   } else if (endsWith(path, "cache_config.json")) {

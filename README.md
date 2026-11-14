@@ -30,7 +30,7 @@ SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data
 | **PIPET** | v0.1.7 | `binary` `survival` `continuous` | ✅ | GPL-3 | Bulk raw counts matrix perferred |
 | **SIDISH** | v0.0.2 | `survival` |  | MIT |  |
 | **SCIPAC** | v0.1.1 | `binary` `survival` `continuous` |  | MIT |  |
-| **TiRank** | v0.0.1 | `binary` `survival` `continuous` |  | MIT |  |
+| **TiRank** | v0.0.1 | `binary` `survival` `continuous` | ✅ | MIT |  |
 
 ## 🔧 Installatation
 
@@ -238,27 +238,31 @@ If you use SigBridgeR in your work, please cite the corresponding papers:
 citation("SigBridgeR")
 #> Please cite the following publications when using this package.
 #> 
-#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R package version 4.0.0,
-#>   <https://wanglabcsu.github.io/sigbridger>.
+#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R package
+#>   version 4.0.0, <https://wanglabcsu.github.io/sigbridger>.
 #> 
 #>   Sun et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol (2022) [Scissor]
 #> 
-#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med (2022) [DEGAS]
+#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to
+#>   disease. Genome Med (2022) [DEGAS]
 #> 
-#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Res (2022) [scAB]
+#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data.
+#>   Nucleic Acids Res (2022) [scAB]
 #> 
 #>   Li et al. Identifying phenotype-associated subpopulations through LP_SGL. Brief Bioinform (2024) [LP_SGL]
 #> 
 #>   Gan et al. SCIPAC: quantitative estimation of cell-phenotype associations. Genome Biol (2024) [SCIPAC]
 #> 
-#>   Ruan et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Brief Bioinform (2024) [PIPET]
+#>   Ruan et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Brief Bioinform (2024)
+#>   [PIPET]
 #> 
 #>   Xie et al. scPAS: single-cell phenotype-associated subpopulation identifier. Brief Bioinform (2025) [scPAS]
 #> 
-#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation. Nat Commun (2025)
-#>   [SIDISH]
+#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico
+#>   perturbation. Nat Commun (2025) [SIDISH]
 #> 
-#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci (2026) [ScPP]
+#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells.
+#>   Interdiscip Sci (2026) [ScPP]
 #> 
 #>   Lin et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med (2026) [TiRank]
 #> 
