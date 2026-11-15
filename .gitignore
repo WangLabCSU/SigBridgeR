@@ -50,3 +50,6 @@ pkgdown/*_files
 _problems
 \.clangd
 tests/testthat/testthat-problems.rds
+.mcp.json
+.gitignore
+AGENTS.md

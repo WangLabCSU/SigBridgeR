@@ -157,6 +157,13 @@ jobs:
                   extra-packages: |
                       any::rcmdcheck
                       any::remotes
+                      any::rlang
+                      any::testthat
+                      any::usethis
+                      any::withr
+                      any::knitr
+                      any::rmarkdown
+                      any::spelling
                   dependencies: '"hard"'
                   needs: check
 
