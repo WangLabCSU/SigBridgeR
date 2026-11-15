@@ -361,7 +361,7 @@ DoscPAS <- function(
 
   sc_data <- SigBridgeRUtils::AddMisc(
     sc_data,
-    scPAS = props(p$cache_config),
+    scPAS = S7::props(p$cache_config),
     cover = FALSE
   )
 

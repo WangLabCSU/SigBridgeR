@@ -55,11 +55,7 @@ Only for SigBridgeR version >= 3.7.0.
 \code{WriteCacheMeta} is an S7 generic with methods available for the following
 classes:
 
-\itemize{
-\item \code{ANY}
-\item \code{SigBridgeR::ScreenMethodCache}
-\item \code{SigBridgeR::ScreenMethodConfig}
-}
+\verb{r doclisting::methods_list("WriteCacheMeta")}
 }
 
 \examples{

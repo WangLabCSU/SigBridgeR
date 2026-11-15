@@ -26,7 +26,7 @@
 #'
 #' @family SigBridgeR-Classes
 #' @export
-Method <- new_class(
+Method <- S7::new_class(
   name = "Method",
   parent = SigBridgeRBase,
   properties = list(
@@ -41,8 +41,8 @@ Method <- new_class(
     method_version,
     sigbridger_version = get_pkg_version()
   ) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       method_name = method_name,
       method_version = method_version,
       executor = executor,
@@ -87,7 +87,7 @@ Method <- new_class(
 #'
 #' @family SigBridgeR-Classes
 #' @export
-ScreenMethod <- new_class(
+ScreenMethod <- S7::new_class(
   name = "ScreenMethod",
   parent = Method,
   properties = list(
@@ -102,8 +102,8 @@ ScreenMethod <- new_class(
     mapper,
     sigbridger_version = get_pkg_version()
   ) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       method_name = method_name,
       method_version = method_version,
       executor = executor,

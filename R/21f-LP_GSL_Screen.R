@@ -214,7 +214,7 @@ DoLP_SGL <- function(
 
   seurat_obj <- AddMisc(
     seurat_obj = lpsgl_res$seurat_obj,
-    LP_SGL = props(p$cache_config)
+    LP_SGL = S7::props(p$cache_config)
   )
 
   # * Find Deferentially Expressed Genes if requested

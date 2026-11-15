@@ -279,7 +279,7 @@ DoscPP <- function(
         cache_path = p$save_cache,
         cache_config_path = file.path(p$save_cache, "cache_config.json"),
         cache_data = list(phenotype = phenotype, gene_list = gene_list), # NULL is OK; stores the data
-        screen_method_config = new_property(class = ScreenMethodConfig)
+        screen_method_config = S7::new_property(class = ScreenMethodConfig)
       )
       CacheSysCall(
         mode = "save",
@@ -307,7 +307,7 @@ DoscPP <- function(
   sc_data[[]] <- scPP_result$metadata
   sc_data <- SigBridgeRUtils::AddMisc(
     sc_data,
-    scPP = props(p$cache_config),
+    scPP = S7::props(p$cache_config),
     cover = FALSE
   )
 

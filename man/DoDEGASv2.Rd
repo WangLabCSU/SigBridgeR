@@ -62,24 +62,6 @@ data (genes x samples). Column names must match names/IDs in \code{phenotype}.}
 
 \item{top_fraction_pos}{Proportion of cells to be labelled as \code{"Positive"}}
 
-\item{sclab}{Metadata for scRNA-seq e.g. cell type, clusters (required), default = NULL}
-
-\item{bulk_hvg}{Whether user wants to use sample (bulk) level high variable genes as input in DEGAS. Default is \code{TRUE}.}
-
-\item{bulk_de}{Whether user wants to use sample (bulk) differential expression genes for phenotype using DEseq2, commonly set Normal or Control as reference. Default is \code{TRUE}.}
-
-\item{sc_de}{Whether user wants to use single cell differential expression genes for each cluster. Default is \code{TRUE}.}
-
-\item{add_genes}{The user decides whether to add their own gene list by preference. If the user set bulk_hvg, bulk_de and sc_de as FALSE, this gene list is necessary. Default is \code{NULL}.}
-
-\item{n_hvg}{Number of bulk high variable genes, default = 250.}
-
-\item{n_bulk_de}{Number of bulk differential expression genes for phenotype, default = 250.}
-
-\item{n_sc_de}{Number of genes for each single cell clusters, default = 200.}
-
-\item{padj.thresh}{Threshold for differential expression analysis, default = 0.05}
-
 \item{only.pos}{Only return positive markers (FALSE by default)}
 
 \item{min.pct}{only test genes that are detected in a minimum fraction of
@@ -90,53 +72,6 @@ by not testing genes that are very infrequently expressed. Default is 0.01}
 X-fold difference (log-scale) between the two groups of cells. Default is 0.1
 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 If the \code{slot} parameter is "scale.data" no filtering is performed.}
-
-\item{n_st_classes}{Integer specifying the number of distinct single-cell/spatial
-labels (cell types, clusters, or spatial annotations). This defines the output
-dimension of the high-resolution (single-cell/spatial) branch, and is passed to
-the Python backend as \code{high_reso_output_shape}. It is required for \verb{Class*} model
-types, which use single-cell labels to supervise the high-resolution branch;
-for \verb{Blank*} models it is an unused dummy value. Typically set to
-\code{length(unique(labels))}. Default = \code{NULL}.}
-
-\item{loss_type}{String specifying the loss function used for training the low-resolution (patient) branch.
-Typically, classification models use \code{cross_entropy}, while survival models can use \code{log_neg} or \code{rank_loss}.
-This value must match the expected loss type of the chosen \code{model_type}, otherwise the backend will raise an error.}
-
-\item{transfer_type}{String indicating the cross-domain alignment method.
-The backend currently supports \code{Wasserstein} (adversarial with gradient penalty) and \code{MMD} (maximum mean discrepancy).
-This parameter determines how the transfer alignment loss is computed.}
-
-\item{model_save_dir}{String specifying the output directory for model files.
-The function will automatically create the directory if it does not exist and will save configuration files, prediction results, and optionally embedding vectors for each submodel.}
-
-\item{lambda1}{Numeric value, a weighting coefficient that controls the contribution
-of the high-resolution branch (single-cell/spatial supervision loss).
-Only applicable to models with the \code{Class} prefix. Default = 1.}
-
-\item{lambda2}{Numeric value, a weighting coefficient that controls
-the loss strength for the low-resolution (patient) branch.
-This parameter applies to all model types. Default = 2.}
-
-\item{lambda3}{Numeric value, a weighting coefficient that controls
-the contribution of the domain-alignment (transfer) loss.
-Works jointly with \code{transfer_type} to regulate the alignment between
-high- and low-resolution embedding distributions. Default = 3.}
-
-\item{tot_seeds}{Integer specifying the number of bagging iterations. Default = 10.}
-
-\item{tot_iters}{Integer specifying the total number of training iterations (epochs).}
-
-\item{extract_embs}{Logical value. If \code{TRUE}, saves the high- and low-resolution hidden embeddings
-as \code{.npy} files at each save interval for downstream visualization or analysis. Default = \code{FALSE}.}
-
-\item{random_feat}{Logical value. If \code{TRUE}, randomly selects a subset of gene features
-before each submodel training. Default = \code{FALSE}.}
-
-\item{random_perc}{Numeric value between 0 and 1 specifying the proportion of features to retain
-when \code{random_feat} is enabled default = 0.8. The same proportion is applied to both patient-level and single-cell/spatial expression matrices.}
-
-\item{early_stopping}{Logical value. A reserved flag for early stopping;}
 
 \item{...}{Additional arguments passed to the function. Common parameters include:
 \itemize{

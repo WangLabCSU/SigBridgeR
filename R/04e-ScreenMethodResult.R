@@ -37,7 +37,7 @@
 #'
 #' @family S7-Classes
 #' @export
-ScreenMethodResult <- new_class(
+ScreenMethodResult <- S7::new_class(
   name = "ScreenMethodResult",
   parent = SigBridgeRBase,
   properties = list(
@@ -45,7 +45,7 @@ ScreenMethodResult <- new_class(
     extra = property_list
   ),
   validator = \(self) {
-    if (!prop_exists(self, "scRNA_data")) {
+    if (!S7::prop_exists(self, "scRNA_data")) {
       return(cli::format_inline(
         "{.val scRNA_data} is required"
       ))
@@ -58,8 +58,8 @@ ScreenMethodResult <- new_class(
     }
   },
   constructor = \(scRNA_data, ..., sigbridger_version = get_pkg_version()) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       scRNA_data = scRNA_data,
       extra = list(...),
       sigbridger_version = sigbridger_version

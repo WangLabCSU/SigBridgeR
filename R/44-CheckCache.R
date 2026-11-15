@@ -52,12 +52,12 @@
 #' )
 #' CheckCache(cache)
 #' }
-CheckCache <- new_generic(
+CheckCache <- S7::new_generic(
   "CheckCache",
   dispatch_args = "cache_config"
 )
 
-method(CheckCache, class_any) <- function(cache_config, ...) {
+S7::method(CheckCache, class_any) <- function(cache_config, ...) {
   cls_cache <- class(cache_config)
   expected_cls <- c("ScreenMethodConfig", "ScreenMethodCache")
   Abort(
@@ -90,7 +90,7 @@ CheckCache.ScreenMethodConfig <- function(cache_config, path, ...) {
   # phenotype_class
   # label_type
 
-  inputs_meta <- props(cache_config)
+  inputs_meta <- S7::props(cache_config)
 
   diff <- find_diff_in_2_lists(
     inputs_meta, # user param
@@ -112,7 +112,7 @@ CheckCache.ScreenMethodConfig <- function(cache_config, path, ...) {
   )
 }
 
-method(
+S7::method(
   CheckCache,
   ScreenMethodConfig
 ) <- function(cache_config, ..., path) {
@@ -120,7 +120,7 @@ method(
 }
 
 
-method(CheckCache, ScreenMethodCache) <- function(
+S7::method(CheckCache, ScreenMethodCache) <- function(
   cache_config,
   ...
 ) {

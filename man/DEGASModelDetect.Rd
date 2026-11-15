@@ -4,7 +4,7 @@
 \alias{DEGASModelDetect}
 \title{Auto-select Model for DEGAS}
 \usage{
-DEGASModelDetect(sc_pheno_colname, bulk_pheno, call = caller_env())
+DEGASModelDetect(sc_pheno_colname, bulk_pheno, call = rlang::caller_env())
 }
 \description{
 Automatically select the DEGAS model based on single-cell labels and bulk-level phenotype information.

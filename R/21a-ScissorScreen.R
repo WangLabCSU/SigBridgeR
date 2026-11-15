@@ -358,7 +358,7 @@ DoScissor <- function(
   sc_data <- SeuratObject::AddMetaData(object = sc_data, metadata = sc_meta)
   sc_data <- AddMisc(
     seurat_obj = sc_data,
-    Scissor = props(p$cache_config),
+    Scissor = S7::props(p$cache_config),
     cover = FALSE
   )
 

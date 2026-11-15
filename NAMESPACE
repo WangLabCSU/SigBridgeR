@@ -27,6 +27,13 @@ export(AggregateDupCols)
 export(AggregateDupRows)
 export(AggregateDups)
 export(AnnotationMethod)
+export(BenchAccConfig)
+export(BenchConfig)
+export(BenchGSEAConfig)
+export(BenchMemory)
+export(BenchMemoryConfig)
+export(BenchMemoryConfigSet)
+export(BenchSSGSEAConfig)
 export(CacheSetHere)
 export(CacheSysCall)
 export(CellTypistAnnotate)
@@ -60,6 +67,7 @@ export(LoadCache)
 export(LoadRefData)
 export(MergeResult)
 export(Method)
+export(MethodParamSet)
 export(Pattern2Colname)
 export(PhenoMap)
 export(PhenoPreProcess)
@@ -110,40 +118,4 @@ importFrom(data.table,
   .SD
 )
 importFrom(ggplot2,autoplot)
-importFrom(rlang,
-  abort,
-  arg_match,
-  call_args,
-  call_name,
-  caller_call,
-  caller_env,
-  check_dots_empty,
-  check_installed,
-  current_env,
-  enquo,
-  enquos,
-  eval_tidy,
-  exec,
-  expr,
-  f_name,
-  fn_body,
-  fn_fmls,
-  fn_fmls_names,
-  get_expr,
-  is_call,
-  is_function,
-  is_installed,
-  is_interactive,
-  is_named,
-  is_named2,
-  is_pairlist,
-  is_symbol,
-  is_syntactic_literal,
-  list2,
-  names2,
-  new_environment,
-  quo_name,
-  try_fetch,
-  warn
-)
 useDynLib(SigBridgeR, .registration = TRUE)

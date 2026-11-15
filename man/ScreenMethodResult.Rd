@@ -47,6 +47,10 @@ The class validator enforces:
 \seealso{
 Other S7-Classes:
 \code{\link[=AnnotationMethod]{AnnotationMethod()}},
+\code{\link[=BenchAccConfig]{BenchAccConfig()}},
+\code{\link[=BenchGSEAConfig]{BenchGSEAConfig()}},
+\code{\link[=BenchMemoryConfig]{BenchMemoryConfig()}},
+\code{\link[=BenchSSGSEAConfig]{BenchSSGSEAConfig()}},
 \code{\link[=ScreenMethodCache]{ScreenMethodCache()}},
 \code{\link[=ScreenMethodConfig]{ScreenMethodConfig()}}
 }

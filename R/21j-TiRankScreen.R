@@ -451,7 +451,7 @@ DoTiRank <- function(
   )
   sc_data <- AddMisc(
     seurat_obj = sc_data,
-    TiRank = props(p$cache_config),
+    TiRank = S7::props(p$cache_config),
     cover = FALSE
   )
 

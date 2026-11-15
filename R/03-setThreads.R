@@ -98,7 +98,7 @@ setThreads <- function(
     config_qs2_threads(qs2),
     config_dt_threads(dt, ...),
     config_cheapr_threads(cheapr),
-    config_wgcna_threads(wgcna),
+    config_wgcna_threads(wgcna, verbose = verbose),
     config_seurat_threads(seurat),
     config_tf_threads(
       threads = threads,
@@ -197,15 +197,22 @@ config_cheapr_threads <- function(cheapr = NULL) {
   )
 }
 
-config_wgcna_threads <- function(wgcna = NULL) {
+config_wgcna_threads <- function(wgcna = NULL, verbose = getFuncOption("verbose")) {
   if (!is.numeric(wgcna)) {
     return(list())
   }
 
   rlang::check_installed("WGCNA")
 
+  if (wgcna <= 1L && verbose) {
+    cli::cli_alert_warning(
+      "WGCNA threads must be > 1. Using default (2) instead of ({wgcna})."
+    )
+    wgcna <- 2L
+  }
+
   old_wgcna <- WGCNA::WGCNAnThreads()
-  WGCNA::enableWGCNAThreads(wgcna)
+  invisible(capture.output(WGCNA::enableWGCNAThreads(wgcna))) # silently enable threads
 
   list(
     WGCNA = list(

@@ -19,7 +19,7 @@ NULL
 #'
 #' The version string is validated to contain at least one dot (`.`).
 #' The default value is obtained from `get_pkg_version()`.
-property_sigbridger_verison <- new_property(
+property_sigbridger_verison <- S7::new_property(
   class = class_character,
   validator = \(value) {
     if (!grepl(pattern = "\\.", value)) {
@@ -37,7 +37,7 @@ property_sigbridger_verison <- new_property(
 #'
 #' The version string is validated to contain at least one dot (`.`).
 #' The default value is obtained from `get_pkg_version()`.
-property_verison <- new_property(
+property_verison <- S7::new_property(
   class = class_any,
   validator = \(value) {
     if (!grepl(pattern = "\\.", value) && !is.null(value)) {
@@ -52,7 +52,7 @@ property_verison <- new_property(
 #' @details
 #' A general-purpose character property with no additional validation.
 #' Can be used for any string-typed attribute in subclasses.
-property_chr <- new_property(class = class_character)
+property_chr <- S7::new_property(class = class_character)
 
 #' @rdname SigBridgeR-properties
 #' @format An S7 property of class `class_character`.
@@ -63,7 +63,7 @@ property_chr <- new_property(class = class_character)
 #'
 #' Default: `c("binary", "continuous", "survival")`.
 #'
-property_phenotype_class <- new_property(
+property_phenotype_class <- S7::new_property(
   class = class_character,
   validator = \(value) {
     valid_val <- c("binary", "continuous", "survival")
@@ -82,7 +82,7 @@ property_phenotype_class <- new_property(
 #' @details
 #' A property that accepts a function value. Used to store callback or
 #' transformation functions in class attributes.
-property_fn <- new_property(class = class_function)
+property_fn <- S7::new_property(class = class_function)
 
 
 #' @rdname SigBridgeR-properties
@@ -90,7 +90,7 @@ property_fn <- new_property(class = class_function)
 #' @details
 #' A named list property. The value must be a named list (not `NULL` or
 #' `NA`) with unique names. Duplicate names are not allowed.
-property_list <- new_property(class = class_list, validator = \(value) {
+property_list <- S7::new_property(class = class_list, validator = \(value) {
   # NULL, NA & list() are invalid
   if (!rlang::is_named(value)) {
     "`list` must be named or not NULL."
@@ -110,7 +110,7 @@ property_list <- new_property(class = class_list, validator = \(value) {
 #'
 #' If a value is provided, it must be a function; otherwise, `NULL` is
 #' accepted to indicate no mapper is configured.
-property_mapper_fn <- new_property(class = class_any, validator = \(value) {
+property_mapper_fn <- S7::new_property(class = class_any, validator = \(value) {
   if (!is.function(value) && !is.null(value)) {
     cli::format_inline(
       "mapper function must be a {.cls function} or {.val NULL}."
@@ -124,7 +124,7 @@ property_mapper_fn <- new_property(class = class_any, validator = \(value) {
 #' A property representing a Python environment configuration.
 #' Accepts either a character string (e.g., a conda environment name or path)
 #' or `NULL` (when no Python environment is specified).
-property_py_env <- new_property(
+property_py_env <- S7::new_property(
   class = class_any,
   validator = \(value) {
     if (!is.null(value) && !is.character(value)) {
@@ -144,7 +144,7 @@ property_py_env <- new_property(
 #' Unlike `property_list`, this property allows `NULL`, `NA`, and empty
 #' lists (`list()`) as valid values, making it suitable for optional
 #' data storage.
-property_data_list <- new_property(class = class_list, validator = \(value) {
+property_data_list <- S7::new_property(class = class_list, validator = \(value) {
   # NULL, NA & list() are valid
   if (!rlang::is_named2(value)) {
     "`data_list` must be named."
@@ -166,7 +166,7 @@ property_data_list <- new_property(class = class_list, validator = \(value) {
 #' for downstream analysis.
 #'
 #' @seealso [SeuratObject::Seurat-class]
-property_seurat <- new_property(
+property_seurat <- S7::new_property(
   class = class_any,
   validator = \(value) {
     if (!inherits(value, "Seurat")) {
@@ -176,7 +176,7 @@ property_seurat <- new_property(
 )
 
 # * Benchmark target: either a Seurat object or a ScreenMethodResult
-property_bench_obj <- new_property(
+property_bench_obj <- S7::new_property(
   class = class_any,
   validator = \(value) {
     if (!inherits(value, c("Seurat", "ScreenMethodResult"))) {
@@ -188,7 +188,7 @@ property_bench_obj <- new_property(
 )
 
 # * Bulk expression matrix: genes x samples
-property_bench_bulk <- new_property(
+property_bench_bulk <- S7::new_property(
   class = class_any,
   validator = \(value) {
     if (!is.matrix(value) && !is.data.frame(value)) {
@@ -200,7 +200,7 @@ property_bench_bulk <- new_property(
 )
 
 # * Phenotype label type: character or NULL (resolved by the benchmark itself)
-property_bench_label_type <- new_property(
+property_bench_label_type <- S7::new_property(
   class = class_any,
   validator = \(value) {
     if (!is.null(value) && !is.character(value)) {
@@ -212,7 +212,7 @@ property_bench_label_type <- new_property(
 )
 
 # * Benchmark iterations: a single positive integer
-property_bench_iterations <- new_property(
+property_bench_iterations <- S7::new_property(
   class = class_integer,
   validator = \(value) {
     if (length(value) != 1L || is.na(value) || value < 1L) {
@@ -245,7 +245,7 @@ property_bench_iterations <- new_property(
 #'
 #' @family SigBridgeR-Classes
 #' @export
-SigBridgeRBase <- new_class(
+SigBridgeRBase <- S7::new_class(
   name = "SigBridgeRBase",
   properties = list(sigbridger_version = property_sigbridger_verison),
   abstract = TRUE

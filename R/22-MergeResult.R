@@ -122,7 +122,7 @@ MergeResult <- function(
   }
   # Extract Seurat objects
   seurat_objects <- lapply(args, function(x) {
-    if (S7_inherits(x, ScreenMethodResult)) {
+    if (S7::S7_inherits(x, ScreenMethodResult)) {
       return(x@scRNA_data)
     } else if (inherits(x, "Seurat")) {
       return(x)

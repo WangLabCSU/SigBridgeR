@@ -89,7 +89,7 @@ CacheSysCall <- function(
   ...
 ) {
   mode <- rlang::arg_match(mode)
-  cache_config <- if (S7_inherits(cache, ScreenMethodConfig)) {
+  cache_config <- if (S7::S7_inherits(cache, ScreenMethodConfig)) {
     if (mode == "save") {
       Abort(
         "cache is a {.cls ScreenMethodConfig}, but mode is {.val save}.",
@@ -98,7 +98,7 @@ CacheSysCall <- function(
       )
     }
     cache
-  } else if (S7_inherits(cache, ScreenMethodCache)) {
+  } else if (S7::S7_inherits(cache, ScreenMethodCache)) {
     cache@screen_method_config
   } else {
     Abort(

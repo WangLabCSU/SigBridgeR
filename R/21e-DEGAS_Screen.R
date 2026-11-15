@@ -571,7 +571,7 @@ DoDEGAS <- function(
   )
   sc_data <- SigBridgeRUtils::AddMisc(
     seurat_obj = sc_data,
-    DEGAS = props(p$cache_config),
+    DEGAS = S7::props(p$cache_config),
     cover = FALSE
   )
   if (p$verbose) {

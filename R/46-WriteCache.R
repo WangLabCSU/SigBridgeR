@@ -75,12 +75,12 @@
 #' # Force CSV format for small data frames
 #' WriteCache(cache, format = "csv")
 #' }
-WriteCache <- new_generic(
+WriteCache <- S7::new_generic(
   "WriteCache",
   dispatch_args = "cache"
 )
 
-method(WriteCache, class_any) <- function(
+S7::method(WriteCache, class_any) <- function(
   cache,
   ...
 ) {
@@ -93,7 +93,7 @@ method(WriteCache, class_any) <- function(
   )
 }
 
-method(WriteCache, ScreenMethodConfig) <- function(
+S7::method(WriteCache, ScreenMethodConfig) <- function(
   cache,
   ...,
   file,
@@ -111,7 +111,7 @@ method(WriteCache, ScreenMethodConfig) <- function(
   )
 }
 
-method(WriteCache, ScreenMethodCache) <- function(
+S7::method(WriteCache, ScreenMethodCache) <- function(
   cache,
   ...,
   format = c("auto", "qs2", "qdata", "rdata", "csv"),

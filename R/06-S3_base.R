@@ -55,7 +55,7 @@ NULL
 #' @export
 `print.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
   cls_x <- gsub(".*:", "", class(x)[1L])
-  properties <- props(x)
+  properties <- S7::props(x)
   nms_properties <- names(properties)
 
   cli::cli_div(
@@ -133,7 +133,7 @@ NULL
 #' @export
 #' @rawNamespace S3method(length,"SigBridgeR::SigBridgeRBase")
 `length.SigBridgeR::SigBridgeRBase` <- function(x) {
-  length(props(x))
+  length(S7::props(x))
 }
 
 #' Names of Properties in a SigBridgeR Object
@@ -150,7 +150,7 @@ NULL
 #' @export
 #' @rawNamespace S3method(names,"SigBridgeR::SigBridgeRBase")
 `names.SigBridgeR::SigBridgeRBase` <- function(x) {
-  prop_names(x)
+  S7::prop_names(x)
 }
 
 #' Names of Properties in a SigBridgeR Object
@@ -195,7 +195,7 @@ NULL
 `format.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
   cls_x <- sub("^.*::", "", class(x)[1L])
 
-  properties <- props(x)
+  properties <- S7::props(x)
   nms_properties <- names(properties)
 
   value_to_chr <- function(value) {
@@ -239,7 +239,7 @@ NULL
 #' @export
 #' @rawNamespace S3method(as.list,"SigBridgeR::SigBridgeRBase")
 `as.list.SigBridgeR::SigBridgeRBase` <- function(x, ...) {
-  props(x)
+  S7::props(x)
 }
 
 #' Coerce a SigBridgeR Object to a Character Vector

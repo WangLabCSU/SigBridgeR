@@ -331,7 +331,7 @@ DoDEGASv2 <- function(
   )
   sc_data <- AddMisc(
     seurat_obj = sc_data,
-    DEGASv2 = props(p$cache_config),
+    DEGASv2 = S7::props(p$cache_config),
     cover = FALSE
   )
 

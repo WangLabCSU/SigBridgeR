@@ -9,13 +9,13 @@ NULL
 #' @rdname Property-visitor
 #' @export
 `$.SigBridgeR::SigBridgeRBase` <- function(object, name) {
-  prop(object = object, name = name)
+  S7::prop(object = object, name = name)
 }
 
 #' @rdname Property-visitor
 #' @export
 `[[.SigBridgeR::SigBridgeRBase` <- function(object, name) {
-  prop(object = object, name = name)
+  S7::prop(object = object, name = name)
 }
 
 #' Merge two ScreenMethodResult objects
@@ -25,7 +25,7 @@ NULL
 #' @rawNamespace S3method("+","SigBridgeR::ScreenMethodResult")
 #' @export
 `+.SigBridgeR::ScreenMethodResult` <- function(x, y) {
-  if (!S7_inherits(y, "ScreenMethodResult")) {
+  if (!S7::S7_inherits(y, "ScreenMethodResult")) {
     Abort(
       "`y` must be a {.cls ScreenMethodResult} object",
       type = "[TYPE ERROR]"

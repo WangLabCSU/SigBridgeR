@@ -40,7 +40,7 @@
 #'
 #' @family S7-Classes
 #' @export
-ScreenMethodConfig <- new_class(
+ScreenMethodConfig <- S7::new_class(
   name = "ScreenMethodConfig",
   parent = SigBridgeRBase,
   properties = list(
@@ -78,8 +78,8 @@ ScreenMethodConfig <- new_class(
     label_type = character(0L),
     sigbridger_version = get_pkg_version()
   ) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       method_name = method_name,
       method_version = method_version %||% r_pkg_version(method_name),
       phenotype_class = phenotype_class,
@@ -130,14 +130,14 @@ ScreenMethodConfig <- new_class(
 #'
 #' @family S7-Classes
 #' @export
-ScreenMethodCache <- new_class(
+ScreenMethodCache <- S7::new_class(
   name = "ScreenMethodCache",
   parent = SigBridgeRBase,
   properties = list(
     cache_path = property_chr,
     cache_config_path = property_chr,
     cache_data = property_data_list, # NULL is OK; stores the data
-    screen_method_config = new_property(class = ScreenMethodConfig)
+    screen_method_config = S7::new_property(class = ScreenMethodConfig)
   ),
   validator = \(self) {
     if (!dir.exists(self@cache_path)) {
@@ -161,8 +161,8 @@ ScreenMethodCache <- new_class(
     screen_method_config,
     sigbridger_version = get_pkg_version()
   ) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       cache_path = cache_path,
       cache_config_path = cache_config_path,
       cache_data = cache_data, # NULL is OK; stores the data

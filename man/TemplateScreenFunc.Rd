@@ -9,7 +9,7 @@ TemplateScreenFunc(
   func_name = "my_screen",
   append = TRUE,
   documentation = FALSE,
-  open = is_interactive(),
+  open = rlang::is_interactive(),
   ...
 )
 }

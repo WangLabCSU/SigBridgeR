@@ -2,7 +2,7 @@
 #'
 #' @family S7-Classes
 #' @export
-BenchConfig <- new_class(
+BenchConfig <- S7::new_class(
   name = "BenchConfig",
   parent = SigBridgeRBase,
   properties = list(
@@ -11,8 +11,8 @@ BenchConfig <- new_class(
   constructor = \(
     sigbridger_version = get_pkg_version()
   ) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       sigbridger_version = sigbridger_version
     )
   }
@@ -37,15 +37,15 @@ BenchConfig <- new_class(
 #'
 #' @family S7-Classes
 #' @export
-BenchAccConfig <- new_class(
+BenchAccConfig <- S7::new_class(
   name = "BenchAccConfig",
   parent = BenchConfig,
   properties = list(
     obj = property_bench_obj
   ),
   constructor = \(obj, ..., sigbridger_version = get_pkg_version()) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       obj = obj,
       param = rlang::list2(...),
       sigbridger_version = sigbridger_version
@@ -68,15 +68,15 @@ BenchAccConfig <- new_class(
 #'
 #' @family S7-Classes
 #' @export
-BenchGSEAConfig <- new_class(
+BenchGSEAConfig <- S7::new_class(
   name = "BenchGSEAConfig",
   parent = BenchConfig,
   properties = list(
     obj = property_bench_obj
   ),
   constructor = \(obj, ..., sigbridger_version = get_pkg_version()) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       obj = obj,
       param = rlang::list2(...),
       sigbridger_version = sigbridger_version
@@ -101,15 +101,15 @@ BenchGSEAConfig <- new_class(
 #'
 #' @family S7-Classes
 #' @export
-BenchSSGSEAConfig <- new_class(
+BenchSSGSEAConfig <- S7::new_class(
   name = "BenchSSGSEAConfig",
   parent = BenchConfig,
   properties = list(
     obj = property_bench_obj
   ),
   constructor = \(obj, ..., sigbridger_version = get_pkg_version()) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       obj = obj,
       param = rlang::list2(...),
       sigbridger_version = sigbridger_version

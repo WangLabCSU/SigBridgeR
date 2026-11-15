@@ -63,10 +63,10 @@ InterceptStrategy <- function(
   dplyr::bind_rows(info)
 }
 
-get_strategy_info <- new_generic("get_strategy_info", "x")
+get_strategy_info <- S7::new_generic("get_strategy_info", "x")
 
-method(get_strategy_info, SigBridgeRBase) <- function(x, name) {
-  properties <- props(x)
+S7::method(get_strategy_info, SigBridgeRBase) <- function(x, name) {
+  properties <- S7::props(x)
   if (!is.null(properties$executor)) {
     properties$executor <- list(rlang::fn_fmls_names(properties$executor))
   }
@@ -77,6 +77,6 @@ method(get_strategy_info, SigBridgeRBase) <- function(x, name) {
   properties
 }
 
-method(get_strategy_info, class_function) <- function(x, name) {
+S7::method(get_strategy_info, class_function) <- function(x, name) {
   list(name = name, args = list(rlang::fn_fmls_names(x)))
 }

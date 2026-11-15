@@ -62,12 +62,12 @@
 #'   additional_description = "Scissor screening for survival phenotype"
 #' )
 #' }
-WriteCacheMeta <- new_generic(
+WriteCacheMeta <- S7::new_generic(
   name = "WriteCacheMeta",
   dispatch_args = "cache_config"
 )
 
-method(WriteCacheMeta, class_any) <- function(
+S7::method(WriteCacheMeta, class_any) <- function(
   cache_config,
   ...
 ) {
@@ -103,7 +103,7 @@ WriteCacheMeta.ScreenMethodConfig <- function(
       !!!get_r_info(),
       SigBridgeR_version = get_pkg_version()
     ),
-    config = props(cache_config), # all properties as a list
+    config = S7::props(cache_config), # all properties as a list
     description = additional_description
   )
 
@@ -130,7 +130,7 @@ WriteCacheMeta.ScreenMethodConfig <- function(
   invisible(cache_meta)
 }
 
-method(WriteCacheMeta, ScreenMethodConfig) <- function(
+S7::method(WriteCacheMeta, ScreenMethodConfig) <- function(
   cache_config,
   ...,
   file,
@@ -146,7 +146,7 @@ method(WriteCacheMeta, ScreenMethodConfig) <- function(
   )
 }
 
-method(WriteCacheMeta, ScreenMethodCache) <- function(
+S7::method(WriteCacheMeta, ScreenMethodCache) <- function(
   cache_config,
   ...,
   additional_description = NULL,

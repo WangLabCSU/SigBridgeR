@@ -26,7 +26,7 @@
 #'
 #' @family S7-Classes
 #' @export
-AnnotationMethod <- new_class(
+AnnotationMethod <- S7::new_class(
   name = "AnnotationMethod",
   properties = list(
     py_env = property_py_env
@@ -42,8 +42,8 @@ AnnotationMethod <- new_class(
     py_env = NULL,
     sigbridger_version = get_pkg_version()
   ) {
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       method_name = method_name,
       executor = executor,
       py_env = py_env,

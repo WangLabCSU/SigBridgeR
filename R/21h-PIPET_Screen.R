@@ -323,7 +323,7 @@ DoPIPET <- function(
   )
   sc_data <- AddMisc(
     seurat_obj = sc_data,
-    PIPET = props(p$cache_config),
+    PIPET = S7::props(p$cache_config),
     cover = FALSE
   )
 

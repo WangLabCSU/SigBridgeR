@@ -369,7 +369,7 @@ DoSCIPAC <- function(
   )
   modified_sc_data <- AddMisc(
     seurat_obj = modified_sc_data,
-    SCIPAC = props(p$cache_config),
+    SCIPAC = S7::props(p$cache_config),
     cover = FALSE
   )
 

@@ -6,6 +6,8 @@ BenchAcc.Seurat <- function(obj, ...) {}
 
 `BenchAcc.SigBridgeR::ScreenMethodResult` <- function(obj, ...) {}
 
+`BenchAcc.SigBridgeR::`
+
 BenchAcc.default <- function(obj, ...) {
   cls_obj <- class(obj)
   avaialble_methods <- utils::methods(BenchAcc, all.names = TRUE) |>

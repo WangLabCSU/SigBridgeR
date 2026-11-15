@@ -294,7 +294,7 @@ DoscAB <- function(
   )
   sc_data <- SigBridgeRUtils::AddMisc(
     seurat_obj = sc_data,
-    scAB = props(p$cache_config),
+    scAB = S7::props(p$cache_config),
     cover = FALSE
   )
 

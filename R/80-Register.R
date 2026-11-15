@@ -62,12 +62,12 @@ Register <- function(
     RegisterImpl(x = x, name = name, overwrite = overwrite, verbose = verbose)
   })
 }
-RegisterImpl <- new_generic(
+RegisterImpl <- S7::new_generic(
   name = "RegisterImpl",
   dispatch_args = "x"
 )
 
-method(generic = RegisterImpl, class_any) <- function(
+S7::method(generic = RegisterImpl, class_any) <- function(
   x,
   name,
   ...
@@ -81,7 +81,7 @@ method(generic = RegisterImpl, class_any) <- function(
   )
 }
 
-method(generic = RegisterImpl, ScreenMethod) <- function(
+S7::method(generic = RegisterImpl, ScreenMethod) <- function(
   x,
   name = NULL,
   overwrite = FALSE,
@@ -123,7 +123,7 @@ method(generic = RegisterImpl, ScreenMethod) <- function(
   invisible(TRUE)
 }
 
-method(generic = RegisterImpl, AnnotationMethod) <- function(
+S7::method(generic = RegisterImpl, AnnotationMethod) <- function(
   x,
   name,
   overwrite = FALSE,
@@ -156,7 +156,7 @@ method(generic = RegisterImpl, AnnotationMethod) <- function(
   invisible(TRUE)
 }
 
-method(generic = RegisterImpl, class_function) <- function(
+S7::method(generic = RegisterImpl, class_function) <- function(
   x,
   name,
   overwrite = FALSE,
