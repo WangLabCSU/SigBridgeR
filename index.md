@@ -174,6 +174,13 @@ are welcome!
 
 ## 📚 Citation
 
+- Yuxi Yang, Hongqian Qian, Zeyu Yan, Chunyang Wang, Liping Du, Xiaoxiao
+  Shen, Yun Peng, Xiaoyun Bu, Ting Li, Jian-Guo Zhou, Shixiang Wang,
+  SigBridgeR: An R Toolkit for Standardized Identification and
+  Benchmarking of Phenotype-Associated Cell Subpopulations in
+  Single-Cell Transcriptomics, GigaScience, 2026;, giag100,
+  <https://doi.org/10.1093/gigascience/giag100>
+
 ``` r
 
 citation("SigBridgeR")
