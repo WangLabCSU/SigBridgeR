@@ -9,7 +9,8 @@
 #'
 #' @param sc A single-cell dataset, either:
 #'   * A `Seurat` object (recommended), or
-#'   * A `SingleCellExperiment` object.
+#'   * A `SingleCellExperiment` object, or
+#'   * A [ScreenMethodResult] object, whose `scRNA_data` slot is annotated.
 #' @param verbose Logical. Whether to print progress messages.
 #'   Default: inherits from package option \code{getOption("SigBridgeR.verbose")}.
 #' @param ensembl Logical scalar indicating whether to convert row names to Ensembl IDs. Genes without a mapping to a non-duplicated Ensembl ID are discarded.
@@ -39,6 +40,8 @@
 #'   * **`SingleR_delta_next`**: Confidence score (difference between top and second-best scores).
 #'   * **`SingleR_pruned_labels`**: Labels after pruning low-confidence assignments.
 #' * If input is a `SingleCellExperiment`: returns the `SingleR` prediction result
+#' * If input is a [ScreenMethodResult]: returns the annotated `Seurat` object
+#'   from its `scRNA_data` slot, as above.
 #'
 #' @section Requirements:
 #'
@@ -61,7 +64,52 @@
 #' )
 #' }
 #' @export
-SingleRAnnotate <- function(
+SingleRAnnotate <- function(sc, ...) {
+  UseMethod("SingleRAnnotate")
+}
+
+#' @rdname SingleRAnnotate
+#' @export
+SingleRAnnotate.default <- function(sc, ...) {
+  supported_classes <- utils::methods("SingleRAnnotate")
+  sc_class <- class(sc)[1L]
+
+  Abort(
+    "{.fn SingleRAnnotate} doesn't support {.cls {sc_class}} objects.",
+    "i" = "Supported classes: {.cls {supported_classes}}.",
+    "i" = "Convert your object to a supported class first."
+  )
+}
+
+#' @rdname SingleRAnnotate
+#' @export
+`SingleRAnnotate.SigBridgeR::ScreenMethodResult` <- function(sc, ...) {
+  SingleRAnnotate.Seurat(sc = sc@scRNA_data, ...)
+}
+
+#' @rdname SingleRAnnotate
+#' @export
+SingleRAnnotate.Seurat <- function(sc, ...) {
+  prediction_sce <- SingleRAnnotate.SingleCellExperiment(
+    sc = Seurat::as.SingleCellExperiment(sc),
+    ...
+  )
+
+  sc |>
+    Seurat::AddMetaData(prediction_sce$labels, col.name = "SingleR_labels") |>
+    Seurat::AddMetaData(
+      prediction_sce$delta.next,
+      col.name = "SingleR_delta_next"
+    ) |>
+    Seurat::AddMetaData(
+      prediction_sce$pruned.labels,
+      col.name = "SingleR_pruned_labels"
+    )
+}
+
+#' @rdname SingleRAnnotate
+#' @export
+SingleRAnnotate.SingleCellExperiment <- function(
   sc,
   verbose = getFuncOption("verbose"),
   # * pass to `celldex::HumanPrimaryCellAtlasData`
@@ -75,29 +123,24 @@ SingleRAnnotate <- function(
 ) {
   rlang::check_installed("SingleR", action = \(pkg, ...) pak::pak("dviraran/SingleR"))
 
-  orginally_seurat <- inherits(sc, "Seurat")
-  sce_obj <- if (orginally_seurat) {
-    Seurat::as.SingleCellExperiment(sc)
-  } else {
-    sc
-  }
   # * Robust check
-  chk::chk_length(ref)
-  if (ref == "HPCA") {
+  if (is.character(ref)) {
+    ref <- rlang::arg_match(ref)
+    if (ref == "custom") {
+      # misunderstood the argument `ref`
+      Abort(
+        "Please specify the reference dataset. Not character `'custom'`",
+        type = "[ARG ERROR]"
+      )
+    }
     # Human Primary Cell Atlas but not the `SingleCellExperiment` object.
     rlang::check_installed("celldex")
     ref <- celldex::HumanPrimaryCellAtlasData(
       ensembl = ensembl,
-      cell.ont = cell.ont,
+      cell.ont = rlang::arg_match(cell.ont),
       legacy = legacy
     )
     labels <- ref$label.main
-  } else if (ref == "custom") {
-    # misunderstood the argument `ref`
-    Abort(
-      "Please specify the reference dataset. Not character `'custom'`",
-      type = "[ARG ERROR]"
-    )
   } else if (is.null(labels)) {
     # Please find the label from ref data yourself because the `label` slotname may be different from different data.
     # e.g. when set `ref = celldex::HumanPrimaryCellAtlasData()`, there are 3 labels
@@ -112,7 +155,7 @@ SingleRAnnotate <- function(
 
   # * run
   prediction_sce <- SingleR::SingleR(
-    test = sce_obj,
+    test = sc,
     ref = ref,
     labels = labels,
     ...
@@ -121,18 +164,5 @@ SingleRAnnotate <- function(
     ts_cli$cli_alert_success("Annotation finish")
   }
 
-  if (!orginally_seurat) {
-    return(prediction_sce)
-  }
-
-  sc |>
-    Seurat::AddMetaData(prediction_sce$labels, col.name = "SingleR_labels") |>
-    Seurat::AddMetaData(
-      prediction_sce$delta.next,
-      col.name = "SingleR_delta_next"
-    ) |>
-    Seurat::AddMetaData(
-      prediction_sce$pruned.labels,
-      col.name = "SingleR_pruned_labels"
-    )
+  prediction_sce
 }

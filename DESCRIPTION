@@ -48,6 +48,7 @@ Suggests:
     DESeq2,
     dplyr,
     edgeR,
+    fgsea,
     furrr,
     future,
     future.mirai,

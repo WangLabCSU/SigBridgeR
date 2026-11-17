@@ -13,7 +13,7 @@
 #'     - `executor`: function implementation of the method
 #'     - `phenotype_class`: The phenotype types supported by this method
 #'     - `mapper`: A function that transforms the parameters passed to the `Screen` function before forwarding them to the executor; both input and output must be of type `list`.
-#'
+#' @name ScreenStrategy
 #' @export
 ScreenStrategy <- rlang::new_environment(
   list(
@@ -96,3 +96,9 @@ ScreenStrategy <- rlang::new_environment(
     )
   )
 )
+
+#' @rdname ScreenStrategy
+#' @export
+AVAILABLE_SCREEN_METHODS <- names(ScreenStrategy)
+
+# nocov end

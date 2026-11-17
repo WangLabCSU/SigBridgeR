@@ -163,6 +163,17 @@ jobs:
                   extra-packages: |
                       any::rcmdcheck
                       any::pak
+                      any::remotes
+                      any::testthat
+                      any::usethis
+                      any::devtools
+                      any::roxygen2
+                      any::knitr
+                      any::rmarkdown
+                      any::bookdown
+                      any::pkgdown
+                      any::BiocManager
+                      any::spelling
                   dependencies: '"hard"'
                   needs: check
 

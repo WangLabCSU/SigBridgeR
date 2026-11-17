@@ -23,7 +23,7 @@ BenchMemoryConfig(
 \item{sc_data}{A \link[SeuratObject:Seurat-class]{Seurat} object to be screened.}
 
 \item{phenotype}{Phenotype data, either a named vector or a patient survival
-data frame. See \code{\link[=BenchMemory]{BenchMemory()}}.}
+data frame. See \code{\link[=Screen]{Screen()}}.}
 
 \item{label_type}{\code{character} or \code{NULL}. Length-one glue-style template for
 the phenotype label type, with \code{{method_name}} available. When \code{NULL} or
@@ -54,31 +54,17 @@ A \code{BenchMemoryConfig} S7 object.
 }
 \description{
 \code{BenchMemoryConfig} stores the configuration of a time and memory benchmark
-run performed by \code{\link[=BenchMemory]{BenchMemory()}}. It extends \link{BenchConfig} with the inputs
-shared by every screening method (\code{matched_bulk}, \code{sc_data}, \code{phenotype},
-\code{label_type}, \code{phenotype_class}, \code{screen_method}), the method specific
-arguments collected in \code{method_param}, and the benchmarking controls
-collected in \code{bench_config}.
+run performed by \code{\link[=BenchMemory]{BenchMemory()}}. It extends \link{BenchConfig} with the
+benchmarking controls collected in \code{bench_config}; the inputs shared by every
+screening method (\code{matched_bulk}, \code{sc_data}, \code{phenotype}, \code{label_type},
+\code{phenotype_class}, \code{screen_method}) and the method specific arguments
+collected in \code{method_param} are inherited from \link{BenchConfig}.
 }
 \details{
 Unlike the other benchmark configurations, one \code{BenchMemoryConfig} describes
 several screening runs: \code{\link[=BenchMemory]{BenchMemory()}} screens the same data with each
 method listed in \code{screen_method}, one method at a time.
 \itemize{
-\item \code{screen_method} may only contain methods registered in \link{ScreenStrategy}
-(e.g. \code{"Scissor"}, \code{"scPAS"}, \code{"LP_SGL"}); the constructor aborts on any
-unknown name. It also aborts when the selected methods have no phenotype
-class in common.
-\item \code{method_param} is a named list with one entry per method, named
-\code{"<method>_param"} (e.g. \code{list(Scissor_param = list(alpha = 0.05))}).
-Each entry is spliced into the arguments of that method's executor, after
-its \link{ScreenMethod} mapper has run. Use \code{\link[=MethodParamSet]{MethodParamSet()}} to build the full
-set with empty defaults, so unspecified methods simply run with their own
-defaults.
-\item \code{label_type} is a length-one template. The default \code{"{method_name}"} is
-resolved inside \code{\link[=BenchMemory]{BenchMemory()}} with the name of the method currently being
-benchmarked, so a single configuration can serve methods whose executors
-expect differently named phenotype labels.
 \item \code{bench_config} holds the controls of the measurement itself (\code{rounds},
 \code{iterations}, \code{order}, \code{seed}, \code{warmup}, the memory/time budgets, ...).
 See the \emph{Benchmark controls} section of \code{\link[=BenchMemory]{BenchMemory()}} for the full list;
@@ -89,6 +75,7 @@ unknown fields abort instead of being silently ignored.
 Other S7-Classes:
 \code{\link[=AnnotationMethod]{AnnotationMethod()}},
 \code{\link[=BenchAccConfig]{BenchAccConfig()}},
+\code{\link[=BenchConfig]{BenchConfig()}},
 \code{\link[=BenchGSEAConfig]{BenchGSEAConfig()}},
 \code{\link[=BenchSSGSEAConfig]{BenchSSGSEAConfig()}},
 \code{\link[=ScreenMethodCache]{ScreenMethodCache()}},

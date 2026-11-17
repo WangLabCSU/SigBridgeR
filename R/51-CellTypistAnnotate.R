@@ -11,8 +11,13 @@
 #' suitable Python interpreter automatically via \code{reticulate}; use
 #' \code{reticulate::use_python()} to pin a specific environment beforehand.
 #'
-#' @param sc A \code{Seurat} object containing single-cell RNA-seq data. Must have
-#'   a valid assay with gene expression matrix.
+#' @param sc A single-cell dataset, one of:
+#'   * A `Seurat` object (recommended) with a valid assay and gene expression
+#'     matrix;
+#'   * A `SingleCellExperiment` object, converted to `Seurat` via
+#'     [Seurat::as.Seurat()] before annotation (requires `counts`/`logcounts`
+#'     assays);
+#'   * A [ScreenMethodResult] object, whose `scRNA_data` slot is annotated.
 #' @param model Character. CellTypist model specification. One of:
 #'   * A built-in model name (e.g., `"Immune_All_Low"`); a `.pkl` suffix is appended
 #'     automatically if missing.
@@ -54,6 +59,8 @@
 #'   cell type labels are stored as new columns in `meta.data` (prefixed with
 #'   `celltypist_`), and the scoring matrices are stored in `misc$celltypist`.
 #'   Column names may vary slightly depending on the CellTypist version and options used.
+#'   `SingleCellExperiment` and [ScreenMethodResult] inputs are annotated as
+#'   `Seurat` objects and returned as such.
 #'
 #' @section Requirements:
 #'
@@ -85,7 +92,38 @@
 #' )
 #' }
 #' @export
-CellTypistAnnotate <- function(
+CellTypistAnnotate <- function(sc, ...) {
+  UseMethod("CellTypistAnnotate")
+}
+
+#' @rdname CellTypistAnnotate
+#' @export
+CellTypistAnnotate.default <- function(sc, ...) {
+  supported_classes <- utils::methods("CellTypistAnnotate")
+  sc_class <- class(sc)[1L]
+
+  Abort(
+    "{.fn CellTypistAnnotate} doesn't support {.cls {sc_class}} objects.",
+    "i" = "Supported classes: {.cls {supported_classes}}.",
+    "i" = "Convert your object to a supported class first."
+  )
+}
+
+#' @rdname CellTypistAnnotate
+#' @export
+`CellTypistAnnotate.SigBridgeR::ScreenMethodResult` <- function(sc, ...) {
+  CellTypistAnnotate.Seurat(sc = sc@scRNA_data, ...)
+}
+
+#' @rdname CellTypistAnnotate
+#' @export
+CellTypistAnnotate.SingleCellExperiment <- function(sc, ...) {
+  CellTypistAnnotate.Seurat(sc = Seurat::as.Seurat(sc), ...)
+}
+
+#' @rdname CellTypistAnnotate
+#' @export
+CellTypistAnnotate.Seurat <- function(
   sc,
   model = NULL,
   download = TRUE,

@@ -19,8 +19,13 @@
 #'    `mLLMCelltype::annotate_cell_types()`.
 #' 5. Adds results as metadata columns to the Seurat object.
 #'
-#' @param sc A `Seurat` object with pre-computed clusters (stored in
-#'   `Idents(sc)` or `sc$seurat_clusters`).
+#' @param sc A single-cell dataset with pre-computed clusters (stored in
+#'   `Idents(sc)` or `sc$seurat_clusters`), one of:
+#'   * A `Seurat` object (recommended);
+#'   * A `SingleCellExperiment` object, converted to `Seurat` via
+#'     [Seurat::as.Seurat()] before annotation (requires `counts`/`logcounts`
+#'     assays);
+#'   * A [ScreenMethodResult] object, whose `scRNA_data` slot is annotated.
 #' @param seurat_obj_markers Optional pre-computed marker gene table (output of
 #'   `Seurat::FindAllMarkers()`). If `NULL` (default), markers are computed
 #'   automatically using parameters passed via `...`.
@@ -95,6 +100,9 @@
 #'   **Note**: Uncertainty metrics are *only added in multi-model mode*
 #'   (`length(models) > 1`).
 #'
+#'   `SingleCellExperiment` and [ScreenMethodResult] inputs are annotated as
+#'   `Seurat` objects and returned as such.
+#'
 #' @section Requirements:
 #'
 #' * R packages: `mLLMCelltype`, `Seurat`
@@ -144,7 +152,38 @@
 #' @seealso \code{\link[mLLMCelltype]{annotate_cell_types}},
 #'          \code{\link[mLLMCelltype]{interactive_consensus_annotation}}
 #' @export
-mLLMCelltypeAnnotate <- function(
+mLLMCelltypeAnnotate <- function(sc, ...) {
+  UseMethod("mLLMCelltypeAnnotate")
+}
+
+#' @rdname mLLMCelltypeAnnotate
+#' @export
+mLLMCelltypeAnnotate.default <- function(sc, ...) {
+  supported_classes <- utils::methods("mLLMCelltypeAnnotate")
+  sc_class <- class(sc)[1L]
+
+  Abort(
+    "{.fn mLLMCelltypeAnnotate} doesn't support {.cls {sc_class}} objects.",
+    "i" = "Supported classes: {.cls {supported_classes}}.",
+    "i" = "Convert your object to a supported class first."
+  )
+}
+
+#' @rdname mLLMCelltypeAnnotate
+#' @export
+`mLLMCelltypeAnnotate.SigBridgeR::ScreenMethodResult` <- function(sc, ...) {
+  mLLMCelltypeAnnotate.Seurat(sc = sc@scRNA_data, ...)
+}
+
+#' @rdname mLLMCelltypeAnnotate
+#' @export
+mLLMCelltypeAnnotate.SingleCellExperiment <- function(sc, ...) {
+  mLLMCelltypeAnnotate.Seurat(sc = Seurat::as.Seurat(sc), ...)
+}
+
+#' @rdname mLLMCelltypeAnnotate
+#' @export
+mLLMCelltypeAnnotate.Seurat <- function(
   sc,
   seurat_obj_markers = NULL,
   tissue_name = NULL, # context

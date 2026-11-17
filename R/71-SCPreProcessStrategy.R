@@ -1,4 +1,5 @@
 # nocov start
+# ! deprecated
 
 #' @title Preprocessing Strategy Registry for Single-Cell Workflows
 #'
@@ -58,3 +59,5 @@ SCPreProcessStrategy <- rlang::new_environment(
     i = Seurat::IntegrateLayers
   )
 )
+
+# nocov end

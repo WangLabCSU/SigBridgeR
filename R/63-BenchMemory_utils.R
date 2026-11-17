@@ -167,6 +167,8 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
     bench_process$poll_io(250L)
   }
 
+  # --------------------------------------------------------------------------------------------
+  # Timeout
   # * collapse the child output into one line: it goes into `error` and into cli
   # * messages, where newlines would break the layout
   child_log <- bench_child_log(log = child_log, process = bench_process)
@@ -205,7 +207,8 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
       started = started
     ))
   }
-
+  # ----------------------------------------------------------------------------------------------
+  # Failure
   # * a child that dies before returning (segfault, OOM kill, `q()`) raises here
   # * instead of returning a value; treat it as a regular failure so that
   # * `on_failure = "skip"` still keeps the remaining methods
@@ -240,8 +243,8 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
     ))
   }
 
-# -----------------------------------------------------------------------------------------------
-# success
+  # -----------------------------------------------------------------------------------------------
+  # success
 
   bench_res <- mem_peak <- rss_peak <- NULL # ease check NOTE
   c(bench_res, mem_peak, rss_peak) %<-% child

@@ -81,7 +81,7 @@ ScreenUpset <- function(
   all_screen_types <- colnames(meta_data)
 
   if (is.null(screen_type)) {
-    pattern_detect <- paste0(paste(names(ScreenStrategy), collapse = "$|"), "$")
+    pattern_detect <- paste0(paste(AVAILABLE_SCREEN_METHODS, collapse = "$|"), "$")
     screen_type <- grep(
       pattern_detect,
       all_screen_types,

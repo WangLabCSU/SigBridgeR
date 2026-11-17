@@ -11,7 +11,7 @@
 #'  - `value`: list
 #'     - `method_name`: method name
 #'     - `executor`: function implementation of the method
-#'
+#' @name SCAnnotateStrategy
 #' @export
 SCAnnotateStrategy <- rlang::new_environment(
   list(
@@ -33,3 +33,9 @@ SCAnnotateStrategy <- rlang::new_environment(
     )
   )
 )
+
+#' @rdname SCAnnotateStrategy
+#' @export
+AVAILABLE_ANNOTATE_METHODS <- names(SCAnnotateStrategy)
+
+# nocov end

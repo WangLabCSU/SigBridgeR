@@ -165,7 +165,7 @@ MergeResult <- function(
       cli::cli_alert_info("Performing weighted voting")
     }
 
-    existing <- tolower(names(ScreenStrategy))
+    existing <- tolower(AVAILABLE_SCREEN_METHODS)
 
     method_vote <- tolower(names(weights))
     not_exist <- !method_vote %chin% existing

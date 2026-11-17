@@ -25,7 +25,7 @@ autoplot.Seurat <- function(
 ) {
   rlang::check_installed(c("tidydr", "ggplot2"))
 
-  available_group_by <- names(ScreenStrategy)
+  available_group_by <- AVAILABLE_SCREEN_METHODS
   group.by <- group.by %||% available_group_by
   if (length(group.by) > 1L) {
     choice <- utils::menu(

@@ -309,7 +309,7 @@ Screen <- function(
 
   screen_method <- rlang::arg_match(
     screen_method,
-    names(ScreenStrategy)
+    AVAILABLE_SCREEN_METHODS
   )
   method_config <- ScreenStrategy[[screen_method]]
 

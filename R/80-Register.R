@@ -104,7 +104,7 @@ S7::method(generic = RegisterImpl, ScreenMethod) <- function(
     x@method_name <- name
   }
 
-  if (x@method_name %chin% names(ScreenStrategy) && !overwrite) {
+  if (x@method_name %chin% AVAILABLE_SCREEN_METHODS && !overwrite) {
     Abort(
       "Method {.field {x@method_name}} already exists",
       "Please use `overwrite = {.val TRUE}` to overwrite",
