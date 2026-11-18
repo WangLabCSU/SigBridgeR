@@ -4,10 +4,20 @@
 #'
 #' @description
 #' `BenchGSEAConfig` stores the configuration of a GSEA benchmark run
-#' performed by [BenchGSEA()]. It extends [BenchConfig] with the benchmarked
-#' object, and forwards every additional argument to [BenchGSEA()] as `param`.
+#' performed by [BenchGSEA()]. It extends [BenchConfig] with the GSEA-specific
+#' controls collected in `bench_config`; the inputs shared by every screening
+#' method (`matched_bulk`, `sc_data`, `phenotype`, `label_type`,
+#' `phenotype_class`, `screen_method`) and the method specific arguments
+#' collected in `method_param` are inherited from [BenchConfig].
 #'
-#' @inheritParams BenchAccConfig
+#' @inheritParams BenchConfig
+#' @param bench_config Named `list` of GSEA controls returned by
+#'   [BenchGSEAConfigSet()]. It holds `group` (one group label per cell in
+#'   `sc_data`) and `pathway` (a named list of gene sets), plus optional
+#'   arguments forwarded to [fgsea::fgsea()] such as `minSize`, `maxSize` and
+#'   `gseaParam`. `group` must have the same length as the number of cells in
+#'   `sc_data`. Default: `BenchGSEAConfigSet(sc_data)`.
+#' @param ... Must be empty. Method specific arguments belong in `method_param`.
 #'
 #' @returns A `BenchGSEAConfig` S7 object.
 #'
@@ -55,23 +65,34 @@ BenchGSEAConfig <- S7::new_class(
   }
 )
 
+#' @title Build GSEA Benchmark Controls
 #'
-#' @param group A vector of length number of cells, with each element being the group
-#' @inheritParams fgsea::fgsea
+#' @description
+#' Collects the arguments of a GSEA benchmark into the `bench_config` list of
+#' [BenchGSEAConfig()]. Arguments matching [fgsea::fgsea()] formals are handed
+#' over to it; all other named arguments are kept as-is.
 #'
-#' @return A list of parameters for `fgsea()` and `BenchGSEAConfig`
-#' @example
-#' \donttest{
-#' BenchGSEAConfigSet()
+#' @param sc_data A [Seurat][SeuratObject::Seurat-class] object to be screened.
+#'   It defines the cells that `group` assigns labels to.
+#' @param pathway A named `list` of gene sets, each element a character vector
+#'   of gene symbols. Passed to the `pathways` argument of [fgsea::fgsea()].
+#' @param ... Additional named arguments, typically further [fgsea::fgsea()]
+#'   controls (e.g. `nperm`, `scoreType`). Case variants of the function's own
+#'   arguments are resolved to their canonical names.
+#'
+#' @return A list of parameters for [fgsea::fgsea()] and [BenchGSEAConfig()].
+#' @examples
+#' \dontrun{
+#' config <- BenchGSEAConfigSet(
+#'   sc_data = sc,
+#'   pathway = fgsea::examplePathways
+#' )
 #' }
-#'
+#' @family ConfigSet
 #' @export
 BenchGSEAConfigSet <- function(
   sc_data, # seurat
   pathway, # pass to fgsea()
-  minSize = 1,
-  maxSize = length(group) - 1,
-  gseaParam = 1,
   ...
 ) {
   rlang::check_installed("dplyr")

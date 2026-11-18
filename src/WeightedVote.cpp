@@ -85,6 +85,18 @@ CharacterVector weighted_vote_impl(const CharacterMatrix &vote_data,
 
 } // namespace
 
+//' Combine Votes Using Per-Voter Weights
+//'
+//' @param vote_data Character matrix of votes, one row per cell and one
+//'   column per voter.
+//' @param weights Numeric vector of weights, one per column of `vote_data`.
+//' @param ties_method `integer`. Tie handling: 0 random, 1 `"Positive"`,
+//'   2 `"Other"`.
+//'
+//' @return A character vector of length `nrow(vote_data)` with values
+//'   `"Positive"` or `"Other"`.
+//'
+//' @keywords internal
 // [[Rcpp::export(rng = false)]]
 CharacterVector weighted_vote_cpp(CharacterMatrix vote_data,
                                   NumericVector weights, int ties_method) {

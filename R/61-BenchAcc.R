@@ -1,4 +1,74 @@
-#' @return A list containing metrics matrix, with column `TPR FPR TNR FNR F1 Accuracy`
+#' @title Benchmark Screening Methods: Classification Accuracy
+#'
+#' @description
+#' Computes binary classification metrics for every screening method present in
+#' the input, by comparing each method's per-cell labels against ground-truth
+#' labels. `"Positive"` is treated as the positive class and all other labels
+#' as negative, so the accuracy of different screening methods can be compared
+#' on the same cells.
+#'
+#' @param obj The object to evaluate, one of:
+#'   * a `Seurat` object whose `meta.data` contains screening method results
+#'     (columns named after screening methods, e.g. `"Scissor"`);
+#'   * a [ScreenMethodResult] object, whose `scRNA_data` slot is evaluated;
+#'   * a [BenchAccConfig] object, whose `screen_method` entries are all run
+#'     through [Screen()] first and the accumulated labels are evaluated in a
+#'     single pass.
+#' @param bench_config `character`. Ground-truth labels used as the reference:
+#'   either a length-one column name in `obj@meta.data`, or a per-cell label
+#'   vector of length `ncol(obj)`. Must contain a `"Positive"` label. For a
+#'   [BenchAccConfig] input the labels are taken from the same-named slot.
+#' @param verbose Logical. Whether to report progress information.
+#'   Default: `TRUE`.
+#' @param nthreads Integer. Number of threads used by the C++ metric
+#'   computation. Default: `2L`.
+#' @param ... Additional arguments passed between the S3 methods. Currently
+#'   unused apart from forwarding
+#'
+#' @return A named `list` with one element per screening method found in
+#'   `meta.data`. Each element is a 1-row numeric matrix with columns `TPR`,
+#'   `FPR`, `TNR`, `FNR`, `F1` and `Accuracy`, and a row name giving the
+#'   screening method. A metric is `NA` when its denominator is zero.
+#'
+#' @details
+#' ## Dispatch
+#' `BenchAcc()` dispatches on the class of `obj`: a [BenchAccConfig] is screened
+#' first, a [ScreenMethodResult] is unwrapped to its `scRNA_data` slot, and
+#' `BenchAcc.Seurat()` performs the computation. Unsupported classes abort with
+#' an informative error.
+#'
+#' ## Method detection
+#' Columns of `obj@meta.data` whose names match a supported screening method
+#' (case-insensitive) are taken as the predicted labels; other columns are
+#' ignored. The function aborts when no such column exists.
+#'
+#' ## Ground truth
+#' A length-one `bench_config` is looked up as a column of `obj@meta.data`;
+#' otherwise it is used directly as a per-cell label vector. The labels must
+#' include `"Positive"`, and the vector form must have one element per cell.
+#'
+#' ## Metrics
+#' With `P`, `N`, `TP`, `FP`, `TN` and `FN` denoting the numbers of positive
+#' cells, negative cells, true/false positives and true/false negatives:
+#' `TPR = TP / (TP + FN)`, `FPR = FP / (FP + TN)`, `TNR = TN / (TN + FP)`,
+#' `FNR = FN / (FN + TP)`, `F1 = 2TP / (2TP + FP + FN)` and
+#' `Accuracy = (TP + TN) / (P + N)`.
+#'
+#' @examplesIf rlang::is_installed("Seurat")
+#' counts <- matrix(
+#'   rep(1:10, 6L),
+#'   nrow = 10L,
+#'   dimnames = list(paste0("Gene", 1:10), paste0("Cell", 1:6))
+#' )
+#' obj <- Seurat::CreateSeuratObject(counts = counts)
+#' obj$truth <- c("Positive", "Negative", "Positive", "Other", "Positive", "Negative")
+#' obj$Scissor <- c("Positive", "Negative", "Positive", "Other", "Negative", "Negative")
+#' BenchAcc(obj, bench_config = "truth", verbose = FALSE)
+#'
+#' @seealso [BenchAccConfig()], [ScreenMethodResult], [Screen()],
+#'   [BenchGSEA()], [BenchMemory()], [BenchGeneScore()]
+#'
+#' @family Benchmark
 #'
 #' @name BenchAcc
 #' @export
@@ -19,7 +89,7 @@ BenchAcc.Seurat <- function(
   nthreads = getFuncOption("nthreads")
 ) {
   meta_data <- obj[[]]
-  rlang::check_string(bench_config)
+  chk::chk_character(bench_config)
   if (length(bench_config) == 0L) {
     Abort(
       "{.val bench_config} is not specified"
@@ -75,6 +145,7 @@ BenchAcc.Seurat <- function(
     bench_label = bench_label,
     n_threads = nthreads
   )
+  # a list of matrices of metrics
 }
 
 #' @rdname BenchAcc

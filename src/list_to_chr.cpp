@@ -129,6 +129,14 @@ void sexp_write(std::ostringstream &oss, SEXP x) {
   oss << "<" << type_or_class(x) << ">";
 }
 
+//' Render a Nested List as Readable Text
+//'
+//' @param x A (possibly nested) list or atomic vector.
+//'
+//' @return A single string showing `name: value` entries with bracketed
+//'   nesting.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 std::string list_to_character_recursive(List x) {
   std::ostringstream oss;

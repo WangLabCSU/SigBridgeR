@@ -196,6 +196,19 @@ int distance_elbow(const std::vector<double> &variance, int ndims) {
 
 } // namespace
 
+//' Compute Elbow Heuristics from PCA Embeddings
+//'
+//' @param initialized_matrix A beachmat-compatible matrix whose first
+//'   `ndims` columns hold PCA coordinates.
+//' @param ndims `integer`. Number of leading dimensions to consider.
+//'
+//' @return A list of 11 elements: numeric vectors `stdev`, `variance`,
+//'   `pct_variance` and `cumulative_variance` (each of length `ndims`), and
+//'   integer scalars `cumulative_90`, `cumulative_80`, `above_mean`,
+//'   `above_2sd`, `second_deriv`, `distance` and `final_dims` (the selected
+//'   number of dimensions).
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 Rcpp::List find_robust_elbow_cpp(SEXP initialized_matrix, int ndims) {
   if (ndims < 1)

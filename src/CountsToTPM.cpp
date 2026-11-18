@@ -6,6 +6,17 @@
 #include <cstddef>
 
 // inv_length: 每行基因的 1 / gene_length，由 R 端用 match() 对齐后传入。
+//' Convert Counts to TPM from a beachmat Matrix
+//'
+//' @param initialized_counts A beachmat-compatible counts matrix, genes in
+//'   rows and samples in columns.
+//' @param inv_length Numeric vector of `1 / gene_length`, aligned to the rows
+//'   on the R side.
+//'
+//' @return A numeric matrix with the same dimensions as
+//'   `initialized_counts`, holding TPM values.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 Rcpp::NumericMatrix counts_to_tpm_cpp(SEXP initialized_counts,
                                       const Rcpp::NumericVector &inv_length) {

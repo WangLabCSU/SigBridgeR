@@ -28,6 +28,21 @@ using namespace Rcpp;
  * 4. at least min_integer_fraction of the values are close to integers;
  * 5. every sample has a library size > 0.
  */
+//' Check Whether a Matrix Looks like Counts
+//'
+//' @param initialized_matrix A beachmat-compatible numeric matrix.
+//' @param verbose `logical`. Whether to report the reason on failure.
+//'   Default: `FALSE`.
+//' @param integer_tol `numeric`. Tolerance for treating a value as an
+//'   integer. Default: `1e-8`.
+//' @param min_integer_fraction `numeric`. Minimum fraction of values that
+//'   must be close to integers. Default: `0.95`.
+//'
+//' @return A length-1 logical: `TRUE` when the matrix is non-empty, finite,
+//'   non-negative, sufficiently integral and every column has a positive
+//'   library size.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 bool is_counts_matrix_cpp(SEXP initialized_matrix, bool verbose = false,
                           double integer_tol = 1e-8,

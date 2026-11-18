@@ -48,6 +48,7 @@
 #'   `list(Scissor_param = list(alpha = 0.05))`). Default: [MethodParamSet()],
 #'   i.e. one empty entry per registered method.
 #' @param sigbridger_version Package Version of SigBridgeR
+#' @param ... unused
 #'
 #' @returns A `BenchConfig` S7 object.
 #'
@@ -149,30 +150,83 @@ BenchConfig <- S7::new_class(
   }
 )
 
-
 #' A List of Method Parameters
 #'
-#' @param user_list A list of method-specific parameters specified by the user.
+#' @description
+#' Collects the method-specific arguments of a benchmark configuration.
+#' Each method registered in [ScreenStrategy] has a corresponding argument
+#' named `"<method>_param"`, which defaults to `list()`.
+#'
+#' @eval GenerateRoxy.MethodParamSet()
 #'
 #' @returns A modified list of method-specific parameters.
-#' @details
-#' Structure of the list is as follows:
-#' ```
-#' list(
-#'    Scissor_param = list(alpha = 0.05),
-#'    scPAS_param = list(alpha = 0.05),
-#'    LP_SGL_param = list(alpha = 0.05)
-#'    ...
-#' )
-#' ```
 #'
-#'  @export
-MethodParamSet <- function(user_list = list()) {
-  chk::chk_list(user_list)
-  available_methods <- AVAILABLE_SCREEN_METHODS
-  default <- stats::setNames(
-    rep(list(list()), length(available_methods)),
-    paste0(available_methods, "_param")
+#' @example
+#' \donttest{
+#' MethodParamSet(
+#'   Scissor_param = list(alpha = 0.05),
+#'   scPAS_param = list(alpha = 0.05)
+#' )
+#' }
+#' @family ConfigSet
+#' @export
+MethodParamSet <- function(
+  Scissor_param = list(),
+  scAB_param = list(),
+  scPAS_param = list(),
+  scPP_param = list(),
+  DEGAS_param = list(),
+  DEGASv2_param = list(),
+  LP_SGL_param = list(),
+  PIPET_param = list(),
+  SIDISH_param = list(),
+  TiRank_param = list(),
+  ...
+) {
+  arg_names <- rlang::fn_fmls_names()
+  # cpp
+  dots <- resolve_param_case(
+    dots = list(...),
+    canonical = arg_names,
+    env = rlang::current_env(),
+    lower_inner = FALSE
   )
-  modify_list(x = default, val = user_list) # cpp
+
+  unknown <- setdiff(names(dots), arg_names)
+  if (length(unknown) > 0L) {
+    Abort(
+      "Unknown {.arg method_param} field(s): {.val {unknown}}",
+      tips = "Valid fields: {.val {toString(arg_names)}}"
+    )
+  }
+
+  list(
+    Scissor_param = Scissor_param,
+    scAB_param = scAB_param,
+    scPAS_param = scPAS_param,
+    scPP_param = scPP_param,
+    DEGAS_param = DEGAS_param,
+    DEGASv2_param = DEGASv2_param,
+    LP_SGL_param = LP_SGL_param,
+    PIPET_param = PIPET_param,
+    SIDISH_param = SIDISH_param,
+    TiRank_param = TiRank_param
+  )
+}
+
+#' Generate roxygen lines for the `@param` of [MethodParamSet()]
+#'
+#' One `@param` tag per registered method, in registry order.
+#'
+#' @returns `character()` of roxygen lines, one per tag.
+#' @name GenerateRoxy
+#' @keywords internal
+GenerateRoxy.MethodParamSet <- function() {
+  methods <- names(ScreenStrategy)
+  paste0(
+    "#' @param ",
+    methods,
+    "_param Extra arguments for method ",
+    methods
+  )
 }

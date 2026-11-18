@@ -105,3 +105,4 @@ SigBridgeR_workflow.png
 ^uvr\.lock$
 ^\.uvr$
 ^\.covrignore$
+^\dev$

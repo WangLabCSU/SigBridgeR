@@ -77,17 +77,17 @@
 #'
 #' @seealso [BenchMemoryConfig()], [bench::mark()]
 #' @family Benchmark
+#'
+#' @name BenchMemory
 #' @export
-BenchMemory <- function(config, verbose = getFuncOption("verbose")) {
-  rlang::check_installed(c("bench", "glue", "callr", "qs2"))
+BenchMemory <- function(obj, ...) {
+  UseMethod("BenchMemory")
+}
 
-  if (!S7::S7_inherits(config, BenchMemoryConfig)) {
-    cls_now <- class(config)
-    Abort(
-      "{.arg config} must be a {.cls BenchMemoryConfig}",
-      "Currently {.cls {cls_now}}"
-    )
-  }
+#' @rdname BenchMemory
+#' @export
+`BenchMemory.SigBridgeR::BenchMemoryConfig` <- function(config, verbose = getFuncOption("verbose")) {
+  rlang::check_installed(c("bench", "glue", "callr", "qs2"))
 
   methods <- unique(config@screen_method)
 
@@ -148,4 +148,17 @@ BenchMemory <- function(config, verbose = getFuncOption("verbose")) {
   cli::cli_progress_done()
 
   metrics
+}
+
+#' @rdname BenchMemory
+#' @export
+BenchMemory.default <- function(obj, ...) {
+  cls_obj <- class(obj)
+  avaialble_methods <- utils::methods(BenchMemory, all.names = TRUE) |>
+    as.character() |>
+    gsub(pattern = ".*\\.", replacement = "", x = _)
+  Abort(
+    "BenchMemory is not implemented for class: {.cls {cls_obj}}",
+    "Available methods: {.cls {avaialble_methods}}"
+  )
 }

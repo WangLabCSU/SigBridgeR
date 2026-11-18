@@ -5,11 +5,21 @@ using namespace Rcpp;
 static inline double safe_div(double num, double den) {
   return den > 0.0 ? num / den : NA_REAL;
 }
-//' Calculate Accuracy and F1 Score for Screen Method Labels
-//' @param metrics A data frame with columns of predicted labels.
-//' @param bench_label A character vector of benchmark labels. 
+//' Calculate Binary Classification Metrics for Screening Labels
 //'
-//' @return A list of matrices with columns of metrics.
+//' Treats `"Positive"` as the positive class and computes accuracy metrics
+//' for each column of predicted labels.
+//'
+//' @param metrics A data frame of predicted-label columns, one per screening
+//'   method.
+//' @param bench_label Character vector of ground-truth labels, one per row of
+//'   `metrics`.
+//' @param n_threads `integer`. Number of OpenMP threads. Default: `1L`.
+//'
+//' @return A named list with one element per column of `metrics`. Each
+//'   element is a 1-row numeric matrix with columns `TPR`, `FPR`, `TNR`,
+//'   `FNR`, `F1` and `Accuracy` and the method name as row name.
+//'
 //' @keywords internal
 // [[Rcpp::export]]
 List calc_binary_metrics(DataFrame metrics, CharacterVector bench_label,
@@ -24,7 +34,7 @@ List calc_binary_metrics(DataFrame metrics, CharacterVector bench_label,
          (int)metrics.nrow(), (int)n);
 
   CharacterVector keys =
-      CharacterVector::create("Positive", "Negative", "Netural", "Other");
+      CharacterVector::create("Positive", "Negative", "Neutral", "Other");
   const SEXP K0 = STRING_ELT(keys, 0), K1 = STRING_ELT(keys, 1),
              K2 = STRING_ELT(keys, 2), K3 = STRING_ELT(keys, 3);
 

@@ -2,6 +2,19 @@
 #include <cmath>
 using namespace Rcpp;
 
+//' Test Whether a Target Value Is Over- or Under-Represented
+//'
+//' @param x Vector of values to examine.
+//' @param target `numeric`. Value to test. Default: `0`.
+//' @param expected_p `numeric`. Expected proportion of `target`.
+//'   Default: `0.8`.
+//' @param n_sd `integer`. Number of binomial standard errors allowed.
+//'   Default: `4L`.
+//'
+//' @return A length-1 logical: `TRUE` when the observed proportion deviates
+//'   by more than `n_sd` standard errors; `NA` for empty input.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 LogicalVector IsSkewedDynamic_cpp(SEXP x, double target = 0.0,
                                   double expected_p = 0.8, int n_sd = 4) {

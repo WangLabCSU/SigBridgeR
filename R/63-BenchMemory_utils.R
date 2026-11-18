@@ -1,9 +1,18 @@
 #' @title Probe Machine Resources
 #' @description
-#' Collects CPU count, configured thread count, memory figures and load
-#' average. Values that cannot be detected are returned as `NA` instead of
-#' being guessed.
-#' @return A named `list`.
+#' Collects CPU count, configured thread count, physical memory, load average
+#' and R heap usage. Values that cannot be detected are returned as `NA`
+#' instead of being guessed.
+#'
+#' @return A named `list` with elements:
+#'   * `cores`: CPU count from `parallel::detectCores()` (may be `NA`);
+#'   * `nthreads`: configured thread count from `getFuncOption("nthreads")`;
+#'   * `mem_total_gb`, `mem_avail_gb`: total and available physical memory as
+#'     reported by [bench_proc_meminfo()];
+#'   * `load1`: 1-minute load average from [bench_proc_load()] (`NA_real_` on
+#'     platforms without a load average);
+#'   * `heap_used_mb`: R heap high-water mark from [bench_heap_used_mb()].
+#'
 #' @keywords internal
 bench_probe_resources <- function() {
   rlang::check_installed("parallel")
@@ -12,19 +21,47 @@ bench_probe_resources <- function() {
   list(
     cores = parallel::detectCores(),
     nthreads = getFuncOption("nthreads"),
-    mem_total_mb = mem[["MemTotal"]],
-    mem_avail_mb = mem[["MemAvailable"]],
+    mem_total_gb = mem[["MemTotal"]],
+    mem_avail_gb = mem[["MemAvailable"]],
     load1 = bench_proc_load(), # cpp
     heap_used_mb = bench_heap_used_mb()
   )
 }
 
 
+#' @title R Heap High-Water Mark
+#' @description
+#' Returns the peak size of the R heap in megabytes, taken from the `max used`
+#' figures of `gc()`. A `gc(reset = TRUE)` before a measurement resets this
+#' high-water mark, so later calls report the peak reached during that
+#' measurement rather than since the process started.
+#'
+#' @return A single `numeric` value: peak R heap usage in MB.
+#'
+#' @keywords internal
 bench_heap_used_mb <- function() {
   sum(gc(verbose = FALSE)[, 6L])
 }
 
 
+#' @title Stage Benchmark Inputs in a Temporary Directory
+#' @description
+#' Serialises the three shared benchmark inputs into a fresh temporary
+#' directory with `qs2`, so that each measurement child process can load its
+#' own copies instead of sharing mutable objects with the parent.
+#'
+#' @param sc_data A `Seurat` object holding the cells to screen.
+#' @param bulk_data The matched bulk data passed to [Screen()].
+#' @param pheno_data The phenotype data passed to [Screen()].
+#'
+#' @details Serialisation uses half of the detected CPU cores (at least one)
+#'   as the `qs2` thread count.
+#'
+#' @return The path of the created directory, containing `sc_data.qs2`,
+#'   `matched_bulk.qdata` and `phenotype.qdata`. The caller is responsible for
+#'   removing it, as [BenchMemory()] does via `on.exit()`.
+#'
+#' @keywords internal
 bench_tmp_dir <- function(sc_data, bulk_data, pheno_data) {
   tmp_dir <- file.path(tempfile(), paste0("SigBridgeR_bench_tmp"))
   dir.create(tmp_dir, recursive = TRUE)
@@ -41,9 +78,15 @@ bench_tmp_dir <- function(sc_data, bulk_data, pheno_data) {
 #' Appends the buffered `stdout`/`stderr` of a [callr::r_bg()] child to a rolling
 #' log. Only the last `n` lines are kept, so a chatty child cannot grow the
 #' parent heap during a long measurement.
-#' @param log
+#' @param log `character`. Lines collected by earlier calls; the returned
+#'   vector keeps at most `n` of the combined old and new lines.
+#' @param process A [callr::r_bg()] handle whose output and error pipes are
+#'   read. Pipe errors (e.g. after the child has been reaped) are ignored, so
+#'   already collected lines are preserved.
+#' @param n `integer`. Maximum number of lines to keep. Default: `100L`.
 #'
 #' @return A `character` vector of at most `n` lines.
+#'
 #' @keywords internal
 bench_child_log <- function(log, process, n = 100L) {
   # * processx closes the pipes once the child is reaped, so a late read raises
@@ -58,15 +101,43 @@ bench_child_log <- function(log, process, n = 100L) {
 
 #' @title Measure One Screening Method
 #' @description
-#' Runs `method_name` once, optionally after an untimed warm-up, inside
-#' [bench::mark()] and returns a single-row table with the timing and memory
-#' metrics plus the elapsed wall time of the whole measurement.
+#' Runs `method_name` once inside [bench::mark()] in an isolated
+#' [callr::r_bg()] child and returns a one-row table with the timing and
+#' memory metrics. The parent supervises the child: its pipes are drained
+#' while it runs, and it is killed when `bench_config$timeout_sec` is exceeded.
+#'
+#' @param config A [BenchMemoryConfig] object supplying `label_type`,
+#'   `phenotype_class` and the `bench_config` controls (`seed`, `set_threads`,
+#'   `measure_rss`, `on_failure`, `timeout_sec`, and the arguments forwarded to
+#'   [bench::mark()]).
+#' @param method_name `character`. Name of one screening method; its arguments
+#'   are taken from `config@method_param[[paste0(method_name, "_param")]]`.
+#' @param round `integer`. Round number, recorded in the result.
+#' @param position `integer`. Position of the method within the round.
+#' @param tmp_dir `character`. Directory created by [bench_tmp_dir()] holding
+#'   the serialised inputs loaded by the child.
+#' @param verbose `logical`. Whether to report progress. Default: `FALSE`.
+#'
+#' @details
+#' The child sets the configured seed and threads, loads the inputs from
+#' `tmp_dir`, and runs [Screen()] through [bench::mark()]. It returns the mark
+#' result together with the R heap peak ([bench_heap_used_mb()]) and, when
+#' `measure_rss` is enabled, the process RSS peak ([bench_peak_rss_mb()]).
+#'
+#' Failure and timeout are handled according to `on_failure`: `"stop"` aborts,
+#' while `"skip"` returns a row from [fail_row()] with `status` set to
+#' `"error"` or `"timeout"`. The child is always killed and reaped on exit so
+#' it cannot outlive the call.
+#'
+#' @return A one-row `data.table`: the [bench::mark()] columns, with
+#'   `expression` replaced by `method_name`, plus `method_name`, `round`,
+#'   `position`, `status`, `error`, `mem_peak_mb`, `rss_peak_mb` and `elapsed`
+#'   (total wall-clock seconds of the child run).
+#'
 #' @keywords internal
 bench_mem_measure <- function(config, method_name, round, position, tmp_dir, verbose = FALSE) {
   gc(reset = TRUE)
   started <- Sys.time()
-
-  method_config <- config@method_param[[method_name]]
 
   timeout_sec <- config@bench_config$timeout_sec
   # * absolute deadline, `NULL` means "no limit" (`timeout_sec = Inf`)
@@ -203,7 +274,7 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
       round = round,
       position = position,
       status = "timeout",
-      error = error_msg,
+      error = "timeout",
       started = started
     ))
   }
@@ -224,7 +295,7 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
     if (identical(config@bench_config$on_failure, "stop")) {
       Abort(
         "Method {.val {method_name}} failed in round {round}",
-        tips = "The benchmark child process died; see the returned {.code error} column"
+        "The benchmark child process died; see the returned {.code error} column"
       )
     }
 
@@ -287,6 +358,22 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
   res
 }
 
+#' @title Build a Failed-Measurement Row
+#' @description
+#' Creates the one-row table returned by [bench_mem_measure()] when a child
+#' times out or fails, keeping the same columns as a successful row but with
+#' `NA` memory metrics.
+#'
+#' @param method_name `character`. Name of the failed screening method.
+#' @param round,position `integer`. Round number and position within the round.
+#' @param status `character`. Failure status, e.g. `"error"` or `"timeout"`.
+#' @param error `character`. Message describing the failure.
+#' @param started `POSIXct` time at which the measurement started, used to
+#'   compute `elapsed`.
+#'
+#' @return A one-row `data.table`.
+#'
+#' @keywords internal
 fail_row <- function(method_name, round, position, status, error, started) {
   data.table::data.table(
     method_name = method_name,

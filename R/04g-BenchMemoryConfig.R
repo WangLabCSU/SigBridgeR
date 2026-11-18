@@ -59,11 +59,37 @@ BenchMemoryConfig <- S7::new_class(
 #' @description
 #' Merges the user supplied `bench_config` with the defaults and validates the
 #' names, so that a typo aborts instead of being silently ignored.
-#' @param
+#' @param rounds `integer`. Number of benchmark rounds; every method is screened
+#'   once per round and per-method summaries are taken across rounds. Odd values
+#'   let the median ignore a single cold round. Must be at least 1. Default: `3L`.
+#' @param order `character`. Order in which methods run within a round:
+#'   `"random"` shuffles them (seeded by `seed`) to spread cold-cache and
+#'   package-caching effects; `"fixed"` keeps the given method order. Default:
+#'   `c("random", "fixed")` (first value used).
+#' @param seed `integer`. Base seed for shuffling method order each round; the
+#'   round number is added to it. Also set inside each measurement child process.
+#'   Default: `123L`.
+#' @param measure_rss `logical`. Whether to record peak process resident set size
+#'   (RSS) in addition to R heap memory. Supported on Linux only. Default: `FALSE`.
+#' @param on_failure `character`. Action when a method times out or errors in a
+#'   round: `"skip"` warns and continues with the remaining methods, `"stop"`
+#'   aborts the whole benchmark. Default: `c("skip", "stop")` (first value used).
+#' @param set_threads `integer`. Number of threads the measurement child process
+#'   is pinned to via [setThreads()], so runs stay comparable across methods.
+#'   Default: `1L`.
+#' @param timeout_sec `numeric`. Maximum wall-clock seconds allowed for one
+#'   method in one round; the child process is killed when the limit is exceeded.
+#'   Use `Inf` to disable the limit. Default: `10800L` (3 hours).
 #' @inheritParams bench::mark
 #'
 #' @return A named `list` of resolved controls.
 #'
+#' @examples
+#' \donttest{
+#' BenchMemoryConfigSet()
+#' }
+#'
+#' @family ConfigSet
 #'
 #' @export
 BenchMemoryConfigSet <- function(

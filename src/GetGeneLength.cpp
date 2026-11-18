@@ -345,6 +345,19 @@ NumericVector finish(GtfAccumulator &acc, bool verbose) {
 
 } // namespace
 
+//' Compute Gene Lengths from a GTF File
+//'
+//' Streams a plain or gzipped GTF file and merges overlapping exons by gene.
+//'
+//' @param path `character`. Path to the GTF file, optionally `.gz`.
+//' @param verbose `logical`. Whether to emit progress messages. Default: `TRUE`.
+//' @param canonical_chr_only `logical`. Whether to keep only canonical
+//'   chromosomes. Default: `FALSE`.
+//'
+//' @return A numeric vector named by `gene_id` and sorted by it, holding
+//'   merged exon lengths.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 NumericVector gtf_file_to_gene_length(const std::string &path,
                                       bool verbose = true,
@@ -367,6 +380,20 @@ NumericVector gtf_file_to_gene_length(const std::string &path,
   return finish(acc, verbose);
 }
 
+//' Compute Gene Lengths from GTF Lines
+//'
+//' Applies the same exon-merging logic as [gtf_file_to_gene_length()] to GTF
+//' lines already held in memory.
+//'
+//' @param lines Character vector of GTF lines.
+//' @param verbose `logical`. Whether to emit progress messages. Default: `TRUE`.
+//' @param canonical_chr_only `logical`. Whether to keep only canonical
+//'   chromosomes. Default: `FALSE`.
+//'
+//' @return A numeric vector named by `gene_id` and sorted by it, holding
+//'   merged exon lengths.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 NumericVector r_gtf_lines_to_gene_length(const CharacterVector &lines,
                                          bool verbose = true,

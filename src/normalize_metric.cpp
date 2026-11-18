@@ -6,6 +6,15 @@ using namespace Rcpp;
 // Min-max normalization.
 // - NA / NaN / +-Inf 视为缺失：不参与 min/max，输出 NA
 // - 有效值全部相同（或仅 1 个有效值）：有效位置输出 0.5
+//' Min-Max Normalize a Numeric Vector
+//'
+//' @param x Numeric vector.
+//' @param invert `logical`. Whether to reverse the mapping. Default: `FALSE`.
+//'
+//' @return Numeric vector of the same length as `x`: non-finite entries
+//'   become `NA`, and a constant input maps its finite entries to `0.5`.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 NumericVector normalize_metric(const NumericVector &x, bool invert = false) {
   const R_xlen_t n = x.size();

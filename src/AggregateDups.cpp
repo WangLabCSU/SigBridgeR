@@ -118,6 +118,21 @@ static inline double aggregate_gather(const double *v, const int *idx, int k,
   return NA_REAL;
 }
 
+//' Aggregate Columns of a Matrix by Group
+//'
+//' Collapses columns sharing the same 1-based group id into one column using
+//' the requested statistic.
+//'
+//' @param initialized_matrix A beachmat-compatible numeric matrix.
+//' @param group_id Integer vector of 1-based group ids, one per column.
+//' @param n_groups `integer`. Number of groups, i.e. columns of the result.
+//' @param method Aggregation method: `"max"`, `"sum"`, `"mean"`, `"median"`
+//'   or `"first"`.
+//'
+//' @return A numeric matrix with `nrow(initialized_matrix)` rows and
+//'   `n_groups` columns.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 NumericMatrix aggregate_dup_cols_cpp(SEXP initialized_matrix,
                                      IntegerVector group_id, int n_groups,
@@ -213,6 +228,21 @@ NumericMatrix aggregate_dup_cols_cpp(SEXP initialized_matrix,
   return output;
 }
 
+//' Aggregate Rows of a Matrix by Group
+//'
+//' Collapses rows sharing the same 1-based group id into one row using the
+//' requested statistic.
+//'
+//' @param initialized_matrix A beachmat-compatible numeric matrix.
+//' @param group_id Integer vector of 1-based group ids, one per row.
+//' @param n_groups `integer`. Number of groups, i.e. rows of the result.
+//' @param method Aggregation method: `"max"`, `"sum"`, `"mean"`, `"median"`
+//'   or `"first"`.
+//'
+//' @return A numeric matrix with `n_groups` rows and
+//'   `ncol(initialized_matrix)` columns.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 NumericMatrix aggregate_dup_rows_cpp(SEXP initialized_matrix,
                                      IntegerVector group_id, int n_groups,

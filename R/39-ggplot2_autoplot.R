@@ -74,20 +74,10 @@ autoplot.Seurat <- function(
 #' @export
 `autoplot.SigBridgeR::ScreenMethodResult` <- function(
   object,
-  group.by = NULL,
-  label = TRUE,
-  label.size = 4L,
-  pt.size = 0.5,
-  cols = NULL,
   ...
 ) {
   autoplot.Seurat(
     object = object@scRNA_data,
-    group.by = group.by,
-    label = label,
-    label.size = label.size,
-    pt.size = pt.size,
-    cols = cols,
     ...
   )
 }

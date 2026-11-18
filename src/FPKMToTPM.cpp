@@ -19,6 +19,22 @@ constexpr int kTotalTooSmall = 5; // 1e6 / total 溢出
 
 // 返回 list(tpm, status, row, col, na_count, zero_cols)
 // status != 0 时 tpm 为 NULL，row/col 为首个问题位置（1-based，col 可能无 row）
+//' Convert FPKM to TPM from a beachmat Matrix
+//'
+//' Converts every column to TPM and reports validation problems through
+//' `status` instead of raising an error.
+//'
+//' @param initialized_fpkm A beachmat-compatible FPKM matrix, genes in rows.
+//' @param na_as_zero `logical`. Whether NA values are treated as zero.
+//'   Default: `TRUE`.
+//'
+//' @return A list of six elements: `tpm` (same-dimension numeric matrix on
+//'   success, `NULL` otherwise), `status` (integer: 0 success, 1 NA not
+//'   allowed, 2 negative value, 3 Inf, 4 column-sum overflow, 5 scaling
+//'   overflow), `row`/`col` (1-based first problem position), `na_count`
+//'   and `zero_cols`.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 List fpkm_to_tpm_cpp(SEXP initialized_fpkm, bool na_as_zero = true) {
   Rtatami::BoundNumericPointer parsed(initialized_fpkm);

@@ -20,15 +20,14 @@
 #'   being the genes of one gene set. List names are used as the gene-set names
 #'   (row names) of the result.
 #' @param method Character. Scoring backend, one of `"ssGSEA"`, `"AUCell"`,
-#'   `"UCell"` or `"AddModuleScore"`; see [AVAILABLE_GENE_SCORE_METHODS].
-#'   Default: `"ssGSEA"`.
+#'   `"UCell"` or `"AddModuleScore"`. Default: `"ssGSEA"`.
 #' @param assay Character or `NULL`. Assay to score. Default: `NULL`, i.e. the
 #'   default assay of `obj` as reported by
 #'   [SeuratObject::DefaultAssay()].
 #' @param layer Character. Expression layer of `assay` holding the values to
 #'   score. Default: `"data"`.
 #' @param verbose Logical. Whether to report progress information.
-#'   Default: `getFuncOption("verbose")`.
+#'   Default: `TRUE`.
 #' @param ... Additional named arguments forwarded to the selected backend.
 #'   Arguments are matched against the formal argument names of the backend and
 #'   split automatically over the two stages when a method needs two calls:
@@ -40,8 +39,6 @@
 #'
 #' @return A numeric matrix with gene sets in rows and cells in columns. Gene
 #'   sets dropped by backend-specific filtering are omitted from the result.
-#'   `"AUCell"` returns the [AUCell::AUCell_calcAUC()] object instead, whose
-#'   AUC matrix has the same layout.
 #'
 #' @details
 #' ## Dispatch
@@ -85,7 +82,7 @@
 #' scores <- BenchGeneScore(obj, pathways, method = "ssGSEA", verbose = FALSE)
 #'
 #' @seealso [BenchGeneScoreConfig()], [BenchGeneScoreConfigSet()],
-#'   [AVAILABLE_GENE_SCORE_METHODS], [Screen()], [BenchGSEA()], [BenchAcc()]
+#'   [Screen()], [BenchGSEA()], [BenchAcc()]
 #'
 #' @family Benchmark
 #'
@@ -277,7 +274,7 @@ BenchGeneScore.Seurat.AUCell <- function(
       calc_auc_param
     )
   )
-  auc
+  AUCell::getAUC(auc)
 }
 
 

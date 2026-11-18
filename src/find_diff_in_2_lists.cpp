@@ -124,6 +124,17 @@ static SEXP find_diff_rec(SEXP x, SEXP y, SEXP current_name) {
   return diff_pair(x, y, current_name);
 }
 
+//' Find the First Difference Between Two Lists
+//'
+//' Recursively compares two lists, matching by name or by position.
+//'
+//' @param x,y Two lists to compare.
+//'
+//' @return `TRUE` (length 1) when they are identical; otherwise a list of
+//'   three elements: `name` (path of the first difference), `x` and `y`
+//'   (the differing objects, `NULL` when missing on one side).
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 SEXP find_diff_in_2_lists(SEXP x, SEXP y) {
   if (!is_list_cpp(x) || !is_list_cpp(y)) {

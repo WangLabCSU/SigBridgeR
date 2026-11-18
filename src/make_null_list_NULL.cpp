@@ -23,5 +23,13 @@ static SEXP make_null_list_NULL_rec(SEXP x) {
   return out;
 }
 
+//' Replace Empty Lists with NULL Recursively
+//'
+//' @param x Any R object; lists are processed recursively.
+//'
+//' @return `x` with every empty list replaced by `NULL`; non-list objects are
+//'   returned unchanged and names of non-empty lists are kept.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 SEXP make_null_list_NULL(SEXP x) { return make_null_list_NULL_rec(x); }

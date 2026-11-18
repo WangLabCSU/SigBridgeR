@@ -1,21 +1,51 @@
 # --------------------------------------------------------------------------------
 
-#' @title BenchGeneScoreConfig: ssGSEA Benchmark Configuration
+#' @title BenchGeneScoreConfig: Gene Set Scoring Benchmark Configuration
 #'
 #' @description
-#' `BenchGeneScoreConfig` stores the configuration of an ssGSEA benchmark run
-#' performed by [BenchGeneScore()]. It extends [BenchConfig] with the benchmarked
-#' object, and forwards every additional argument to [BenchGeneScore()] as
-#' `param`.
+#' `BenchGeneScoreConfig` stores the configuration of a gene set scoring
+#' benchmark run performed by [BenchGeneScore()]. It extends [BenchConfig] with
+#' the scoring controls collected in `bench_config`; the inputs shared by every
+#' screening method (`matched_bulk`, `sc_data`, `phenotype`, `label_type`,
+#' `phenotype_class`, `screen_method`) and the method specific arguments
+#' collected in `method_param` are inherited from [BenchConfig].
 #'
-#' @inheritParams BenchGSEAConfig
+#' @details
+#' For a `BenchGeneScoreConfig` input, [BenchGeneScore()] screens the data with
+#' each method in `screen_method` and scores the accumulated cell labels in a
+#' single pass, so the scores are comparable across screening methods by
+#' construction. `bench_config` selects the scoring backend and collects the
+#' arguments forwarded to it, as built by [BenchGeneScoreConfigSet()].
+#'
+#' @inheritParams BenchConfig
+#' @param bench_config Named `list` of gene set scoring controls returned by
+#'   [BenchGeneScoreConfigSet()]. It holds `method` (the scoring backend, one of
+#'   `"ssGSEA"`, `"AUCell"` or `"UCell"`) plus any additional arguments passed
+#'   to that backend. Default: `BenchGeneScoreConfigSet()`, i.e. `ssGSEA`.
+#' @param ... Must be empty. Method specific arguments belong in `method_param`.
 #'
 #' @returns A `BenchGeneScoreConfig` S7 object.
+#'
+#' @example
+#' \dontrun{
+#' BenchGeneScoreConfig(
+#'   matched_bulk = bulk_matrix,
+#'   sc_data = seurat,
+#'   phenotype = phenotype,
+#'   label_type = "{method_name}",
+#'   phenotype_class = "binary",
+#'   screen_method = "ssGSEA",
+#'   method_param = list(
+#'     nperm = 1000
+#'   )
+#' )
+#' }
+#'
 #'
 #' @family S7-Classes
 #' @export
 BenchGeneScoreConfig <- S7::new_class(
-  name = "BenchGSEAConfig",
+  name = "BenchGeneScoreConfig",
   parent = BenchConfig,
   properties = list(
     bench_config = property_list
@@ -48,11 +78,42 @@ BenchGeneScoreConfig <- S7::new_class(
   }
 )
 
+#' @title Build Gene Set Scoring Benchmark Controls
 #'
-#' @param method The name of the method to benchmark.
+#' @description
+#' Collects the arguments of a gene set scoring benchmark into the
+#' `bench_config` list of [BenchGeneScoreConfig()]. `method` selects the scoring
+#' backend, and additional named arguments are forwarded to that backend when
+#' [BenchGeneScore()] computes the scores.
+#'
+#' @param method Character. Scoring backend to benchmark, one of `"ssGSEA"`,
+#'   `"AUCell"`, `"UCell"`, `"AddModuleScore"`; The package backing the selected backend is checked with
+#'   [rlang::check_installed()]. Default: `"ssGSEA"`.
+#' @param ... Additional named arguments forwarded to the selected scoring
+#'   backend. They are matched against the backend's formal arguments and, when
+#'   a method needs two calls, split over its stages (e.g.
+#'   [GSVA::ssgseaParam()] and [GSVA::gsva()] for `"ssGSEA"`). Case variants of
+#'   the function's own arguments are resolved to their canonical names.
+#'
+#' @return A named `list` holding `method` and the extra backend arguments, to
+#'   be used as the `bench_config` of [BenchGeneScoreConfig()].
+#'
+#' @examples
+#' \donttest{
+#' BenchGeneScoreConfigSet(method = "ssGSEA")
+#' }
+#'
+#' @seealso [BenchGeneScoreConfig()], [BenchGeneScore()]
+#'
+#' @family ConfigSet
 #' @export
 BenchGeneScoreConfigSet <- function(
-  method = AVAILABLE_GENE_SCORE_METHODS,
+  method = c(
+    "ssGSEA",
+    "AUCell",
+    "UCell",
+    "AddModuleScore"
+  ),
   ...
 ) {
   arg_names <- rlang::fn_fmls_names()
@@ -71,9 +132,3 @@ BenchGeneScoreConfigSet <- function(
     dots # pass to specific method
   )
 }
-
-GENE_SCORE_METHODS <- c(
-  "ssGSEA",
-  "AUCell",
-  "UCell"
-)

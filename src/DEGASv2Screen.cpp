@@ -8,6 +8,20 @@
 using namespace Rcpp;
 using namespace arma;
 
+//' Select Highly Variable Genes from Bulk Data
+//'
+//' Ranks genes by the standard deviation of their row in `patdata`.
+//'
+//' @param patdata Numeric matrix with genes in rows.
+//' @param common_genes Character vector of gene names, one per row of
+//'   `patdata`.
+//' @param n_hvg `integer`. Maximum number of genes to return.
+//'
+//' @return Character vector of at most `n_hvg` gene names, ordered by
+//'   decreasing row standard deviation; `character(0)` when there is no
+//'   valid input.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 Rcpp::CharacterVector get_bulk_hvg(const arma::mat &patdata,
                                    const Rcpp::CharacterVector &common_genes,
@@ -184,6 +198,16 @@ inline void scale_ptr(const double *x, double *out, const arma::uword n) {
 
 } // anonymous namespace
 
+//' Standardize a Numeric Vector
+//'
+//' Computes `(x - mean(x, na.rm = TRUE)) / (sd(x, na.rm = TRUE) + 1e-3)`.
+//'
+//' @param x Numeric vector.
+//'
+//' @return Numeric vector of the same length as `x`, with missing entries
+//'   preserved.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 arma::vec normFunc_ptr(const arma::vec &x) {
   arma::vec out(x.n_elem);
@@ -191,6 +215,16 @@ arma::vec normFunc_ptr(const arma::vec &x) {
   return out;
 }
 
+//' Scale a Numeric Vector to 0-1
+//'
+//' Computes `(x - min(x)) / (max(x) - min(x) + 1e-3)`; typically applied
+//' after [normFunc_ptr()].
+//'
+//' @param x Numeric vector.
+//'
+//' @return Numeric vector of the same length as `x`.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 arma::vec scaleFunc_ptr(const arma::vec &x) {
   arma::vec out(x.n_elem);
@@ -220,6 +254,16 @@ arma::vec scaleFunc_ptr(const arma::vec &x) {
  *
  *   ncol(X) x nrow(X)
  */
+//' Normalize and Scale a Matrix Column-wise
+//'
+//' Applies the norm and scale transformations to every column of `X`.
+//'
+//' @param X Numeric matrix with features in rows and samples in columns.
+//'
+//' @return Numeric matrix of dimension `ncol(X) x nrow(X)`, i.e. transposed
+//'   relative to `X`, matching the original R implementation.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 arma::mat normalizeScale_ptr(const arma::mat &X) {
   const arma::uword nrow = X.n_rows;
@@ -297,6 +341,17 @@ arma::mat normalizeScale_ptr(const arma::mat &X) {
  *
  * then normFunc and scaleFunc are applied directly.
  */
+//' Preprocess Counts and Normalize Column-wise
+//'
+//' Applies `1.5^log2(x + 1)` element-wise, then the norm and scale
+//' transformations to every column of `X`.
+//'
+//' @param X Numeric matrix with features in rows and samples in columns.
+//'
+//' @return Numeric matrix of dimension `ncol(X) x nrow(X)`, i.e. transposed
+//'   relative to `X`.
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 arma::mat preprocessCounts_ptr(const arma::mat &X) {
   const arma::uword nrow = X.n_rows;

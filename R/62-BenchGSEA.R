@@ -16,7 +16,7 @@
 #'   filtered by adjusted p-value (`p_val_adj < 0.05`) before ranking.
 #'   Default: `NULL`.
 #' @param verbose Logical. Whether to report progress.
-#'   Default: `getFuncOption("verbose")`.
+#'   Default: `TRUE`.
 #' @param ... Additional arguments, automatically split by formal argument
 #'   names between [Seurat::FindMarkers()] and [fgsea::fgsea()] (including
 #'   [fgsea::fgseaMultilevel()] / [fgsea::fgseaSimple()]).

@@ -205,6 +205,17 @@ static inline void scan_doubles(const double *p, R_xlen_t n, Add add) {
  * literal because Rcpp::compileAttributes() cannot translate R_PosInf into an
  * R default value.
  */
+//' Scan a beachmat Matrix for Missing Values
+//'
+//' @param initialized_matrix A beachmat-compatible numeric matrix; unstored
+//'   sparse entries are treated as 0.
+//' @param max_store `numeric`. Maximum number of positions kept in the result;
+//'   a negative value (default) keeps all. `count` always reports the total.
+//'
+//' @return A list with `count` (total number of NA/NaN values), `row` and
+//'   `col` (1-based integer vectors of the stored positions).
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 List check_na_beachmat_matrix_cpp(SEXP initialized_matrix,
                                   double max_store = -1.0) {
@@ -267,6 +278,14 @@ List check_na_beachmat_matrix_cpp(SEXP initialized_matrix,
  * This keeps the original R atomic-vector implementation, because
  * beachmat is a matrix backend rather than a general vector backend.
  */
+//' Scan a Vector for Missing Values
+//'
+//' @param x An atomic vector or list to scan for NA/NaN.
+//'
+//' @return A list with `count` (number of missing values) and `positions`
+//'   (1-based integer vector of their positions).
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 List check_na_vector_cpp(SEXP x) {
   std::vector<int> positions;
@@ -285,6 +304,16 @@ List check_na_vector_cpp(SEXP x) {
  * A data.frame is not a beachmat matrix, so columns are scanned
  * one by one with scan_atomic().
  */
+//' Scan a data.frame for Missing Values
+//'
+//' @param df A data.frame whose columns are scanned for NA/NaN.
+//' @param nr `integer`. Expected number of rows; every column must have this
+//'   length.
+//'
+//' @return A list with `count` (number of missing values) and `row`/`col`
+//'   (1-based integer vectors of their positions).
+//'
+//' @keywords internal
 // [[Rcpp::export]]
 List check_na_dataframe_cpp(List df, int nr) {
   if (nr < 0) {
