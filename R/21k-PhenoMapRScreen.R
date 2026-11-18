@@ -1,5 +1,1 @@
-DoPhenoMapR <- function(
-    
-){
-    
-}
+DoPhenoMapR <- function() {}

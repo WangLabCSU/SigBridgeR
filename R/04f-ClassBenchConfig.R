@@ -161,7 +161,7 @@ BenchConfig <- S7::new_class(
 #'
 #' @returns A modified list of method-specific parameters.
 #'
-#' @example
+#' @examples
 #' \donttest{
 #' MethodParamSet(
 #'   Scissor_param = list(alpha = 0.05),
@@ -179,6 +179,7 @@ MethodParamSet <- function(
   DEGASv2_param = list(),
   LP_SGL_param = list(),
   PIPET_param = list(),
+  SCIPAC_param = list(),
   SIDISH_param = list(),
   TiRank_param = list(),
   ...
@@ -207,6 +208,7 @@ MethodParamSet <- function(
     scPP_param = scPP_param,
     DEGAS_param = DEGAS_param,
     DEGASv2_param = DEGASv2_param,
+    SCIPAC_param = SCIPAC_param,
     LP_SGL_param = LP_SGL_param,
     PIPET_param = PIPET_param,
     SIDISH_param = SIDISH_param,

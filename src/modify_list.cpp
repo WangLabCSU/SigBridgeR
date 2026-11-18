@@ -6,7 +6,7 @@ using namespace Rcpp;
 
 //' Faster modifyList()
 //' 
-//' @inherit base::modifyList
+//' @inherit utils::modifyList
 // [[Rcpp::export]]
 List modify_list(List x, List val, bool keep_null = true) {
   return sigbridger::modify_list(x, val, keep_null);

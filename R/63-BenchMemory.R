@@ -132,7 +132,7 @@ BenchMemory <- function(obj, ...) {
         )
       }
 
-      rows[[(round - 1) * length(methods) + i]] <- bench_mem_measure(
+      rows[[(round - 1L) * length(methods) + i]] <- bench_mem_measure(
         config = config,
         method_name = method_name,
         round = round,

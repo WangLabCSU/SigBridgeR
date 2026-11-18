@@ -202,6 +202,7 @@ BenchGeneScore.Seurat <- function(
 #'
 #' @keywords internal
 #' @name GeneScore
+#' @exportS3Method SigBridgeR::BenchGeneScore.Seurat
 BenchGeneScore.Seurat.ssGSEA <- function(
   obj,
   pathway,
@@ -241,6 +242,7 @@ BenchGeneScore.Seurat.ssGSEA <- function(
 
 #' @rdname GeneScore
 #' @keywords internal
+#' @exportS3Method SigBridgeR::BenchGeneScore.Seurat
 BenchGeneScore.Seurat.AUCell <- function(
   obj,
   pathway,
@@ -280,6 +282,7 @@ BenchGeneScore.Seurat.AUCell <- function(
 
 #' @rdname GeneScore
 #' @keywords internal
+#' @exportS3Method SigBridgeR::BenchGeneScore.Seurat
 BenchGeneScore.Seurat.UCell <- function(
   obj,
   pathway,
@@ -309,6 +312,7 @@ BenchGeneScore.Seurat.UCell <- function(
 
 #' @rdname GeneScore
 #' @keywords internal
+#' @exportS3Method SigBridgeR::BenchGeneScore.Seurat
 BenchGeneScore.Seurat.AddModuleScore <- function(
   obj,
   pathway,

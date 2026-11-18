@@ -92,9 +92,7 @@ ValidateDEGASParams <- function(
     )
   }
 
-  degas_params$DEGAS.model_type <- if (
-    length(degas_params$DEGAS.model_type) != 1L
-  ) {
+  degas_params$DEGAS.model_type <- if (length(degas_params$DEGAS.model_type) != 1L) {
     # model.type auto-detection
     DEGASModelDetect(
       sc_pheno_colname = sc_data.pheno_colname,
@@ -204,9 +202,7 @@ TrainDEGASModel <- function(
 
   # * Check if environment exists and locate python
   rlang::check_installed("reticulate")
-  p$degas_params$DEGAS.pyloc <- if (
-    !reticulate::py_available(initialize = FALSE)
-  ) {
+  p$degas_params$DEGAS.pyloc <- if (!reticulate::py_available(initialize = FALSE)) {
     Abort(
       "Python is not available.",
       "Please configure python executable path with `reticulate::use_python(path)`",

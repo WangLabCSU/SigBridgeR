@@ -4,10 +4,84 @@
 \alias{BenchMemoryConfigSet}
 \title{Resolve Benchmark Controls}
 \usage{
-BenchMemoryConfigSet(user_list = list())
+BenchMemoryConfigSet(
+  rounds = 3L,
+  min_iterations = 1L,
+  max_iterations = 1L,
+  order = c("random", "fixed"),
+  seed = getFuncOption("seed"),
+  memory = TRUE,
+  filter_gc = FALSE,
+  check = FALSE,
+  measure_rss = FALSE,
+  on_failure = c("skip", "stop"),
+  set_threads = 1L,
+  min_time = 0.5,
+  relative = FALSE,
+  time_unit = NULL,
+  timeout_sec = 10800L,
+  ...
+)
 }
 \arguments{
-\item{user_list}{Named \code{list} taken from \code{BenchMemoryConfig@bench_config}.}
+\item{rounds}{\code{integer}. Number of benchmark rounds; every method is screened
+once per round and per-method summaries are taken across rounds. Odd values
+let the median ignore a single cold round. Must be at least 1. Default: \code{3L}.}
+
+\item{min_iterations}{Each expression will be evaluated a minimum of \code{min_iterations} times.}
+
+\item{max_iterations}{Each expression will be evaluated a maximum of \code{max_iterations} times.}
+
+\item{order}{\code{character}. Order in which methods run within a round:
+\code{"random"} shuffles them (seeded by \code{seed}) to spread cold-cache and
+package-caching effects; \code{"fixed"} keeps the given method order. Default:
+\code{c("random", "fixed")} (first value used).}
+
+\item{seed}{\code{integer}. Base seed for shuffling method order each round; the
+round number is added to it. Also set inside each measurement child process.
+Default: \code{123L}.}
+
+\item{memory}{If \code{TRUE} (the default when R is compiled with memory
+profiling), track memory allocations using \code{\link[utils:Rprofmem]{utils::Rprofmem()}}. If \code{FALSE}
+disable memory tracking.}
+
+\item{filter_gc}{If \code{TRUE} remove iterations that contained at least one
+garbage collection before summarizing. If \code{TRUE} but an expression had
+a garbage collection in every iteration, filtering is disabled, with a warning.}
+
+\item{check}{Check if results are consistent. If \code{TRUE}, checking is done
+with \code{\link[=all.equal]{all.equal()}}, if \code{FALSE} checking is disabled and results are not
+stored. If \code{check} is a function that function will be called with each
+pair of results to determine consistency.}
+
+\item{measure_rss}{\code{logical}. Whether to record peak process resident set size
+(RSS) in addition to R heap memory. Supported on Linux only. Default: \code{FALSE}.}
+
+\item{on_failure}{\code{character}. Action when a method times out or errors in a
+round: \code{"skip"} warns and continues with the remaining methods, \code{"stop"}
+aborts the whole benchmark. Default: \code{c("skip", "stop")} (first value used).}
+
+\item{set_threads}{\code{integer}. Number of threads the measurement child process
+is pinned to via \code{\link[=setThreads]{setThreads()}}, so runs stay comparable across methods.
+Default: \code{1L}.}
+
+\item{min_time}{The minimum number of seconds to run each expression, set to
+\code{Inf} to always run \code{max_iterations} times instead.}
+
+\item{relative}{If \code{TRUE} all summaries are computed relative to the minimum
+execution time rather than absolute time.}
+
+\item{time_unit}{If \code{NULL} the times are reported in a human readable
+fashion depending on each value. If one of 'ns', 'us', 'ms', 's', 'm', 'h',
+'d', 'w' the time units are instead expressed as nanoseconds, microseconds,
+milliseconds, seconds, hours, minutes, days or weeks respectively.}
+
+\item{timeout_sec}{\code{numeric}. Maximum wall-clock seconds allowed for one
+method in one round; the child process is killed when the limit is exceeded.
+Use \code{Inf} to disable the limit. Default: \code{10800L} (3 hours).}
+
+\item{...}{Expressions to benchmark, if named the \code{expression} column will
+be the name, otherwise it will be the deparsed expression.}
 }
 \value{
 A named \code{list} of resolved controls.
@@ -16,3 +90,16 @@ A named \code{list} of resolved controls.
 Merges the user supplied \code{bench_config} with the defaults and validates the
 names, so that a typo aborts instead of being silently ignored.
 }
+\examples{
+\donttest{
+BenchMemoryConfigSet()
+}
+
+}
+\seealso{
+Other ConfigSet:
+\code{\link[=BenchGSEAConfigSet]{BenchGSEAConfigSet()}},
+\code{\link[=BenchGeneScoreConfigSet]{BenchGeneScoreConfigSet()}},
+\code{\link[=MethodParamSet]{MethodParamSet()}}
+}
+\concept{ConfigSet}

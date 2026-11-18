@@ -119,6 +119,26 @@ reference:
           - SCPreProcessStrategy
           - SCAnnotateStrategy
           - ScreenStrategy
+          - AVAILABLE_ANNOTATE_METHODS
+          - AVAILABLE_GENE_SCORE_METHODS
+          - AVAILABLE_SCREEN_METHODS
+
+    - title: Benchmark Design
+      contents:
+          - BenchAcc
+          - BenchAccConfig
+          - BenchConfig
+          - BenchGSEA
+          - BenchGSEAConfig
+          - BenchGSEAConfigSet
+          - BenchGeneScore
+          - BenchGeneScore.Seurat
+          - BenchGeneScoreConfig
+          - BenchGeneScoreConfigSet
+          - BenchMemory
+          - BenchMemoryConfig
+          - BenchMemoryConfigSet
+          - MethodParamSet
 
     - title: Cache Management
       desc: >

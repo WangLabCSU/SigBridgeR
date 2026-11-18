@@ -26,7 +26,7 @@
 #'
 #' @returns A `BenchGeneScoreConfig` S7 object.
 #'
-#' @example
+#' @examples
 #' \dontrun{
 #' BenchGeneScoreConfig(
 #'   matched_bulk = bulk_matrix,

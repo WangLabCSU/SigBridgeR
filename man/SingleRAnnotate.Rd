@@ -2,9 +2,21 @@
 % Please edit documentation in R/50-SingleRAnnotate.R
 \name{SingleRAnnotate}
 \alias{SingleRAnnotate}
+\alias{SingleRAnnotate.default}
+\alias{SingleRAnnotate.SigBridgeR::ScreenMethodResult}
+\alias{SingleRAnnotate.Seurat}
+\alias{SingleRAnnotate.SingleCellExperiment}
 \title{Annotate Single-Cell Data Using SingleR}
 \usage{
-SingleRAnnotate(
+SingleRAnnotate(sc, ...)
+
+\method{SingleRAnnotate}{default}(sc, ...)
+
+\method{SingleRAnnotate}{`SigBridgeR::ScreenMethodResult`}(sc, ...)
+
+\method{SingleRAnnotate}{Seurat}(sc, ...)
+
+\method{SingleRAnnotate}{SingleCellExperiment}(
   sc,
   verbose = getFuncOption("verbose"),
   ensembl = FALSE,
@@ -19,8 +31,11 @@ SingleRAnnotate(
 \item{sc}{A single-cell dataset, either:
 \itemize{
 \item A \code{Seurat} object (recommended), or
-\item A \code{SingleCellExperiment} object.
+\item A \code{SingleCellExperiment} object, or
+\item A \link{ScreenMethodResult} object, whose \code{scRNA_data} slot is annotated.
 }}
+
+\item{...}{Additional arguments passed to \code{SingleR::SingleR()} (e.g., \code{assay.type.ref}, \code{genes}).}
 
 \item{verbose}{Logical. Whether to print progress messages.
 Default: inherits from package option \code{getOption("SigBridgeR.verbose")}.}
@@ -47,8 +62,6 @@ Required when \code{ref} is a custom \code{SingleCellExperiment}. For \code{"HPC
 defaults to \code{ref$label.main}.
 
 Alternatively, if ref is a list, labels should be a list of the same length. Each element should contain a character vector or factor specifying the labels for the columns of the corresponding element of ref.}
-
-\item{...}{Additional arguments passed to \code{SingleR::SingleR()} (e.g., \code{assay.type.ref}, \code{genes}).}
 }
 \value{
 \itemize{
@@ -59,6 +72,8 @@ Alternatively, if ref is a list, labels should be a list of the same length. Eac
 \item \strong{\code{SingleR_pruned_labels}}: Labels after pruning low-confidence assignments.
 }
 \item If input is a \code{SingleCellExperiment}: returns the \code{SingleR} prediction result
+\item If input is a \link{ScreenMethodResult}: returns the annotated \code{Seurat} object
+from its \code{scRNA_data} slot, as above.
 }
 }
 \description{

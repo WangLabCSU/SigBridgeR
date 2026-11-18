@@ -75,14 +75,14 @@ CountsToTPM <- function(counts, gene_length) {
 
   idx <- match(row_names, gl_names)
   if (anyNA(idx)) {
-    missing_genes <- utils::head(row_names[is.na(idx)], 5)
+    missing_genes <- utils::head(row_names[is.na(idx)], 5L)
     n_missing <- sum(is.na(idx))
     Abort(
       "`gene_length` misses {n_missing} gene(s), e.g. {.val {missing_genes}}",
       type = "[INPUT ERROR]"
     )
   }
-  inv_length <- 1 / as.double(gene_length)[idx]
+  inv_length <- 1L / as.double(gene_length)[idx]
 
   if (is.data.frame(counts)) {
     counts <- as.matrix(counts)

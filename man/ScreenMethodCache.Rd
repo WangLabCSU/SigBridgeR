@@ -53,9 +53,10 @@ The class validator checks that:
 Other S7-Classes:
 \code{\link[=AnnotationMethod]{AnnotationMethod()}},
 \code{\link[=BenchAccConfig]{BenchAccConfig()}},
+\code{\link[=BenchConfig]{BenchConfig()}},
 \code{\link[=BenchGSEAConfig]{BenchGSEAConfig()}},
+\code{\link[=BenchGeneScoreConfig]{BenchGeneScoreConfig()}},
 \code{\link[=BenchMemoryConfig]{BenchMemoryConfig()}},
-\code{\link[=BenchSSGSEAConfig]{BenchSSGSEAConfig()}},
 \code{\link[=ScreenMethodConfig]{ScreenMethodConfig()}},
 \code{\link[=ScreenMethodResult]{ScreenMethodResult()}}
 }

@@ -2,9 +2,21 @@
 % Please edit documentation in R/51-CellTypistAnnotate.R
 \name{CellTypistAnnotate}
 \alias{CellTypistAnnotate}
+\alias{CellTypistAnnotate.default}
+\alias{CellTypistAnnotate.SigBridgeR::ScreenMethodResult}
+\alias{CellTypistAnnotate.SingleCellExperiment}
+\alias{CellTypistAnnotate.Seurat}
 \title{Annotate Cell Types Using CellTypist (Python Backend)}
 \usage{
-CellTypistAnnotate(
+CellTypistAnnotate(sc, ...)
+
+\method{CellTypistAnnotate}{default}(sc, ...)
+
+\method{CellTypistAnnotate}{`SigBridgeR::ScreenMethodResult`}(sc, ...)
+
+\method{CellTypistAnnotate}{SingleCellExperiment}(sc, ...)
+
+\method{CellTypistAnnotate}{Seurat}(
   sc,
   model = NULL,
   download = TRUE,
@@ -24,8 +36,17 @@ CellTypistAnnotate(
 )
 }
 \arguments{
-\item{sc}{A \code{Seurat} object containing single-cell RNA-seq data. Must have
-a valid assay with gene expression matrix.}
+\item{sc}{A single-cell dataset, one of:
+\itemize{
+\item A \code{Seurat} object (recommended) with a valid assay and gene expression
+matrix;
+\item A \code{SingleCellExperiment} object, converted to \code{Seurat} via
+\code{\link[Seurat:as.Seurat]{Seurat::as.Seurat()}} before annotation (requires \code{counts}/\code{logcounts}
+assays);
+\item A \link{ScreenMethodResult} object, whose \code{scRNA_data} slot is annotated.
+}}
+
+\item{...}{Additional arguments passed through to the CellTypist Python backend.}
 
 \item{model}{Character. CellTypist model specification. One of:
 \itemize{
@@ -77,14 +98,14 @@ Ignored when \code{majority_voting = FALSE}. Default: \code{0L}.}
 Default: \code{getFuncOption("verbose")}.}
 
 \item{assay}{which Seurat assay to use}
-
-\item{...}{Additional arguments passed through to the CellTypist Python backend.}
 }
 \value{
 The input \code{Seurat} object with prediction results added:
 cell type labels are stored as new columns in \code{meta.data} (prefixed with
 \code{celltypist_}), and the scoring matrices are stored in \code{misc$celltypist}.
 Column names may vary slightly depending on the CellTypist version and options used.
+\code{SingleCellExperiment} and \link{ScreenMethodResult} inputs are annotated as
+\code{Seurat} objects and returned as such.
 }
 \description{
 Performs automated cell type annotation via the \code{celltypist} Python package

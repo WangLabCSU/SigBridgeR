@@ -4,11 +4,19 @@
 \alias{BenchConfig}
 \title{BenchConfig: Base Configuration for Benchmarks}
 \usage{
-BenchConfig(sigbridger_version = get_pkg_version())
+BenchConfig(
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type = "{method_name}",
+  phenotype_class = c("binary", "survival", "continuous"),
+  screen_method = AVAILABLE_SCREEN_METHODS,
+  method_param = MethodParamSet(),
+  sigbridger_version = get_pkg_version(),
+  ...
+)
 }
 \arguments{
-\item{sigbridger_version}{Package Version of SigBridgeR}
-
 \item{matched_bulk}{\code{matrix} or \code{data.frame}. Bulk expression data
 (genes x samples) matching \code{phenotype}. Shared by all methods.}
 
@@ -34,8 +42,9 @@ only to the executor of the method it is named after (e.g.
 \code{list(Scissor_param = list(alpha = 0.05))}). Default: \code{\link[=MethodParamSet]{MethodParamSet()}},
 i.e. one empty entry per registered method.}
 
-\item{param}{Named \code{list} of extra arguments stored for subclasses that
-forward additional arguments. Default: \code{list()}.}
+\item{sigbridger_version}{Package Version of SigBridgeR}
+
+\item{...}{unused}
 }
 \value{
 A \code{BenchConfig} S7 object.
@@ -73,8 +82,8 @@ Other S7-Classes:
 \code{\link[=AnnotationMethod]{AnnotationMethod()}},
 \code{\link[=BenchAccConfig]{BenchAccConfig()}},
 \code{\link[=BenchGSEAConfig]{BenchGSEAConfig()}},
+\code{\link[=BenchGeneScoreConfig]{BenchGeneScoreConfig()}},
 \code{\link[=BenchMemoryConfig]{BenchMemoryConfig()}},
-\code{\link[=BenchSSGSEAConfig]{BenchSSGSEAConfig()}},
 \code{\link[=ScreenMethodCache]{ScreenMethodCache()}},
 \code{\link[=ScreenMethodConfig]{ScreenMethodConfig()}},
 \code{\link[=ScreenMethodResult]{ScreenMethodResult()}}

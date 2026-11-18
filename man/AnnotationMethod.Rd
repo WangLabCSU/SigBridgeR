@@ -53,9 +53,10 @@ is resolved via \code{py_pkg_version()}.
 \seealso{
 Other S7-Classes:
 \code{\link[=BenchAccConfig]{BenchAccConfig()}},
+\code{\link[=BenchConfig]{BenchConfig()}},
 \code{\link[=BenchGSEAConfig]{BenchGSEAConfig()}},
+\code{\link[=BenchGeneScoreConfig]{BenchGeneScoreConfig()}},
 \code{\link[=BenchMemoryConfig]{BenchMemoryConfig()}},
-\code{\link[=BenchSSGSEAConfig]{BenchSSGSEAConfig()}},
 \code{\link[=ScreenMethodCache]{ScreenMethodCache()}},
 \code{\link[=ScreenMethodConfig]{ScreenMethodConfig()}},
 \code{\link[=ScreenMethodResult]{ScreenMethodResult()}}

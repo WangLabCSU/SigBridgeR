@@ -17,15 +17,7 @@
   ...
 )
 
-\method{autoplot}{`SigBridgeR::ScreenMethodResult`}(
-  object,
-  group.by = NULL,
-  label = TRUE,
-  label.size = 4L,
-  pt.size = 0.5,
-  cols = NULL,
-  ...
-)
+\method{autoplot}{`SigBridgeR::ScreenMethodResult`}(object, ...)
 }
 \arguments{
 \item{object}{Seurat object}

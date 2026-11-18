@@ -69,7 +69,11 @@ data.frame, or matrix, \code{qdata} format is used.
 \code{WriteCache} is an S7 generic with methods available for the following
 classes:
 
-\verb{r doclisting::methods_list("WriteCache")}
+\itemize{
+\item \code{ANY}
+\item \code{SigBridgeR::ScreenMethodCache}
+\item \code{SigBridgeR::ScreenMethodConfig}
+}
 }
 
 \examples{

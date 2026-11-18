@@ -39,7 +39,11 @@ provided and actual values.
 \code{CheckCache} is an S7 generic with methods available for the following
 classes:
 
-\verb{r doclisting::methods_list("CheckCache")}
+\itemize{
+\item \code{ANY}
+\item \code{SigBridgeR::ScreenMethodCache}
+\item \code{SigBridgeR::ScreenMethodConfig}
+}
 }
 
 \examples{

@@ -2,9 +2,21 @@
 % Please edit documentation in R/52-mLLMCelltypeAnnotate.R
 \name{mLLMCelltypeAnnotate}
 \alias{mLLMCelltypeAnnotate}
+\alias{mLLMCelltypeAnnotate.default}
+\alias{mLLMCelltypeAnnotate.SigBridgeR::ScreenMethodResult}
+\alias{mLLMCelltypeAnnotate.SingleCellExperiment}
+\alias{mLLMCelltypeAnnotate.Seurat}
 \title{Annotate Cell Types Using Multi-LLM Consensus Approach}
 \usage{
-mLLMCelltypeAnnotate(
+mLLMCelltypeAnnotate(sc, ...)
+
+\method{mLLMCelltypeAnnotate}{default}(sc, ...)
+
+\method{mLLMCelltypeAnnotate}{`SigBridgeR::ScreenMethodResult`}(sc, ...)
+
+\method{mLLMCelltypeAnnotate}{SingleCellExperiment}(sc, ...)
+
+\method{mLLMCelltypeAnnotate}{Seurat}(
   sc,
   seurat_obj_markers = NULL,
   tissue_name = NULL,
@@ -27,8 +39,25 @@ mLLMCelltypeAnnotate(
 )
 }
 \arguments{
-\item{sc}{A \code{Seurat} object with pre-computed clusters (stored in
-\code{Idents(sc)} or \code{sc$seurat_clusters}).}
+\item{sc}{A single-cell dataset with pre-computed clusters (stored in
+\code{Idents(sc)} or \code{sc$seurat_clusters}), one of:
+\itemize{
+\item A \code{Seurat} object (recommended);
+\item A \code{SingleCellExperiment} object, converted to \code{Seurat} via
+\code{\link[Seurat:as.Seurat]{Seurat::as.Seurat()}} before annotation (requires \code{counts}/\code{logcounts}
+assays);
+\item A \link{ScreenMethodResult} object, whose \code{scRNA_data} slot is annotated.
+}}
+
+\item{...}{Additional arguments routed to downstream functions:
+\itemize{
+\item Arguments matching \code{Seurat::FindAllMarkers()} formals (e.g., \code{min.pct},
+\code{logfc.threshold}, \code{test.use}) are passed to marker detection when
+\code{seurat_obj_markers = NULL}.
+\item \code{verbose}: Logical. Whether to print progress messages. Default:
+\code{getFuncOption("verbose")}.
+\item \code{seed}: Integer. Random seed. Default: \code{getFuncOption("seed")}.
+}}
 
 \item{seurat_obj_markers}{Optional pre-computed marker gene table (output of
 \code{Seurat::FindAllMarkers()}). If \code{NULL} (default), markers are computed
@@ -102,16 +131,6 @@ IDs to analyze; \code{NULL} analyzes all clusters. Default: \code{NULL}.}
 
 \item{force_rerun}{Logical. Whether to ignore cached results and re-run the
 annotation. Default: \code{FALSE}.}
-
-\item{...}{Additional arguments routed to downstream functions:
-\itemize{
-\item Arguments matching \code{Seurat::FindAllMarkers()} formals (e.g., \code{min.pct},
-\code{logfc.threshold}, \code{test.use}) are passed to marker detection when
-\code{seurat_obj_markers = NULL}.
-\item \code{verbose}: Logical. Whether to print progress messages. Default:
-\code{getFuncOption("verbose")}.
-\item \code{seed}: Integer. Random seed. Default: \code{getFuncOption("seed")}.
-}}
 }
 \value{
 The input \code{Seurat} object with the following metadata columns added:
@@ -127,6 +146,9 @@ among models).
 
 \strong{Note}: Uncertainty metrics are \emph{only added in multi-model mode}
 (\code{length(models) > 1}).
+
+\code{SingleCellExperiment} and \link{ScreenMethodResult} inputs are annotated as
+\code{Seurat} objects and returned as such.
 }
 \description{
 Performs automated cell type annotation for Seurat clusters by leveraging

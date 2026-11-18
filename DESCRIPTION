@@ -46,6 +46,7 @@ Suggests:
     DEGAS (>= 1.0.1),
     DEGASv2,
     DESeq2,
+    doclisting,
     dplyr,
     edgeR,
     fgsea,

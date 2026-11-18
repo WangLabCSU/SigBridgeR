@@ -78,7 +78,7 @@ FPKMToTPM <- function(data, na_as_zero = TRUE, verbose = TRUE, ...) {
   )
 
   # NA 报告：保持原行为（verbose 且存在 NA 时展示）
-  if (verbose && (res$status == 1L || res$na_count > 0)) {
+  if (verbose && (res$status == 1L || res$na_count > 0L)) {
     CheckNA(data = data, ...)
   }
 
@@ -125,7 +125,7 @@ FPKMToTPM <- function(data, na_as_zero = TRUE, verbose = TRUE, ...) {
   }
 
   if (verbose) {
-    if (res$na_count > 0) {
+    if (res$na_count > 0L) {
       cli::cli_alert_info(
         "Replacing {res$na_count} missing value{?s} with zero"
       )

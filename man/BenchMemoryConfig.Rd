@@ -10,7 +10,7 @@ BenchMemoryConfig(
   phenotype,
   label_type = "{method_name}",
   phenotype_class = c("binary", "survival", "continuous"),
-  screen_method = "Scissor",
+  screen_method = AVAILABLE_SCREEN_METHODS,
   method_param = MethodParamSet(),
   bench_config = BenchMemoryConfigSet(),
   ...
@@ -60,24 +60,13 @@ screening method (\code{matched_bulk}, \code{sc_data}, \code{phenotype}, \code{l
 \code{phenotype_class}, \code{screen_method}) and the method specific arguments
 collected in \code{method_param} are inherited from \link{BenchConfig}.
 }
-\details{
-Unlike the other benchmark configurations, one \code{BenchMemoryConfig} describes
-several screening runs: \code{\link[=BenchMemory]{BenchMemory()}} screens the same data with each
-method listed in \code{screen_method}, one method at a time.
-\itemize{
-\item \code{bench_config} holds the controls of the measurement itself (\code{rounds},
-\code{iterations}, \code{order}, \code{seed}, \code{warmup}, the memory/time budgets, ...).
-See the \emph{Benchmark controls} section of \code{\link[=BenchMemory]{BenchMemory()}} for the full list;
-unknown fields abort instead of being silently ignored.
-}
-}
 \seealso{
 Other S7-Classes:
 \code{\link[=AnnotationMethod]{AnnotationMethod()}},
 \code{\link[=BenchAccConfig]{BenchAccConfig()}},
 \code{\link[=BenchConfig]{BenchConfig()}},
 \code{\link[=BenchGSEAConfig]{BenchGSEAConfig()}},
-\code{\link[=BenchSSGSEAConfig]{BenchSSGSEAConfig()}},
+\code{\link[=BenchGeneScoreConfig]{BenchGeneScoreConfig()}},
 \code{\link[=ScreenMethodCache]{ScreenMethodCache()}},
 \code{\link[=ScreenMethodConfig]{ScreenMethodConfig()}},
 \code{\link[=ScreenMethodResult]{ScreenMethodResult()}}

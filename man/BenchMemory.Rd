@@ -2,9 +2,15 @@
 % Please edit documentation in R/63-BenchMemory.R
 \name{BenchMemory}
 \alias{BenchMemory}
+\alias{BenchMemory.SigBridgeR::BenchMemoryConfig}
+\alias{BenchMemory.default}
 \title{Benchmark Screening Methods: Wall Time and Memory}
 \usage{
-BenchMemory(config, verbose = getFuncOption("verbose"))
+BenchMemory(obj, ...)
+
+\method{BenchMemory}{`SigBridgeR::BenchMemoryConfig`}(config, verbose = getFuncOption("verbose"))
+
+\method{BenchMemory}{default}(obj, ...)
 }
 \arguments{
 \item{config}{A \link{BenchMemoryConfig} object.}
@@ -13,14 +19,7 @@ BenchMemory(config, verbose = getFuncOption("verbose"))
 Default: \code{getFuncOption("verbose")}.}
 }
 \value{
-A \code{bench_mark} object as returned by \code{\link[bench:mark]{bench::mark()}} (with the heavy
-\code{result}, \code{gc} and \code{memory} profile columns dropped), holding one row per
-method and round plus \code{method_name}, \code{method_version}, \code{round}, \code{position},
-\code{status}, \code{time_sec}, \code{mem_alloc_mb}, \code{mem_peak_mb} and \code{rss_peak_mb}.
-Two attributes carry the rest of the report: \code{summary} (per-method
-aggregates such as \code{time_median_sec}, \code{time_min_sec}, \code{time_max_sec},
-\code{time_mad_sec}, \code{cv}) and \code{settings} (resolved controls, resource probe,
-budget decisions and the execution order of every round).
+A
 }
 \description{
 Runs every screening method listed in a \link{BenchMemoryConfig} on the same data
@@ -102,5 +101,11 @@ attr(res, "summary")
 }
 \seealso{
 \code{\link[=BenchMemoryConfig]{BenchMemoryConfig()}}, \code{\link[bench:mark]{bench::mark()}}
+
+Other Benchmark:
+\code{\link{AVAILABLE_GENE_SCORE_METHODS}},
+\code{\link[=BenchAcc]{BenchAcc()}},
+\code{\link[=BenchGSEA]{BenchGSEA()}},
+\code{\link[=BenchGeneScore]{BenchGeneScore()}}
 }
 \concept{Benchmark}

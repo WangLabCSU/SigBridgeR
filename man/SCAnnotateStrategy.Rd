@@ -2,9 +2,12 @@
 % Please edit documentation in R/72-SCAnnotateStrategy.R
 \name{SCAnnotateStrategy}
 \alias{SCAnnotateStrategy}
+\alias{AVAILABLE_ANNOTATE_METHODS}
 \title{Registry of Cell Type Annotation Methods}
 \usage{
 SCAnnotateStrategy
+
+AVAILABLE_ANNOTATE_METHODS
 }
 \description{
 An environment storing methods for annotating cell types.
