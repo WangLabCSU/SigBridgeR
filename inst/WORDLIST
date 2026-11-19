@@ -72,7 +72,6 @@ GAuge
 GSEA
 GTF
 GZ
-Gan
 Github
 Guan
 HVG
@@ -84,7 +83,6 @@ Interdiscip
 Intra
 JIT
 Jin
-Jolasun
 KNN
 LLM
 LLMs
@@ -105,6 +103,7 @@ Opions
 PAAD
 PIPET
 Parallelization
+PolyForm
 Preprocess
 Qian
 RData
@@ -113,7 +112,6 @@ RStudio
 Rcpp
 Retriving
 Roxygen
-Ruan
 RunPCA
 RunTSNE
 RunUMAP
@@ -166,10 +164,8 @@ Wasserstein
 XLA
 Xena
 Xenium
-Xie
 Xu
 Yu
-Zhang
 Zhao
 Zhou
 Zhu
@@ -254,6 +250,7 @@ mLLMCelltype
 matrixStats
 matrixTests
 maxiter
+mb
 md
 metho
 meyhods
@@ -311,6 +308,7 @@ pyloc
 qdata
 qs
 rdb
+relicensed
 renormalization
 reorganisations
 responder
@@ -320,6 +318,7 @@ ribosomal
 roxygen
 rp
 rrna
+rss
 sc
 scAB
 scArches
@@ -367,6 +366,7 @@ usedl
 vacor
 validator
 validators
+vendored
 venn
 venv
 virtualenv

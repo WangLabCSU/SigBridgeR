@@ -37,6 +37,9 @@
 #'   * **`variance_stability`**: Weight for variance-mean decoupling (default: 0.4)
 #'   * **`marker_signal`**: Weight for marker gene retention (default: 0.35)
 #'   * **`dropout_robustness`**: Weight for dropout bias removal (default: 0.25)
+#' @param verbose Logical. Whether to print progress messages.
+#' @param seed Integer. Seed for reproducible random sampling.
+#'
 #'
 #' @return A list containing:
 #'
@@ -117,7 +120,9 @@ ChooseNormalization <- function(
     variance_stability = 0.4,
     marker_signal = 0.35,
     dropout_robustness = 0.25
-  )
+  ),
+  verbose = getFuncOption("verbose"),
+  seed = getFuncOption("seed")
 ) {
   dots <- rlang::list2(...)
   is_seurat <- vapply(
@@ -141,9 +146,6 @@ ChooseNormalization <- function(
     low_expressed_thresh = low_expressed_thresh,
     weight = weight
   )
-
-  verbose <- dots$verbose %||% getFuncOption("verbose")
-  seed <- dots$seed %||% getFuncOption("seed")
 
   set.seed(seed)
 
@@ -216,15 +218,15 @@ ChooseNormalization <- function(
 
   if (verbose) {
     cli::cli_h3("Method Ranking (Composite Score)")
-    cli::cli_text(paste0(
-      "Top method: {.field {best_method}} "
-    ))
+    cli::cli_text("Top method: {.field {best_method}}")
 
     purrr::walk(seq_len(min(5L, nrow(metrics))), function(i) {
       cli::cli_text(
         "{.strong [{i}]} {metrics$method[i]}: {.val {round(metrics$composite_score[i], 3)}}"
       )
     })
+
+    method <- NULL # ease check NOTE
     # Highlight key differentiators
     best_metrics <- metrics[method == best_method]
     runner_up <- if (nrow(metrics) > 1L) metrics$method[2L] else NULL

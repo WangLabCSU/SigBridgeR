@@ -56,19 +56,18 @@ data, performing as a bridge to existing tools.
 | [**DEGASv2**](https://github.com/ElliotLiu1997/DEGASv2) | `binary` `survival` `continuous` |               |    MIT     | Bulk raw counts matrix perferred |
 | [**LP-SGL**](https://github.com/hongmeizhanghm/LP_SGL)  | `binary` `survival` `continuous` |               | No License |                                  |
 |  [**PIPET**](https://github.com/ruan2ruan/PIPET)  | `binary` `survival` `continuous` |       ✅      |   GPL-3    | Bulk raw counts matrix perferred |
-| [**SIDISH**](mcgilldinglab/SIDISH)  |            `survival`            |               |  Before commit 9e9e86e16a08f88f0d4942af0854335b5acbe71b: MIT. After: PolyForm Noncommercial License 1.0.0 |                                  |
+| [**SIDISH**](mcgilldinglab/SIDISH)  |            `survival`            |               | MIT\* / PolyForm NC 1.0.0 | see [note]((#special-declaration-concerning-sidish)) below |
 | [**SCIPAC**](https://github.com/mianaz/SCIPAC)  | `binary` `survival` `continuous` |               |    MIT     |                                  |
 | [**TiRank**](https://github.com/LenisLin/TiRank)  | `binary` `survival` `continuous` |       ✅      |    MIT     |                                  |
 
 ## 🔧 Installatation
 
-Usually we recommend installing the latest release from GitHub because
-of the latest features and bug fixes.
+We recommend installing the stable branch `version3` from GitHub .
 
-1.  Install the development version from GitHub:
+1. Install stable version 3.x (branch `version3`):
 
 ```{r}
-#| label: installation
+#| label: installation_legacy
 #| eval: false
 
 if (!requireNamespace("pak")) {
@@ -82,7 +81,7 @@ if (!requireNamespace("pak")) {
     )
   )
 }
-pak::pak("WangLabCSU/SigBridgeR")
+pak::pak("WangLabCSU/SigBridgeR@version3")
 ```
 
 2.  Install from r-universe:
@@ -94,13 +93,13 @@ pak::pak("WangLabCSU/SigBridgeR")
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
-3. Install legacy version 3.x (branch `version3`):
+3.  Install the development version 4 (beta) from GitHub:
 
 ```{r}
-#| label: installation_legacy
+#| label: installation
 #| eval: false
 
-pak::pak("WangLabCSU/SigBridgeR@version3")
+pak::pak("WangLabCSU/SigBridgeR")
 ```
 
 **unnecessary but recommended**:
@@ -162,7 +161,7 @@ pak::pak("anndataR") # both are supported
 
 pak::pak(c(
   "ggplot2",
-  "randomcoloR", # or RColorBrewer
+  "RColorBrewer",
   "ggupset", # for upset plot
   "patchwork", # for fraction stack plot
   "ggforce", # for pca plot

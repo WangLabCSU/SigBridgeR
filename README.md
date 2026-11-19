@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-8A2BE2)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) <!-- badges: end -->
+[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![version4:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![version3:stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-8A2BE2)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) <!-- badges: end -->
 
 ## 🌐 Overview
 
@@ -28,15 +28,15 @@ SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data
 | [**DEGASv2**](https://github.com/ElliotLiu1997/DEGASv2) | `binary` `survival` `continuous` |  | MIT | Bulk raw counts matrix perferred |
 | [**LP-SGL**](https://github.com/hongmeizhanghm/LP_SGL) | `binary` `survival` `continuous` |  | No License |  |
 | [**PIPET**](https://github.com/ruan2ruan/PIPET) | `binary` `survival` `continuous` | ✅ | GPL-3 | Bulk raw counts matrix perferred |
-| [**SIDISH**](mcgilldinglab/SIDISH) | `survival` |  | Before commit 9e9e86e16a08f88f0d4942af0854335b5acbe71b: MIT. After: PolyForm Noncommercial License 1.0.0 |  |
+| [**SIDISH**](mcgilldinglab/SIDISH) | `survival` |  | MIT\* / PolyForm NC 1.0.0 | see [note]((#special-declaration-concerning-sidish)) below |
 | [**SCIPAC**](https://github.com/mianaz/SCIPAC) | `binary` `survival` `continuous` |  | MIT |  |
 | [**TiRank**](https://github.com/LenisLin/TiRank) | `binary` `survival` `continuous` | ✅ | MIT |  |
 
 ## 🔧 Installatation
 
-Usually we recommend installing the latest release from GitHub because of the latest features and bug fixes.
+We recommend installing the stable branch `version3` from GitHub .
 
-1.  Install the development version from GitHub:
+1.  Install stable version 3.x (branch `version3`):
 
 ``` r
 if (!requireNamespace("pak")) {
@@ -50,7 +50,7 @@ if (!requireNamespace("pak")) {
     )
   )
 }
-pak::pak("WangLabCSU/SigBridgeR")
+pak::pak("WangLabCSU/SigBridgeR@version3")
 ```
 
 2.  Install from r-universe:
@@ -59,19 +59,16 @@ pak::pak("WangLabCSU/SigBridgeR")
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
-3.  Install legacy version 3.x (branch `version3`):
+3.  Install the development version 4 (beta) from GitHub:
 
 ``` r
-pak::pak("WangLabCSU/SigBridgeR@version3")
+pak::pak("WangLabCSU/SigBridgeR")
 ```
 
 **unnecessary but recommended**:
 
 <details>
-
-<summary>
-For better performance:
-</summary>
+<summary>For better performance:</summary>
 
 ``` r
 pak::pak(
@@ -92,10 +89,7 @@ pak::pak(
 </details>
 
 <details>
-
-<summary>
-For seamless integration with single-cell RNA-seq data stored in `.h5ad`:
-</summary>
+<summary>For seamless integration with single-cell RNA-seq data stored in <code>.h5ad</code>:</summary>
 
 ``` r
 pak::pak("anndata")
@@ -106,15 +100,12 @@ pak::pak("anndataR") # both are supported
 </details>
 
 <details>
-
-<summary>
-For visualization:
-</summary>
+<summary>For visualization:</summary>
 
 ``` r
 pak::pak(c(
   "ggplot2",
-  "randomcoloR", # or RColorBrewer
+  "RColorBrewer",
   "ggupset", # for upset plot
   "patchwork", # for fraction stack plot
   "ggforce", # for pca plot
@@ -125,10 +116,7 @@ pak::pak(c(
 </details>
 
 <details>
-
-<summary>
-To use the built-in cell annotation methods:
-</summary>
+<summary>To use the built-in cell annotation methods:</summary>
 
 ``` r
 pak::pak(c(
@@ -147,10 +135,7 @@ pak::pak(c(
 </details>
 
 <details>
-
-<summary>
-To add custom extension functions to SigBridgeR:
-</summary>
+<summary>To add custom extension functions to SigBridgeR:</summary>
 
 ``` r
 pak::pak(c(

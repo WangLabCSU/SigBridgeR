@@ -28,11 +28,12 @@ The peak is monotonically non-decreasing over the lifetime of the
 process; it is not reset by garbage collection.
 }
 \examples{
+\dontrun{
 bench_peak_rss_mb()
 
 # Allocate roughly 400 MB and observe the peak grow
 x <- numeric(5e7)
 bench_peak_rss_mb()
-
+}
 }
 \keyword{internal}

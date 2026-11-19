@@ -46,8 +46,8 @@ while it runs, and it is killed when \code{bench_config$timeout_sec} is exceeded
 \details{
 The child sets the configured seed and threads, loads the inputs from
 \code{tmp_dir}, and runs \code{\link[=Screen]{Screen()}} through \code{\link[bench:mark]{bench::mark()}}. It returns the mark
-result together with the R heap peak (\code{\link[=bench_heap_used_mb]{bench_heap_used_mb()}}) and, when
-\code{measure_rss} is enabled, the process RSS peak (\code{\link[=bench_peak_rss_mb]{bench_peak_rss_mb()}}).
+result together with the R heap peak (\code{bench_heap_used_mb()}) and, when
+\code{measure_rss} is enabled, the process RSS peak (`bench_peak_rss_mb()``).
 
 Failure and timeout are handled according to \code{on_failure}: \code{"stop"} aborts,
 while \code{"skip"} returns a row from \code{\link[=fail_row]{fail_row()}} with \code{status} set to

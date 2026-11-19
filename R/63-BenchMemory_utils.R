@@ -11,7 +11,7 @@
 #'     reported by [bench_proc_meminfo()];
 #'   * `load1`: 1-minute load average from [bench_proc_load()] (`NA_real_` on
 #'     platforms without a load average);
-#'   * `heap_used_mb`: R heap high-water mark from [bench_heap_used_mb()].
+#'   * `heap_used_mb`: R heap high-water mark from `bench_heap_used_mb()`.
 #'
 #' @keywords internal
 bench_probe_resources <- function() {
@@ -121,8 +121,8 @@ bench_child_log <- function(log, process, n = 100L) {
 #' @details
 #' The child sets the configured seed and threads, loads the inputs from
 #' `tmp_dir`, and runs [Screen()] through [bench::mark()]. It returns the mark
-#' result together with the R heap peak ([bench_heap_used_mb()]) and, when
-#' `measure_rss` is enabled, the process RSS peak ([bench_peak_rss_mb()]).
+#' result together with the R heap peak (`bench_heap_used_mb()`) and, when
+#' `measure_rss` is enabled, the process RSS peak (`bench_peak_rss_mb()``).
 #'
 #' Failure and timeout are handled according to `on_failure`: `"stop"` aborts,
 #' while `"skip"` returns a row from [fail_row()] with `status` set to

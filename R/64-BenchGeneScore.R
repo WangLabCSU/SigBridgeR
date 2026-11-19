@@ -16,16 +16,8 @@
 #'   * a [BenchGeneScoreConfig] object, whose `screen_method` entries are all
 #'     run through [Screen()] first and the accumulated labels are scored in a
 #'     single pass.
-#' @param pathway A non-empty, named list of character vectors, each element
-#'   being the genes of one gene set. List names are used as the gene-set names
-#'   (row names) of the result.
 #' @param method Character. Scoring backend, one of `"ssGSEA"`, `"AUCell"`,
 #'   `"UCell"` or `"AddModuleScore"`. Default: `"ssGSEA"`.
-#' @param assay Character or `NULL`. Assay to score. Default: `NULL`, i.e. the
-#'   default assay of `obj` as reported by
-#'   [SeuratObject::DefaultAssay()].
-#' @param layer Character. Expression layer of `assay` holding the values to
-#'   score. Default: `"data"`.
 #' @param verbose Logical. Whether to report progress information.
 #'   Default: `TRUE`.
 #' @param ... Additional named arguments forwarded to the selected backend.
@@ -67,7 +59,8 @@
 #' * `"AUCell"` builds the rankings with `plotStats = FALSE`, since the plot is
 #'   only meaningful for a manual inspection.
 #'
-#' @examplesIf rlang::is_installed(c("Seurat", "GSVA"))
+#' @examples
+#' \donttest{
 #' counts <- matrix(
 #'   rep(seq_len(20), times = 5) + rep(seq_len(5), each = 20),
 #'   nrow = 20,
@@ -80,7 +73,7 @@
 #'   Second = paste0("Gene", 6:10)
 #' )
 #' scores <- BenchGeneScore(obj, pathways, method = "ssGSEA", verbose = FALSE)
-#'
+#' }
 #' @seealso [BenchGeneScoreConfig()], [BenchGeneScoreConfigSet()],
 #'   [Screen()], [BenchGSEA()], [BenchAcc()]
 #'

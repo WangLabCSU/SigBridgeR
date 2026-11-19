@@ -33,7 +33,8 @@ Note that "available" is defined slightly differently by each
 operating system, so cross-platform comparisons should be made with care.
 }
 \examples{
+\dontrun{
 bench_proc_meminfo()
-
+}
 }
 \keyword{internal}

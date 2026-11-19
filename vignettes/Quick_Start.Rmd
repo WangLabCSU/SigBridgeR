@@ -192,7 +192,6 @@ upset$plot
 #| label: visualize_umap
 #| eval: false
 library(patchwork)
-library(randomcoloR)
 
 c(
   scissor_umap,
@@ -215,9 +214,9 @@ c(
   )
 
 set.seed(123)
-cols <- randomcoloR::distinctColorPalette(
+cols <- RColorBrewer::brewer.pal(
   length(unique(merged_seurat$seurat_clusters)),
-  runTsne = TRUE
+  "Set1"
 )
 
 cluster_umap <- Seurat::DimPlot(

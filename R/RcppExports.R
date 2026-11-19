@@ -81,12 +81,13 @@ calc_binary_metrics <- function(metrics, bench_label, n_threads = 1L) {
 #'   if it cannot be determined on the current platform.
 #'
 #' @examples
+#' \dontrun{
 #' bench_peak_rss_mb()
 #'
 #' # Allocate roughly 400 MB and observe the peak grow
 #' x <- numeric(5e7)
 #' bench_peak_rss_mb()
-#'
+#' }
 #' @keywords internal
 bench_peak_rss_mb <- function() {
     .Call(`_SigBridgeR_bench_peak_rss_mb`)
@@ -119,8 +120,9 @@ bench_peak_rss_mb <- function() {
 #'   `NA_real_`.
 #'
 #' @examples
+#' \dontrun{
 #' bench_proc_meminfo()
-#'
+#' }
 #' @keywords internal
 bench_proc_meminfo <- function() {
     .Call(`_SigBridgeR_bench_proc_meminfo`)
@@ -140,8 +142,9 @@ bench_proc_meminfo <- function() {
 #'   `NA_real_` if it is unavailable on the current platform.
 #'
 #' @examples
+#' \dontrun{
 #' bench_proc_load()
-#'
+#' }
 #' @keywords internal
 bench_proc_load <- function() {
     .Call(`_SigBridgeR_bench_proc_load`)

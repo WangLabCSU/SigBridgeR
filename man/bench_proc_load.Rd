@@ -20,7 +20,8 @@ Windows has no load-average concept, so \code{NA_real_} is returned there.
 Inside containers the value usually reflects the host, not the container.
 }
 \examples{
+\dontrun{
 bench_proc_load()
-
+}
 }
 \keyword{internal}

@@ -893,12 +893,12 @@ Parameters pass to `...` when using `PIPET` method
 ```{R}
 #| label: PIPET_screening
 #| eval: false
-pipet_result = Screen(
+pipet_result <- Screen(
     matched_bulk = matched_bulk,
     sc_data = sc_dataset, # A Seurat object after preprocessing
     phenotype = matched_phenotype_data,
     label_type = "TP53", # The filtering labels are stored in the `Seurat_object@misc`
-    phenotype_class = "binary", # `survival` is not supported 
+    phenotype_class = "binary", # `survival` is not supported
     screen_method = "PIPET",
     # PIPET specific parameters
     lg2FC = 1,
@@ -1779,9 +1779,9 @@ library(zeallot)
 
 # * color palette
 set.seed(123)
-my_colors <- randomcoloR::distinctColorPalette(
+my_colors <- RColorBrewer::brewer.pal(
   length(unique(screen_result$seurat_clusters)),
-  runTsne = TRUE
+  "Set1"
 )
 
 c(scissor_pos, scab_pos, scpas_pos, scpp_pos, degas_pos, lpsgl_pos) %<-%
@@ -1939,9 +1939,9 @@ UMAP is the most commonly used type of plot in academic literature.
 library(patchwork)
 library(zeallot)
 
-my_palette <- randomcoloR::distinctColorPalette(
-  k = length(unique(screen_result$Sample)),
-  runTsne = TRUE
+my_palette <- RColorBrewer::brewer.pal(
+  n = length(unique(screen_result$Sample)),
+  "Set1"
 )
 
 sample_umap <- Seurat::DimPlot(

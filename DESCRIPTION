@@ -105,7 +105,6 @@ Suggests:
     PIPET,
     preprocessCore,
     qs2,
-    randomcoloR,
     RColorBrewer,
     rmarkdown,
     rSIDISH (>= 0.0.2),

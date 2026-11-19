@@ -45,17 +45,6 @@ Default: \code{TRUE}.}
 
 \item{method}{Character. Scoring backend, one of \code{"ssGSEA"}, \code{"AUCell"},
 \code{"UCell"} or \code{"AddModuleScore"}. Default: \code{"ssGSEA"}.}
-
-\item{pathway}{A non-empty, named list of character vectors, each element
-being the genes of one gene set. List names are used as the gene-set names
-(row names) of the result.}
-
-\item{assay}{Character or \code{NULL}. Assay to score. Default: \code{NULL}, i.e. the
-default assay of \code{obj} as reported by
-\code{\link[SeuratObject:DefaultAssay]{SeuratObject::DefaultAssay()}}.}
-
-\item{layer}{Character. Expression layer of \code{assay} holding the values to
-score. Default: \code{"data"}.}
 }
 \value{
 A numeric matrix with gene sets in rows and cells in columns. Gene

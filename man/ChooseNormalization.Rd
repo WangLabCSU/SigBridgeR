@@ -10,7 +10,9 @@ ChooseNormalization(
   known_hvgs = list(),
   n_hvgs = 2000L,
   low_expressed_thresh = 0.2,
-  weight = c(variance_stability = 0.4, marker_signal = 0.35, dropout_robustness = 0.25)
+  weight = c(variance_stability = 0.4, marker_signal = 0.35, dropout_robustness = 0.25),
+  verbose = getFuncOption("verbose"),
+  seed = getFuncOption("seed")
 )
 }
 \arguments{
@@ -46,6 +48,10 @@ contain exactly these components summing to 1:
 \item \strong{\code{marker_signal}}: Weight for marker gene retention (default: 0.35)
 \item \strong{\code{dropout_robustness}}: Weight for dropout bias removal (default: 0.25)
 }}
+
+\item{verbose}{Logical. Whether to print progress messages.}
+
+\item{seed}{Integer. Seed for reproducible random sampling.}
 }
 \value{
 A list containing:

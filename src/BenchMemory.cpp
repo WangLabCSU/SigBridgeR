@@ -68,12 +68,13 @@ bool parse_kb_line(const std::string &line, const std::string &key,
 //'   if it cannot be determined on the current platform.
 //'
 //' @examples
+//' \dontrun{
 //' bench_peak_rss_mb()
 //'
 //' # Allocate roughly 400 MB and observe the peak grow
 //' x <- numeric(5e7)
 //' bench_peak_rss_mb()
-//'
+//' }
 //' @keywords internal
 // [[Rcpp::export]]
 double bench_peak_rss_mb() {
@@ -126,8 +127,9 @@ double bench_peak_rss_mb() {
 //'   `NA_real_`.
 //'
 //' @examples
+//' \dontrun{
 //' bench_proc_meminfo()
-//'
+//' }
 //' @keywords internal
 // [[Rcpp::export]]
 Rcpp::NumericVector bench_proc_meminfo() {
@@ -216,8 +218,9 @@ Rcpp::NumericVector bench_proc_meminfo() {
 //'   `NA_real_` if it is unavailable on the current platform.
 //'
 //' @examples
+//' \dontrun{
 //' bench_proc_load()
-//'
+//' }
 //' @keywords internal
 // [[Rcpp::export]]
 double bench_proc_load() {

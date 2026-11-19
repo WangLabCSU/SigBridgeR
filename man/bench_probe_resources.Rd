@@ -15,7 +15,7 @@ A named \code{list} with elements:
 reported by \code{\link[=bench_proc_meminfo]{bench_proc_meminfo()}};
 \item \code{load1}: 1-minute load average from \code{\link[=bench_proc_load]{bench_proc_load()}} (\code{NA_real_} on
 platforms without a load average);
-\item \code{heap_used_mb}: R heap high-water mark from \code{\link[=bench_heap_used_mb]{bench_heap_used_mb()}}.
+\item \code{heap_used_mb}: R heap high-water mark from \code{bench_heap_used_mb()}.
 }
 }
 \description{
