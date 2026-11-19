@@ -1,12 +1,6 @@
 # WeightedVote - basic voting --------------------------------------------
 
 describe("WeightedVote - basic voting", {
-  # arg_match() is called without rlang:: prefix in the source; mock it.
-  local_mocked_bindings(
-    arg_match = rlang::arg_match,
-    .package = "SigBridgeR"
-  )
-
   it("returns Positive when all voters vote Positive", {
     vote_data <- data.frame(
       V1 = "Positive",
@@ -107,11 +101,6 @@ describe("WeightedVote - basic voting", {
 # WeightedVote - weighted scoring ----------------------------------------
 
 describe("WeightedVote - weighted scoring", {
-  local_mocked_bindings(
-    arg_match = rlang::arg_match,
-    .package = "SigBridgeR"
-  )
-
   it("higher weight overrides majority", {
     vote_data <- data.frame(
       V1 = c("Positive", "Negative"),
@@ -186,11 +175,6 @@ describe("WeightedVote - weighted scoring", {
 # WeightedVote - ties.method ---------------------------------------------
 
 describe("WeightedVote - ties.method", {
-  local_mocked_bindings(
-    arg_match = rlang::arg_match,
-    .package = "SigBridgeR"
-  )
-
   it("ties.method = 'first' chooses Positive on tie", {
     # TieFirst::choose() returns 0 -> "Positive"
     vote_data <- data.frame(
@@ -257,11 +241,6 @@ describe("WeightedVote - ties.method", {
 # WeightedVote - row names -----------------------------------------------
 
 describe("WeightedVote - row names", {
-  local_mocked_bindings(
-    arg_match = rlang::arg_match,
-    .package = "SigBridgeR"
-  )
-
   it("preserves row names in output", {
     vote_data <- data.frame(
       Expert1 = c("Positive", "Negative", "Neutral"),
@@ -312,11 +291,6 @@ describe("WeightedVote - row names", {
 # WeightedVote - edge cases ----------------------------------------------
 
 describe("WeightedVote - edge cases", {
-  local_mocked_bindings(
-    arg_match = rlang::arg_match,
-    .package = "SigBridgeR"
-  )
-
   it("handles data with only Negative/Neutral/Other (no Positive)", {
     vote_data <- data.frame(
       V1 = c("Negative", "Neutral"),
@@ -436,11 +410,6 @@ describe("WeightedVote - edge cases", {
 # WeightedVote - input validation ----------------------------------------
 
 describe("WeightedVote - input validation", {
-  local_mocked_bindings(
-    arg_match = rlang::arg_match,
-    .package = "SigBridgeR"
-  )
-
   it("aborts when vote_data has no column names", {
     vote_data <- matrix(c("Positive", "Negative"), nrow = 1L)
     # matrix without dimnames

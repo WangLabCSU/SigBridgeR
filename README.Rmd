@@ -21,7 +21,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Project_Status:_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![version4:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![version3:stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-8A2BE2)](https://deepwiki.com/WangLabCSU/SigBridgeR)
@@ -93,10 +94,21 @@ pak::pak("WangLabCSU/SigBridgeR")
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
+3. Install legacy version 3.x (branch `version3`):
+
+```{r}
+#| label: installation_legacy
+#| eval: false
+
+pak::pak("WangLabCSU/SigBridgeR@version3")
+```
+
 **unnecessary but recommended**:
 
+```{=html}
 <details>
 <summary>For better performance:</summary>
+```
 
 ```{r}
 #| label: installation_extra
@@ -117,10 +129,14 @@ pak::pak(
 )
 ```
 
+```{=html}
 </details>
+```
 
+```{=html}
 <details>
-<summary>For seamless integration with single-cell RNA-seq data stored in `.h5ad`:</summary>
+<summary>For seamless integration with single-cell RNA-seq data stored in <code>.h5ad</code>:</summary>
+```
 
 ```{r}
 #| label: installation_anndata
@@ -131,10 +147,14 @@ pak::pak("anndata")
 pak::pak("anndataR") # both are supported
 ```
 
+```{=html}
 </details>
+```
 
+```{=html}
 <details>
 <summary>For visualization:</summary>
+```
 
 ```{r}
 #| label: installation_visualization
@@ -150,10 +170,14 @@ pak::pak(c(
 ))
 ```
 
+```{=html}
 </details>
+```
 
+```{=html}
 <details>
 <summary>To use the built-in cell annotation methods:</summary>
+```
 
 ```{r}
 #| label: installation_cell_annotation
@@ -172,10 +196,14 @@ pak::pak(c(
 ))
 ```
 
+```{=html}
 </details>
+```
 
+```{=html}
 <details>
 <summary>To add custom extension functions to SigBridgeR:</summary>
+```
 
 ```{r}
 #| label: installation_custom_extension
@@ -189,7 +217,9 @@ pak::pak(c(
 ))
 ```
 
+```{=html}
 </details>
+```
 
 <!-- 
 ## 🤝 Community
@@ -252,10 +282,8 @@ installable with the [`skills`](https://www.npmjs.com/package/skills) CLI
 
 | Skill | What it covers |
 |:------|:---------------|
-| `sigbridger-quickstart` | Minimal end-to-end run: `LoadRefData()` -> `Screen()` -> `MergeResult()` -> plots |
-| `sigbridger-results-plots` | Reading `ScreenMethodResult`, `MergeResult()`, `WeightedVote()`, `ScreenFractionPlot()`, `ScreenUpset()`, `autoplot()` |
+| `sigbridger-screen` | Validate scRNA/bulk/phenotype inputs, choose a registered `ScreenStrategy` method, run `Screen()` and read the `@scRNA_data` result |
 | `sigbridger-extend` | Plugging in custom algorithms via `TemplateScreenFunc()`, `ScreenMethod`, `AnnotationMethod` and `Register()` |
-| `sigbridger-utilities` | Helper toolkit: `SCIntegrate()`, `ChooseNormalization()`, `SymbolConvert()`, `AddMisc()`, `SCAnnotate()`, `setThreads()` |
 
 Install every skill (interactive: pick the skills and the target agents):
 
@@ -266,7 +294,7 @@ npx skills add WangLabCSU/SigBridgeR
 Install one skill non-interactively, into a specific agent:
 
 ```bash
-npx skills add WangLabCSU/SigBridgeR --skill sigbridger-quickstart -a codebuddy
+npx skills add WangLabCSU/SigBridgeR --skill sigbridger-screen -a codebuddy
 ```
 
 Install globally so the skills are available in every project on the machine:
@@ -317,30 +345,28 @@ All vendored code remains under its original upstream license, and the
 corresponding license notices are retained alongside the vendored sources
 (e.g. in `inst/vendor/`).
 
+
 #### Special declaration concerning SIDISH
 
 The license of SIDISH changed during its development:
 
-- At commit `9e9e86e16a08f88f0d4942af0854335b5acbe71b` and **all earlier
-  commits**, SIDISH was distributed under the **MIT license**.
+- At commit `9e9e86e16a08f88f0d4942af0854335b5acbe71b` and **all earlier commits**, SIDISH was distributed under the **MIT license**.
 - In commits **after** `9e9e86e16a08f88f0d4942af0854335b5acbe71b`, SIDISH was
   relicensed under the **PolyForm Noncommercial License 1.0.0**. Under that
   license, noncommercial use is permitted only under its complete, unmodified
   terms, and any use outside those permissions requires a separate written
   agreement with the copyright holders or their authorized representatives.
 
-**The SIDISH code vendored in SigBridgeR is taken exclusively from the
-MIT-licensed version at or before commit
-`9e9e86e16a08f88f0d4942af0854335b5acbe71b`.** SigBridgeR does not include,
-copy, modify, or derive from any SIDISH code introduced in commits after that
-commit. In particular, **no code under the PolyForm Noncommercial License
-1.0.0 is present in SigBridgeR**. All other SIDISH-related code in SigBridgeR
-was independently implemented.
+**The SIDISH code vendored in SigBridgeR is taken exclusively from the MIT-licensed version at or before commit `9e9e86e16a08f88f0d4942af0854335b5acbe71b`.** 
+SigBridgeR does not include, copy, modify, or derive from any SIDISH code introduced in commits after that commit. 
+In particular, **no code under the PolyForm Noncommercial License 1.0.0 is present in SigBridgeR**. 
+All other SIDISH-related code in SigBridgeR was independently implemented.
 
-#### Note on LP-SGL
+<!-- 
+#### Note on LP-SGL and scPP
 
 The upstream LP-SGL and scPP repository declares no license. SigBridgeR does not vendor
 any source code from them, instead using fork modifications of the original implementations.
 
 Except for the vendored GPL-3.0/MIT upstream code described above, all code in
-SigBridgeR was independently written by the SigBridgeR authors.
+SigBridgeR was independently written by the SigBridgeR authors. -->

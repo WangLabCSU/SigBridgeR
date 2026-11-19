@@ -1,6 +1,13 @@
 skip_if_not_installed("ggplot2")
 skip_if_not_installed("Matrix")
 
+# autoplot() defaults group.by to every registered ScreenStrategy; with more
+# than one choice it prompts via utils::menu(), which needs an interactive
+# session. Skip tests that would hit that prompt when run non-interactively.
+skip_if_default_menu <- function() {
+  skip_if_not(interactive(), "requires interactive utils::menu() selection")
+}
+
 # Helper: create a minimal Seurat object with n cells
 new_test_seurat <- function(n_cells = 2L, n_genes = 2L) {
   m <- matrix(
@@ -12,7 +19,7 @@ new_test_seurat <- function(n_cells = 2L, n_genes = 2L) {
       paste0("cell", seq_len(n_cells))
     )
   )
-  m <- Matrix::Matrix(m)
+  m <- Matrix::Matrix(m, sparse = TRUE)
   suppressWarnings(SeuratObject::CreateSeuratObject(counts = m))
 }
 
@@ -57,7 +64,7 @@ describe("autoplot.Seurat", {
       ) {
         rlang::abort("Mock: package not installed", call = call)
       },
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
 
     expect_error(
@@ -69,12 +76,13 @@ describe("autoplot.Seurat", {
   it("returns a ggplot object", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, ...) ggplot2::ggplot(),
@@ -93,6 +101,7 @@ describe("autoplot.Seurat", {
   it("uses custom cols when provided", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
     custom_cols <- c("#FF0000", "#00FF00", "#0000FF")
@@ -101,7 +110,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, cols, ...) {
@@ -123,6 +132,7 @@ describe("autoplot.Seurat", {
   it("uses palette_SigBridgeR as default colors when cols is NULL", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
 
@@ -130,7 +140,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, cols, ...) {
@@ -159,7 +169,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, group.by, ...) {
@@ -181,6 +191,7 @@ describe("autoplot.Seurat", {
   it("passes label and label.size to Seurat::DimPlot", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
 
@@ -188,7 +199,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, label, label.size, ...) {
@@ -212,6 +223,7 @@ describe("autoplot.Seurat", {
   it("passes pt.size to Seurat::DimPlot", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
 
@@ -219,7 +231,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, pt.size, ...) {
@@ -241,6 +253,7 @@ describe("autoplot.Seurat", {
   it("forwards ... to Seurat::DimPlot", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
 
@@ -248,7 +261,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, ...) {
@@ -272,6 +285,7 @@ describe("autoplot.Seurat", {
   it("uses default label and label.size when not specified", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
 
@@ -279,7 +293,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, label, label.size, ...) {
@@ -303,6 +317,7 @@ describe("autoplot.Seurat", {
   it("uses 'umap' as default reduction", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
 
@@ -310,7 +325,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, ...) {
@@ -332,6 +347,7 @@ describe("autoplot.Seurat", {
   it("passes reduction to Seurat::DimPlot", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
 
@@ -339,7 +355,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, ...) {
@@ -368,7 +384,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, cols, ...) {
@@ -405,7 +421,7 @@ describe("autoplot.Seurat", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, cols, ...) {
@@ -431,13 +447,14 @@ describe("autoplot.SigBridgeR::ScreenMethodResult", {
   it("returns a ggplot object", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
     screen_result <- ScreenMethodResult(scRNA_data = seurat)
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, ...) ggplot2::ggplot(),
@@ -456,6 +473,7 @@ describe("autoplot.SigBridgeR::ScreenMethodResult", {
   it("delegates to autoplot.Seurat with scRNA_data", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
     screen_result <- ScreenMethodResult(scRNA_data = seurat)
@@ -464,7 +482,7 @@ describe("autoplot.SigBridgeR::ScreenMethodResult", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, ...) {
@@ -486,6 +504,7 @@ describe("autoplot.SigBridgeR::ScreenMethodResult", {
   it("passes extra arguments through to autoplot.Seurat", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("SeuratObject")
+    skip_if_default_menu()
 
     seurat <- new_test_seurat()
     screen_result <- ScreenMethodResult(scRNA_data = seurat)
@@ -494,7 +513,7 @@ describe("autoplot.SigBridgeR::ScreenMethodResult", {
 
     local_mocked_bindings(
       check_installed = function(pkg, ...) invisible(),
-      .package = "SigBridgeR"
+      .package = "rlang"
     )
     local_mocked_bindings(
       DimPlot = function(object, reduction, cols, label, ...) {

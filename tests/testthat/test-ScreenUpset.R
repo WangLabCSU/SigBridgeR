@@ -13,7 +13,7 @@ new_test_seurat <- function(n_cells = 2L, n_genes = 2L) {
       paste0("cell", seq_len(n_cells))
     )
   )
-  m <- Matrix::Matrix(m)
+  m <- Matrix::Matrix(m, sparse = TRUE)
 
   SeuratObject::CreateSeuratObject(counts = m)
 }

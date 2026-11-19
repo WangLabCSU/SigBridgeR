@@ -57,7 +57,7 @@ CheckCache <- S7::new_generic(
   dispatch_args = "cache_config"
 )
 
-S7::method(CheckCache, class_any) <- function(cache_config, ...) {
+S7::method(CheckCache, S7::class_any) <- function(cache_config, ...) {
   cls_cache <- class(cache_config)
   expected_cls <- c("ScreenMethodConfig", "ScreenMethodCache")
   Abort(

@@ -67,7 +67,7 @@ WriteCacheMeta <- S7::new_generic(
   dispatch_args = "cache_config"
 )
 
-S7::method(WriteCacheMeta, class_any) <- function(
+S7::method(WriteCacheMeta, S7::class_any) <- function(
   cache_config,
   ...
 ) {
@@ -93,7 +93,7 @@ WriteCacheMeta.ScreenMethodConfig <- function(
   if (!is.null(additional_description)) {
     chk::chk_string(additional_description)
   }
-  chk::chk_scalar(file)
+  chk::chk_string(file)
 
   cache_meta <- list(
     general = rlang::list2(

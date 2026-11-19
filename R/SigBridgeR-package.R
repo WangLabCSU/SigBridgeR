@@ -2,9 +2,8 @@
 
 ## usethis namespace: start
 #' @importFrom data.table := %chin% .N .SD .I
+#' @importFrom Rcpp sourceCpp
 #' @importFrom SigBridgeRUtils %<-%
-#' @import S7
-#' @importFrom Rcpp evalCpp
 #' @rawNamespace if (getRversion() < "4.3.0") importFrom("S7", "@")
 #' @useDynLib SigBridgeR, .registration = TRUE
 ## usethis namespace: end

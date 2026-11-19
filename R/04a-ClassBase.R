@@ -64,7 +64,7 @@ property_chr <- S7::new_property(class = S7::class_character)
 #' Default: `c("binary", "continuous", "survival")`.
 #'
 property_phenotype_class <- S7::new_property(
-  class = class_character,
+  class = S7::class_character,
   validator = \(value) {
     valid_val <- c("binary", "continuous", "survival")
 

@@ -35,7 +35,7 @@ test_that("`ValidateScreenFunc` reports problems without throwing", {
 })
 
 test_that("`ValidateScreenFunc` skips the timer when tictoc is missing", {
-  local_mocked_bindings(is_installed = function(...) FALSE)
+  local_mocked_bindings(is_installed = function(...) FALSE, .package = "rlang")
 
   msgs <- suppressWarnings(
     capture_messages(ValidateScreenFunc(compliant_screen))

@@ -296,7 +296,7 @@ describe("detect_format", {
   })
 
   it("falls back to rdata for non-qdata objects when qs2 is absent", {
-    skip_if(is_installed("qs2"))
+    local_mocked_bindings(is_installed = function(...) FALSE, .package = "rlang")
     expect_identical(detect_format(mean, 1000L, 20L), "rdata")
   })
 })

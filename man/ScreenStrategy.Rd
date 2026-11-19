@@ -2,9 +2,12 @@
 % Please edit documentation in R/70-ScreenStrategy.R
 \name{ScreenStrategy}
 \alias{ScreenStrategy}
+\alias{AVAILABLE_SCREEN_METHODS}
 \title{Registry of Phenotype-Associated Cell Screening Methods}
 \usage{
 ScreenStrategy
+
+AVAILABLE_SCREEN_METHODS
 }
 \description{
 An environment storing methods for screening phenotype-associated cells.

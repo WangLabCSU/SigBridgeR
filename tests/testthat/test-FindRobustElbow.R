@@ -186,7 +186,7 @@ describe("find_robust_elbow_cpp", {
         beachmat::initializeCpp(matrix(0, nrow = 10L, ncol = 5L)),
         5L
       ),
-      "zero variance"
+      "zero or non-finite total variance"
     )
 
     non_finite <- make_embeddings()

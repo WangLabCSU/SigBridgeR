@@ -30,7 +30,7 @@ autoplot.Seurat <- function(
   if (length(group.by) > 1L) {
     choice <- utils::menu(
       group.by,
-      title = cli::cli_text("{cli_symbol$square_small} Choose a {.field group.by} to Seurat::DimPlot()")
+      title = cli::format_inline("{cli_symbol$square_small} Choose a {.field group.by} to Seurat::DimPlot()")
     )
     if (choice == 0L) {
       stop("Cancelled")

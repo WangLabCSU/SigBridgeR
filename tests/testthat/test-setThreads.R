@@ -113,7 +113,7 @@ test_that("setThreads delegates each backend with its own thread count", {
       seen$cheapr <- cheapr
       list()
     },
-    config_wgcna_threads = function(wgcna = NULL) {
+    config_wgcna_threads = function(wgcna = NULL, verbose = TRUE) {
       seen$wgcna <- wgcna
       list()
     },
@@ -160,7 +160,7 @@ test_that("setThreads inherits the global thread count by default", {
       seen$cheapr <- cheapr
       list()
     },
-    config_wgcna_threads = function(wgcna = NULL) {
+    config_wgcna_threads = function(wgcna = NULL, verbose = TRUE) {
       seen$wgcna <- wgcna
       list()
     },
@@ -334,7 +334,7 @@ test_that("config_dt_threads filters ... before calling setDTthreads", {
 test_that("config_qs2_threads checks its dependency before configuring", {
   local_mocked_bindings(
     check_installed = function(pkg, ...) stop("dependency guard: ", pkg),
-    .package = "SigBridgeR"
+    .package = "rlang"
   )
 
   expect_identical(config_qs2_threads(NULL), list())
@@ -344,7 +344,7 @@ test_that("config_qs2_threads checks its dependency before configuring", {
 test_that("config_cheapr_threads checks its dependency before configuring", {
   local_mocked_bindings(
     check_installed = function(pkg, ...) stop("dependency guard: ", pkg),
-    .package = "SigBridgeR"
+    .package = "rlang"
   )
 
   expect_identical(config_cheapr_threads(NULL), list())
@@ -354,7 +354,7 @@ test_that("config_cheapr_threads checks its dependency before configuring", {
 test_that("config_wgcna_threads checks its dependency before configuring", {
   local_mocked_bindings(
     check_installed = function(pkg, ...) stop("dependency guard: ", pkg),
-    .package = "SigBridgeR"
+    .package = "rlang"
   )
 
   expect_identical(config_wgcna_threads(NULL), list())
@@ -370,6 +370,9 @@ test_that("config_seurat_threads skips non-numeric input", {
 test_that("config_seurat_threads warns and skips Seurat older than 6.0.0", {
   local_mocked_bindings(
     is_installed = function(...) FALSE,
+    .package = "rlang"
+  )
+  local_mocked_bindings(
     r_pkg_version = function(...) "5.2.0",
     .package = "SigBridgeR"
   )

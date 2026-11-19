@@ -77,6 +77,6 @@ S7::method(get_strategy_info, SigBridgeRBase) <- function(x, name) {
   properties
 }
 
-S7::method(get_strategy_info, class_function) <- function(x, name) {
+S7::method(get_strategy_info, S7::class_function) <- function(x, name) {
   list(name = name, args = list(rlang::fn_fmls_names(x)))
 }

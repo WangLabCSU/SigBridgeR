@@ -46,7 +46,7 @@ test_that("`ValidateArgsSyntax` flags suspicious globals", {
 })
 
 test_that("`ValidateArgsSyntax` warns when codetools is unavailable", {
-  local_mocked_bindings(is_installed = function(...) FALSE)
+  local_mocked_bindings(is_installed = function(...) FALSE, .package = "rlang")
 
   expect_warning(
     ValidateArgsSyntax(compliant_screen),

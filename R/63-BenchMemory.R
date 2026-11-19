@@ -149,7 +149,7 @@ BenchMemory <- function(obj, ...) {
   }
 
   metrics <- data.table::rbindlist(rows, fill = TRUE)
-  data.table::setorder(metrics, c("method_name", "round", "position"))
+  data.table::setorderv(metrics, c("method_name", "round", "position"))
   cli::cli_progress_done()
 
   metrics

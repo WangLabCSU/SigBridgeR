@@ -80,7 +80,7 @@ WriteCache <- S7::new_generic(
   dispatch_args = "cache"
 )
 
-S7::method(WriteCache, class_any) <- function(
+S7::method(WriteCache, S7::class_any) <- function(
   cache,
   ...
 ) {
@@ -177,7 +177,7 @@ S7::method(WriteCache, ScreenMethodCache) <- function(
 
   # -- batch write ----------------------------------------------------------
   saving_fn <- purrr::in_parallel(function(x, file, format) {
-    WriteSingleCacheData(
+    SigBridgeR:::WriteSingleCacheData(
       x = x,
       file = file,
       format = format

@@ -67,7 +67,7 @@ RegisterImpl <- S7::new_generic(
   dispatch_args = "x"
 )
 
-S7::method(generic = RegisterImpl, class_any) <- function(
+S7::method(generic = RegisterImpl, S7::class_any) <- function(
   x,
   name,
   ...
@@ -156,7 +156,7 @@ S7::method(generic = RegisterImpl, AnnotationMethod) <- function(
   invisible(TRUE)
 }
 
-S7::method(generic = RegisterImpl, class_function) <- function(
+S7::method(generic = RegisterImpl, S7::class_function) <- function(
   x,
   name,
   overwrite = FALSE,
