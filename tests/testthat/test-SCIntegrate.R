@@ -1,4 +1,6 @@
 # Helpers -----------------------------------------------------------------
+skip_if_not_installed("Matrix")
+
 
 # Create a simple numeric matrix with gene-like rownames and cell-like colnames
 new_test_matrix <- function(n_genes = 10L, n_cells = 5L, seed = 42L) {
@@ -16,6 +18,7 @@ new_test_matrix <- function(n_genes = 10L, n_cells = 5L, seed = 42L) {
 # Create a minimal Seurat object
 new_test_seurat <- function(n_cells = 10L, n_genes = 10L, seed = 42L) {
   m <- new_test_matrix(n_genes, n_cells, seed)
+  m <- Matrix::Matrix(m)
   SeuratObject::CreateSeuratObject(counts = m)
 }
 

@@ -114,7 +114,7 @@ bench_child_log <- function(log, process, n = 100L) {
 #'   are taken from `config@method_param[[paste0(method_name, "_param")]]`.
 #' @param round `integer`. Round number, recorded in the result.
 #' @param position `integer`. Position of the method within the round.
-#' @param tmp_dir `character`. Directory created by [bench_tmp_dir()] holding
+#' @param tmp_dir `character`. Directory created by `bench_tmp_dir()`` holding
 #'   the serialised inputs loaded by the child.
 #' @param verbose `logical`. Whether to report progress. Default: `FALSE`.
 #'

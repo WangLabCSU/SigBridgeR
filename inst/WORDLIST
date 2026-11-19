@@ -6,6 +6,11 @@ AnnotationMethod
 Anthropic
 Argumetns
 BatchA
+BenchAccConfig
+BenchConfig
+BenchGSEAConfig
+BenchGeneScoreConfig
+BenchMemoryConfig
 Binarized
 Bioinformatics
 Biotechnol
@@ -27,12 +32,14 @@ Codecov
 Coefficent
 Commun
 Conda
+ConfigSet
 DEGASv
 DESeq
 DEseq
 DashScope
 DeepSeek
 DeepWiki
+Deepayan
 DenseNet
 DimPlot
 DoDEGAS
@@ -46,6 +53,7 @@ DoTiRank
 DoscAB
 DoscPAS
 DoscPP
+Embeddings
 Ensembl
 Entrez
 Env
@@ -53,12 +61,15 @@ Exmaple
 ExperimentHub
 Extensibility
 FC
+FNR
 FPKM
+FPR
 FeaturePlot
 FindClusters
 FindNeighbors
 FindVariableFeatures
 GAuge
+GSEA
 GTF
 GZ
 Gan
@@ -117,6 +128,7 @@ SGL
 SIDISH
 SNE
 SNN
+Sarkar
 ScPP
 ScaleData
 Schedin
@@ -126,6 +138,8 @@ ScreenMethodConfig
 ScreenMethodResult
 ScreenStrategy
 ScreenUpset
+Serialisation
+Serialises
 Sessioninfo
 SeuratObject
 Sig
@@ -133,7 +147,9 @@ SigBridgeRBase
 SingleR
 SummarizedExperiment
 TCGA
+TNR
 TPM
+TPR
 TPU
 TiRank
 Transcriptomics
@@ -164,12 +180,17 @@ andit
 assoicated
 autoplot
 autosomes
+backend's
 barcodes
 bb
 bbad
 bbae
+beachmat
 behaviour
+benchmarked
+benchmarking
 bera
+binarised
 binarize
 bioconductor
 biomarker
@@ -212,6 +233,7 @@ ggplot
 ggupset
 github
 gzip
+gzipped
 https
 hvg
 ident
@@ -227,6 +249,7 @@ labelled
 linux
 logFC
 logfc
+lowercased
 mLLMCelltype
 matrixStats
 matrixTests
@@ -236,6 +259,7 @@ metho
 meyhods
 microenvironment
 mllmcelltype
+modifyList
 multiresolution
 mykey
 nCount
@@ -251,9 +275,11 @@ nificant
 nlayers
 normalisation
 nrow
+ns
 numpy
 occurence
 omics
+organised
 overridable
 oversubscription
 padj
@@ -265,6 +291,7 @@ patbatch
 pc
 pca
 pearson
+penalising
 perc
 perferred
 pheno
@@ -306,6 +333,7 @@ scSurvival
 scbatch
 sclab
 scpas
+serialised
 setFunOption
 setFuncOption
 seurat
@@ -333,6 +361,7 @@ tred
 tsne
 umap
 umaps
+unstored
 upregulated
 usedl
 vacor

@@ -8,18 +8,27 @@
 \usage{
 BenchMemory(obj, ...)
 
-\method{BenchMemory}{`SigBridgeR::BenchMemoryConfig`}(config, verbose = getFuncOption("verbose"))
+\method{BenchMemory}{`SigBridgeR::BenchMemoryConfig`}(obj, ..., verbose = getFuncOption("verbose"))
 
 \method{BenchMemory}{default}(obj, ...)
 }
 \arguments{
-\item{config}{A \link{BenchMemoryConfig} object.}
+\item{obj}{An object of class \link{BenchMemoryConfig}}
 
-\item{verbose}{\code{logical}. Whether to report progress and print the summary.
+\item{...}{Additional arguments passed to methods. Currently unused.}
+
+\item{verbose}{\code{logical}. Whether to report progress.
 Default: \code{getFuncOption("verbose")}.}
 }
 \value{
-A
+A \code{data.table} with one row per screening method per round. Each row
+contains the \code{\link[bench:mark]{bench::mark()}} columns (\code{min}, \code{median}, \code{itr/sec},
+\code{mem_alloc}, \code{n_itr}, \code{n_gc}, \code{total_time}, ...), with \code{expression}
+replaced by the method name, plus \code{method_name}, \code{round}, \code{position},
+\code{status}, \code{error}, \code{mem_peak_mb}, \code{rss_peak_mb} and \code{elapsed}. Successful
+measurements have \code{status = "ok"}; failed or timed-out measurements are
+kept with \code{status} set to \code{"error"} or \code{"timeout"} and \code{NA} memory
+metrics, while their benchmark columns are filled with \code{NA}.
 }
 \description{
 Runs every screening method listed in a \link{BenchMemoryConfig} on the same data
@@ -27,57 +36,46 @@ and measures its wall time and memory footprint with \code{\link[bench:mark]{ben
 }
 \details{
 The benchmark is organised in \emph{rounds}. Within a round every method is
-screened once, and the round order is shuffled so that cold-cache,
+screened once, and the round order is shuffled by default so that cold-cache,
 lazy-loading and package-level caching effects are spread across methods
-instead of always penalising the first one. Per-method summaries are taken
-across rounds (median, min, max, MAD, CV) rather than from a single run.
+instead of always penalising the first one. One row is returned per method
+per round; summaries across rounds are left to the caller.
 
-Measurement is deliberately one \code{bench::mark()} call per method per round: a
-single call over all methods would keep every \code{ScreenMethodResult} alive in
-the same result object, inflating the heap seen by the methods measured
-afterwards. Each call drops its result immediately and is followed by \code{gc()}.
+Each measurement runs in its own background R process (\code{\link[callr:r_bg]{callr::r_bg()}}) with
+its own copies of the inputs, staged in a temporary directory with \code{qs2}.
+A child process therefore cannot leak package-level caches, loaded Python
+runtimes or large result objects into the next measurement. The child is
+always terminated on exit so it cannot outlive the call, and \code{timeout_sec}
+bounds the wall time of a single method in a single round.
 
-Two memory numbers are reported because they mean different things:
+Three memory numbers are reported because they mean different things:
 \itemize{
-\item \code{mem_alloc_mb} - bytes allocated during the run (allocation churn, from
+\item \code{mem_alloc} - bytes allocated during the run (allocation churn, from
 \code{\link[bench:mark]{bench::mark()}}).
 \item \code{mem_peak_mb} - peak R heap high-water mark, from \code{gc(reset = TRUE)}.
+\item \code{rss_peak_mb} - peak process resident set size, recorded only when
+\code{measure_rss = TRUE} (Linux only).
 }
 }
-\section{Machine protection}{
-
-By default (\code{auto_budget = TRUE}) the benchmark inspects the machine and
-adapts itself:
-\itemize{
-\item threads are pinned to 1 while measuring and restored afterwards, because
-multi-threaded runs are neither comparable across methods nor
-representative of an interactive session;
-\item with more than one round, the elapsed time of finished rounds is used to
-project the total cost, and the remaining rounds are dropped when
-\code{time_budget_sec} would be exceeded;
-\item before each round the free memory is compared with \code{mem_budget_mb}; a run
-that cannot fit is stopped instead of pushing the machine into swap.
-}
-
-Every decision is recorded in \code{attr(result, "settings")}, and all thresholds
-can be overridden through \code{bench_config} of the configuration.
-}
-
 \section{Benchmark controls (\code{bench_config})}{
 
 \itemize{
-\item \code{rounds} (\code{3L}): number of rounds; odd values let the median ignore a
-single cold round.
-\item \code{iterations} (\code{1L}): repetitions inside one \code{\link[bench:mark]{bench::mark()}} call.
-\item \code{order} (\code{"random"}): \code{"random"} or \code{"fixed"}.
-\item \code{seed} (\code{getFuncOption("seed")}): seed used to shuffle each round.
-\item \code{warmup} (\code{TRUE}): run each method once untimed before its first round.
-\item \code{memory}, \code{filter_gc}, \code{check}: forwarded to \code{\link[bench:mark]{bench::mark()}}.
-\item \code{auto_budget} (\code{TRUE}), \code{mem_safety} (\code{0.7}), \code{mem_budget_mb} (\code{NULL}),
-\code{time_budget_sec} (\code{NULL}): machine protection.
-\item \code{measure_rss} (\code{FALSE}): record peak process RSS (Linux only).
-\item \code{on_failure} (\code{"skip"}): \code{"skip"} or \code{"stop"}.
-\item \code{set_threads} (\code{TRUE}): pin threads to 1 during measurement.
+\item \code{rounds} (\code{3L}): number of rounds; every method is screened once per
+round.
+\item \code{min_iterations}, \code{max_iterations} (\code{1L}, \code{1L}): iteration bounds passed
+to \code{\link[bench:mark]{bench::mark()}}.
+\item \code{order} (\code{"random"}): \code{"random"} shuffles methods within each round using
+\code{seed} plus the round number; \code{"fixed"} keeps the given order.
+\item \code{seed} (\code{getFuncOption("seed")}): base seed for shuffling and for each
+measurement child.
+\item \code{memory}, \code{filter_gc}, \code{check}, \code{min_time}, \code{relative}, \code{time_unit}:
+forwarded to \code{\link[bench:mark]{bench::mark()}}.
+\item \code{measure_rss} (\code{FALSE}): also record peak process RSS (Linux only).
+\item \code{on_failure} (\code{"skip"}): \code{"skip"} records the failure and continues,
+\code{"stop"} aborts the whole benchmark.
+\item \code{set_threads} (\code{1L}): number of threads the child process is pinned to.
+\item \code{timeout_sec} (\code{10800L}): maximum wall-clock seconds for one method in one
+round; use \code{Inf} to disable the limit.
 }
 }
 
@@ -92,18 +90,18 @@ config <- BenchMemoryConfig(
     scPP_param = list(Log2FC_cutoff = 0.585),
     scPAS_param = list(permutation_times = 500)
   )),
-  bench_config = list(rounds = 3L, time_budget_sec = 1800)
+  bench_config = list(rounds = 3L, timeout_sec = 1800)
 )
 res <- BenchMemory(config)
-attr(res, "summary")
+res
+res[status == "ok", .(median_sec = median(median)), by = method_name]
 }
 
 }
 \seealso{
-\code{\link[=BenchMemoryConfig]{BenchMemoryConfig()}}, \code{\link[bench:mark]{bench::mark()}}
+\code{\link[=BenchMemoryConfig]{BenchMemoryConfig()}}, \code{\link[=BenchMemoryConfigSet]{BenchMemoryConfigSet()}}, \code{\link[bench:mark]{bench::mark()}}
 
 Other Benchmark:
-\code{\link{AVAILABLE_GENE_SCORE_METHODS}},
 \code{\link[=BenchAcc]{BenchAcc()}},
 \code{\link[=BenchGSEA]{BenchGSEA()}},
 \code{\link[=BenchGeneScore]{BenchGeneScore()}}

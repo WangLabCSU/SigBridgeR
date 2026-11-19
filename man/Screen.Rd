@@ -41,17 +41,17 @@ data:
 
 \item{screen_method}{Screening algorithm to use. Available options:
 \itemize{
-\item "Scissor": see also \code{\link[=DoScissor]{DoScissor()}}
-\item "scPP": see also \code{\link[=DoscPP]{DoscPP()}}
-\item "scPAS": see also \code{\link[=DoscPAS]{DoscPAS()}}
-\item "scAB": see also \code{\link[=DoscAB]{DoscAB()}}; continuous phenotype is not supported
-\item "DEGAS": see also \code{\link[=DoDEGAS]{DoDEGAS()}}
 \item "DEGASv2": see also \code{\link[=DoDEGASv2]{DoDEGASv2()}}
+\item "Scissor": see also \code{\link[=DoScissor]{DoScissor()}}
+\item "TiRank": see also \code{\link[=DoTiRank]{DoTiRank()}}
+\item "SCIPAC": see also \code{\link[=DoSCIPAC]{DoSCIPAC()}}
+\item "scPP": see also \code{\link[=DoscPP]{DoscPP()}}
 \item "LP_SGL": see also \code{\link[=DoLP_SGL]{DoLP_SGL()}}
 \item "PIPET": see also \code{\link[=DoPIPET]{DoPIPET()}}
+\item "DEGAS": see also \code{\link[=DoDEGAS]{DoDEGAS()}}
+\item "scAB": see also \code{\link[=DoscAB]{DoscAB()}}
 \item "SIDISH": see also \code{\link[=DoSIDISH]{DoSIDISH()}}
-\item "SCIPAC": see also \code{\link[=DoSCIPAC]{DoSCIPAC()}}
-\item "TiRank": see also \code{\link[=DoTiRank]{DoTiRank()}}
+\item "scPAS": see also \code{\link[=DoscPAS]{DoscPAS()}}
 }}
 
 \item{...}{Additional method-specific parameters.

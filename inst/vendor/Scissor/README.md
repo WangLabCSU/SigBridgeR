@@ -1,0 +1,1 @@
+This directory contains license from the Scissor package (https://github.com/sunduanchen/Scissor)

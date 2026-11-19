@@ -104,8 +104,8 @@ CellTypistAnnotate.default <- function(sc, ...) {
 
   Abort(
     "{.fn CellTypistAnnotate} doesn't support {.cls {sc_class}} objects.",
-    "i" = "Supported classes: {.cls {supported_classes}}.",
-    "i" = "Convert your object to a supported class first."
+    "Supported classes: {.cls {supported_classes}}.",
+    "Convert your object to a supported class first."
   )
 }
 

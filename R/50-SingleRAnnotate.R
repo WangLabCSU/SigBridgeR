@@ -74,11 +74,11 @@ SingleRAnnotate.default <- function(sc, ...) {
   supported_classes <- utils::methods("SingleRAnnotate")
   sc_class <- class(sc)[1L]
 
-  Abort(
+  Abort(c(
     "{.fn SingleRAnnotate} doesn't support {.cls {sc_class}} objects.",
-    "i" = "Supported classes: {.cls {supported_classes}}.",
-    "i" = "Convert your object to a supported class first."
-  )
+    "Supported classes: {.cls {supported_classes}}.",
+    "Convert your object to a supported class first."
+  ))
 }
 
 #' @rdname SingleRAnnotate

@@ -273,11 +273,11 @@ describe("IsSkewedDynamic - edge cases", {
 
   it("larger n makes small deviations detectable", {
     # Small n: diff same but SD larger -> not skewed
-    x_small <- c(rep(0L, 8L), rep(1L, 2L))  # n=10, 80% zeros
+    x_small <- c(rep(0L, 8L), rep(1L, 2L)) # n=10, 80% zeros
     result_small <- IsSkewedDynamic(x_small, target = 0L, expected_p = 0.8)
 
     # Large n: same proportion but SD smaller -> may be skewed
-    x_large <- c(rep(0L, 800L), rep(1L, 200L))  # n=1000, 80% zeros
+    x_large <- c(rep(0L, 800L), rep(1L, 200L)) # n=1000, 80% zeros
     result_large <- IsSkewedDynamic(x_large, target = 0L, expected_p = 0.8)
 
     # Both are exactly 0.8, neither should be skewed

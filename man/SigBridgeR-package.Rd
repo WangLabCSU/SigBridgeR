@@ -49,5 +49,18 @@ Useful links:
 Yuxi Yang \email{15364051195@163.com} (ORCID: 0009-0006-1329-1224)
 Shixiang Wang \email{shixiang1994wang@gmail.com} (ORCID: 0000-0001-9855-7357)
 Zeyu Yan \email{3191647388@qq.com}
+Duanchen Sun \email{sund@ohsu.edu} (ORCID: NA)
+Travis Johnson \email{johnstrs@iu.edu} (ORCID: 0000-0002-4628-2256)
+Zhi Huang \email{huang898@purdue.edu} (ORCID: NA)
+Qinran Zhang \email{qr_zhang@whu.edu.cn} (ORCID: 0000-0001-8920-586X)
+Hongmei Zhang \email{zhanghmmail@163.com} (ORCID: 0009-0003-0914-1539)
+Dailin Gan \email{dgan@nd.edu} (ORCID: NA)
+Jun Li (ORCID: 0000-0003-4353-5761)
+Xinjia Ruan \email{ruan.cpu@foxmail.com} (ORCID: 0000-0003-2309-2641)
+Aimin Xie \email{aiminyy1993@gmail.com} (ORCID: NA)
+Xiaosheng Wang \email{xiaosheng.wang@cpu.edu.cn} (ORCID: 0000-0002-7199-7093)
+Yasmin Jolasun \email{yasmin.jolasun@mail.mcgill.ca} (ORCID: 0009-0009-2559-1015)
+Jun Ding \email{jun.ding@mcgill.ca} (ORCID: 0000-0001-5183-6885)
+Yuxiang Lin (ORCID: 0000-0001-8854-2995)
 }
 \keyword{internal}

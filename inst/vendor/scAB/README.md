@@ -1,0 +1,1 @@
+This directory contains license from the scAB package (https://github.com/jinworks/scAB)

@@ -56,7 +56,7 @@ BenchGeneScoreConfig <- S7::new_class(
     phenotype,
     label_type = "{method_name}",
     phenotype_class = c("binary", "survival", "continuous"),
-    screen_method = AVAILABLE_SCREEN_METHODS,
+    screen_method = names(ScreenStrategy),
     method_param = MethodParamSet(),
     bench_config = BenchGeneScoreConfigSet(),
     ...
@@ -126,7 +126,11 @@ BenchGeneScoreConfigSet <- function(
   )
 
   method <- rlang::arg_match(method)
-  rlang::check_installed(method)
+  if (method == "ssGSEA") {
+    rlang::check_installed("GSVA")
+  } else {
+    rlang::check_installed(method)
+  }
   c(
     list(method = method),
     dots # pass to specific method

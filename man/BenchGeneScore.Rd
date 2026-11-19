@@ -13,14 +13,10 @@ BenchGeneScore(obj, ...)
 
 \method{BenchGeneScore}{`SigBridgeR::ScreenMethodResult`}(obj, ...)
 
-BenchGeneScore.Seurat(
+\method{BenchGeneScore}{Seurat}(
   obj,
-  pathway,
   method = c("ssGSEA", "AUCell", "UCell", "AddModuleScore"),
-  assay = NULL,
-  layer = "data",
-  ...,
-  verbose = getFuncOption("verbose")
+  ...
 )
 }
 \arguments{
@@ -47,12 +43,12 @@ split automatically over the two stages when a method needs two calls:
 \item{verbose}{Logical. Whether to report progress information.
 Default: \code{TRUE}.}
 
+\item{method}{Character. Scoring backend, one of \code{"ssGSEA"}, \code{"AUCell"},
+\code{"UCell"} or \code{"AddModuleScore"}. Default: \code{"ssGSEA"}.}
+
 \item{pathway}{A non-empty, named list of character vectors, each element
 being the genes of one gene set. List names are used as the gene-set names
 (row names) of the result.}
-
-\item{method}{Character. Scoring backend, one of \code{"ssGSEA"}, \code{"AUCell"},
-\code{"UCell"} or \code{"AddModuleScore"}. Default: \code{"ssGSEA"}.}
 
 \item{assay}{Character or \code{NULL}. Assay to score. Default: \code{NULL}, i.e. the
 default assay of \code{obj} as reported by
@@ -78,7 +74,7 @@ different screening methods can be compared on a common ground.
 \link{BenchGeneScoreConfig} is benchmarked and a \link{ScreenMethodResult} is unwrapped
 before the actual scoring happens. \code{\link[=BenchGeneScore.Seurat]{BenchGeneScore.Seurat()}} is itself a
 generic dispatching on \code{method}: every backend lives in its own
-\verb{BenchGeneScore.Seurat.<method>} function and its package is loaded on demand
+\verb{BenchGeneScoreSeurat.<method>} function and its package is loaded on demand
 by \code{\link[rlang:check_installed]{rlang::check_installed()}}, so neither \code{GSVA}, \code{AUCell}, \code{UCell} nor
 \code{Seurat} is required to merely call the generic.
 }
@@ -126,7 +122,6 @@ scores <- BenchGeneScore(obj, pathways, method = "ssGSEA", verbose = FALSE)
 \code{\link[=Screen]{Screen()}}, \code{\link[=BenchGSEA]{BenchGSEA()}}, \code{\link[=BenchAcc]{BenchAcc()}}
 
 Other Benchmark:
-\code{\link{AVAILABLE_GENE_SCORE_METHODS}},
 \code{\link[=BenchAcc]{BenchAcc()}},
 \code{\link[=BenchGSEA]{BenchGSEA()}},
 \code{\link[=BenchMemory]{BenchMemory()}}

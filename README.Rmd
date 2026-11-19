@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Project_Status:_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Repo_Status](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-8A2BE2)](https://deepwiki.com/WangLabCSU/SigBridgeR)
@@ -45,19 +45,19 @@ data, performing as a bridge to existing tools.
 
 **Current Status**
 
-|  Algorithm  | Fork Version |       Supported Phenotypes       | Cache Support |  License   |                Note              |  
-|:-----------:|:------------:|:--------------------------------:|:-------------:|:----------:|:--------------------------------:|
-| **Scissor** |  v2.1.0 | `binary` `survival` `continuous` |       ✅      |   GPL-3    |                                  |
-|  **scPAS**  |  v0.2.1 | `binary` `survival` `continuous` |               |   GPL-3    |                                  |
-|  **scAB**   |  v1.0.5 | `binary` `survival` `continuous` |       ✅      |   GPL-3    |                                  |
-|  **scPP**   |  v0.0.2 | `binary` `survival` `continuous` |               |   GPL-3    |                                  |
-|  **DEGAS**  |  v1.0.1 | `binary` `survival` `continuous` |               |    MIT     |                                  |
-| **DEGASv2** |  v1.0.0 | `binary` `survival` `continuous` |               |    MIT     | Bulk raw counts matrix perferred |
-| **LP-SGL**  |  v0.0.2 | `binary` `survival` `continuous` |               | No License |                                  |
-|  **PIPET**  |  v0.1.7 | `binary` `survival` `continuous` |       ✅      |   GPL-3    | Bulk raw counts matrix perferred |
-| **SIDISH**  |  v0.0.2 |            `survival`            |               |    MIT     |                                  |
-| **SCIPAC**  |  v0.1.1 | `binary` `survival` `continuous` |               |    MIT     |                                  |
-| **TiRank**  |  v0.0.1 | `binary` `survival` `continuous` |       ✅      |    MIT     |                                  |
+|  Algorithm  |       Supported Phenotypes       | Cache Support |  License   |                Note              |  
+|:-----------:|:--------------------------------:|:-------------:|:----------:|:--------------------------------:|
+| [**Scissor**](https://github.com/sunduanchen/Scissor) | `binary` `survival` `continuous` |       ✅      |   GPL-3    |                                  |
+|  [**scPAS**](https://github.com/aiminXie/scPAS)  | `binary` `survival` `continuous` |               |   GPL-3    |                                  |
+|  [**scAB**](https://github.com/jinworks/scAB)   | `binary` `survival` `continuous` |       ✅      |   GPL-3    |                                  |
+|  [**scPP**](https://github.com/WangX-Lab/ScPP)   | `binary` `survival` `continuous` |               |   GPL-3    |                                  |
+|  [**DEGAS**](https://github.com/tsteelejohnson91/DEGAS)  | `binary` `survival` `continuous` |               |    MIT     |                                  |
+| [**DEGASv2**](https://github.com/ElliotLiu1997/DEGASv2) | `binary` `survival` `continuous` |               |    MIT     | Bulk raw counts matrix perferred |
+| [**LP-SGL**](https://github.com/hongmeizhanghm/LP_SGL)  | `binary` `survival` `continuous` |               | No License |                                  |
+|  [**PIPET**](https://github.com/ruan2ruan/PIPET)  | `binary` `survival` `continuous` |       ✅      |   GPL-3    | Bulk raw counts matrix perferred |
+| [**SIDISH**](mcgilldinglab/SIDISH)  |            `survival`            |               |  Before commit 9e9e86e16a08f88f0d4942af0854335b5acbe71b: MIT. After: PolyForm Noncommercial License 1.0.0 |                                  |
+| [**SCIPAC**](https://github.com/mianaz/SCIPAC)  | `binary` `survival` `continuous` |               |    MIT     |                                  |
+| [**TiRank**](https://github.com/LenisLin/TiRank)  | `binary` `survival` `continuous` |       ✅      |    MIT     |                                  |
 
 ## 🔧 Installatation
 
@@ -70,7 +70,17 @@ of the latest features and bug fixes.
 #| label: installation
 #| eval: false
 
-# install.packages("pak")
+if (!requireNamespace("pak")) {
+  install.packages(
+    "pak",
+    repos = sprintf(
+      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
+      .Platform$pkgType,
+      R.Version()$os,
+      R.Version()$arch
+    )
+  )
+}
 pak::pak("WangLabCSU/SigBridgeR")
 ```
 
@@ -216,6 +226,9 @@ res <- Screen(
   screen_method = "scAB", # Algorithm
   phenotype_class = "binary" # or "survival"/"continuous"
 )
+
+ggplot2::autoplot(res)
+table(res@scRNA_data$scAB)
 ```
 
 
@@ -277,9 +290,8 @@ If you use SigBridgeR in your work, please cite the corresponding papers:
 
 ```{r}
 #| label: citation
-citation("SigBridgeR")
+print(citation("SigBridgeR"), bibtex = TRUE)
 ```
-
 
 ## 🗺️ Similar Projects
 
@@ -292,3 +304,43 @@ citation("SigBridgeR")
 [SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq expression matrix + target scRNA-seq expression matrix + (optional) bulk RNA-seq expression matrix with paired survival data -> cell embeddings, cluster assignments, UMAP visualizations, and phenotype-algebra-derived risk scores with survival probability curves for individual cell subpopulations.
 
 [scPER](https://github.com/BrianLlll/scPER): Single-cell RNA-seq data + bulk RNA-seq data + celltype annotation (optional batch labels) -> phenotype-associated cell populations
+
+## Declaration of Interest
+
+SigBridgeR is distributed under the GNU General Public License version 3
+(GPL-3.0). As reflected in the **Current Status** table above, SigBridgeR
+integrates algorithms from a number of upstream projects. SigBridgeR vendors
+upstream source code only from projects licensed under **GPL-3.0** or **MIT**,
+both of which are compatible with GPL-3.0.
+
+All vendored code remains under its original upstream license, and the
+corresponding license notices are retained alongside the vendored sources
+(e.g. in `inst/vendor/`).
+
+#### Special declaration concerning SIDISH
+
+The license of SIDISH changed during its development:
+
+- At commit `9e9e86e16a08f88f0d4942af0854335b5acbe71b` and **all earlier
+  commits**, SIDISH was distributed under the **MIT license**.
+- In commits **after** `9e9e86e16a08f88f0d4942af0854335b5acbe71b`, SIDISH was
+  relicensed under the **PolyForm Noncommercial License 1.0.0**. Under that
+  license, noncommercial use is permitted only under its complete, unmodified
+  terms, and any use outside those permissions requires a separate written
+  agreement with the copyright holders or their authorized representatives.
+
+**The SIDISH code vendored in SigBridgeR is taken exclusively from the
+MIT-licensed version at or before commit
+`9e9e86e16a08f88f0d4942af0854335b5acbe71b`.** SigBridgeR does not include,
+copy, modify, or derive from any SIDISH code introduced in commits after that
+commit. In particular, **no code under the PolyForm Noncommercial License
+1.0.0 is present in SigBridgeR**. All other SIDISH-related code in SigBridgeR
+was independently implemented.
+
+#### Note on LP-SGL
+
+The upstream LP-SGL and scPP repository declares no license. SigBridgeR does not vendor
+any source code from them, instead using fork modifications of the original implementations.
+
+Except for the vendored GPL-3.0/MIT upstream code described above, all code in
+SigBridgeR was independently written by the SigBridgeR authors.

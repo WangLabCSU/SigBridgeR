@@ -6,57 +6,57 @@
 #'
 #' @details
 #' The benchmark is organised in *rounds*. Within a round every method is
-#' screened once, and the round order is shuffled so that cold-cache,
+#' screened once, and the round order is shuffled by default so that cold-cache,
 #' lazy-loading and package-level caching effects are spread across methods
-#' instead of always penalising the first one. Per-method summaries are taken
-#' across rounds (median, min, max, MAD, CV) rather than from a single run.
+#' instead of always penalising the first one. One row is returned per method
+#' per round; summaries across rounds are left to the caller.
 #'
-#' Measurement is deliberately one `bench::mark()` call per method per round: a
-#' single call over all methods would keep every `ScreenMethodResult` alive in
-#' the same result object, inflating the heap seen by the methods measured
-#' afterwards. Each call drops its result immediately and is followed by `gc()`.
+#' Each measurement runs in its own background R process ([callr::r_bg()]) with
+#' its own copies of the inputs, staged in a temporary directory with `qs2`.
+#' A child process therefore cannot leak package-level caches, loaded Python
+#' runtimes or large result objects into the next measurement. The child is
+#' always terminated on exit so it cannot outlive the call, and `timeout_sec`
+#' bounds the wall time of a single method in a single round.
 #'
-#' Two memory numbers are reported because they mean different things:
+#' Three memory numbers are reported because they mean different things:
 #'
-#' * `mem_alloc_mb` - bytes allocated during the run (allocation churn, from
+#' * `mem_alloc` - bytes allocated during the run (allocation churn, from
 #'   [bench::mark()]).
 #' * `mem_peak_mb` - peak R heap high-water mark, from `gc(reset = TRUE)`.
-#'
-#' @section Machine protection:
-#' By default (`auto_budget = TRUE`) the benchmark inspects the machine and
-#' adapts itself:
-#'
-#' * threads are pinned to 1 while measuring and restored afterwards, because
-#'   multi-threaded runs are neither comparable across methods nor
-#'   representative of an interactive session;
-#' * with more than one round, the elapsed time of finished rounds is used to
-#'   project the total cost, and the remaining rounds are dropped when
-#'   `time_budget_sec` would be exceeded;
-#' * before each round the free memory is compared with `mem_budget_mb`; a run
-#'   that cannot fit is stopped instead of pushing the machine into swap.
-#'
-#' Every decision is recorded in `attr(result, "settings")`, and all thresholds
-#' can be overridden through `bench_config` of the configuration.
+#' * `rss_peak_mb` - peak process resident set size, recorded only when
+#'   `measure_rss = TRUE` (Linux only).
 #'
 #' @section Benchmark controls (`bench_config`):
-#' * `rounds` (`3L`): number of rounds; odd values let the median ignore a
-#'   single cold round.
-#' * `iterations` (`1L`): repetitions inside one [bench::mark()] call.
-#' * `order` (`"random"`): `"random"` or `"fixed"`.
-#' * `seed` (`getFuncOption("seed")`): seed used to shuffle each round.
-#' * `warmup` (`TRUE`): run each method once untimed before its first round.
-#' * `memory`, `filter_gc`, `check`: forwarded to [bench::mark()].
-#' * `auto_budget` (`TRUE`), `mem_safety` (`0.7`), `mem_budget_mb` (`NULL`),
-#'   `time_budget_sec` (`NULL`): machine protection.
-#' * `measure_rss` (`FALSE`): record peak process RSS (Linux only).
-#' * `on_failure` (`"skip"`): `"skip"` or `"stop"`.
-#' * `set_threads` (`TRUE`): pin threads to 1 during measurement.
+#' * `rounds` (`3L`): number of rounds; every method is screened once per
+#'   round.
+#' * `min_iterations`, `max_iterations` (`1L`, `1L`): iteration bounds passed
+#'   to [bench::mark()].
+#' * `order` (`"random"`): `"random"` shuffles methods within each round using
+#'   `seed` plus the round number; `"fixed"` keeps the given order.
+#' * `seed` (`getFuncOption("seed")`): base seed for shuffling and for each
+#'   measurement child.
+#' * `memory`, `filter_gc`, `check`, `min_time`, `relative`, `time_unit`:
+#'   forwarded to [bench::mark()].
+#' * `measure_rss` (`FALSE`): also record peak process RSS (Linux only).
+#' * `on_failure` (`"skip"`): `"skip"` records the failure and continues,
+#'   `"stop"` aborts the whole benchmark.
+#' * `set_threads` (`1L`): number of threads the child process is pinned to.
+#' * `timeout_sec` (`10800L`): maximum wall-clock seconds for one method in one
+#'   round; use `Inf` to disable the limit.
 #'
-#' @param config A [BenchMemoryConfig] object.
-#' @param verbose `logical`. Whether to report progress and print the summary.
+#' @param obj An object of class [BenchMemoryConfig]
+#' @param ... Additional arguments passed to methods. Currently unused.
+#' @param verbose `logical`. Whether to report progress.
 #'   Default: `getFuncOption("verbose")`.
 #'
-#' @return A
+#' @return A `data.table` with one row per screening method per round. Each row
+#'   contains the [bench::mark()] columns (`min`, `median`, `itr/sec`,
+#'   `mem_alloc`, `n_itr`, `n_gc`, `total_time`, ...), with `expression`
+#'   replaced by the method name, plus `method_name`, `round`, `position`,
+#'   `status`, `error`, `mem_peak_mb`, `rss_peak_mb` and `elapsed`. Successful
+#'   measurements have `status = "ok"`; failed or timed-out measurements are
+#'   kept with `status` set to `"error"` or `"timeout"` and `NA` memory
+#'   metrics, while their benchmark columns are filled with `NA`.
 #'
 #' @examples
 #' \dontrun{
@@ -69,13 +69,14 @@
 #'     scPP_param = list(Log2FC_cutoff = 0.585),
 #'     scPAS_param = list(permutation_times = 500)
 #'   )),
-#'   bench_config = list(rounds = 3L, time_budget_sec = 1800)
+#'   bench_config = list(rounds = 3L, timeout_sec = 1800)
 #' )
 #' res <- BenchMemory(config)
-#' attr(res, "summary")
+#' res
+#' res[status == "ok", .(median_sec = median(median)), by = method_name]
 #' }
 #'
-#' @seealso [BenchMemoryConfig()], [bench::mark()]
+#' @seealso [BenchMemoryConfig()], [BenchMemoryConfigSet()], [bench::mark()]
 #' @family Benchmark
 #'
 #' @name BenchMemory
@@ -86,10 +87,14 @@ BenchMemory <- function(obj, ...) {
 
 #' @rdname BenchMemory
 #' @export
-`BenchMemory.SigBridgeR::BenchMemoryConfig` <- function(config, verbose = getFuncOption("verbose")) {
+`BenchMemory.SigBridgeR::BenchMemoryConfig` <- function(
+  obj,
+  ...,
+  verbose = getFuncOption("verbose")
+) {
   rlang::check_installed(c("bench", "glue", "callr", "qs2"))
 
-  methods <- unique(config@screen_method)
+  methods <- unique(obj@screen_method)
 
   if (verbose) {
     cli::cli_progress_step("Detecting machine resources")
@@ -102,7 +107,7 @@ BenchMemory <- function(obj, ...) {
   }
 
   # * seed & threads & init
-  tmp_dir <- bench_tmp_dir(config@sc_data, config@matched_bulk, config@phenotype)
+  tmp_dir <- bench_tmp_dir(obj@sc_data, obj@matched_bulk, obj@phenotype)
   on.exit(
     {
       cli::cli_progress_done()
@@ -112,12 +117,12 @@ BenchMemory <- function(obj, ...) {
     add = TRUE
   )
 
-  rows <- vector("list", length(methods) * config@bench_config$rounds)
-  rounds <- config@bench_config$rounds
+  rows <- vector("list", length(methods) * obj@bench_config$rounds)
+  rounds <- obj@bench_config$rounds
 
   for (round in seq_len(rounds)) {
-    order <- if (config@bench_config$order == "random") {
-      set.seed(config@bench_config$seed + round)
+    order <- if (obj@bench_config$order == "random") {
+      set.seed(obj@bench_config$seed + round)
       sample(methods)
     } else {
       methods
@@ -133,7 +138,7 @@ BenchMemory <- function(obj, ...) {
       }
 
       rows[[(round - 1L) * length(methods) + i]] <- bench_mem_measure(
-        config = config,
+        config = obj,
         method_name = method_name,
         round = round,
         position = i,

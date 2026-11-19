@@ -1,0 +1,1 @@
+This directory contains license from the SIDISH package (https://github.com/mcgilldinglab/SIDISH)

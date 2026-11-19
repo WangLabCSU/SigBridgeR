@@ -24,19 +24,7 @@
 #' - "continuous": Continuous measurements
 #' - "survival": Survival information
 #'
-#' @param screen_method Screening algorithm to use. Available options:
-#'
-#' - "Scissor": see also [DoScissor()]
-#' - "scPP": see also [DoscPP()]
-#' - "scPAS": see also [DoscPAS()]
-#' - "scAB": see also [DoscAB()]; continuous phenotype is not supported
-#' - "DEGAS": see also [DoDEGAS()]
-#' - "DEGASv2": see also [DoDEGASv2()]
-#' - "LP_SGL": see also [DoLP_SGL()]
-#' - "PIPET": see also [DoPIPET()]
-#' - "SIDISH": see also [DoSIDISH()]
-#' - "SCIPAC": see also [DoSCIPAC()]
-#' - "TiRank": see also [DoTiRank()]
+#' @eval GenerateRoxy.Screen.screen_method()
 #'
 #' @param ... Additional method-specific parameters.
 #'
@@ -309,7 +297,7 @@ Screen <- function(
 
   screen_method <- rlang::arg_match(
     screen_method,
-    AVAILABLE_SCREEN_METHODS
+    names(ScreenStrategy)
   )
   method_config <- ScreenStrategy[[screen_method]]
 
@@ -333,4 +321,21 @@ Screen <- function(
 
   res_list <- do.call(method_config@executor, params)
   do.call(ScreenMethodResult, res_list)
+}
+
+#' Generate roxygen lines for the `@param screen_method` of [Screen()]
+#'
+#' One markdown bullet per registered method, in registry order.
+#'
+#' @returns `character()` of roxygen lines defining the complete
+#'   `@param screen_method` tag.
+#' @rdname GenerateRoxy
+#' @keywords internal
+GenerateRoxy.Screen.screen_method <- function() {
+  methods <- names(ScreenStrategy)
+  c(
+    "@param screen_method Screening algorithm to use. Available options:",
+    "",
+    paste0(" - \"", methods, "\": see also [Do", methods, "()]")
+  )
 }

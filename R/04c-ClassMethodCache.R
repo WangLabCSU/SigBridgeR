@@ -62,7 +62,7 @@ ScreenMethodConfig <- S7::new_class(
       ))
     }
 
-    valid_method_name <- AVAILABLE_SCREEN_METHODS
+    valid_method_name <- names(ScreenStrategy)
     if (!any(self@method_name %chin% valid_method_name)) {
       return(cli::format_inline(
         "@method_name must be one of {.val {valid_method_name}}, but got {.val {self@method_name}}"

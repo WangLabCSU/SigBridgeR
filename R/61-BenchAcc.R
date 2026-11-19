@@ -97,14 +97,14 @@ BenchAcc.Seurat <- function(
   } else if (length(bench_config) == 1L) {
     if (!bench_config %chin% colnames(meta_data)) {
       Abort(
-        "{.val {bench_config}} is not a valid column name in sc_data@meta.data"
+        "{.val {bench_config}} is not a valid column name in obj@meta.data"
       )
     }
     bench_label <- meta_data[[bench_config]]
     bench_label_names <- names(table(bench_label))
     if (!"Positive" %chin% bench_label_names) {
       Abort(
-        "{.val {bench_config}} in sc_data@meta.data doesn't have a `Positive` label"
+        "{.val {bench_config}} in obj@meta.data doesn't have a `Positive` label"
       )
     }
   } else {
@@ -116,8 +116,8 @@ BenchAcc.Seurat <- function(
         "{.val bench_config} doesn't have a `Positive` label"
       )
     }
-    if (length(bench_label) != ncol(sc_data)) {
-      n_cells <- ncol(sc_data)
+    if (length(bench_label) != ncol(obj)) {
+      n_cells <- ncol(obj)
       n_bench_label <- length(bench_label)
       Abort(
         "{.val bench_config} doesn't have the same length as cells",
@@ -125,11 +125,12 @@ BenchAcc.Seurat <- function(
       )
     }
   }
-  existing_method <- tolower(colnames(meta_data)) %chin% tolower(AVAILABLE_SCREEN_METHOD)
+  available_method <- names(ScreenStrategy)
+  existing_method <- tolower(colnames(meta_data)) %chin% tolower(available_method)
   if (!any(existing_method)) {
     Abort(
       "Seurat object has no screen method results",
-      "Can't find any column names like {.val {AVAILABLE_SCREEN_METHOD}}"
+      "Can't find any column names like {.val {available_method}}"
     )
   }
   metrics <- meta_data[, existing_method]

@@ -75,6 +75,31 @@ describe("PhenoMap - vector input", {
 
     expect_equal(result, character(0L))
   })
+
+  it("resolves objects from the calling environment", {
+    v <- c(5L, 15L, 25L)
+    cutoff <- 10L
+
+    result <- PhenoMap(v, v > cutoff ~ "High", .default = "Low")
+
+    expect_equal(result, c("Low", "High", "High"))
+  })
+
+  it("accepts a formula stored in a variable", {
+    v <- c(5L, 15L, 25L)
+    rule <- v > 10L ~ "High"
+
+    result <- PhenoMap(v, rule, .default = "Low")
+
+    expect_equal(result, c("Low", "High", "High"))
+  })
+
+  it("treats missing condition values as unmatched", {
+    v <- c(1L, NA_integer_, 3L)
+    result <- PhenoMap(v, v > 2L ~ "High", .default = "Low")
+
+    expect_equal(result, c("Low", "Low", "High"))
+  })
 })
 
 describe("PhenoMap - vector conditions evaluated sequentially", {
@@ -182,6 +207,43 @@ describe("PhenoMap - data frame input", {
     expect_equal(result$a, c("Small", "Big", "Big"))
     expect_equal(result$b, c(10L, 20L, 30L))
   })
+
+  it("evaluates both conditions and values in the formula environment", {
+    threshold <- 10L
+    multiplier <- 2L
+    df <- data.frame(value = c(5L, 15L, 25L))
+
+    result <- PhenoMap(
+      df,
+      value > threshold ~ value * multiplier,
+      .default = 0L
+    )
+
+    expect_equal(result$value, c(0L, 30L, 50L))
+  })
+
+  it("treats missing condition values as unmatched rows", {
+    df <- data.frame(x = c(1L, NA_integer_, 3L))
+    result <- PhenoMap(df, x > 2L ~ "High", .default = "Low")
+
+    expect_equal(result$x, c("Low", "Low", "High"))
+  })
+
+  it("handles a data.frame with zero rows", {
+    df <- data.frame(val = integer(0L))
+    result <- PhenoMap(df, val > 1L ~ "Big", .default = "Small")
+
+    expect_s3_class(result, "data.table")
+    expect_equal(nrow(result), 0L)
+    expect_equal(result$val, character(0L))
+  })
+
+  it("does not modify the input data.frame", {
+    df <- data.frame(value = c(5L, 15L, 25L))
+    PhenoMap(df, value > 10L ~ "High", .default = "Low")
+
+    expect_equal(df$value, c(5L, 15L, 25L))
+  })
 })
 
 # PhenoMap - matrix input -------------------------------------------------
@@ -244,6 +306,33 @@ describe("PhenoMap - input validation", {
     expect_error(
       PhenoMap(c(1L, 2L, 3L), x > 1L ~ "yes", "not a formula"),
       "Not all conditions are formula"
+    )
+  })
+
+  it("aborts when the first condition references no column", {
+    df <- data.frame(val = c(1L, 2L, 3L))
+
+    expect_error(
+      PhenoMap(df, TRUE ~ "yes"),
+      "Cannot determine target column"
+    )
+  })
+
+  it("aborts when the target column is absent from the data", {
+    df <- data.frame(val = c(1L, 2L, 3L))
+
+    expect_error(
+      PhenoMap(df, missing_col > 1L ~ "yes"),
+      "Cannot determine target column"
+    )
+  })
+
+  it("aborts when the target column is absent from a data.table", {
+    dt <- data.table::data.table(val = c(1L, 2L, 3L))
+
+    expect_error(
+      PhenoMap(dt, other_col > 1L ~ "yes"),
+      "Cannot determine target column"
     )
   })
 })

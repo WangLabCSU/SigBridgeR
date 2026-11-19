@@ -1,4 +1,5 @@
 skip_if_not_installed("ggplot2")
+skip_if_not_installed("Matrix")
 
 # Helper: create a minimal Seurat object with n cells
 new_test_seurat <- function(n_cells = 2L, n_genes = 2L) {
@@ -11,6 +12,7 @@ new_test_seurat <- function(n_cells = 2L, n_genes = 2L) {
       paste0("cell", seq_len(n_cells))
     )
   )
+  m <- Matrix::Matrix(m)
   suppressWarnings(SeuratObject::CreateSeuratObject(counts = m))
 }
 

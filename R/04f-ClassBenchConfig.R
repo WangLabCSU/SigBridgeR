@@ -68,7 +68,7 @@ BenchConfig <- S7::new_class(
     method_param = property_data_list
   ),
   validator = \(self) {
-    valid_method <- AVAILABLE_SCREEN_METHODS
+    valid_method <- names(ScreenStrategy)
 
     if (!all(self@screen_method %chin% valid_method)) {
       invalid_method <- setdiff(self@screen_method, valid_method)
@@ -97,7 +97,7 @@ BenchConfig <- S7::new_class(
     phenotype,
     label_type = "{method_name}",
     phenotype_class = c("binary", "survival", "continuous"),
-    screen_method = AVAILABLE_SCREEN_METHODS,
+    screen_method = names(ScreenStrategy),
     method_param = MethodParamSet(),
     sigbridger_version = get_pkg_version(),
     ...
@@ -112,8 +112,8 @@ BenchConfig <- S7::new_class(
     }
 
     # * check screen_method
-    if (!all(screen_method %chin% AVAILABLE_SCREEN_METHODS)) {
-      diff <- screen_method[!screen_method %chin% AVAILABLE_SCREEN_METHODS]
+    if (!all(screen_method %chin% names(ScreenStrategy))) {
+      diff <- screen_method[!screen_method %chin% names(ScreenStrategy)]
       Abort(
         "Algorithm {.val {diff}} is not supported. Please check the spelling or update the package."
       )
@@ -158,6 +158,7 @@ BenchConfig <- S7::new_class(
 #' named `"<method>_param"`, which defaults to `list()`.
 #'
 #' @eval GenerateRoxy.MethodParamSet()
+#' @param ... Currently unused
 #'
 #' @returns A modified list of method-specific parameters.
 #'
@@ -226,7 +227,7 @@ MethodParamSet <- function(
 GenerateRoxy.MethodParamSet <- function() {
   methods <- names(ScreenStrategy)
   paste0(
-    "#' @param ",
+    "@param ",
     methods,
     "_param Extra arguments for method ",
     methods

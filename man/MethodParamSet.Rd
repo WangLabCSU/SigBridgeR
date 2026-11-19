@@ -19,6 +19,31 @@ MethodParamSet(
   ...
 )
 }
+\arguments{
+\item{Scissor_param}{Extra arguments for method Scissor}
+
+\item{scAB_param}{Extra arguments for method scAB}
+
+\item{scPAS_param}{Extra arguments for method scPAS}
+
+\item{scPP_param}{Extra arguments for method scPP}
+
+\item{DEGAS_param}{Extra arguments for method DEGAS}
+
+\item{DEGASv2_param}{Extra arguments for method DEGASv2}
+
+\item{LP_SGL_param}{Extra arguments for method LP_SGL}
+
+\item{PIPET_param}{Extra arguments for method PIPET}
+
+\item{SCIPAC_param}{Extra arguments for method SCIPAC}
+
+\item{SIDISH_param}{Extra arguments for method SIDISH}
+
+\item{TiRank_param}{Extra arguments for method TiRank}
+
+\item{...}{Currently unused}
+}
 \value{
 A modified list of method-specific parameters.
 }

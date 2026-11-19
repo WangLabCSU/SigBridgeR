@@ -90,7 +90,6 @@ res <- BenchGSEA(sc, pathway = pathways)
 \code{\link[Seurat:FindMarkers]{Seurat::FindMarkers()}}, \code{\link[=BenchAcc]{BenchAcc()}}, \code{\link[=BenchMemory]{BenchMemory()}}
 
 Other Benchmark:
-\code{\link{AVAILABLE_GENE_SCORE_METHODS}},
 \code{\link[=BenchAcc]{BenchAcc()}},
 \code{\link[=BenchGeneScore]{BenchGeneScore()}},
 \code{\link[=BenchMemory]{BenchMemory()}}

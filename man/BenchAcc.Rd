@@ -112,7 +112,6 @@ BenchAcc(obj, bench_config = "truth", verbose = FALSE)
 \code{\link[=BenchGSEA]{BenchGSEA()}}, \code{\link[=BenchMemory]{BenchMemory()}}, \code{\link[=BenchGeneScore]{BenchGeneScore()}}
 
 Other Benchmark:
-\code{\link{AVAILABLE_GENE_SCORE_METHODS}},
 \code{\link[=BenchGSEA]{BenchGSEA()}},
 \code{\link[=BenchGeneScore]{BenchGeneScore()}},
 \code{\link[=BenchMemory]{BenchMemory()}}

@@ -46,7 +46,7 @@
 #' [BenchGeneScoreConfig] is benchmarked and a [ScreenMethodResult] is unwrapped
 #' before the actual scoring happens. [BenchGeneScore.Seurat()] is itself a
 #' generic dispatching on `method`: every backend lives in its own
-#' `BenchGeneScore.Seurat.<method>` function and its package is loaded on demand
+#' `BenchGeneScoreSeurat.<method>` function and its package is loaded on demand
 #' by [rlang::check_installed()], so neither `GSVA`, `AUCell`, `UCell` nor
 #' `Seurat` is required to merely call the generic.
 #'
@@ -142,16 +142,40 @@ BenchGeneScore <- function(obj, ...) {
 #' @export
 BenchGeneScore.Seurat <- function(
   obj,
-  pathway,
   method = c("ssGSEA", "AUCell", "UCell", "AddModuleScore"),
-  assay = NULL,
-  layer = "data",
-  ...,
-  verbose = getFuncOption("verbose")
+  ...
 ) {
   method <- rlang::arg_match(method)
-  class(method) <- method
-  UseMethod("BenchGeneScore.Seurat", method)
+  switch(
+    method,
+    "ssGSEA" = {
+      rlang::check_installed("GSVA")
+      BenchGeneScoreSeurat.ssGSEA(
+        obj = obj,
+        ...
+      )
+    },
+    "AUCell" = {
+      rlang::check_installed("AUCell")
+      BenchGeneScoreSeurat.AUCell(
+        obj = obj,
+        ...
+      )
+    },
+    "UCell" = {
+      rlang::check_installed("UCell")
+      BenchGeneScoreSeurat.UCell(
+        obj = obj,
+        ...
+      )
+    },
+    "AddModuleScore" = {
+      BenchGeneScoreSeurat.AddModuleScore(
+        obj = obj,
+        ...
+      )
+    }
+  )
 }
 
 # --------------------------------------------------------------------------------
@@ -165,17 +189,11 @@ BenchGeneScore.Seurat <- function(
 #' value of its `method` argument. They share the same interface and only differ
 #' in the backend they wrap, hence the common documentation.
 #'
-#' `BenchGeneScore.Seurat.<method>()` is not meant to be called directly: it is
+#' `BenchGeneScoreSeurat.<method>()` is not meant to be called directly: it is
 #' reached through the class that [BenchGeneScore.Seurat()] sets on `method`
 #' before dispatching.
 #'
 #' @param obj A `Seurat` object.
-#' @param pathway A non-empty, named list of character vectors, each element
-#'   being the genes of one gene set.
-#' @param assay Character or `NULL`. Assay to score. `NULL` resolves to the
-#'   default assay of `obj` via [SeuratObject::DefaultAssay()].
-#' @param layer Character. Expression layer of `assay` holding the values to
-#'   score. Default: `"data"`.
 #' @param ... Additional arguments forwarded to the wrapped backend.
 #' @param verbose Logical. Whether to print progress information.
 #'   Default: `getFuncOption("verbose")`.
@@ -201,9 +219,8 @@ BenchGeneScore.Seurat <- function(
 #' @seealso [BenchGeneScore()]
 #'
 #' @keywords internal
-#' @name GeneScore
-#' @exportS3Method SigBridgeR::BenchGeneScore.Seurat
-BenchGeneScore.Seurat.ssGSEA <- function(
+#' @name BenchGeneScoreSeuratMethod
+BenchGeneScoreSeurat.ssGSEA <- function(
   obj,
   pathway,
   assay = NULL,
@@ -240,10 +257,9 @@ BenchGeneScore.Seurat.ssGSEA <- function(
 }
 
 
-#' @rdname GeneScore
+#' @rdname BenchGeneScoreSeuratMethod
 #' @keywords internal
-#' @exportS3Method SigBridgeR::BenchGeneScore.Seurat
-BenchGeneScore.Seurat.AUCell <- function(
+BenchGeneScoreSeurat.AUCell <- function(
   obj,
   pathway,
   assay = NULL,
@@ -280,10 +296,9 @@ BenchGeneScore.Seurat.AUCell <- function(
 }
 
 
-#' @rdname GeneScore
+#' @rdname BenchGeneScoreSeuratMethod
 #' @keywords internal
-#' @exportS3Method SigBridgeR::BenchGeneScore.Seurat
-BenchGeneScore.Seurat.UCell <- function(
+BenchGeneScoreSeurat.UCell <- function(
   obj,
   pathway,
   assay = NULL,
@@ -310,10 +325,9 @@ BenchGeneScore.Seurat.UCell <- function(
 }
 
 
-#' @rdname GeneScore
+#' @rdname BenchGeneScoreSeuratMethod
 #' @keywords internal
-#' @exportS3Method SigBridgeR::BenchGeneScore.Seurat
-BenchGeneScore.Seurat.AddModuleScore <- function(
+BenchGeneScoreSeurat.AddModuleScore <- function(
   obj,
   pathway,
   assay = NULL,
@@ -357,42 +371,3 @@ BenchGeneScore.Seurat.AddModuleScore <- function(
   rownames(scores) <- names(pathway)
   scores
 }
-
-# --------------------------------------------------------------------------------
-# Constants
-# --------------------------------------------------------------------------------
-
-#' @title Supported Gene Set Scoring Methods
-#'
-#' @description
-#' Character vector of the gene-set scoring backends shipped with the package,
-#' i.e. the valid values of the `method` argument of [BenchGeneScore()] and
-#' [BenchGeneScore.Seurat()]. Every element `"<method>"` has a matching
-#' `BenchGeneScore.Seurat.<method>()` implementation.
-#'
-#' @details
-#' The scoring backends are optional: `GSVA`, `AUCell`, `UCell` and `Seurat` are
-#' listed in `Suggests`, and the package of the selected backend is only checked
-#' when it is actually used. The constant therefore reports what the package can
-#' do, not what the current library can do; use [BenchGeneScoreConfigSet()] to
-#' validate a method and check its backend in one step, or
-#' [rlang::check_installed()] on the corresponding package.
-#'
-#' @return A character vector of method names: `"ssGSEA"`, `"AUCell"`, `"UCell"`
-#'   and `"AddModuleScore"`.
-#'
-#' @examples
-#' AVAILABLE_GENE_SCORE_METHODS
-#'
-#' @seealso [BenchGeneScore()], [BenchGeneScore.Seurat()],
-#'   [BenchGeneScoreConfigSet()]
-#'
-#' @family Benchmark
-#'
-#' @export
-AVAILABLE_GENE_SCORE_METHODS <- c(
-  "ssGSEA",
-  "AUCell",
-  "UCell",
-  "AddModuleScore"
-)

@@ -10,7 +10,7 @@ BenchGSEAConfig(
   phenotype,
   label_type = "{method_name}",
   phenotype_class = c("binary", "survival", "continuous"),
-  screen_method = AVAILABLE_SCREEN_METHODS,
+  screen_method = names(ScreenStrategy),
   method_param = MethodParamSet(),
   bench_config = BenchGSEAConfigSet(sc_data),
   ...

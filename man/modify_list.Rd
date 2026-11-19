@@ -11,6 +11,8 @@ modify_list(x, val, keep_null = TRUE)
 
 \item{val}{A named list with components to replace corresponding
     components in \code{x} or add new components.}
+
+\item{keep_null}{If TRUE, NULL elements in val become NULL elements in x. Otherwise, the corresponding element, if present, is deleted from x.}
 }
 \value{
 A modified version of \code{x}, with the modifications determined as
@@ -35,3 +37,4 @@ str(bar)
 \author{
 Deepayan Sarkar \email{Deepayan.Sarkar@R-project.org}
 }
+\keyword{internal}

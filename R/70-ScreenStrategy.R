@@ -97,8 +97,4 @@ ScreenStrategy <- rlang::new_environment(
   )
 )
 
-#' @rdname ScreenStrategy
-#' @export
-AVAILABLE_SCREEN_METHODS <- names(ScreenStrategy)
-
 # nocov end

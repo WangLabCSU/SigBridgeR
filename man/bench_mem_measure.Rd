@@ -26,7 +26,7 @@ are taken from \code{config@method_param[[paste0(method_name, "_param")]]}.}
 
 \item{position}{\code{integer}. Position of the method within the round.}
 
-\item{tmp_dir}{\code{character}. Directory created by \code{\link[=bench_tmp_dir]{bench_tmp_dir()}} holding
+\item{tmp_dir}{\code{character}. Directory created by `bench_tmp_dir()`` holding
 the serialised inputs loaded by the child.}
 
 \item{verbose}{\code{logical}. Whether to report progress. Default: \code{FALSE}.}

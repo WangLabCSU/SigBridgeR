@@ -92,11 +92,12 @@ BenchGSEA.Seurat <- function(
   # ------------------------------------------------------------------------------------------------------------------------------------
 
   meta_data <- obj[[]]
-  existing_method <- tolower(colnames(meta_data)) %chin% tolower(AVAILABLE_SCREEN_METHOD)
+  available_methods <- names(ScreenStrategy)
+  existing_method <- tolower(colnames(meta_data)) %chin% tolower(available_methods)
   if (!any(existing_method)) {
     Abort(
       "Seurat object has no screen method results",
-      "Can't find any column names like {.val {AVAILABLE_SCREEN_METHOD}}"
+      "Can't find any column names like {.val {available_methods}}"
     )
   }
   # * binarize
@@ -137,7 +138,7 @@ BenchGSEA.Seurat <- function(
       markers <- markers[markers$p_val_adj < 0.05, ]
     }
 
-    v <- setNames(
+    v <- stats::setNames(
       object = sign(markers$avg_log2FC) * -log10(markers$p_val_adj),
       nm = rownames(markers)
     )

@@ -136,7 +136,7 @@ ScreenFractionPlot <- function(
   }
   # Check available screen types in the Seurat object
   if (is.null(screen_type)) {
-    pattern_detect <- paste0(paste(AVAILABLE_SCREEN_METHODS, collapse = "$|"), "$")
+    pattern_detect <- paste0(paste(names(ScreenStrategy), collapse = "$|"), "$")
     screen_type <- grep(
       pattern_detect,
       all_screen_types,

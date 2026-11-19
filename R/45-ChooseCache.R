@@ -30,7 +30,7 @@
 #' cache_path <- ChooseCache("./Scissor_res")
 #' }
 ChooseCache <- function(directory) {
-  expected_dir_name <- paste0(AVAILABLE_SCREEN_METHODS, "_res")
+  expected_dir_name <- paste0(names(ScreenStrategy), "_res")
   if (!basename(directory) %chin% expected_dir_name) {
     Abort(
       "{.path {directory}} is not a cache directory",

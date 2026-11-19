@@ -1,12 +1,39 @@
 Package: SigBridgeR
 Title: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data
 Version: 4.0.0
-Authors@R: 
-    c(
-        person("Yuxi", "Yang", email = "15364051195@163.com", role = c("cre", "aut"), comment = c(ORCID = "0009-0006-1329-1224")),
-        person("Shixiang", "Wang", email = "shixiang1994wang@gmail.com", role = c("aut"), comment = c(ORCID = "0000-0001-9855-7357")),
-        person("Zeyu", "Yan", email = "3191647388@qq.com", role = "ctb") 
-     )
+Authors@R: c(
+    person("Yuxi", "Yang", , "15364051195@163.com", role = c("cre", "aut"),
+           comment = c(ORCID = "0009-0006-1329-1224")),
+    person("Shixiang", "Wang", , "shixiang1994wang@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0001-9855-7357")),
+    person("Zeyu", "Yan", , "3191647388@qq.com", role = "ctb"),
+    person("Duanchen", "Sun", role = c("ctb", "cph"), email = "sund@ohsu.edu",
+           comment = "Author of the included Scissor code (https://github.com/sunduanchen/Scissor)"),
+    person("Travis", "Johnson", email = "johnstrs@iu.edu", role = c("ctb", "cph"),
+           comment = c("Author of the included DEGAS code (https://github.com/tsteelejohnson91/DEGAS)", ORCID = "0000-0002-4628-2256")),
+    person("Zhi", "Huang", email = "huang898@purdue.edu", role = c("ctb", "cph"),
+           comment = "Author of the included DEGAS code (https://github.com/tsteelejohnson91/DEGAS)"),
+    person("Qinran", "Zhang", role = c("ctb", "cph"), email = "qr_zhang@whu.edu.cn",
+           comment = c("Author of the included scAB code (https://github.com/jinworks/scAB)", ORCID = "0000-0001-8920-586X")),
+    person("Hongmei", "Zhang", role = c("ctb", "cph"), email = "zhanghmmail@163.com",
+           comment = c("Author of the included LP_SGL code (https://github.com/hongmeizhanghm/LP_SGL)", ORCID = "0009-0003-0914-1539")),
+    person("Dailin", "Gan", , "dgan@nd.edu", role = c("ctb", "cph"),
+           comment = "Author of the included SCIPAC code (https://github.com/mianaz/SCIPAC)"),
+    person("Jun", "Li", role = c("ctb", "cph"),
+           comment = c("Author of the included SCIPAC code (https://github.com/mianaz/SCIPAC)",ORCID = "0000-0003-4353-5761")),
+    person(given = "Xinjia", family = "Ruan", role = c("ctb", "cph"), email = "ruan.cpu@foxmail.com",
+           comment = c("Author of the included PIPET code (https://github.com/ruan2ruan/PIPET)", ORCID = "0000-0003-2309-2641")),
+    person("Aimin", "Xie", role = c("ctb", "cph"), email = "aiminyy1993@gmail.com",
+           comment = "Author of the included scPAS code (https://github.com/aiminXie/scPAS)"),
+    person("Xiaosheng", "Wang", role = c("ctb", "cph"), email = "xiaosheng.wang@cpu.edu.cn",
+           comment = c("Author of the included scPP code (https://github.com/WangX-Lab/ScPP)", ORCID = "0000-0002-7199-7093")),
+    person("Yasmin", "Jolasun", role = c("ctb", "cph"), email = "yasmin.jolasun@mail.mcgill.ca",
+           comment = c("Author of the included SIDISH code (https://github.com/mcgilldinglab/SIDISH)",ORCID = "0009-0009-2559-1015")),
+    person("Jun", "Ding", role = c("ctb", "cph"), email = "jun.ding@mcgill.ca",
+           comment = c("Author of the included SIDISH code (https://github.com/mcgilldinglab/SIDISH)", ORCID = "0000-0001-5183-6885")),
+    person("Yuxiang", "Lin", role = c("ctb", "cph"),
+           comment = c("Author of the included TiRank code (https://github.com/LenisLin/TiRank)", ORCID = "0000-0001-8854-2995"))
+  )
 Description: Identifies phenotype-associated cell subpopulations by integrating phenotypic data (e.g., survival, drug sensitivity), bulk gene expression, and single-cell RNA-seq (scRNA-seq) profiles. It employs multiple algorithms to reliably connect cellular features with clinical or functional phenotypes, offering a unified pipeline for multi-modal analysis that uncovers biologically and clinically relevant cell states in heterogeneous datasets.  
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -35,6 +62,7 @@ Depends:
 Suggests: 
     anndata,
     anndataR,
+    AUCell,
     bench,
     callr,
     carrier,
@@ -58,6 +86,7 @@ Suggests:
     ggupset,
     ggVennDiagram,
     glue,
+    GSVA,
     here,
     IDConverter,
     jsonlite,
@@ -97,6 +126,7 @@ Suggests:
     tictoc,
     tidydr,
     tidyr,
+    UCell,
     WGCNA,
     withr,
     zeallot
@@ -114,3 +144,14 @@ SystemRequirements:
     zlib (>= 1.2.4)
 Config/roxygen2/version: 8.1.1
 Language: en-US
+Copyright: Duanchen Sun (for the Scissor code included in R/vendor-Scissor.R),
+    Travis Johnson and Zhi Huang (for the DEGAS code included in
+    R/vendor-DEGAS.R), Qinran Zhang (for the scAB code included in
+    R/vendor-scAB.R), Hongmei Zhang (for the LP_SGL code included in
+    R/vendor-LP_SGL.R), Dailin Gan and Jun Li (for the SCIPAC code included in
+    R/vendor-SCIPAC.R), Xinjia Ruan (for the PIPET code included in
+    R/vendor-PIPET.R), Aimin Xie (for the scPAS code included in
+    R/vendor-scPAS.R), Xiaosheng Wang (for the scPP code included in
+    R/vendor-scPP.R), Yasmin Jolasun and Jun Ding (for the SIDISH code included
+    in R/vendor-SIDISH.R), Yuxiang Lin (for the TiRank code included in
+    R/vendor-TiRank.R)

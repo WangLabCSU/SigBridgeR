@@ -212,9 +212,9 @@ ChooseNormalization <- function(
   metrics[, rank := seq_len(.N)] # Rank methods
 
   # ===== 6. Report results =====
-  if (verbose) {
-    best_method <- metrics$method[1L]
+  best_method <- metrics$method[1L]
 
+  if (verbose) {
     cli::cli_h3("Method Ranking (Composite Score)")
     cli::cli_text(paste0(
       "Top method: {.field {best_method}} "
@@ -290,25 +290,23 @@ ChooseNormalizationCheck <- function(
   # contains data slot
   purrr::walk(
     method_objects,
-    ~ if (
-      "data" %chin%
-        methods::slotNames(SeuratObject::LayerData(
-          object = .x,
-          assay = assay,
-          layer = layer
-        ))
-    ) {
-      if (is.null(layer)) {
+    ~ {
+      assay_name <- assay %||% SeuratObject::DefaultAssay(.x)
+      layers <- SeuratObject::Layers(.x, assay = assay_name)
+
+      if (!"data" %chin% layers) {
+        if (is.null(layer)) {
+          Abort(
+            "All objects must contain normalized data in {.cls {assay_name}} assay {.cls data} slot",
+            type = "[DATA ERROR]"
+          )
+        }
+
         Abort(
-          "All objects must contain normalized data in {.cls {assay}} assay {.cls data} slot",
+          "All objects must contain normalized data in {.cls {assay_name}} assay {.cls {layer}} {.cls data} slot",
           type = "[DATA ERROR]"
         )
       }
-
-      Abort(
-        "All objects must contain normalized data in {.cls {assay}} assay {.cls {layer}} {.cls data} slot",
-        type = "[DATA ERROR]"
-      )
     }
   )
   # same cell number
@@ -320,12 +318,20 @@ ChooseNormalizationCheck <- function(
     )
   }
   chk::chk_range(low_expressed_thresh)
-  chk::chk_named(
-    weight,
-    x_name = c("variance_stability", "marker_signal", "dropout_robustness")
+  required_weights <- c(
+    "variance_stability",
+    "marker_signal",
+    "dropout_robustness"
   )
+  chk::chk_named(weight, x_name = required_weights)
   chk::chk_vector(weight)
   chk::chk_length(weight, 3L)
+  if (!setequal(names(weight), required_weights)) {
+    Abort(
+      "weight must contain exactly these components: {.field {required_weights}}",
+      type = "[VALUE ERROR]"
+    )
+  }
   if (sum(weight) != 1L) {
     Abort("weight must sum to 1", type = "[VALUE ERROR]")
   }

@@ -7,6 +7,8 @@ using namespace Rcpp;
 //' Faster modifyList()
 //' 
 //' @inherit utils::modifyList
+//' @param keep_null If TRUE, NULL elements in val become NULL elements in x. Otherwise, the corresponding element, if present, is deleted from x.
+//' @keywords internal
 // [[Rcpp::export]]
 List modify_list(List x, List val, bool keep_null = true) {
   return sigbridger::modify_list(x, val, keep_null);

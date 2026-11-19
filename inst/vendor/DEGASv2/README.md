@@ -1,0 +1,1 @@
+License declaration of DEGASv2 package (https://github.com/ElliotLiu1997/DEGASv2): MIT. No license file found in the repository.

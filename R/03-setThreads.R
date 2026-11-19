@@ -212,7 +212,7 @@ config_wgcna_threads <- function(wgcna = NULL, verbose = getFuncOption("verbose"
   }
 
   old_wgcna <- WGCNA::WGCNAnThreads()
-  invisible(capture.output(WGCNA::enableWGCNAThreads(wgcna))) # silently enable threads
+  invisible(utils::capture.output(WGCNA::enableWGCNAThreads(wgcna))) # silently enable threads
 
   list(
     WGCNA = list(

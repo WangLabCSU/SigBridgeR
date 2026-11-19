@@ -1,0 +1,1 @@
+This directory contains license from the DEGAS package (https://github.com/tsteelejohnson91/DEGAS)
