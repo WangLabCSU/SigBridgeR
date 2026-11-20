@@ -176,13 +176,14 @@ S7::method(WriteCache, ScreenMethodCache) <- function(
   )
 
   # -- batch write ----------------------------------------------------------
-  saving_fn <- purrr::in_parallel(function(x, file, format) {
-    SigBridgeR:::WriteSingleCacheData(
+  saving_fn <- function(x, file, format) {
+    WriteSingleCacheData(
       x = x,
       file = file,
       format = format
     )
-  })
+  }
+
   purrr::pwalk(
     list(cache_data, files, formats),
     saving_fn,

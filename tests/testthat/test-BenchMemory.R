@@ -164,3 +164,7 @@ test_that("BenchMemory random order is reproducible for a fixed seed", {
   expect_setequal(first[grepl("^1:", first)], paste0("1:", methods))
   expect_setequal(first[grepl("^2:", first)], paste0("2:", methods))
 })
+
+test_that("BenchMemory.default reports unsupported classes", {
+  expect_error(BenchMemory(list()), "not implemented for class")
+})

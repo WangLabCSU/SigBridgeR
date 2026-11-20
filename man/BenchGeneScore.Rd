@@ -91,7 +91,7 @@ only meaningful for a manual inspection.
 }
 }
 \examples{
-\dontshow{if (rlang::is_installed(c("Seurat", "GSVA"))) withAutoprint(\{ # examplesIf}
+\donttest{
 counts <- matrix(
   rep(seq_len(20), times = 5) + rep(seq_len(5), each = 20),
   nrow = 20,
@@ -104,7 +104,7 @@ pathways <- list(
   Second = paste0("Gene", 6:10)
 )
 scores <- BenchGeneScore(obj, pathways, method = "ssGSEA", verbose = FALSE)
-\dontshow{\}) # examplesIf}
+}
 }
 \seealso{
 \code{\link[=BenchGeneScoreConfig]{BenchGeneScoreConfig()}}, \code{\link[=BenchGeneScoreConfigSet]{BenchGeneScoreConfigSet()}},

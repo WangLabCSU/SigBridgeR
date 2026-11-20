@@ -52,13 +52,13 @@ BenchAccConfig <- S7::new_class(
     }
 
     if (length(self@bench_config) == 1L) {
-      exists_bench_label <- self@bench_config %chin% colnames(sc_data[[]])
+      exists_bench_label <- self@bench_config %chin% colnames(self@sc_data[[]])
       if (!exists_bench_label) {
         return(cli::format_inline(
           "{.val {self@bench_config}} is not a valid column name in sc_data@meta.data"
         ))
       }
-      bench_label <- sc_data[[]][[self@bench_config]] |> table() |> names()
+      bench_label <- self@sc_data[[]][[self@bench_config]] |> table() |> names()
       if (!"Positive" %chin% bench_label) {
         return(cli::format_inline(
           "{.val {self@bench_config}} in sc_data@meta.data doesn't have a `Positive` label"

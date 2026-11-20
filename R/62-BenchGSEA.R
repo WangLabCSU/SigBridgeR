@@ -156,7 +156,7 @@ BenchGSEA.Seurat <- function(
   }
 
   leadingEdgeStats <- leadingEdge <- NULL # ease checking NOTE
-  fgsea_res <- purrr::map(X = markers, FUN = function(markers, name) {
+  fgsea_res <- purrr::imap(.x = markers, .f = function(markers, name) {
     if (length(markers$filtered) == 0L) {
       cli::cli_warn("No markers found for {name}")
       return(NULL)
@@ -164,7 +164,7 @@ BenchGSEA.Seurat <- function(
 
     dt <- do.call(
       what = fgsea::fgsea,
-      args = list(pathways = pathway, stats = markers$filtered, !!!fgsea_params)
+      args = rlang::list2(pathways = pathway, stats = markers$filtered, !!!fgsea_params)
     )
     dt[,
       leadingEdgeStats := lapply(
