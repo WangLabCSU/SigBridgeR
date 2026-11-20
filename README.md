@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![Project_Status:\_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![version4:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![version3:stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-8A2BE2)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) <!-- badges: end -->
+[![version4:beta](https://img.shields.io/badge/version4-beta-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![version3:stable](https://img.shields.io/badge/version3-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR) [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions) [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-8A2BE2)](https://deepwiki.com/WangLabCSU/SigBridgeR) [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR) [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/) <!-- badges: end -->
 
 ## 🌐 Overview
 
@@ -235,8 +235,8 @@ If you use SigBridgeR in your work, please cite the corresponding papers:
 print(citation("SigBridgeR"), bibtex = TRUE)
 #> Please cite the following publications when using this package.
 #> 
-#>   Yang et al. SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell Transcriptomics. GigaScience (2026)
-#>   [SigBridgeR]
+#>   Yang et al. SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell
+#>   Transcriptomics. GigaScience (2026) [SigBridgeR]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -265,7 +265,8 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     url = {https://doi.org/10.1038/s41587-021-01091-3},
 #>   }
 #> 
-#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med (2022) [DEGAS]
+#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to
+#>   disease. Genome Med (2022) [DEGAS]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -280,7 +281,8 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     url = {https://doi.org/10.1186/s13073-022-01012-2},
 #>   }
 #> 
-#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Res (2022) [scAB]
+#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic
+#>   Acids Res (2022) [scAB]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -359,8 +361,8 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     url = {https://doi.org/10.1093/bib/bbae655},
 #>   }
 #> 
-#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation. Nat Commun (2025)
-#>   [SIDISH]
+#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico
+#>   perturbation. Nat Commun (2025) [SIDISH]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -375,7 +377,8 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     url = {https://doi.org/10.1038/s41467-025-66162-4},
 #>   }
 #> 
-#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci (2026) [ScPP]
+#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells.
+#>   Interdiscip Sci (2026) [ScPP]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 

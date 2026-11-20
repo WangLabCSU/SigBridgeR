@@ -88,7 +88,9 @@ void atomic_write(std::ostringstream &oss, SEXP x) {
 }
 
 void list_write(std::ostringstream &oss, List x) {
-  CharacterVector nms = x.names();
+  SEXP nms_sexp = Rf_getAttrib(x, R_NamesSymbol);
+  CharacterVector nms =
+      Rf_isNull(nms_sexp) ? CharacterVector(0) : CharacterVector(nms_sexp);
   int n = x.size();
   for (int i = 0; i < n; ++i) {
     if (i > 0)

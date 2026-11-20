@@ -20,9 +20,8 @@ knitr::opts_chunk$set(
 # SigBridgeR <a href="https://wanglabcsu.github.io/SigBridgeR/"><img src="man/figures/logo_white.png" alt="sigbridger website" align="right" height="139"/></a>
 
 <!-- badges: start -->
-[![Project_Status:_Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![version4:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![version3:stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![version4:beta](https://img.shields.io/badge/version4-beta-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![version3:stable](https://img.shields.io/badge/version3-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-blue.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-8A2BE2)](https://deepwiki.com/WangLabCSU/SigBridgeR)

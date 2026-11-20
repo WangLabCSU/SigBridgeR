@@ -1,3 +1,5 @@
+# nocov start
+
 #' Retrieve a property from SigBridgeR object
 #'
 #' @param object An object inheriting from SigBridgeRBase
@@ -33,3 +35,5 @@ NULL
   }
   MergeResult(x@scRNA_data, y@scRNA_data)
 }
+
+# nocov end

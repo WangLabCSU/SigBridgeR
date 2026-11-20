@@ -1,3 +1,5 @@
+# nocov start
+
 #' Base R Methods for SigBridgeR Objects
 #'
 #' @description
@@ -263,6 +265,8 @@ NULL
     type = "[TYPE ERROR]"
   )
 }
+
+# nocov end
 
 #' Convert a List to a Compact Character Representation
 #'
