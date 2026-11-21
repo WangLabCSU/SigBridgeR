@@ -64,7 +64,9 @@ test_that("DoscAB integrates mocked scAB results into the Seurat object", {
   )
 
   res <- DoscAB(
-    bulk, sc, pheno,
+    bulk,
+    sc,
+    pheno,
     alpha = 0.005,
     alpha_2 = 0.005,
     k_max = 2L,

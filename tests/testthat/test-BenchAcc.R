@@ -6,8 +6,7 @@
 
 .benchacc_obj <- function() {
   counts <- Matrix::Matrix(
-    matrix(seq_len(24L), nrow = 4L,
-           dimnames = list(paste0("g", 1:4), paste0("c", 1:6))),
+    matrix(seq_len(24L), nrow = 4L, dimnames = list(paste0("g", 1:4), paste0("c", 1:6))),
     sparse = TRUE
   )
   obj <- suppressWarnings(SeuratObject::CreateSeuratObject(counts = counts))
@@ -19,8 +18,7 @@
 
 .benchacc_config <- function(obj, method = "scPP") {
   BenchAccConfig(
-    matched_bulk = matrix(seq_len(4L), nrow = 2L,
-                          dimnames = list(c("g1", "g2"), c("s1", "s2"))),
+    matched_bulk = matrix(seq_len(4L), nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
     sc_data = obj,
     phenotype = c(c1 = 0, c2 = 1, c3 = 1, c4 = 0, c5 = 0, c6 = 1),
     label_type = "{method_name}",
@@ -47,13 +45,11 @@ test_that("BenchAcc computes all eight binary metrics per screening method", {
   expect_identical(rownames(res$Scissor), "Scissor")
   expect_equal(
     res$Scissor[1L, ],
-    c(TPR = 2 / 3, FPR = 0, TNR = 1, FNR = 1 / 3, F1 = 0.8, Accuracy = 5 / 6,
-      Precision = 1, Recall = 2 / 3)
+    c(TPR = 2 / 3, FPR = 0, TNR = 1, FNR = 1 / 3, F1 = 0.8, Accuracy = 5 / 6, Precision = 1, Recall = 2 / 3)
   )
   expect_equal(
     res$scPAS[1L, ],
-    c(TPR = 1 / 3, FPR = 1 / 3, TNR = 2 / 3, FNR = 2 / 3, F1 = 0.4,
-      Accuracy = 0.5, Precision = 1 / 2, Recall = 1 / 3)
+    c(TPR = 1 / 3, FPR = 1 / 3, TNR = 2 / 3, FNR = 2 / 3, F1 = 0.4, Accuracy = 0.5, Precision = 1 / 2, Recall = 1 / 3)
   )
 })
 

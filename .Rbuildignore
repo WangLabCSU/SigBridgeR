@@ -106,3 +106,5 @@ SigBridgeR_workflow.png
 ^\.uvr$
 ^\.covrignore$
 ^dev$
+^\.xerj-data$
+^.xerj$

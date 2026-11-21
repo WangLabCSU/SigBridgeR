@@ -45,3 +45,4 @@ tests/testthat/testthat-problems.rds
 .clangd
 .mcp.json
 AGENTS.md
+.xerj-data

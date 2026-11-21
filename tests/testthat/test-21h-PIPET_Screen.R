@@ -82,7 +82,9 @@ test_that("DoPIPET attaches mocked marker-based labels to the Seurat object", {
   )
 
   res <- DoPIPET(
-    bulk, sc, pheno,
+    bulk,
+    sc,
+    pheno,
     phenotype_class = "binary",
     nPerm = 5L,
     marker_finder = "limma",

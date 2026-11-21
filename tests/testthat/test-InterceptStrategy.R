@@ -60,7 +60,9 @@ test_that("InterceptStrategy() expands S7 method properties into list columns", 
       phenotype,
       label_type,
       phenotype_class
-    ) NULL,
+    ) {
+      NULL
+    },
     phenotype_class = "binary",
     mapper = NULL
   )
@@ -111,42 +113,41 @@ test_that("get_strategy_info() records the name and formals of a function", {
   expect_identical(info$args, list(c("a", "b")))
 })
 
-test_that(
-  "get_strategy_info() wraps executor formals and phenotype_class for S7 methods",
-  {
-    method <- ScreenMethod(
-      method_name = "TestMethod",
-      method_version = "1.0.0",
-      executor = function(
-        matched_bulk,
-        sc_data,
-        phenotype,
-        label_type,
-        phenotype_class
-      ) NULL,
-      phenotype_class = c("binary", "survival"),
-      mapper = NULL
-    )
+test_that("get_strategy_info() wraps executor formals and phenotype_class for S7 methods", {
+  method <- ScreenMethod(
+    method_name = "TestMethod",
+    method_version = "1.0.0",
+    executor = function(
+      matched_bulk,
+      sc_data,
+      phenotype,
+      label_type,
+      phenotype_class
+    ) {
+      NULL
+    },
+    phenotype_class = c("binary", "survival"),
+    mapper = NULL
+  )
 
-    info <- get_strategy_info(method, "method")
+  info <- get_strategy_info(method, "method")
 
-    expect_identical(
-      info$executor,
-      list(
-        c(
-          "matched_bulk",
-          "sc_data",
-          "phenotype",
-          "label_type",
-          "phenotype_class"
-        )
+  expect_identical(
+    info$executor,
+    list(
+      c(
+        "matched_bulk",
+        "sc_data",
+        "phenotype",
+        "label_type",
+        "phenotype_class"
       )
     )
-    expect_identical(info$phenotype_class, list(c("binary", "survival")))
-    expect_identical(info$name, "method")
-    expect_identical(info$method_name, "TestMethod")
-  }
-)
+  )
+  expect_identical(info$phenotype_class, list(c("binary", "survival")))
+  expect_identical(info$name, "method")
+  expect_identical(info$method_name, "TestMethod")
+})
 
 test_that("get_strategy_info() skips missing executor or phenotype_class properties", {
   config <- ScreenMethodConfig(

@@ -9,10 +9,16 @@
 # All GTF inputs are tiny (1-6 lines) to keep the suite fast.
 
 # Helper: build a single GTF line with 9 tab-separated fields.
-.gtf_line <- function(chr = "1", feature = "exon", start, end, strand = "+",
-                      gene_id = "G", extra = "") {
+.gtf_line <- function(chr = "1", feature = "exon", start, end, strand = "+", gene_id = "G", extra = "") {
   paste(
-    chr, "test_src", feature, start, end, ".", strand, ".",
+    chr,
+    "test_src",
+    feature,
+    start,
+    end,
+    ".",
+    strand,
+    ".",
     paste0('gene_id "', gene_id, '";', extra),
     sep = "\t"
   )
@@ -64,7 +70,8 @@ describe("r_gtf_lines_to_gene_length - exon merging", {
 
   it("accepts unquoted gene_id values", {
     lines <- sub(
-      'gene_id "G1";', "gene_id G1;",
+      'gene_id "G1";',
+      "gene_id G1;",
       .gtf_line(start = 1, end = 10, gene_id = "G1"),
       fixed = TRUE
     )

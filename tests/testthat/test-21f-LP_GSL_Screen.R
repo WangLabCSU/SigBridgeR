@@ -45,7 +45,9 @@ test_that("DoLP_SGL integrates mocked LP-SGL results into the Seurat object", {
   )
 
   res <- DoLP_SGL(
-    bulk, sc, pheno,
+    bulk,
+    sc,
+    pheno,
     phenotype_class = "binary",
     resolution = 0.6,
     alpha = 0.5,

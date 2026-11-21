@@ -6,8 +6,7 @@
 
 .benchgsea_obj <- function() {
   counts <- Matrix::Matrix(
-    matrix(seq_len(120L), nrow = 10L,
-           dimnames = list(paste0("g", 1:10), paste0("c", 1:12))),
+    matrix(seq_len(120L), nrow = 10L, dimnames = list(paste0("g", 1:10), paste0("c", 1:12))),
     sparse = TRUE
   )
   obj <- suppressWarnings(SeuratObject::CreateSeuratObject(counts = counts))
@@ -85,8 +84,7 @@ test_that("BenchGSEA.ScreenMethodResult dispatches to the Seurat method", {
 test_that("BenchGSEA.BenchGSEAConfig screens each method before GSEA", {
   obj <- .benchgsea_obj()
   config <- BenchGSEAConfig(
-    matched_bulk = matrix(seq_len(4L), nrow = 2L,
-                          dimnames = list(c("g1", "g2"), c("s1", "s2"))),
+    matched_bulk = matrix(seq_len(4L), nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
     sc_data = obj,
     phenotype = rep(c(0, 1), 6L) |> stats::setNames(paste0("c", 1:12)),
     label_type = "{method_name}",

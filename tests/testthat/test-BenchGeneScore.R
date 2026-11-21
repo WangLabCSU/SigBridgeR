@@ -6,8 +6,7 @@
 
 .benchgs_obj <- function() {
   counts <- Matrix::Matrix(
-    matrix(seq_len(80L), nrow = 10L,
-           dimnames = list(paste0("g", 1:10), paste0("c", 1:8))),
+    matrix(seq_len(80L), nrow = 10L, dimnames = list(paste0("g", 1:10), paste0("c", 1:8))),
     sparse = TRUE
   )
   obj <- suppressWarnings(SeuratObject::CreateSeuratObject(counts = counts))
@@ -147,8 +146,7 @@ test_that("BenchGeneScore.ScreenMethodResult unwraps scRNA_data", {
 test_that("BenchGeneScore.BenchGeneScoreConfig screens methods before scoring", {
   obj <- .benchgs_obj()
   config <- BenchGeneScoreConfig(
-    matched_bulk = matrix(seq_len(4L), nrow = 2L,
-                          dimnames = list(c("g1", "g2"), c("s1", "s2"))),
+    matched_bulk = matrix(seq_len(4L), nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
     sc_data = obj,
     phenotype = stats::setNames(rep(c(0, 1), 4L), paste0("c", 1:8)),
     label_type = "{method_name}",

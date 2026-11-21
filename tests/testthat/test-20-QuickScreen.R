@@ -21,7 +21,9 @@ test_that("Screen() rejects unknown methods and phenotype classes", {
   expect_error(Screen(bulk, sc, pheno, screen_method = "NoSuchMethod"))
   expect_error(
     Screen(
-      bulk, sc, pheno,
+      bulk,
+      sc,
+      pheno,
       screen_method = "scAB",
       phenotype_class = "continuous"
     )

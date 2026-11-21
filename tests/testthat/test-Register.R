@@ -25,7 +25,9 @@ new_screen_method <- function(method_name, method_version = "1.0.0") {
       phenotype,
       label_type,
       phenotype_class
-    ) NULL,
+    ) {
+      NULL
+    },
     phenotype_class = "binary",
     mapper = NULL
   )
