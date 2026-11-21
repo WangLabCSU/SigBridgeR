@@ -56,8 +56,10 @@ test_that("ValidateSCIPACParams rejects bad inputs", {
 })
 
 test_that("OverLapSCBulk aligns bulk and single-cell genes", {
-  bulk <- nb_bulk(50L, 50L)
-  sc <- nb_seurat(50L, 50L)
+  # SCIPAC::obtain.preprocessed.data() hard-codes min.features = 200, so the
+  # overlapping gene set must exceed that threshold for cells to survive.
+  bulk <- nb_bulk(300L, 50L)
+  sc <- nb_seurat(300L, 50L)
 
   out <- OverLapSCBulk(sc_data = sc, bulk = bulk, hvg = 20L)
 

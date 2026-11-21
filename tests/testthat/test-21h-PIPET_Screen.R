@@ -72,7 +72,12 @@ test_that("DoPIPET attaches mocked marker-based labels to the Seurat object", {
     Create_Markers2 = function(...) {
       data.frame(gene = c("G1", "G2"), log2FoldChange = c(2, -2))
     },
-    PIPET = function(...) data.frame(PIPET_label = rep("Positive", ncol(sc))),
+    PIPET = function(...) {
+      data.frame(
+        PIPET_label = rep("Positive", ncol(sc)),
+        row.names = colnames(sc)
+      )
+    },
     .package = "PIPET"
   )
 
@@ -87,22 +92,18 @@ test_that("DoPIPET attaches mocked marker-based labels to the Seurat object", {
   expect_named(res, c("scRNA_data", "markers"))
   expect_true(inherits(res$scRNA_data, "Seurat"))
   expect_equal(ncol(res$scRNA_data), 20L)
-  expect_equal(res$scRNA_data$PIPET_label, rep("Positive", 20L))
+  expect_equal(unname(res$scRNA_data$PIPET_label), rep("Positive", 20L))
   expect_equal(nrow(res$markers), 2L)
 })
 
 test_that("ValidatePIPETParams forwards cache and DESeq2 marker finder", {
-  args <- c(
-    .pipet_args("continuous"),
-    list(
-      marker_finder = "DESeq2",
-      distance = "spearman",
-      parallel = TRUE,
-      assay = "SCT",
-      load_cache = "/tmp/load",
-      save_cache = "/tmp/save"
-    )
-  )
+  args <- .pipet_args("continuous")
+  args$marker_finder <- "DESeq2"
+  args$distance <- "spearman"
+  args$parallel <- TRUE
+  args$assay <- "SCT"
+  args$load_cache <- "/tmp/load"
+  args$save_cache <- "/tmp/save"
   p <- do.call(ValidatePIPETParams, args)
 
   expect_equal(p$phenotype_class, "continuous")

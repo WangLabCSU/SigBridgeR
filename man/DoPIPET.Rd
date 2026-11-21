@@ -78,7 +78,7 @@ Must be sorted in ascending order.}
 
 \item{nPerm}{An integer, number of permutations to do. The default value is \code{1000L}.}
 
-\item{distance}{A character, the distance algorithm must be included in "cosine", "pearson", "spearman", "kendall","euclidean","maximum". default value is \code{NULL}, which means \code{"cosine"}.}
+\item{distance}{A character, the distance algorithm must be included in "cosine", "pearson", "spearman", "kendall","euclidean","maximum". default value is \code{"cosine"}.}
 
 \item{...}{Additional arguments to be passed to \code{PIPET.optimized}.
 \itemize{

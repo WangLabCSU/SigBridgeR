@@ -112,7 +112,7 @@ property_list <- S7::new_property(class = S7::class_list, validator = \(value) {
 property_mapper_fn <- S7::new_property(class = S7::class_any, validator = \(value) {
   if (!is.function(value) && !is.null(value)) {
     cli::format_inline(
-      "mapper function must be a {.cls function} or {.val NULL}."
+      "function must be a {.cls function} or {.val NULL}."
     )
   }
 })

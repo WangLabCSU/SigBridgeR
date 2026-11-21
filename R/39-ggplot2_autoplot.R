@@ -37,6 +37,9 @@ autoplot.Seurat <- function(
     }
     group.by <- group.by[choice]
   }
+  if (length(group.by) == 0L) {
+    Abort("group.by specified but not found in the Seurat object")
+  }
 
   cluster_color <- cols %||%
     if (!is.null(group.by) && group.by %chin% available_group_by) {

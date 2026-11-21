@@ -69,7 +69,8 @@ ValidateDEGASParams <- function(
       "jarque-bera",
       "d'agostino",
       "kolmogorov-smirnov"
-    )
+    ),
+    NULL
   )
 
   # DEGAS path must contain "/"
@@ -435,11 +436,7 @@ DoDEGAS <- function(
   env_params = lifecycle::deprecated(),
   # DEGAS parameters
   degas_params = list(),
-  normality_test_method = c(
-    "jarque-bera",
-    "d'agostino",
-    "kolmogorov-smirnov"
-  ),
+  normality_test_method = "jarque-bera",
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------

@@ -16,7 +16,7 @@ DoDEGAS(
   tmp_dir = "DEGAS_res",
   env_params = lifecycle::deprecated(),
   degas_params = list(),
-  normality_test_method = c("jarque-bera", "d'agostino", "kolmogorov-smirnov"),
+  normality_test_method = "jarque-bera",
   ...
 )
 }

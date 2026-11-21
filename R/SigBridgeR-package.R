@@ -14,7 +14,8 @@ utils::globalVariables(c(
   "base_key",
   ".",
   "suffix",
-  "max_suffix"
+  "max_suffix",
+  "..duplicate_cols"
 ))
 
 #' @inherit SigBridgeRUtils::AddMisc

@@ -51,16 +51,17 @@ BenchGSEAConfig <- S7::new_class(
     rlang::check_dots_empty()
 
     S7::new_object(
-      S7::S7_object(),
-      matched_bulk = matched_bulk,
-      sc_data = sc_data,
-      phenotype = phenotype,
-      label_type = label_type,
-      phenotype_class = phenotype_class,
-      screen_method = screen_method,
-      method_param = method_param,
-      bench_config = bench_config,
-      sigbridger_version = get_pkg_version()
+      BenchConfig(
+        matched_bulk = matched_bulk,
+        sc_data = sc_data,
+        phenotype = phenotype,
+        label_type = label_type,
+        phenotype_class = phenotype_class,
+        screen_method = screen_method,
+        method_param = method_param,
+        sigbridger_version = get_pkg_version()
+      ),
+      bench_config = bench_config
     )
   }
 )

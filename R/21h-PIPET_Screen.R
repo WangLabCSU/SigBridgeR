@@ -39,7 +39,7 @@ ValidatePIPETParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  rlang::check_installed("PIPET", action = \(pkg, ...) {
+  rlang::check_installed("PIPET", action = function(pkg, ...) {
     rlang::check_installed("pak")
     pak::pak("Exceret/PIPET")
   })
@@ -51,19 +51,19 @@ ValidatePIPETParams <- function(
     c("binary", "continuous", "survival"),
     NULL
   )
-  purrr::walk(c(show_log2FC, normalize, scale), chk::chk_flag)
+  purrr::walk(
+    c(show_log2FC, normalize, scale),
+    ~ chk::chk_flag(.x, x_name = "show_log2FC, normalize and scale")
+  )
   purrr::walk(
     c(group),
-    ~ if (!is.null(.x)) chk::chk_character(.x)
+    ~ if (!is.null(.x)) chk::chk_character(.x, x_name = "group")
   )
-  chk::chk_integer(c(nPerm, freq_counts))
-  purrr::walk(c(log2FC, p_adjust), chk::chk_double)
-  marker_finder <- SigBridgeRUtils::MatchArg(
-    marker_finder,
-    c("limma", "DESeq2")
-  )
+  chk::chk_integer(c(nPerm, freq_counts), x_name = "nPerm and freq_counts")
+  purrr::walk(c(log2FC, p_adjust), ~ chk::chk_double(.x, x_name = "log2FC and p_adjust"))
+  marker_finder <- rlang::arg_match0(marker_finder, c("limma", "DESeq2"))
 
-  distance <- SigBridgeRUtils::MatchArg(
+  distance <- rlang::arg_match0(
     distance,
     c(
       "cosine",
@@ -72,8 +72,7 @@ ValidatePIPETParams <- function(
       "kendall",
       "euclidean",
       "maximum"
-    ),
-    NULL
+    )
   )
 
   # -- process dots ---------------------------------------------------------
@@ -147,7 +146,7 @@ ValidatePIPETParams <- function(
 #' @param normalize Select whether to perform normalization of count data. The default value is `TRUE`.
 #' @param scale Select whether to scale and center features in the dataset. The default value is `TRUE`.
 #' @param nPerm An integer, number of permutations to do. The default value is `1000L`.
-#' @param distance A character, the distance algorithm must be included in "cosine", "pearson", "spearman", "kendall","euclidean","maximum". default value is `NULL`, which means `"cosine"`.
+#' @param distance A character, the distance algorithm must be included in "cosine", "pearson", "spearman", "kendall","euclidean","maximum". default value is `"cosine"`.
 #' @param ... Additional arguments to be passed to `PIPET.optimized`.
 #' - seed: Random seed for reproducibility
 #' - verbose: Whether to show progress messages
@@ -176,14 +175,7 @@ DoPIPET <- function(
   normalize = TRUE,
   scale = TRUE,
   nPerm = 1000L,
-  distance = c(
-    "cosine",
-    "pearson",
-    "spearman",
-    "kendall",
-    "euclidean",
-    "maximum"
-  ),
+  distance = c("cosine", "pearson", "spearman", "kendall", "euclidean", "maximum"),
   ...
 ) {
   # -- validate & prepare all parameters -----------------------------------

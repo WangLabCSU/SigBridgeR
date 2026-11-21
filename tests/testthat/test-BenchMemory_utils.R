@@ -26,17 +26,19 @@
     phenotype_class = "binary",
     mapper = NULL
   )
-  withr::defer(rm(list = name, envir = ScreenStrategy))
+  # Defer to the caller's frame: deferring inside this helper would run the
+  # cleanup on return, before the test body builds its config.
+  withr::defer(rm(list = name, envir = ScreenStrategy), envir = parent.frame())
 }
 
 .benchmem_config <- function(method, timeout_sec = 5, on_failure = "skip") {
   BenchMemoryConfig(
-    matched_bulk = matrix(seq_len(4L), nrow = 2L,
-                          dimnames = list(c("g1", "g2"), c("s1", "s2"))),
+    matched_bulk = matrix(seq_len(4L), nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
     sc_data = .benchmem_obj(),
     phenotype = c(c1 = 0, c2 = 1, c3 = 1, c4 = 0),
     screen_method = method,
     method_param = MethodParamSet(),
+    phenotype_class = "binary",
     bench_config = BenchMemoryConfigSet(
       rounds = 1L,
       order = "fixed",
@@ -59,7 +61,9 @@
       read_error = function() character(),
       poll_io = function(...) invisible(NULL),
       get_result = function() {
-        if (die) stop("child died")
+        if (die) {
+          stop("child died")
+        }
         result
       },
       kill_tree = function() invisible(NULL),

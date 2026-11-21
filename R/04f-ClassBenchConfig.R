@@ -121,7 +121,7 @@ BenchConfig <- S7::new_class(
 
     # * check phenotype_class
     phenotype_classes <- SigBridgeRUtils::MatchArg(
-      x = phenotype_class,
+      arg = phenotype_class,
       choices = c("binary", "continuous", "survival"),
       default = NULL
     )

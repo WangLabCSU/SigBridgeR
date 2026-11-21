@@ -145,7 +145,7 @@ MergeResult <- function(
     data.table::as.data.table(x[[]], keep.rownames = "cell_id")
   })
 
-  ..duplicate_cols <- ..vote_cols <- NULL # ease checking NOTE
+  ..vote_cols <- NULL # ease checking NOTE
   merged_meta <- Reduce(
     function(x, y) {
       duplicate_cols <- setdiff(intersect(names(x), names(y)), "cell_id")

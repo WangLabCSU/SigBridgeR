@@ -40,6 +40,7 @@ test_that("BenchMemoryConfig keeps label templates and per-method arguments", {
     matched_bulk = matrix(1:4, nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
     sc_data = sc,
     phenotype = c(s1 = 0, s2 = 1),
+    phenotype_class = "binary",
     label_type = "{method_name}_res",
     screen_method = "scPP",
     method_param = MethodParamSet(scPP_param = list(Log2FC_cutoff = 0.05)),
@@ -70,7 +71,8 @@ test_that("BenchMemory runs each method once per round in fixed order", {
       method_name = nm,
       method_version = "0.0.1",
       executor = fake_executor,
-      phenotype_class = "binary"
+      phenotype_class = "binary",
+      mapper = NULL
     )
   }
   withr::defer({
@@ -85,6 +87,7 @@ test_that("BenchMemory runs each method once per round in fixed order", {
     matched_bulk = matrix(1:4, nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
     sc_data = sc,
     phenotype = c(s1 = 0, s2 = 1),
+    phenotype_class = "binary",
     screen_method = c("cheap", "broken"),
     method_param = MethodParamSet(),
     bench_config = BenchMemoryConfigSet(rounds = 2L, order = "fixed")
@@ -128,10 +131,15 @@ test_that("BenchMemory random order is reproducible for a fixed seed", {
       method_name = nm,
       method_version = "0.0.1",
       executor = fake_executor,
-      phenotype_class = "binary"
+      phenotype_class = "binary",
+      mapper = NULL
     )
   }
-  withr::defer(for (nm in methods) rm(list = nm, envir = ScreenStrategy))
+  withr::defer(
+    for (nm in methods) {
+      rm(list = nm, envir = ScreenStrategy)
+    }
+  )
 
   sc <- suppressWarnings(
     SeuratObject::CreateSeuratObject(counts = Matrix::Matrix(matrix(1:4, 2L)))
@@ -142,6 +150,7 @@ test_that("BenchMemory random order is reproducible for a fixed seed", {
       matched_bulk = matrix(1:4, nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
       sc_data = sc,
       phenotype = c(s1 = 0, s2 = 1),
+      phenotype_class = "binary",
       screen_method = methods,
       method_param = MethodParamSet(),
       bench_config = BenchMemoryConfigSet(rounds = 2L, order = "random", seed = seed)
