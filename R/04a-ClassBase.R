@@ -70,11 +70,10 @@ property_phenotype_class <- S7::new_property(
 
     if (!all(value %chin% valid_val)) {
       cli::format_inline(
-        "`phenotype_class` must be one or more of {.val {valid_val}}"
+        "must be one or more of {.val {valid_val}}"
       )
     }
-  },
-  default = c("binary", "continuous", "survival")
+  }
 )
 
 #' @rdname SigBridgeR-properties

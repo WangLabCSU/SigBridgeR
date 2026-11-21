@@ -27,8 +27,7 @@
 #'
 #' @return A named `list` with one element per screening method found in
 #'   `meta.data`. Each element is a 1-row numeric matrix with columns `TPR`,
-#'   `FPR`, `TNR`, `FNR`, `F1` and `Accuracy`, and a row name giving the
-#'   screening method. A metric is `NA` when its denominator is zero.
+#'   `FPR`, `TNR`, `FNR`, `F1`, `Accuracy` and so on.
 #'
 #' @details
 #' ## Dispatch
@@ -49,10 +48,7 @@
 #'
 #' ## Metrics
 #' With `P`, `N`, `TP`, `FP`, `TN` and `FN` denoting the numbers of positive
-#' cells, negative cells, true/false positives and true/false negatives:
-#' `TPR = TP / (TP + FN)`, `FPR = FP / (FP + TN)`, `TNR = TN / (TN + FP)`,
-#' `FNR = FN / (FN + TP)`, `F1 = 2TP / (2TP + FP + FN)` and
-#' `Accuracy = (TP + TN) / (P + N)`.
+#' cells, negative cells, true/false positives and true/false negatives
 #'
 #' @examplesIf rlang::is_installed("Seurat")
 #' counts <- matrix(

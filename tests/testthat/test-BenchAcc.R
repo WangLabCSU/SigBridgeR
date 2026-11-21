@@ -31,7 +31,7 @@
   )
 }
 
-test_that("BenchAcc computes all six binary metrics per screening method", {
+test_that("BenchAcc computes all eight binary metrics per screening method", {
   obj <- .benchacc_obj()
 
   res <- BenchAcc(obj, bench_config = "truth", verbose = FALSE, nthreads = 1L)
@@ -39,17 +39,22 @@ test_that("BenchAcc computes all six binary metrics per screening method", {
   expect_type(res, "list")
   expect_length(res, 2L)
   expect_setequal(names(res), c("Scissor", "scPAS"))
-  expect_identical(dim(res$Scissor), c(1L, 6L))
+  expect_identical(dim(res$Scissor), c(1L, 8L))
   expect_identical(
     colnames(res$Scissor),
-    c("TPR", "FPR", "TNR", "FNR", "F1", "Accuracy")
+    c("TPR", "FPR", "TNR", "FNR", "F1", "Accuracy", "Precision", "Recall")
   )
   expect_identical(rownames(res$Scissor), "Scissor")
   expect_equal(
     res$Scissor[1L, ],
-    c(TPR = 2 / 3, FPR = 0, TNR = 1, FNR = 1 / 3, F1 = 0.8, Accuracy = 5 / 6)
+    c(TPR = 2 / 3, FPR = 0, TNR = 1, FNR = 1 / 3, F1 = 0.8, Accuracy = 5 / 6,
+      Precision = 1, Recall = 2 / 3)
   )
-  expect_equal(res$scPAS[1L, "Accuracy"], 0.5)
+  expect_equal(
+    res$scPAS[1L, ],
+    c(TPR = 1 / 3, FPR = 1 / 3, TNR = 2 / 3, FNR = 2 / 3, F1 = 0.4,
+      Accuracy = 0.5, Precision = 1 / 2, Recall = 1 / 3)
+  )
 })
 
 test_that("BenchAcc accepts a per-cell ground-truth vector", {

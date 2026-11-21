@@ -64,7 +64,7 @@ def ts_print(
                 'warning', 'error', 'debug'. Default: no symbol.
         color: Whether to enable ANSI color output (default True).
     """
-    timestamp = datetime.datetime.now(tz=datetime.timezone.utc).strftime(
+    timestamp = datetime.datetime.now(tz=datetime.UTC).strftime(
         "[%Y/%m/%d %H:%M:%S]"
     )
 
@@ -116,10 +116,7 @@ def annotate_celltypist(
     cell_file: str | None = None,
     majority_voting: bool = False,
     over_clustering: (
-        str
-        | list
-        | tuple
-        | None
+        str | list | tuple | None
         # numpy.ndarray,
         # pandas.core.series.Series,
         # pandas.core.indexes.base.Index,

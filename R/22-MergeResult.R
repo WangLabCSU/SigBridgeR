@@ -115,7 +115,6 @@ MergeResult <- function(
   verbose = SigBridgeRUtils::getFuncOption("verbose")
 ) {
   args <- rlang::list2(...)
-  ..vote_cols <- NULL # suppress checking NOTE
 
   if (length(args) == 0L) {
     Abort("Input objects must be provided.", type = "[ARG ERROR]")
@@ -146,6 +145,7 @@ MergeResult <- function(
     data.table::as.data.table(x[[]], keep.rownames = "cell_id")
   })
 
+  ..duplicate_cols <- ..vote_cols <- NULL # ease checking NOTE
   merged_meta <- Reduce(
     function(x, y) {
       duplicate_cols <- setdiff(intersect(names(x), names(y)), "cell_id")
@@ -161,6 +161,7 @@ MergeResult <- function(
 
   # * vote
   if (!is.null(weights)) {
+    chk::chk_numeric(weights, "weights")
     if (verbose) {
       cli::cli_alert_info("Performing weighted voting")
     }
@@ -206,26 +207,25 @@ MergeResult <- function(
     )
 
     merged_obj <- subset(seurat_objects[[1L]], cells = common_cells)
-    merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
-
-    # merge slots
-    merged_obj <- Reduce(
-      function(merged_obj, slot_type) {
-        MergeSlot(
-          slot_type = slot_type,
-          merged_obj = merged_obj,
-          seurat_objects = seurat_objects,
-          common_cells = common_cells
-        )
-      },
-      c("assays", "reductions", "graphs", "images"),
-      init = merged_obj
-    )
   } else {
     # all same, just use the first one as base
     merged_obj <- seurat_objects[[1L]]
-    merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
   }
+  merged_obj[[]] <- SigBridgeRUtils::Col2Rownames(merged_meta, "cell_id")
+
+  # merge slots
+  merged_obj <- Reduce(
+    function(merged_obj, slot_type) {
+      MergeSlot(
+        slot_type = slot_type,
+        merged_obj = merged_obj,
+        seurat_objects = seurat_objects,
+        common_cells = common_cells
+      )
+    },
+    c("assays", "reductions", "graphs", "images"),
+    init = merged_obj
+  )
 
   # merge misc
   all_keys <- unique(unlist(lapply(seurat_objects, function(obj) {
@@ -265,6 +265,8 @@ MergeResult <- function(
 #' @description
 #' Returns the names of the slots in a Seurat object.
 #'
+#' @return Character vector of names of this slot, otherwise `NULL`
+#'
 #' @keywords internal
 GetSlotNames <- function(obj, slot_type) {
   switch(
@@ -273,7 +275,7 @@ GetSlotNames <- function(obj, slot_type) {
     "graphs" = names(obj@graphs),
     "reductions" = names(obj@reductions),
     "images" = names(obj@images),
-    character(0L)
+    NULL
   )
 }
 
@@ -313,7 +315,7 @@ MergeSlot <- function(slot_type, merged_obj, seurat_objects, common_cells) {
           common_cells
         )
         if (length(valid_cells) > 0L) {
-          item <- item[valid_cells, ]
+          item <- subset(item, cells = valid_cells)
           merged_obj@reductions[[name]] <- item
         }
       } else if (slot_type == "graphs") {

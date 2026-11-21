@@ -54,8 +54,12 @@
   )
 
   # * S7 OOP system
-  S7::methods_register()
+  S7::S7_on_load()
   invisible()
+}
+
+.onUnload <- function(...) {
+  S7::S7_on_unload()
 }
 
 .time_record <- new.env()

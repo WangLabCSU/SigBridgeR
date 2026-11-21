@@ -108,6 +108,7 @@ ScreenMethod <- S7::new_class(
       method_version = method_version,
       executor = executor,
       phenotype_class = phenotype_class,
+      mapper = mapper,
       sigbridger_version = sigbridger_version
     )
   },

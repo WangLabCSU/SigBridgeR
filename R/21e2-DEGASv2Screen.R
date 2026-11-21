@@ -69,7 +69,7 @@ ValidateDEGASv2Params <- function(
   if (!is.null(label_type)) {
     chk::chk_character(label_type)
   }
-  phenotype_class <- rlang::arg_match(phenotype_class)
+  phenotype_class <- rlang::arg_match0(phenotype_class, c("binary", "survival", "continuous"))
   chk::chk_range(top_fraction_pos)
   if (!is.null(sclab)) {
     chk::chk_character(sclab)

@@ -53,7 +53,7 @@ Imports:
     Rcpp,
     reticulate,
     rlang (>= 1.0.0),
-    S7 (>= 0.2.2),
+    S7 (>= 1.0.0),
     Seurat (>= 5.0.0),
     SeuratObject (>= 5.0.0),
     SigBridgeRUtils (>= 0.2.5)

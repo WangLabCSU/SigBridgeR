@@ -92,7 +92,7 @@ List calc_binary_metrics(DataFrame metrics, CharacterVector bench_label,
            CHAR(STRING_ELT(col_names, j)), (int)(bad[j] + 1));
 
   CharacterVector stat_names =
-      CharacterVector::create("TPR", "FPR", "TNR", "FNR", "F1", "Accuracy");
+      CharacterVector::create("TPR", "FPR", "TNR", "FNR", "F1", "Accuracy", "Precision","Recall");
   const double N = (double)n;
 
   List out(p);
@@ -102,13 +102,15 @@ List calc_binary_metrics(DataFrame metrics, CharacterVector bench_label,
     const double FP = PPv[j] - TP;
     const double TN = N - P - FP;
 
-    NumericMatrix m(1, 6);
+    NumericMatrix m(1, 8);
     m(0, 0) = safe_div(TP, TP + FN);
     m(0, 1) = safe_div(FP, FP + TN);
     m(0, 2) = safe_div(TN, TN + FP);
     m(0, 3) = safe_div(FN, FN + TP);
     m(0, 4) = safe_div(2.0 * TP, 2.0 * TP + FP + FN);
     m(0, 5) = safe_div(TP + TN, N);
+    m(0, 6) = safe_div(TP, TP + FP);
+    m(0, 7) = safe_div(TP, TP + FN);
     colnames(m) = stat_names;
     rownames(m) = CharacterVector::create(col_names[j]);
     out[j] = m;

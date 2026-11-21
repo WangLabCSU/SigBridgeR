@@ -14,8 +14,7 @@ utils::globalVariables(c(
   "base_key",
   ".",
   "suffix",
-  "max_suffix",
-  "..duplicate_cols"
+  "max_suffix"
 ))
 
 #' @inherit SigBridgeRUtils::AddMisc
@@ -45,5 +44,7 @@ getFuncOption <- SigBridgeRUtils::getFuncOption
 setFuncOption <- SigBridgeRUtils::setFuncOption
 
 cli_symbol <- cli::symbol
+
+S7::S7_on_build()
 
 # nocov end

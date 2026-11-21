@@ -6,6 +6,9 @@
 \usage{
 GetSlotNames(obj, slot_type)
 }
+\value{
+Character vector of names of this slot, otherwise \code{NULL}
+}
 \description{
 Returns the names of the slots in a Seurat object.
 }

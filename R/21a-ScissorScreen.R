@@ -69,24 +69,31 @@ ValidateScissorParams <- function(
       "DoScissor(family = )",
       "DoScissor(phenotype_class = )"
     )
-    phenotype_class <- switch(
-      family,
-      "binomial" = "binary",
-      "cox" = "survival",
-      "gaussian" = "continuous",
+    chk::chk_length(family)
+    phenotype_class <- if (family == "binomial") {
+      "binary"
+    } else if (family == "cox") {
+      "survival"
+    } else if (family == "gaussian") {
+      "continuous"
+    } else {
       Abort("Invalid family: {.val {family}}", type = "[VALUE ERROR]")
-    )
+    }
   }
-  family <- switch(
-    phenotype_class,
-    "binary" = "binomial",
-    "survival" = "cox",
-    "continuous" = "gaussian",
+  chk::chk_length(phenotype_class)
+
+  family <- if (phenotype_class == "binary") {
+    "binomial"
+  } else if (phenotype_class == "continuous") {
+    "gaussian"
+  } else if (phenotype_class == "survival") {
+    "cox"
+  } else {
     Abort(
       "Invalid phenotype_class: {.val {phenotype_class}}",
       type = "[VALUE ERROR]"
     )
-  )
+  }
 
   # -- input validation -----------------------------------------------------
   chk::chk_character(label_type)

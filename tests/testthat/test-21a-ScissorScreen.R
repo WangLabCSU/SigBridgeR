@@ -127,7 +127,7 @@ test_that("DoScissor labels positive and negative cells from Scissor output", {
     .package = "Scissor"
   )
 
-  res <- DoScissor(bulk, sc, pheno, alpha = 0.05, cutoff = 0.2, verbose = FALSE)
+  res <- DoScissor(bulk, sc, pheno, alpha = 0.05, cutoff = 0.2, verbose = FALSE, phenotype_class = "binary")
 
   expect_named(res, c("scRNA_data", "scissor_result", "reliability_result", "cell_evaluation"))
   expect_true(inherits(res$scRNA_data, "Seurat"))

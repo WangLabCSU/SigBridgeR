@@ -1,11 +1,20 @@
 skip_if_not_installed("DEGAS")
 
+# ValidateDEGASParams() pulls the "data" layer from the Seurat object, so the
+# shared nb_seurat() fixture (counts only) needs a normalised layer added.
+.degas_seurat <- function() {
+  sc <- nb_seurat()
+  SeuratObject::LayerData(sc, assay = "RNA", layer = "data") <-
+    log1p(SeuratObject::LayerData(sc, assay = "RNA", layer = "counts"))
+  sc
+}
+
 .degas_args <- function(tmp_dir, phenotype = nb_binary_phenotype()) {
   list(
     select_fraction = 0.05,
     min_thresh = 0.4,
     matched_bulk = nb_bulk(),
-    sc_data = nb_seurat(),
+    sc_data = .degas_seurat(),
     phenotype = phenotype,
     sc_data.pheno_colname = NULL,
     label_type = "DEGAS",

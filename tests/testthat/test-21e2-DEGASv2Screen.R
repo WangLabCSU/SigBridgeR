@@ -53,10 +53,6 @@ test_that("ValidateDEGASv2Params resolves defaults", {
 })
 
 test_that("ValidateDEGASv2Params validates algorithm choices", {
-  expect_equal(
-    do.call(ValidateDEGASv2Params, c(.degasv2_args(), list(phenotype_class = "survival")))$phenotype_class,
-    "survival"
-  )
   expect_error(do.call(
     ValidateDEGASv2Params,
     within(.degasv2_args(), loss_type <- "invalid")

@@ -19,9 +19,9 @@ test_that("MergeResult combines metadata and keeps first duplicate column", {
 
   expect_true(inherits(merged, "Seurat"))
   expect_equal(ncol(merged), 20L)
-  expect_equal(merged$shared, rep("from_first", 20L))
-  expect_equal(merged$Scissor, rep(c("Positive", "Negative"), 10L))
-  expect_equal(merged$scPP, rep(c("Positive", "Neutral"), each = 10L))
+  expect_equal(unname(merged$shared), rep("from_first", 20L))
+  expect_equal(unname(merged$Scissor), rep(c("Positive", "Negative"), 10L))
+  expect_equal(unname(merged$scPP), rep(c("Positive", "Neutral"), each = 10L))
 })
 
 test_that("MergeResult accepts lists containing scRNA_data", {
@@ -32,7 +32,7 @@ test_that("MergeResult accepts lists containing scRNA_data", {
   merged <- MergeResult(list(scRNA_data = s1, note = "ignored"), list(scRNA_data = s2))
 
   expect_equal(ncol(merged), 20L)
-  expect_equal(merged$scPAS, rep("Positive", 20L))
+  expect_equal(unname(merged$scPAS), rep("Positive", 20L))
 })
 
 test_that("MergeResult performs an inner join on cell barcodes", {
@@ -48,7 +48,7 @@ test_that("MergeResult performs an inner join on cell barcodes", {
 
   expect_equal(ncol(merged), 20L)
   expect_setequal(colnames(merged), paste0("C", 11:30))
-  expect_equal(merged$scPP, rep("Positive", 20L))
+  expect_equal(unname(merged$scPP), rep("Positive", 20L))
 })
 
 test_that("MergeResult adds a weighted vote column", {
@@ -86,8 +86,8 @@ test_that("GetSlotNames reports available Seurat slots", {
   s <- nb_seurat(20L, 20L)
 
   expect_equal(GetSlotNames(s, "assays"), "RNA")
-  expect_equal(GetSlotNames(s, "graphs"), character(0L))
-  expect_equal(GetSlotNames(s, "unknown"), character(0L))
+  expect_equal(GetSlotNames(s, "graphs"), NULL)
+  expect_equal(GetSlotNames(s, "unknown"), NULL)
 })
 
 test_that("MergeSlot carries reductions from later objects", {

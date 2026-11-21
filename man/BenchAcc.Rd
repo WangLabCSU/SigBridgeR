@@ -52,8 +52,7 @@ computation. Default: \code{2L}.}
 \value{
 A named \code{list} with one element per screening method found in
 \code{meta.data}. Each element is a 1-row numeric matrix with columns \code{TPR},
-\code{FPR}, \code{TNR}, \code{FNR}, \code{F1} and \code{Accuracy}, and a row name giving the
-screening method. A metric is \code{NA} when its denominator is zero.
+\code{FPR}, \code{TNR}, \code{FNR}, \code{F1}, \code{Accuracy} and so on.
 }
 \description{
 Computes binary classification metrics for every screening method present in
@@ -88,10 +87,7 @@ include \code{"Positive"}, and the vector form must have one element per cell.
 \subsection{Metrics}{
 
 With \code{P}, \code{N}, \code{TP}, \code{FP}, \code{TN} and \code{FN} denoting the numbers of positive
-cells, negative cells, true/false positives and true/false negatives:
-\code{TPR = TP / (TP + FN)}, \code{FPR = FP / (FP + TN)}, \code{TNR = TN / (TN + FP)},
-\code{FNR = FN / (FN + TP)}, \verb{F1 = 2TP / (2TP + FP + FN)} and
-\code{Accuracy = (TP + TN) / (P + N)}.
+cells, negative cells, true/false positives and true/false negatives
 }
 }
 \examples{

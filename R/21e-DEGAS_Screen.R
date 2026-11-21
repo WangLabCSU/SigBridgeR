@@ -79,8 +79,8 @@ ValidateDEGASParams <- function(
       type = "[ARG ERROR]"
     )
   }
-  if (!endsWith(tmp_dir, "/")) {
-    tmp_dir <- paste0(tmp_dir, "/")
+  if (!endsWith(tmp_dir, .Platform$file.sep)) {
+    tmp_dir <- paste0(tmp_dir, .Platform$file.sep)
   }
 
   # -- resolve env & degas defaults -----------------------------------------
