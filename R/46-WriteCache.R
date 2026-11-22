@@ -222,9 +222,11 @@ WriteSingleCacheData <- function(x, file, format) {
   switch(
     format,
 
-    "qs2" = ,
+    "qs2" = {
+      qs2::qs_save(x, file, nthreads = getFuncOption("nthreads"))
+    },
     "qdata" = {
-      qs2::qs_save(x, file)
+      qs2::qd_save(x, file, nthreads = getFuncOption("nthreads"))
     },
 
     "rdata" = {

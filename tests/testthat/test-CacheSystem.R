@@ -22,6 +22,12 @@ new_cache_root <- function(method_name = "Scissor") {
   file.path(withr::local_tempdir(), paste0(method_name, "_res"))
 }
 
+# Normalize paths before comparison: on Windows this expands 8.3 short names
+# (e.g. RUNNER~1 -> runneradmin) and unifies separators to "/".
+.normalize_test_path <- function(path) {
+  normalizePath(path, mustWork = FALSE, winslash = "/")
+}
+
 # 43-WriteCacheMeta.R ------------------------------------------------------
 
 describe("WriteCacheMeta - ScreenMethodConfig", {
@@ -473,7 +479,10 @@ describe("CacheSetHere - save mode", {
     )
 
     expect_identical(basename(cache_dir), "survival_20250101")
-    expect_identical(dirname(cache_dir), normalizePath(root, mustWork = FALSE))
+    expect_identical(
+      .normalize_test_path(dirname(cache_dir)),
+      .normalize_test_path(root)
+    )
   })
 
   it("aborts when the target path is already a cache", {
@@ -525,8 +534,8 @@ describe("CacheSetHere - load mode", {
     dir.create(cache, recursive = TRUE)
 
     expect_identical(
-      CacheSetHere(root, new_cache_config(), mode = "load"),
-      cache
+      .normalize_test_path(CacheSetHere(root, new_cache_config(), mode = "load")),
+      .normalize_test_path(cache)
     )
   })
 
@@ -536,8 +545,8 @@ describe("CacheSetHere - load mode", {
     dir.create(cache, recursive = TRUE)
 
     expect_identical(
-      CacheSetHere(parent, new_cache_config(), mode = "load"),
-      cache
+      .normalize_test_path(CacheSetHere(parent, new_cache_config(), mode = "load")),
+      .normalize_test_path(cache)
     )
   })
 

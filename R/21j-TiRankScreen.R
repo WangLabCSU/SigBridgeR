@@ -25,7 +25,7 @@ ValidateTiRankParams <- function(
   ...
 ) {
   # -- package checks -------------------------------------------------------
-  rlang::check_installed("rTIRank", action = \(pkg, ...) {
+  rlang::check_installed("rTiRank", action = \(pkg, ...) {
     rlang::check_installed("pak")
     pak::pak("Exceret/rTIRank")
   })
@@ -66,7 +66,7 @@ ValidateTiRankParams <- function(
   )
   cache_config <- ScreenMethodConfig(
     method_name = "TiRank",
-    method_version = utils::packageVersion("rTIRank"),
+    method_version = utils::packageVersion("rTiRank"),
     param = res,
     phenotype_class = phenotype_class,
     label_type = label_type
