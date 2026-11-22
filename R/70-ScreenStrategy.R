@@ -93,6 +93,13 @@ ScreenStrategy <- rlang::new_environment(
       executor = DoTiRank,
       phenotype_class = c("binary", "survival", "continuous"),
       mapper = NULL
+    ),
+    PhenoMapR = ScreenMethod(
+      method_name = "PhenoMapR",
+      method_version = r_pkg_version("PhenoMapR"),
+      executor = DoPhenoMapR,
+      phenotype_class = c("binary", "survival", "continuous"),
+      mapper = NULL
     )
   )
 )

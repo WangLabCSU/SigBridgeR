@@ -214,6 +214,7 @@ Other screen_method:
 \code{\link[=DoDEGAS]{DoDEGAS()}},
 \code{\link[=DoLP_SGL]{DoLP_SGL()}},
 \code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoPhenoMapR]{DoPhenoMapR()}},
 \code{\link[=DoSIDISH]{DoSIDISH()}},
 \code{\link[=DoScissor]{DoScissor()}},
 \code{\link[=DoTiRank]{DoTiRank()}},

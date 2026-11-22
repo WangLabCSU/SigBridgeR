@@ -102,6 +102,7 @@ Suggests:
     org.Hs.eg.db,
     pak,
     patchwork,
+    PhenoMapR,
     PIPET,
     preprocessCore,
     qs2,

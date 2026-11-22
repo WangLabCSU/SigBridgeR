@@ -98,6 +98,7 @@ testing for significance assessment.
 Other screen_method:
 \code{\link[=DoDEGAS]{DoDEGAS()}},
 \code{\link[=DoLP_SGL]{DoLP_SGL()}},
+\code{\link[=DoPhenoMapR]{DoPhenoMapR()}},
 \code{\link[=DoSCIPAC]{DoSCIPAC()}},
 \code{\link[=DoSIDISH]{DoSIDISH()}},
 \code{\link[=DoScissor]{DoScissor()}},

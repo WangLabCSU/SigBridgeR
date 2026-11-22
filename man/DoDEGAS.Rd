@@ -154,6 +154,7 @@ Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et al. Diagnostic Evidence GAu
 Other screen_method:
 \code{\link[=DoLP_SGL]{DoLP_SGL()}},
 \code{\link[=DoPIPET]{DoPIPET()}},
+\code{\link[=DoPhenoMapR]{DoPhenoMapR()}},
 \code{\link[=DoSCIPAC]{DoSCIPAC()}},
 \code{\link[=DoSIDISH]{DoSIDISH()}},
 \code{\link[=DoScissor]{DoScissor()}},

@@ -43,6 +43,8 @@ MethodParamSet(
 \item{TiRank_param}{Extra arguments for method TiRank}
 
 \item{...}{Currently unused}
+
+\item{PhenoMapR_param}{Extra arguments for method PhenoMapR}
 }
 \value{
 A modified list of method-specific parameters.

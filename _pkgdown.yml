@@ -70,6 +70,7 @@ reference:
           - DoSIDISH
           - DoSCIPAC
           - DoTiRank
+          - DoPhenoMapR
 
     - title: Seurat Object Utilities
       contents:

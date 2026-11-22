@@ -11,7 +11,7 @@ Screen(
   label_type = NULL,
   phenotype_class = c("binary", "survival", "continuous"),
   screen_method = c("Scissor", "scPP", "scPAS", "scAB", "DEGAS", "LP_SGL", "PIPET",
-    "SIDISH", "SCIPAC", "TiRank", "DEGASv2"),
+    "SIDISH", "SCIPAC", "TiRank", "DEGASv2", "PhenoMapR"),
   ...
 )
 }
@@ -50,6 +50,7 @@ data:
 \item "PIPET": see also \code{\link[=DoPIPET]{DoPIPET()}}
 \item "DEGAS": see also \code{\link[=DoDEGAS]{DoDEGAS()}}
 \item "scAB": see also \code{\link[=DoscAB]{DoscAB()}}
+\item "PhenoMapR": see also \code{\link[=DoPhenoMapR]{DoPhenoMapR()}}
 \item "SIDISH": see also \code{\link[=DoSIDISH]{DoSIDISH()}}
 \item "scPAS": see also \code{\link[=DoscPAS]{DoscPAS()}}
 }}
@@ -274,6 +275,34 @@ getFuncOption("seed").
 \item save_cache: Character. Directory to save TiRank cache. Default: save_path.
 \item additional_description: Character. Optional description appended to the
 cache metadata.
+}
+
+PhenoMapR
+\itemize{
+\item phenotype_column: Character or NULL. Outcome column name for
+binary/continuous phenotypes. Default: NULL (uses "phenotype_value").
+\item survival_time, survival_event: Character. Columns of the survival phenotype
+data frame. Default: "time" / "status".
+\item normalize: Logical. Whether to normalize bulk expression. Default: TRUE.
+\item platform: Character. "auto", "rnaseq", or "microarray". Default: "auto".
+\item probe_annotation: Probe-to-gene annotation for microarray data. Default: NULL.
+\item hugo_species: Character vector passed to HGNChelper. Default:
+c("human", "mouse").
+\item binary_positive_reference: Character. "second" or "first". Default: "second".
+\item assay, layer: Character. Seurat assay and layer used for scoring. Default:
+"RNA" / "data".
+\item z_score_cutoff: Numeric. Z-score cutoff for limiting paired genes. Default: 2.
+\item reference_sign: Integer. Sign applied to reference scores. Default: 1.
+\item score_mode: Character vector. Default: c("weighted_sum", "activity_adjusted").
+\item vars_to_regress: Character vector. Default: c("S.Score", "G2M.Score",
+"nCount_RNA").
+\item cancer_type: Character or NULL. Optional cancer-type context. Default: NULL.
+\item pseudobulk: Logical. Whether to score pseudobulk profiles. Default: FALSE.
+\item group_by: Character or NULL. Grouping variable for pseudobulk. Default: NULL.
+\item sample_metadata: Data frame or NULL. Metadata for pseudobulk. Default: NULL.
+\item percentile: Numeric. Tail percentile for phenotype groups. Default: 0.05.
+\item permutation_n: Integer or NULL. Number of permutations. Default: NULL.
+\item permutation_seed: Integer or NULL. Permutation seed; defaults to seed.
 }}
 }
 \value{
@@ -287,9 +316,9 @@ the selected method.
 }
 \description{
 Integrates matched bulk expression data and phenotype information to identify
-phenotype-associated cell populations in single-cell RNA-seq data using one of
-nine computational methods. Ensures consistency between bulk and phenotype data
-before analysis.
+phenotype-associated cell populations in single-cell RNA-seq data using a
+registered screening method. Ensures consistency between bulk and phenotype
+data before analysis.
 }
 \section{Data Matching Requirements}{
 
@@ -316,5 +345,6 @@ Associated functions:
 \item \code{\link[=DoSCIPAC]{DoSCIPAC()}}
 \item \code{\link[=DoTiRank]{DoTiRank()}}
 \item \code{\link[=DoDEGASv2]{DoDEGASv2()}}
+\item \code{\link[=DoPhenoMapR]{DoPhenoMapR()}}
 }
 }
