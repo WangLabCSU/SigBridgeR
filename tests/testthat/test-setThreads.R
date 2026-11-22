@@ -301,18 +301,26 @@ test_that("config_dt_threads skips non-numeric input", {
 })
 
 test_that("config_dt_threads sets data.table threads and records the old value", {
+  seen <- NULL
+  local_mocked_bindings(
+    setDTthreads = function(threads, ...) {
+      seen <<- list(threads = threads, ...)
+      invisible(1L)
+    },
+    .package = "data.table"
+  )
   old <- data.table::getDTthreads(verbose = FALSE)
-  withr::defer(data.table::setDTthreads(old))
 
   res <- config_dt_threads(2L)
 
   expect_equal(res$dt$old, old)
   expect_equal(res$dt$new, 2L)
-  expect_equal(data.table::getDTthreads(verbose = FALSE), 2L)
+  expect_equal(seen$threads, 2L)
 })
 
 test_that("config_dt_threads filters ... before calling setDTthreads", {
   seen <- NULL
+  dt_seen <- NULL
   local_mocked_bindings(
     FilterArgs4Func = function(dots, .fn) {
       seen <<- dots
@@ -320,13 +328,18 @@ test_that("config_dt_threads filters ... before calling setDTthreads", {
     },
     .package = "SigBridgeRUtils"
   )
-  old <- data.table::getDTthreads(verbose = FALSE)
-  withr::defer(data.table::setDTthreads(old))
+  local_mocked_bindings(
+    setDTthreads = function(threads, ...) {
+      dt_seen <<- list(threads = threads, ...)
+      invisible(1L)
+    },
+    .package = "data.table"
+  )
 
   expect_no_error(config_dt_threads(2L, percent = TRUE, unsupported = 1L))
 
   expect_equal(seen, list(percent = TRUE, unsupported = 1L))
-  expect_equal(data.table::getDTthreads(verbose = FALSE), 2L)
+  expect_equal(dt_seen$threads, 2L)
 })
 
 # Optional backends: qs2 / cheapr / WGCNA ----------------------------------

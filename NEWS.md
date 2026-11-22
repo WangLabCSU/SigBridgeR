@@ -1,3 +1,67 @@
+# SigBridgeR 4.0.0
+
+## NEW FEATURES
+
+* Added `GetGeneLength()` and `FPKMToTPM()` for extracting gene lengths from GTF annotations and converting FPKM to TPM. `GetGeneLength()` supports a `canonical_chr_only` option and preserves gene ID versions.
+* Introduced a benchmarking framework: `BenchAcc()`, `BenchGSEA()`, `BenchGeneScore()` and `BenchMemory()`, along with their S7 configuration classes (`BenchConfig`, `BenchAccConfig`, `BenchGSEAConfig`, `BenchGeneScoreConfig`, `BenchMemoryConfig`, `MethodParamSet` and the `*ConfigSet` helpers). `BenchAcc()` now also reports `Precision` and `Recall`.
+* Exported `AVAILABLE_SCREEN_METHODS` and `AVAILABLE_ANNOTATE_METHODS`; the `ScreenStrategy` registry replaces ad-hoc `names(ScreenStrategy)` lookups.
+* `SymbolConvert()` now accepts character vectors, offers `update_symbol_method` (`"scCustomize"`, `"Seurat"` or `"auto"`), supports extended genome builds, and replaces unmatched/duplicated symbols with the original IDs; `unknown_format` is deprecated and ignored.
+* Added a `+` operator for merging `ScreenMethodResult` objects and S3 methods for merging `Seurat` objects.
+* `autoplot()` interactively prompts for `group.by` when multiple candidates are available.
+* `setThreads()` gains a Seurat thread-config backend; the WGCNA backend is renamed `wgcna`.
+
+## PERFORMANCE
+
+* `FindRobustElbow()` offloads elbow detection to C++ using tatami streaming and caps `ndims` at the number of available PCs.
+* `FPKMToTPM()` / `GetGeneLength()` stream GTF files through a zlib buffered reader with single-pass C++ validation.
+* Replaced `utils::modifyList()` with a custom C++ `modify_list()` and added an `nthreads` option.
+* Matrix handling now uses `beachmat`.
+
+## BREAKING CHANGES
+
+* Minimum requirements raised: R >= 4.2.0, S7 >= 1.0.0, C++17 and zlib (>= 1.2.4) (previously R >= 4.1.0, S7 >= 1.0.0, C++14).
+* `CacheSysCall()` load mode now requires an explicit `path`.
+* `SymbolConvert()`'s `unknown_format` argument is deprecated and ignored.
+* `PIPET_Screen()` now defaults `distance` to `"cosine"`; `DoDEGAS()` defaults `normality_test_method` to `"jarque-bera"`.
+* The WGCNA backend in `setThreads()` is renamed `wgcna`.
+
+## BUG FIXES
+
+* Fixed a Scissor crash ("a character vector argument expected") caused by missing null-checks on cache paths (#22).
+* Fixed bugs and integer-literal conversions in the vendored SCIPAC code.
+* Added typed error messages across modules and switched to `rlang::arg_match0()` / `rlang::arg_match()` for stricter argument validation.
+* Improved `SymbolConvert()` handling of NA and duplicated symbols.
+* `MergeResult()` now handles duplicate columns and slot merging correctly.
+* Improved error handling in `ValidateDEGASv2Params()` and `ValidateDEGASParams()`.
+* Fixed `ChooseNormalizationCheck()` layer detection and tightened weight validation.
+* Corrected the `ssGSEA` dependency check and added `AUCell`, `GSVA`, `UCell` to Suggests.
+* Fixed typos `rTIRank` -> `rTiRank` and `qs2` -> `qd_save`, and added a path-normalization helper.
+* Removed a duplicate `cli::cli_end()` call in `S3_base`.
+* Bumped the vendored Scissor fork to v2.1.0 with `qs2` cache support.
+* Dropped the `randomcoloR` dependency and resolved R CMD check notes.
+
+## MINOR IMPROVEMENTS
+
+* Restructured the benchmark config hierarchy: shared properties moved to `BenchConfig`, with dedicated `BenchAccConfig` / `BenchGSEAConfig` classes.
+* Added `S7_on_build()` / `S7_on_unload()` hooks, benchmark properties on `SigBridgeRBase`, and fully qualified S7 class references.
+* Prefixed `rlang` calls with `rlang::` and replaced `cli::cli_fmt(cli::cli_text(...))` with `cli::format_inline()`.
+* Updated roxygen2 to 8.1.1 and added dynamic screen-method documentation generation.
+* Added runtime `glue` dependency checks and raised the minimum `cli` version to 3.0.0.
+* Added full third-party copyright attribution to `DESCRIPTION` and updated `CITATION`.
+
+## DOCUMENTATION
+
+* Updated the README algorithm table and citation information.
+* Refreshed roxygen documentation and benchmark docs covering C++ backends and config APIs; reworked `BenchMemory()` docs for child-process measurement.
+* Added a spelling check to CI.
+
+## INTERNAL CHANGES
+
+* Added unit tests for benchmark functions and strategy registries, plus screen-method and `AddMetaFeature()` tests with fixtures.
+* CI now derives R-CMD-check dependencies from `DESCRIPTION`; updated the version-bumper workflow with cached `cli::symbol`.
+* Updated `.gitignore` / `.Rbuildignore`, excluded `dev/` from the package build, and removed hardcoded R binary paths from VS Code settings.
+* Added an AI skill.
+
 # SigBridgeR 4.0.0-beta-4
 
 ## NEW FEATURES
