@@ -183,6 +183,7 @@ MethodParamSet <- function(
   SCIPAC_param = list(),
   SIDISH_param = list(),
   TiRank_param = list(),
+  PhenoMapR_param = list(),
   ...
 ) {
   arg_names <- rlang::fn_fmls_names()
@@ -213,7 +214,8 @@ MethodParamSet <- function(
     LP_SGL_param = LP_SGL_param,
     PIPET_param = PIPET_param,
     SIDISH_param = SIDISH_param,
-    TiRank_param = TiRank_param
+    TiRank_param = TiRank_param,
+    PhenoMapR_param = PhenoMapR_param
   )
 }
 

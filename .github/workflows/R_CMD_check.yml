@@ -174,7 +174,6 @@ jobs:
                       any::pkgdown
                       any::BiocManager
                       any::spelling
-                      bioc::BiocNeighbors
                   dependencies: '"hard"'
                   needs: check
 

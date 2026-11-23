@@ -16,6 +16,7 @@ MethodParamSet(
   SCIPAC_param = list(),
   SIDISH_param = list(),
   TiRank_param = list(),
+  PhenoMapR_param = list(),
   ...
 )
 }
@@ -42,9 +43,9 @@ MethodParamSet(
 
 \item{TiRank_param}{Extra arguments for method TiRank}
 
-\item{...}{Currently unused}
-
 \item{PhenoMapR_param}{Extra arguments for method PhenoMapR}
+
+\item{...}{Currently unused}
 }
 \value{
 A modified list of method-specific parameters.

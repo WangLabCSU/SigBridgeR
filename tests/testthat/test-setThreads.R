@@ -374,6 +374,24 @@ test_that("config_wgcna_threads checks its dependency before configuring", {
   expect_error(config_wgcna_threads(2L), "dependency guard: WGCNA")
 })
 
+test_that("config_wgcna_threads raises one-thread requests to two in quiet mode", {
+  skip_if_not_installed("WGCNA")
+
+  old <- WGCNA::WGCNAnThreads()
+  withr::defer({
+    if (old >= 2L) {
+      WGCNA::enableWGCNAThreads(old)
+    } else {
+      WGCNA::disableWGCNAThreads()
+    }
+  })
+
+  res <- expect_silent(config_wgcna_threads(1L, verbose = FALSE))
+
+  expect_equal(WGCNA::WGCNAnThreads(), 2L)
+  expect_equal(res$WGCNA$new, 2L)
+})
+
 # config_seurat_threads ----------------------------------------------------
 
 test_that("config_seurat_threads skips non-numeric input", {

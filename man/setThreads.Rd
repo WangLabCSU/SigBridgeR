@@ -9,7 +9,7 @@ setThreads(
   dt = threads,
   cheapr = threads,
   qs2 = threads,
-  wgcna = threads,
+  wgcna = max(threads, 2L),
   seurat = threads,
   openmp = NULL,
   tf_config = list(xla_flag = "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit", xla_device =
@@ -28,7 +28,9 @@ Default: \code{2L}}
 
 \item{qs2}{Integer. Thread count for qs2 (default: inherited from \code{threads}).}
 
-\item{wgcna}{Integer. Thread count for WGCNA (default: inherited from \code{threads}).}
+\item{wgcna}{Integer. Thread count for WGCNA (default: inherited from
+\code{max(threads, 2L)}). Values below 2 are raised to 2, because
+\code{WGCNA::enableWGCNAThreads()} requires at least two threads.}
 
 \item{seurat}{Integer. Thread count for Seurat (default: inherited from \code{threads}).
 Only applied when \pkg{Seurat} >= 6.0.0 is installed, as

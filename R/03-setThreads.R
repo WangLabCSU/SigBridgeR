@@ -14,7 +14,9 @@
 #' @param cheapr Integer. Thread count for cheapr (default: inherited from \code{threads}).
 #' @param qs2 Integer. Thread count for qs2 (default: inherited from \code{threads}).
 #' @param openmp Integer. Thread count for OpenMP (default: inherited from \code{threads}).
-#' @param wgcna Integer. Thread count for WGCNA (default: inherited from \code{threads}).
+#' @param wgcna Integer. Thread count for WGCNA (default: inherited from
+#'   \code{max(threads, 2L)}). Values below 2 are raised to 2, because
+#'   \code{WGCNA::enableWGCNAThreads()} requires at least two threads.
 #' @param seurat  Integer. Thread count for Seurat (default: inherited from \code{threads}).
 #'   Only applied when \pkg{Seurat} >= 6.0.0 is installed, as
 #'   \code{Seurat::setThreads()} is not available in earlier versions.
@@ -57,7 +59,7 @@ setThreads <- function(
   dt = threads,
   cheapr = threads,
   qs2 = threads,
-  wgcna = threads,
+  wgcna = max(threads, 2L),
   seurat = threads,
   openmp = NULL,
   tf_config = list(
@@ -204,10 +206,12 @@ config_wgcna_threads <- function(wgcna = NULL, verbose = getFuncOption("verbose"
 
   rlang::check_installed("WGCNA")
 
-  if (wgcna <= 1L && verbose) {
-    cli::cli_alert_warning(
-      "WGCNA threads must be > 1. Using default (2) instead of ({wgcna})."
-    )
+  if (wgcna < 2L) {
+    if (isTRUE(verbose)) {
+      cli::cli_alert_warning(
+        "WGCNA threads must be at least 2. Using 2 instead of ({wgcna})."
+      )
+    }
     wgcna <- 2L
   }
 

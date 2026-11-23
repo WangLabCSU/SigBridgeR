@@ -74,7 +74,8 @@ github_only <- c(
   "SCIPAC",
   "Scissor",
   "scPAS",
-  "ScPP"
+  "ScPP",
+  "PhenoMapR"
 )
 
 skipped_github <- intersect(deps, github_only)
@@ -88,9 +89,7 @@ cran_repo <- Sys.getenv("CRAN_REPO", unset = "")
 if (!nzchar(cran_repo)) {
   cran_repo <- getOption("repos")[["CRAN"]]
 }
-if (
-  is.null(cran_repo) || !nzchar(cran_repo) || identical(cran_repo, "@CRAN@")
-) {
+if (is.null(cran_repo) || !nzchar(cran_repo) || identical(cran_repo, "@CRAN@")) {
   cran_repo <- "https://cloud.r-project.org"
 }
 
@@ -100,16 +99,13 @@ if (grepl("unstable|devel", R.version$status)) {
   bioc_channel <- "devel"
 }
 
-# Posit Package Manager mirrors Bioconductor, with binary packages on every
-# platform, at /bioconductor/<snapshot>/packages/<bioc-version>/<sub-repo>; the
-# release version paired with the running R therefore has to be spelled out.
 bioc_versions <- c(
-  "4.7" = "3.23",
-  "4.6" = "3.22",
-  "4.5" = "3.21",
+  "4.7" = "3.24", # devel; not used while R is unstable
+  "4.6" = "3.23",
+  "4.5" = "3.22",
   "4.4" = "3.20",
-  "4.3" = "3.19",
-  "4.2" = "3.18"
+  "4.3" = "3.18",
+  "4.2" = "3.16"
 )
 r_series <- paste(
   R.version$major,
@@ -216,7 +212,7 @@ if (length(published) > 0L) {
 }
 
 if (list_only) {
-  cat(candidates, sep = "\n")
+  cat(toString(candidates))
   quit(save = "no", status = 0L)
 }
 
