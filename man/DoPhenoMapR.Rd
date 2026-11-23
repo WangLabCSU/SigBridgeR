@@ -20,7 +20,7 @@ DoPhenoMapR(
   binary_positive_reference = c("second", "first"),
   assay = "RNA",
   layer = "data",
-  z_score_cutoff = 2,
+  z_score_cutoff = 2L,
   reference_sign = 1L,
   score_mode = c("weighted_sum", "activity_adjusted"),
   vars_to_regress = c("S.Score", "G2M.Score", "nCount_RNA"),

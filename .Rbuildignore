@@ -107,4 +107,5 @@ SigBridgeR_workflow.png
 ^\.covrignore$
 ^dev$
 ^\.xerj-data$
-^.xerj$
+^\.xerj$
+^\.codewhale/$

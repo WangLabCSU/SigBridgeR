@@ -26,9 +26,18 @@
 #' * `rss_peak_mb` - peak process resident set size, recorded only when
 #'   `measure_rss = TRUE` (Linux only).
 #'
+#' Before the benchmark starts, [bench_probe_resources()] collects a machine
+#' resource summary. Set `probe_resources = FALSE` in the `bench_config`
+#' controls (see [BenchMemoryConfigSet()]) to skip this probe, for example when
+#' the workspace is large and the probe's full `gc()` would add noticeable
+#' startup time.
+#'
 #' @section Benchmark controls (`bench_config`):
 #' * `rounds` (`3L`): number of rounds; every method is screened once per
 #'   round.
+#' * `probe_resources` (`TRUE`): whether to call [bench_probe_resources()]
+#'   before staging the inputs. Set to `FALSE` to skip the probe and its full
+#'   `gc()`.
 #' * `min_iterations`, `max_iterations` (`1L`, `1L`): iteration bounds passed
 #'   to [bench::mark()].
 #' * `order` (`"random"`): `"random"` shuffles methods within each round using
@@ -96,23 +105,26 @@ BenchMemory <- function(obj, ...) {
 
   methods <- unique(obj@screen_method)
 
-  if (verbose) {
-    cli::cli_progress_step("Detecting machine resources")
-  }
+  # * missing/NULL keeps the documented default (TRUE); only explicit FALSE skips
+  if (!isFALSE(obj@bench_config$probe_resources)) {
+    if (verbose) {
+      cli::cli_progress_step("Detecting machine resources")
+    }
 
-  resources <- bench_probe_resources()
+    resources <- bench_probe_resources()
+  }
 
   if (verbose) {
     cli::cli_progress_step("Initializing temporary directory")
   }
 
   # * seed & threads & init
-  tmp_dir <- bench_tmp_dir(obj@sc_data, obj@matched_bulk, obj@phenotype)
+  tmp_dir <- n_cores <- NULL # checking NOTE
+  c(tmp_dir, n_cores) %<-% bench_tmp_dir(obj@sc_data, obj@matched_bulk, obj@phenotype)
   on.exit(
     {
       cli::cli_progress_done()
       unlink(tmp_dir, recursive = TRUE, force = TRUE)
-      gc(verbose = FALSE)
     },
     add = TRUE
   )

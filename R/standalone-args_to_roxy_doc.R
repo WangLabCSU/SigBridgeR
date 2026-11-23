@@ -96,7 +96,7 @@ args_to_roxy_doc <- function(fn, package = NULL, path = ".") {
   db <- get_rd_db(package)
   if (is.null(db)) {
     warning("Cannot read Rd documentation of package `", package, "`.", call. = FALSE)
-    return(character(0))
+    return(character(0L))
   }
   rd <- find_rd_by_alias(db, fn_name)
   if (is.null(rd)) {

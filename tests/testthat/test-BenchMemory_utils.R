@@ -124,10 +124,12 @@ test_that("fail_row builds an error row with missing memory metrics", {
 
 test_that("bench_tmp_dir stages the three shared inputs", {
   skip_if_not_installed("qs2")
-  tmp_dir <- bench_tmp_dir(.benchmem_obj(), matrix(1:4, 2L), c(s1 = 0, s2 = 1))
+  staged <- bench_tmp_dir(.benchmem_obj(), matrix(1:4, 2L), c(s1 = 0, s2 = 1))
+  tmp_dir <- staged$tmp_dir
   withr::defer(unlink(tmp_dir, recursive = TRUE, force = TRUE))
 
   expect_true(dir.exists(tmp_dir))
+  expect_length(staged$n_cores, 1L)
   expect_setequal(
     basename(list.files(tmp_dir)),
     c("sc_data.qs2", "matched_bulk.qdata", "phenotype.qdata")

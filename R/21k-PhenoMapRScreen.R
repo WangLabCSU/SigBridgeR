@@ -110,7 +110,7 @@ ValidatePhenoMapRParams <- function(
     binary_positive_reference = dots$binary_positive_reference %||% c("second", "first"),
     assay = dots$assay %||% "RNA",
     layer = dots$layer %||% "data",
-    z_score_cutoff = dots$z_score_cutoff %||% 2,
+    z_score_cutoff = dots$z_score_cutoff %||% 2L,
     reference_sign = dots$reference_sign %||% 1L,
     score_mode = dots$score_mode %||% c("weighted_sum", "activity_adjusted"),
     vars_to_regress = dots$vars_to_regress %||% c("S.Score", "G2M.Score", "nCount_RNA"),
@@ -219,7 +219,7 @@ DoPhenoMapR <- function(
   binary_positive_reference = c("second", "first"),
   assay = "RNA",
   layer = "data",
-  z_score_cutoff = 2,
+  z_score_cutoff = 2L,
   reference_sign = 1L,
   score_mode = c("weighted_sum", "activity_adjusted"),
   vars_to_regress = c("S.Score", "G2M.Score", "nCount_RNA"),
@@ -325,7 +325,7 @@ DoPhenoMapR <- function(
     score_columns = NULL
   )
 
-  group_col <- groups[, 2] |>
+  group_col <- groups[, 2L] |>
     dplyr::recode_values(
       "Most Adverse" ~ "Positive",
       "Most Favorable" ~ "Negative",

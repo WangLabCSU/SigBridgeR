@@ -56,12 +56,21 @@ Three memory numbers are reported because they mean different things:
 \item \code{rss_peak_mb} - peak process resident set size, recorded only when
 \code{measure_rss = TRUE} (Linux only).
 }
+
+Before the benchmark starts, \code{\link[=bench_probe_resources]{bench_probe_resources()}} collects a machine
+resource summary. Set \code{probe_resources = FALSE} in the \code{bench_config}
+controls (see \code{\link[=BenchMemoryConfigSet]{BenchMemoryConfigSet()}}) to skip this probe, for example when
+the workspace is large and the probe's full \code{gc()} would add noticeable
+startup time.
 }
 \section{Benchmark controls (\code{bench_config})}{
 
 \itemize{
 \item \code{rounds} (\code{3L}): number of rounds; every method is screened once per
 round.
+\item \code{probe_resources} (\code{TRUE}): whether to call \code{\link[=bench_probe_resources]{bench_probe_resources()}}
+before staging the inputs. Set to \code{FALSE} to skip the probe and its full
+\code{gc()}.
 \item \code{min_iterations}, \code{max_iterations} (\code{1L}, \code{1L}): iteration bounds passed
 to \code{\link[bench:mark]{bench::mark()}}.
 \item \code{order} (\code{"random"}): \code{"random"} shuffles methods within each round using

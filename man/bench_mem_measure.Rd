@@ -10,7 +10,8 @@ bench_mem_measure(
   round,
   position,
   tmp_dir,
-  verbose = FALSE
+  verbose = FALSE,
+  n_cores = 2L
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ are taken from \code{config@method_param[[paste0(method_name, "_param")]]}.}
 the serialised inputs loaded by the child.}
 
 \item{verbose}{\code{logical}. Whether to report progress. Default: \code{FALSE}.}
+
+\item{n_cores}{\code{integer}. Number of CPU cores to configure for the child. Used not in
+the child, but in the parent.}
 }
 \value{
 A one-row \code{data.table}: the \code{\link[bench:mark]{bench::mark()}} columns, with

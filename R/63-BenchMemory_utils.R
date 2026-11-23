@@ -58,18 +58,20 @@ bench_heap_used_mb <- function() {
 #'   as the `qs2` thread count.
 #'
 #' @return The path of the created directory, containing `sc_data.qs2`,
-#'   `matched_bulk.qdata` and `phenotype.qdata`. The caller is responsible for
-#'   removing it, as [BenchMemory()] does via `on.exit()`.
+#'   `matched_bulk.qdata` and `phenotype.qdata` and the number of CPU cores.
+#'   The caller is responsible for removing it, as [BenchMemory()] does via `on.exit()`.
 #'
 #' @keywords internal
 bench_tmp_dir <- function(sc_data, bulk_data, pheno_data) {
   tmp_dir <- file.path(tempfile(), paste0("SigBridgeR_bench_tmp"))
   dir.create(tmp_dir, recursive = TRUE)
-  n_cores <- max(floor(parallel::detectCores() / 2L), 1L)
-  qs2::qs_save(sc_data, file.path(tmp_dir, "sc_data.qs2"), nthreads = n_cores)
-  qs2::qd_save(bulk_data, file.path(tmp_dir, "matched_bulk.qdata"), nthreads = n_cores)
-  qs2::qd_save(pheno_data, file.path(tmp_dir, "phenotype.qdata"), nthreads = n_cores)
-  tmp_dir
+  n_cores <- max(floor(parallel::detectCores() / 2L), 2L) %||% 2L
+
+  qs2::qs_save(sc_data, file.path(tmp_dir, "sc_data.qs2"), nthreads = n_cores, compress_level = 1L)
+  qs2::qd_save(bulk_data, file.path(tmp_dir, "matched_bulk.qdata"), nthreads = n_cores, compress_level = 1L)
+  qs2::qd_save(pheno_data, file.path(tmp_dir, "phenotype.qdata"), nthreads = n_cores, compress_level = 1L)
+
+  list(tmp_dir = tmp_dir, n_cores = n_cores)
 }
 
 
@@ -117,6 +119,8 @@ bench_child_log <- function(log, process, n = 100L) {
 #' @param tmp_dir `character`. Directory created by `bench_tmp_dir()`` holding
 #'   the serialised inputs loaded by the child.
 #' @param verbose `logical`. Whether to report progress. Default: `FALSE`.
+#' @param n_cores `integer`. Number of CPU cores to configure for the child. Used not in
+#'   the child, but in the parent.
 #'
 #' @details
 #' The child sets the configured seed and threads, loads the inputs from
@@ -135,8 +139,15 @@ bench_child_log <- function(log, process, n = 100L) {
 #'   (total wall-clock seconds of the child run).
 #'
 #' @keywords internal
-bench_mem_measure <- function(config, method_name, round, position, tmp_dir, verbose = FALSE) {
-  gc(reset = TRUE)
+bench_mem_measure <- function(
+  config,
+  method_name,
+  round,
+  position,
+  tmp_dir,
+  verbose = FALSE,
+  n_cores = 2L
+) {
   started <- Sys.time()
 
   timeout_sec <- config@bench_config$timeout_sec
@@ -183,12 +194,12 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
         error = function(e) e
       )
       mem_peak <- bench_heap_used_mb()
-      rss_peak <- if (isTRUE(config@bench_config$measure_rss)) bench_peak_rss_mb() else NA_real_
+      rss_peak <- if (isTRUE(bench_config$measure_rss)) bench_peak_rss_mb() else NA_real_
       list(bench_res = bench_res, mem_peak = mem_peak, rss_peak = rss_peak)
     },
     args = list(
       tmp_dir = tmp_dir,
-      n_cores = max(floor(parallel::detectCores() / 2L), 1L),
+      n_cores = n_cores,
       label_type = glue::glue(config@label_type), # `method_name` exists
       phenotype_class = config@phenotype_class,
       bench_config = config@bench_config,
@@ -204,8 +215,8 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
   # * from the console
   on.exit(
     {
-      cli::cli_warn("Cleaning up the child process for {method_name} in round {round}")
       if (bench_process$is_alive()) {
+        cli::cli_warn("Cleaning up the child process for {method_name} in round {round}")
         invisible(bench_process$kill_tree())
       }
     },
@@ -352,8 +363,6 @@ bench_mem_measure <- function(config, method_name, round, position, tmp_dir, ver
     rss_peak_mb = rss_peak,
     elapsed = elapsed
   )]
-
-  gc(verbose = FALSE)
 
   res
 }

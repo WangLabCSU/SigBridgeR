@@ -2,15 +2,19 @@ test_that("BenchMemoryConfigSet merges defaults and rejects unknown fields", {
   ctrl <- BenchMemoryConfigSet()
   expect_equal(ctrl$rounds, 3L)
   expect_equal(ctrl$order, "random")
+  expect_true(ctrl$probe_resources)
   expect_true(ctrl$memory)
   expect_equal(ctrl$timeout_sec, 10800L)
 
-  ctrl <- BenchMemoryConfigSet(rounds = 5L, order = "fixed")
+  ctrl <- BenchMemoryConfigSet(rounds = 5L, order = "fixed", probe_resources = FALSE)
   expect_equal(ctrl$rounds, 5L)
   expect_equal(ctrl$order, "fixed")
+  expect_false(ctrl$probe_resources)
 
   expect_error(BenchMemoryConfigSet(other_xyz = 5L), "Unknown")
   expect_error(BenchMemoryConfigSet(rounds = 0L), "at least 1")
+  expect_error(BenchMemoryConfigSet(probe_resources = NA), "probe_resources")
+  expect_error(BenchMemoryConfigSet(probe_resources = "yes"), "probe_resources")
 })
 
 # Mocked measurement: the orchestration is tested without launching child R sessions.
@@ -50,6 +54,100 @@ test_that("BenchMemoryConfig keeps label templates and per-method arguments", {
   expect_identical(config@label_type, "{method_name}_res")
   expect_equal(config@method_param[["scPP_param"]]$Log2FC_cutoff, 0.05)
   expect_identical(config@bench_config$order, "random")
+})
+
+test_that("BenchMemoryConfigSet stores the resource probe switch", {
+  skip_if_not_installed("SeuratObject")
+
+  sc <- suppressWarnings(
+    SeuratObject::CreateSeuratObject(counts = Matrix::Matrix(matrix(1:4, 2L)))
+  )
+
+  make_config <- function(probe_resources = TRUE) {
+    BenchMemoryConfig(
+      matched_bulk = matrix(1:4, nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
+      sc_data = sc,
+      phenotype = c(s1 = 0, s2 = 1),
+      phenotype_class = "binary",
+      screen_method = "scPP",
+      method_param = MethodParamSet(),
+      bench_config = BenchMemoryConfigSet(
+        rounds = 1L,
+        probe_resources = probe_resources
+      )
+    )
+  }
+
+  expect_true(make_config()@bench_config$probe_resources)
+  expect_false(make_config(probe_resources = FALSE)@bench_config$probe_resources)
+  expect_error(BenchMemoryConfigSet(probe_resources = NA), "probe_resources")
+  expect_error(BenchMemoryConfigSet(probe_resources = c(TRUE, FALSE)), "probe_resources")
+  expect_error(BenchMemoryConfigSet(probe_resources = "yes"), "probe_resources")
+})
+
+test_that("BenchMemory probes resources only when probe_resources is TRUE", {
+  skip_if_not_installed("bench")
+  skip_if_not_installed("SeuratObject")
+
+  fake_executor <- function(
+    matched_bulk,
+    sc_data,
+    phenotype,
+    label_type,
+    phenotype_class,
+    ...
+  ) {
+    list(scRNA_data = sc_data)
+  }
+  ScreenStrategy[["probe_switch"]] <- ScreenMethod(
+    method_name = "probe_switch",
+    method_version = "0.0.1",
+    executor = fake_executor,
+    phenotype_class = "binary",
+    mapper = NULL
+  )
+  withr::defer(rm("probe_switch", envir = ScreenStrategy))
+
+  sc <- suppressWarnings(
+    SeuratObject::CreateSeuratObject(counts = Matrix::Matrix(matrix(1:4, 2L)))
+  )
+
+  make_config <- function(probe_resources) {
+    BenchMemoryConfig(
+      matched_bulk = matrix(1:4, nrow = 2L, dimnames = list(c("g1", "g2"), c("s1", "s2"))),
+      sc_data = sc,
+      phenotype = c(s1 = 0, s2 = 1),
+      phenotype_class = "binary",
+      screen_method = "probe_switch",
+      method_param = MethodParamSet(),
+      bench_config = BenchMemoryConfigSet(
+        rounds = 1L,
+        order = "fixed",
+        probe_resources = probe_resources
+      )
+    )
+  }
+
+  seen <- new.env(parent = emptyenv())
+  seen$value <- character()
+  seen$probed <- 0L
+  local_mocked_bindings(
+    bench_probe_resources = function() {
+      seen$probed <- seen$probed + 1L
+      list(cores = 1L)
+    },
+    bench_tmp_dir = function(sc_data, bulk_data, pheno_data) {
+      list(tmp_dir = tempfile(), n_cores = 1L)
+    },
+    bench_mem_measure = mock_measure(seen),
+    .package = "SigBridgeR"
+  )
+
+  BenchMemory(make_config(TRUE), verbose = FALSE)
+  expect_identical(seen$probed, 1L)
+
+  BenchMemory(make_config(FALSE), verbose = FALSE)
+  expect_identical(seen$probed, 1L)
 })
 
 test_that("BenchMemory runs each method once per round in fixed order", {
@@ -97,7 +195,9 @@ test_that("BenchMemory runs each method once per round in fixed order", {
   seen$value <- character()
   local_mocked_bindings(
     bench_probe_resources = function() list(cores = 1L),
-    bench_tmp_dir = function(sc_data, bulk_data, pheno_data) tempfile(),
+    bench_tmp_dir = function(sc_data, bulk_data, pheno_data) {
+      list(tmp_dir = tempfile(), n_cores = 1L)
+    },
     bench_mem_measure = mock_measure(seen),
     .package = "SigBridgeR"
   )
@@ -159,7 +259,9 @@ test_that("BenchMemory random order is reproducible for a fixed seed", {
     seen$value <- character()
     local_mocked_bindings(
       bench_probe_resources = function() list(cores = 1L),
-      bench_tmp_dir = function(sc_data, bulk_data, pheno_data) tempfile(),
+      bench_tmp_dir = function(sc_data, bulk_data, pheno_data) {
+        list(tmp_dir = tempfile(), n_cores = 1L)
+      },
       bench_mem_measure = mock_measure(seen),
       .package = "SigBridgeR"
     )

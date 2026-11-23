@@ -6,6 +6,7 @@
 \usage{
 BenchMemoryConfigSet(
   rounds = 3L,
+  probe_resources = TRUE,
   min_iterations = 1L,
   max_iterations = 1L,
   order = c("random", "fixed"),
@@ -27,6 +28,11 @@ BenchMemoryConfigSet(
 \item{rounds}{\code{integer}. Number of benchmark rounds; every method is screened
 once per round and per-method summaries are taken across rounds. Odd values
 let the median ignore a single cold round. Must be at least 1. Default: \code{3L}.}
+
+\item{probe_resources}{\code{logical}. Whether \code{\link[=BenchMemory]{BenchMemory()}} should call
+\code{\link[=bench_probe_resources]{bench_probe_resources()}} before staging the inputs. The probe calls
+\code{gc()} and can be expensive on large workspaces; disable it when the
+machine resource summary is not needed. Default: \code{TRUE}.}
 
 \item{min_iterations}{Each expression will be evaluated a minimum of \code{min_iterations} times.}
 

@@ -63,6 +63,10 @@ BenchMemoryConfig <- S7::new_class(
 #' @param rounds `integer`. Number of benchmark rounds; every method is screened
 #'   once per round and per-method summaries are taken across rounds. Odd values
 #'   let the median ignore a single cold round. Must be at least 1. Default: `3L`.
+#' @param probe_resources `logical`. Whether [BenchMemory()] should call
+#'   [bench_probe_resources()] before staging the inputs. The probe calls
+#'   `gc()` and can be expensive on large workspaces; disable it when the
+#'   machine resource summary is not needed. Default: `TRUE`.
 #' @param order `character`. Order in which methods run within a round:
 #'   `"random"` shuffles them (seeded by `seed`) to spread cold-cache and
 #'   package-caching effects; `"fixed"` keeps the given method order. Default:
@@ -95,6 +99,7 @@ BenchMemoryConfig <- S7::new_class(
 #' @export
 BenchMemoryConfigSet <- function(
   rounds = 3L,
+  probe_resources = TRUE,
   min_iterations = 1L,
   max_iterations = 1L,
   order = c("random", "fixed"),
@@ -142,6 +147,7 @@ BenchMemoryConfigSet <- function(
   }
   seed <- as.integer(seed)
 
+  rlang::check_bool(probe_resources)
   rlang::check_bool(memory)
   rlang::check_bool(filter_gc)
   rlang::check_bool(check)
@@ -153,6 +159,7 @@ BenchMemoryConfigSet <- function(
 
   list(
     rounds = rounds,
+    probe_resources = probe_resources,
     min_iterations = min_iterations,
     max_iterations = max_iterations,
     order = order,

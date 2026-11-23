@@ -15,8 +15,8 @@ bench_tmp_dir(sc_data, bulk_data, pheno_data)
 }
 \value{
 The path of the created directory, containing \code{sc_data.qs2},
-\code{matched_bulk.qdata} and \code{phenotype.qdata}. The caller is responsible for
-removing it, as \code{\link[=BenchMemory]{BenchMemory()}} does via \code{on.exit()}.
+\code{matched_bulk.qdata} and \code{phenotype.qdata} and the number of CPU cores.
+The caller is responsible for removing it, as \code{\link[=BenchMemory]{BenchMemory()}} does via \code{on.exit()}.
 }
 \description{
 Serialises the three shared benchmark inputs into a fresh temporary
