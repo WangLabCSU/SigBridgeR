@@ -23,7 +23,7 @@ SigBridgeR integrates multiple algorithms, using single-cell RNA sequencing data
 | [**Scissor**](https://github.com/sunduanchen/Scissor) | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
 | [**scPAS**](https://github.com/aiminXie/scPAS) | `binary` `survival` `continuous` |  | GPL-3 |  |
 | [**scAB**](https://github.com/jinworks/scAB) | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
-| [**scPP**](https://github.com/WangX-Lab/ScPP) | `binary` `survival` `continuous` |  | GPL-3 |  |
+| [**scPP**](https://github.com/WangX-Lab/ScPP) | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
 | [**DEGAS**](https://github.com/tsteelejohnson91/DEGAS) | `binary` `survival` `continuous` |  | MIT |  |
 | [**DEGASv2**](https://github.com/ElliotLiu1997/DEGASv2) | `binary` `survival` `continuous` |  | MIT | Bulk raw counts matrix perferred |
 | [**LP-SGL**](https://github.com/hongmeizhanghm/LP_SGL) | `binary` `survival` `continuous` |  | No License |  |
@@ -194,12 +194,15 @@ Let us know if you have ideas to make this project better. Pull requests are wel
 
 ## 🧩 Agent Skills
 
-SigBridgeR ships a set of [Agent Skills](https://skills.sh/) that teach AI coding agents how to drive the package correctly. They live in the standalone [`skills/`](skills) folder and are installable with the [`skills`](https://www.npmjs.com/package/skills) CLI (Node.js \>= 22).
+SigBridgeR ships a set of [Agent Skills](https://skills.sh/) that teach AI coding agents how to use and extend the package correctly. They live in the standalone [`skills/`](skills) folder and are installable with the [`skills`](https://www.npmjs.com/package/skills) CLI (Node.js \>= 22).
 
 | Skill | What it covers |
 |:---|:---|
-| `sigbridger-screen` | Validate scRNA/bulk/phenotype inputs, choose a registered `ScreenStrategy` method, run `Screen()` and read the `@scRNA_data` result |
-| `sigbridger-extend` | Plugging in custom algorithms via `TemplateScreenFunc()`, `ScreenMethod`, `AnnotationMethod` and `Register()` |
+| `sigbridger-screen` | Validate scRNA/bulk/phenotype inputs, choose a registered `ScreenStrategy` method, run `Screen()` and read the labelled `Seurat` object from `@scRNA_data` |
+| `sigbridger-extend` | Add custom methods: scaffold with `TemplateScreenFunc()`, validate with `ValidateScreenFunc()`, and register `ScreenMethod`, `AnnotationMethod` and preprocessing steps via `Register()` |
+| `reference-coding` | For contributors: query the local XERJ corpora (upstream screening algorithms, Seurat, Rcpp) before changing analysis code, cite `file:line`, and respect upstream licences |
+
+`reference-coding` relies on the optional XERJ setup documented in [`AGENTS.md`](AGENTS.md); the other two work without it.
 
 Install every skill (interactive: pick the skills and the target agents):
 

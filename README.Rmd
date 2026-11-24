@@ -276,14 +276,18 @@ Let us know if you have ideas to make this project better. Pull requests are wel
 ## 🧩 Agent Skills
 
 SigBridgeR ships a set of [Agent Skills](https://skills.sh/) that teach AI coding
-agents how to drive the package correctly. They live in the standalone [`skills/`](skills) folder and are
-installable with the [`skills`](https://www.npmjs.com/package/skills) CLI
-(Node.js >= 22).
+agents how to use and extend the package correctly. They live in the standalone
+[`skills/`](skills) folder and are installable with the
+[`skills`](https://www.npmjs.com/package/skills) CLI (Node.js >= 22).
 
 | Skill | What it covers |
 |:------|:---------------|
-| `sigbridger-screen` | Validate scRNA/bulk/phenotype inputs, choose a registered `ScreenStrategy` method, run `Screen()` and read the `@scRNA_data` result |
-| `sigbridger-extend` | Plugging in custom algorithms via `TemplateScreenFunc()`, `ScreenMethod`, `AnnotationMethod` and `Register()` |
+| `sigbridger-screen` | Validate scRNA/bulk/phenotype inputs, choose a registered `ScreenStrategy` method, run `Screen()` and read the labelled `Seurat` object from `@scRNA_data` |
+| `sigbridger-extend` | Add custom methods: scaffold with `TemplateScreenFunc()`, validate with `ValidateScreenFunc()`, and register `ScreenMethod`, `AnnotationMethod` and preprocessing steps via `Register()` |
+| `reference-coding` | For contributors: query the local XERJ corpora (upstream screening algorithms, Seurat, Rcpp) before changing analysis code, cite `file:line`, and respect upstream licences |
+
+`reference-coding` relies on the optional XERJ setup documented in
+[`AGENTS.md`](AGENTS.md); the other two work without it.
 
 Install every skill (interactive: pick the skills and the target agents):
 
