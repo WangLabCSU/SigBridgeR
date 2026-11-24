@@ -31,10 +31,10 @@ backend, and additional named arguments are forwarded to that backend when
 \code{\link[=BenchGeneScore]{BenchGeneScore()}} computes the scores.
 }
 \examples{
-\donttest{
+\dontshow{if (rlang::is_installed("GSVA")) withAutoprint(\{ # examplesIf}
 BenchGeneScoreConfigSet(method = "ssGSEA")
-}
 
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=BenchGeneScoreConfig]{BenchGeneScoreConfig()}}, \code{\link[=BenchGeneScore]{BenchGeneScore()}}

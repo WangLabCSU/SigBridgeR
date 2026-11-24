@@ -19,6 +19,7 @@
 #' @return `integer(1)`.
 #' @noRd
 image2_default_nthreads <- function() {
+  rlang::check_installed("parallel")
   cores <- tryCatch(
     parallel::detectCores(logical = TRUE),
     error = function(e) NA_integer_,

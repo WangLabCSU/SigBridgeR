@@ -99,10 +99,9 @@ BenchGeneScoreConfig <- S7::new_class(
 #' @return A named `list` holding `method` and the extra backend arguments, to
 #'   be used as the `bench_config` of [BenchGeneScoreConfig()].
 #'
-#' @examples
-#' \donttest{
+#' @examplesIf rlang::is_installed("GSVA")
 #' BenchGeneScoreConfigSet(method = "ssGSEA")
-#' }
+#'
 #'
 #' @seealso [BenchGeneScoreConfig()], [BenchGeneScore()]
 #'

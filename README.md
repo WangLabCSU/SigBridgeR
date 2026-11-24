@@ -81,9 +81,10 @@ pak::pak(
   "matrixTests",
   "KernSmooth",
   "cheapr",
+  "WGCNA",
   # better gene symbol conversion
   "scCustomize",
-  "WGCNA"
+  "huayc09/SeuratExtend"
 )
 ```
 
@@ -239,17 +240,19 @@ If you use SigBridgeR in your work, please cite the corresponding papers:
 print(citation("SigBridgeR"), bibtex = TRUE)
 #> Please cite the following publications when using this package.
 #> 
-#>   Yang Y, Wang S (2026). _SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data_. R package version 4.0.0,
-#>   <https://wanglabcsu.github.io/sigbridger>.
+#>   Yang et al. SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell
+#>   Transcriptomics. GigaScience (2026) [SigBridgeR]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
-#>   @Manual{,
-#>     title = {SigBridgeR: Integrative Toolkit for Linking Phenotypes to Cell Subpopulations via scRNA-seq and Bulk Data},
-#>     author = {Yuxi Yang and Shixiang Wang},
+#>   @Article{,
+#>     title = {SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell Transcriptomics},
+#>     author = {Yuxi Yang and Hongqian Qian and Zeyu Yan and Chunyang Wang and Liping Du and Xiaoxiao Shen and Yun Peng and Xiaoyun Bu and Ting Li and Jian-Guo Zhou and Shixiang Wang},
+#>     journal = {GigaScience},
 #>     year = {2026},
-#>     note = {R package version 4.0.0},
-#>     url = {https://wanglabcsu.github.io/sigbridger},
+#>     pages = {giag100},
+#>     doi = {10.1093/gigascience/giag100},
+#>     url = {https://doi.org/10.1093/gigascience/giag100},
 #>   }
 #> 
 #>   Sun et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol (2022) [Scissor]
@@ -267,7 +270,8 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     url = {https://doi.org/10.1038/s41587-021-01091-3},
 #>   }
 #> 
-#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med (2022) [DEGAS]
+#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to
+#>   disease. Genome Med (2022) [DEGAS]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -282,7 +286,8 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     url = {https://doi.org/10.1186/s13073-022-01012-2},
 #>   }
 #> 
-#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Res (2022) [scAB]
+#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic
+#>   Acids Res (2022) [scAB]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -361,8 +366,8 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     url = {https://doi.org/10.1093/bib/bbae655},
 #>   }
 #> 
-#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation. Nat Commun (2025)
-#>   [SIDISH]
+#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico
+#>   perturbation. Nat Commun (2025) [SIDISH]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -377,7 +382,8 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     url = {https://doi.org/10.1038/s41467-025-66162-4},
 #>   }
 #> 
-#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci (2026) [ScPP]
+#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells.
+#>   Interdiscip Sci (2026) [ScPP]
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 

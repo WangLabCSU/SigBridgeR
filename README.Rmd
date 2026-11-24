@@ -123,9 +123,10 @@ pak::pak(
   "matrixTests",
   "KernSmooth",
   "cheapr",
+  "WGCNA",
   # better gene symbol conversion
   "scCustomize",
-  "WGCNA"
+  "huayc09/SeuratExtend"
 )
 ```
 
