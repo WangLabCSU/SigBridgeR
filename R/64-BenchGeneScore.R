@@ -72,7 +72,7 @@
 #'   First = paste0("Gene", 1:5),
 #'   Second = paste0("Gene", 6:10)
 #' )
-#' scores <- BenchGeneScore(obj, pathways, method = "ssGSEA", verbose = FALSE)
+#' scores <- try(BenchGeneScore(obj, pathways, method = "ssGSEA", verbose = FALSE)) # require GSVA
 #' }
 #' @seealso [BenchGeneScoreConfig()], [BenchGeneScoreConfigSet()],
 #'   [Screen()], [BenchGSEA()], [BenchAcc()]

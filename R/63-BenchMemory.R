@@ -122,10 +122,7 @@ BenchMemory <- function(obj, ...) {
   tmp_dir <- n_cores <- NULL # checking NOTE
   c(tmp_dir, n_cores) %<-% bench_tmp_dir(obj@sc_data, obj@matched_bulk, obj@phenotype)
   on.exit(
-    {
-      cli::cli_progress_done()
-      unlink(tmp_dir, recursive = TRUE, force = TRUE)
-    },
+    unlink(tmp_dir, recursive = TRUE, force = TRUE),
     add = TRUE
   )
 
@@ -157,12 +154,15 @@ BenchMemory <- function(obj, ...) {
         tmp_dir = tmp_dir,
         verbose = verbose
       )
+
+      if (isTRUE(verbose)) {
+        cli::cli_progress_done()
+      }
     }
   }
 
   metrics <- data.table::rbindlist(rows, fill = TRUE)
   data.table::setorderv(metrics, c("method_name", "round", "position"))
-  cli::cli_progress_done()
 
   metrics
 }

@@ -178,6 +178,7 @@ VariableFeatures
 WGCNA
 WangX
 Wasserstein
+XERJ
 XLA
 Xena
 Xenium
@@ -248,7 +249,6 @@ ggupset
 github
 gzip
 gzipped
-hardcoded
 https
 hugo
 hvg
@@ -263,6 +263,7 @@ kmeans
 kolmogorov
 labelled
 labelling
+licences
 lifecycle
 linux
 logFC
@@ -358,6 +359,7 @@ scbatch
 sclab
 scpas
 serialised
+serialises
 setFunOption
 setFuncOption
 seurat
