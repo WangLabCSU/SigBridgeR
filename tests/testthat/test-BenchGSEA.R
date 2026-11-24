@@ -91,7 +91,11 @@ test_that("BenchGSEA.BenchGSEAConfig screens each method before GSEA", {
     phenotype_class = "binary",
     screen_method = "scPP",
     method_param = MethodParamSet(),
-    bench_config = list(group = obj$truth, pathway = .benchgsea_pathway())
+    bench_config = list(
+      group = obj$truth,
+      pathway = .benchgsea_pathway(),
+      minSize = 5L
+    )
   )
   seen <- new.env(parent = emptyenv())
   seen$n <- 0L
@@ -101,8 +105,11 @@ test_that("BenchGSEA.BenchGSEAConfig screens each method before GSEA", {
       seen$n <- seen$n + 1L
       ScreenMethodResult(scRNA_data = obj)
     },
-    BenchGSEA.Seurat = function(obj, ...) {
+    BenchGSEA.Seurat = function(obj, group, pathway, minSize, ...) {
       seen$obj <- obj
+      seen$group <- group
+      seen$pathway <- pathway
+      seen$minSize <- minSize
       invisible(NULL)
     },
     .package = "SigBridgeR"
@@ -112,6 +119,9 @@ test_that("BenchGSEA.BenchGSEAConfig screens each method before GSEA", {
 
   expect_equal(seen$n, 1L)
   expect_identical(seen$obj, obj)
+  expect_identical(seen$group, obj$truth)
+  expect_identical(seen$pathway, .benchgsea_pathway())
+  expect_identical(seen$minSize, 5L)
 })
 
 test_that("BenchGSEA binarizes screening labels before calling FindMarkers", {

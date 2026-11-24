@@ -156,5 +156,5 @@ Screen(bulk, sc, pheno, phenotype_class = "binary", screen_method = "Foo")
   `?SigBridgeR::ScreenMethod`, `?SigBridgeR::AnnotationMethod`,
   `?SigBridgeR::Register`, `?SigBridgeR::ScreenStrategy`,
   `?SigBridgeR::SCPreProcessStrategy`
-- Vignettes `Extending_ScreenMethod`, `Extending_Annotation`, `Extending_Seurat`
+- Vignettes `Extending_ScreenMethod`, `Extending_Annotation`, `Extending_Seurat` (deprecated)
 - Worked end-to-end example: `references/custom-method-example.md`

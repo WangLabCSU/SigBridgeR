@@ -46,6 +46,7 @@ reference:
           Merge and visualize screening results across methods or conditions.
       contents:
           - MergeResult
+          - plus-methods
           - WeightedVote
           - DrawBulkPCA
           - ScreenFractionPlot
@@ -121,7 +122,6 @@ reference:
           - SCAnnotateStrategy
           - ScreenStrategy
           - AVAILABLE_ANNOTATE_METHODS
-          - AVAILABLE_GENE_SCORE_METHODS
           - AVAILABLE_SCREEN_METHODS
 
     - title: Benchmark Design
@@ -249,11 +249,29 @@ navbar:
 
                 - text: -------
 
+                - text: Benchmark Methods - Accuracy
+                  icon: fa-check
+                  href: articles/Benchmark_Accuracy.html
+
+                - text: Benchmark Methods - Gene Set Enrichment
+                  icon: fa-sitemap
+                  href: articles/Benchmark_GSEA.html
+
+                - text: Benchmark Methods - Gene Set Scoring
+                  icon: fa-chart-line
+                  href: articles/Benchmark_GeneScore.html
+
+                - text: Benchmark Methods - Time and Memory
+                  icon: fa-clock
+                  href: articles/Benchmark_Memory.html
+
+                - text: -------
+
                 - text: Extending SigBridgeR with Custom Algorithm"
                   icon: fa-code-branch
                   href: articles/Extending_ScreenMethod.html
 
-                - text: Extend Seurat Preprocessing Pipeline
+                - text: Extend Seurat Preprocessing Pipeline (Deprecated)
                   icon: fa-code-branch
                   href: articles/Extending_Seurat.html
 

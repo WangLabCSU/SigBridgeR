@@ -54,6 +54,7 @@
 * Updated the README algorithm table and citation information.
 * Refreshed roxygen documentation and benchmark docs covering C++ backends and config APIs; reworked `BenchMemory()` docs for child-process measurement.
 * Added a spelling check to CI.
+* Deprecated the `Extending_Seurat` vignette, which now carries a lifecycle badge and points to `Register()` and `SCIntegrate(pipeline = )`.
 
 ## INTERNAL CHANGES
 

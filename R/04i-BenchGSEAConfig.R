@@ -12,11 +12,12 @@
 #'
 #' @inheritParams BenchConfig
 #' @param bench_config Named `list` of GSEA controls returned by
-#'   [BenchGSEAConfigSet()]. It holds `group` (one group label per cell in
-#'   `sc_data`) and `pathway` (a named list of gene sets), plus optional
+#'   [BenchGSEAConfigSet()]. It holds `pathway` (a named list of gene sets),
+#'   optionally `group` (one group label per cell in `sc_data`), plus optional
 #'   arguments forwarded to [fgsea::fgsea()] such as `minSize`, `maxSize` and
-#'   `gseaParam`. `group` must have the same length as the number of cells in
-#'   `sc_data`. Default: `BenchGSEAConfigSet(sc_data)`.
+#'   `gseaParam`. `group`, when supplied, must have the same length as the
+#'   number of cells in `sc_data`. Default: `list()`, which is rejected by the
+#'   validator because `pathway` is required.
 #' @param ... Must be empty. Method specific arguments belong in `method_param`.
 #'
 #' @returns A `BenchGSEAConfig` S7 object.
@@ -30,11 +31,19 @@ BenchGSEAConfig <- S7::new_class(
     bench_config = property_list
   ),
   validator = \(self) {
-    if (length(self@bench_config$group) != ncol(self@sc_data)) {
-      Abort(
-        "{.arg group} must have the same length as the number of cells",
-        "Each label represents a cell"
-      )
+    if (is.null(self@bench_config$pathway)) {
+      return(cli::format_inline(
+        "{.val bench_config$pathway} is not specified"
+      ))
+    }
+    if (
+      !is.null(self@bench_config$group) &&
+        length(self@bench_config$group) != ncol(self@sc_data)
+    ) {
+      return(cli::format_inline(
+        "{.arg group} must have the same length as the number of cells. \
+        Each label represents a cell"
+      ))
     }
   },
   constructor = \(
@@ -45,7 +54,7 @@ BenchGSEAConfig <- S7::new_class(
     phenotype_class = c("binary", "survival", "continuous"),
     screen_method = names(ScreenStrategy),
     method_param = MethodParamSet(),
-    bench_config = BenchGSEAConfigSet(sc_data),
+    bench_config = list(),
     ...
   ) {
     rlang::check_dots_empty()
@@ -77,6 +86,9 @@ BenchGSEAConfig <- S7::new_class(
 #'   It defines the cells that `group` assigns labels to.
 #' @param pathway A named `list` of gene sets, each element a character vector
 #'   of gene symbols. Passed to the `pathways` argument of [fgsea::fgsea()].
+#' @param group `character` or `NULL`. Per-cell group labels, one per cell in
+#'   `sc_data`. The vector is stored in `bench_config` and validated by
+#'   [BenchGSEAConfig()]. Default: `NULL`.
 #' @param ... Additional named arguments, typically further [fgsea::fgsea()]
 #'   controls (e.g. `nperm`, `scoreType`). Case variants of the function's own
 #'   arguments are resolved to their canonical names.
@@ -86,7 +98,8 @@ BenchGSEAConfig <- S7::new_class(
 #' \dontrun{
 #' config <- BenchGSEAConfigSet(
 #'   sc_data = sc,
-#'   pathway = fgsea::examplePathways
+#'   pathway = fgsea::examplePathways,
+#'   group = sc$cell_type
 #' )
 #' }
 #' @family ConfigSet
@@ -94,6 +107,7 @@ BenchGSEAConfig <- S7::new_class(
 BenchGSEAConfigSet <- function(
   sc_data, # seurat
   pathway, # pass to fgsea()
+  group = NULL, # per-cell group labels
   ...
 ) {
   rlang::check_installed("dplyr")
@@ -108,7 +122,8 @@ BenchGSEAConfigSet <- function(
 
   c(
     list(
-      pathway = pathway # named list, elements are chr vecs
+      pathway = pathway, # named list, elements are chr vecs
+      group = group
     ),
     dots # pass to fgsea()
   )

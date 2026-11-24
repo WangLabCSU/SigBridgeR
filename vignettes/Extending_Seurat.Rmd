@@ -7,6 +7,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="https://img.shields.io/badge/lifecycle-deprecated-orange.svg" alt="Lifecycle: deprecated" align="right"></a>
+
+> **Deprecated.** This vignette is deprecated as of SigBridgeR 4.0.0 and will be
+> removed in a future release. `SCPreProcess()` and the registry-based
+> preprocessing pipeline are superseded
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,

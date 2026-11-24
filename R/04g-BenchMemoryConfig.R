@@ -80,7 +80,7 @@ BenchMemoryConfig <- S7::new_class(
 #'   round: `"skip"` warns and continues with the remaining methods, `"stop"`
 #'   aborts the whole benchmark. Default: `c("skip", "stop")` (first value used).
 #' @param set_threads `integer`. Number of threads the measurement child process
-#'   is pinned to via [setThreads()], so runs stay comparable across methods.
+#'   is pinned to via [SetThreads()], so runs stay comparable across methods.
 #'   Default: `1L`.
 #' @param timeout_sec `numeric`. Maximum wall-clock seconds allowed for one
 #'   method in one round; the child process is killed when the limit is exceeded.

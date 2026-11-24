@@ -273,7 +273,7 @@ DoscPP <- function(
       return(NULL)
     }
 
-    gene_list <- if (is.null(p$save_cache)) {
+    if (!is.null(p$save_cache)) {
       # avoid saving cache when loading cache
       cache <- ScreenMethodCache(
         cache_path = p$save_cache,

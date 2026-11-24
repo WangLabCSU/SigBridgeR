@@ -19,6 +19,68 @@ library(SigBridgeR)
 
 This document introduces several auxiliary functions of SigBridgeR.
 
+# Quick Reference
+
+The table below lists parts of functions exported by SigBridgeR, which are useful for users.
+
+| Function | Purpose |
+|----------|---------|
+| `setFuncOption()` | Set package options (`verbose`, `seed`, `timeout`). |
+| `getFuncOption()` | Retrieve package option values. |
+| `setThreads()` | Configure thread counts for OpenMP, data.table, and TensorFlow. |
+| `SymbolConvert()` | Convert Ensembl/TCGA IDs to gene symbols. |
+| `AggregateDups()` | Merge duplicated row and column names in one step. |
+| `AggregateDupRows()` | Merge rows with identical names. |
+| `AggregateDupCols()` | Merge columns with identical names. |
+| `SCIntegrate()` | Integrate multiple single-cell datasets. |
+| `CheckNA()` | Detect and report missing values in vectors or tables. |
+| `PhenoMap()` | Map phenotype values using conditional rules. |
+| `CountsToTPM()` | Convert bulk raw counts to TPM. |
+| `FPKMToTPM()` | Convert bulk FPKM to TPM. |
+| `GetGeneLength()` | Compute gene lengths from a GTF file or GTF lines. |
+| `IsCountsMatrix()` | Check whether a matrix looks like raw counts. |
+| `IsSkewedDynamic()` | Test whether a target value's proportion is highly skewed. |
+| `ChooseNormalization()` | Data-driven selection of a single-cell normalization method. |
+| `FindRobustElbow()` | Automatically determine the optimal number of PCs. |
+| `AddMetaFeature()` | Add gene-level metadata to a Seurat object. |
+| `AddMisc()` | Safely add data to a Seurat object's `@misc` slot. |
+| `DrawBulkPCA()` | Draw a PCA plot for bulk expression data. |
+| `WeightedVote()` | Aggregate multiple voters' labels by weighted voting. |
+| `SCAnnotate()` | Unified interface for cell type annotation methods. |
+| `DownloadCellTypistModels()` | Download CellTypist models. |
+| `ListCellTypistModels()` | List available CellTypist models. |
+| `LoadRefData()` | Download and load bundled reference datasets. |
+| `SetupPyEnv()` | Create or reuse a Python environment with required packages. |
+| `ListPyEnv()` | List available conda/virtual Python environments. |
+| `BenchAcc()` | Benchmark screening methods by classification accuracy. |
+| `BenchAccConfig()` | Build an accuracy benchmark configuration. |
+| `BenchConfig()` | Base configuration shared by all benchmarks. |
+| `BenchGSEA()` | Benchmark methods by GSEA of their marker genes. |
+| `BenchGSEAConfig()` | Build a GSEA benchmark configuration. |
+| `BenchGSEAConfigSet()` | Collect GSEA benchmark arguments into a configuration. |
+| `BenchGeneScore()` | Score gene sets per cell (ssGSEA, AUCell, UCell, AddModuleScore). |
+| `BenchGeneScoreConfig()` | Build a gene-set scoring benchmark configuration. |
+| `BenchGeneScoreConfigSet()` | Collect gene-set scoring arguments into a configuration. |
+| `BenchMemory()` | Benchmark screening wall time and memory. |
+| `BenchMemoryConfig()` | Build a time/memory benchmark configuration. |
+| `BenchMemoryConfigSet()` | Merge and validate time/memory benchmark defaults. |
+| `CacheSetHere()` | Resolve and set up a cache directory. |
+| `CacheSysCall()` | Load or save cached screening results in one call. |
+| `CheckCache()` | Check cache configuration consistency. |
+| `ChooseCache()` | Choose a cache directory. |
+| `WriteCache()` | Write an R object to cache. |
+| `WriteCacheMeta()` | Write cache metadata. |
+| `LoadCache()` | Load a cached R object. |
+| `Register()` | Register screening, preprocessing, or annotation methods. |
+| `RegisterScreenMethod()` | Deprecated; register a custom screening method. |
+| `RegisterAnnoMethod()` | Deprecated; register a custom annotation method. |
+| `InterceptStrategy()` | Inspect registered strategy environments. |
+| `ValidateScreenFunc()` | Validate a custom screening function. |
+| `TemplateScreenFunc()` | Generate a screening-function template. |
+| `AVAILABLE_SCREEN_METHODS` | Names of available screening methods. |
+| `AVAILABLE_ANNOTATE_METHODS` | Names of available annotation methods. |
+| `list_to_chr()` | Compact `as.character()` representation of a list (helper). |
+
 # Setting
 
 ## Setting and Retriving Package Options

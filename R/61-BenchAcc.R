@@ -178,12 +178,16 @@ BenchAcc.Seurat <- function(
     cli::cli_progress_done()
   }
 
-  BenchAcc.Seurat(
+  out <- BenchAcc.Seurat(
     obj = sc,
     bench_config = obj@bench_config, # yes it's a chr vec
     ...,
     verbose = verbose
   )
+  if (length(out) == 1L) {
+    names(out) <- obj@screen_method
+  }
+  out
 }
 
 #' @rdname BenchAcc

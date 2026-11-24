@@ -4,7 +4,7 @@
 \alias{BenchGSEAConfigSet}
 \title{Build GSEA Benchmark Controls}
 \usage{
-BenchGSEAConfigSet(sc_data, pathway, ...)
+BenchGSEAConfigSet(sc_data, pathway, group = NULL, ...)
 }
 \arguments{
 \item{sc_data}{A \link[SeuratObject:Seurat-class]{Seurat} object to be screened.
@@ -12,6 +12,10 @@ It defines the cells that \code{group} assigns labels to.}
 
 \item{pathway}{A named \code{list} of gene sets, each element a character vector
 of gene symbols. Passed to the \code{pathways} argument of \code{\link[fgsea:fgsea]{fgsea::fgsea()}}.}
+
+\item{group}{\code{character} or \code{NULL}. Per-cell group labels, one per cell in
+\code{sc_data}. The vector is stored in \code{bench_config} and validated by
+\code{\link[=BenchGSEAConfig]{BenchGSEAConfig()}}. Default: \code{NULL}.}
 
 \item{...}{Additional named arguments, typically further \code{\link[fgsea:fgsea]{fgsea::fgsea()}}
 controls (e.g. \code{nperm}, \code{scoreType}). Case variants of the function's own
@@ -29,7 +33,8 @@ over to it; all other named arguments are kept as-is.
 \dontrun{
 config <- BenchGSEAConfigSet(
   sc_data = sc,
-  pathway = fgsea::examplePathways
+  pathway = fgsea::examplePathways,
+  group = sc$cell_type
 )
 }
 }

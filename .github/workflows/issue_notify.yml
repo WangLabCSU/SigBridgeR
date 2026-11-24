@@ -29,9 +29,9 @@ on:
     # project_column:
     #     types: [created, deleted]
     public:
-    pull_request:
-        branches: ["main", "version4", "version3"]
-        types: [opened, reopened]
+    # pull_request:
+    #     branches: ["main", "version4", "version3"]
+    #     types: [opened, reopened]
     pull_request_review:
         types: [edited, dismissed, submitted]
     pull_request_review_comment:

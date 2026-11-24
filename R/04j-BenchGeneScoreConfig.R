@@ -127,11 +127,14 @@ BenchGeneScoreConfigSet <- function(
   )
 
   method <- rlang::arg_match(method)
-  if (method == "ssGSEA") {
-    rlang::check_installed("GSVA")
-  } else {
-    rlang::check_installed(method)
-  }
+  backend_pkg <- switch(
+    method,
+    "ssGSEA" = "GSVA",
+    "AUCell" = "AUCell",
+    "UCell" = "UCell",
+    "AddModuleScore" = "Seurat"
+  )
+  rlang::check_installed(backend_pkg)
   c(
     list(method = method),
     dots # pass to specific method

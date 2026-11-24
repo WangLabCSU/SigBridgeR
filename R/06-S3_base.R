@@ -88,6 +88,10 @@ NULL
       list_to_chr(key)
     } else if (typeof(key) %chin% c("S3", "S4", "S7", "R6")) {
       class(key)
+    } else if (is_2d(key)) {
+      paste0("(", paste(dim(key), collapse = " x "), ")")
+    } else if (length(key) > 10L) {
+      paste(toString(utils::head(key, 5L)), ", ...")
     } else {
       key
     }
@@ -101,7 +105,6 @@ NULL
 
   invisible(x)
 }
-
 
 #' Summary of a SigBridgeR object
 #'

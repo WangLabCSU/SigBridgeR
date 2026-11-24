@@ -163,8 +163,11 @@ test_that("BenchGeneScore.BenchGeneScoreConfig screens methods before scoring", 
       seen$n <- seen$n + 1L
       ScreenMethodResult(scRNA_data = obj)
     },
-    BenchGeneScore.Seurat = function(obj, ...) {
+    BenchGeneScore.Seurat = function(obj, method, nbin, ctrl, ...) {
       seen$obj <- obj
+      seen$method <- method
+      seen$nbin <- nbin
+      seen$ctrl <- ctrl
       invisible(NULL)
     },
     .package = "SigBridgeR"
@@ -174,4 +177,14 @@ test_that("BenchGeneScore.BenchGeneScoreConfig screens methods before scoring", 
 
   expect_equal(seen$n, 1L)
   expect_identical(seen$obj, obj)
+  expect_identical(seen$method, "AddModuleScore")
+  expect_identical(seen$nbin, 2L)
+  expect_identical(seen$ctrl, 1L)
+})
+
+test_that("BenchGeneScoreConfigSet supports the AddModuleScore backend", {
+  config <- BenchGeneScoreConfigSet(method = "AddModuleScore", nbin = 2L)
+
+  expect_identical(config$method, "AddModuleScore")
+  expect_identical(config$nbin, 2L)
 })

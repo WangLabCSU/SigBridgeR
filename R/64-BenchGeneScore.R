@@ -118,9 +118,28 @@ BenchGeneScore <- function(obj, ...) {
     cli::cli_progress_done()
   }
 
-  BenchGeneScore.Seurat(
+  bench_config <- obj@bench_config
+
+  # * extra arguments supplied by the caller take precedence over the config
+  dots <- list(...)
+  if (length(dots) > 0L && (is.null(names(dots)) || any(!nzchar(names(dots))))) {
+    Abort("All arguments in {.arg ...} must be named")
+  }
+
+  method <- dots$method %||% bench_config$method
+  dots$method <- NULL
+  dots$verbose <- NULL
+
+  params <- bench_config[setdiff(names(bench_config), c("method", "verbose"))]
+  if (length(dots) > 0L) {
+    params[names(dots)] <- dots
+  }
+
+  rlang::exec(
+    BenchGeneScore.Seurat,
     obj = sc,
-    ...,
+    method = method,
+    !!!params,
     verbose = verbose
   )
 }

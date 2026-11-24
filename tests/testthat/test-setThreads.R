@@ -1,8 +1,8 @@
-# setThreads ---------------------------------------------------------------
+# SetThreads ---------------------------------------------------------------
 
 # Engines backed by optional Suggests packages are disabled by default so that
 # these tests do not require qs2, cheapr or WGCNA to be installed.
-call_setThreads <- function(...) {
+call_SetThreads <- function(...) {
   args <- list(
     threads = 2L,
     dt = NULL,
@@ -17,7 +17,7 @@ call_setThreads <- function(...) {
   if (length(overrides) > 0L) {
     args[names(overrides)] <- overrides
   }
-  do.call(setThreads, args)
+  do.call(SetThreads, args)
 }
 
 # Every variable set by the thread helpers is reset for the duration of a test;
@@ -33,54 +33,54 @@ local_threads_env <- function(.local_envir = parent.frame()) {
   )
 }
 
-# setThreads - input validation --------------------------------------------
+# SetThreads - input validation --------------------------------------------
 
-test_that("setThreads rejects non-integer global thread counts", {
-  expect_error(setThreads(threads = 2), class = "chk_error")
-  expect_error(setThreads(threads = "2"), class = "chk_error")
-  expect_error(setThreads(threads = 2.5), class = "chk_error")
+test_that("SetThreads rejects non-integer global thread counts", {
+  expect_error(SetThreads(threads = 2), class = "chk_error")
+  expect_error(SetThreads(threads = "2"), class = "chk_error")
+  expect_error(SetThreads(threads = 2.5), class = "chk_error")
 })
 
-test_that("setThreads validates the structure of tf_config", {
+test_that("SetThreads validates the structure of tf_config", {
   expect_error(
-    setThreads(threads = 2L, tf_config = "not-a-list"),
+    SetThreads(threads = 2L, tf_config = "not-a-list"),
     class = "chk_error"
   )
   expect_error(
-    setThreads(threads = 2L, tf_config = list(xla_flag = c("a", "b"))),
-    class = "chk_error"
-  )
-})
-
-test_that("setThreads validates TensorFlow thread counts", {
-  expect_error(
-    setThreads(threads = 2L, tf_config = list(inter_op = -1L)),
-    class = "chk_error"
-  )
-  expect_error(
-    setThreads(threads = 2L, tf_config = list(inter_op = 2)),
-    class = "chk_error"
-  )
-  expect_error(
-    setThreads(threads = 2L, tf_config = list(intra_op = -1L)),
+    SetThreads(threads = 2L, tf_config = list(xla_flag = c("a", "b"))),
     class = "chk_error"
   )
 })
 
-test_that("setThreads accepts valid TensorFlow overrides", {
+test_that("SetThreads validates TensorFlow thread counts", {
+  expect_error(
+    SetThreads(threads = 2L, tf_config = list(inter_op = -1L)),
+    class = "chk_error"
+  )
+  expect_error(
+    SetThreads(threads = 2L, tf_config = list(inter_op = 2)),
+    class = "chk_error"
+  )
+  expect_error(
+    SetThreads(threads = 2L, tf_config = list(intra_op = -1L)),
+    class = "chk_error"
+  )
+})
+
+test_that("SetThreads accepts valid TensorFlow overrides", {
   local_threads_env()
 
   expect_no_error(
-    call_setThreads(tf_config = list(inter_op = 2L, intra_op = 4L))
+    call_SetThreads(tf_config = list(inter_op = 2L, intra_op = 4L))
   )
 })
 
-# setThreads - orchestration ------------------------------------------------
+# SetThreads - orchestration ------------------------------------------------
 
-test_that("setThreads returns an invisible list of TensorFlow settings", {
+test_that("SetThreads returns an invisible list of TensorFlow settings", {
   local_threads_env()
 
-  out <- withVisible(call_setThreads())
+  out <- withVisible(call_SetThreads())
 
   expect_false(out$visible)
   expect_named(
@@ -93,7 +93,7 @@ test_that("setThreads returns an invisible list of TensorFlow settings", {
   )
 })
 
-test_that("setThreads delegates each backend with its own thread count", {
+test_that("SetThreads delegates each backend with its own thread count", {
   local_threads_env()
   seen <- new.env(parent = emptyenv())
   local_mocked_bindings(
@@ -128,7 +128,7 @@ test_that("setThreads delegates each backend with its own thread count", {
     .package = "SigBridgeR"
   )
 
-  res <- setThreads(threads = 6L, dt = 3L, verbose = FALSE)
+  res <- SetThreads(threads = 6L, dt = 3L, verbose = FALSE)
 
   expect_equal(seen$dt, 3L)
   expect_equal(seen$qs2, 6L)
@@ -144,7 +144,7 @@ test_that("setThreads delegates each backend with its own thread count", {
   expect_named(res, "tf")
 })
 
-test_that("setThreads inherits the global thread count by default", {
+test_that("SetThreads inherits the global thread count by default", {
   local_threads_env()
   seen <- new.env(parent = emptyenv())
   local_mocked_bindings(
@@ -173,8 +173,8 @@ test_that("setThreads inherits the global thread count by default", {
     .package = "SigBridgeR"
   )
 
-  # Call setThreads() directly so that every backend inherits `threads`.
-  setThreads(threads = 4L, verbose = FALSE)
+  # Call SetThreads() directly so that every backend inherits `threads`.
+  SetThreads(threads = 4L, verbose = FALSE)
 
   expect_equal(seen$dt, 4L)
   expect_equal(seen$qs2, 4L)
@@ -183,7 +183,7 @@ test_that("setThreads inherits the global thread count by default", {
   expect_equal(seen$seurat, 4L)
 })
 
-test_that("setThreads forwards ... to the data.table backend", {
+test_that("SetThreads forwards ... to the data.table backend", {
   local_threads_env()
   seen <- NULL
   local_mocked_bindings(
@@ -200,13 +200,13 @@ test_that("setThreads forwards ... to the data.table backend", {
     .package = "SigBridgeR"
   )
 
-  call_setThreads(dt = 2L, percent = TRUE)
+  call_SetThreads(dt = 2L, percent = TRUE)
 
   expect_equal(seen$dt, 2L)
   expect_equal(seen$dots, list(percent = TRUE))
 })
 
-test_that("setThreads aggregates results from every configured backend", {
+test_that("SetThreads aggregates results from every configured backend", {
   local_threads_env()
   local_mocked_bindings(
     config_qs2_threads = function(...) list(),
@@ -217,7 +217,7 @@ test_that("setThreads aggregates results from every configured backend", {
     .package = "SigBridgeR"
   )
 
-  res <- setThreads(threads = 4L, openmp = 3L, verbose = FALSE)
+  res <- SetThreads(threads = 4L, openmp = 3L, verbose = FALSE)
 
   expect_named(
     res,
@@ -227,7 +227,7 @@ test_that("setThreads aggregates results from every configured backend", {
   expect_identical(res$inter_op$new, 2L)
 })
 
-test_that("setThreads prints only when verbose is enabled", {
+test_that("SetThreads prints only when verbose is enabled", {
   local_threads_env()
   calls <- 0L
   local_mocked_bindings(
@@ -235,17 +235,17 @@ test_that("setThreads prints only when verbose is enabled", {
     .package = "SigBridgeR"
   )
 
-  call_setThreads(verbose = FALSE)
+  call_SetThreads(verbose = FALSE)
   expect_identical(calls, 0L)
 
-  call_setThreads(verbose = TRUE)
+  call_SetThreads(verbose = TRUE)
   expect_identical(calls, 1L)
 
-  call_setThreads(verbose = NULL)
+  call_SetThreads(verbose = NULL)
   expect_identical(calls, 2L)
 })
 
-test_that("setThreads passes the aggregated config to the printer", {
+test_that("SetThreads passes the aggregated config to the printer", {
   local_threads_env()
   printed <- NULL
   local_mocked_bindings(
@@ -253,7 +253,7 @@ test_that("setThreads passes the aggregated config to the printer", {
     .package = "SigBridgeR"
   )
 
-  call_setThreads(verbose = TRUE)
+  call_SetThreads(verbose = TRUE)
 
   expect_named(
     printed,
@@ -420,7 +420,7 @@ test_that("config_seurat_threads configures Seurat >= 6.0.0", {
   skip_if_not(utils::packageVersion("Seurat") >= "6.0.0")
 
   old <- Seurat::getThreads(verbose = FALSE)
-  withr::defer(Seurat::setThreads(n = old, verbose = FALSE))
+  withr::defer(Seurat::SetThreads(n = old, verbose = FALSE))
 
   res <- config_seurat_threads(3L)
 

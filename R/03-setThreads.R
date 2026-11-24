@@ -19,7 +19,7 @@
 #'   \code{WGCNA::enableWGCNAThreads()} requires at least two threads.
 #' @param seurat  Integer. Thread count for Seurat (default: inherited from \code{threads}).
 #'   Only applied when \pkg{Seurat} >= 6.0.0 is installed, as
-#'   \code{Seurat::setThreads()} is not available in earlier versions.
+#'   \code{Seurat::SetThreads()} is not available in earlier versions.
 #' @param tf_config Named list for TensorFlow-specific configuration:
 #'   * `xla_flag`: Character. XLA JIT compilation flags (default: auto-optimized)
 #'   * `xla_device`: Integer. XLA device ID (default: `1L`)
@@ -36,25 +36,25 @@
 #' @examples
 #' \dontrun{
 #' # Basic usage: auto-detect and configure
-#' setThreads()
+#' SetThreads()
 #'
 #' # Explicit thread count for CPU-intensive workloads
-#' setThreads(threads = 12L)
+#' SetThreads(threads = 12L)
 #'
 #' # TensorFlow-optimized configuration for deep learning
-#' setThreads(
+#' SetThreads(
 #'   threads = 8L,
 #'   tf_config = list(
 #'     inter_op = 2L,
 #'     intra_op = 8L
 #'   )
 #' )
-#' # Import AFTER setThreads()
+#' # Import AFTER SetThreads()
 #'
 #' # Configure only data.table for memory-efficient workflows
-#' setThreads(dt = 4L , verbose = FALSE)
+#' SetThreads(dt = 4L , verbose = FALSE)
 #' }
-setThreads <- function(
+SetThreads <- function(
   threads = getFuncOption("nthreads"),
   dt = threads,
   cheapr = threads,
@@ -233,7 +233,7 @@ config_seurat_threads <- function(seurat = NULL) {
     return(list())
   }
 
-  # * Seurat::setThreads() is only available in Seurat >= 6.0.0
+  # * Seurat::SetThreads() is only available in Seurat >= 6.0.0
   if (!rlang::is_installed("Seurat", version = "6.0.0")) {
     installed_version <- r_pkg_version("Seurat") %||% "not installed"
     cli::cli_warn(c(
@@ -244,7 +244,7 @@ config_seurat_threads <- function(seurat = NULL) {
   }
 
   old_seurat <- Seurat::getThreads(verbose = FALSE)
-  Seurat::setThreads(n = seurat, verbose = FALSE)
+  Seurat::SetThreads(n = seurat, verbose = FALSE)
 
   list(
     seurat = list(

@@ -279,7 +279,7 @@ The Pipeline String: Each letter in the pipeline argument triggers a specific Se
 | **u** | `RunUMAP` | UMAP reduction. |
 | **r** | `SCTransform` | **SCT workflow.** Replaces n, s, v. |
 
-If more are needed, see [A Guide for Extend Single Cell Preprocess Pipeline](https://wanglabcsu.github.io/SigBridgeR/articles/Extending_Seurat.html)
+If more are needed, see [A Guide for Extend Single Cell Preprocess Pipeline](https://wanglabcsu.github.io/SigBridgeR/articles/Extending_Seurat.html) (deprecated).
 
 Example Usage
 
@@ -492,7 +492,7 @@ table(d2$mpg)
 
 ## 2. Screen Cells Associated with Phenotype
 
-The function **`Screen`** provide 8 different options for screening cells associated with phenotype, These 8 algorithms come from the repositories mentioned in [6. References](#6-references), and you can choose one of them to screen your cells.
+The function **`Screen`** provide 12 different options for screening cells associated with phenotype, These 12 algorithms come from the repositories mentioned in [6. References](#6-references), and you can choose one of them to screen your cells.
 
 Key parameters for `Screen`:
 
@@ -501,7 +501,7 @@ Key parameters for `Screen`:
 -   `phenotype`: A data frame or named vacor of phenotype data after intersecting samples. See [5. Example](#5-example) for more details.
 -   `label_type`: A character value specifying the filtering labels are stored in the `Seurat_object@misc` . Default: `NULL`, meaning the name of metho will be used.
 -   `phenotype_class`: A character value specifying the phenotype data type, i.e. `"binary"`, `"survival"` or `"continuous"`.
--   `screen_method`: A character value specifying the screening method, i.e. "Scissor", "scPAS", "scAB", "scPP",  "DEGAS", "LP_SGL", or "PIPET"
+-   `screen_method`: A character value specifying the screening method, i.e. "Scissor", "scPAS", "scAB", "scPP", "DEGAS", "DEGASv2", "LP_SGL", "PIPET", "SIDISH", "SCIPAC", "TiRank", or "PhenoMapR". Use `AVAILABLE_SCREEN_METHODS` to list all registered methods.
 -   `...`: Other parameters for the screening methods, see below
 
 ### 2.1 (Option A) Scissor Screening
@@ -1014,7 +1014,7 @@ ListPyEnv()
 
 ### 2.9 (Option I) SCIPAC Screening
 
-Parameters pass to `...` when using `PIPET` method 
+Parameters pass to `...` when using `SCIPAC` method 
 
 - `hvg`: Integer. Number of highly variable genes to use for preprocessing. Default is `1000L`.
 - `do_pca_sc`: Logical. Whether to perform PCA on single-cell data and apply the rotation matrix to bulk data; if FALSE, PCA is performed on bulk data and applied to single-cell data. Default is `FALSE`.
@@ -1036,6 +1036,8 @@ scipac_result <- Screen(
   sc_data = A_Seurat_object,
   phenotype = your_matched_phenotype,
   label_type = "TP53",
+  screen_method = "SCIPAC",
+  phenotype_class = "binary",
   hvg = 1000L,
   do_pca_sc = FALSE,
   n_pc = 60L,
@@ -1055,6 +1057,308 @@ scipac_result <- Screen(
 - `pca_res` : PCA rotation results 
 - `cluster_res` : Clustering results of single-cell data
 
+### 2.10 (Option J) DEGASv2 Screening
+
+Parameters pass to `...` when using `DEGASv2` method (basically adapted from the `DEGASv2`'s documentation):
+
+**Feature selection (shared by bulk and single-cell data)**
+
+- `bulk_hvg`: Logical. Whether to select highly variable genes from the bulk data. Default is `TRUE`.
+- `bulk_de`: Logical. Whether to perform differential expression analysis on the bulk data. Default is `TRUE`.
+- `sc_de`: Logical. Whether to perform differential expression analysis on the single-cell data. Default is `TRUE`.
+- `add_genes`: Character vector or `NULL`. Additional genes forced into the feature set. Default is `NULL`.
+- `n_hvg`: Integer. Number of highly variable genes to select from bulk data. Default is `250L`.
+- `n_bulk_de`: Integer. Number of bulk DE genes to select. Default is `250L`.
+- `n_sc_de`: Integer. Number of single-cell DE genes to select. Default is `200L`.
+- `padj.thresh`: Numeric. Adjusted p-value threshold for DE gene selection. Default is `0.05`.
+- `only.pos`: Logical. Whether to keep only positively enriched markers. Default is `FALSE`.
+- `min.pct`: Numeric. Minimum fraction of cells expressing a gene in the DE analysis. Default is `0.25`.
+- `logfc.threshold`: Numeric. Log fold-change threshold for the DE analysis. Default is `0.25`.
+
+**Cell labelling**
+
+- `top_fraction_pos`: Numeric. Proportion of cells labelled as `"Positive"` according to the predicted hazard (the top quantile). Default is `0.2`.
+- `sclab`: Character or `NULL`. Metadata column of `sc_data` providing supervised cell labels. When supplied, both single-cell and bulk labels are used (`ClassClass` / `ClassCox` mode). Default is `NULL`.
+- `n_st_classes`: Integer. Number of single-cell classes. Default is `length(unique(sc_data$seurat_clusters))`.
+
+**Model training**
+
+- `loss_type`: Character. Loss function, one of `"cross_entropy"`, `"log_neg"`, `"rank_loss"`. Default is `"cross_entropy"`.
+- `transfer_type`: Character. Domain adaptation method, one of `"Wasserstein"`, `"MMD"`. Default is `"Wasserstein"`.
+- `model_save_dir`: Character. Directory used to store the trained model. Default is `"DEGASv2_res"`.
+- `lambda1`, `lambda2`, `lambda3`: Numeric. Weights of the classification, domain-adaptation and reconstruction losses. Defaults are `1L`, `3L` and `3L`.
+- `tot_seeds`: Integer. Number of random seeds to train. Default is `10L`.
+- `tot_iters`: Integer. Number of training iterations. Default is `300L`.
+- `extract_embs`: Logical. Whether to extract cell embeddings. Default is `FALSE`.
+- `random_feat`: Logical. Whether to use random features. Default is `FALSE`.
+- `random_perc`: Numeric. Proportion of random features when `random_feat = TRUE`. Default is `0.8`.
+- `early_stopping`: Logical. Whether to enable early stopping. Default is `FALSE`.
+
+**Usage**:
+
+```{r}
+#| label: DEGASv2_screening
+#| eval: false
+degasv2_result <- Screen(
+  matched_bulk = your_matched_bulk, # raw counts matrix is preferred
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "TP53",
+  screen_method = "DEGASv2",
+  phenotype_class = "binary", # "binary", "survival" or "continuous"
+  # Cell labelling
+  top_fraction_pos = 0.2,
+  # Optional supervised single-cell labels
+  sclab = NULL,
+  # Feature selection
+  bulk_hvg = TRUE,
+  bulk_de = TRUE,
+  sc_de = TRUE,
+  add_genes = NULL,
+  n_hvg = 250L,
+  n_bulk_de = 250L,
+  n_sc_de = 200L,
+  padj.thresh = 0.05,
+  # Training
+  loss_type = "cross_entropy",
+  transfer_type = "Wasserstein",
+  model_save_dir = "DEGASv2_res",
+  lambda1 = 1L,
+  lambda2 = 3L,
+  lambda3 = 3L,
+  tot_seeds = 10L,
+  tot_iters = 300L,
+  early_stopping = FALSE
+)
+```
+
+```{r}
+#| label: DEGASv2_screening_result
+#| eval: false
+table(degasv2_result$scRNA_data$DEGASv2)
+#    Other Positive
+```
+
+**note**:
+
+- DEGASv2 is the re-implemented, deep-transfer-learning based successor of DEGAS. Its training backend is PyTorch, accessed through `reticulate`, but unlike DEGAS you do **not** need to create and activate a Python environment manually: the `DEGASv2` package declares its Python dependencies with `reticulate::py_require()`, so they are provisioned automatically on first use. The `DEGASv2` package itself must be installed (`pak::pak("Exceret/DEGASv2")`, handled automatically by `Screen`).
+- Bulk raw counts are preferred, since the bulk branch can perform differential expression analysis (`bulk_de = TRUE`); if the bulk matrix is not a counts matrix, the bulk DE step is skipped with a warning.
+
+**returning structure**: A list containing:
+
+- `scRNA_data`: A Seurat object after screening. The screening result is stored in the `DEGASv2` column (`"Positive"` / `"Other"`), together with the predicted hazard (`DEGASv2_hazard`) and the threshold used for labelling (`DEGASv2_pos_thresh`). The parameters used are recorded in `scRNA_data@misc$DEGASv2`.
+
+### 2.11 (Option K) TiRank Screening
+
+TiRank integrates bulk and single-cell data through a rank-based deep learning framework. Parameters pass to `...` when using `TiRank` method:
+
+- `tirank_params`: List of TiRank algorithm parameters. See below for details. Default is the full default list.
+- `save_path`: (Soft-deprecated) Directory for intermediate and final results. The final prediction table is read from `<save_path>/3_Analysis/spot_predict_score.csv`, so keep it aligned with the cache directory when caching is used. Default is `"./TiRank_res"`.
+- `assay`: Character. Assay of `sc_data` to use. Default is `"RNA"`.
+- `load_cache` / `save_cache`: Character. Cache directory used to load/save intermediate results (preferred over `save_path`), see `CacheSetHere()`. Default is `NULL` / `save_path`.
+- `verbose`: Logical. Whether to print progress messages. Default is inherited from `getFuncOption("verbose")`.
+- `seed`: Integer. Random seed. Default is inherited from `getFuncOption("seed")`.
+
+Parameters in `tirank_params`:
+
+**Data preprocessing**
+
+- `validation_proportion`: Numeric. Proportion of bulk data held out for validation. Default is `0.15`.
+- `sampling_thresh`: Numeric. Threshold for the resampling strategy. Default is `0.5`.
+- `sampling_mode`: Character. Resampling method, one of `"smote"`, `"downsample"`, `"upsample"`, `"tomeklinks"`.
+- `top_var_genes`: Integer. Number of top variable genes to select. Default is `2000L`.
+- `top_gene_pairs`: Integer. Number of top gene pairs used for ranking. Default is `1000L`.
+- `p_value_threshold`: Numeric. P-value threshold for feature selection. Default is `0.05`.
+- `max_cutoff`, `min_cutoff`: Numeric. Upper/lower cutoffs for correlation filtering. Defaults are `0.8` and `-0.8`.
+
+**Neural network architecture**
+
+- `nhead`: Integer. Number of attention heads. Default is `2L`.
+- `nhid1`, `nhid2`: Integer. Sizes of the first and second hidden layers. Defaults are `96L` and `8L`.
+- `n_output`: Integer. Output dimension of the encoder. Default is `32L`.
+- `nlayers`: Integer. Number of encoder layers. Default is `3L`.
+- `n_pred`: Integer. Number of prediction heads. Default is `2L`.
+- `dropout`: Numeric. Dropout rate for regularization. Default is `0.5`.
+- `encoder_type`: Character. Encoder architecture, one of `"MLP"`, `"Transformer"`, `"DenseNet"`.
+- `infer_mode`: Character. Inference mode, `"SC"` (single-cell) or `"ST"` (spatial transcriptomics).
+
+**Training**
+
+- `n_trials`: Integer. Number of repeated training trials. Default is `5L`.
+- `do_reject`: Logical. Whether to apply rejection criteria to uncertain predictions. Default is `TRUE`.
+- `tolerance`: Numeric. Tolerance threshold for rejection. Default is `0.05`.
+
+**Usage**:
+
+```{r}
+#| label: TiRank_screening
+#| eval: false
+tirank_result <- Screen(
+  matched_bulk = your_matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "TP53",
+  screen_method = "TiRank",
+  phenotype_class = "survival", # "binary" (Classification), "survival" (Cox), "continuous" (Regression)
+  assay = "RNA",
+  tirank_params = list(
+    # Data preprocessing
+    validation_proportion = 0.15,
+    sampling_thresh = 0.5,
+    sampling_mode = "smote", # "smote", "downsample", "upsample", "tomeklinks"
+    top_var_genes = 2000L,
+    top_gene_pairs = 1000L,
+    p_value_threshold = 0.05,
+    max_cutoff = 0.8,
+    min_cutoff = -0.8,
+    # Neural network architecture
+    nhead = 2L,
+    nhid1 = 96L,
+    nhid2 = 8L,
+    n_output = 32L,
+    nlayers = 3L,
+    n_pred = 2L,
+    dropout = 0.5,
+    encoder_type = "MLP", # "MLP", "Transformer", "DenseNet"
+    infer_mode = "SC", # "SC" or "ST"
+    # Training
+    n_trials = 5L,
+    do_reject = TRUE,
+    tolerance = 0.05
+  )
+)
+```
+
+TiRank supports caching, so the preprocessed data and the trained model can be reused. Note that the final prediction table is read from `<save_path>/3_Analysis/spot_predict_score.csv`, so keep `save_path` aligned with the cache directory being used:
+
+```{r}
+#| label: TiRank_screening_cache
+#| eval: false
+# First run: train the model and save the cache under `TiRank_res/`
+tirank_result <- Screen(
+  matched_bulk = your_matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "TP53",
+  screen_method = "TiRank",
+  phenotype_class = "survival",
+  save_path = "TiRank_res",
+  save_cache = "TiRank_res"
+)
+
+# Later runs: reuse the cache directory created in the previous step,
+# e.g. `TiRank_res/survival_20250101000000`
+tirank_result <- Screen(
+  matched_bulk = your_matched_bulk, # not required when the cache is complete
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype, # not required when the cache is complete
+  label_type = "TP53",
+  screen_method = "TiRank",
+  phenotype_class = "survival",
+  save_path = "TiRank_res/survival_20250101000000",
+  load_cache = "TiRank_res/survival_20250101000000"
+)
+```
+
+```{r}
+#| label: TiRank_screening_result
+#| eval: false
+table(tirank_result$scRNA_data$TiRank)
+# Negative  Neutral Positive
+```
+
+**note**:
+
+- TiRank currently runs on **GPU** (`device = "cuda"` is used internally), so a CUDA-capable device is required. The `rTiRank` package must be installed (`pak::pak("Exceret/rTIRank")`, handled automatically by `Screen`), and its Python dependencies are provisioned automatically through `reticulate::py_require()`.
+
+**returning structure**: A list containing:
+
+- `scRNA_data`: A Seurat object after screening, with `TiRank_Reject`, `TiRank_Rank_Score` and `TiRank` (`"Positive"`, `"Neutral"`, `"Negative"`) added to `meta.data`, and the parameters stored in `scRNA_data@misc$TiRank`.
+- `cell_cell_distance`: The computed cell-cell similarity/distance matrix.
+
+### 2.12 (Option L) PhenoMapR Screening
+
+PhenoMapR derives a gene-level reference from the matched bulk expression and phenotype, then scores every single cell and labels the two tails of the score distribution. Parameters pass to `...` when using `PhenoMapR` method:
+
+**Phenotype handling**
+
+- `phenotype_column`: Character or `NULL`. Outcome column name for binary/continuous phenotypes. Default is `NULL` (uses `"phenotype_value"`).
+- `survival_time`, `survival_event`: Character. Column names of the survival phenotype data frame. Defaults are `"time"` and `"status"`.
+- `binary_positive_reference`: Character. Which level of a binary phenotype is treated as the reference-positive direction, `"second"` or `"first"`. Default is `"second"`.
+- `reference_sign`: Integer. Sign applied to the reference scores, use `-1` to mirror the score axis. Default is `1L`.
+
+**Bulk reference construction**
+
+- `normalize`: Logical. Whether to normalize the bulk expression. Default is `TRUE`.
+- `platform`: Character. Bulk platform, one of `"auto"`, `"rnaseq"`, `"microarray"`. Default is `"auto"`.
+- `probe_annotation`: Probe-to-gene annotation table for microarray data. Default is `NULL`.
+- `hugo_species`: Character. Species passed to HGNChelper, `"human"` or `"mouse"`. Default is `c("human", "mouse")`.
+
+**Single-cell scoring**
+
+- `assay`, `layer`: Character. Seurat assay and layer used for scoring. Defaults are `"RNA"` and `"data"`.
+- `z_score_cutoff`: Numeric. Z-score cutoff for limiting paired genes. Default is `2L`.
+- `score_mode`: Character. Scoring mode, one of `"weighted_sum"`, `"activity_adjusted"`.
+- `vars_to_regress`: Character vector. Variables regressed out before scoring. Default is `c("S.Score", "G2M.Score", "nCount_RNA")`.
+- `cancer_type`: Character or `NULL`. Optional cancer-type context. Default is `NULL`.
+- `pseudobulk`: Logical. Whether to score pseudobulk profiles instead of single cells. Default is `FALSE`.
+- `group_by`: Character or `NULL`. Grouping variable used for pseudobulk aggregation. Default is `NULL`.
+- `sample_metadata`: Data frame or `NULL`. Sample-level metadata used with `pseudobulk = TRUE`. Default is `NULL`.
+
+**Group definition**
+
+- `percentile`: Numeric. Tail percentile used to define the phenotype groups. Default is `0.05`.
+- `permutation_n`: Integer or `NULL`. Number of permutations. Default is `NULL`.
+- `permutation_seed`: Integer or `NULL`. Permutation seed, defaults to `seed`.
+
+**Usage**:
+
+```{r}
+#| label: PhenoMapR_screening
+#| eval: false
+phenomapr_result <- Screen(
+  matched_bulk = your_matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "PhenoMapR",
+  screen_method = "PhenoMapR",
+  phenotype_class = "survival", # "binary", "survival" or "continuous"
+  # Phenotype handling
+  survival_time = "time",
+  survival_event = "status",
+  # Bulk reference construction
+  normalize = TRUE,
+  platform = "auto",
+  hugo_species = "human",
+  # Single-cell scoring
+  assay = "RNA",
+  layer = "data",
+  z_score_cutoff = 2L,
+  score_mode = "weighted_sum",
+  vars_to_regress = c("S.Score", "G2M.Score", "nCount_RNA"),
+  # Group definition
+  percentile = 0.05
+)
+```
+
+```{r}
+#| label: PhenoMapR_screening_result
+#| eval: false
+table(phenomapr_result$scRNA_data$PhenoMapR, useNA = "ifany")
+# Negative  Neutral Positive
+```
+
+**note**:
+
+- PhenoMapR labels the upper tail of the score distribution as `"Most Adverse"` and the lower tail as `"Most Favorable"`, which are mapped to the package-wide vocabulary as `"Positive"` and `"Negative"`; cells in the middle are labelled `"Neutral"`.
+- Higher scores follow the phenotype-valued-as-`1` direction when the reference is derived with the default orientation. For binary phenotypes this means `binary_positive_reference = "second"` regresses on the `"1"` level, and for survival traits the Cox z-score is positive for hazard-increasing genes. Therefore, when phenotype `1` denotes the unfavourable direction, the `"Most Adverse"` tail is the one labelled `"Positive"`. If your phenotype is encoded the other way round, adjust `binary_positive_reference` or set `reference_sign = -1`.
+
+**returning structure**: A list containing:
+
+- `scRNA_data`: A Seurat object after screening, with the group labels stored in the `PhenoMapR` column (`"Positive"`, `"Negative"`, `"Neutral"` or `NA`) and the per-cell scores in `PhenoMapR_*` columns of `meta.data`. The parameters used are recorded in `scRNA_data@misc$PhenoMapR`.
+- `phenomap_scores`: Per-cell scores returned by `PhenoMapR::PhenoMap()`.
+- `reference`: The gene-level reference z-scores derived from the bulk data.
+
 ### 2.F Merge screening results
 
 If you have performed multiple screening methods on **the same** single-cell data, you can use the `MergeResult` to merge the screening results of these methods. The Seurat object or a results list from `Screen` is accepted.
@@ -1070,7 +1374,12 @@ merged_seurat <- MergeResult(
   your_DEGAS_result
   # # * Add more if you want
   # ,your_LP_SGL_result,
-  # your_PIPET_result
+  # your_PIPET_result,
+  # your_SIDISH_result,
+  # your_SCIPAC_result,
+  # your_DEGASv2_result,
+  # your_TiRank_result,
+  # your_PhenoMapR_result
 )
 
 # * mixed input form is alse supported

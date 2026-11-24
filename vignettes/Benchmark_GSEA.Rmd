@@ -1,0 +1,282 @@
+---
+title: "Benchmarking Screening Methods: Gene Set Enrichment"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Benchmarking Screening Methods: Gene Set Enrichment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center"
+)
+```
+
+```{r}
+#| label: setup
+#| message: false
+library(SigBridgeR)
+library(Seurat)
+```
+
+# Overview
+
+Accuracy alone does not show **which biology** a screening method recovers.
+`BenchGSEA()` complements `BenchAcc()` by asking whether the cells selected by
+each method are enriched for the pathways that are expected to drive the
+phenotype.
+
+For every screening method found in the object, `BenchGSEA()`:
+
+1. binarises the method labels into `"Positive"` and `"Other"`;
+2. finds markers between the two groups with `Seurat::FindMarkers()`;
+3. ranks the markers by `sign(avg_log2FC) * -log10(p_val_adj)`;
+4. runs `fgsea::fgsea()` on the ranked list;
+5. records the ranking statistics of the leading-edge genes.
+
+The results of all methods are stacked into one `data.table`, so pathways can
+be compared side by side.
+
+# A small example
+
+The following toy dataset contains three pathways. The cells selected by
+`Scissor` have extra expression in the first pathway, while the cells selected
+by `scPAS` have extra expression in the second pathway. A good benchmark should
+therefore recover the matching pathway for each method.
+
+```{r}
+#| label: benchgsea-data
+set.seed(123)
+
+n_genes <- 60L
+n_cells <- 18L
+gene_names <- paste0("Gene", seq_len(n_genes))
+cell_names <- paste0("Cell", seq_len(n_cells))
+
+counts <- matrix(
+  rpois(n_genes * n_cells, lambda = 5),
+  nrow = n_genes,
+  dimnames = list(gene_names, cell_names)
+)
+
+scissor_label <- rep(
+  c("Positive", "Positive", "Negative", "Other", "Negative", "Other"),
+  times = 3L
+)
+scpas_label <- rep(
+  c("Negative", "Other", "Positive", "Positive", "Other", "Negative"),
+  times = 3L
+)
+truth <- rep(c("Positive", "Negative", "Other"), each = 6L)
+
+# * pathway A is active in Scissor-positive cells
+counts[1:10, scissor_label == "Positive"] <-
+  counts[1:10, scissor_label == "Positive"] + 40L
+
+# * pathway B is active in scPAS-positive cells
+counts[11:20, scpas_label == "Positive"] <-
+  counts[11:20, scpas_label == "Positive"] + 40L
+
+counts <- Matrix::Matrix(counts, sparse = TRUE)
+
+sc <- CreateSeuratObject(counts = counts)
+sc <- NormalizeData(sc, verbose = FALSE)
+sc$truth <- truth
+sc$Scissor <- scissor_label
+sc$scPAS <- scpas_label
+```
+
+`pathways` is a named list of gene sets, exactly as expected by `fgsea()`:
+
+```{r}
+#| label: benchgsea-pathways
+pathways <- list(
+  Pathway_A = paste0("Gene", 1:10),
+  Pathway_B = paste0("Gene", 11:20),
+  Pathway_C = paste0("Gene", 21:30)
+)
+```
+
+The `group` argument is the per-cell group label vector that accompanies the
+screening results. It must have one entry per cell. The remaining arguments are
+split automatically: arguments named like `FindMarkers()` formals go to
+`FindMarkers()`, and arguments named like `fgsea()` formals go to `fgsea()`.
+
+```{r}
+#| label: benchgsea-run
+#| eval: !expr requireNamespace("fgsea", quietly = TRUE) && requireNamespace("dplyr", quietly = TRUE)
+#| warning: false
+#| message: false
+#| results: hide
+res <- BenchGSEA(
+  sc,
+  group = sc$truth,
+  pathway = pathways,
+  minSize = 5L,
+  maxSize = 50L,
+  nproc = 1L,
+  verbose = FALSE
+)
+```
+
+```{r}
+#| label: benchgsea-table
+#| eval: !expr requireNamespace("fgsea", quietly = TRUE) && requireNamespace("dplyr", quietly = TRUE)
+res[, c("screenMethod", "pathway", "pval", "padj", "ES", "NES", "size"), with = FALSE]
+```
+
+The expected pattern is visible in the result: `Scissor` shows a positive
+`NES` for `Pathway_A` and `scPAS` for `Pathway_B`, while `Pathway_C` is not
+strongly enriched for either method. The enriched direction is given by the
+sign of `NES`: a positive `NES` means the pathway is up in `"Positive"` cells,
+a negative `NES` means it is down.
+
+The tiny example produces tied ranking statistics, so `fgsea()` warns that the
+order of tied genes is arbitrary. The warning is harmless here; on real data,
+ties usually indicate that many markers share the same adjusted p-value and are
+worth a quick look.
+
+`leadingEdge` and `leadingEdgeStats` are list columns. They contain the genes
+that drive each enrichment call and their ranking statistics, which is useful
+for inspecting a pathway rather than only looking at its p-value:
+
+```{r}
+#| label: benchgsea-leading
+#| eval: !expr requireNamespace("fgsea", quietly = TRUE) && requireNamespace("dplyr", quietly = TRUE)
+first_hit <- res[which.min(res$padj)]
+
+first_hit$pathway
+first_hit$leadingEdge[[1L]]
+first_hit$leadingEdgeStats[[1L]]
+```
+
+# Input classes
+
+`BenchGSEA()` dispatches on its input:
+
+* a `Seurat` object is screened from its `meta.data` columns, as shown above;
+* a `ScreenMethodResult` is unwrapped to its `scRNA_data` slot;
+* a `BenchGSEAConfig` runs its configured screening methods first and then
+  performs the GSEA comparison on the resulting object.
+
+The configuration classes collect the shared inputs (`matched_bulk`,
+`sc_data`, `phenotype`, `label_type`, `phenotype_class`, `screen_method` and
+`method_param`) plus the GSEA-specific settings stored in `bench_config`. See
+`?BenchGSEAConfig` and `?BenchGSEAConfigSet` for the complete constructor
+interface and its validation rules.
+
+# Running the screens inside the benchmark
+
+If the screening has not been run yet, `BenchGSEAConfig()` can screen the data
+first and then hand the resulting object to the GSEA comparison. `pathway`,
+`group` and any `fgsea()` controls are collected by `BenchGSEAConfigSet()`:
+
+```{r}
+#| label: benchgsea-config
+#| eval: false
+config <- BenchGSEAConfig(
+  matched_bulk = bulk,
+  sc_data = sc,
+  phenotype = phenotype,
+  label_type = "{method_name}",
+  phenotype_class = "binary",
+  screen_method = c("Scissor", "scPAS"),
+  method_param = MethodParamSet(
+    Scissor_param = list(alpha = 0.05),
+    scPAS_param = list(alpha = 0.01)
+  ),
+  bench_config = BenchGSEAConfigSet(
+    sc_data = sc,
+    pathway = pathways,
+    group = sc$truth,
+    minSize = 5L,
+    maxSize = 50L
+  )
+)
+
+res_cfg <- BenchGSEA(config, verbose = FALSE)
+```
+
+The same configuration can be reused to compare different pathway
+collections: only `bench_config$pathway` needs to be replaced, while the
+screening results are recomputed by `BenchGSEA()` for each call.
+
+# Filtering markers
+
+By default all markers returned by `FindMarkers()` are used. Supplying a
+non-`NULL` `p_value_threshold` keeps only markers with adjusted p-value below
+0.05 before ranking:
+
+```{r}
+#| label: benchgsea-filter
+#| eval: false
+res_filtered <- BenchGSEA(
+  sc,
+  group = sc$truth,
+  pathway = pathways,
+  p_value_threshold = 0.05,
+  minSize = 5L,
+  maxSize = 50L
+)
+```
+
+This is useful when a method returns many weak markers. Be aware that filtering
+too aggressively can remove the signal of small pathways.
+
+# Reading the result
+
+The returned object has one row per method and pathway. The most useful columns
+are:
+
+| Column | Meaning |
+|--------|---------|
+| `screenMethod` | Screening method that produced the labels |
+| `pathway` | Gene set name from `pathway` |
+| `pval`, `padj` | Enrichment p-value and its multiple-testing adjustment |
+| `ES`, `NES` | Enrichment score and normalised enrichment score |
+| `size` | Number of pathway genes present in the ranked list |
+| `leadingEdge` | Genes driving the enrichment |
+| `leadingEdgeStats` | Ranking statistic of each leading-edge gene |
+
+A compact comparison across methods can be built with base R or `data.table`:
+
+```{r}
+#| label: benchgsea-summary
+#| eval: !expr requireNamespace("fgsea", quietly = TRUE) && requireNamespace("dplyr", quietly = TRUE)
+res_df <- as.data.frame(res)
+
+aggregate(
+  cbind(padj, NES) ~ screenMethod,
+  data = res_df,
+  FUN = function(x) round(mean(x), 3)
+)
+```
+
+# Practical notes
+
+* **Gene identifiers must match.** The pathway gene sets and the row names of
+  the assay must use the same identifier space (for example, both gene
+  symbols). Convert the object or the pathways first if they do not.
+* **Pathway size matters.** `fgsea()` drops pathways outside `minSize` and
+  `maxSize`. For a small demonstration dataset, lower these values; for real
+  data, keep the defaults or tune them to the pathway collection.
+* **Direction is relative to `"Positive"`.** `FindMarkers()` is always run with
+  `ident.1 = "Positive"` and `ident.2 = "Other"`, so a positive `NES` means
+  enrichment in the cells selected by the screening method.
+* **This is a functional comparison, not an accuracy score.** A method can
+  recover a biologically coherent program that is not the pathway you expected.
+  Read `BenchGSEA()` together with `BenchAcc()` when a ground truth is
+  available.
+* **Reserved arguments.** `ident.1`, `ident.2` and `group.by` are managed by
+  `BenchGSEA()` and must not be supplied in `...`.
+
+# See also
+
+* `BenchAcc()` for binary classification metrics against a ground truth.
+* `BenchGeneScore()` for cell-level pathway scores.
+* `BenchMemory()` for run time and memory.
+* `fgsea::fgsea()` and `Seurat::FindMarkers()` for the underlying methods.

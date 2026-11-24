@@ -12,7 +12,7 @@ BenchGSEAConfig(
   phenotype_class = c("binary", "survival", "continuous"),
   screen_method = names(ScreenStrategy),
   method_param = MethodParamSet(),
-  bench_config = BenchGSEAConfigSet(sc_data),
+  bench_config = list(),
   ...
 )
 }
@@ -43,11 +43,12 @@ only to the executor of the method it is named after (e.g.
 i.e. one empty entry per registered method.}
 
 \item{bench_config}{Named \code{list} of GSEA controls returned by
-\code{\link[=BenchGSEAConfigSet]{BenchGSEAConfigSet()}}. It holds \code{group} (one group label per cell in
-\code{sc_data}) and \code{pathway} (a named list of gene sets), plus optional
+\code{\link[=BenchGSEAConfigSet]{BenchGSEAConfigSet()}}. It holds \code{pathway} (a named list of gene sets),
+optionally \code{group} (one group label per cell in \code{sc_data}), plus optional
 arguments forwarded to \code{\link[fgsea:fgsea]{fgsea::fgsea()}} such as \code{minSize}, \code{maxSize} and
-\code{gseaParam}. \code{group} must have the same length as the number of cells in
-\code{sc_data}. Default: \code{BenchGSEAConfigSet(sc_data)}.}
+\code{gseaParam}. \code{group}, when supplied, must have the same length as the
+number of cells in \code{sc_data}. Default: \code{list()}, which is rejected by the
+validator because \code{pathway} is required.}
 
 \item{...}{Must be empty. Method specific arguments belong in \code{method_param}.}
 }

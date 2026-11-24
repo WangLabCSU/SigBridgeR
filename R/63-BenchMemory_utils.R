@@ -169,7 +169,7 @@ bench_mem_measure <- function(
     ) {
       # * seed & threads
       set.seed(bench_config$seed)
-      SigBridgeR::setThreads(bench_config$set_threads, verbose = FALSE)
+      SigBridgeR::SetThreads(bench_config$set_threads, verbose = FALSE)
 
       sc_data <- qs2::qs_read(file.path(tmp_dir, "sc_data.qs2"), nthreads = n_cores)
       matched_bulk <- qs2::qd_read(file.path(tmp_dir, "matched_bulk.qdata"), nthreads = n_cores)

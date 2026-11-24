@@ -222,9 +222,39 @@ BenchGSEA.Seurat <- function(
     cli::cli_progress_done()
   }
 
-  BenchGSEA.Seurat(
+  bench_config <- obj@bench_config
+
+  # * extra arguments supplied by the caller take precedence over the config
+  dots <- list(...)
+  if (length(dots) > 0L && (is.null(names(dots)) || any(!nzchar(names(dots))))) {
+    Abort("All arguments in {.arg ...} must be named")
+  }
+
+  group <- dots$group %||% bench_config$group
+  pathway <- dots$pathway %||% bench_config$pathway
+  if (is.null(pathway)) {
+    Abort(
+      "{.arg pathway} is not specified in {.cls BenchGSEAConfig}",
+      "Build {.arg bench_config} with {.fn BenchGSEAConfigSet}",
+      "Or supply {.arg pathway} directly"
+    )
+  }
+
+  dots$group <- NULL
+  dots$pathway <- NULL
+  dots$verbose <- NULL
+
+  params <- bench_config[setdiff(names(bench_config), c("group", "pathway", "verbose"))]
+  if (length(dots) > 0L) {
+    params[names(dots)] <- dots
+  }
+
+  rlang::exec(
+    BenchGSEA.Seurat,
     obj = sc,
-    ...,
+    group = group,
+    pathway = pathway,
+    !!!params,
     verbose = verbose
   )
 }
