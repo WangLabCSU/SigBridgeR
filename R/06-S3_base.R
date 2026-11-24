@@ -60,48 +60,8 @@ NULL
   properties <- S7::props(x)
   nms_properties <- names(properties)
 
-  cli::cli_div(
-    theme = list(
-      span.red = list(color = "red"),
-      span.blue = list(color = "blue"),
-      span.orange = list(color = "orange"),
-      span.purple = list(color = "purple"),
-      span.green = list(color = "green"),
-      span.magenta = list(color = "magenta"),
-      span.cyan = list(color = "cyan"),
-      span.bold = list("font-weight" = "bold"),
-      span.typeof = list(color = "grey")
-    )
-  )
-
-  cli::cli_text("{.cls {cls_x}}")
-
-  for (i in seq_along(properties)) {
-    name <- nms_properties[i]
-    key <- properties[[i]]
-
-    cls_key <- class(key)[1L] # class(NULL) -> NULL
-
-    key <- if (rlang::is_function(key)) {
-      rlang::fn_fmls_names(key)
-    } else if (is.list(key)) {
-      list_to_chr(key)
-    } else if (typeof(key) %chin% c("S3", "S4", "S7", "R6")) {
-      class(key)
-    } else if (is_2d(key)) {
-      paste0("(", paste(dim(key), collapse = " x "), ")")
-    } else if (length(key) > 10L) {
-      paste(toString(utils::head(key, 5L)), ", ...")
-    } else {
-      key
-    }
-
-    cli::cli_li(
-      "{.blue {name}} {.typeof [{cls_key}]}: {key}"
-    )
-  }
-
-  cli::cli_end()
+  # src/list_to_chr.cpp
+  print_sigbridger_base_cpp(cls_x, nms_properties, properties)
 
   invisible(x)
 }
@@ -270,48 +230,3 @@ NULL
 }
 
 # nocov end
-
-#' Convert a List to a Compact Character Representation
-#'
-#' Converts an R `list` into a single character string using the format
-#' `"key: value"`. Named elements use their names as keys, while unnamed
-#' elements use their 1-based positions. Nested lists are converted
-#' recursively and enclosed in parentheses.
-#'
-#' This method is registered as `list_to_chr`, so it is called
-#' automatically when `as.character()` is applied to a list.
-#'
-#' @param x A list to be converted.
-#' @param ... Additional arguments passed to or from other methods.
-#'   Currently ignored.
-#'
-#' @return A character vector of length one.
-#'
-#' @examples
-#' x <- list(key1 = "val1", key2 = "val2")
-#' as.character(x)
-#' # "key1: val1, key2: val2"
-#'
-#' x <- list(key1 = list(key2 = list(key3 = "val3")))
-#' as.character(x)
-#' # "key1: (key2: (key3: val3))"
-#'
-#' x <- list(
-#'   a = 1,
-#'   b = list(
-#'     c = 2,
-#'     d = list(e = "hello")
-#'   ),
-#'   f = c(1, 2, 3)
-#' )
-#' as.character(x)
-#' # "a: 1, b: (c: 2, d: (e: hello)), f: 1, 2, 3"
-#'
-#' x <- list("foo", bar = NA, baz = NULL)
-#' as.character(x)
-#' # "1: foo, bar: NA, baz: NULL"
-#'
-#' @export
-list_to_chr <- function(x, ...) {
-  list_to_character_recursive(x)
-}

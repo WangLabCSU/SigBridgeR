@@ -439,16 +439,94 @@ IsSkewedDynamic_cpp <- function(x, target = 0.0, expected_p = 0.8, n_sd = 4L) {
     .Call(`_SigBridgeR_IsSkewedDynamic_cpp`, x, target, expected_p, n_sd)
 }
 
-#' Render a Nested List as Readable Text
+#' Convert a List to a Compact Character Representation
 #'
-#' @param x A (possibly nested) list or atomic vector.
+#' Converts an R `list` into a single character string using the format
+#' `"key: value"`. Named elements use their names as keys, while unnamed
+#' elements use their 1-based positions. Nested lists are converted
+#' recursively and enclosed in parentheses.
+#' This method is registered as `list_to_chr`, so it is called
+#' automatically when `as.character()` is applied to a list.
 #'
-#' @return A single string showing `name: value` entries with bracketed
-#'   nesting.
+#' @param x A list to be converted.
 #'
-#' @keywords internal
-list_to_character_recursive <- function(x) {
-    .Call(`_SigBridgeR_list_to_character_recursive`, x)
+#' @return A character vector of length one.
+#'
+#' @examples
+#' x <- list(key1 = "val1", key2 = "val2")
+#' as.character(x)
+#' # "key1: val1, key2: val2"
+#' x <- list(key1 = list(key2 = list(key3 = "val3")))
+#' as.character(x)
+#' # "key1: (key2: (key3: val3))"
+#' x <- list(
+#'   a = 1,
+#'   b = list(
+#'     c = 2,
+#'     d = list(e = "hello")
+#'   ),
+#'   f = c(1, 2, 3)
+#' )
+#' as.character(x)
+#' # "a: 1, b: (c: 2, d: (e: hello)), f: 1, 2, 3"
+#' x <- list("foo", bar = NA, baz = NULL)
+#' as.character(x)
+#' # "1: foo, bar: NA, baz: NULL"
+#'
+#' @export
+list_to_chr <- function(x) {
+    .Call(`_SigBridgeR_list_to_chr`, x)
+}
+
+#' Convert a List to an Indented Multi-line Character Representation
+#'
+#' Converts an R `list` into a single character string in which every
+#' element occupies its own line, using the format `"key: value"`. Named
+#' elements use their names as keys, while unnamed elements use their
+#' 1-based positions. Nested lists are expanded recursively, and each
+#' nesting level is indented by two additional spaces.
+#'
+#' @param x A list to be converted.
+#'
+#' @return A character vector of length one, with lines separated by `"\n"`
+#'   (no trailing newline).
+#'
+#' @examples
+#' x <- list(
+#'   a = 1,
+#'   b = list(
+#'     c = 2,
+#'     d = list(e = "hello")
+#'   ),
+#'   f = c(1, 2, 3)
+#' )
+#' cat(list_to_chr_formated(x), "\n")
+#' # a: 1
+#' # b:
+#' #   c: 2
+#' #   d:
+#' #     e: hello
+#' # f: 1, 2, 3
+#'
+#' @export
+list_to_chr_formated <- function(x) {
+    .Call(`_SigBridgeR_list_to_chr_formated`, x)
+}
+
+#' Print Method Backend for SigBridgeRBase
+#'
+#' Renders the class header and every S7 property of a `SigBridgeRBase`
+#' object, one bullet per property, with ANSI colors when the terminal
+#' supports them.
+#'
+#' @param cls_x Class name shown in the header.
+#' @param nms_properties Property names.
+#' @param properties A list of property values.
+#'
+#' @return `NULL`, invisibly. Called for its side effect of printing.
+#' @noRd
+print_sigbridger_base_cpp <- function(cls_x, nms_properties, properties) {
+    invisible(.Call(`_SigBridgeR_print_sigbridger_base_cpp`, cls_x, nms_properties, properties))
 }
 
 #' Replace Empty Lists with NULL Recursively

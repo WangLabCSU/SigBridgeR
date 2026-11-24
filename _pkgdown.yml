@@ -159,7 +159,7 @@ reference:
       contents:
           - getFuncOption
           - setFuncOption
-          - setThreads
+          - SetThreads
 
     - title: OOP Sytem Design
       desc: >
@@ -176,6 +176,7 @@ reference:
           - SigBridgeR-S3
           - Property-visitor
           - list_to_chr
+          - list_to_chr_formated
 
 # Navbar configuration
 navbar:

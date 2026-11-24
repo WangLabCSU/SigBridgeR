@@ -44,6 +44,6 @@ tests/testthat/testthat-problems.rds
 /.uvr/activate*
 .clangd
 .mcp.json
-AGENTS.md
 .xerj-data
 .codewhale/
+opencode.json

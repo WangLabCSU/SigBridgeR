@@ -3,18 +3,21 @@
 ## NEW FEATURES
 
 * Added `GetGeneLength()` and `FPKMToTPM()` for extracting gene lengths from GTF annotations and converting FPKM to TPM. `GetGeneLength()` supports a `canonical_chr_only` option and preserves gene ID versions.
+* Added `DoPhenoMapR()` as a screening method for PhenoMapR, mapping bulk phenotypes to single-cell subpopulations, with `ValidatePhenoMapRParams()` for input alignment and parameter checks. It is registered in `ScreenStrategy` and available through `Screen()`.
 * Introduced a benchmarking framework: `BenchAcc()`, `BenchGSEA()`, `BenchGeneScore()` and `BenchMemory()`, along with their S7 configuration classes (`BenchConfig`, `BenchAccConfig`, `BenchGSEAConfig`, `BenchGeneScoreConfig`, `BenchMemoryConfig`, `MethodParamSet` and the `*ConfigSet` helpers). `BenchAcc()` now also reports `Precision` and `Recall`.
 * Exported `AVAILABLE_SCREEN_METHODS` and `AVAILABLE_ANNOTATE_METHODS`; the `ScreenStrategy` registry replaces ad-hoc `names(ScreenStrategy)` lookups.
 * `SymbolConvert()` now accepts character vectors, offers `update_symbol_method` (`"scCustomize"`, `"Seurat"` or `"auto"`), supports extended genome builds, and replaces unmatched/duplicated symbols with the original IDs; `unknown_format` is deprecated and ignored.
 * Added a `+` operator for merging `ScreenMethodResult` objects and S3 methods for merging `Seurat` objects.
 * `autoplot()` interactively prompts for `group.by` when multiple candidates are available.
-* `setThreads()` gains a Seurat thread-config backend; the WGCNA backend is renamed `wgcna`.
+* Added `list_to_chr_formated()`, which renders a list as an indented multi-line string; `list_to_chr()` and the `print()` method for `SigBridgeRBase` objects are now backed by C++.
+* `SetThreads()` (renamed from `setThreads()`) gains a Seurat thread-config backend; the WGCNA backend is renamed `wgcna`.
 
 ## PERFORMANCE
 
 * `FindRobustElbow()` offloads elbow detection to C++ using tatami streaming and caps `ndims` at the number of available PCs.
 * `FPKMToTPM()` / `GetGeneLength()` stream GTF files through a zlib buffered reader with single-pass C++ validation.
 * Replaced `utils::modifyList()` with a custom C++ `modify_list()` and added an `nthreads` option.
+* `BenchMemory()` serialises its staged inputs with `compress_level = 1` and derives the `qs2` thread count once; it uses at least two cores and skips the machine-resource probe when `probe_resources = FALSE`.
 * Matrix handling now uses `beachmat`.
 
 ## BREAKING CHANGES
@@ -23,7 +26,8 @@
 * `CacheSysCall()` load mode now requires an explicit `path`.
 * `SymbolConvert()`'s `unknown_format` argument is deprecated and ignored.
 * `PIPET_Screen()` now defaults `distance` to `"cosine"`; `DoDEGAS()` defaults `normality_test_method` to `"jarque-bera"`.
-* The WGCNA backend in `setThreads()` is renamed `wgcna`.
+* `setThreads()` is renamed `SetThreads()`; the WGCNA backend is renamed `wgcna`.
+* The WGCNA backend now requires at least two threads: values below `2L` are raised to `2L` (with a warning when `verbose = TRUE`).
 
 ## BUG FIXES
 
@@ -36,6 +40,7 @@
 * Fixed `ChooseNormalizationCheck()` layer detection and tightened weight validation.
 * Corrected the `ssGSEA` dependency check and added `AUCell`, `GSVA`, `UCell` to Suggests.
 * Fixed typos `rTIRank` -> `rTiRank` and `qs2` -> `qd_save`, and added a path-normalization helper.
+* Corrected integer defaults for `z_score_cutoff` in `DoPhenoMapR()` and for `n_cores` in `BenchMemory()`.
 * Removed a duplicate `cli::cli_end()` call in `S3_base`.
 * Bumped the vendored Scissor fork to v2.1.0 with `qs2` cache support.
 * Dropped the `randomcoloR` dependency and resolved R CMD check notes.
@@ -43,24 +48,28 @@
 ## MINOR IMPROVEMENTS
 
 * Restructured the benchmark config hierarchy: shared properties moved to `BenchConfig`, with dedicated `BenchAccConfig` / `BenchGSEAConfig` classes.
+* `BenchMemoryConfigSet()` gains a `probe_resources` flag to skip the machine-resource probe (and its `gc()`) before staging inputs.
 * Added `S7_on_build()` / `S7_on_unload()` hooks, benchmark properties on `SigBridgeRBase`, and fully qualified S7 class references.
 * Prefixed `rlang` calls with `rlang::` and replaced `cli::cli_fmt(cli::cli_text(...))` with `cli::format_inline()`.
 * Updated roxygen2 to 8.1.1 and added dynamic screen-method documentation generation.
 * Added runtime `glue` dependency checks and raised the minimum `cli` version to 3.0.0.
 * Added full third-party copyright attribution to `DESCRIPTION` and updated `CITATION`.
+* Simplified named `...` validation in `BenchGSEA()` and `BenchGeneScore()` (`!all(nzchar(...))`).
 
 ## DOCUMENTATION
 
 * Updated the README algorithm table and citation information.
 * Refreshed roxygen documentation and benchmark docs covering C++ backends and config APIs; reworked `BenchMemory()` docs for child-process measurement.
+* Added benchmark vignettes for accuracy, GSEA, gene-score and memory benchmarking, and expanded `Full_Tutorial` and `Other_Function_Details`.
+* Added `DoPhenoMapR()` documentation and registered it in the algorithm tables.
 * Added a spelling check to CI.
 * Deprecated the `Extending_Seurat` vignette, which now carries a lifecycle badge and points to `Register()` and `SCIntegrate(pipeline = )`.
 
 ## INTERNAL CHANGES
 
 * Added unit tests for benchmark functions and strategy registries, plus screen-method and `AddMetaFeature()` tests with fixtures.
+* Added tests for `DoPhenoMapR()` / `ValidatePhenoMapRParams()`, the C++ `list_to_chr()` helpers, and the roxygen argument-documentation generator.
 * CI now derives R-CMD-check dependencies from `DESCRIPTION`; updated the version-bumper workflow with cached `cli::symbol`.
-* Updated `.gitignore` / `.Rbuildignore`, excluded `dev/` from the package build, and removed hardcoded R binary paths from VS Code settings.
 * Added an AI skill.
 
 # SigBridgeR 4.0.0-beta-4

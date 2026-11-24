@@ -301,15 +301,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// list_to_character_recursive
-std::string list_to_character_recursive(List x);
-RcppExport SEXP _SigBridgeR_list_to_character_recursive(SEXP xSEXP) {
+// list_to_chr
+std::string list_to_chr(List x);
+RcppExport SEXP _SigBridgeR_list_to_chr(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(list_to_character_recursive(x));
+    rcpp_result_gen = Rcpp::wrap(list_to_chr(x));
     return rcpp_result_gen;
+END_RCPP
+}
+// list_to_chr_formated
+std::string list_to_chr_formated(List x);
+RcppExport SEXP _SigBridgeR_list_to_chr_formated(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(list_to_chr_formated(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// print_sigbridger_base_cpp
+void print_sigbridger_base_cpp(std::string cls_x, CharacterVector nms_properties, List properties);
+RcppExport SEXP _SigBridgeR_print_sigbridger_base_cpp(SEXP cls_xSEXP, SEXP nms_propertiesSEXP, SEXP propertiesSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type cls_x(cls_xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type nms_properties(nms_propertiesSEXP);
+    Rcpp::traits::input_parameter< List >::type properties(propertiesSEXP);
+    print_sigbridger_base_cpp(cls_x, nms_properties, properties);
+    return R_NilValue;
 END_RCPP
 }
 // make_null_list_NULL
@@ -400,7 +423,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SigBridgeR_weighted_vote_cpp", (DL_FUNC) &_SigBridgeR_weighted_vote_cpp, 3},
     {"_SigBridgeR_find_diff_in_2_lists", (DL_FUNC) &_SigBridgeR_find_diff_in_2_lists, 2},
     {"_SigBridgeR_IsSkewedDynamic_cpp", (DL_FUNC) &_SigBridgeR_IsSkewedDynamic_cpp, 4},
-    {"_SigBridgeR_list_to_character_recursive", (DL_FUNC) &_SigBridgeR_list_to_character_recursive, 1},
+    {"_SigBridgeR_list_to_chr", (DL_FUNC) &_SigBridgeR_list_to_chr, 1},
+    {"_SigBridgeR_list_to_chr_formated", (DL_FUNC) &_SigBridgeR_list_to_chr_formated, 1},
+    {"_SigBridgeR_print_sigbridger_base_cpp", (DL_FUNC) &_SigBridgeR_print_sigbridger_base_cpp, 3},
     {"_SigBridgeR_make_null_list_NULL", (DL_FUNC) &_SigBridgeR_make_null_list_NULL, 1},
     {"_SigBridgeR_modify_list", (DL_FUNC) &_SigBridgeR_modify_list, 3},
     {"_SigBridgeR_modify_list2", (DL_FUNC) &_SigBridgeR_modify_list2, 2},

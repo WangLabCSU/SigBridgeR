@@ -19,7 +19,7 @@
 #'   \code{WGCNA::enableWGCNAThreads()} requires at least two threads.
 #' @param seurat  Integer. Thread count for Seurat (default: inherited from \code{threads}).
 #'   Only applied when \pkg{Seurat} >= 6.0.0 is installed, as
-#'   \code{Seurat::SetThreads()} is not available in earlier versions.
+#'   \code{Seurat::setThreads()} is not available in earlier versions.
 #' @param tf_config Named list for TensorFlow-specific configuration:
 #'   * `xla_flag`: Character. XLA JIT compilation flags (default: auto-optimized)
 #'   * `xla_device`: Integer. XLA device ID (default: `1L`)
@@ -233,7 +233,7 @@ config_seurat_threads <- function(seurat = NULL) {
     return(list())
   }
 
-  # * Seurat::SetThreads() is only available in Seurat >= 6.0.0
+  # * Seurat::setThreads() is only available in Seurat >= 6.0.0
   if (!rlang::is_installed("Seurat", version = "6.0.0")) {
     installed_version <- r_pkg_version("Seurat") %||% "not installed"
     cli::cli_warn(c(
@@ -244,7 +244,7 @@ config_seurat_threads <- function(seurat = NULL) {
   }
 
   old_seurat <- Seurat::getThreads(verbose = FALSE)
-  Seurat::SetThreads(n = seurat, verbose = FALSE)
+  Seurat::setThreads(n = seurat, verbose = FALSE)
 
   list(
     seurat = list(

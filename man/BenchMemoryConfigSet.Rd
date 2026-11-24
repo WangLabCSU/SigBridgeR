@@ -68,7 +68,7 @@ round: \code{"skip"} warns and continues with the remaining methods, \code{"stop
 aborts the whole benchmark. Default: \code{c("skip", "stop")} (first value used).}
 
 \item{set_threads}{\code{integer}. Number of threads the measurement child process
-is pinned to via \code{\link[=setThreads]{setThreads()}}, so runs stay comparable across methods.
+is pinned to via \code{\link[=SetThreads]{SetThreads()}}, so runs stay comparable across methods.
 Default: \code{1L}.}
 
 \item{min_time}{The minimum number of seconds to run each expression, set to

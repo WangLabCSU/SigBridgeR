@@ -52,6 +52,7 @@ CONTRICUTING.md
 
 # Agent skills (not part of the R package)
 ^skills$
+^opencode\.json$
 
 # CI/CD
 ^\.github$
@@ -108,4 +109,5 @@ SigBridgeR_workflow.png
 ^dev$
 ^\.xerj-data$
 ^\.xerj$
-^\.codewhale/$
+^\.xerjignore$
+^\.codewhale$

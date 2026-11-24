@@ -27,7 +27,7 @@ The table below lists parts of functions exported by SigBridgeR, which are usefu
 |----------|---------|
 | `setFuncOption()` | Set package options (`verbose`, `seed`, `timeout`). |
 | `getFuncOption()` | Retrieve package option values. |
-| `setThreads()` | Configure thread counts for OpenMP, data.table, and TensorFlow. |
+| `SetThreads()` | Configure thread counts for OpenMP, data.table, and TensorFlow. |
 | `SymbolConvert()` | Convert Ensembl/TCGA IDs to gene symbols. |
 | `AggregateDups()` | Merge duplicated row and column names in one step. |
 | `AggregateDupRows()` | Merge rows with identical names. |
@@ -124,18 +124,18 @@ getFuncOption("SigBridgeR.seed")
 
 ## Setting Threads
 
-`setThreads()` configures thread counts for OpenMP, data.table, and TensorFlow backends. By default, it uses **half of available physical cores** to balance performance and system responsiveness.
+`SetThreads()` configures thread counts for OpenMP, data.table, and TensorFlow backends. By default, it uses **half of available physical cores** to balance performance and system responsiveness.
 
 ### Basic Usage
 
 ```{r}
 #| eval: false
 # Set explicit thread count
-setThreads(8L)
+SetThreads(8L)
 
 # Configure specific backends only
-setThreads(dt = 4L) # data.table only
-setThreads(openmp = 4L) # OpenMP only
+SetThreads(dt = 4L) # data.table only
+SetThreads(openmp = 4L) # OpenMP only
 ```
 
 ### TensorFlow Optimization
@@ -143,7 +143,7 @@ setThreads(openmp = 4L) # OpenMP only
 
 ```{r}
 #| eval: false
-setThreads(
+SetThreads(
   threads = 8L,
   tf_config = list(
     inter_op = 2L,

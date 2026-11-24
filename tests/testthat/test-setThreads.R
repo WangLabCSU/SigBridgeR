@@ -420,7 +420,7 @@ test_that("config_seurat_threads configures Seurat >= 6.0.0", {
   skip_if_not(utils::packageVersion("Seurat") >= "6.0.0")
 
   old <- Seurat::getThreads(verbose = FALSE)
-  withr::defer(Seurat::SetThreads(n = old, verbose = FALSE))
+  withr::defer(Seurat::setThreads(n = old, verbose = FALSE))
 
   res <- config_seurat_threads(3L)
 

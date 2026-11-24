@@ -226,7 +226,7 @@ BenchGSEA.Seurat <- function(
 
   # * extra arguments supplied by the caller take precedence over the config
   dots <- list(...)
-  if (length(dots) > 0L && (is.null(names(dots)) || any(!nzchar(names(dots))))) {
+  if (length(dots) > 0L && (is.null(names(dots)) || !all(nzchar(names(dots))))) {
     Abort("All arguments in {.arg ...} must be named")
   }
 

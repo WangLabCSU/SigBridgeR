@@ -1,0 +1,22 @@
+# XERJ indexing exclusions for SigBridgeR
+# Build artifacts
+src/*.o
+src/*.so
+src/*.dll
+*.o
+*.so
+
+# Generated pkgdown site and rendered vignettes (source lives in vignettes/)
+docs/
+vignettes/*.html
+vignettes/*_cache/
+inst/doc/
+
+# Large binary example datasets, not source
+inst/extdata/
+
+# Scratch
+tmp/
+.Rproj.user/
+*.tar.gz
+*.Rcheck/

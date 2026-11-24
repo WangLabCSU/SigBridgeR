@@ -1,5 +1,7 @@
 AE
 ALRA
+AUCell
+AddModuleScore
 Alibaba
 AnnData
 AnnotationMethod
@@ -11,6 +13,7 @@ BenchConfig
 BenchGSEAConfig
 BenchGeneScoreConfig
 BenchMemoryConfig
+Benchmarking
 Binarized
 Bioinformatics
 Biotechnol
@@ -19,6 +22,8 @@ BlankCox
 CECECE
 CLI
 CMD
+CPM
+CUDA
 CY
 CellPhenoX
 CellTypist
@@ -46,6 +51,7 @@ DoDEGAS
 DoDEGASv
 DoLP
 DoPIPET
+DoPhenoMapR
 DoSCIPAC
 DoSIDISH
 DoScissor
@@ -61,7 +67,9 @@ Exmaple
 ExperimentHub
 Extensibility
 FC
+FN
 FNR
+FP
 FPKM
 FPR
 FeaturePlot
@@ -74,8 +82,10 @@ GTF
 GZ
 Github
 Guan
+HGNChelper
 HVG
 HVGs
+ICI
 IDConverter
 Installatation
 IntegrateLayers
@@ -102,7 +112,10 @@ OpenMP
 Opions
 PAAD
 PIPET
+PRECOG
 Parallelization
+PhenoMap
+PhenoMapR
 PolyForm
 Preprocess
 Qian
@@ -117,6 +130,7 @@ RunTSNE
 RunUMAP
 SBS
 SCAnnotate
+SCE
 SCIPAC
 SCT
 SCTransfomm
@@ -143,9 +157,11 @@ SeuratObject
 Sig
 SigBridgeRBase
 SingleR
+Summarising
 SummarizedExperiment
 TCGA
 TNR
+TP
 TPM
 TPR
 TPU
@@ -153,6 +169,7 @@ TiRank
 Transcriptomics
 UCSC
 UCSCXenaShiny
+UCell
 UMAP
 UpSet
 VAE
@@ -187,6 +204,7 @@ benchmarked
 benchmarking
 bera
 binarised
+binarises
 binarize
 bioconductor
 biomarker
@@ -230,7 +248,9 @@ ggupset
 github
 gzip
 gzipped
+hardcoded
 https
+hugo
 hvg
 ident
 infomation
@@ -242,6 +262,8 @@ kendall
 kmeans
 kolmogorov
 labelled
+labelling
+lifecycle
 linux
 logFC
 logfc
@@ -271,6 +293,7 @@ nhid
 nificant
 nlayers
 normalisation
+normalised
 nrow
 ns
 numpy
@@ -301,6 +324,7 @@ preprocess
 preprocesses
 probs
 protobuf
+pseudobulk
 pthread
 pval
 py
@@ -315,6 +339,7 @@ responder
 reticulate
 reticulate's
 ribosomal
+rnaseq
 roxygen
 rp
 rrna
@@ -343,11 +368,13 @@ singlecell
 smirnov
 sparseMatrixStats
 spearman
+ssGSEA
 str
 subclassing
 subcluster
 subclusters
 subpopulation
+summarise
 sz
 tensorflow
 tibble
@@ -360,6 +387,7 @@ tred
 tsne
 umap
 umaps
+unfavourable
 unstored
 upregulated
 usedl
@@ -371,5 +399,7 @@ venn
 venv
 virtualenv
 wether
+workspaces
 yml
+zlib
 ️
