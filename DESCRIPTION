@@ -118,6 +118,7 @@ Suggests:
     Scissor (>= 2.0.1),
     scPAS (>= 0.2.1),
     ScPP,
+    SingleCellExperiment,
     SingleR,
     sparseMatrixStats,
     spelling,
