@@ -1,0 +1,196 @@
+## Preparation
+
+We will start with a simple example.
+
+    ref <- LoadRefData(data_type = "binary")
+    seurat_obj <- ref[[1]]
+    bulk_bi <- ref[[2]]
+    pheno_bi <- ref[[3]]
+
+`seurat_obj` is a preprocessed single-cell RNA **Seurat** object (QC
+filtering, normalization, clustering, and UMAP are already included),
+`bulk_bi` is a bulk tissue RNA expression matrix (TPM), and `pheno_bi`
+is the phenotypic data associated with `bulk_bi`. When using a binary or
+continuous phenotype, the reference phenotype data is a **named
+vector**.
+
+    head(pheno_bi)
+
+By the way, when using patients’ survival data as phenotype, the
+reference data is a **data.frame**.
+
+    pheno_sur <- LoadRefData(data_type = "survival")[[3]]
+    head(pheno_sur)
+
+The reference single-cell RNA data has already been preprocessed into a
+**Seurat** object (`seurat_obj`), so it can be passed directly to
+`Screen()` without any further processing.
+
+## Screening
+
+Then we can use these data to screen out phenotype-assoicated cells.
+Let’s start by trying **Scissor**.
+
+    scissor_res <- Screen(
+      bulk_bi,
+      seurat_obj,
+      pheno_bi,
+      phenotype_class = "binary",
+      screen_method = "Scissor",
+      alpha = 0.05
+    )
+
+    scissor_res |> class()
+
+    scissor_res |> print()
+
+Other screening methods are also available.
+
+    scpas_res <- Screen(
+      bulk_bi,
+      seurat_obj,
+      pheno_bi,
+      phenotype_class = "binary",
+      screen_method = "scPAS",
+      alpha = 0.05
+    )
+
+Since the screening is performed on the same data, we can merge them
+based on the cell names. Metadata will be merged as well.
+
+    merged_seurat <- MergeResult(
+      scissor_res,
+      scpas_res
+    )
+
+## Visualization
+
+Finally, we can visualize the screening results.
+
+- stacked bar plot:
+
+<!-- -->
+
+    fraction <- ScreenFractionPlot(
+      merged_seurat,
+      group_by = "seurat_clusters",
+      screen_type = c("scissor", "scPAS")
+    )
+
+    names(fraction)
+
+    fraction$combined_plot
+
+- Venn diagram:
+
+<!-- -->
+
+    c(scissor_pos, scpas_pos) %<-%
+      purrr::map(
+        c("scissor", "scPAS"),
+        ~ colnames(merged_seurat)[
+          which(merged_seurat[[.x]] == "Positive")
+        ]
+      )
+
+    all_cells <- colnames(seurat_obj)
+
+    pos_venn <- list(
+      scissor = scissor_pos,
+      scpas = scpas_pos,
+      all_cells = all_cells
+    )
+
+    set.seed(123)
+
+    venn_plot <- ggVennDiagram::ggVennDiagram(
+      x = pos_venn,
+      # * the labels of each group to be shown on the diagram
+      category.names = c(
+        "Scissor",
+        "scPAS",
+        "All cells"
+      ),
+      # * the colors of each group
+      set_color = c(
+        "#a33333ff",
+        "#37ae00ff",
+        "#008383ff"
+      ),
+      label_geom = c("text")
+    ) +
+      ggplot2::scale_fill_gradient(low = "white", high = "#ffb6b6ff") +
+      ggplot2::ggtitle("Screening Venn Diagram")
+
+    venn_plot
+
+- Set plot:
+
+<!-- -->
+
+    upset <- ScreenUpset(
+      merged_seurat,
+      screen_type = c("scissor", "scPAS")
+    )
+    names(upset)
+
+    upset$plot
+
+- 2D UMAP:
+
+<!-- -->
+
+    library(patchwork)
+
+    c(
+      scissor_umap,
+      scpas_umap
+    ) %<-%
+      purrr::map(
+        c("scissor", "scPAS"),
+        ~ Seurat::DimPlot(
+          merged_seurat,
+          group.by = .x,
+          pt.size = 0.1,
+          reduction = "umap",
+          cols = c(
+            "Neutral" = "#CECECE",
+            "Positive" = "#ff3333",
+            "Negative" = "#386c9b"
+          )
+        ) +
+          ggplot2::ggtitle(.x)
+      )
+
+    set.seed(123)
+    cols <- RColorBrewer::brewer.pal(
+      length(unique(merged_seurat$seurat_clusters)),
+      "Set1"
+    )
+
+    cluster_umap <- Seurat::DimPlot(
+      merged_seurat,
+      group.by = "seurat_clusters",
+      pt.size = 0.1,
+      reduction = "umap",
+      cols = cols
+    ) +
+      ggplot2::ggtitle("seurat_clusters")
+
+
+    # * Show
+    umaps <- cluster_umap +
+      scissor_umap +
+      scpas_umap +
+      plot_layout(ncol = 2)
+
+    umaps
+
+UMAP has been registered in the `autoplot()` for easier check.
+
+    ggplot2::autoplot(merged_seurat, group.by = "scPAS")
+
+For more detail, please see [Full
+Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html).
+
+## Session information:

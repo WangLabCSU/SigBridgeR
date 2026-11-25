@@ -1,0 +1,739 @@
+This document introduces several auxiliary functions of SigBridgeR.
+
+# Quick Reference
+
+The table below lists parts of functions exported by SigBridgeR, which
+are useful for users.
+
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setFuncOption()</code></td>
+<td>Set package options (<code>verbose</code>, <code>seed</code>,
+<code>timeout</code>).</td>
+</tr>
+<tr>
+<td><code>getFuncOption()</code></td>
+<td>Retrieve package option values.</td>
+</tr>
+<tr>
+<td><code>SetThreads()</code></td>
+<td>Configure thread counts for OpenMP, data.table, and TensorFlow.</td>
+</tr>
+<tr>
+<td><code>SymbolConvert()</code></td>
+<td>Convert Ensembl/TCGA IDs to gene symbols.</td>
+</tr>
+<tr>
+<td><code>AggregateDups()</code></td>
+<td>Merge duplicated row and column names in one step.</td>
+</tr>
+<tr>
+<td><code>AggregateDupRows()</code></td>
+<td>Merge rows with identical names.</td>
+</tr>
+<tr>
+<td><code>AggregateDupCols()</code></td>
+<td>Merge columns with identical names.</td>
+</tr>
+<tr>
+<td><code>SCIntegrate()</code></td>
+<td>Integrate multiple single-cell datasets.</td>
+</tr>
+<tr>
+<td><code>CheckNA()</code></td>
+<td>Detect and report missing values in vectors or tables.</td>
+</tr>
+<tr>
+<td><code>PhenoMap()</code></td>
+<td>Map phenotype values using conditional rules.</td>
+</tr>
+<tr>
+<td><code>CountsToTPM()</code></td>
+<td>Convert bulk raw counts to TPM.</td>
+</tr>
+<tr>
+<td><code>FPKMToTPM()</code></td>
+<td>Convert bulk FPKM to TPM.</td>
+</tr>
+<tr>
+<td><code>GetGeneLength()</code></td>
+<td>Compute gene lengths from a GTF file or GTF lines.</td>
+</tr>
+<tr>
+<td><code>IsCountsMatrix()</code></td>
+<td>Check whether a matrix looks like raw counts.</td>
+</tr>
+<tr>
+<td><code>IsSkewedDynamic()</code></td>
+<td>Test whether a target value’s proportion is highly skewed.</td>
+</tr>
+<tr>
+<td><code>ChooseNormalization()</code></td>
+<td>Data-driven selection of a single-cell normalization method.</td>
+</tr>
+<tr>
+<td><code>FindRobustElbow()</code></td>
+<td>Automatically determine the optimal number of PCs.</td>
+</tr>
+<tr>
+<td><code>AddMetaFeature()</code></td>
+<td>Add gene-level metadata to a Seurat object.</td>
+</tr>
+<tr>
+<td><code>AddMisc()</code></td>
+<td>Safely add data to a Seurat object’s <code>@misc</code> slot.</td>
+</tr>
+<tr>
+<td><code>DrawBulkPCA()</code></td>
+<td>Draw a PCA plot for bulk expression data.</td>
+</tr>
+<tr>
+<td><code>WeightedVote()</code></td>
+<td>Aggregate multiple voters’ labels by weighted voting.</td>
+</tr>
+<tr>
+<td><code>SCAnnotate()</code></td>
+<td>Unified interface for cell type annotation methods.</td>
+</tr>
+<tr>
+<td><code>DownloadCellTypistModels()</code></td>
+<td>Download CellTypist models.</td>
+</tr>
+<tr>
+<td><code>ListCellTypistModels()</code></td>
+<td>List available CellTypist models.</td>
+</tr>
+<tr>
+<td><code>LoadRefData()</code></td>
+<td>Download and load bundled reference datasets.</td>
+</tr>
+<tr>
+<td><code>SetupPyEnv()</code></td>
+<td>Create or reuse a Python environment with required packages.</td>
+</tr>
+<tr>
+<td><code>ListPyEnv()</code></td>
+<td>List available conda/virtual Python environments.</td>
+</tr>
+<tr>
+<td><code>BenchAcc()</code></td>
+<td>Benchmark screening methods by classification accuracy.</td>
+</tr>
+<tr>
+<td><code>BenchAccConfig()</code></td>
+<td>Build an accuracy benchmark configuration.</td>
+</tr>
+<tr>
+<td><code>BenchConfig()</code></td>
+<td>Base configuration shared by all benchmarks.</td>
+</tr>
+<tr>
+<td><code>BenchGSEA()</code></td>
+<td>Benchmark methods by GSEA of their marker genes.</td>
+</tr>
+<tr>
+<td><code>BenchGSEAConfig()</code></td>
+<td>Build a GSEA benchmark configuration.</td>
+</tr>
+<tr>
+<td><code>BenchGSEAConfigSet()</code></td>
+<td>Collect GSEA benchmark arguments into a configuration.</td>
+</tr>
+<tr>
+<td><code>BenchGeneScore()</code></td>
+<td>Score gene sets per cell (ssGSEA, AUCell, UCell,
+AddModuleScore).</td>
+</tr>
+<tr>
+<td><code>BenchGeneScoreConfig()</code></td>
+<td>Build a gene-set scoring benchmark configuration.</td>
+</tr>
+<tr>
+<td><code>BenchGeneScoreConfigSet()</code></td>
+<td>Collect gene-set scoring arguments into a configuration.</td>
+</tr>
+<tr>
+<td><code>BenchMemory()</code></td>
+<td>Benchmark screening wall time and memory.</td>
+</tr>
+<tr>
+<td><code>BenchMemoryConfig()</code></td>
+<td>Build a time/memory benchmark configuration.</td>
+</tr>
+<tr>
+<td><code>BenchMemoryConfigSet()</code></td>
+<td>Merge and validate time/memory benchmark defaults.</td>
+</tr>
+<tr>
+<td><code>CacheSetHere()</code></td>
+<td>Resolve and set up a cache directory.</td>
+</tr>
+<tr>
+<td><code>CacheSysCall()</code></td>
+<td>Load or save cached screening results in one call.</td>
+</tr>
+<tr>
+<td><code>CheckCache()</code></td>
+<td>Check cache configuration consistency.</td>
+</tr>
+<tr>
+<td><code>ChooseCache()</code></td>
+<td>Choose a cache directory.</td>
+</tr>
+<tr>
+<td><code>WriteCache()</code></td>
+<td>Write an R object to cache.</td>
+</tr>
+<tr>
+<td><code>WriteCacheMeta()</code></td>
+<td>Write cache metadata.</td>
+</tr>
+<tr>
+<td><code>LoadCache()</code></td>
+<td>Load a cached R object.</td>
+</tr>
+<tr>
+<td><code>Register()</code></td>
+<td>Register screening, preprocessing, or annotation methods.</td>
+</tr>
+<tr>
+<td><code>RegisterScreenMethod()</code></td>
+<td>Deprecated; register a custom screening method.</td>
+</tr>
+<tr>
+<td><code>RegisterAnnoMethod()</code></td>
+<td>Deprecated; register a custom annotation method.</td>
+</tr>
+<tr>
+<td><code>InterceptStrategy()</code></td>
+<td>Inspect registered strategy environments.</td>
+</tr>
+<tr>
+<td><code>ValidateScreenFunc()</code></td>
+<td>Validate a custom screening function.</td>
+</tr>
+<tr>
+<td><code>TemplateScreenFunc()</code></td>
+<td>Generate a screening-function template.</td>
+</tr>
+<tr>
+<td><code>AVAILABLE_SCREEN_METHODS</code></td>
+<td>Names of available screening methods.</td>
+</tr>
+<tr>
+<td><code>AVAILABLE_ANNOTATE_METHODS</code></td>
+<td>Names of available annotation methods.</td>
+</tr>
+<tr>
+<td><code>list_to_chr()</code></td>
+<td>Compact <code>as.character()</code> representation of a list
+(helper).</td>
+</tr>
+</tbody>
+</table>
+
+# Setting
+
+## Setting and Retriving Package Options
+
+Currently, 3 package options are provided:
+
+- `verbose`: Whether to print the progress of the function. Default is
+  `TRUE`.
+- `seed`: The random seed used in the function. Default is `123L`.
+- `timeout`: The maximum timeout time when downloading data. Default is
+  `180L`.
+
+These options can be modified using either the `setFuncOption` or
+`Options` function (the former is recommended).
+
+    setFuncOption(seed = 321L)
+
+    options(SigBridgeR.seed = 321L)
+
+`setFuncOption` automatically detects the prefix, so parameters with a
+package name prefix are also compatible.
+
+    setFuncOption(SigBridgeR.seed = 321L)
+
+`getFuncOption` is used to retrieve the global parameters of SigBridgeR.
+
+    getFuncOption("seed")
+    # 321
+
+    # * Auto-detect prefix
+    getFuncOption("SigBridgeR.seed")
+    # 321
+
+## Setting Threads
+
+`SetThreads()` configures thread counts for OpenMP, data.table, and
+TensorFlow backends. By default, it uses **half of available physical
+cores** to balance performance and system responsiveness.
+
+### Basic Usage
+
+    # Set explicit thread count
+    SetThreads(8L)
+
+    # Configure specific backends only
+    SetThreads(dt = 4L) # data.table only
+    SetThreads(openmp = 4L) # OpenMP only
+
+### TensorFlow Optimization
+
+⚠️ **Must configure BEFORE importing TensorFlow**:
+
+    SetThreads(
+      threads = 8L,
+      tf_config = list(
+        inter_op = 2L,
+        intra_op = 8L
+      )
+    )
+    tf <- reticulate::import("tensorflow") # Import AFTER configuration
+
+### Options
+
+- `verbose = FALSE`: suppress console output
+- Returns invisible list of old/new values for programmatic use
+- Additional `data.table::setDTthreads()` arguments accepted via `...`
+  (e.g., `restore = TRUE`)
+
+> 💡 **Tip**: Default half-core allocation prevents oversubscription.
+> Use full cores (`threads = availableCores()`) only on dedicated
+> compute nodes.
+
+# Cell Type Annotation
+
+As of version 3.3.0, three built-in cell annotation algorithms are
+included and can be applied directly to Seurat objects. Using them
+requires installing additional dependencies. See the
+[README](https://wanglabcsu.github.io/SigBridgeR/index.html).
+
+Basic usage:
+
+    seurat <- SCAnnotate(
+      sc = seurat,
+      method = c("CellTypist", "SingleR", "mLLMCelltype")
+      # * more arguments passed to each method
+    )
+
+`SCAnnotate` will automatically set up the required dependencies for you
+(making it even more plug-and-play). If the `method` argument is not
+specified, it will automatically select the appropriate annotation
+method based on the provided arguments.
+
+To control it manually, use following functions:
+
+## CellTypist Annotation
+
+This is the direct R wrapper of celltypist.annotate. Unlike
+`SCAnnotate`, it does not prepare an environment for you.
+
+    seurat <- CellTypistAnnotate(
+      sc,
+      model = NULL,
+      download = TRUE,
+      conda = NULL,
+      python = NULL,
+      verbose = getFuncOption("verbose"), # TRUE
+      celltypist_tools = system.file(
+        "python/73-CellTypistAnnotate.py",
+        package = "SigBridgeR"
+      ),
+      # * more arguments pass to celltypist.annotate (python)
+    )
+
+**Parameters**:
+
+- `sc`: A Seurat object.
+- `model`: Charater/str. The model to use. If `NULL`, the default model
+  will be used.
+- `download`: Logical/bool. Whether to download the model. Defaults to
+  `TRUE`-download all models. if model already exists, skip download.
+- `force_update`: Logical. Whether to force update the model file.
+- `conda`: Character/str. conda environment name. If `NULL`, try to use
+  `python`.
+- `python`: Character/str. The path to the python executable. If `NULL`,
+  try to use `conda`.
+- `verbose`: Logical/bool. Whether to print verbose messages. Defaults
+  to `TRUE`.
+- `celltypist_tools`: The path to the celltypist\_tools.py file. If
+  `NULL`, the default path will be used.
+
+**Returns**:
+
+A Seurat object with the cell type annotation added as metadata columns.
+
+Other parameters supported by `celltypist.annotate` will be
+automatically passed through and can be directly supplied to
+`CellTypistAnnotate`.
+
+helpful link: <https://github.com/Teichlab/celltypist>
+
+## mLLMCelltype Annotation
+
+    seurat <- mLLMCellTypeAnnotate(
+      sc,
+      seurat_obj_markers = NULL,
+      # * Context for large language models
+      tissue_name = "Human Cancer",
+      models = c(
+        "gpt-5",
+        "claude-sonnet-4-5-20250929",
+        "gemini-3-pro",
+        "qwen-max-2025-01-25"
+      ),
+      api_keys = list(
+        anthropic = "your-anthropic-key",
+        openai = "your-openai-key",
+        gemini = "your-google-key",
+        qwen = "your-qwen-key"
+      ),
+      # Other arguments passed to `mLLMCelltype::annotate_cell_types` or ` mLLMCelltype::interactive_consensus_annotation`
+    )
+
+**Parameters**
+
+- `sc` : A Seurat object with pre-computed clusters (stored in
+  `Idents(sc)` or `sc$seurat_clusters`).
+
+- `seurat_obj_markers` : Optional pre-computed marker gene table or list
+  (output of `Seurat::FindAllMarkers()`). If `NULL` (default), markers
+  are computed automatically using parameters passed via `...`.
+
+- `tissue_name` : Character. Biological context for annotation (e.g.,
+  tissue type, disease state). Helps LLMs interpret marker genes
+  appropriately. Default: `"Human Tumor"`.
+
+- `models` : Character vector of LLM model identifiers. Supported
+  formats:
+
+  - OpenAI: `"gpt-4o"`, `"gpt-4o-mini"`, etc.
+  - Anthropic: `"claude-3-5-sonnet-20240620"`, etc.
+  - Google: `"gemini-1.5-pro"`, etc.
+  - Alibaba: `"qwen-max"`, `"qwen-plus"`, etc.
+
+  Default:
+  `c("gpt-4o", "claude-3-5-sonnet-20240620", "gemini-1.5-pro", "qwen-max")`.
+  For single-model mode, only the first model is used.
+
+- `api_keys` : Named list of API keys with provider names as keys:
+
+  - `openai`: OpenAI API key
+  - `anthropic`: Anthropic API key
+  - `gemini`: Google Cloud API key (with Gemini enabled)
+  - `qwen`: Alibaba DashScope API key
+
+  Example: `list(openai = "sk-...", anthropic = "sk-ant-...")`.
+
+  **Note**: Default placeholder keys (`"your-xxx-key"`) will fail-users
+  must supply valid keys.
+
+**Returns**:
+
+A Seurat object with the cell type annotation added as metadata columns.
+
+helpful link: <https://github.com/cafferychen777/mLLMCelltype>
+
+**Privacy**
+
+All data is read from your local input and processed in official
+mLLMCelltype — nothing is stored on any servers.
+
+## SingleR Annotation
+
+    seurat <- SingleRAnnotate(
+      sc,
+      verbose = getFuncOption("verbose"), # TRUE
+      # * pass to `celldex::HumanPrimaryCellAtlasData`
+      ensembl = FALSE,
+      cell.ont = c("all", "nonna", "none"),
+      legacy = FALSE,
+      # * pass to `SingleR::SingleR`
+      ref = c("HPCA", "custom"),
+      labels = NULL,
+      # Other arguments passed to `SingleR::SingleR`
+    )
+
+**Parameters**
+
+- `sc`: A Seurat object.
+- `verbose`: Logical. Whether to print progress messages. Defaults to
+  `TRUE`.
+- `ensembl`: Logical. Whether to convert row names to Ensembl IDs. Genes
+  without a valid mapping are discarded.
+- `cell.ont`: Character. specifying Cell Ontology term handling. Use
+  `"nonna"` to discard samples without valid terms, `"all"` to keep all
+  samples (with possible `NA`), or `"none"` to skip.
+- `legacy`: Logical. Whether to use legacy ExperimentHub backend.
+  Default uses gypsum.
+- `ref`: Reference data for annotation. Either `"HPCA"` (Human Primary
+  Cell Atlas from `celldex`) or a `SingleCellExperiment` object with
+  pre-labeled cells. For multiple references, a list of matrices or
+  `SummarizedExperiment` objects.
+- `labels`: Character vector of cell type labels for `ref` columns.
+  Required for custom references; defaults to `ref$label.main` for
+  `"HPCA"`. If `ref` is a list, `labels` must be a corresponding list.
+
+**Returns**:
+
+A Seurat object with the cell type annotation added as metadata columns.
+
+helpful link: <https://github.com/SingleR-inc/SingleR>
+
+# Setting up Python Environment
+
+Some screening methods (e.g. [Section 3.5
+DEGAS](#35-option-e-degas-screening)) are built using Python and require
+an execution environment. Here is a function to help you set up a Python
+environment. Both Windows and Unix-like systems are supported.
+
+    # * This is an example of setting up a Python environment using conda
+    SetupPyEnv(
+        env_type = "conda",
+        env_name = "test-condaenv",
+        method = c("reticulate", "system","environment"), # choose one of them, default is "reticulate"
+        env_file = NULL # path to environment.yml file, used when method = "environment"
+        python_version = NULL,
+        packages = c(
+            "pandas" = "1.3",
+            "numpy" = "any"
+        ),
+        recreate = FALSE, # whether to remove the existing environment and recreate it
+        use_conda_forge = TRUE,
+        verbose = TRUE
+    ) 
+
+    reticualte::use_condaenv("test-condaenv")
+
+    # * Or use virtualenv via reticulate
+    SetupPyEnv(
+      env_type = "venv",
+      env_name = "test-venv",
+      python_version = "3.9.15",
+      packages = c("tensorflow" = "2.4.1", "protobuf" = "3.20.3"),
+      python_path = NULL,
+      recreate = FALSE,
+      verbose = TRUE
+    )
+
+    reticulate::use_virtualenv("test-venv")
+
+You can use `ListPyEnv()` to list all the Python environments you have
+set up. Both conda and virtual environments are supported.
+
+    # * Unix-like systems
+    ListPyEnv()
+    #                 name                                                  python  type
+    # 1               base                        /home/user/miniconda3/bin/python conda
+    # 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda
+    # 3          test-venv         /home/user/miniconda3/envs/test-venv/bin/python  venv
+
+Show the conda environments only:
+
+    # * Unix-like systems
+    ListPyEnv(env_type = "conda")
+    #                 name                                                  python  type
+    # 1               base                        /home/user/miniconda3/bin/python conda
+    # 2      test-condaenv     /home/user/miniconda3/envs/test-condaenv/bin/python conda
+
+If the virtual environment isn’t installed in the default location, you
+can specify the location of the virtual environment with the
+`venv_locations` parameter.
+
+    ListPyEnv(env_type = "venv", venv_locations = "~/here_is_a_dir/.virtualenvs")
+
+# Other Functions
+
+## Load reference data
+
+**Parameters**
+
+- `data_type`: The type of data to load. Can be either “continuous”,
+  “survival” or “binary”, case-insensitive.
+- `path`: The path to the data directory.
+- `cache`: Whether to cache the data. Defaults to `TRUE`.
+- `timeout`: The maximum timeout time when downloading data.
+
+When loading the example data, the single-cell RNA **Seurat object**
+(preprocessed), the bulk RNA expression matrix, and the clinical
+phenotype data are loaded all at once. These data are combined into a
+list and returned.
+
+    mydata <- LoadRefData(
+      data_type = c("survival"),
+      path = tempdir(),
+      cache = TRUE,
+      timeout = 60
+    )
+
+    # * seurat_obj (single-cell data, preprocessed)
+    mydata[[1]]
+    # An object of class Seurat
+    # 15924 features across 1077 samples within 1 assay
+    # Active assay: RNA (15924 features, 2000 variable features)
+    #  3 layers present: counts, data, scale.data
+    #  2 dimensional reductions calculated: pca, umap
+
+    # * bulk_survival
+    mydata[[2]][1:6, 1:6]
+    #         TCGA-69-7978 TCGA-62-8399 TCGA-78-7539 TCGA-73-4658 TCGA-44-6775 TCGA-44-2655
+    # HIF3A         4.2598      11.6239       9.1362       5.0288       4.0573       5.5335
+    # RTN4RL2       8.2023       5.5819       3.5365       7.4156       7.7107       5.3257
+    # HMGCLL1       2.7476       5.8513       3.8334       3.6447       2.9188       4.8820
+    # LRRTM1        0.0000       0.4628       4.7506       6.8005       7.7819       2.2882
+    # GRIN1         6.6074       5.4257       4.9563       7.3510       3.5361       3.3311
+    # LRRTM3        1.7458       2.0092       0.0000       1.4468       0.0000       0.0000
+
+    # * pheno_survival
+    mydata[[3]] |> head()
+    #               time status
+    # TCGA-69-7978  4.40      0
+    # TCGA-62-8399 88.57      0
+    # TCGA-78-7539 25.99      0
+    # TCGA-73-4658 52.56      1
+    # TCGA-44-6775 23.16      0
+    # TCGA-44-2655 43.50      0
+
+We recommend using the `zeallot` `%<-%` function to assign values and
+rename them simultaneously.
+
+    library(zeallot)
+
+    c(seurat_obj, bulk, pheno) %<-%
+      LoadRefData(
+        data_type = c("survival"),
+        path = tempdir(),
+        cache = TRUE,
+        timeout = 60
+      )
+
+## Aggregating Duplicate Rows or Columns
+
+These functions collapse duplicated row names (e.g., gene symbols) or
+column names (e.g., sample IDs) in expression matrices and count tables
+using configurable aggregation methods.
+
+### Core Functions
+
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AggregateDupRows()</code></td>
+<td>Merge rows with identical names (e.g., duplicate genes)</td>
+</tr>
+<tr>
+<td><code>AggregateDupCols()</code></td>
+<td>Merge columns with identical names (e.g., duplicate samples)</td>
+</tr>
+<tr>
+<td><code>AggregateDups()</code></td>
+<td>Convenience wrapper: merge rows &amp; columns</td>
+</tr>
+</tbody>
+</table>
+
+### Supported Methods
+
+- `"max"` (default), `"sum"`, `"mean"`, `"median"`, `"first"`
+
+### Basic Usage
+
+    # Example matrix with duplicate genes (rows) and samples (columns)
+    mat <- matrix(
+      1:16,
+      nrow = 4,
+      dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"), c("S1", "S1", "S2", "S3"))
+    )
+
+    mat
+    #       S1 S1 S2 S3
+    # TP53   1  5  9 13
+    # TP53   2  6 10 14
+    # BRCA1  3  7 11 15
+    # ACTB   4  8 12 16
+
+    # Collapse duplicate genes using sum
+    AggregateDupRows(mat, method = "sum")
+    #       S1 S1 S2 S3
+    # TP53   2  6 10 14
+    # BRCA1  3  7 11 15
+    # ACTB   4  8 12 16
+
+    # Collapse duplicate samples using max
+    AggregateDupCols(mat, method = "max")
+    #       S1 S2 S3
+    # TP53   5  9 13
+    # TP53   6 10 14
+    # BRCA1  7 11 15
+    # ACTB   8 12 16
+
+    # Full deduplication in one step
+    AggregateDups(mat, method = "sum")
+    #       S1 S2 S3
+    # TP53  14 19 27
+    # BRCA1 10 11 15
+    # ACTB  12 12 16
+
+### Features
+
+- ✅ Handles `matrix`, `data.frame`, and S4 `Matrix` classes (e.g.,
+  `dgCMatrix`)
+- ✅ Preserves original order of *first occurrence* for each unique name
+- ✅ Silent mode: `verbose = FALSE`
+- ✅ Independent row/column methods via
+  `AggregateDups(row_method, col_method)`
+
+## Standalone
+
+### get\_var\_value
+
+`get_var_value` is a **standalone script** that statically traces
+variable assignments inside an R function (both from function parameters
+and the function body) and computes the variable’s value by recursively
+resolving the dependency chain.
+
+#### Example
+
+    g <- function(a = 1, b = 2) {
+      c <<- a * 2 + b * 3
+      d <- c^2
+      e <- d - 1
+      e
+    }
+    get_var_value("d", g) # returns 64
+
+    h <- function(a = "A", ...) {
+      a <- 1
+      return(a)
+      a <- 2
+      a
+    }
+    get_var_value("a", h) # returns 1
+
+To copy `get_var_value` into your own package, run:
+
+    usethis::use_standalone("WangLabCSU/SigBridgeR", "standalone-get_var_value.R")
