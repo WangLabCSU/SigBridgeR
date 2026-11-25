@@ -70,3 +70,29 @@ test_that("OverLapSCBulk aligns bulk and single-cell genes", {
   other_bulk <- nb_matrix(10L, 10L, prefix_rows = "X")
   expect_error(OverLapSCBulk(sc_data = sc, bulk = other_bulk, hvg = 5L))
 })
+
+# DoSCIPAC - wrapper behaviour ---------------------------------------------
+
+test_that("DoSCIPAC aborts when sc_batch_col matches no metadata column", {
+  # Same fixtures as the OverLapSCBulk test: the abort sits after gene
+  # alignment, so the shared gene set must clear min.features = 200.
+  bulk <- nb_bulk(300L, 50L)
+  sc <- nb_seurat(300L, 50L)
+  sc$batch_id <- rep(c("Batch1", "Batch2"), length.out = ncol(sc))
+
+  pheno <- nb_binary_phenotype(50L)
+
+  expect_error(
+    DoSCIPAC(
+      matched_bulk = bulk,
+      sc_data = sc,
+      phenotype = pheno,
+      phenotype_class = "binary",
+      hvg = 20L,
+      sc_batch_col = "batch_typo",
+      verbose = FALSE,
+      seed = 7L
+    ),
+    "no batch information found"
+  )
+})

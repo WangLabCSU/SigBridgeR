@@ -295,6 +295,7 @@ DoSCIPAC <- function(
     ncore = ncore,
     ci_alpha = ci_alpha,
     nfold = nfold,
+    sc_data = sc_data,
     ...
   )
 
@@ -312,7 +313,12 @@ DoSCIPAC <- function(
     assay = p$assay
   )
   if (!is.null(sc_batch_col)) {
-    sc_batch_col <- if (chk::vld_chr(sc_batch_col)) {
+    sc_batch_col <- if (chk::vld_string(sc_batch_col)) {
+      if (!sc_batch_col %in% colnames(sc_data[[]])) {
+        Abort(
+          "`sc_batch_col` provided, but no batch information found in `sc_data`."
+        )
+      }
       sc_data[[sc_batch_col]]
     } else {
       sc_batch_col
