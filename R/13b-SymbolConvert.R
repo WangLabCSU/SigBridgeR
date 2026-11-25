@@ -77,6 +77,13 @@ SymbolConvert <- function(
     row_names,
     genome_build = genome_build
   )
+  if (is.null(gene_symbols)) {
+    Abort(
+      "Failed to obtain gene annotation data from IDConverter.",
+      tips = "Check network access or pre-download the reference data.",
+      type = "[DATA ERROR]"
+    )
+  }
 
   # * replace NA with original unconverted IDs
   na_count <- if (rlang::is_installed("cheapr")) {

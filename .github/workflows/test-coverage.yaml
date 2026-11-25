@@ -22,7 +22,21 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr, any::xml2
+          extra-packages: |
+            any::covr
+            any::xml2
+            Exceret/DEGAS
+            Exceret/DEGASv2
+            Exceret/LPSGL
+            brooksbenard/PhenoMapR
+            Exceret/PIPET
+            Exceret/rSIDISH
+            Exceret/rTiRank
+            Exceret/scAB
+            Exceret/SCIPAC
+            Exceret/Scissor
+            Exceret/scPAS
+            Exceret/scPP
           needs: coverage
 
       - name: Test coverage

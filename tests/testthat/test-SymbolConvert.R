@@ -2,6 +2,30 @@
 # Real Ensembl IDs (grch37/grch38):
 #   ENSG00000000003 -> TSPAN6, ENSG00000000419 -> DPM1, ENSG00000000457 -> SCYL3
 
+testthat::skip_if_not_installed("IDConverter")
+
+# `IDConverter::convert_hm_genes()` downloads its annotation tables from Zenodo
+# on first use. That network dependency is unreliable on CI (notably Windows),
+# where a failed download makes the function return NULL. Stub it with a
+# deterministic mapping for the IDs used in these tests.
+testthat::local_mocked_bindings(
+  convert_hm_genes = function(
+    IDs,
+    type = c("ensembl", "symbol"),
+    genome_build = c("hg38", "hg19", "mm10", "mm9", "ce11", "T2T"),
+    multiple = FALSE
+  ) {
+    map <- c(
+      "ENSG00000000003" = "TSPAN6",
+      "ENSG00000000419" = "DPM1",
+      "ENSG00000000457" = "SCYL3",
+      "ENSMUSG00000000001" = "Trp53"
+    )
+    unname(map[IDs])
+  },
+  .package = "IDConverter"
+)
+
 new_test_mat <- function(
   ids = c(
     "ENSG00000000003",
@@ -147,6 +171,7 @@ describe("SymbolConvert - update_symbol_method", {
   })
 
   it("uses scCustomize HGNC when method = 'scCustomize' and hg build", {
+    testthat::skip_if_not_installed("scCustomize")
     mat <- new_test_mat("ENSG00000000003")
     called <- new.env()
     testthat::local_mocked_bindings(
@@ -168,6 +193,7 @@ describe("SymbolConvert - update_symbol_method", {
   })
 
   it("uses scCustomize MGI for mouse genome builds", {
+    testthat::skip_if_not_installed("scCustomize")
     mat <- new_test_mat("ENSMUSG00000000001")
     testthat::local_mocked_bindings(
       convert_hm_genes = function(x, type, genome_build) "Trp53",

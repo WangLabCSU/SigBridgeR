@@ -31,9 +31,28 @@ jobs:
 
             - uses: r-lib/actions/setup-r-dependencies@v2
               with:
+                  # `dependencies: hard` only installs Imports/LinkingTo, but
+                  # pkgdown knits every vignette, so the Suggests used by the
+                  # *evaluated* chunks must be installed explicitly:
+                  #   knitr/rmarkdown  vignette engine and rmarkdown output
+                  #   zeallot          Extending_ScreenMethod (setup chunk)
+                  #   dplyr            PhenoMap() in Full_Tutorial,
+                  #                    InterceptStrategy() in
+                  #                    Extending_Annotation / Extending_Seurat /
+                  #                    Extending_ScreenMethod
+                  #   fgsea            BenchGSEA() in Benchmark_GSEA (its chunks
+                  #                    are skipped without fgsea + dplyr)
+                  # Chunks marked `eval: false` (ggVennDiagram, patchwork,
+                  # tibble, qs2, future, SingleR, ...) are not run by pkgdown
+                  # and therefore need no installation.
                   extra-packages: |
                       any::pkgdown
                       local::.
+                      any::knitr
+                      any::rmarkdown
+                      any::zeallot
+                      any::dplyr
+                      any::fgsea
                   dependencies: '"hard"'
             - name: Build site
               run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
