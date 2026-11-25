@@ -158,11 +158,14 @@ test_that("SingleRAnnotate() resolves the HPCA reference through celldex", {
     verbose = FALSE
   )
 
-  expect_equal(captured$celldex, list(
-    ensembl = TRUE,
-    cell.ont = "none",
-    legacy = TRUE
-  ))
+  expect_equal(
+    captured$celldex,
+    list(
+      ensembl = TRUE,
+      cell.ont = "none",
+      legacy = TRUE
+    )
+  )
   expect_equal(captured$labels, ref$label.main)
   expect_equal(out$labels, rep("T cell", ncol(sce)))
 })
@@ -189,7 +192,8 @@ test_that("SingleRAnnotate.Seurat adds the SingleR metadata columns", {
       "SingleR_labels",
       "SingleR_delta_next",
       "SingleR_pruned_labels"
-    ) %chin% colnames(out@meta.data)
+    ) %chin%
+      colnames(out@meta.data)
   ))
   expect_equal(unname(out$SingleR_labels), rep("B cell", ncol(sc)))
   expect_equal(unname(out$SingleR_delta_next), seq_len(ncol(sc)))
