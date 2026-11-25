@@ -303,7 +303,14 @@ test_that("SigBridgeRBase is abstract and declares its version property", {
   version_prop <- SigBridgeRBase@properties$sigbridger_version
   expect_identical(version_prop$class, property_sigbridger_verison$class)
   expect_identical(version_prop$default, property_sigbridger_verison$default)
-  expect_identical(version_prop$validator, property_sigbridger_verison$validator)
+  # Compare validator behaviour rather than bodies: covr instruments each
+  # function separately, which makes identical() report false differences.
+  expect_null(version_prop$validator(version_prop$default))
+  expect_match(
+    version_prop$validator("4"),
+    "does not contain a dot",
+    fixed = TRUE
+  )
   expect_error(SigBridgeRBase(), "abstract", fixed = TRUE)
 })
 
@@ -312,7 +319,7 @@ test_that("SigBridgeRBase subclasses inherit the package version", {
   obj <- child_class()
 
   expect_true(S7::S7_inherits(obj, SigBridgeRBase))
-  expect_identical(names(obj), "sigbridger_version")
+  expect_identical(S7::prop_names(obj), "sigbridger_version")
   expect_identical(obj@sigbridger_version, get_pkg_version())
   expect_identical(
     S7::prop(obj, "sigbridger_version"),
