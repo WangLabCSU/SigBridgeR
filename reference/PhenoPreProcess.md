@@ -1,9 +1,9 @@
 # Preprocess Phenotype Data
 
-Aligns and validates phenotype data with bulk RNA-seq expression matrix.
-Supports three phenotype types (binary, continuous, survival) with
-automatic sample matching, type validation, and optional conditional
-mapping via
+**\[deprecated\]** Aligns and validates phenotype data with bulk RNA-seq
+expression matrix. Supports three phenotype types (binary, continuous,
+survival) with automatic sample matching, type validation, and optional
+conditional mapping via
 [`PhenoMap`](https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.md).
 
 ## Usage
@@ -40,20 +40,15 @@ PhenoPreProcess(
 
   Character. Type of phenotype:
 
-  `"binary"`
+  - **`"binary"`**: Two-class categorical outcome (e.g., case/control).
+    Must have exactly 2 unique values.
 
-  :   Two-class categorical outcome (e.g., case/control). Must have
-      exactly 2 unique values.
+  - **`"continuous"`**: Continuous measurement (e.g., age, expression).
+    Must have \>2 unique values.
 
-  `"continuous"`
-
-  :   Continuous measurement (e.g., age, expression). Must have \>2
-      unique values.
-
-  `"survival"`
-
-  :   Survival data with time and status columns. Automatically guesses
-      columns named "time" and "status/censor" if `select` is `NULL`.
+  - **`"survival"`**: Survival data with time and status columns.
+    Automatically guesses columns named "time" and "status/censor" if
+    `select` is `NULL`.
 
   Partial matching is supported.
 
@@ -117,9 +112,10 @@ Only samples present in both `bulk` and `phenotype` are retained.
 [`PhenoMap()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.md)
 
 Other input_preprocess:
-[`BulkPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.md),
+[`DrawBulkPCA()`](https://wanglabcsu.github.io/sigbridger/reference/DrawBulkPCA.md),
 [`PhenoMap()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.md),
-[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
+[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md),
+[`SymbolConvert()`](https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.md)
 
 ## Examples
 

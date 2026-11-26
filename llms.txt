@@ -7,14 +7,30 @@ sequencing data, bulk expression data, and sample-related phenotypic
 data, to identify the cells most closely associated with the phenotypic
 data, performing as a bridge to existing tools.
 
-![](SigBridgeR_workflow.png)
+![SigBridgeR workflow](reference/figures/SigBridgeR_workflow.png)
 
-## 🔧 Installation
+**Current Status**
 
-Usually we recommend installing the latest release from GitHub because
-of the latest features and bug fixes.
+| Algorithm | Supported Phenotypes | Cache Support | License | Note |
+|:--:|:--:|:--:|:--:|:--:|
+| [**Scissor**](https://github.com/sunduanchen/Scissor) | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
+| [**scPAS**](https://github.com/aiminXie/scPAS) | `binary` `survival` `continuous` |  | GPL-3 |  |
+| [**scAB**](https://github.com/jinworks/scAB) | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
+| [**scPP**](https://github.com/WangX-Lab/ScPP) | `binary` `survival` `continuous` | ✅ | GPL-3 |  |
+| [**DEGAS**](https://github.com/tsteelejohnson91/DEGAS) | `binary` `survival` `continuous` |  | MIT |  |
+| [**DEGASv2**](https://github.com/ElliotLiu1997/DEGASv2) | `binary` `survival` `continuous` |  | MIT | Bulk raw counts matrix perferred |
+| [**LP-SGL**](https://github.com/hongmeizhanghm/LP_SGL) | `binary` `survival` `continuous` |  | No License |  |
+| [**PIPET**](https://github.com/ruan2ruan/PIPET) | `binary` `survival` `continuous` | ✅ | GPL-3 | Bulk raw counts matrix perferred |
+| [**SIDISH**](https://wanglabcsu.github.io/sigbridger/mcgilldinglab/SIDISH) | `survival` |  | MIT\* / PolyForm NC 1.0.0 | see [note](#special-declaration-concerning-sidish) below |
+| [**SCIPAC**](https://github.com/mianaz/SCIPAC) | `binary` `survival` `continuous` |  | MIT |  |
+| [**TiRank**](https://github.com/LenisLin/TiRank) | `binary` `survival` `continuous` | ✅ | MIT |  |
+| [**PhenoMapR**](https://github.com/brooksbenard/PhenoMapR) | `binary` `survival` `continuous` |  | MIT |  |
 
-1.  Install the development version from GitHub:
+## 🔧 Installatation
+
+We recommend installing the stable branch `version3` from GitHub .
+
+1.  Install stable version 3.x (branch `version3`):
 
 ``` r
 
@@ -29,7 +45,7 @@ if (!requireNamespace("pak")) {
     )
   )
 }
-pak::pkg_install("WangLabCSU/SigBridgeR")
+pak::pak("WangLabCSU/SigBridgeR@version3")
 ```
 
 2.  Install from r-universe:
@@ -39,16 +55,11 @@ pak::pkg_install("WangLabCSU/SigBridgeR")
 install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
 ```
 
-### It is recommended to install the following packages:
-
-`SigBridgeR` includes the Scissor and scAB algorithms by default. In
-addition to these, installing the following packages allows you to use
-additional algorithms.
+3.  Install the development version 4 (beta) from GitHub:
 
 ``` r
 
-methods <- c("scPAS", "scPP", "DEGAS", "LPSGL", "PIPET", "rSIDISH", "SCIPAC")
-pak::pkg_install(file.path("Exceret", methods))
+pak::pak("WangLabCSU/SigBridgeR")
 ```
 
 **unnecessary but recommended**:
@@ -57,7 +68,7 @@ For better performance:
 
 ``` r
 
-pak::pkg_install(c(
+pak::pak(
   # faster computation
   "sparseMatrixStats",
   "matrixStats",
@@ -66,18 +77,11 @@ pak::pkg_install(c(
   "matrixTests",
   "KernSmooth",
   "cheapr",
+  "WGCNA",
   # better gene symbol conversion
   "scCustomize",
-  # parallel computation
-  "furrr",
-  "future"
-))
-
-if (!requireNamespace("BiocManager")) {
-  install.packages("BiocManager")
-}
-# faster computation
-BiocManager::install("WGCNA")
+  "huayc09/SeuratExtend"
+)
 ```
 
 For seamless integration with single-cell RNA-seq data stored in
@@ -85,22 +89,22 @@ For seamless integration with single-cell RNA-seq data stored in
 
 ``` r
 
-pak::pkg_install("anndata")
+pak::pak("anndata")
 # or
-pak::pkg_install("anndataR") # both are supported
+pak::pak("anndataR") # both are supported
 ```
 
 For visualization:
 
 ``` r
 
-pak::pkg_install(c(
- "ggplot2",
- "randomcoloR", # or RColorBrewer
- "ggupset", # for upset plot
- "patchwork", # for fraction stack plot
- "ggforce", # for pca plot
- "ggVennDiagram" # for venn diagram
+pak::pak(c(
+  "ggplot2",
+  "RColorBrewer",
+  "ggupset", # for upset plot
+  "patchwork", # for fraction stack plot
+  "ggforce", # for pca plot
+  "ggVennDiagram" # for venn diagram
 ))
 ```
 
@@ -108,7 +112,7 @@ To use the built-in cell annotation methods:
 
 ``` r
 
-pak::pkg_install(c(
+pak::pak(c(
   # SingleR
   "SingleR-inc/SingleR",
   "celldex",
@@ -125,40 +129,32 @@ To add custom extension functions to SigBridgeR:
 
 ``` r
 
-pak::pkg_install(c(
+pak::pak(c(
   "tictoc",
   "codetools",
-  "knitr",
   "lintr",
-  "rstudioapi",
-  "yonicd/tidycheckUsage"
+  "rstudioapi"
 ))
 ```
 
-To reproduce the tutorial to learn more usage:
+## 📓 Get Started
 
 ``` r
 
-pak::pkg_install(c(
-  "zeallot",
-  "here",
-  "org.Hs.eg.db",
-  "processx"
-))
+library(SigBridgeR)
+res <- Screen(
+  bulk, # bulk RNA expression data
+  seurat_obj,
+  pheno, # named vector label/survival time data.frame
+  screen_method = "scAB", # Algorithm
+  phenotype_class = "binary" # or "survival"/"continuous"
+)
+
+ggplot2::autoplot(res)
+table(res@scRNA_data$scAB)
 ```
 
-## 📓 Documentation
-
-Get Started:
-
 - View [Github Webpage](https://wanglabcsu.github.io/SigBridgeR/)
-- [A Quick Started
-  Guide](https://wanglabcsu.github.io/sigbridger/vignettes/Quick_Start.md)
-- [Start from spatial
-  transcriptome](https://wanglabcsu.github.io/sigbridger/vignettes/Spatial_Transcriptome.md)
-- [Full
-  Tutorial](https://wanglabcsu.github.io/sigbridger/vignettes/Full_Tutorial.md)
-  for more details
 - Use `?SigBridgeR::function_name` to access the help documents in R.
 
 If you encounter problems, please check:
@@ -172,49 +168,231 @@ If you encounter problems, please check:
 Let us know if you have ideas to make this project better. Pull requests
 are welcome!
 
+## 🧩 Agent Skills
+
+SigBridgeR ships a set of [Agent Skills](https://skills.sh/) that teach
+AI coding agents how to use and extend the package correctly. They live
+in the standalone
+[`skills/`](https://wanglabcsu.github.io/sigbridger/skills) folder and
+are installable with the
+[`skills`](https://www.npmjs.com/package/skills) CLI (Node.js \>= 22).
+
+| Skill | What it covers |
+|:---|:---|
+| `sigbridger-screen` | Validate scRNA/bulk/phenotype inputs, choose a registered `ScreenStrategy` method, run [`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md) and read the labelled `Seurat` object from `@scRNA_data` |
+| `sigbridger-extend` | Add custom methods: scaffold with [`TemplateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.md), validate with [`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md), and register `ScreenMethod`, `AnnotationMethod` and preprocessing steps via [`Register()`](https://wanglabcsu.github.io/sigbridger/reference/Register.md) |
+| `reference-coding` | For contributors: query the local XERJ corpora (upstream screening algorithms, Seurat, Rcpp) before changing analysis code, cite `file:line`, and respect upstream licences |
+
+`reference-coding` relies on the optional XERJ setup documented in
+[`AGENTS.md`](https://wanglabcsu.github.io/sigbridger/AGENTS.md); the
+other two work without it.
+
+Install every skill (interactive: pick the skills and the target
+agents):
+
+``` bash
+npx skills add WangLabCSU/SigBridgeR
+```
+
+Install one skill non-interactively, into a specific agent:
+
+``` bash
+npx skills add WangLabCSU/SigBridgeR --skill sigbridger-screen -a codebuddy
+```
+
+Install globally so the skills are available in every project on the
+machine:
+
+``` bash
+npx skills add WangLabCSU/SigBridgeR -g
+```
+
+Manage the installed set:
+
+``` bash
+npx skills list      # what is installed and where
+npx skills check     # are updates available
+npx skills update    # pull the latest version
+npx skills remove    # uninstall
+```
+
 ## 📚 Citation
 
-- Yuxi Yang, Hongqian Qian, Zeyu Yan, Chunyang Wang, Liping Du, Xiaoxiao
-  Shen, Yun Peng, Xiaoyun Bu, Ting Li, Jian-Guo Zhou, Shixiang Wang,
-  SigBridgeR: An R Toolkit for Standardized Identification and
-  Benchmarking of Phenotype-Associated Cell Subpopulations in
-  Single-Cell Transcriptomics, GigaScience, 2026;, giag100,
-  <https://doi.org/10.1093/gigascience/giag100>
+If you use SigBridgeR in your work, please cite the corresponding
+papers:
 
 ``` r
 
-citation("SigBridgeR")
+print(citation("SigBridgeR"), bibtex = TRUE)
 #> Please cite the following publications when using this package.
 #> 
-#>   Yang et al. SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell
-#>   Transcriptomics. GigaScience (2026) [SigBridgeR]
+#>   Yang et al. SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell Transcriptomics. GigaScience (2026)
+#>   [SigBridgeR]
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     title = {SigBridgeR: An R Toolkit for Standardized Identification and Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell Transcriptomics},
+#>     author = {Yuxi Yang and Hongqian Qian and Zeyu Yan and Chunyang Wang and Liping Du and Xiaoxiao Shen and Yun Peng and Xiaoyun Bu and Ting Li and Jian-Guo Zhou and Shixiang Wang},
+#>     journal = {GigaScience},
+#>     year = {2026},
+#>     pages = {giag100},
+#>     doi = {10.1093/gigascience/giag100},
+#>     url = {https://doi.org/10.1093/gigascience/giag100},
+#>   }
 #> 
 #>   Sun et al. Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data. Nat Biotechnol (2022) [Scissor]
 #> 
-#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation
-#>   to disease. Genome Med (2022) [DEGAS]
+#> A BibTeX entry for LaTeX users is
 #> 
-#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data.
-#>   Nucleic Acids Res (2022) [scAB]
+#>   @Article{,
+#>     author = {Duanchen Sun and Xiangnan Guan and Amy E. Moran and Ling-Yun Wu and David Z. Qian and Pepper Schedin and Mu-Shui Dai and Alexey V. Danilov and Joshi J. Alumkal and Andrew C. Adey and Paul T. Spellman and Zheng Xia},
+#>     title = {Identifying phenotype-associated subpopulations by integrating bulk and single-cell sequencing data},
+#>     journal = {Nature Biotechnology},
+#>     year = {2022},
+#>     volume = {40},
+#>     pages = {527-538},
+#>     doi = {10.1038/s41587-021-01091-3},
+#>     url = {https://doi.org/10.1038/s41587-021-01091-3},
+#>   }
+#> 
+#>   Johnson et al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease. Genome Med (2022) [DEGAS]
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Travis S. Johnson and Christina Y. Yu and Zhi Huang and Siwen Xu and Tongxin Wang and Chuanpeng Dong and Wei Shao and Mohammad Abu Zaid and Xiaoqing Huang and Yijie Wang and Christopher Bartlett and Yan Zhang and Brian A. Walker and Yunlong Liu and Kun Huang and Jie Zhang},
+#>     title = {Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible deep transfer learning framework for prioritizing cells in relation to disease},
+#>     journal = {Genome Medicine},
+#>     year = {2022},
+#>     volume = {14},
+#>     pages = {11},
+#>     doi = {10.1186/s13073-022-01012-2},
+#>     url = {https://doi.org/10.1186/s13073-022-01012-2},
+#>   }
+#> 
+#>   Zhang et al. scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data. Nucleic Acids Res (2022) [scAB]
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Qinran Zhang and Suoqin Jin and Xiufen Zou},
+#>     title = {scAB detects multiresolution cell states with clinical significance by integrating single-cell genomics and bulk sequencing data},
+#>     journal = {Nucleic Acids Research},
+#>     year = {2022},
+#>     volume = {50},
+#>     number = {21},
+#>     pages = {12112-12130},
+#>     doi = {10.1093/nar/gkac1109},
+#>     url = {https://doi.org/10.1093/nar/gkac1109},
+#>   }
 #> 
 #>   Li et al. Identifying phenotype-associated subpopulations through LP_SGL. Brief Bioinform (2024) [LP_SGL]
 #> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Juntao Li and Hongmei Zhang and Bingyu Mu and Hongliang Zuo and Kanglei Zhou},
+#>     title = {Identifying phenotype-associated subpopulations through LP_SGL},
+#>     journal = {Briefings in Bioinformatics},
+#>     year = {2024},
+#>     volume = {25},
+#>     number = {1},
+#>     pages = {bbad424},
+#>     doi = {10.1093/bib/bbad424},
+#>     url = {https://doi.org/10.1093/bib/bbad424},
+#>   }
+#> 
 #>   Gan et al. SCIPAC: quantitative estimation of cell-phenotype associations. Genome Biol (2024) [SCIPAC]
 #> 
-#>   Ruan et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Brief Bioinform (2024)
-#>   [PIPET]
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Dailin Gan and Yini Zhu and Xin Lu and Jun Li},
+#>     title = {SCIPAC: quantitative estimation of cell-phenotype associations},
+#>     journal = {Genome Biology},
+#>     year = {2024},
+#>     volume = {25},
+#>     pages = {119},
+#>     doi = {10.1186/s13059-024-03263-1},
+#>     url = {https://doi.org/10.1186/s13059-024-03263-1},
+#>   }
+#> 
+#>   Ruan et al. PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data. Brief Bioinform (2024) [PIPET]
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Xinjia Ruan and Yu Cheng and Yuqing Ye and Yuhang Wang and Xinyi Chen and Yuqing Yang and Tiantian Liu and Fangrong Yan},
+#>     title = {PIPET: predicting relevant subpopulations in single-cell data using phenotypic information from bulk data},
+#>     journal = {Briefings in Bioinformatics},
+#>     year = {2024},
+#>     volume = {25},
+#>     number = {4},
+#>     pages = {bbae260},
+#>     doi = {10.1093/bib/bbae260},
+#>     url = {https://doi.org/10.1093/bib/bbae260},
+#>   }
 #> 
 #>   Xie et al. scPAS: single-cell phenotype-associated subpopulation identifier. Brief Bioinform (2025) [scPAS]
 #> 
-#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in
-#>   silico perturbation. Nat Commun (2025) [SIDISH]
+#> A BibTeX entry for LaTeX users is
 #> 
-#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells.
-#>   Interdiscip Sci (2026) [ScPP]
+#>   @Article{,
+#>     author = {Aimin Xie and Hao Wang and Jiaxu Zhao and Zhaoyang Wang and Jinyuan Xu and Yan Xu},
+#>     title = {scPAS: single-cell phenotype-associated subpopulation identifier},
+#>     journal = {Briefings in Bioinformatics},
+#>     year = {2025},
+#>     volume = {26},
+#>     number = {1},
+#>     pages = {bbae655},
+#>     doi = {10.1093/bib/bbae655},
+#>     url = {https://doi.org/10.1093/bib/bbae655},
+#>   }
+#> 
+#>   Jolasun et al. SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation. Nat Commun (2025)
+#>   [SIDISH]
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Yasmin Jolasun and Kailu Song and Yumin Zheng and Jingtao Wang and Gregory J. Fonseca and David H. Eidelman and Jun Ding},
+#>     title = {SIDISH integrates single-cell and bulk transcriptomics to identify high-risk cells and guide precision therapeutics through in silico perturbation},
+#>     journal = {Nature Communications},
+#>     year = {2025},
+#>     volume = {16},
+#>     pages = {11271},
+#>     doi = {10.1038/s41467-025-66162-4},
+#>     url = {https://doi.org/10.1038/s41467-025-66162-4},
+#>   }
+#> 
+#>   He et al. Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells. Interdiscip Sci (2026) [ScPP]
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Yin He and Rongzhuo Long and Xiaosheng Wang},
+#>     title = {Inferring Phenotypes of Single Cells Based on the Expression Profiles of Phenotype-Associated Marker Genes in Bulks and Single Cells},
+#>     journal = {Interdisciplinary Sciences},
+#>     year = {2026},
+#>     doi = {10.1007/s12539-025-00803-6},
+#>     url = {https://doi.org/10.1007/s12539-025-00803-6},
+#>   }
 #> 
 #>   Lin et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med (2026) [TiRank]
 #> 
-#> To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set 'options(citation.bibtex.max=999)'.
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Yuxiang Lin and Zening Huang and Ziyan Lin and Yating Lin and Jinsheng Song and Ling Luo and Jiayao Chi and Yeyang Zheng and Youxin Gao and Junjie Lin and Xinyu Li and Chenyu Liang and Lei Zhang and Xinkang Wang and Yuqin Sun and Rongshan Yu and Qiyue Chen and Mengsha Tong},
+#>     title = {TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery},
+#>     journal = {Genome Medicine},
+#>     year = {2026},
+#>     volume = {18},
+#>     pages = {23},
+#>     doi = {10.1186/s13073-026-01604-2},
+#>     url = {https://doi.org/10.1186/s13073-026-01604-2},
+#>   }
 ```
 
 ## 🗺️ Similar Projects
@@ -237,7 +415,7 @@ prediction model
 [SCellBOW](https://github.com/cellsemantics/SCellBOW): source scRNA-seq
 expression matrix + target scRNA-seq expression matrix + (optional) bulk
 RNA-seq expression matrix with paired survival data -\> cell embeddings,
-cluster assignments, UMAP visualizations, and phenotype‑algebra‑derived
+cluster assignments, UMAP visualizations, and phenotype-algebra-derived
 risk scores with survival probability curves for individual cell
 subpopulations.
 
@@ -245,16 +423,47 @@ subpopulations.
 bulk RNA-seq data + celltype annotation (optional batch labels) -\>
 phenotype-associated cell populations
 
+## Declaration of Interest
+
+SigBridgeR is distributed under the GNU General Public License version 3
+(GPL-3.0). As reflected in the **Current Status** table above,
+SigBridgeR integrates algorithms from a number of upstream projects.
+SigBridgeR vendors upstream source code only from projects licensed
+under **GPL-3.0** or **MIT**, both of which are compatible with GPL-3.0.
+
+All vendored code remains under its original upstream license, and the
+corresponding license notices are retained alongside the vendored
+sources (e.g. in `inst/vendor/`).
+
+#### Special declaration concerning SIDISH
+
+The license of SIDISH changed during its development:
+
+- At commit `9e9e86e16a08f88f0d4942af0854335b5acbe71b` and **all earlier
+  commits**, SIDISH was distributed under the **MIT license**.
+- In commits **after** `9e9e86e16a08f88f0d4942af0854335b5acbe71b`,
+  SIDISH was relicensed under the **PolyForm Noncommercial License
+  1.0.0**. Under that license, noncommercial use is permitted only under
+  its complete, unmodified terms, and any use outside those permissions
+  requires a separate written agreement with the copyright holders or
+  their authorized representatives.
+
+**The SIDISH code vendored in SigBridgeR is taken exclusively from the
+MIT-licensed version at or before commit
+`9e9e86e16a08f88f0d4942af0854335b5acbe71b`.** SigBridgeR does not
+include, copy, modify, or derive from any SIDISH code introduced in
+commits after that commit. In particular, **no code under the PolyForm
+Noncommercial License 1.0.0 is present in SigBridgeR**. All other
+SIDISH-related code in SigBridgeR was independently implemented.
+
 # Package index
 
 ## Data Preprocessing
 
 Functions for preprocessing inputs.
 
-- [`BulkPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.md)
-  : Bulk RNA-seq Data Preprocessing and Quality Control Function
 - [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
-  : Single-Cell RNA-seq Preprocessing Pipeline
+  **\[deprecated\]** : Single-Cell RNA-seq Preprocessing Pipeline
 - [`QCFilter()`](https://wanglabcsu.github.io/sigbridger/reference/QCFilter.md)
   : Filter Seurat object cells by QC metrics
 - [`QCPatternDetect()`](https://wanglabcsu.github.io/sigbridger/reference/QCPatternDetect.md)
@@ -270,15 +479,25 @@ Functions for preprocessing inputs.
   : Aggregate Rows or Columns with Duplicate Names
 - [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
   [`SCIntegrate.data.frame()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
-  [`SCIntegrate.Matrix()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
+  [`SCIntegrate.matrix()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
   [`SCIntegrate.Seurat()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md)
   : Integrate Single-Cell Datasets
 - [`CheckNA()`](https://wanglabcsu.github.io/sigbridger/reference/CheckNA.md)
   : Check for Missing Values (NA) in Data
 - [`PhenoPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoPreProcess.md)
-  : Preprocess Phenotype Data
+  **\[deprecated\]** : Preprocess Phenotype Data
 - [`PhenoMap()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.md)
   : Map Phenotype Values Using Conditional Rules
+- [`CountsToTPM()`](https://wanglabcsu.github.io/sigbridger/reference/CountsToTPM.md)
+  : Convert bulk RNA-seq raw counts to TPM
+- [`FPKMToTPM()`](https://wanglabcsu.github.io/sigbridger/reference/FPKMToTPM.md)
+  : Convert bulk RNA-seq FPKM to TPM
+- [`GetGeneLength()`](https://wanglabcsu.github.io/sigbridger/reference/GetGeneLength.md)
+  : Compute Gene Lengths from a GTF File or GTF Lines
+- [`IsCountsMatrix()`](https://wanglabcsu.github.io/sigbridger/reference/IsCountsMatrix.md)
+  : Check whether a matrix looks like RNA-seq raw counts
+- [`IsSkewedDynamic()`](https://wanglabcsu.github.io/sigbridger/reference/IsSkewedDynamic.md)
+  : Test Whether the Proportion of a Target Value Is Highly Skewed
 
 ## Result Integration & Visualization
 
@@ -286,13 +505,36 @@ Merge and visualize screening results across methods or conditions.
 
 - [`MergeResult()`](https://wanglabcsu.github.io/sigbridger/reference/MergeResult.md)
   : Merge Multiple Screening Analysis Results
+
+- [`` `+`( ``*`<SigBridgeR::ScreenMethodResult>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/plus-methods.md)
+  [`` `+`( ``*`<Seurat>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/plus-methods.md)
+  :
+
+  Merge two objects with `+`
+
 - [`WeightedVote()`](https://wanglabcsu.github.io/sigbridger/reference/WeightedVote.md)
   : Weighted Voting Aggregation for Multi-Voter Classification
+
+- [`DrawBulkPCA()`](https://wanglabcsu.github.io/sigbridger/reference/DrawBulkPCA.md)
+  : Draw PCA Plot for Bulk Expression Data
+
 - [`ScreenFractionPlot()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenFractionPlot.md)
   : Visualization of Cell Screening Fractions
+
 - [`ScreenUpset()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenUpset.md)
   : ScreenUpset - Visualize cell type intersections from screened Seurat
   object
+
+- [`reexports`](https://wanglabcsu.github.io/sigbridger/reference/reexports.md)
+  [`autoplot`](https://wanglabcsu.github.io/sigbridger/reference/reexports.md)
+  : Objects exported from other packages
+
+- [`autoplot(`*`<Seurat>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/autoplot-SigBridgeR.md)
+  [`autoplot(`*`<SigBridgeR::ScreenMethodResult>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/autoplot-SigBridgeR.md)
+  : autoplot method for Seurat UMAP
+
+- [`palette_SigBridgeR()`](https://wanglabcsu.github.io/sigbridger/reference/palette_SigBridgeR.md)
+  : A Palette
 
 ## Screening Methods
 
@@ -314,12 +556,16 @@ Built-in screening algorithms.
   : Perform scPP screening analysis
 - [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md)
   : Run DEGAS Analysis for Single-Cell and Bulk RNA-seq Data Integration
+- [`DoDEGASv2()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGASv2.md)
+  : Screen Function Template
 - [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md)
   : Perform SIDISH Screening Analysis
 - [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md)
   : Screen Single-Cell Data Using SCIPAC Algorithm
 - [`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md)
   : Perform TiRank Screening Analysis
+- [`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md)
+  : PhenoMapR: Bulk-to-Single-Cell Phenotype Mapping
 
 ## Seurat Object Utilities
 
@@ -345,6 +591,10 @@ Built-in annotationa algorithms.
   : Annotate Single-Cell Data Using SingleR
 - [`mLLMCelltypeAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/mLLMCelltypeAnnotate.md)
   : Annotate Cell Types Using Multi-LLM Consensus Approach
+- [`DownloadCellTypistModels()`](https://wanglabcsu.github.io/sigbridger/reference/DownloadCellTypistModels.md)
+  : Download CellTypist Models
+- [`ListCellTypistModels()`](https://wanglabcsu.github.io/sigbridger/reference/ListCellTypistModels.md)
+  : List Available CellTypist Models
 
 ## Reference Data & External Resources
 
@@ -369,11 +619,13 @@ Manage Python environments for integrated R/Python workflows.
 - [`Register()`](https://wanglabcsu.github.io/sigbridger/reference/Register.md)
   : Unified Registration Interface for Strategy Methods
 - [`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
-  : Register a Custom Screening Method for Phenotype-Driven Analysis
+  **\[deprecated\]** : Register a Custom Screening Method for
+  Phenotype-Driven Analysis
 - [`RegisterAnnoMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterAnnoMethod.md)
-  : Register an Annotation Method into the Strategy Registry
+  **\[deprecated\]** : Register an Annotation Method into the Strategy
+  Registry
 - [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md)
-  : Register a Seurat Processing Strategy
+  **\[deprecated\]** : Register a Seurat Processing Strategy
 - [`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md)
   : Validate Custom Screening Function Compliance
 - [`TemplateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/TemplateScreenFunc.md)
@@ -387,9 +639,40 @@ Extended registry for SigBridgeR
 - [`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md)
   : Preprocessing Strategy Registry for Single-Cell Workflows
 - [`SCAnnotateStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotateStrategy.md)
+  [`AVAILABLE_ANNOTATE_METHODS`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotateStrategy.md)
   : Registry of Cell Type Annotation Methods
 - [`ScreenStrategy`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md)
+  [`AVAILABLE_SCREEN_METHODS`](https://wanglabcsu.github.io/sigbridger/reference/ScreenStrategy.md)
   : Registry of Phenotype-Associated Cell Screening Methods
+
+## Benchmark Design
+
+- [`BenchAcc()`](https://wanglabcsu.github.io/sigbridger/reference/BenchAcc.md)
+  : Benchmark Screening Methods: Classification Accuracy
+- [`BenchAccConfig()`](https://wanglabcsu.github.io/sigbridger/reference/BenchAccConfig.md)
+  : BenchAccConfig: Accuracy Benchmark Configuration
+- [`BenchConfig()`](https://wanglabcsu.github.io/sigbridger/reference/BenchConfig.md)
+  : BenchConfig: Base Configuration for Benchmarks
+- [`BenchGSEA()`](https://wanglabcsu.github.io/sigbridger/reference/BenchGSEA.md)
+  : Benchmark Screening Methods: Gene Set Enrichment Analysis
+- [`BenchGSEAConfig()`](https://wanglabcsu.github.io/sigbridger/reference/BenchGSEAConfig.md)
+  : BenchGSEAConfig: GSEA Benchmark Configuration
+- [`BenchGSEAConfigSet()`](https://wanglabcsu.github.io/sigbridger/reference/BenchGSEAConfigSet.md)
+  : Build GSEA Benchmark Controls
+- [`BenchGeneScore()`](https://wanglabcsu.github.io/sigbridger/reference/BenchGeneScore.md)
+  : Single-sample Gene Set Scoring for Single-Cell Data
+- [`BenchGeneScoreConfig()`](https://wanglabcsu.github.io/sigbridger/reference/BenchGeneScoreConfig.md)
+  : BenchGeneScoreConfig: Gene Set Scoring Benchmark Configuration
+- [`BenchGeneScoreConfigSet()`](https://wanglabcsu.github.io/sigbridger/reference/BenchGeneScoreConfigSet.md)
+  : Build Gene Set Scoring Benchmark Controls
+- [`BenchMemory()`](https://wanglabcsu.github.io/sigbridger/reference/BenchMemory.md)
+  : Benchmark Screening Methods: Wall Time and Memory
+- [`BenchMemoryConfig()`](https://wanglabcsu.github.io/sigbridger/reference/BenchMemoryConfig.md)
+  : BenchMemoryConfig: Time and Memory Benchmark Configuration
+- [`BenchMemoryConfigSet()`](https://wanglabcsu.github.io/sigbridger/reference/BenchMemoryConfigSet.md)
+  : Resolve Benchmark Controls
+- [`MethodParamSet()`](https://wanglabcsu.github.io/sigbridger/reference/MethodParamSet.md)
+  : A List of Method Parameters
 
 ## Cache Management
 
@@ -407,6 +690,8 @@ Manage cache files for SigBridgeR
   : Load a Cached R Object
 - [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md)
   : Resolve and Set Up Cache Directory
+- [`CacheSysCall()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSysCall.md)
+  : System-Level Cache Load and Save
 
 ## Package Configuration
 
@@ -416,15 +701,77 @@ Get and set global options for SigBridgeR behavior.
   : Configuration Functions for SigBridgeR Package
 - [`setFuncOption()`](https://wanglabcsu.github.io/sigbridger/reference/setFuncOption.md)
   : Configuration Functions for SigBridgeR Package
-- [`setThreads()`](https://wanglabcsu.github.io/sigbridger/reference/setThreads.md)
+- [`SetThreads()`](https://wanglabcsu.github.io/sigbridger/reference/SetThreads.md)
   : Configure Parallel Execution Backends
+
+## OOP Sytem Design
+
+OOP system design for SigBridgeR
+
+- [`SigBridgeRBase()`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeRBase.md)
+  : SigBridgeRBase: Abstract Base Class for SigBridgeR
+- [`Method()`](https://wanglabcsu.github.io/sigbridger/reference/Method.md)
+  : Method: Abstract Base Class for Analysis Methods
+- [`ScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenMethod.md)
+  : ScreenMethod: Screening Method Class for Phenotype-Associated Cell
+  Detection
+- [`ScreenMethodCache()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenMethodCache.md)
+  : ScreenMethodCache: Screening Method Cache Container
+- [`ScreenMethodConfig()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenMethodConfig.md)
+  : ScreenMethodConfig: Screening Method Configuration
+- [`ScreenMethodResult()`](https://wanglabcsu.github.io/sigbridger/reference/ScreenMethodResult.md)
+  : ScreenMethodResult: Screening Method Result Container
+- [`AnnotationMethod()`](https://wanglabcsu.github.io/sigbridger/reference/AnnotationMethod.md)
+  : AnnotationMethod: Annotation Method Class for Cell Type
+  Identification
+- [`property_sigbridger_verison`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_verison`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_chr`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_phenotype_class`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_fn`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_list`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_mapper_fn`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_py_env`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_data_list`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_seurat`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_phenotype`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  [`property_matrix`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-properties.md)
+  : SigBridgeR Base Class Properties
+- [`print(`*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-S3.md)
+  [`summary(`*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-S3.md)
+  [`length(`*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-S3.md)
+  [`names(`*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-S3.md)
+  [`` `names<-`( ``*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-S3.md)
+  [`format(`*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-S3.md)
+  [`as.list(`*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-S3.md)
+  [`as.character(`*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/SigBridgeR-S3.md)
+  : Base R Methods for SigBridgeR Objects
+- [`` `$`( ``*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/Property-visitor.md)
+  [`` `[[`( ``*`<SigBridgeR::SigBridgeRBase>`*`)`](https://wanglabcsu.github.io/sigbridger/reference/Property-visitor.md)
+  : Retrieve a property from SigBridgeR object
+- [`list_to_chr()`](https://wanglabcsu.github.io/sigbridger/reference/list_to_chr.md)
+  : Convert a List to a Compact Character Representation
+- [`list_to_chr_formated()`](https://wanglabcsu.github.io/sigbridger/reference/list_to_chr_formated.md)
+  : Convert a List to an Indented Multi-line Character Representation
 
 # Articles
 
 ### All vignettes
 
+- [Benchmarking Screening Methods: Classification
+  Accuracy](https://wanglabcsu.github.io/sigbridger/articles/Benchmark_Accuracy.md):
+- [Benchmarking Screening Methods: Gene Set
+  Scoring](https://wanglabcsu.github.io/sigbridger/articles/Benchmark_GeneScore.md):
+- [Benchmarking Screening Methods: Gene Set
+  Enrichment](https://wanglabcsu.github.io/sigbridger/articles/Benchmark_GSEA.md):
+- [Benchmarking Screening Methods: Time and
+  Memory](https://wanglabcsu.github.io/sigbridger/articles/Benchmark_Memory.md):
+- [Extending SigBridgeR: A Guide for Extend
+  SCAnnotate](https://wanglabcsu.github.io/sigbridger/articles/Extending_Annotation.md):
 - [Extending SigBridgeR: A Guide for Custom
-  Extensions](https://wanglabcsu.github.io/sigbridger/articles/Extending.md):
+  Extensions](https://wanglabcsu.github.io/sigbridger/articles/Extending_ScreenMethod.md):
+- [Extending SigBridgeR: A Guide for Extend Single Cell Preprocess
+  Pipeline](https://wanglabcsu.github.io/sigbridger/articles/Extending_Seurat.md):
 - [Full
   Tutorial](https://wanglabcsu.github.io/sigbridger/articles/Full_Tutorial.md):
 - [Find Optimal Parameters for My
@@ -432,7 +779,7 @@ Get and set global options for SigBridgeR behavior.
   :
 - [Auxiliary
   Utils](https://wanglabcsu.github.io/sigbridger/articles/Other_Function_Details.md):
-- [Quick Start Guide for
+- [Get Started with
   SigBridgeR](https://wanglabcsu.github.io/sigbridger/articles/Quick_Start.md):
 - [Application of SigBridgeR to Single-cell Spatial Transcriptomics
   Data](https://wanglabcsu.github.io/sigbridger/articles/Spatial_Transcriptome.md):

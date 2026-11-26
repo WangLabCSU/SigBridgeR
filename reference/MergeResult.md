@@ -43,17 +43,11 @@ MergeResult(
 
   Character. Method for resolving ties in weighted voting:
 
-  `"first"`
+  - **`"first"`**: Select the first category alphabetically (default)
 
-  :   Select the first category alphabetically (default)
+  - **`"last"`**: Select the last category alphabetically
 
-  `"last"`
-
-  :   Select the last category alphabetically
-
-  `"random"`
-
-  :   Randomly select among tied categories
+  - **`"random"`**: Randomly select among tied categories
 
 - verbose:
 

@@ -32,19 +32,13 @@ CheckNA(data, max_print = 5L, ...)
 
 Invisible list containing NA information:
 
-- `count`:
+- **`count`**: Total number of NA values found
 
-  Total number of NA values found
+- **`positions`**: For vectors: integer vector of positions; For 2D
+  data: data frame with row/column indices and names (if available)
 
-- `positions`:
-
-  For vectors: integer vector of positions; For 2D data: data frame with
-  row/column indices and names (if available)
-
-- `names`:
-
-  For named vectors: character vector of names corresponding to NA
-  positions
+- **`names`**: For named vectors: character vector of names
+  corresponding to NA positions
 
 Returns empty list components when no NA values are found.
 

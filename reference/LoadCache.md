@@ -19,7 +19,7 @@ installation instructions.
 ## Usage
 
 ``` r
-LoadCache(file, ...)
+LoadCache(file)
 ```
 
 ## Arguments
@@ -27,11 +27,6 @@ LoadCache(file, ...)
 - file:
 
   Character string. Path to the cache file to load.
-
-- ...:
-
-  Additional arguments (must be empty, checked by
-  [`rlang::check_dots_empty0()`](https://rlang.r-lib.org/reference/check_dots_empty0.html)).
 
 ## Value
 
@@ -41,6 +36,7 @@ The cached R object.
 
 Other cache_config:
 [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md),
+[`CacheSysCall()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSysCall.md),
 [`CheckCache()`](https://wanglabcsu.github.io/sigbridger/reference/CheckCache.md),
 [`ChooseCache()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseCache.md),
 [`WriteCache()`](https://wanglabcsu.github.io/sigbridger/reference/WriteCache.md),

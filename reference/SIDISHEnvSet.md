@@ -11,4 +11,5 @@ SIDISHEnvSet(env_params = list(), device = c("cuda", "cpu"))
 ## See also
 
 Other SIDISH:
-[`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md)
+[`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
+[`ValidateSIDISHParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateSIDISHParams.md)

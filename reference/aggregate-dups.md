@@ -4,22 +4,16 @@ These functions collapse duplicated row names (e.g., gene symbols) or
 column names (e.g., sample IDs) in matrix-like objects by aggregating
 values using configurable methods. They support:
 
-- Rows:
+- **Rows**: `AggregateDupRows`: merges rows sharing the same row name.
 
-  `AggregateDupRows`: merges rows sharing the same row name.
+- **Columns**: `AggregateDupCols`: merges columns sharing the same
+  column name.
 
-- Columns:
-
-  `AggregateDupCols`: merges columns sharing the same column name.
-
-- Both:
-
-  `AggregateDups`: convenience wrapper applying row-then-column
-  aggregation.
-
-Designed for expression matrices, count tables, or any numeric data
-where feature/sample duplication occurs. Handles `matrix`, `data.frame`,
-and S4 `Matrix` classes (e.g. `dgCMatrix`) robustly.
+- **Both**: `AggregateDups`: convenience wrapper applying
+  row-then-column aggregation. Designed for expression matrices, count
+  tables, or any numeric data where feature/sample duplication occurs.
+  Handles `matrix`, `data.frame`, and S4 `Matrix` classes (e.g.
+  `dgCMatrix`) robustly.
 
 Convenience wrapper that first aggregates duplicated rows, then
 duplicated columns. Useful for cleaning matrices where both feature and
@@ -45,8 +39,8 @@ AggregateDupCols(
 AggregateDups(
   x,
   method = c("max", "sum", "mean", "median", "first"),
-  row_method = NULL,
-  col_method = NULL,
+  row_method = method,
+  col_method = method,
   verbose = TRUE,
   ...
 )
@@ -87,25 +81,15 @@ row/column names.
 
 Supported methods (applied column-wise for rows, row-wise for columns):
 
-- `"max"`:
+- **`"max"`**: Maximum value per group (default).
 
-  Maximum value per group (default).
+- **`"sum"`**: Sum of values per group.
 
-- `"sum"`:
+- **`"mean"`**: Arithmetic mean (uses `na.rm = TRUE`).
 
-  Sum of values per group.
+- **`"median"`**: Median value.
 
-- `"mean"`:
-
-  Arithmetic mean (uses `na.rm = TRUE`).
-
-- `"median"`:
-
-  Median value.
-
-- `"first"`:
-
-  First occurrence in original order.
+- **`"first"`**: First occurrence in original order.
 
 ## Input Types and Return Types
 
@@ -114,7 +98,7 @@ Supported methods (applied column-wise for rows, row-wise for columns):
 | Input class  | Output class (unless noted)                             |
 | `matrix`     | `matrix`                                                |
 | `data.frame` | `data.frame`                                            |
-| S4 `Matrix`  | `matrix` (dense) — S4 attributes dropped for generality |
+| S4 `Matrix`  | `matrix` (dense) - S4 attributes dropped for generality |
 
 Row/column order in output follows *first occurrence* of each unique
 name in `rownames(x)` / `colnames(x)`.
@@ -126,13 +110,16 @@ name in `rownames(x)` / `colnames(x)`.
 mat <- matrix(1:16, nrow = 4,
               dimnames = list(c("TP53", "TP53", "BRCA1", "ACTB"),
                             c("S1", "S1", "S2", "S3")))
+mat
+#>       S1 S1 S2 S3
+#> TP53   1  5  9 13
+#> TP53   2  6 10 14
+#> BRCA1  3  7 11 15
+#> ACTB   4  8 12 16
+
 AggregateDups(mat, method = "sum")
 #>       S1 S2 S3
 #> TP53  14 19 27
 #> BRCA1 10 11 15
 #> ACTB  12 12 16
-#>       S1 S2 S3
-#> TP53   5  7  9
-#> BRCA1  3  7 11
-#> ACTB   4  8 12
 ```

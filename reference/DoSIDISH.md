@@ -152,25 +152,21 @@ DoSIDISH(
   Additional arguments passed to the function. Common parameters
   include:
 
-  verbose
+  - **`verbose`**: Logical. Whether to print verbose output (default:
+    `TRUE`).
 
-  :   Logical. Whether to print verbose output (default: `TRUE`).
+  - **`seed`**: Integer. Random seed for reproducibility (default:
+    `123L`).
 
-  seed
-
-  :   Integer. Random seed for reproducibility (default: `123L`).
-
-  assay
-
-  :   Character. Assay to use for screening (default: `"RNA"`).
+  - **`assay`**: Character. Assay to use for screening (default:
+    `"RNA"`).
 
 ## Value
 
 A named list containing:
 
-- scRNA_data:
-
-  Modified single-cell data object with integrated screening results.
+- **scRNA_data**: Modified single-cell data object with integrated
+  screening results.
 
 ## See also
 
@@ -178,6 +174,7 @@ Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
 [`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md),
@@ -186,4 +183,5 @@ Other screen_method:
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)
 
 Other SIDISH:
-[`SIDISHEnvSet()`](https://wanglabcsu.github.io/sigbridger/reference/SIDISHEnvSet.md)
+[`SIDISHEnvSet()`](https://wanglabcsu.github.io/sigbridger/reference/SIDISHEnvSet.md),
+[`ValidateSIDISHParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateSIDISHParams.md)

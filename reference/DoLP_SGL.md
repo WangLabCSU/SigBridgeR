@@ -13,11 +13,12 @@ DoLP_SGL(
   sc_data,
   phenotype,
   label_type = "LP_SGL",
-  family = c("logit", "cox", "linear"),
+  phenotype_class = c("binary", "continuous", "survival"),
+  family = lifecycle::deprecated(),
   resolution = 0.6,
   alpha = 0.5,
-  nfold = 5,
-  dge_analysis = list(run = FALSE, logFC_threshold = 1, pval_threshold = 0.05),
+  nfold = 5L,
+  dge_analysis = list(run = FALSE, logFC_threshold = 1L, pval_threshold = 0.05),
   ...
 )
 ```
@@ -26,24 +27,40 @@ DoLP_SGL(
 
 - matched_bulk:
 
-  Bulk expression matrix (features × samples)
+  Matrix or data frame of preprocessed bulk RNA-seq expression data
+  (genes x samples). Column names must match names/IDs in phenotype.
 
 - sc_data:
 
-  Single-cell RNA-seq data (Seurat object)
+  A Seurat object containing scRNA-seq data to be screened.
 
 - phenotype:
 
-  Binary phenotype vector for bulk samples
+  Phenotype data, either:
+
+  - Named vector, where names match columns of matched_bulk
+
+  - Patient survival data frame, where row names match columns of
+    matched_bulk, and column names are "time" and "status"
 
 - label_type:
 
-  Character specifying phenotype label type (default: "LP_SGL")
+  Character specifying phenotype label type, e.g. "SBS1" or "time".
+
+- phenotype_class:
+
+  Type of phenotypic outcome. Must be consistent with input data:
+
+  - "binary": Binary traits, e.g. case/control
+
+  - "continuous": Continuous measurements
+
+  - "survival": Survival information
 
 - family:
 
-  Type of regression model: "`logit`" (logistic), "`cox`" (Cox), or
-  "`linear`" (linear regression)
+  **\[deprecated\]** Type of regression model: "`logit`" (logistic),
+  "`cox`" (Cox), or "`linear`" (linear regression)
 
 - resolution:
 
@@ -61,41 +78,34 @@ DoLP_SGL(
 
   List controlling differential expression analysis:
 
-  - run: Whether to run DEG analysis (default: `FALSE`)
+  - `run`: Whether to run DEG analysis (default: `FALSE`)
 
-  - logFC_threshold: Log fold change threshold (default: `1`)
+  - `logFC_threshold`: Log fold change threshold (default: `1`)
 
-  - pval_threshold: P-value threshold (default: `0.05`)
+  - `pval_threshold`: P-value threshold (default: `0.05`)
 
 - ...:
 
   Additional arguments passed to preprocessing functions, e.g.:
 
-  - verbose: Whether to print progress messages (default: `TRUE`)
+  - `verbose`: Whether to print progress messages (default: `TRUE`)
 
-  - seed: Random seed for reproducibility (default: `123L`)
+  - `seed`: Random seed for reproducibility (default: `123L`)
 
-  - assay: Assay to use for clustering (default: `"RNA"`)
+  - `assay`: Assay to use for clustering (default: `"RNA"`)
 
 ## Value
 
 A list containing:
 
-- scRNA_data:
+- **scRNA_data**: Seurat object with LP-SGL results integrated
 
-  Seurat object with LP-SGL results integrated
+- **sgl_fit**: Fitted SGL model object
 
-- sgl_fit:
+- **cvfit**: Cross-validation results
 
-  Fitted SGL model object
-
-- cvfit:
-
-  Cross-validation results
-
-- dge_res:
-
-  Differential expression results if requested (NULL otherwise)
+- **dge_res**: Differential expression results if requested (NULL
+  otherwise)
 
 ## References
 
@@ -108,6 +118,7 @@ subpopulations through LP_SGL. Briefings in Bioinformatics. 2023 Nov
 Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
@@ -115,6 +126,9 @@ Other screen_method:
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)
+
+Other LP_SGL:
+[`ValidateLPSGLParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateLPSGLParams.md)
 
 ## Examples
 

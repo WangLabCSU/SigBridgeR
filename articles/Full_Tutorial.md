@@ -4,63 +4,6 @@
 
 ### 0. Preface
 
-#### 0.1 Contents
-
-- [Full Tutorial for SigBridgeR](#full-tutorial-for-sigbridger)
-  - [0. Preface](#id_0-preface)
-    - [0.1 Contents](#id_01-contents)
-    - [0.2 Introduction to
-      SigBridgeR](#id_02-introduction-to-sigbridger)
-  - [1. Load and Preprocess data](#id_1-load-and-preprocess-data)
-    - [1.1 Single-cell RNA-seq Data](#id_11-single-cell-rna-seq-data)
-      - [1.1.1 (Option A) Start from Raw
-        Matrix](#id_111-option-a-start-from-raw-matrix)
-      - [1.1.2 (Option B) Start from AnnData
-        Object](#id_112-option-b-start-from-anndata-object)
-      - [1.1.8 (Optional) Filter Out Tumor
-        Cells](#id_118-optional-filter-out-tumor-cells)
-    - [1.2 Bulk expression data](#id_##12-bulk-expression-data)
-      - [1.2.1 Evaluate the quality of your bulk RNA-seq
-        data](#id_121-evaluate-the-quality-of-your-bulk-rna-seq-data)
-        - [Quality Control Metrics
-          Reported](#quality-control-metrics-reported)
-        - [Recommended Parameter
-          Adjustments](#recommended-parameter-adjustments)
-      - [1.2.2 Gene Symbol Conversion](#id_122-gene-symbol-conversion)
-    - [1.3 Phenotype Data](#id_13-phenotype-data)
-  - [2. Screen Cells Associated with
-    Phenotype](#id_2-screen-cells-associated-with-phenotype)
-    - [2.1 (Option A) Scissor
-      Screening](#id_21-option-a-scissor-screening)
-    - [2.2 (Option B) scPAS Screening](#id_22-option-b-scpas-screening)
-    - [2.3 (Option C) scAB Screening](#id_23-option-c-scab-screening)
-    - [2.4 (Option D) scPP Screening](#id_24-option-d-scpp-screening)
-    - [2.5 (Option E) DEGAS Screening](#id_25-option-e-degas-screening)
-    - [2.6 (Option F) LP_SGL
-      Screening](#id_26-option-f-lp_sgl-screening)
-    - [2.7 (Option G) PIPET Screening](#id_27-option-g-pipet-screening)
-    - [2.8 (Option H) SIDISH
-      Screening](#id_28-option-h-sidish-screening)
-    - [2.9 (Option I) SCIPAC
-      Screening](#id_29-option-i-scipac_screening)
-    - [2.F Merge screening results](#id_2f-merge-screening-results)
-  - [3. Visualization](#id_3-visualization)
-    - [3.1 UMAP](#id_31-umap)
-    - [3.2 Stack bar plot](#id_32-stack-bar-plot)
-    - [3.3 Venn diagram](#id_33-venn-diagram)
-    - [3.4 Upset plot](#id_34-upset-plot)
-  - [4. Example](#id_4-example)
-    - [4.1 Survival-associated cell
-      screening](#id_41-survival-associated-cell-screening)
-    - [4.2 Continuous Phenotype-associated cell
-      screening](#id_42-continuous-phenotype-associated-cell-screening)
-    - [4.3 Binarized phenotype-associated cell
-      screening](#id_43-binarized-phenotype-associated-cell-screening)
-  - [5. Troubleshooting](#id_5-troubleshooting)
-  - [6. References](#id_6-references)
-
-#### 0.2 Introduction to SigBridgeR
-
 SigBridgeR (short for **Sig**nificant cell-to-phenotype **Bridge** in
 **R**) is an R package for screening cells highly associated with
 phenotype data using single-cell RNA-seq, bulk RNA expression and sample
@@ -80,369 +23,491 @@ indicating successful loading:
 ``` r
 
 library(SigBridgeR)
-# ✔ SigBridgeR v3.x.x loaded
 ```
+
+    ## ✔ SigBridgeR v4.0.0 loaded [436 ms]
 
 #### 1.1 Single-cell RNA-seq Data
 
-You can use function `SCPreProcess` to preprocess your single-cell
-RNA-seq data. This function utilizes a flexible pipeline system,
-allowing you to customize the analysis workflow using character codes:
+You need to preprocess your single-cell RNA-seq data into a Seurat
+object. We provide some function helping you do this purpose.
 
-**Pipeline Code Table:**
+##### 1.1.1 Find the Optimal Normalization Method for Seurat
 
-| Code  | Function               | Description                           |
-|-------|------------------------|---------------------------------------|
-| **o** | `CreateSeuratObject`   | **Required.** Must be the first step. |
-| **n** | `NormalizeData`        | Standard normalization.               |
-| **s** | `ScaleData`            | Scales data for PCA.                  |
-| **v** | `FindVariableFeatures` | Selects highly variable genes.        |
-| **p** | `RunPCA`               | Principal Component Analysis.         |
-| **e** | `FindNeighbors`        | Computes SNN graph.                   |
-| **c** | `FindClusters`         | Louvain algorithm clustering.         |
-| **t** | `RunTSNE`              | t-SNE reduction.                      |
-| **u** | `RunUMAP`              | UMAP reduction.                       |
-| **r** | `SCTransform`          | **SCT workflow.** Replaces n, s, v.   |
+A simple scoring function for selecting a normalization method.
 
-##### 1.1.1 (Option A) Start from Raw Matrix
+Evaluates 3 dimensions of preprocessing quality:
 
-When starting from a raw count matrix (data.frame, matrix or dgCMatrix),
-`SCPreProcess` executes the steps defined in the pipeline argument
-(Default: `"onsvpcetu"`). You can customize parameters for each step via
-the `params` list.
+- **Variance stabilization**: Decoupling of mean-variance relationship
+  in normalized expression (lower correlation = better).
+
+- **Biological signal retention**: Preservation of known marker genes
+  within highly variable genes (higher retention = better).
+
+- **Dropout robustness**: Removal of technical dropout bias from
+  normalized values (lower correlation with dropout rate = better).
+
+Exmaple:
 
 ``` r
 
-your_seurat <- SCPreProcess(
-  sc = your_matrix,
-  ...,
-  pipeline = "onsvpcetu",
-  params = list(
-    # * CreateSeuratObject
-    o = list(
-      project = "SC_Screen_Proj",
-      min.cells = 400L
-    ),
-    # * NormalizeData
-    n = list(),
-    # * ScaleData
-    s = list(),
-    # * FindVariableFeatures
-    v = list(),
-    # * RunPCA
-    p = list(),
-    # * FindNeightbors
-    e = list(),
-    # * FindClusters
-    c = list(
-      resolution = 0.6
-    ),
-    # * RunTSNE
-    t = list(),
-    # * RunUMAP
-    u = list()
-    # * SCTransform
-    # r = list()
-  ),
-  quality_control = list(
-    pattern = c("^MT-")
-  ),
-  data_filter = list(
-    nFeature_RNA_thresh = c(200L, 6000L),
-    nCount_RNA_thresh = c(500L, 50000L),
-    # * only used when specifed in `quality_control.pattern`
-    percent.mt = 20L, # mitochondrial genes
-    percent.rp = 60L # ribosomal protein genes
-    # ? When combined pattern is used, like `quality_control$pattern <- "^MT-|^RP[LS]"`
-    # ? Use `_` to separate different patterns like this:
-    # percent.mt_rp = 60L
+obj <- Seurat::CreateSeuratObject(counts)
 
-    # ? When filtering for non-mitochondrial genes and non-ribosomal proteins RNA genes,
-    # ? the column names are in lowercase letter form with regular expression symbols removed.
-    # `quality_control$pattern <- "^[rt]rna"`
-    # Correct threshhold setting is `percent.rt_rna = 60L`
+sct <- Seurat::SCTransform(obj)
+lognorm <- Seurat::NormalizeData(obj) |>
+  Seurat::ScaleData() |>
+  Seurat::FindVariableFeatures()
 
-    # ? Use `SigBridgeR::Pattern2Colname()` to get the correct colname if still confused.
-  ),
-  column2only_tumor = NULL
+res <- ChooseNormalization(
+  sct = sct,
+  lognorm = lognorm,
+  # * More can be added here
+  subset_size = integer(),
+  known_hvgs = list(),
+  n_hvgs = 2000L,
+  low_expressed_thresh = 0.2,
+  weight = c(
+    variance_stability = 0.4,
+    marker_signal = 0.35,
+    dropout_robustness = 0.25
+  )
 )
 ```
 
-**Key Workflow Steps:**
-
-1.  Pipeline Execution: The function runs Seurat methods in the order
-    specified by the `pipeline` string (e.g., ‘o’ then ‘n’).
-
-2.  QC & Filtering:
-
-    - Detection: Regex patterns in `quality_control` (e.g., `^MT-`)
-      automatically generate metadata columns (e.g.,`percent.mt`).
-
-    - Filtering: Cells are filtered based on `data_filter` thresholds.
-      Note: Custom patterns generate specific column names (e.g.,
-      `^[rt]rna` becomes `percent.rt_rna`).
-
-3.  Tumor Filtering: If `column2only_tumor` is provided, the function
-    retains only cells with `"Tumor/Cancer/Malignant"`(case-insensitive)
-    labels in that metadata column.
-
-##### 1.1.2 (Option B) Start from AnnData Object
-
-SCPreProcess natively supports AnnData object. You can use package
-`anndata` or `anndataR` to read in your AnnData object from `.h5ad`
-file.
-
-First, import the data
-
 ``` r
 
-reticulate::use_pythonenv("The_path_to_your_python")
-# reticulate::use_condaenv("conda_env_name")
-
-anndata_obj <- anndata::read_h5ad("path_to_your_file.h5ad") # Or other file formats, make sure the matrix is in obj$X.
+res$metrics |> format()
+res$recommendation
 ```
 
-Or use `anndataR` to read in your file:
+Supports simultaneously adding Seurat objects preprocessed with multiple
+methods, ensuring they are equivalent to the standard workflow of
+`NormalizeData` + `ScaleData` + `FindVariableFeatures`.
+
+**Parameters**
+
+- `subset_size`: Size of the single-cell data subset (i.e., number of
+  cells) to be evaludated.
+- `known_hvgs`: list or character. Known highly variable genes, provided
+  as a reference baseline.
+- `n_hvgs`: Maximum number of highly variable genes to consider.
+- `low_expressed_thresh`: Percentage of genes excluded from
+  consideration, ranked by expression level.
+- `weight`: Scoring weight that sum to 1.
+
+##### 1.1.2 Finding the Optimal Number of Principle Components
+
+Usually the number if principle components (PCs) is manually set to 10
+or 20 according to the elbow plot. However, it is not always the case
+that the PCs with the highest variance are the most informative. Here is
+a function to help you find the optimal number of PCs.
 
 ``` r
 
-reticulate::use_pythonenv("The_path_to_your_python")
-# reticulate::use_condaenv("conda_env_name")
-
-anndata_obj <- anndataR::read_h5ad("path_to_your_file.h5ad") # basically no difference
-```
-
-Then just pass it to `SCPreProcess`:
-
-``` r
-
-your_seurat <- SCPreProcess(
-  anndata_obj,
-  pipeline = "onsvpcetu", # Standard pipeline
-  column2only_tumor = "Tissue" # Optional: keep only tumor cells
+ndims <- FindRobustElbow(
+  obj = seurat_obj,
+  verbose = TRUE,
+  ndims = 50
 )
 ```
 
-The description of data (meta.data) in `anndata_obj$obs` will be add to
-`your_seurat@meta.data`.
+``` r
 
-**helpful documentation:**
+ndims
+```
 
-For the structure of `anndata`, you can refer to
+This function will draw an elbow plot with each method and the
+recommended number of PCs. You can also use the `ndims` parameter to
+specify the maximum number of PCs to be tested. The default value is
+`50`.
 
-- [AnnData for R](https://github.com/dynverse/anndata)
-- [{anndataR}: An R package for working with AnnData
-  objects](https://github.com/scverse/anndataR)
+##### 1.1.3 Add miscellaneous information to the Seurat object
 
-For more quality control, please use
-[scCustmoize](https://samuel-marsh.github.io/scCustomize/index.html),
-like `scCustomize::Add_Cell_QC_Metrics()`.
+SigBridgeR uses
+[`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
+to record what data features or evidence the various screening
+algorithms are based on during execution. As a substitute for the
+[`SeuratObject::Misc()`](https://satijalab.github.io/seurat-object/reference/Misc.html)
 
-##### 1.1.8 (Optional) Filter Out Tumor Cells
-
-If you already have a Seurat object and aim to filter out
-phenotype-associated cells in tumor cells. `SCPreProcess` will validate
-its structure and filter out tumor cells using the specified metadata
-column:
+- [`AddMisc()`](https://wanglabcsu.github.io/sigbridger/reference/AddMisc.md)
+  : Add miscellaneous information to the Seurat object. Support for
+  adding multiple attributes to the `SeuratObject@misc` slot
+  simultaneously.
 
 ``` r
 
-your_seurat <- SCPreProcess(sc = your_seurat, column2only_tumor = "Tissue")
+# basic usage
+seurat_obj <- AddMisc(seurat_obj, "QC_stats" = "^MT-")
+
+# Auto-incrementing example when `cover` set to FALSE
+seurat_obj <- AddMisc(seurat_obj, markers = c("CD3D", "CD4", "CD8A"))
+seurat_obj <- AddMisc(
+  seurat_obj,
+  markers = c("CD3D", "CD4", "CD8A"),
+  cover = FALSE
+)
+
+# Add multiple attributes to the `SeuratObject@misc` slot simultaneously
+seurat_obj <- AddMisc(seurat_obj, markers1 = "CD3D", markers2 = "CD4")
+
+# Add multiple attributes (stored as a list element) to the `SeuratObject@misc`
+seurat_obj <- AddMisc(seurat_obj, list(attr1 = "value1", attr2 = "value2"))
 ```
 
-> Note: I don’t recommend using columns like
-> `column2only_tumor = "Celltype"` as tumor cell identities vary across
-> tissues. instead:
->
-> - Create a Dedicated Column: Add a new metadata column (e.g.,
->   is_tumor) to explicitly label cells:“Tumo(u)r”/“Normal”
->
-> - Code Example:
->
-> ``` r
-> # For glioblastoma (GBM)
-> seurat_obj$is_tumor <- ifelse(
->  >  grep
->     l("GBM|glioblastoma|astrocytoma_grade_IV
->    ", seurat_obj$Celltyp
->    e, ignore.case = TR
->   UE),
->  >  "Tumor,  # or "Tumou" 
->  >  "Norma"  # or "Non-Tumo" 
-> )
-> ```
+``` r
+
+seurat_obj@misc |> str()
+```
+
+##### 1.1.4 Add Gene-level Metadata to the Seurat object
+
+SigBridgeR uses
+[`AddMetaFeature()`](https://wanglabcsu.github.io/sigbridger/reference/AddMetaFeature.md)
+to update the `SeuratObject@assays$RNA@meta.data`
+
+Add a new column to the metadata
+
+``` r
+
+gene_type <- paste0("test", 1:nrow(seurat_obj))
+
+seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type)
+```
+
+``` r
+
+seurat_obj@assays$RNA@meta.data |> head()
+```
+
+Add a data.frame to the metadata, with the column names as the metadata
+names.
+
+``` r
+
+seurat_obj <- AddMetaFeature(
+  seurat_obj,
+  data.frame(gene_type = gene_type, gene_name = rownames(seurat_obj))
+)
+```
+
+``` r
+
+seurat_obj@assays$RNA@meta.data |> head()
+```
+
+Add to different assays
+
+``` r
+
+seurat_obj <- AddMetaFeature(seurat_obj, "gene_type" = gene_type, assay = "RNA")
+seurat_obj <- AddMetaFeature(
+  seurat_obj,
+  "gene_type" = gene_type,
+  assay = "ATAC"
+)
+```
+
+If duplicate column names are detected, they will be suffixed with an
+underscore and a number (e.g., `_1`, `_2`) for disambiguation.
+
+##### 1.1.5 Integration of Single Cell Data
+
+**Matrix Integration**
+
+When passing raw matrices, the function performs a “join” operation
+based on the union of all genes. Missing values are filled with NA.
+
+``` r
+
+# Create dummy matrices
+mat1 <- matrix(
+  rpois(50, 5),
+  nrow = 10,
+  dimnames = list(paste0("G", 1:10), paste0("C", 1:5))
+)
+mat2 <- matrix(
+  rpois(60, 6),
+  nrow = 10,
+  dimnames = list(paste0("G", 5:14), paste0("C", 1:6))
+)
+
+# Integrate matrices with custom prefixes
+integrated_mat <- SCIntegrate(BatchA = mat1, BatchB = mat2)
+# default prefixed
+integrated_mat2 <- SCIntegrate(mat1, mat2)
+```
+
+``` r
+
+integrated_mat[1:6, 1:7]
+```
+
+    ## 6 x 7 sparse Matrix of class "dgCMatrix"
+    ##    BatchA_C1 BatchA_C2 BatchA_C3 BatchA_C4 BatchA_C5 BatchB_C1 BatchB_C2
+    ## G1         2         8         4         1         6         .         .
+    ## G2         7         3         6         3         5         .         .
+    ## G3         5         1         6         4         6         .         .
+    ## G4         3         4         3         6         6         .         .
+    ## G5         1         4        10         5         2         6         8
+    ## G6         5         3         6         4         7         5         4
+
+``` r
+
+integrated_mat2[1:6, 1:7]
+```
+
+    ## 6 x 7 sparse Matrix of class "dgCMatrix"
+    ##    mat1_C1 mat1_C2 mat1_C3 mat1_C4 mat1_C5 mat2_C1 mat2_C2
+    ## G1       2       8       4       1       6       .       .
+    ## G2       7       3       6       3       5       .       .
+    ## G3       5       1       6       4       6       .       .
+    ## G4       3       4       3       6       6       .       .
+    ## G5       1       4      10       5       2       6       8
+    ## G6       5       3       6       4       7       5       4
+
+Key Features:
+
+- Duplicate Resolution: Automatically calls `AggregateDups` to handle
+  redundant gene symbols.
+
+- Auto-Naming: Uses argument names (like BatchA) as cell ID prefixes.
+
+**Seurat Integration**
+
+For Seurat objects, `SCIntegrate` automates the standard workflow via
+the pipeline parameter.
+
+The Pipeline String: Each letter in the pipeline argument triggers a
+specific Seurat command:
+
+| Code  | Function               | Description                         |
+|-------|------------------------|-------------------------------------|
+| **o** | `CreateSeuratObject`   | (do not use it in this function)    |
+| **n** | `NormalizeData`        | Standard normalization.             |
+| **s** | `ScaleData`            | Scales data for PCA.                |
+| **v** | `FindVariableFeatures` | Selects highly variable genes.      |
+| **p** | `RunPCA`               | Principal Component Analysis.       |
+| **e** | `FindNeighbors`        | Computes SNN graph.                 |
+| **c** | `FindClusters`         | Louvain algorithm clustering.       |
+| **t** | `RunTSNE`              | t-SNE reduction.                    |
+| **u** | `RunUMAP`              | UMAP reduction.                     |
+| **r** | `SCTransform`          | **SCT workflow.** Replaces n, s, v. |
+
+If more are needed, see [A Guide for Extend Single Cell Preprocess
+Pipeline](https://wanglabcsu.github.io/SigBridgeR/articles/Extending_Seurat.html)
+(deprecated).
+
+Example Usage
+
+``` r
+
+integrated <- SCIntegrate(
+  obj1,
+  obj2, # -> merge.Seurat
+  pipeline = "nsvpi",
+  method = Seurat::RPCAIntegration, # Change integration method
+  dims = 1:30, # Passed to RunPCA and IntegrateLayers
+  k.weight = 50 # Passed to IntegrateLayers
+)
+```
+
+An example using mock data
+
+``` r
+
+mat1 <- matrix(
+  rpois(1000, 5),
+  nrow = 20,
+  dimnames = list(paste0("G", 1:20), paste0("C", 1:50))
+)
+mat2 <- matrix(
+  rpois(1200, 6),
+  nrow = 20,
+  dimnames = list(paste0("G", 11:30), paste0("C", 1:60))
+)
+
+seu1 <- Seurat::CreateSeuratObject(mat1)
+```
+
+    ## Warning: Data is of class matrix. Coercing to dgCMatrix.
+
+``` r
+
+seu2 <- Seurat::CreateSeuratObject(mat2)
+```
+
+    ## Warning: Data is of class matrix. Coercing to dgCMatrix.
+
+``` r
+
+integrated_seu <- SCIntegrate(
+  Seurat1 = seu1, # Add prefixes
+  Seurat2 = seu2,
+  method = Seurat::CCAIntegration,
+  pipeline = "nsvpi",
+  dims = 1:10,
+  k.weight = 40
+)
+```
+
+    ## Start merging Seurat objects
+
+    ## Normalizing layer: counts.1
+
+    ## Normalizing layer: counts.2
+
+    ## Centering and scaling data matrix
+
+    ## Finding variable features for layer counts.1
+
+    ## Finding variable features for layer counts.2
+
+    ## Warning: Requested number is larger than the number of available items (10).
+    ## Setting to 10.
+
+    ## Warning: Requested number is larger than the number of available items (10).
+    ## Setting to 10.
+    ## Warning: Requested number is larger than the number of available items (10).
+    ## Setting to 10.
+    ## Warning: Requested number is larger than the number of available items (10).
+    ## Setting to 10.
+    ## Warning: Requested number is larger than the number of available items (10).
+    ## Setting to 10.
+
+    ## PC_ 1 
+    ## Positive:  G20, G14, G17, G15, G19 
+    ## Negative:  G16, G18, G12, G11, G13 
+    ## PC_ 2 
+    ## Positive:  G17, G11, G19, G15, G13 
+    ## Negative:  G18, G14, G20, G12, G16 
+    ## PC_ 3 
+    ## Positive:  G11, G16, G13, G15, G14 
+    ## Negative:  G12, G17, G19, G18, G20 
+    ## PC_ 4 
+    ## Positive:  G12, G11, G15, G20, G13 
+    ## Negative:  G19, G18, G16, G14, G17 
+    ## PC_ 5 
+    ## Positive:  G15, G16, G17, G18, G11 
+    ## Negative:  G13, G12, G19, G20, G14
+
+    ## Finding all pairwise anchors
+
+    ## Warning in RunCCA.Seurat(object1 = object.1, object2 = object.2, assay1 =
+    ## "ToIntegrate", : Fewer than 50 features used as input for CCA.
+
+    ## Running CCA
+
+    ## Merging objects
+
+    ## Finding neighborhoods
+
+    ## Finding anchors
+
+    ##  Found 213 anchors
+
+    ## Merging dataset 1 into 2
+
+    ## Extracting anchors for merged samples
+
+    ## Finding integration vectors
+
+    ## Finding integration vector weights
+
+    ## Integrating data
+
+    ## ✔ Integration finished
+
+``` r
+
+integrated_seu
+```
+
+    ## An object of class Seurat 
+    ## 30 features across 110 samples within 1 assay 
+    ## Active assay: RNA (30 features, 10 variable features)
+    ##  5 layers present: counts.1, counts.2, data.1, data.2, scale.data
+    ##  2 dimensional reductions calculated: pca, integrated.dr
 
 #### 1.2 Bulk expression data
 
 Here are some methods for processing bulk RNA-seq gene expression data
 matrices.
 
-##### 1.2.1 Evaluate the quality of your bulk RNA-seq data
-
-`BulkPreProcess` performs comprehensive quality control on raw bulk
-RNA-seq count matrix data.
-
-Key parameters for `BulkPreProcess`:
-
-- `data`: Expression matrix with genes as rows and samples as columns,
-  or a list containing count_matrix and sample_info.
-- `sample_info`: Sample information data frame (optional), ignored if
-  data is a list. A qualified `sample_info` should contain both `sample`
-  and `condition` columns (case-sensitive), and there are no specific
-  requirements for the data type stored in the `condition` column.
-- `gene_symbol_conversion`: Whether to convert Ensembl version IDs and
-  TCGA version IDs to genes with [SymbolConvert in Section
-  1.2.2](#id_122-gene-symbol-conversion), default TRUE.
-- `check`: Whether to perform detailed quality checks, default TRUE.
-- `min_count_threshold`: Minimum count threshold for gene filtering,
-  default 10.
-- `min_gene_expressed`: Minimum number of samples a gene must be
-  expressed in, default 3.
-- `min_total_reads`: Minimum total reads per sample, default 1e6.
-- `min_genes_detected`: Minimum number of genes detected per sample,
-  default 10000.
-- `min_correlation`: Minimum correlation threshold between samples,
-  default 0.8.
-- `n_top_genes`: Number of top variable genes for PCA analysis, default
-  500.
-- `show_plot_results`: Whether to generate PCA visualization plots,
-  default TRUE.
-- `verbose`: Whether to output detailed information, default TRUE.
-
-Suppose you have bulk RNA-seq count data and sample information, and you
-want to perform comprehensive preprocessing and quality control. You can
-refer to and use the following code:
+##### 1.2.1 Convert bulk RNA-seq raw counts to TPM
 
 ``` r
 
-# Example usage of BulkPreProcess
-filtered_counts <- BulkPreProcess(
-  data = your_count_matrix,
-  sample_info = your_sample_info,
-  gene_symbol_conversion = TRUE,
-  check = TRUE,
-  min_count_threshold = 10,
-  min_samples_expressed = 3,
-  min_total_reads = 1e6,
-  min_genes_detected = 10000,
-  min_correlation = 0.8,
-  n_top_genes = 500,
-  show_plot_results = TRUE,
-  verbose = TRUE
+set.seed(123)
+ngenes <- 1000
+nsamples <- 1000
+
+gene_names <- paste0("GENE", seq_len(ngenes))
+sample_names <- paste0("Sample", seq_len(nsamples))
+
+counts <- matrix(
+  rnbinom(ngenes * nsamples, mu = 100, size = 10),
+  nrow = ngenes,
+  ncol = nsamples,
+  dimnames = list(gene_names, sample_names)
 )
+gene_length <- sample(
+  500:5000,
+  ngenes,
+  replace = TRUE
+)
+names(gene_length) <- gene_names
 ```
 
-The function returns a filtered bulk count matrix after applying quality
-control steps and does not perform log2 transformation on the data.
+``` r
 
-###### Quality Control Metrics Reported
+tpm <- CountsToTPM(counts, gene_length)
+tpm[1:5, 1:5]
+```
 
-- Gene Filtering:
-
-  First, lowly expressed genes are removed, retaining genes that have an
-  expression level reaching `min_count_threshold` in at least
-  `min_gene_expressed` samples. This step is based on statistical power
-  considerations, as lowly expressed genes are prone to false-positive
-  results in differential analysis.
-
-- Sample Filtering:
-
-  Subsequently, low-quality samples are filtered based on three core
-  indicators:  
-
-  - Sequencing Depth: The total number of reads must reach
-    `min_total_reads`.
-  - Library Complexity: The number of detected genes must exceed
-    `min_genes_detected`.
-  - Sample Consistency: When quality checking is enabled, the average
-    correlation between samples must meet the `min_correlation`
-    threshold.
-
-- Data Integrity Check: Identifies technical anomalies; too many missing
-  values may indicate experimental issues.
-
-- Feature Expression Filtering: Uses a count threshold rather than a
-  proportion threshold to avoid over-penalizing small samples. Genes
-  must be stably expressed in multiple samples to ensure the reliability
-  of statistical tests.
-
-- Sample-Level Filtering:
-
-  Comprehensively evaluates technical quality:  
-  Sequencing depth ensures detection sensitivity, the number of detected
-  genes reflects library diversity, and sample correlation (Pearson)
-  validates experimental reproducibility. PCA analysis further
-  identifies batch effects and outlier samples.
-
-- PCA Variance:
-
-  Variance explained by first two principal components.  
-  When `show_plot_results = TRUE`, the function generates PCA plot
-  colored by experimental condition
-
-- Batch Effects: Proportion of genes significantly affected by batch
-
-###### Recommended Parameter Adjustments
-
-Parameter settings need to balance data quality and information
-retention:
-
-- For Low-Depth Sequencing Data:
-
-  Should relax `min_total_reads` and `min_genes_detected` due to
-  technical limitations rather than quality issues causing low
-  indicators.
-
-- For Noisy Datasets:
-
-  Need to increase the `min_correlation` threshold to strengthen sample
-  consistency requirements and exclude technical variation interference.
-
-- For Large Datasets:
-
-  Consider setting `check = FALSE` to enable only partial filtering
-  functions and speed up the process.
-
-All parameters are set based on empirical values, and users should make
-appropriate adjustments according to the specific experimental design
-and sequencing platform characteristics.
+    ##        Sample1   Sample2   Sample3   Sample4   Sample5
+    ## GENE1 602.7856 1078.0287  687.1092  514.0647  647.0981
+    ## GENE2 224.4745  335.5068  437.5985  556.4223  384.2567
+    ## GENE3 760.3323  262.8887  411.2022  511.3512  255.3896
+    ## GENE4 537.6406 1100.3214 1685.6017 1223.9918 1116.6870
+    ## GENE5 609.4410  452.0651  437.2982  840.6543  329.2632
 
 ##### 1.2.2 Gene Symbol Conversion
 
 `SymbolConvert` performs a straightforward task: converting common gene
 identifiers (e.g., Ensemble IDs, Entrez) to standardized gene symbols by
-using the [IDConverter](https://github.com/ShixiangWang/IDConverter)
+using [IDConverter](https://github.com/ShixiangWang/IDConverter)
 package.
 
 ``` r
 
 # genes * samples
-your_bulk_data <- read.csv(
+bulk <- read.csv(
   "path_to_your_file.csv",
   header = TRUE,
   row.names = 1
 )
-
-your_bulk_data <- SymbolConvert(your_bulk_data)
 ```
 
-You can also use other package like `org.Hs.eg.db` for gene symbol
-matching if you prefer not to use SymbolConvert’s built-in
+``` r
+
+bulk <- SymbolConvert(bulk)
+```
+
+You can also use other package like `org.Hs.eg.db` or `SeuratExtend` for
+gene symbol matching if you prefer not to use `SymbolConvert`’s built-in
 `IDConverter`.
 
 ``` r
 
 library(org.Hs.eg.db)
 
-your_bulk_data <- read.csv(
+bulk <- read.csv(
   "path_to_your_file.csv",
   header = TRUE,
   row.names = 1
 )
 
-your_bulk_data <- BulkPreProcess(your_bulk_data, gene_symbol_conversion = FALSE)
-
-ensembl_ids <- sub("\\..*", "", rownames(your_bulk_data))
+ensembl_ids <- sub("\\..*", "", rownames(bulk))
 gene_symbols <- mapIds(
   org.Hs.eg.db,
   keys = ensembl_ids,
@@ -451,7 +516,27 @@ gene_symbols <- mapIds(
   multiVals = "first"
 )
 
-rownames(your_bulk_data) <- gene_symbols
+rownames(bulk) <- gene_symbols
+```
+
+``` r
+
+library(SeuratExtend)
+
+bulk <- read.csv(
+  "path_to_your_file.csv",
+  header = TRUE,
+  row.names = 1
+)
+
+ensembl_ids <- sub("\\..*", "", rownames(bulk))
+gene_symbols <- EnsemblToGenesymbol(
+  org.Hs.eg.db,
+  spe = "human",
+  keep.seq = TRUE
+)
+
+rownames(bulk) <- gene_symbols
 ```
 
 #### 1.3 Phenotype Data
@@ -479,12 +564,28 @@ mat <- matrix(
   2,
   dimnames = list(c("Gene1", "Gene2"), c("Sample1", "Sample2"))
 )
-na_position <- CheckNA(mat)
-# ! Found 2 NA values in data
-# First 2 positions:
-#   Row 1 ("Gene1"), col 1 ("Sample1")
-#   Row 2 ("Gene2"), col 2 ("Sample2")
+CheckNA(mat)
 ```
+
+    ## ! Found 2 NA values in data
+
+    ## First 2 positions:
+
+    ## Row 1 ("Gene1"), Col 1 ("Sample1")
+
+    ## Row 2 ("Gene2"), Col 2 ("Sample2")
+
+``` r
+
+mtcars$wt[5] <- NA
+CheckNA(mtcars)
+```
+
+    ## ! Found 1 NA value in data
+
+    ## First 1 position:
+
+    ## Row 5 ("Hornet Sportabout"), Col 6 ("wt")
 
 **In-place data transformation**
 
@@ -492,7 +593,7 @@ Use it just in tidyverse-like style. The difference between `PhenoMap`
 and the dplyr workflow is that `PhenoMap` is slightly faster when
 processing two-dimensional `data.frame` data, and it preserves the
 `names` attribute when processing one-dimensional vectors. Apart from
-these two points, there is no other difference — it is simply a
+these two points, there is no other difference - it is simply a
 syntactic sugar we provide.
 
 ``` r
@@ -502,62 +603,40 @@ v <- 1:2000
 
 v2 <- PhenoMap(v, v < 1000 ~ "0", v > 1000 ~ "1", .default = "here_is_1k")
 table(v2)
-#  0          1 here_is_1k
-#    999       1000          1
+```
+
+    ## v2
+    ##          0          1 here_is_1k 
+    ##        999       1000          1
+
+``` r
 
 v3 <- PhenoMap(v, v < 100 ~ 0, v < 1000 ~ 1, v > 1000 ~ 2, .default = NA_real_)
 table(v3)
-#    0    1    2
-#   99  900 1000
+```
+
+    ## v3
+    ##    0    1    2 
+    ##   99  900 1000
+
+``` r
 
 # ? if a data
 d <- mtcars
 d2 <- PhenoMap(d, mpg > 15 ~ 1, mpg <= 15 ~ 0)
 table(d2$mpg)
-#  0  1
-#  6 26
-head(d2)
-#      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-#    <num> <num> <num> <num> <num> <num> <num> <num> <num> <num> <num>
-# 1:     1     6   160   110  3.90 2.620 16.46     0     1     4     4
-# 2:     1     6   160   110  3.90 2.875 17.02     0     1     4     4
-# 3:     1     4   108    93  3.85 2.320 18.61     1     1     4     1
-# 4:     1     6   258   110  3.08 3.215 19.44     1     0     3     1
-# 5:     1     8   360   175  3.15 3.440 17.02     0     0     3     2
-# 6:     1     6   225   105  2.76 3.460 20.22     1     0     3     1
 ```
 
-**Direct Interface for Foolproof Data Processing**
-
-``` r
-
-your_phenotype_data <- PhenoPreProcess(
-  bulk = your_bulk_data,
-  phenotype = your_phenotype_data,
-  phenotype_class = "survival",
-  status == "death" ~ 1,
-  status == "alive" ~ 0,
-  selelct = c("time", "status")
-)
-```
-
-Key parameters for `PhenoPreProcess`:
-
-- `bulk`: Bulk RNA-seq expression data with genes as rows and samples as
-  columns
-- `phenotype`: Phenotype data (Named numeric vector/ data.frame)
-- `phenotype_class`: Type of phenotype data, e.g., “binary”, “survival”,
-  “continuous”
-- `...`: pass to `PhenoMap`
-- `select`: Columns to select from the phenotype data when it is a
-  data.frame
+    ## 
+    ##  0  1 
+    ##  6 26
 
 ------------------------------------------------------------------------
 
 ### 2. Screen Cells Associated with Phenotype
 
-The function **`Screen`** provide 8 different options for screening
-cells associated with phenotype, These 8 algorithms come from the
+The function **`Screen`** provide 12 different options for screening
+cells associated with phenotype, These 12 algorithms come from the
 repositories mentioned in [6. References](#id_6-references), and you can
 choose one of them to screen your cells.
 
@@ -577,19 +656,19 @@ Key parameters for `Screen`:
 - `phenotype_class`: A character value specifying the phenotype data
   type, i.e. `"binary"`, `"survival"` or `"continuous"`.
 - `screen_method`: A character value specifying the screening method,
-  i.e. “Scissor”, “scPAS”, “scAB”, “scPP”, “DEGAS”, “LP_SGL”, or “PIPET”
+  i.e. “Scissor”, “scPAS”, “scAB”, “scPP”, “DEGAS”, “DEGASv2”, “LP_SGL”,
+  “PIPET”, “SIDISH”, “SCIPAC”, “TiRank”, or “PhenoMapR”. Use
+  `AVAILABLE_SCREEN_METHODS` to list all registered methods.
 - `...`: Other parameters for the screening methods, see below
 
 #### 2.1 (Option A) Scissor Screening
 
 Parameters pass to `...` when using `Scissor` method:
 
-- `path2save_scissor_inputs`: deprecated, use `save_path` instead
 - `save_path`: A character value specifying the path to save
   intermediate data, you can also set `NULL` to suppress the saving of
   intermediate files. Default:
   `Scissor_res/<cache_stamp>/Scissor_inputs.RData`
-- `path2load_scissor_cahce`: deprecated, use `load_path` instead
 - `load_path`: A character value specifying the path to load
   intermediate data, e.g. `"Scissor_res/<cache_stamp>`. Default: `NULL`
 - `alpha`: Parameter used to balance the effect of the l1 norm and the
@@ -625,7 +704,7 @@ scissor_result <- Screen(
   label_type = "TP53", # The filtering labels are stored in the `@misc`, you can change it to your own label
   phenotype_class = "binary",
   screen_method = c("Scissor"),
-  path2save_scissor_inputs = "Tmp/Scissor_inputs.RData" # Intermediate data
+  save_cache = "Tmp" # Intermediate data
 )
 ```
 
@@ -639,7 +718,7 @@ scissor_result <- Screen(
   label_type = "TP53",
   phenotype_class = "binary",
   screen_method = c("Scissor"),
-  path2load_scissor_cahe = "Tmp/Scissor_inputs.RData" # Intermediate data
+  load_cache = "Tmp" # Intermediate data
 )
 ```
 
@@ -654,7 +733,7 @@ scissor_result <- Screen(
   label_type = "TP53",
   phenotype_class = "binary",
   screen_method = c("Scissor"),
-  path2load_scissor_cahce = "Tmp/Scissor_inputs.RData", # Intermediate data
+  load_cache = "Tmp", # Intermediate data
   alpha = NULL,
   cutoff = 0.2
 )
@@ -681,7 +760,7 @@ scissor_result <- Screen(
   label_type = "TP53",
   phenotype_class = "binary",
   screen_method = c("Scissor"),
-  path2load_scissor_cahce = "Tmp/Scissor_inputs.RData", # Intermediate data
+  load_cache = "Tmp", # Intermediate data
   reliability_test = TRUE,
   cell_evaluation = TRUE,
   cell_evaluation.benchmark_data = "path_to_benchmark_data.RData",
@@ -800,13 +879,6 @@ vectors, the total number of searches equals the product of their
 lengths, which may lead to long runtimes. In such cases, we recommend
 enabling parallel computation.
 
-``` r
-
-setFuncOption(parallel = TRUE, parallel.type = 'multisession', workers = 4L)
-```
-
-Then simply run the function directly.
-
 **returning structure**: A list containing:
 
 - `scRNA_data`: A Seurat object after screening
@@ -873,6 +945,8 @@ Parameters pass to `...` when using `DEGAS` method
 
 ``` r
 
+reticulate::use_condaenv("r-reticulate-degas")
+
 degas_result <- Screen(
   matched_bulk = your_matched_bulk,
   sc_data = A_Seurat_object,
@@ -881,29 +955,6 @@ degas_result <- Screen(
   screen_method = "DEGAS",
   # The type of phenotype
   phenotype_class = c("binary", "continuous", "survival"),
-  # Environment parameters
-  env_params = list(
-    env.name = "r-reticulate-degas",
-    env.type = "conda",
-    # Environment.yml file will be used to create the conda environment in default, so other parameters can be ignored
-    env.method = "environment",
-    # The path of the environment.yml file
-    env.file = system.file(
-      "conda/DEGAS_environment.yml",
-      package = "SigBridgeR"
-    ),
-    env.python_verion = "3.9.15",
-    env.packages = c(
-      "tensorflow" = "2.4.1",
-      "protobuf" = "3.20.3"
-    ),
-    # Force re-creating the env
-    env.recreate = FALSE,
-    # Use conda-forge channel for env creating
-    env.use_conda_forge = TRUE,
-    # Message output when creating the env
-    env.verbose = FALSE
-  ),
   # DEGAS parameters
   degas_params = list(
     # DEGAS.model_type will be automatically determined by the `phenotype_class`
@@ -925,7 +976,7 @@ degas_result <- Screen(
     # The python executable path of the conda environment, auto detected in default
     DEGAS.pyloc = NULL,
     # Some functions will be called in the DEGAS algorithm
-    DEGAS.toolsPath = paste0(.libPaths()[1], "/DEGAS/tools/"), # or `file.path(.libaPaths()[1], "SigBridgeR/DEGAS_tools/")`
+    DEGAS.toolsPath = paste0(.libPaths()[1], "/DEGAS/tools/"),
     # Screening parameters
     DEGAS.ff_depth = 3,
     DEGAS.bag_depth = 5,
@@ -948,15 +999,23 @@ degas_result <- Screen(
 )
 ```
 
-This code chunk will CREATE a conda environment called
-“**r-reticulate-degas**” with python 3.9.15, and install the required
-packages (tensorflow, protobuf) for DEGAS. If an environment with the
-same name already exists, it will directly use this environment without
-creating a new one (unless specified
-`env_params = list(env.recreate=TRUE)`).
+After update to v4.0.0. `Screen` does not automatically creat a python
+env for DEGAS, you need to create a python env for DEGAS before using
+`Screen`. So as to comply the R package’s principle.
 
-To obtain the default parameters for DEGAS, you can use
-`SigBridgeR:::DEGASParamSet()`
+To obtain a template python env configuration file for DEGAS, you can
+use:
+
+``` r
+
+env_config <- system.file(
+  "conda/DEGAS_environment.yml",
+  package = "SigBridgeR"
+) |>
+  readLines()
+```
+
+To obtain the default parameters for DEGAS, you can use:
 
 ``` r
 
@@ -968,7 +1027,7 @@ env_param <- SigBridgeR:::DEGASEnvSet(list())
 You can use `ListPyEnvs()` to list all the python environments in your
 system, including virtual environments. Both Windows and Unix-like
 systems are supported. More information can be found in
-<https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html>
+[Other_Function_Details](https://wanglabcsu.github.io/SigBridgeR/articles/Other_Function_Details.html)
 
 ``` r
 
@@ -1055,12 +1114,12 @@ Parameters pass to `...` when using `PIPET` method
 
 ``` r
 
-pipet_result = Screen(
+pipet_result <- Screen(
     matched_bulk = matched_bulk,
     sc_data = sc_dataset, # A Seurat object after preprocessing
     phenotype = matched_phenotype_data,
     label_type = "TP53", # The filtering labels are stored in the `Seurat_object@misc`
-    phenotype_class = "binary", # `survival` is not supported 
+    phenotype_class = "binary", # `survival` is not supported
     screen_method = "PIPET",
     # PIPET specific parameters
     lg2FC = 1,
@@ -1103,7 +1162,7 @@ sidish_result <- Screen(
   phenotype_class = "survival", # Currently only survival phenotype is supported
 
   # SIDISH algorithm parameters
-  sidish_params = list(
+  sidish_param = list(
     # Preprocessing parameters
     patient_id = "Sample",
     celltype_name = "celltype_major",
@@ -1148,61 +1207,20 @@ sidish_result <- Screen(
     train_distribution_fit = "fitted" # "fitted" or "default"
   ),
 
-  # Python environment parameters
-  env_params = list(
-    env.name = "r-reticulate-sidish-nvidia", # Auto-selected based on device parameter
-    env.type = "conda",
-    env.method = "environment",
-    env.file = system.file(
-      "conda/SIDISH_nvidia_environment.yml",
-      package = "SigBridgeR"
-    ),
-    env.python_verion = "3.12.12",
-    env.packages = c(
-      "numpy" = "1.26.4"
-      # Additional packages defined in environment.yml
-    ),
-    env.recreate = FALSE, # Force re-creating environment if TRUE
-    env.use_conda_forge = TRUE,
-    env.verbose = FALSE
-  ),
-
   verbose = TRUE
 )
 ```
-
-This code chunk will CREATE a conda environment called
-**`r-reticulate-sidish-nvidia`** (for GPU) or
-**`r-reticulate-sidish-cpu`** (for CPU) with Python 3.12.12 and install
-all required dependencies for SIDISH. If an environment with the same
-name already exists, it will be reused without recreation (unless
-`env_params = list(env.recreate = TRUE)` is specified).
 
 **Note**: SIDISH currently **only supports survival phenotypes**
 (`phenotype_class = "survival"`). The phenotype data frame must contain
 columns named `"time"` (survival time) and `"status"` (event indicator).
 
 To obtain the default parameters for SIDISH, use
-`SigBridgeR:::SIDISHParamSet()` and `SigBridgeR:::SIDISHEnvSet()`:
+`SigBridgeR::SIDISHParamSet()`
 
 ``` r
 
-# Get default SIDISH algorithm parameters
 sidish_default_params <- SigBridgeR:::SIDISHParamSet(list())
-```
-
-Environment configuration has been replaced by `reticulate::use_*`,
-which is more flexible and easier to use. So conda environments are no
-longer created by `SigBridgeR:::SIDISHEnvSet()`, left here for
-reference:
-
-``` r
-
-# Get default environment parameters (CPU version)
-env_default_cpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cpu")
-
-# Get default environment parameters (GPU version)
-env_default_gpu <- SigBridgeR:::SIDISHEnvSet(list(), device = "cuda")
 ```
 
 You can use `ListPyEnvs()` to list all Python environments available on
@@ -1217,12 +1235,6 @@ ListPyEnv()
 # 3 r-reticulate-sidish-cpu    /home/user/miniconda3/envs/r-reticulate-sidish-cpu/bin/python conda
 ```
 
-> **Important considerations**: - GPU acceleration requires
-> CUDA-compatible hardware. If GPU is not detected but `device = "cuda"`
-> is specified, the function will abort with an error message. Set
-> `sidish_param = list(device = "cpu")` to run on CPU. And of course the
-> python environment must be recreated.
-
 **Return structure**: A named list containing:
 
 - `scRNA_data`: A Seurat object with SIDISH screening results integrated
@@ -1232,7 +1244,7 @@ ListPyEnv()
 
 #### 2.9 (Option I) SCIPAC Screening
 
-Parameters pass to `...` when using `PIPET` method
+Parameters pass to `...` when using `SCIPAC` method
 
 - `hvg`: Integer. Number of highly variable genes to use for
   preprocessing. Default is `1000L`.
@@ -1265,6 +1277,8 @@ scipac_result <- Screen(
   sc_data = A_Seurat_object,
   phenotype = your_matched_phenotype,
   label_type = "TP53",
+  screen_method = "SCIPAC",
+  phenotype_class = "binary",
   hvg = 1000L,
   do_pca_sc = FALSE,
   n_pc = 60L,
@@ -1284,9 +1298,425 @@ scipac_result <- Screen(
 - `pca_res` : PCA rotation results
 - `cluster_res` : Clustering results of single-cell data
 
+#### 2.10 (Option J) DEGASv2 Screening
+
+Parameters pass to `...` when using `DEGASv2` method (basically adapted
+from the `DEGASv2`’s documentation):
+
+**Feature selection (shared by bulk and single-cell data)**
+
+- `bulk_hvg`: Logical. Whether to select highly variable genes from the
+  bulk data. Default is `TRUE`.
+- `bulk_de`: Logical. Whether to perform differential expression
+  analysis on the bulk data. Default is `TRUE`.
+- `sc_de`: Logical. Whether to perform differential expression analysis
+  on the single-cell data. Default is `TRUE`.
+- `add_genes`: Character vector or `NULL`. Additional genes forced into
+  the feature set. Default is `NULL`.
+- `n_hvg`: Integer. Number of highly variable genes to select from bulk
+  data. Default is `250L`.
+- `n_bulk_de`: Integer. Number of bulk DE genes to select. Default is
+  `250L`.
+- `n_sc_de`: Integer. Number of single-cell DE genes to select. Default
+  is `200L`.
+- `padj.thresh`: Numeric. Adjusted p-value threshold for DE gene
+  selection. Default is `0.05`.
+- `only.pos`: Logical. Whether to keep only positively enriched markers.
+  Default is `FALSE`.
+- `min.pct`: Numeric. Minimum fraction of cells expressing a gene in the
+  DE analysis. Default is `0.25`.
+- `logfc.threshold`: Numeric. Log fold-change threshold for the DE
+  analysis. Default is `0.25`.
+
+**Cell labelling**
+
+- `top_fraction_pos`: Numeric. Proportion of cells labelled as
+  `"Positive"` according to the predicted hazard (the top quantile).
+  Default is `0.2`.
+- `sclab`: Character or `NULL`. Metadata column of `sc_data` providing
+  supervised cell labels. When supplied, both single-cell and bulk
+  labels are used (`ClassClass` / `ClassCox` mode). Default is `NULL`.
+- `n_st_classes`: Integer. Number of single-cell classes. Default is
+  `length(unique(sc_data$seurat_clusters))`.
+
+**Model training**
+
+- `loss_type`: Character. Loss function, one of `"cross_entropy"`,
+  `"log_neg"`, `"rank_loss"`. Default is `"cross_entropy"`.
+- `transfer_type`: Character. Domain adaptation method, one of
+  `"Wasserstein"`, `"MMD"`. Default is `"Wasserstein"`.
+- `model_save_dir`: Character. Directory used to store the trained
+  model. Default is `"DEGASv2_res"`.
+- `lambda1`, `lambda2`, `lambda3`: Numeric. Weights of the
+  classification, domain-adaptation and reconstruction losses. Defaults
+  are `1L`, `3L` and `3L`.
+- `tot_seeds`: Integer. Number of random seeds to train. Default is
+  `10L`.
+- `tot_iters`: Integer. Number of training iterations. Default is
+  `300L`.
+- `extract_embs`: Logical. Whether to extract cell embeddings. Default
+  is `FALSE`.
+- `random_feat`: Logical. Whether to use random features. Default is
+  `FALSE`.
+- `random_perc`: Numeric. Proportion of random features when
+  `random_feat = TRUE`. Default is `0.8`.
+- `early_stopping`: Logical. Whether to enable early stopping. Default
+  is `FALSE`.
+
+**Usage**:
+
+``` r
+
+degasv2_result <- Screen(
+  matched_bulk = your_matched_bulk, # raw counts matrix is preferred
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "TP53",
+  screen_method = "DEGASv2",
+  phenotype_class = "binary", # "binary", "survival" or "continuous"
+  # Cell labelling
+  top_fraction_pos = 0.2,
+  # Optional supervised single-cell labels
+  sclab = NULL,
+  # Feature selection
+  bulk_hvg = TRUE,
+  bulk_de = TRUE,
+  sc_de = TRUE,
+  add_genes = NULL,
+  n_hvg = 250L,
+  n_bulk_de = 250L,
+  n_sc_de = 200L,
+  padj.thresh = 0.05,
+  # Training
+  loss_type = "cross_entropy",
+  transfer_type = "Wasserstein",
+  model_save_dir = "DEGASv2_res",
+  lambda1 = 1L,
+  lambda2 = 3L,
+  lambda3 = 3L,
+  tot_seeds = 10L,
+  tot_iters = 300L,
+  early_stopping = FALSE
+)
+```
+
+``` r
+
+table(degasv2_result$scRNA_data$DEGASv2)
+#    Other Positive
+```
+
+**note**:
+
+- DEGASv2 is the re-implemented, deep-transfer-learning based successor
+  of DEGAS. Its training backend is PyTorch, accessed through
+  `reticulate`, but unlike DEGAS you do **not** need to create and
+  activate a Python environment manually: the `DEGASv2` package declares
+  its Python dependencies with
+  [`reticulate::py_require()`](https://rstudio.github.io/reticulate/reference/py_require.html),
+  so they are provisioned automatically on first use. The `DEGASv2`
+  package itself must be installed (`pak::pak("Exceret/DEGASv2")`,
+  handled automatically by `Screen`).
+- Bulk raw counts are preferred, since the bulk branch can perform
+  differential expression analysis (`bulk_de = TRUE`); if the bulk
+  matrix is not a counts matrix, the bulk DE step is skipped with a
+  warning.
+
+**returning structure**: A list containing:
+
+- `scRNA_data`: A Seurat object after screening. The screening result is
+  stored in the `DEGASv2` column (`"Positive"` / `"Other"`), together
+  with the predicted hazard (`DEGASv2_hazard`) and the threshold used
+  for labelling (`DEGASv2_pos_thresh`). The parameters used are recorded
+  in `scRNA_data@misc$DEGASv2`.
+
+#### 2.11 (Option K) TiRank Screening
+
+TiRank integrates bulk and single-cell data through a rank-based deep
+learning framework. Parameters pass to `...` when using `TiRank` method:
+
+- `tirank_params`: List of TiRank algorithm parameters. See below for
+  details. Default is the full default list.
+- `save_path`: (Soft-deprecated) Directory for intermediate and final
+  results. The final prediction table is read from
+  `<save_path>/3_Analysis/spot_predict_score.csv`, so keep it aligned
+  with the cache directory when caching is used. Default is
+  `"./TiRank_res"`.
+- `assay`: Character. Assay of `sc_data` to use. Default is `"RNA"`.
+- `load_cache` / `save_cache`: Character. Cache directory used to
+  load/save intermediate results (preferred over `save_path`), see
+  [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
+  Default is `NULL` / `save_path`.
+- `verbose`: Logical. Whether to print progress messages. Default is
+  inherited from `getFuncOption("verbose")`.
+- `seed`: Integer. Random seed. Default is inherited from
+  `getFuncOption("seed")`.
+
+Parameters in `tirank_params`:
+
+**Data preprocessing**
+
+- `validation_proportion`: Numeric. Proportion of bulk data held out for
+  validation. Default is `0.15`.
+- `sampling_thresh`: Numeric. Threshold for the resampling strategy.
+  Default is `0.5`.
+- `sampling_mode`: Character. Resampling method, one of `"smote"`,
+  `"downsample"`, `"upsample"`, `"tomeklinks"`.
+- `top_var_genes`: Integer. Number of top variable genes to select.
+  Default is `2000L`.
+- `top_gene_pairs`: Integer. Number of top gene pairs used for ranking.
+  Default is `1000L`.
+- `p_value_threshold`: Numeric. P-value threshold for feature selection.
+  Default is `0.05`.
+- `max_cutoff`, `min_cutoff`: Numeric. Upper/lower cutoffs for
+  correlation filtering. Defaults are `0.8` and `-0.8`.
+
+**Neural network architecture**
+
+- `nhead`: Integer. Number of attention heads. Default is `2L`.
+- `nhid1`, `nhid2`: Integer. Sizes of the first and second hidden
+  layers. Defaults are `96L` and `8L`.
+- `n_output`: Integer. Output dimension of the encoder. Default is
+  `32L`.
+- `nlayers`: Integer. Number of encoder layers. Default is `3L`.
+- `n_pred`: Integer. Number of prediction heads. Default is `2L`.
+- `dropout`: Numeric. Dropout rate for regularization. Default is `0.5`.
+- `encoder_type`: Character. Encoder architecture, one of `"MLP"`,
+  `"Transformer"`, `"DenseNet"`.
+- `infer_mode`: Character. Inference mode, `"SC"` (single-cell) or
+  `"ST"` (spatial transcriptomics).
+
+**Training**
+
+- `n_trials`: Integer. Number of repeated training trials. Default is
+  `5L`.
+- `do_reject`: Logical. Whether to apply rejection criteria to uncertain
+  predictions. Default is `TRUE`.
+- `tolerance`: Numeric. Tolerance threshold for rejection. Default is
+  `0.05`.
+
+**Usage**:
+
+``` r
+
+tirank_result <- Screen(
+  matched_bulk = your_matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "TP53",
+  screen_method = "TiRank",
+  phenotype_class = "survival", # "binary" (Classification), "survival" (Cox), "continuous" (Regression)
+  assay = "RNA",
+  tirank_params = list(
+    # Data preprocessing
+    validation_proportion = 0.15,
+    sampling_thresh = 0.5,
+    sampling_mode = "smote", # "smote", "downsample", "upsample", "tomeklinks"
+    top_var_genes = 2000L,
+    top_gene_pairs = 1000L,
+    p_value_threshold = 0.05,
+    max_cutoff = 0.8,
+    min_cutoff = -0.8,
+    # Neural network architecture
+    nhead = 2L,
+    nhid1 = 96L,
+    nhid2 = 8L,
+    n_output = 32L,
+    nlayers = 3L,
+    n_pred = 2L,
+    dropout = 0.5,
+    encoder_type = "MLP", # "MLP", "Transformer", "DenseNet"
+    infer_mode = "SC", # "SC" or "ST"
+    # Training
+    n_trials = 5L,
+    do_reject = TRUE,
+    tolerance = 0.05
+  )
+)
+```
+
+TiRank supports caching, so the preprocessed data and the trained model
+can be reused. Note that the final prediction table is read from
+`<save_path>/3_Analysis/spot_predict_score.csv`, so keep `save_path`
+aligned with the cache directory being used:
+
+``` r
+
+# First run: train the model and save the cache under `TiRank_res/`
+tirank_result <- Screen(
+  matched_bulk = your_matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "TP53",
+  screen_method = "TiRank",
+  phenotype_class = "survival",
+  save_path = "TiRank_res",
+  save_cache = "TiRank_res"
+)
+
+# Later runs: reuse the cache directory created in the previous step,
+# e.g. `TiRank_res/survival_20250101000000`
+tirank_result <- Screen(
+  matched_bulk = your_matched_bulk, # not required when the cache is complete
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype, # not required when the cache is complete
+  label_type = "TP53",
+  screen_method = "TiRank",
+  phenotype_class = "survival",
+  save_path = "TiRank_res/survival_20250101000000",
+  load_cache = "TiRank_res/survival_20250101000000"
+)
+```
+
+``` r
+
+table(tirank_result$scRNA_data$TiRank)
+# Negative  Neutral Positive
+```
+
+**note**:
+
+- TiRank currently runs on **GPU** (`device = "cuda"` is used
+  internally), so a CUDA-capable device is required. The `rTiRank`
+  package must be installed (`pak::pak("Exceret/rTIRank")`, handled
+  automatically by `Screen`), and its Python dependencies are
+  provisioned automatically through
+  [`reticulate::py_require()`](https://rstudio.github.io/reticulate/reference/py_require.html).
+
+**returning structure**: A list containing:
+
+- `scRNA_data`: A Seurat object after screening, with `TiRank_Reject`,
+  `TiRank_Rank_Score` and `TiRank` (`"Positive"`, `"Neutral"`,
+  `"Negative"`) added to `meta.data`, and the parameters stored in
+  `scRNA_data@misc$TiRank`.
+- `cell_cell_distance`: The computed cell-cell similarity/distance
+  matrix.
+
+#### 2.12 (Option L) PhenoMapR Screening
+
+PhenoMapR derives a gene-level reference from the matched bulk
+expression and phenotype, then scores every single cell and labels the
+two tails of the score distribution. Parameters pass to `...` when using
+`PhenoMapR` method:
+
+**Phenotype handling**
+
+- `phenotype_column`: Character or `NULL`. Outcome column name for
+  binary/continuous phenotypes. Default is `NULL` (uses
+  `"phenotype_value"`).
+- `survival_time`, `survival_event`: Character. Column names of the
+  survival phenotype data frame. Defaults are `"time"` and `"status"`.
+- `binary_positive_reference`: Character. Which level of a binary
+  phenotype is treated as the reference-positive direction, `"second"`
+  or `"first"`. Default is `"second"`.
+- `reference_sign`: Integer. Sign applied to the reference scores, use
+  `-1` to mirror the score axis. Default is `1L`.
+
+**Bulk reference construction**
+
+- `normalize`: Logical. Whether to normalize the bulk expression.
+  Default is `TRUE`.
+- `platform`: Character. Bulk platform, one of `"auto"`, `"rnaseq"`,
+  `"microarray"`. Default is `"auto"`.
+- `probe_annotation`: Probe-to-gene annotation table for microarray
+  data. Default is `NULL`.
+- `hugo_species`: Character. Species passed to HGNChelper, `"human"` or
+  `"mouse"`. Default is `c("human", "mouse")`.
+
+**Single-cell scoring**
+
+- `assay`, `layer`: Character. Seurat assay and layer used for scoring.
+  Defaults are `"RNA"` and `"data"`.
+- `z_score_cutoff`: Numeric. Z-score cutoff for limiting paired genes.
+  Default is `2L`.
+- `score_mode`: Character. Scoring mode, one of `"weighted_sum"`,
+  `"activity_adjusted"`.
+- `vars_to_regress`: Character vector. Variables regressed out before
+  scoring. Default is `c("S.Score", "G2M.Score", "nCount_RNA")`.
+- `cancer_type`: Character or `NULL`. Optional cancer-type context.
+  Default is `NULL`.
+- `pseudobulk`: Logical. Whether to score pseudobulk profiles instead of
+  single cells. Default is `FALSE`.
+- `group_by`: Character or `NULL`. Grouping variable used for pseudobulk
+  aggregation. Default is `NULL`.
+- `sample_metadata`: Data frame or `NULL`. Sample-level metadata used
+  with `pseudobulk = TRUE`. Default is `NULL`.
+
+**Group definition**
+
+- `percentile`: Numeric. Tail percentile used to define the phenotype
+  groups. Default is `0.05`.
+- `permutation_n`: Integer or `NULL`. Number of permutations. Default is
+  `NULL`.
+- `permutation_seed`: Integer or `NULL`. Permutation seed, defaults to
+  `seed`.
+
+**Usage**:
+
+``` r
+
+phenomapr_result <- Screen(
+  matched_bulk = your_matched_bulk,
+  sc_data = A_Seurat_object,
+  phenotype = your_matched_phenotype,
+  label_type = "PhenoMapR",
+  screen_method = "PhenoMapR",
+  phenotype_class = "survival", # "binary", "survival" or "continuous"
+  # Phenotype handling
+  survival_time = "time",
+  survival_event = "status",
+  # Bulk reference construction
+  normalize = TRUE,
+  platform = "auto",
+  hugo_species = "human",
+  # Single-cell scoring
+  assay = "RNA",
+  layer = "data",
+  z_score_cutoff = 2L,
+  score_mode = "weighted_sum",
+  vars_to_regress = c("S.Score", "G2M.Score", "nCount_RNA"),
+  # Group definition
+  percentile = 0.05
+)
+```
+
+``` r
+
+table(phenomapr_result$scRNA_data$PhenoMapR, useNA = "ifany")
+# Negative  Neutral Positive
+```
+
+**note**:
+
+- PhenoMapR labels the upper tail of the score distribution as
+  `"Most Adverse"` and the lower tail as `"Most Favorable"`, which are
+  mapped to the package-wide vocabulary as `"Positive"` and
+  `"Negative"`; cells in the middle are labelled `"Neutral"`.
+- Higher scores follow the phenotype-valued-as-`1` direction when the
+  reference is derived with the default orientation. For binary
+  phenotypes this means `binary_positive_reference = "second"` regresses
+  on the `"1"` level, and for survival traits the Cox z-score is
+  positive for hazard-increasing genes. Therefore, when phenotype `1`
+  denotes the unfavourable direction, the `"Most Adverse"` tail is the
+  one labelled `"Positive"`. If your phenotype is encoded the other way
+  round, adjust `binary_positive_reference` or set
+  `reference_sign = -1`.
+
+**returning structure**: A list containing:
+
+- `scRNA_data`: A Seurat object after screening, with the group labels
+  stored in the `PhenoMapR` column (`"Positive"`, `"Negative"`,
+  `"Neutral"` or `NA`) and the per-cell scores in `PhenoMapR_*` columns
+  of `meta.data`. The parameters used are recorded in
+  `scRNA_data@misc$PhenoMapR`.
+- `phenomap_scores`: Per-cell scores returned by
+  `PhenoMapR::PhenoMap()`.
+- `reference`: The gene-level reference z-scores derived from the bulk
+  data.
+
 #### 2.F Merge screening results
 
-If you have performed multiple screening methods one the same
+If you have performed multiple screening methods on **the same**
 single-cell data, you can use the `MergeResult` to merge the screening
 results of these methods. The Seurat object or a results list from
 `Screen` is accepted.
@@ -1301,7 +1731,12 @@ merged_seurat <- MergeResult(
   your_DEGAS_result
   # # * Add more if you want
   # ,your_LP_SGL_result,
-  # your_PIPET_result
+  # your_PIPET_result,
+  # your_SIDISH_result,
+  # your_SCIPAC_result,
+  # your_DEGASv2_result,
+  # your_TiRank_result,
+  # your_PhenoMapR_result
 )
 
 # * mixed input form is alse supported
@@ -1320,11 +1755,12 @@ merged_seurat <- MergeResult(
 
 This function merges all slots from the input Seurat objects. Note that
 intermediate data (e.g., `scissor_result$reliability.test` or
-`scab_result$scAB_result`) will not be retained during the merge. While
-the function can technically combine different single-cell datasets, it
-is specifically designed for merging replicates or batches of the *same*
-single-cell RNA-seq experiment; using it for heterogeneous data may lead
-to subtle (and potentially hard-to-detect) errors.
+`scab_result$scAB_result`) **will not be retained** during the merge.
+While the function can technically combine different single-cell
+datasets, it is specifically designed for merging replicates or batches
+of the **same** single-cell RNA-seq experiment; using it for
+heterogeneous data may lead to subtle (and potentially hard-to-detect)
+errors (You may consider `SCIntegrate` for this purpose).
 
 **returning structure**:
 
@@ -1338,7 +1774,10 @@ Here we provide some visualization methods for the screening results.
 Considering that many people have different needs for data
 visualization, `SigBridgeR` hardly provides visualization (except for
 fraction plot and upset plot, because we provide some statistic results
-for them). We only provide the source code for reference.
+for them).
+
+If you have any suggestions for visualization, please submit an issue or
+pull request.
 
 #### 3.1 UMAP
 
@@ -1347,6 +1786,12 @@ for them). We only provide the source code for reference.
 Suppose you have performed all algorithm screening on your Seurat object
 and wish to examine the distribution across different celltypes and
 patient, you may reference and use the following code:
+
+``` r
+
+# * Glance your seurat object
+ggplot2::autoplot(merged_seurat, group.by = "scissor")
+```
 
 ``` r
 
@@ -1369,7 +1814,7 @@ c(
     # make sure these column names exist
     c("celltype", "patient", "scissor", "scAB", "scPAS", "scPP", "DEGAS"),
     ~ Seurat::DimPlot(
-      your_seurat_obj,
+      merged_seurat,
       group.by = .x,
       pt.size = 0.05,
       reduction = "umap"
@@ -1408,11 +1853,11 @@ c(scPAS_Pvalue_umap, scPAS_NRS_umap) %<-%
   purrr::map(
     c("scPAS_Pvalue", "scPAS_NRS"),
     ~ Seurat::FeaturePlot(
-      object = your_seurat_obj,
+      object = merged_seurat,
       features = .x,
     ) +
       ggplot2::ggtitle(.x) +
-      theme(legend.position = "right")
+      ggplot2::theme(legend.position = "right")
   )
 
 # * Show
@@ -1454,11 +1899,12 @@ code:
 ``` r
 
 plot <- ScreenFractionPlot(
-  screened_seurat = scpas_result$scRNA_data,
-  group_by = "patient", # grouping basis for the x-axis
+  screened_seurat = merged_seurat,
+  group_by = "seurat_clusters", # grouping basis for the x-axis
   screen_type = "scPAS",
   plot_title = "scPAS Screening Results"
 )
+plot
 ```
 
 If you have performed multiple screening methods and already merged the
@@ -1468,10 +1914,11 @@ results, you can use the following code:
 
 plot <- ScreenFractionPlot(
   screened_seurat = merged_seurat,
-  group_by = "patient", # grouping basis for the x-axis
-  screen_type = c("scPAS", "scAB", "scPP"), # multiple screening results
+  group_by = "seurat_clusters", # grouping basis for the x-axis
+  screen_type = c("scPAS", "scissor"), # multiple screening results
   plot_title = "Screening Results" #  A screen_type prefix will be added to the current plot title
 )
+plot$combined_plot
 ```
 
 The order of the groups is determined by the proportion of **Positive**
@@ -1608,6 +2055,7 @@ Key parameters for `ScreenUpset`:
 ``` r
 
 upset <- ScreenUpset(screened_seurat = merged_seurat)
+upset$plot
 ```
 
 **returning structure**:
@@ -1623,7 +2071,7 @@ https://github.com/const-ae/ggupset](https://github.com/const-ae/ggupset)
 
 ------------------------------------------------------------------------
 
-### 4. Example
+### 4. Example (last updated: 2025-7-31)
 
 #### 4.1 Survival-associated cell screening
 
@@ -1632,32 +2080,18 @@ functions in `SigBridgeR` to screen cells associated with phenotype.
 
 ``` r
 
-# Set working directory
-if (requireNamespace("here", quietly = TRUE)) {
-  here::i_am(".here")
-  setwd(here::here())
-  knitr::opts_knit$set(root.dir = here::here())
-}
-```
-
-``` r
-
 library(SigBridgeR)
 library(zeallot)
 
 # * load the example data
-c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "survival")
+c(seurat, bulk, pheno) %<-% LoadRefData(data_type = "survival")
 
-dim(mat_exam)
-#[1] 33694  1093
-mat_exam[1:6, 1:2]
-#          SMC01.T_AAACCTGCATACGCCG SMC01.T_AAACCTGGTCGCATAT
-# A1BG                            0                        0
-# A1BG.AS1                        0                        0
-# A1CF                            0                        2
-# A2M                             0                        0
-# A2M.AS1                         0                        0
-# A2ML1                           0                        0
+seurat
+# An object of class Seurat
+# 15924 features across 1077 samples within 1 assay
+# Active assay: RNA (15924 features, 2000 variable features)
+#  3 layers present: counts, data, scale.data
+#  2 dimensional reductions calculated: pca, umap
 
 dim(bulk)
 # [1] 4071  506
@@ -1681,135 +2115,11 @@ head(pheno)
 # TCGA-44-2655 43.50      0
 ```
 
-This single-cell RNA data is from humans. We set many parameters to
-`NULL` or `0` in order to maximize the flexibility of downstream
-analyses and capture a broader range of biological signals, so as to
-avoid insignificant results caused by too small a dataset.
-
-In practical data analysis, please adjust the thresholds and parameters
-as needed for your specific use case.
-
-Now we use
-[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
-to pre-process the single-cell RNA expression matrix data.
-
-``` r
-
-seurat <- SCPreProcess(
-  sc = mat_exam,
-  params = list(
-    o = list(
-      min.cells = 0,
-      min.features = 0
-    ),
-    s = list(
-      features = rownames(mat_exam)
-    )
-  ),
-  quality_control = list(),
-  data_filter = list()
-)
-```
-
-[`BulkPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.md)
-is to pre-process the bulk expression data and the related clinical
-data.frame (containing bulk sample information) to perform PCA. Here, we
-want to retain the data so that the screening can reflect the most
-accurate situation. You can choose whether to filter or retain based on
-your own needs. See also [1.2 Bulk expression
-data](#id_12-bulk-expression-data) for more details.
-
-To facilitate the demonstration of the use of the `sample_info`
-parameter, we will divide the `pheno` based on its survival status into
-two groups, which will be stored in the `condition` column. `batch`
-column is used to store the batch information of the samples. The
-example is from one single batch.
-
-In practice, please replace this with your actual phenotype
-classification; the approach shown here is for demonstration purposes
-only and is not recommended for real analyses.
-
-``` r
-
-sample_info <- tibble::rownames_to_column(pheno, var = "sample") %>%
-  dplyr::rename(condition = status)
-sample_info$batch <- "batch1"
-
-head(sample_info)
-#         sample  time condition  batch
-# 1 TCGA-69-7978  4.40         0 batch1
-# 2 TCGA-62-8399 88.57         0 batch1
-# 3 TCGA-78-7539 25.99         0 batch1
-# 4 TCGA-73-4658 52.56         1 batch1
-# 5 TCGA-44-6775 23.16         0 batch1
-# 6 TCGA-44-2655 43.50         0 batch1
-
-set.seed(123)
-
-# * generate a mock data
-gene_ids <- c(
-  paste0("ENSG", sprintf("%011d", 1:3900)),
-  paste0("GENE_", LETTERS[1:100])
-)
-library(MASS)
-mu <- c(
-  runif(500, 100, 2000), # high
-  runif(1500, 20, 200), # medium
-  rexp(2000, rate = 1 / 2) # low (gamma-like, many near-zero)
-)
-lib_size_factor <- rlnorm(506, meanlog = log(3e7), sdlog = 0.3) / 3e7 # ~20–60M reads
-counts_mat <- matrix(0L, nrow = 4000, ncol = 506)
-
-for (i in seq_len(4000)) {
-  mu_i <- mu[i] * lib_size_factor
-  # dispersion decreases with mean: phi ≈ 0.5 / sqrt(mu_i + 1)
-  phi_i <- pmax(0.05, 0.5 / sqrt(mu_i + 1))
-  size_i <- 1 / phi_i
-  counts_mat[i, ] <- rnbinom(506, mu = mu_i, size = size_i)
-}
-counts_mat <- floor(counts_mat)
-counts_mat[counts_mat < 0] <- 0L
-
-colnames(counts_mat) <- sample_info$sample
-rownames(counts_mat) <- gene_ids
-
-
-filtered_counts_mat <- BulkPreProcess(
-  data = counts_mat,
-  sample_info = sample_info,
-  min_count_threshold = 10L,
-  min_gene_expressed = 3L,
-  min_total_reads = 1e5L,
-  min_genes_detected = 1000L,
-  min_correlation = 0.8,
-  n_top_genes = 500L, # used in pca
-  show_plot_results = TRUE
-)
-# ✔ [2025/12/23 15:19:20] Data loaded: 4000 genes * 506 samples
-# ℹ Aggregate Duplicated genes in rownames
-# ℹ [2025/12/23 15:19:21] Starting detailed quality checks...
-# ✔ Sample correlation: Good (minimum = 0.95)
-# ℹ [2025/12/23 15:19:23] PCA completed: PC1(0.99%) PC2(0.83%), 27 outlier samples
-# Warning: Detected 27 outlier sample(s) : TCGA-86-A456, TCGA-55-A492, TCGA-78-8660, TCGA-69-7973, TCGA-69-7980, TCGA-97-7937, TCGA-55-6543, TCGA-86-8671, TCGA-86-8359, TCGA-05-4405, TCGA-62-A471,
-# TCGA-35-3615, TCGA-05-5428, TCGA-99-8025, TCGA-44-6779, TCGA-4B-A93V, TCGA-MP-A4T7, TCGA-55-8203, …, TCGA-55-8301, and TCGA-55-7727
-# ℹ [2025/12/23 15:19:23] Generating visualization plots...
-# ✔ [2025/12/23 15:19:24] Data filtering completed:
-# ℹ   Genes: 4000 -> 2703 (removed 1297)
-# ℹ   Samples: 506 -> 506 (removed 0)
-# ✔ [2025/12/23 15:19:24] BulkPreProcess completed
-```
-
-And we will see a PCA plot.
-
-``` r
-
-knitr::include_graphics("vignettes/example_figures/bulk_preprocess_pca.png")
-```
-
-[![pca](example_figures/bulk_preprocess_pca.png)](NA)
-
-Thus far, we have completed all the data preprocessing. We are now ready
-to formally employ various single-cell phenotypic screening algorithms.
+This single-cell RNA data is from humans. It has already been
+preprocessed into a **Seurat** object (`seurat`) with QC filtering,
+normalization, clustering, and UMAP included, so it can be passed
+directly to
+[`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md).
 
 First, we use `scissor` to screen cells associated with survival.
 
@@ -1825,23 +2135,23 @@ scissor_result <- Screen(
   alpha = 0.05
 )
 
-# ℹ [2025/09/08 17:03:20] Scissor start...
-# ℹ [2025/09/08 17:03:20] Start from raw data...
-# ℹ Using "RNA_snn" graph for network.
-# ℹ [2025/09/08 17:03:20] Normalizing quantiles of data...
-# ℹ [2025/09/08 17:03:20] Subsetting data...
-# ℹ [2025/09/08 17:03:21] Calculating correlation...
+# i [2025/09/08 17:03:20] Scissor start...
+# i [2025/09/08 17:03:20] Start from raw data...
+# i Using "RNA_snn" graph for network.
+# i [2025/09/08 17:03:20] Normalizing quantiles of data...
+# i [2025/09/08 17:03:20] Subsetting data...
+# i [2025/09/08 17:03:21] Calculating correlation...
 # ----------------------------------------------------------------------------------------------------
 # Five-number summary of correlations:
 
 #         0%        25%        50%        75%       100%
 # -0.2342323  0.0594385  0.1118708  0.1642065  0.5250605
 # ----------------------------------------------------------------------------------------------------
-# ℹ [2025/09/08 17:03:21] Perform cox regression on the given clinical outcomes:
-# ✔ Statistics data saved to `Scissor_inputs.RData`.
-# ℹ [2025/09/08 17:03:22] Screening...
+# i [2025/09/08 17:03:21] Perform cox regression on the given clinical outcomes:
+# v Statistics data saved to `Scissor_inputs.RData`.
+# i [2025/09/08 17:03:22] Screening...
 #
-# ── At alpha = 0.05 ──
+# -- At alpha = 0.05 --
 #
 # Scissor identified 265 Scissor+ cells and 73 Scissor- cells.
 # The percentage of selected cell is: 30.924%
@@ -1871,19 +2181,19 @@ scissor_result <- Screen(
   path2load_scissor_cache = "Scissor_inputs.RData",
   reliability_test = TRUE
 )
-# ℹ [2025/09/08 16:07:48] Scissor start...
-# ℹ [2025/09/08 16:07:48] Loading data from `Scissor_inputs.RData`...
-# ℹ [2025/09/08 16:07:48] Screening...
+# i [2025/09/08 16:07:48] Scissor start...
+# i [2025/09/08 16:07:48] Loading data from `Scissor_inputs.RData`...
+# i [2025/09/08 16:07:48] Screening...
 # [1] "alpha = 0.05"
 # [1] "Scissor identified 249 Scissor+ cells and 245 Scissor- cells."
 # [1] "The percentage of selected cell is: 45.197%"
 
 # --------------------------------------------------------------------------------
-# ℹ [2025/09/08 16:07:54] Start reliability test
+# i [2025/09/08 16:07:54] Start reliability test
 
-# Attaching package: ‘survival’
+# Attaching package: 'survival'
 
-# The following object is masked from ‘package:future’:
+# The following object is masked from 'package:future':
 
 #     cluster
 
@@ -1895,7 +2205,7 @@ scissor_result <- Screen(
 # Finished!
 # [1] "Test statistic = 0.590"
 # [1] "Reliability significance test p = 0.000"
-# ✔ [2025/09/08 16:10:54] reliability test: Done
+# v [2025/09/08 16:10:54] reliability test: Done
 
 scissor_result$reliability_result$statistic
 # [1] 0.5899587
@@ -1906,8 +2216,8 @@ scissor_result$reliability_result$p
 scissor_result$reliability_result$c_index_test_real
 #  [1] 0.6038544 0.5022222 0.6050725 0.6279391 0.5064935 0.6033520 0.6769231 0.6453089 0.4968421 0.6315789
 
-scissor_result$reliability_result$c_index_test_back %>%
-  unlist() %>%
+scissor_result$reliability_result$c_index_test_back |>
+  unlist() |>
   matrix(nrow = 10)
 #            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]      [,8]      [,9]     [,10]
 #  [1,] 0.5594714 0.4943820 0.5379747 0.5583658 0.5527728 0.6146435 0.5130597 0.5701275 0.4691943 0.5177305
@@ -1937,23 +2247,23 @@ scpas_result <- Screen(
   screen_method = "scPAS",
   alpha = 0.05
 )
-# ℹ [2025/10/20 16:24:27] Start scPAS screening.
-# ℹ [2025/10/20 16:24:29] Quantile normalization of bulk data.
-# ℹ [2025/10/20 16:24:29] Extracting single-cell expression profiles...
-# ℹ [2025/10/20 16:24:29] Constructing a gene-gene similarity by single cell data...
+# i [2025/10/20 16:24:27] Start scPAS screening.
+# i [2025/10/20 16:24:29] Quantile normalization of bulk data.
+# i [2025/10/20 16:24:29] Extracting single-cell expression profiles...
+# i [2025/10/20 16:24:29] Constructing a gene-gene similarity by single cell data...
 # Building SNN based on a provided distance matrix
 # Computing SNN
-# ℹ [2025/10/20 16:24:30] Optimizing the network-regularized sparse regression model...
-# ℹ [2025/10/20 16:24:30] Perform cox regression on the given phenotypes...
+# i [2025/10/20 16:24:30] Optimizing the network-regularized sparse regression model...
+# i [2025/10/20 16:24:30] Perform cox regression on the given phenotypes...
 #
-# ── At alpha = 0.05 ──
+# -- At alpha = 0.05 --
 #
 # lambda = 0.776168989003421
 # scPAS identified 59 risk+ features and 61 risk- features.
 # The percentage of selected feature is: 13.73%
-# ℹ [2025/10/20 16:24:49] Calculating quantified risk scores...
-# ℹ [2025/10/20 16:24:49] Qualitative identification by permutation test program with 2000 times random perturbations...
-# ✔ [2025/10/20 16:24:50] scPAS screening done.
+# i [2025/10/20 16:24:49] Calculating quantified risk scores...
+# i [2025/10/20 16:24:49] Qualitative identification by permutation test program with 2000 times random perturbations...
+# v [2025/10/20 16:24:50] scPAS screening done.
 
 table(scpas_result$scRNA_data$scPAS)
 
@@ -1980,41 +2290,41 @@ scpas_result <- Screen(
   alpha = NULL,
   cutoff = 0.2
 )
-# ℹ [2025/10/20 16:43:31] Start scPAS screening.
-# ℹ [2025/10/20 16:43:32] Quantile normalization of bulk data.
-# ℹ [2025/10/20 16:43:32] Extracting single-cell expression profiles...
-# ℹ [2025/10/20 16:43:32] Constructing a gene-gene similarity by single cell data...
+# i [2025/10/20 16:43:31] Start scPAS screening.
+# i [2025/10/20 16:43:32] Quantile normalization of bulk data.
+# i [2025/10/20 16:43:32] Extracting single-cell expression profiles...
+# i [2025/10/20 16:43:32] Constructing a gene-gene similarity by single cell data...
 # Building SNN based on a provided distance matrix
 # Computing SNN
-# ℹ [2025/10/20 16:43:33] Optimizing the network-regularized sparse regression model...
-# ℹ [2025/10/20 16:43:33] Perform cox regression on the given phenotypes...
+# i [2025/10/20 16:43:33] Optimizing the network-regularized sparse regression model...
+# i [2025/10/20 16:43:33] Perform cox regression on the given phenotypes...
 #
-# ── At alpha = 0.001 ──
+# -- At alpha = 0.001 --
 #
 # lambda = 7.61825638357188
 # scPAS identified 315 risk+ features and 366 risk- features.
 # The percentage of selected feature is: 77.918%
 #
-# ── At alpha = 0.005 ──
+# -- At alpha = 0.005 --
 #
 # lambda = 3.68743152046651
 # scPAS identified 193 risk+ features and 231 risk- features.
 # The percentage of selected feature is: 48.513%
 #
-# ── At alpha = 0.01 ──
+# -- At alpha = 0.01 --
 #
 # lambda = 2.55333682907113
 # scPAS identified 137 risk+ features and 158 risk- features.
 # The percentage of selected feature is: 33.753%
 #
-# ── At alpha = 0.05 ──
+# -- At alpha = 0.05 --
 #
 # lambda = 0.776168989003421
 # scPAS identified 59 risk+ features and 61 risk- features.
 # The percentage of selected feature is: 13.73%
-# ℹ [2025/10/20 16:44:55] Calculating quantified risk scores...
-# ℹ [2025/10/20 16:44:55] Qualitative identification by permutation test program with 2000 times random perturbations...
-# ✔ [2025/10/20 16:44:57] scPAS screening done.
+# i [2025/10/20 16:44:55] Calculating quantified risk scores...
+# i [2025/10/20 16:44:55] Qualitative identification by permutation test program with 2000 times random perturbations...
+# v [2025/10/20 16:44:57] scPAS screening done.
 ```
 
 Generally speaking, a larger alpha means looser screening. However, it
@@ -2040,12 +2350,12 @@ scab_result <- Screen(
   phenotype_class = "survival",
   screen_method = "scAB"
 )
-# ℹ [2025/09/08 17:04:51] Start scAB screening.
-# ℹ  Using "RNA_snn" graph for network.
-# ℹ [2025/09/08 17:04:52] Selecting K...
-# ℹ [2025/09/08 17:06:15] Run NMF with phenotype and cell-cell similarity regularization at K = 3.
-# ℹ [2025/09/08 17:06:19] Screening cells...
-# ℹ [2025/09/08 17:06:19] scAB screening done.
+# i [2025/09/08 17:04:51] Start scAB screening.
+# i  Using "RNA_snn" graph for network.
+# i [2025/09/08 17:04:52] Selecting K...
+# i [2025/09/08 17:06:15] Run NMF with phenotype and cell-cell similarity regularization at K = 3.
+# i [2025/09/08 17:06:19] Screening cells...
+# i [2025/09/08 17:06:19] scAB screening done.
 
 table(scab_result$scRNA_data$scAB)
 #    Other Positive
@@ -2062,16 +2372,16 @@ scpp_result <- Screen(
   phenotype_class = "survival",
   screen_method = "scPP"
 )
-# ℹ [2025/09/08 17:00:28] Start scPP screening.
-# ℹ [2025/09/08 17:00:28] Finding markers...
+# i [2025/09/08 17:00:28] Start scPP screening.
+# i [2025/09/08 17:00:28] Finding markers...
 # Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights,  :
 #   Loglik converged before variable  1 ; coefficient may be infinite.
-# ℹ [2025/09/08 17:00:52] Screening...
+# i [2025/09/08 17:00:52] Screening...
 # Genes in the gene sets NOT available in the dataset:
 #   gene_pos:   13 (6% of 230)
 #   gene_neg:   54 (12% of 446)
 # There are no genes significantly upregulated in Phenotype- compared to Phenotype+.
-# ✔ [2025/09/08 17:00:54] scPP screening done.
+# v [2025/09/08 17:00:54] scPP screening done.
 
 table(scpp_result$scRNA_data$scPP)
 # Negative  Neutral Positive
@@ -2089,20 +2399,20 @@ degas_result <- Screen(
   phenotype_class = "survival",
   screen_method = "DEGAS"
 )
-# ℹ [2025/10/09 18:41:00] Starting DEGAS Screen
-# ℹ [2025/10/09 18:41:01] Setting up Environment...
-# ℹ [2025/10/09 18:41:08] Training DEGAS model...
-# ℹ [2025/10/09 18:41:08] 3-layer DenseNet BlankCox DEGAS model
-# ℹ [2025/10/09 18:41:10] Python check passed, using Python 3.9.15
-# ℹ [2025/10/09 18:41:10] Training...
+# i [2025/10/09 18:41:00] Starting DEGAS Screen
+# i [2025/10/09 18:41:01] Setting up Environment...
+# i [2025/10/09 18:41:08] Training DEGAS model...
+# i [2025/10/09 18:41:08] 3-layer DenseNet BlankCox DEGAS model
+# i [2025/10/09 18:41:10] Python check passed, using Python 3.9.15
+# i [2025/10/09 18:41:10] Training...
 ###########################
 # Many output from python #
 ###########################
-# ℹ [2025/10/10 17:35:04] Predicting and Labeling...
-# ℹ [2025/10/10 17:35:04] Labeling screened cells...
-# ℹ [2025/10/10 17:35:04] Searching for survival-associated cells...
-# ℹ Scores over 0.499 are considered `Positive`.
-# ℹ [2025/10/10 17:35:04] DEGAS Screen done.
+# i [2025/10/10 17:35:04] Predicting and Labeling...
+# i [2025/10/10 17:35:04] Labeling screened cells...
+# i [2025/10/10 17:35:04] Searching for survival-associated cells...
+# i Scores over 0.499 are considered `Positive`.
+# i [2025/10/10 17:35:04] DEGAS Screen done.
 
 table(degas_result$scRNA_data$DEGAS)
 #    Other Positive
@@ -2120,14 +2430,14 @@ lpsgl_result <- Screen(
   phenotype_class = "survival",
   screen_method = "LP_SGL"
 )
-# ℹ [2025/11/22 21:14:29] Starting LP-SGL screening analysis
-# ℹ [2025/11/22 21:14:29] Fetch graph from Seurat object
-# ℹ [2025/11/22 21:14:29] Run Leiden clustering
-# ℹ [2025/11/22 21:14:30] Calculating correlation matrix...
-# ℹ [2025/11/22 21:14:33] Fitting SGL model with alpha = 0.5, this may take a while
-# ℹ [2025/11/22 21:14:49] Running 5-fold cross-validation
-# ℹ [2025/11/22 21:17:31] Optimal lambda index: 20 (error = 1380.7537932881)
-# ℹ [2025/11/22 21:17:31] LP-SGL screening completed
+# i [2025/11/22 21:14:29] Starting LP-SGL screening analysis
+# i [2025/11/22 21:14:29] Fetch graph from Seurat object
+# i [2025/11/22 21:14:29] Run Leiden clustering
+# i [2025/11/22 21:14:30] Calculating correlation matrix...
+# i [2025/11/22 21:14:33] Fitting SGL model with alpha = 0.5, this may take a while
+# i [2025/11/22 21:14:49] Running 5-fold cross-validation
+# i [2025/11/22 21:17:31] Optimal lambda index: 20 (error = 1380.7537932881)
+# i [2025/11/22 21:17:31] LP-SGL screening completed
 
 table(lpsgl_result$scRNA_data$LP_SGL)
 # Negative  Neutral Positive
@@ -2151,7 +2461,7 @@ screen_result <- MergeResult(
   degas_result,
   lpsgl_result
 )
-# ✔ Successfully merged 6 objects.
+# v Successfully merged 6 objects.
 
 class(screen_result)
 # [1] "Seurat"
@@ -2174,9 +2484,9 @@ library(zeallot)
 
 # * color palette
 set.seed(123)
-my_colors <- randomcoloR::distinctColorPalette(
+my_colors <- RColorBrewer::brewer.pal(
   length(unique(screen_result$seurat_clusters)),
-  runTsne = TRUE
+  "Set1"
 )
 
 c(scissor_pos, scab_pos, scpas_pos, scpp_pos, degas_pos, lpsgl_pos) %<-%
@@ -2229,21 +2539,9 @@ venn <- ggVennDiagram::ggVennDiagram(
   ggplot2::ggtitle("Screening Venn Diagram")
 
 venn
-
-# ggplot2::ggsave(
-#   "vignettes/example_figures/venn.png",
-#   plot = venn,
-#   width = 10,
-#   height = 10
-# )
 ```
 
-``` r
-
-knitr::include_graphics("vignettes/example_figures/venn.png")
-```
-
-[![venn](example_figures/venn.png)](NA)
+[![venn](articles/example_figures/venn.png)](https://wanglabcsu.github.io/sigbridger/articles/vignettes/example_figures/venn.png)
 
 When there are too many sets, the visualization effect of the Venn
 diagram is not very good. We can use a set plot instead. Only positive
@@ -2259,7 +2557,7 @@ upset <- ScreenUpset(
 
 # * show the cell numbers of each set
 head(upset$stats)
-# # A tibble: 6 × 3
+# # A tibble: 6 x 3
 #   intersection    sets         count
 #   <chr>           <named list> <dbl>
 # 1 scissor         <chr [1]>      265
@@ -2270,19 +2568,14 @@ head(upset$stats)
 # 6 LP_SGL          <chr [1]>      233
 
 # ggplot2::ggsave(
-#   "vignettes/example_figures/upset.png",
+#   "vignettes/vignettes/example_figures/upset.png",
 #   plot = upset$plot,
 #   width = 10,
 #   height = 10
 # )
 ```
 
-``` r
-
-knitr::include_graphics("vignettes/example_figures/upset.png")
-```
-
-[![upset](example_figures/upset.png)](NA)
+[![upset](articles/example_figures/upset.png)](https://wanglabcsu.github.io/sigbridger/articles/vignettes/example_figures/upset.png)
 
 A bar chart showing proportions can also be used to examine the
 screening results. Since the example data does not have sample metadata,
@@ -2313,43 +2606,38 @@ fraction_list <- ScreenFractionPlot(
 # Creating plots for 6 screen types...
 
 # ggplot2::ggsave(
-#   "vignettes/example_figures/fraction.png",
+#   "vignettes/vignettes/example_figures/fraction.png",
 #   plot = fraction_list$combined_plot,
 #   width = 10,
 #   height = 10
 # )
 ```
 
-``` r
-
-knitr::include_graphics("vignettes/example_figures/fraction.png")
-```
+[![fraction](articles/example_figures/fraction.png)](https://wanglabcsu.github.io/sigbridger/articles/vignettes/example_figures/fraction.png)
 
 As you see, the `label_type`s set in function `Screen` are shown in the
 legend of each plot.
-
-[![fraction](example_figures/fraction.png)](NA)
 
 The `fraction_list` contains the statistical data and charts for each
 screening algorithm. The title of each plot will be appended with the
 method name as an identifier.
 
 fraction_list  
-├── stats  
-│ ├── scissor  
-│ ├── scAB  
-│ ├── scPAS  
-│ ├── scPP  
-│ ├── DEGAS  
-│ └── LP_SGL  
-├── plots  
-│ ├── scissor  
-│ ├── scAB  
-│ ├── scPAS  
-│ ├── scPP  
-│ ├── DEGAS  
-│ └── LP_SGL  
-└── combined_plot \# show 6 plots in one plot
+\|– stats  
+\| \|– scissor  
+\| \|– scAB  
+\| \|– scPAS  
+\| \|– scPP  
+\| \|– DEGAS  
+\| -- LP_SGL  
+\|– plots  
+\| \|– scissor  
+\| \|– scAB  
+\| \|– scPAS  
+\| \|– scPP  
+\| \|– DEGAS  
+\| -- LP_SGL  
+-- combined_plot \# show 6 plots in one plot
 
 UMAP is the most commonly used type of plot in academic literature.
 
@@ -2358,9 +2646,9 @@ UMAP is the most commonly used type of plot in academic literature.
 library(patchwork)
 library(zeallot)
 
-my_palette <- randomcoloR::distinctColorPalette(
-  k = length(unique(screen_result$Sample)),
-  runTsne = TRUE
+my_palette <- RColorBrewer::brewer.pal(
+  n = length(unique(screen_result$Sample)),
+  "Set1"
 )
 
 sample_umap <- Seurat::DimPlot(
@@ -2413,19 +2701,14 @@ umaps <- sample_umap +
 umaps
 
 # ggplot2::ggsave(
-#      "vignettes/example_figures/umaps.png",
+#      "vignettes/vignettes/example_figures/umaps.png",
 #      plot = umaps,
 #      width = 10,
 #      height = 10
 # )
 ```
 
-``` r
-
-knitr::include_graphics("vignettes/example_figures/umaps.png")
-```
-
-[![umaps](example_figures/umaps.png)](NA)
+[![umaps](articles/example_figures/umaps.png)](https://wanglabcsu.github.io/sigbridger/articles/vignettes/example_figures/umaps.png)
 
 All the analysis has been completed, and we can save the data for future
 use.
@@ -2434,7 +2717,7 @@ use.
 
 SeuratObject::SaveSeuratRds(
   object = screen_result,
-  filename = "screened_result.rds"
+  file = "screened_result.rds"
 )
 ```
 
@@ -2464,10 +2747,14 @@ library(Seurat)
 setwd(here::here())
 
 # * load the example data
-c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "continuous")
+c(seurat, bulk, pheno) %<-% LoadRefData(data_type = "continuous")
 
-dim(mat_exam)
-# [1] 33694  1093
+seurat
+# An object of class Seurat
+# 15911 features across 1077 samples within 1 assay
+# Active assay: RNA (15911 features, 2000 variable features)
+#  3 layers present: counts, data, scale.data
+#  2 dimensional reductions calculated: pca, umap
 dim(bulk)
 # [1] 4106  289
 bulk[1:6, 1:6]
@@ -2504,13 +2791,16 @@ the preprocessing of binary phenotypic data is introduced.
 library(SigBridgeR)
 library(zeallot)
 library(Seurat)
-setwd(here::here())
 
 # * load the example data
-c(mat_exam, bulk, pheno) %<-% LoadRefData(data_type = "binary")
+c(seurat, bulk, pheno) %<-% LoadRefData(data_type = "binary")
 
-dim(mat_exam)
-#[1] 33694  1093
+seurat
+# An object of class Seurat
+# 15911 features across 1077 samples within 1 assay
+# Active assay: RNA (15911 features, 2000 variable features)
+#  3 layers present: counts, data, scale.data
+#  2 dimensional reductions calculated: pca, umap
 dim(bulk)
 # [1] 4106  434
 bulk[1:6, 1:6]
@@ -2561,16 +2851,16 @@ pipet_result <- Screen(
   screen_method = "PIPET",
   label_type = "PIPET"
 )
-#ℹ [2025/12/26 06:18:28] Starting PIPET screen
-#ℹ [2025/12/26 06:18:28] Creating marker genes from bulk data...
-#ℹ [2025/12/26 06:18:28] Fitting model with limma
-#✔ [2025/12/26 06:18:28] Created 2795 marker genes
-#ℹ [2025/12/26 06:18:28] Running PIPET correlation analysis...
-#ℹ [2025/12/26 06:18:28] The classification of markers is: group_0: 945 and group_1: 477
-#ℹ [2025/12/26 06:18:28] Normalize count data with CPM and log1p
-#ℹ [2025/12/26 06:18:29] Scale features with z-score normalization
-#ℹ [2025/12/26 06:19:49] Organize the computed results
-#✔ [2025/12/26 06:19:49] PIPET screening done.
+#i [2025/12/26 06:18:28] Starting PIPET screen
+#i [2025/12/26 06:18:28] Creating marker genes from bulk data...
+#i [2025/12/26 06:18:28] Fitting model with limma
+#v [2025/12/26 06:18:28] Created 2795 marker genes
+#i [2025/12/26 06:18:28] Running PIPET correlation analysis...
+#i [2025/12/26 06:18:28] The classification of markers is: group_0: 945 and group_1: 477
+#i [2025/12/26 06:18:28] Normalize count data with CPM and log1p
+#i [2025/12/26 06:18:29] Scale features with z-score normalization
+#i [2025/12/26 06:19:49] Organize the computed results
+#v [2025/12/26 06:19:49] PIPET screening done.
 
 table(pipet_result$scRNA_data$PIPET)
 # Negative  Neutral Positive
@@ -2583,14 +2873,8 @@ table(pipet_result$scRNA_data$PIPET)
 
 View
 Troubleshooting[(https://github.com/WangX-Lab/SigBridgeR/wiki/Troubleshooting)](https://wanglabcsu.github.io/SigBridgeR/articles/Troubleshooting.html)
-for troubleshooting, especially for the environment setup.
 
 Session information:
-
-``` r
-
-sessionInfo()
-```
 
     ## R version 4.6.2 (2026-10-29)
     ## Platform: x86_64-pc-linux-gnu
@@ -2612,14 +2896,45 @@ sessionInfo()
     ## attached base packages:
     ## [1] stats     graphics  grDevices utils     datasets  methods   base     
     ## 
+    ## other attached packages:
+    ## [1] SigBridgeR_4.0.0
+    ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] digest_0.6.39     desc_1.4.3        R6_2.6.1          fastmap_1.2.0    
-    ##  [5] xfun_0.62         cachem_1.1.0      knitr_1.52        htmltools_0.5.9  
-    ##  [9] rmarkdown_2.32    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      
-    ## [13] pkgdown_2.2.1     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2
-    ## [17] compiler_4.6.2    tools_4.6.2       ragg_1.5.2        bslib_0.12.0     
-    ## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.3.0        jsonlite_2.0.0   
-    ## [25] rlang_1.3.0       fs_2.1.0
+    ##   [1] pbapply_1.7-5         gridExtra_2.3.1       rlang_1.3.0          
+    ##   [4] magrittr_2.0.5        RcppAnnoy_0.0.23      otel_0.3.0           
+    ##   [7] matrixStats_1.5.0     ggridges_0.5.7        compiler_4.6.2       
+    ##  [10] png_0.1-9             systemfonts_1.3.4     vctrs_0.7.3          
+    ##  [13] reshape2_1.4.5        stringr_1.6.0         pkgconfig_2.0.3      
+    ##  [16] fastmap_1.2.0         XVector_0.52.0        rmarkdown_2.32       
+    ##  [19] ragg_1.5.2            purrr_1.2.2           xfun_0.62            
+    ##  [22] cachem_1.1.0          beachmat_2.28.0       jsonlite_2.0.0       
+    ##  [25] DelayedArray_0.38.2   chk_0.11.0            irlba_2.4.1          
+    ##  [28] parallel_4.6.2        cluster_2.1.8.3       R6_2.6.1             
+    ##  [31] ica_1.0-3             bslib_0.12.0          stringi_1.8.9        
+    ##  [34] RColorBrewer_1.1-3    reticulate_1.47.0     parallelly_1.50.0    
+    ##  [37] jquerylib_0.1.4       scattermore_1.2       Rcpp_1.1.2           
+    ##  [40] knitr_1.52            future.apply_1.21.0   IRanges_2.46.0       
+    ##  [43] sctransform_0.4.3     Matrix_1.7-6          igraph_2.3.4         
+    ##  [46] tidyselect_1.2.1      abind_1.4-8           yaml_2.3.12          
+    ##  [49] codetools_0.2-20      listenv_1.1.0         lattice_0.23-1       
+    ##  [52] tibble_3.3.1          plyr_1.8.9            S7_1.0.0             
+    ##  [55] evaluate_1.0.5        Rtsne_0.17            future_1.82.0        
+    ##  [58] fastDummies_1.7.6     desc_1.4.3            pillar_1.11.1        
+    ##  [61] MatrixGenerics_1.24.0 Seurat_6.0.0          KernSmooth_2.23-27   
+    ##  [64] stats4_4.6.2          generics_0.1.4        RcppHNSW_0.7.0       
+    ##  [67] sp_2.2-4              S4Vectors_0.50.3      ggplot2_4.0.4        
+    ##  [70] scales_1.4.0          globals_0.20.0        glue_1.8.1           
+    ##  [73] tools_4.6.2           data.table_1.18.6.1   RSpectra_0.16-2      
+    ##  [76] SigBridgeRUtils_0.2.7 RANN_2.6.3            fs_2.1.0             
+    ##  [79] dotCall64_1.2         cowplot_1.2.0         grid_4.6.2           
+    ##  [82] patchwork_1.3.2       cli_3.6.6             textshaping_1.1.0    
+    ##  [85] spam_2.11-4           S4Arrays_1.12.1       dplyr_1.2.1          
+    ##  [88] uwot_0.2.5            gtable_0.3.6          pls_2.9-0            
+    ##  [91] sass_0.5.0            digest_0.6.39         progressr_1.1.0      
+    ##  [94] BiocGenerics_0.58.1   SparseArray_1.12.3    ggrepel_0.9.8        
+    ##  [97] htmlwidgets_1.6.4     SeuratObject_5.4.0    farver_2.1.2         
+    ## [100] htmltools_0.5.9       pkgdown_2.2.1         lifecycle_1.0.5      
+    ## [103] httr_1.4.9            MASS_7.3-66
 
 ------------------------------------------------------------------------
 
@@ -2628,7 +2943,7 @@ sessionInfo()
 > 1.  Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et
 >     al. Identifying phenotype-associated subpopulations by integrating
 >     bulk and single-cell sequencing data. Nat Biotechnol. 2022
->     Apr;40(4):527–38.
+>     Apr;40(4):527-38.
 >
 > 2.  Xie A, Wang H, Zhao J, Wang Z, Xu J, Xu Y. scPAS: single-cell
 >     phenotype-associated subpopulation identifier. Briefings in
@@ -2637,10 +2952,12 @@ sessionInfo()
 > 3.  Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states
 >     with clinical significance by integrating single-cell genomics and
 >     bulk sequencing data. Nucleic Acids Research. 2022 Nov
->     28;50(21):12112–30.
+>     28;50(21):12112-30.
 >
-> 4.  WangX-Lab/ScPP Internet. cited 2025 Aug 31. Available from:
->     <https://github.com/WangX-Lab/ScPP>
+> 4.  He Y, Long R, Wang X. Inferring Phenotypes of Single Cells Based
+>     on the Expression Profiles of Phenotype-Associated Marker Genes in
+>     Bulks and Single Cells. Interdiscip Sci. Published online January
+>     28, 2026.
 >
 > 5.  Johnson TS, Yu CY, Huang Z, Xu S, Wang T, Dong C, et
 >     al. Diagnostic Evidence GAuge of Single cells (DEGAS): a flexible

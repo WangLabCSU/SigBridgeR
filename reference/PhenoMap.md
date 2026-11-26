@@ -39,9 +39,10 @@ a vector.
 [`case_when`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html)
 
 Other input_preprocess:
-[`BulkPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.md),
+[`DrawBulkPCA()`](https://wanglabcsu.github.io/sigbridger/reference/DrawBulkPCA.md),
 [`PhenoPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoPreProcess.md),
-[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
+[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md),
+[`SymbolConvert()`](https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.md)
 
 ## Examples
 

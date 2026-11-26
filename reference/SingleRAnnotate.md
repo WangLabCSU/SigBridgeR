@@ -8,6 +8,18 @@ user-provided `SingleCellExperiment` objects. Integrates seamlessly with
 ## Usage
 
 ``` r
+SingleRAnnotate(sc, ...)
+
+# Default S3 method
+SingleRAnnotate(sc, ...)
+
+# S3 method for class '`SigBridgeR::ScreenMethodResult`'
+SingleRAnnotate(sc, ...)
+
+# S3 method for class 'Seurat'
+SingleRAnnotate(sc, ...)
+
+# S3 method for class 'SingleCellExperiment'
 SingleRAnnotate(
   sc,
   verbose = getFuncOption("verbose"),
@@ -28,7 +40,17 @@ SingleRAnnotate(
 
   - A `Seurat` object (recommended), or
 
-  - A `SingleCellExperiment` object.
+  - A `SingleCellExperiment` object, or
+
+  - A
+    [ScreenMethodResult](https://wanglabcsu.github.io/sigbridger/reference/ScreenMethodResult.md)
+    object, whose `scRNA_data` slot is annotated.
+
+- ...:
+
+  Additional arguments passed to
+  [`SingleR::SingleR()`](https://rdrr.io/pkg/SingleR/man/SingleR.html)
+  (e.g., `assay.type.ref`, `genes`).
 
 - verbose:
 
@@ -62,15 +84,17 @@ SingleRAnnotate(
   - A `SingleCellExperiment` object containing pre-labeled reference
     cells.
 
-  Note: The placeholder option `"custom"` is not valid—users must
+  Note: The placeholder option `"custom"` is not valid-users must
   provide an actual reference object.
 
   A numeric matrix of (usually normalized and log-transformed)
   expression values from a reference dataset, or a SummarizedExperiment
-  object containing such a matrix; see `SingleR::trainSingleR` for
-  details. Alternatively, a list or List of SummarizedExperiment objects
-  or numeric matrices containing multiple references. Row names may be
-  different across entries but only the intersection will be used,
+  object containing such a matrix; see
+  [`SingleR::trainSingleR`](https://rdrr.io/pkg/SingleR/man/trainSingleR.html)
+  for details. Alternatively, a list or List of SummarizedExperiment
+  objects or numeric matrices containing multiple references. Row names
+  may be different across entries but only the intersection will be
+  used,
 
 - labels:
 
@@ -83,30 +107,26 @@ SingleRAnnotate(
   specifying the labels for the columns of the corresponding element of
   ref.
 
-- ...:
-
-  Additional arguments passed to `SingleR::SingleR()` (e.g.,
-  `assay.type.ref`, `genes`).
-
 ## Value
 
 - If input is a `Seurat` object: returns the same object with three new
   metadata columns:
 
-  - `SingleR_labels`:
+  - **`SingleR_labels`**: Predicted cell type labels.
 
-    Predicted cell type labels.
+  - **`SingleR_delta_next`**: Confidence score (difference between top
+    and second-best scores).
 
-  - `SingleR_delta_next`:
-
-    Confidence score (difference between top and second-best scores).
-
-  - `SingleR_pruned_labels`:
-
-    Labels after pruning low-confidence assignments.
+  - **`SingleR_pruned_labels`**: Labels after pruning low-confidence
+    assignments.
 
 - If input is a `SingleCellExperiment`: returns the `SingleR` prediction
   result
+
+- If input is a
+  [ScreenMethodResult](https://wanglabcsu.github.io/sigbridger/reference/ScreenMethodResult.md):
+  returns the annotated `Seurat` object from its `scRNA_data` slot, as
+  above.
 
 ## Requirements
 
@@ -119,6 +139,8 @@ SingleRAnnotate(
 
 Other Single_Cell_Annotation_Method:
 [`CellTypistAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.md),
+[`DownloadCellTypistModels()`](https://wanglabcsu.github.io/sigbridger/reference/DownloadCellTypistModels.md),
+[`ListCellTypistModels()`](https://wanglabcsu.github.io/sigbridger/reference/ListCellTypistModels.md),
 [`RegisterAnnoMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterAnnoMethod.md),
 [`SCAnnotateStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotateStrategy.md),
 [`mLLMCelltypeAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/mLLMCelltypeAnnotate.md)

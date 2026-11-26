@@ -17,9 +17,9 @@ DoDEGAS(
   label_type = "DEGAS",
   phenotype_class = c("binary", "continuous", "survival"),
   tmp_dir = "DEGAS_res",
-  env_params = list(),
+  env_params = lifecycle::deprecated(),
   degas_params = list(),
-  normality_test_method = c("jarque-bera", "d'agostino", "kolmogorov-smirnov"),
+  normality_test_method = "jarque-bera",
   ...
 )
 ```
@@ -82,7 +82,8 @@ DoDEGAS(
 
 - env_params:
 
-  List of environment parameters for Python setup including:
+  **\[deprecated\]** List of environment parameters for Python setup
+  including:
 
   - env.name: environment name (default: `"r-reticulate-degas"`)
 
@@ -223,6 +224,7 @@ Med. 2022 Feb 1;14(1):11.
 Other screen_method:
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
@@ -234,7 +236,9 @@ Other screen_method:
 Other DEGAS:
 [`DEGASEnvSet()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASEnvSet.md),
 [`DEGASModelDetect()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASModelDetect.md),
-[`DEGASParamSet()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASParamSet.md)
+[`DEGASParamSet()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASParamSet.md),
+[`TrainDEGASModel()`](https://wanglabcsu.github.io/sigbridger/reference/TrainDEGASModel.md),
+[`ValidateDEGASParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateDEGASParams.md)
 
 ## Examples
 

@@ -10,8 +10,9 @@ Only metrics with non-constant, non-all-zero values are used.
 ``` r
 QCFilter(
   seurat_obj,
-  data_filter.thresh = list(assay = names(seurat_obj@assays)[[1]], nFeature_thresh =
-    c(200L, 6000L), nCount_thresh = c(500L, 50000L), percent.mt = 20L, percent.rp = 60L),
+  data_filter.thresh = list(assay = SeuratObject::DefaultAssay(seurat_obj),
+    nFeature_thresh = c(200L, 6000L), nCount_thresh = c(500L, 50000L), percent.mt = 20L,
+    percent.rp = 60L),
   verbose = TRUE,
   ...
 )

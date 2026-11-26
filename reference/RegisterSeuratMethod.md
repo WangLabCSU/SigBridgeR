@@ -1,9 +1,10 @@
 # Register a Seurat Processing Strategy
 
-Dynamically registers one or more new preprocessing strategies into a
-strategy environment (i.e., `SCPreProcessStrategy`). Each strategy is
-stored under a user-defined key and wraps a Seurat-compatible function
-to conform to the standard interface: `function(object, params)`.
+**\[deprecated\]** Dynamically registers one or more new preprocessing
+strategies into a strategy environment (i.e., `SCPreProcessStrategy`).
+Each strategy is stored under a user-defined key and wraps a
+Seurat-compatible function to conform to the standard interface:
+`function(object, params)`.
 
 Supports both direct function objects and character specifications of
 package-qualified function names (e.g., `h = "Seurat::RunHarmony"`).
@@ -31,12 +32,11 @@ RegisterSeuratMethod(
   - A **function**, or
 
   - A **character string** specifying a function (e.g.,
-    `"Seurat::RunHarmony"` or `"stats::prcomp"`).
-
-  The function will be automatically wrapped to accept `object` and
-  `params`, making it compatible with
-  [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
-  pipelines.
+    `"Seurat::RunHarmony"` or `"stats::prcomp"`). The function will be
+    automatically wrapped to accept `object` and `params`, making it
+    compatible with
+    [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)
+    pipelines.
 
 - overwrite:
 
@@ -60,7 +60,6 @@ Invisibly returns `TRUE` on successful registration.
 ## See also
 
 Other Registering:
-[`Register()`](https://wanglabcsu.github.io/sigbridger/reference/Register.md),
 [`RegisterAnnoMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterAnnoMethod.md),
 [`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
 
@@ -72,8 +71,7 @@ Other single_cell_preprocess:
 [`SCAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotate.md),
 [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md),
 [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md),
-[`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md),
-[`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)
+[`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md)
 
 ## Examples
 

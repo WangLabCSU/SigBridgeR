@@ -1,13 +1,13 @@
 # Register a Custom Screening Method for Phenotype-Driven Analysis
 
-Registers one or more user-defined screening functions into a shared
-registry (i.e., `ScreenStrategy`), enabling dynamic dispatch based on
-phenotype type (binary, survival, or continuous). Each method is stored
-with metadata including supported phenotypes and an optional parameter
-remapping function.
+**\[deprecated\]** Registers one or more user-defined screening
+functions into a shared registry (i.e., `ScreenStrategy`), enabling
+dynamic dispatch based on phenotype type (binary, survival, or
+continuous). Each method is stored with metadata including supported
+phenotypes and an optional parameter remapping function.
 
 This function supports community-driven extension of analysis
-pipelines—ideal for integrating novel single cell phenotypic screening
+pipelines-ideal for integrating novel single cell phenotypic screening
 methods while maintaining compatibility with downstream validation and
 execution frameworks.
 
@@ -32,7 +32,7 @@ RegisterScreenMethod(
   screening method. The name becomes the method identifier (e.g.,
   `Scissor = DoScissor` registers `DoScissor` under the key
   `"Scissor"`). Unnamed arguments are auto-named using their expression
-  (e.g., `Scissor` → name `"Scissor"`).
+  (e.g., `Scissor` -\> name `"Scissor"`).
 
 - supported_phenotypes:
 
@@ -71,21 +71,13 @@ Invisibly returns `TRUE` on successful registration.
 
 Each registered method is stored as a list with four elements:
 
-- `method_name`:
+- **`method_name`**: Character: the method key (e.g., "Scissor")
 
-  Character: the method key (e.g., "Scissor")
+- **`executor`**: Function: the actual screening implementation
 
-- `executor`:
+- **`phenotypes`**: Character vector: supported phenotype classes
 
-  Function: the actual screening implementation
-
-- `phenotypes`:
-
-  Character vector: supported phenotype classes
-
-- `mapper`:
-
-  Function: parameter transformation hook
+- **`mapper`**: Function: parameter transformation hook
 
 ## See also
 
@@ -95,7 +87,6 @@ Other Add_Screen_method:
 [`ValidateScreenFunc()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScreenFunc.md)
 
 Other Registering:
-[`Register()`](https://wanglabcsu.github.io/sigbridger/reference/Register.md),
 [`RegisterAnnoMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterAnnoMethod.md),
 [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md)
 
@@ -105,11 +96,13 @@ Other Registering:
 if (FALSE) { # \dontrun{
 # Example: Register a custom screen method for survival data
 DoMyScreen <- function(...) {
+  # Implement your method here
   stop("Not implemented")
 }
 
 RegisterScreenMethod(
   # Key = function
+  # jarl-ignore unreachable_code: example
   MyCox = DoMyScreen,
   # If `continuous` phenotype is not supported
   supported_phenotypes = c("survival", "binary"),

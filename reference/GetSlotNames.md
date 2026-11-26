@@ -7,3 +7,7 @@ Returns the names of the slots in a Seurat object.
 ``` r
 GetSlotNames(obj, slot_type)
 ```
+
+## Value
+
+Character vector of names of this slot, otherwise `NULL`

@@ -3,7 +3,7 @@
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v3.8.6 loaded
+#> ✔ SigBridgeR v4.0.0 loaded [415 ms]
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
@@ -20,11 +20,6 @@ library(Seurat)
 #>     intersect, t
 #> v6.0 adds significant improvements in speed and efficiency, particularly for large datasets.
 #> For more information, see https://satijalab.org/seurat/articles/announcements.
-#> 
-#> Attaching package: 'Seurat'
-#> The following object is masked from 'package:SigBridgeR':
-#> 
-#>     setThreads
 ```
 
 ## Load Data
@@ -73,12 +68,12 @@ spatials <- merge(
 # DefaultAssay(spatials) <- "SCT"
 VariableFeatures(spatials) <- lapply(spatial_list, function(seurat) {
   VariableFeatures(seurat)
-}) %>%
-  unlist() %>%
+}) |>
+  unlist() |>
   unique()
-spatials <- RunPCA(spatials) %>%
-  FindNeighbors(dims = 1:30) %>%
-  FindClusters() %>%
+spatials <- RunPCA(spatials) |>
+  FindNeighbors(dims = 1:30) |>
+  FindClusters() |>
   RunUMAP(dims = 1:30)
 
 # SeuratObject::SaveSeuratRds(spatials, "seurat.rds")
@@ -86,13 +81,13 @@ spatials <- RunPCA(spatials) %>%
 
 In theory, this workflow could be simplified using `SCPreProcess`;
 however, due to the performance issue reported in [Seurat
-\#10153](https://github.com/satijalab/seurat/issues/10153)—where
+\#10153](https://github.com/satijalab/seurat/issues/10153)-where
 `SCTransform` hangs or slows down significantly when called via
-`do.call` (as `SCPreProcess` does internally)—we instead use a custom
+`do.call` (as `SCPreProcess` does internally)-we instead use a custom
 workflow here to avoid the slowdown.
 
 (It hasn’t been fixed yet. If it gets resolved, please kindly notify me
-in the issue—thank you! :))
+in the issue-thank you! :))
 
 ### Bulk RNA Seq & Survival
 
@@ -121,10 +116,10 @@ tcga_surv <- load_data("tcga_surv")
 
 paad_samples <- colnames(bulk)
 
-tcga_paad_surv <- dplyr::filter(tcga_surv, sample %in% paad_samples) %>%
-  dplyr::select(sample, OS.time, OS) %>%
-  dplyr::rename(time = OS.time, status = OS) %>%
-  dplyr::filter(status != "NA", time != "NA", !is.na(status), !is.na(time)) %>%
+tcga_paad_surv <- dplyr::filter(tcga_surv, sample %chin% paad_samples) |>
+  dplyr::select(sample, OS.time, OS) |>
+  dplyr::rename(time = OS.time, status = OS) |>
+  dplyr::filter(status != "NA", time != "NA", !is.na(status), !is.na(time)) |>
   tibble::column_to_rownames(var = "sample")
 
 head(tcga_paad_surv)
@@ -172,8 +167,8 @@ spatials <- SCAnnotate(
 
 ``` r
 
-# ℹ [2026/02/09 11:26:14] [mLLMCelltype] Start annotating cell types
-# ℹ [2026/02/09 11:26:14] Find marker genes for each clusters
+# i [2026/02/09 11:26:14] [mLLMCelltype] Start annotating cell types
+# i [2026/02/09 11:26:14] Find marker genes for each clusters
 # Calculating cluster 0
 # Calculating cluster 1
 # Calculating cluster 2
@@ -199,11 +194,11 @@ spatials <- SCAnnotate(
 # Calculating cluster 22
 # Calculating cluster 23
 # Calculating cluster 24
-# ℹ [2026/02/09 11:28:42] Large language models cell type Annotating
+# i [2026/02/09 11:28:42] Large language models cell type Annotating
 # ###
 # # LLM Output
 # ###
-# ✔ [2026/02/09 11:28:46] Annotation Finished
+# v [2026/02/09 11:28:46] Annotation Finished
 ```
 
 ``` r
@@ -243,45 +238,45 @@ res <- Screen(
 
 ``` r
 
-# ℹ `label_type` not specified or not of length 1, using "Scissor"
-# ℹ [2026/02/09 15:40:19] Scissor start...
-# ℹ [2026/02/09 15:40:19] Start from raw data...
-# ℹ Using "SCT_snn" graph for network.
-# ℹ [2026/02/09 15:40:24] Normalizing quantiles of data
-# ℹ [2026/02/09 15:41:21] Subsetting data
-# ℹ [2026/02/09 15:41:27] Calculating correlation
+# i `label_type` not specified or not of length 1, using "Scissor"
+# i [2026/02/09 15:40:19] Scissor start...
+# i [2026/02/09 15:40:19] Start from raw data...
+# i Using "SCT_snn" graph for network.
+# i [2026/02/09 15:40:24] Normalizing quantiles of data
+# i [2026/02/09 15:41:21] Subsetting data
+# i [2026/02/09 15:41:27] Calculating correlation
 # -------------------------------------------------------------
 # Five-number summary of correlations:
 # 0.220832 0.388996 0.414044 0.433624 0.47267
 # -------------------------------------------------------------
-# ℹ [2026/02/09 15:41:39] Perform cox regression on the given clinical outcomes...
-# ✔ [2026/02/09 15:42:43] Statistics data saved to Scissor_inputs.RData.
-# ℹ [2026/02/09 15:42:47] Screening...
+# i [2026/02/09 15:41:39] Perform cox regression on the given clinical outcomes...
+# v [2026/02/09 15:42:43] Statistics data saved to Scissor_inputs.RData.
+# i [2026/02/09 15:42:47] Screening...
 
-# ── At alpha = 0.05 ──
+# -- At alpha = 0.05 --
 
 # Scissor identified 1789 Scissor+ cells and 1617 Scissor- cells.
 # The percentage of selected cell is: 14.533%
-# ℹ [2026/02/09 15:45:05] Scissor Ended.
+# i [2026/02/09 15:45:05] Scissor Ended.
 ```
 
 ### data
 
 The returned structure is a `list`, where the first
-slot—`scRNA_data`—contains the Seurat object. Additional slots in the
+slot-`scRNA_data`-contains the Seurat object. Additional slots in the
 list store intermediate data generated during the process.
 
 A new column named `Scissor` will be added to the `meta.data` of the
 Seurat object, with three possible labels:
 
 - **Positive** denotes cells whose abundance or activity is **positively
-  correlated** with the phenotype of interest—specifically, those
+  correlated** with the phenotype of interest-specifically, those
   associated with **poor prognosis**.  
 - **Negative** denotes cells that are **negatively correlated** with the
   phenotype (i.e., potentially protective or associated with better
   outcomes).  
 - **Neutral** cells can be interpreted as **background** or
-  **non-informative** cells—those showing little to no association with
+  **non-informative** cells-those showing little to no association with
   the phenotype.
 
 ### files
@@ -432,36 +427,37 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_6.0.0       SeuratObject_5.4.0 sp_2.2-4           SigBridgeR_3.8.6  
+#> [1] Seurat_6.0.0       SeuratObject_5.4.0 sp_2.2-4           SigBridgeR_4.0.0  
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] tidyselect_1.2.1    dplyr_1.2.1         farver_2.1.2       
-#>  [4] S7_0.2.2            fastmap_1.2.0       RANN_2.6.3         
-#>  [7] digest_0.6.39       dotCall64_1.2       lifecycle_1.0.5    
-#> [10] cluster_2.1.8.3     magrittr_2.0.5      compiler_4.6.2     
-#> [13] rlang_1.3.0         sass_0.4.10         tools_4.6.2        
-#> [16] igraph_2.3.4        yaml_2.3.12         data.table_1.18.6.1
-#> [19] knitr_1.52          plyr_1.8.9          RColorBrewer_1.1-3 
-#> [22] KernSmooth_2.23-27  Rtsne_0.17          desc_1.4.3         
-#> [25] grid_4.6.2          RcppHNSW_0.7.0      fastDummies_1.7.6  
-#> [28] future_1.82.0       progressr_1.1.0     ggplot2_4.0.4      
-#> [31] globals_0.20.0      scales_1.4.0        MASS_7.3-66        
-#> [34] ggridges_0.5.7      cli_3.6.6           rmarkdown_2.32     
-#> [37] ragg_1.5.2          generics_0.1.4      otel_0.3.0         
-#> [40] ica_1.0-3           future.apply_1.21.0 RSpectra_0.16-2    
-#> [43] sctransform_0.4.3   httr_1.4.9          reshape2_1.4.5     
-#> [46] pbapply_1.7-5       cachem_1.1.0        stringr_1.6.0      
-#> [49] parallel_4.6.2      matrixStats_1.5.0   vctrs_0.7.3        
-#> [52] Matrix_1.7-6        jsonlite_2.0.0      patchwork_1.3.2    
-#> [55] ggrepel_0.9.8       irlba_2.4.1         scattermore_1.2    
-#> [58] listenv_1.1.0       systemfonts_1.3.2   jquerylib_0.1.4    
-#> [61] pls_2.9-0           glue_1.8.1          parallelly_1.50.0  
-#> [64] spam_2.11-4         pkgdown_2.2.1       codetools_0.2-20   
-#> [67] uwot_0.2.5          cowplot_1.2.0       RcppAnnoy_0.0.23   
-#> [70] stringi_1.8.9       gtable_0.3.6        tibble_3.3.1       
-#> [73] pillar_1.11.1       htmltools_0.5.9     R6_2.6.1           
-#> [76] textshaping_1.0.5   evaluate_1.0.5      lattice_0.23-1     
-#> [79] png_0.1-9           bslib_0.12.0        Rcpp_1.1.2         
-#> [82] gridExtra_2.3.1     xfun_0.62           fs_2.1.0           
-#> [85] pkgconfig_2.0.3
+#>  [1] tidyselect_1.2.1      dplyr_1.2.1           farver_2.1.2         
+#>  [4] S7_1.0.0              fastmap_1.2.0         RANN_2.6.3           
+#>  [7] digest_0.6.39         dotCall64_1.2         lifecycle_1.0.5      
+#> [10] cluster_2.1.8.3       magrittr_2.0.5        compiler_4.6.2       
+#> [13] rlang_1.3.0           sass_0.5.0            tools_4.6.2          
+#> [16] igraph_2.3.4          yaml_2.3.12           data.table_1.18.6.1  
+#> [19] knitr_1.52            htmlwidgets_1.6.4     reticulate_1.47.0    
+#> [22] plyr_1.8.9            RColorBrewer_1.1-3    KernSmooth_2.23-27   
+#> [25] Rtsne_0.17            purrr_1.2.2           desc_1.4.3           
+#> [28] grid_4.6.2            RcppHNSW_0.7.0        fastDummies_1.7.6    
+#> [31] future_1.82.0         progressr_1.1.0       ggplot2_4.0.4        
+#> [34] globals_0.20.0        scales_1.4.0          MASS_7.3-66          
+#> [37] ggridges_0.5.7        cli_3.6.6             rmarkdown_2.32       
+#> [40] ragg_1.5.2            generics_0.1.4        otel_0.3.0           
+#> [43] ica_1.0-3             future.apply_1.21.0   RSpectra_0.16-2      
+#> [46] sctransform_0.4.3     httr_1.4.9            reshape2_1.4.5       
+#> [49] pbapply_1.7-5         cachem_1.1.0          stringr_1.6.0        
+#> [52] parallel_4.6.2        matrixStats_1.5.0     vctrs_0.7.3          
+#> [55] Matrix_1.7-6          jsonlite_2.0.0        patchwork_1.3.2      
+#> [58] ggrepel_0.9.8         irlba_2.4.1           scattermore_1.2      
+#> [61] listenv_1.1.0         systemfonts_1.3.4     jquerylib_0.1.4      
+#> [64] pls_2.9-0             glue_1.8.1            parallelly_1.50.0    
+#> [67] spam_2.11-4           pkgdown_2.2.1         SigBridgeRUtils_0.2.7
+#> [70] codetools_0.2-20      uwot_0.2.5            cowplot_1.2.0        
+#> [73] stringi_1.8.9         RcppAnnoy_0.0.23      gtable_0.3.6         
+#> [76] tibble_3.3.1          pillar_1.11.1         htmltools_0.5.9      
+#> [79] R6_2.6.1              textshaping_1.1.0     evaluate_1.0.5       
+#> [82] lattice_0.23-1        png_0.1-9             bslib_0.12.0         
+#> [85] Rcpp_1.1.2            gridExtra_2.3.1       xfun_0.62            
+#> [88] fs_2.1.0              pkgconfig_2.0.3
 ```

@@ -1,0 +1,91 @@
+# Check whether a matrix looks like RNA-seq raw counts
+
+Determines whether a numeric matrix is likely to be a bulk/single-cell
+RNA-seq raw counts matrix. A matrix is accepted only if it is non-empty,
+finite, non-negative, integer-like in a sufficiently high proportion,
+and has a positive library size for every sample. Useful for validating
+input before running count-based downstream analyses.
+
+## Usage
+
+``` r
+IsCountsMatrix(
+  x,
+  verbose = TRUE,
+  integer_tol = 1e-08,
+  min_integer_fraction = 0.95
+)
+```
+
+## Arguments
+
+- x:
+
+  Numeric matrix. Rows are genes, columns are samples.
+
+- verbose:
+
+  Logical. Whether to print diagnostic statistics (fractions of
+  non-negative, integer-like, and zero values, library sizes, and the
+  reason for rejection) to the console. Default: `TRUE`.
+
+- integer_tol:
+
+  Numeric in `[0, 1]`. Absolute tolerance used to decide whether a value
+  is integer-like (`abs(x - round(x)) <= integer_tol`). Default: `1e-8`.
+
+- min_integer_fraction:
+
+  Numeric in `[0, 1]`. Minimum fraction of integer-like values required
+  for the matrix to be considered counts. Default: `0.95`.
+
+## Value
+
+A single logical value: `TRUE` if `x` is likely a bulk counts matrix,
+`FALSE` otherwise.
+
+## Details
+
+`IsCountsMatrix()` rejects a matrix for any of the following reasons:
+
+- the matrix is empty;
+
+- the matrix contains `NA`, `NaN`, or infinite values;
+
+- the matrix contains negative values;
+
+- the fraction of integer-like values is below `min_integer_fraction`;
+
+- at least one sample (column) has a library size (column sum) `<= 0`.
+
+When `verbose = TRUE`, the reason for rejection (or diagnostic
+statistics on acceptance) is printed to the console.
+
+## Examples
+
+``` r
+# A typical bulk RNA-seq raw counts matrix (genes x samples)
+counts <- matrix(
+  c(100, 200, 300, 150, 250, 350),
+  nrow = 3, ncol = 2,
+  dimnames = list(c("GENE1", "GENE2", "GENE3"), c("Sample1", "Sample2"))
+)
+IsCountsMatrix(counts)
+#> ✔ Result: TRUE; matrix is likely a counts matrix (integer fraction among non-zero 1.000000, density 1.000000)
+#> [1] TRUE
+
+# A log-normalized matrix is not counts
+IsCountsMatrix(log1p(counts))
+#> ℹ Result: FALSE; insufficient integer-like values among non-zero entries (integer fraction 0.000000 < threshold 0.950000)
+#> [1] FALSE
+
+# Matrices containing negative values are not counts
+IsCountsMatrix(counts - 1000)
+#> ℹ Result: FALSE; matrix contains negative values
+#> [1] FALSE
+
+# Inspect diagnostic statistics
+IsCountsMatrix(counts, verbose = TRUE)
+#> ✔ Result: TRUE; matrix is likely a counts matrix (integer fraction among non-zero 1.000000, density 1.000000)
+#> [1] TRUE
+```

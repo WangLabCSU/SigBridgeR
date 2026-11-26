@@ -6,6 +6,8 @@ An environment storing methods for screening phenotype-associated cells.
 
 ``` r
 ScreenStrategy
+
+AVAILABLE_SCREEN_METHODS
 ```
 
 ## Details
@@ -20,7 +22,7 @@ Storing structure - named list
 
   - `executor`: function implementation of the method
 
-  - `phenotypes`: The phenotype types supported by this method
+  - `phenotype_class`: The phenotype types supported by this method
 
   - `mapper`: A function that transforms the parameters passed to the
     `Screen` function before forwarding them to the executor; both input

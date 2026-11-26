@@ -26,7 +26,9 @@ ChooseNormalization(
   known_hvgs = list(),
   n_hvgs = 2000L,
   low_expressed_thresh = 0.2,
-  weight = c(variance_stability = 0.4, marker_signal = 0.35, dropout_robustness = 0.25)
+  weight = c(variance_stability = 0.4, marker_signal = 0.35, dropout_robustness = 0.25),
+  verbose = getFuncOption("verbose"),
+  seed = getFuncOption("seed")
 )
 ```
 
@@ -67,7 +69,7 @@ ChooseNormalization(
 
 - low_expressed_thresh:
 
-  Numeric (0–1). Quantile threshold for filtering lowly expressed genes
+  Numeric (0-1). Quantile threshold for filtering lowly expressed genes
   during variance-mean correlation calculation. Genes below this
   quantile of mean expression are excluded. Default: `0.2` (bottom 20%
   excluded).
@@ -77,25 +79,28 @@ ChooseNormalization(
   Named numeric vector specifying weights for composite scoring. Must
   contain exactly these components summing to 1:
 
-  `variance_stability`
+  - **`variance_stability`**: Weight for variance-mean decoupling
+    (default: 0.4)
 
-  :   Weight for variance-mean decoupling (default: 0.4)
+  - **`marker_signal`**: Weight for marker gene retention (default:
+    0.35)
 
-  `marker_signal`
+  - **`dropout_robustness`**: Weight for dropout bias removal (default:
+    0.25)
 
-  :   Weight for marker gene retention (default: 0.35)
+- verbose:
 
-  `dropout_robustness`
+  Logical. Whether to print progress messages.
 
-  :   Weight for dropout bias removal (default: 0.25)
+- seed:
+
+  Integer. Seed for reproducible random sampling.
 
 ## Value
 
 A list containing:
 
-- `metrics`:
-
-  A `data.table` with diagnostic metrics per method:
+- **`metrics`**: A `data.table` with diagnostic metrics per method:
 
   - `variance_mean_cor`: Pearson correlation between log10(mean) and
     log10(variance) of normalized expression (lower = better)
@@ -106,18 +111,15 @@ A list containing:
   - `mean_dropout_residual`: Absolute Spearman correlation between
     dropout rate (from counts) and normalized means (lower = better)
 
-  - `composite_score`: Weighted combination of normalized metrics (0–1
+  - `composite_score`: Weighted combination of normalized metrics (0-1
     scale)
 
   - `rank`: Method ranking (1 = best)
 
-- `recommendation`:
+- **`recommendation`**: Character string naming the top-ranked method
 
-  Character string naming the top-ranked method
-
-- `plots`:
-
-  (Optional) Diagnostic visualizations if `ggplot2` available
+- **`plots`**: (Optional) Diagnostic visualizations if `ggplot2`
+  available
 
 ## Workflow
 
@@ -128,19 +130,14 @@ A list containing:
 
 3.  Computes three core metrics per method:
 
-    - Variance stabilization:
+    - **Variance stabilization**: Correlation between log-transformed
+      mean and variance of normalized expression
 
-      Correlation between log-transformed mean and variance of
-      normalized expression
+    - **Marker retention**: Overlap between user-provided markers and
+      top HVGs
 
-    - Marker retention:
-
-      Overlap between user-provided markers and top HVGs
-
-    - Dropout robustness:
-
-      Correlation between gene dropout rate (from counts) and normalized
-      expression means
+    - **Dropout robustness**: Correlation between gene dropout rate
+      (from counts) and normalized expression means
 
 4.  Normalizes metrics to 0-1 scale (inverting where lower=better)
 
@@ -150,7 +147,7 @@ A list containing:
 
 ## Notes
 
-- Requires *pre-normalized* Seurat objects—this function **does not**
+- Requires *pre-normalized* Seurat objects-this function **does not**
   perform normalization itself. Users must first run `SCTransform()`,
   `NormalizeData()`, etc., and store results in the `data` slot.
 

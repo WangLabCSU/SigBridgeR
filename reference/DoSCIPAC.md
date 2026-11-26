@@ -33,7 +33,7 @@ DoSCIPAC(
 - matched_bulk:
 
   Matrix or data frame of preprocessed bulk RNA-seq expression data
-  (genes × samples). Column names must match names/IDs in `phenotype`.
+  (genes x samples). Column names must match names/IDs in `phenotype`.
 
 - sc_data:
 
@@ -57,17 +57,13 @@ DoSCIPAC(
 
   Type of phenotypic outcome:
 
-  `"binary"`
+  - **`"binary"`**: Binary traits (e.g., case/control,
+    responder/non-responder)
 
-  :   Binary traits (e.g., case/control, responder/non-responder)
+  - **`"continuous"`**: Continuous measurements (e.g., age, biomarker
+    levels)
 
-  `"continuous"`
-
-  :   Continuous measurements (e.g., age, biomarker levels)
-
-  `"survival"`
-
-  :   Survival information (time-to-event data)
+  - **`"survival"`**: Survival information (time-to-event data)
 
   Partial matching is supported.
 
@@ -130,19 +126,13 @@ DoSCIPAC(
 
 A named list containing:
 
-- `scRNA_data`:
+- **`scRNA_data`**: Modified Seurat object with SCIPAC screening results
+  added as metadata columns. Includes association statistics, p-values,
+  and confidence intervals for each cell cluster.
 
-  Modified Seurat object with SCIPAC screening results added as metadata
-  columns. Includes association statistics, p-values, and confidence
-  intervals for each cell cluster.
+- **`pca_res`**: PCA rotation results from `SCIPAC::sc.bulk.pca()`
 
-- `pca_res`:
-
-  PCA rotation results from `SCIPAC::sc.bulk.pca()`
-
-- `cluster_res`:
-
-  Clustering results from `SCIPAC::seurat.ct()`
+- **`cluster_res`**: Clustering results from `SCIPAC::seurat.ct()`
 
 ## Workflow
 
@@ -183,13 +173,11 @@ A named list containing:
 
 ## See also
 
-`SCIPAC`, `sc.bulk.pca`, `seurat.ct`,
-[`RegisterScreenMethod`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md)
-
 Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
 [`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md),

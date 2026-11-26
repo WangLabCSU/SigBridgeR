@@ -1,61 +1,44 @@
 # Write Cache Metadata
 
-Writes metadata for SigBridgeR cache identification to a JSON file.
+Writes metadata for SigBridgeR cache identification to a JSON file. The
+metadata includes general system information, cache configuration, and
+an optional user-provided description.
 
 ## Usage
 
 ``` r
-WriteCacheMeta(
-  file = "cache_config.json",
-  screen_method,
-  phenotype_class = c("binary", "survival", "continuous"),
-  label_type = screen_method,
-  params,
-  additional_description = NULL,
-  verbose = FALSE,
-  ...
-)
+WriteCacheMeta(cache_config, ...)
 ```
 
 ## Arguments
 
-- file:
+- cache_config:
 
-  Character string. Path to the JSON metadata file to be written.
-
-- screen_method:
-
-  Character string. Screening method name. Must match one of the keys in
-  `ScreenStrategy`.
-
-- phenotype_class:
-
-  Character string. Type of phenotype data. One of `"binary"`,
-  `"survival"`, or `"continuous"`.
-
-- label_type:
-
-  Character string. Type of label for the screening. Defaults to
-  `screen_method`.
-
-- params:
-
-  List. Parameters used for the screening configuration.
-
-- additional_description:
-
-  Character string. Optional additional description text to include in
-  the metadata. Default is `NULL`.
-
-- verbose:
-
-  Logical. Whether to print metadata preview for debugging. Default is
-  `FALSE`.
+  A `ScreenMethodConfig` or `ScreenMethodCache` S7 object containing the
+  cache configuration to write.
 
 - ...:
 
-  Additional arguments (must be empty, checked by
-  [`rlang::check_dots_empty0()`](https://rlang.r-lib.org/reference/check_dots_empty0.html)).
+  Additional arguments passed to methods.
+
+  For `ScreenMethodConfig`:
+
+  - `file`: `character(1)`. Path to the JSON metadata file to be
+    written.
+
+  - `additional_description`: `character` or `NULL`. An optional string
+    describing the cache entry. Default: `NULL`.
+
+  - `verbose`: `logical`. Whether to print progress messages. Default:
+    `TRUE`.
+
+  For `ScreenMethodCache`:
+
+  - `additional_description`: `character` or `NULL`. An optional string
+    describing the cache entry. Default: `NULL`.
+
+  - `verbose`: `logical`. Whether to print progress messages. Default:
+    `TRUE`.
 
 ## Value
 
@@ -65,28 +48,35 @@ Invisible. Returns the metadata list that was written to the file.
 
 This function creates a JSON metadata file containing:
 
-- general:
+- **`general`**: File path, OS information, timestamp, R version, and
+  SigBridgeR version
 
-  File path, OS information, timestamp, R version, and SigBridgeR
-  version
+- **`config`**: Screen method, phenotype class, label type, and
+  parameters
 
-- config:
-
-  Screen method, phenotype class, label type, and parameters
-
-- description:
-
-  Additional user-provided description
-
-Only for SigBridgeR version \>= 3.7.0
+- **`description`**: Additional user-provided description
 
 The JSON file includes a header comment indicating it is required for
 cache identification and should not be modified.
+
+Only for SigBridgeR version \>= 3.7.0.
+
+## Methods
+
+`WriteCacheMeta` is an S7 generic with methods available for the
+following classes:
+
+- `ANY`
+
+- [`SigBridgeR::ScreenMethodCache`](https://wanglabcsu.github.io/sigbridger/reference/ScreenMethodCache.md)
+
+- [`SigBridgeR::ScreenMethodConfig`](https://wanglabcsu.github.io/sigbridger/reference/ScreenMethodConfig.md)
 
 ## See also
 
 Other cache_config:
 [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md),
+[`CacheSysCall()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSysCall.md),
 [`CheckCache()`](https://wanglabcsu.github.io/sigbridger/reference/CheckCache.md),
 [`ChooseCache()`](https://wanglabcsu.github.io/sigbridger/reference/ChooseCache.md),
 [`LoadCache()`](https://wanglabcsu.github.io/sigbridger/reference/LoadCache.md),
@@ -96,12 +86,17 @@ Other cache_config:
 
 ``` r
 if (FALSE) { # \dontrun{
-WriteCacheMeta(
-  file = "cache/meta.json",
-  screen_method = "DEGAS",
-  phenotype_class = "binary",
-  params = list(n_top = 100),
-  additional_description = "Test run"
+# Write metadata for a ScreenMethodConfig
+config <- ScreenMethodConfig(
+  method_name = "Scissor",
+  param = list(alpha = 0.05)
+)
+WriteCacheMeta(config, file = "cache/cache_config.json")
+
+# With an additional description
+WriteCacheMeta(config,
+  file = "cache/cache_config.json",
+  additional_description = "Scissor screening for survival phenotype"
 )
 } # }
 ```

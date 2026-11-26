@@ -13,7 +13,7 @@ DoscPP(
   phenotype,
   label_type = "scPP",
   phenotype_class = c("binary", "continuous", "survival"),
-  ref_group = 0,
+  ref_group = 0L,
   Log2FC_cutoff = 0.585,
   estimate_cutoff = 0.2,
   probs = c(0.2, NULL),
@@ -25,38 +25,35 @@ DoscPP(
 
 - matched_bulk:
 
-  Bulk expression data (genes × samples) where:
-
-  - Column names must match `phenotype` row names
+  Matrix or data frame of preprocessed bulk RNA-seq expression data
+  (genes x samples). Column names must match names/IDs in phenotype.
 
 - sc_data:
 
-  Seurat object containing preprocessed single-cell data:
-
-  - Normalized counts in `RNA` assay
+  A Seurat object containing scRNA-seq data to be screened.
 
 - phenotype:
 
-  Data frame or tibble or named vector with:
+  Phenotype data, either:
 
-  - Rownames matching `matched_bulk` columns
+  - Named vector, where names match columns of matched_bulk
 
-  - For survival: must contain time and status columns
+  - Patient survival data frame, where row names match columns of
+    matched_bulk, and column names are "time" and "status"
 
 - label_type:
 
-  Character specifying phenotype label type (e.g., "SBS1"), stored in
-  `scRNA_data@misc`
+  Character specifying phenotype label type, e.g. "SBS1" or "time".
 
 - phenotype_class:
 
-  Analysis type (case-sensitive):
+  Type of phenotypic outcome. Must be consistent with input data:
 
-  - `"Binary"`: Case-control studies (e.g., tumor/normal)
+  - "binary": Binary traits, e.g. case/control
 
-  - `"Continuous"`: Quantitative traits (e.g., drug response)
+  - "continuous": Continuous measurements
 
-  - `"Survival"`: Time-to-event data (requires time/status columns)
+  - "survival": Survival information
 
 - ref_group:
 
@@ -94,17 +91,11 @@ DoscPP(
 
 A list containing:
 
-- scRNA_data:
+- **scRNA_data**: Seurat object with added metadata:
 
-  Seurat object with added metadata:
+  - **ScPP**: "Positive"/"Negative"/"Neutral" classification
 
-  ScPP
-
-  :   "Positive"/"Negative"/"Neutral" classification
-
-- gene_list:
-
-  List of genes used for screening
+- **gene_list**: List of genes used for screening
 
 ## Algorithm Steps
 
@@ -130,12 +121,16 @@ Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
 [`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md),
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md)
+
+Other scPP:
+[`ValidatescPPParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidatescPPParams.md)
 
 ## Examples
 

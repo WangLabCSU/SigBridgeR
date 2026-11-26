@@ -14,11 +14,11 @@ active script in RStudio or Positron (requires `rstudioapi`).
 
 ``` r
 TemplateScreenFunc(
-  filename = "my_screen.R",
+  filename = NULL,
   func_name = "my_screen",
   append = TRUE,
   documentation = FALSE,
-  open = TRUE,
+  open = rlang::is_interactive(),
   ...
 )
 ```
@@ -48,7 +48,8 @@ TemplateScreenFunc(
 
   Logical. Whether to include a full roxygen2 documentation block above
   the function. Default: `FALSE`. If `TRUE`, users should run
-  `devtools::document()` afterward.
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  afterward.
 
 - open:
 

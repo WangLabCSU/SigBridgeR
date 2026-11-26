@@ -9,6 +9,12 @@ each method directly.
 ## Usage
 
 ``` r
+SCAnnotate(sc, ...)
+
+# Default S3 method
+SCAnnotate(sc, ...)
+
+# S3 method for class 'Seurat'
 SCAnnotate(sc, method = c("CellTypist", "SingleR", "mLLMCelltype"), ...)
 ```
 
@@ -18,13 +24,6 @@ SCAnnotate(sc, method = c("CellTypist", "SingleR", "mLLMCelltype"), ...)
 
   A `Seurat` object containing single-cell RNA-seq data with
   preprocessed expression matrix and (optionally) pre-computed clusters.
-
-- method:
-
-  Character. Annotation method to use. Must be one of the keys
-  registered in `SCAnnotateStrategy` (e.g., `"CellTypist"`, `"SingleR"`,
-  `"mLLMCelltype"`). Partial matching is supported. Use
-  `names(SCAnnotateStrategy)` to list available methods.
 
 - ...:
 
@@ -39,23 +38,26 @@ SCAnnotate(sc, method = c("CellTypist", "SingleR", "mLLMCelltype"), ...)
 
   See individual method documentation for details.
 
+- method:
+
+  Character. Annotation method to use. Must be one of the keys
+  registered in `SCAnnotateStrategy` (e.g., `"CellTypist"`, `"SingleR"`,
+  `"mLLMCelltype"`). Partial matching is supported. Use
+  `names(SCAnnotateStrategy)` to list available methods.
+
 ## Value
 
 The input `Seurat` object enriched with method-specific annotation
 metadata columns. Column names and content depend on the chosen method:
 
-- `SingleR`:
+- **`SingleR`**: `SingleR_labels`, `SingleR_delta_next`,
+  `SingleR_pruned_labels`
 
-  `SingleR_labels`, `SingleR_delta_next`, `SingleR_pruned_labels`
+- **`CellTypist`**: `celltypist_prediction`, `celltypist_probability`,
+  etc.
 
-- `CellTypist`:
-
-  `celltypist_prediction`, `celltypist_probability`, etc.
-
-- `mLLMCelltype`:
-
-  `mllmcelltype_cell_type`, `mllmcelltype_consensus_proportion`,
-  `mllmcelltype_entropy`
+- **`mLLMCelltype`**: `mllmcelltype_cell_type`,
+  `mllmcelltype_consensus_proportion`, `mllmcelltype_entropy`
 
 ## Extensibility
 
@@ -76,8 +78,7 @@ Other single_cell_preprocess:
 [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md),
 [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md),
 [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md),
-[`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md),
-[`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)
+[`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md)
 
 ## Examples
 

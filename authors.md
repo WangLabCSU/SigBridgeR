@@ -9,6 +9,61 @@
 
 - **Zeyu Yan**. Contributor.
 
+- **Duanchen Sun**. Contributor, copyright holder.  
+  Author of the included Scissor code
+  (https://github.com/sunduanchen/Scissor)
+
+- **Travis Johnson**. Contributor, copyright holder.
+  [](https://orcid.org/0000-0002-4628-2256)  
+  Author of the included DEGAS code
+  (https://github.com/tsteelejohnson91/DEGAS)
+
+- **Zhi Huang**. Contributor, copyright holder.  
+  Author of the included DEGAS code
+  (https://github.com/tsteelejohnson91/DEGAS)
+
+- **Qinran Zhang**. Contributor, copyright holder.
+  [](https://orcid.org/0000-0001-8920-586X)  
+  Author of the included scAB code (https://github.com/jinworks/scAB)
+
+- **Hongmei Zhang**. Contributor, copyright holder.
+  [](https://orcid.org/0009-0003-0914-1539)  
+  Author of the included LP_SGL code
+  (https://github.com/hongmeizhanghm/LP_SGL)
+
+- **Dailin Gan**. Contributor, copyright holder.  
+  Author of the included SCIPAC code (https://github.com/mianaz/SCIPAC)
+
+- **Jun Li**. Contributor, copyright holder.
+  [](https://orcid.org/0000-0003-4353-5761)  
+  Author of the included SCIPAC code (https://github.com/mianaz/SCIPAC)
+
+- **Xinjia Ruan**. Contributor, copyright holder.
+  [](https://orcid.org/0000-0003-2309-2641)  
+  Author of the included PIPET code (https://github.com/ruan2ruan/PIPET)
+
+- **Aimin Xie**. Contributor, copyright holder.  
+  Author of the included scPAS code (https://github.com/aiminXie/scPAS)
+
+- **Xiaosheng Wang**. Contributor, copyright holder.
+  [](https://orcid.org/0000-0002-7199-7093)  
+  Author of the included scPP code (https://github.com/WangX-Lab/ScPP)
+
+- **Yasmin Jolasun**. Contributor, copyright holder.
+  [](https://orcid.org/0009-0009-2559-1015)  
+  Author of the included SIDISH code
+  (https://github.com/mcgilldinglab/SIDISH)
+
+- **Jun Ding**. Contributor, copyright holder.
+  [](https://orcid.org/0000-0001-5183-6885)  
+  Author of the included SIDISH code
+  (https://github.com/mcgilldinglab/SIDISH)
+
+- **Yuxiang Lin**. Contributor, copyright holder.
+  [](https://orcid.org/0000-0001-8854-2995)  
+  Author of the included TiRank code
+  (https://github.com/LenisLin/TiRank)
+
 ## Citation
 
 Source:

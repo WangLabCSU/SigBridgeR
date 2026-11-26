@@ -6,8 +6,8 @@ preprocessing operations. Each entry is a function of the form
 clustering)
 
 This registry enables compact, composable pipeline definitions (e.g.,
-via character strings like `"onvps"` for "Create → Normalize →
-VariableFeatures → Scale → PCA") and supports both standard
+via character strings like `"onvps"` for "Create -\> Normalize -\>
+VariableFeatures -\> Scale -\> PCA") and supports both standard
 (`NormalizeData`) and SCTransform-based workflows.
 
 ## Usage
@@ -18,59 +18,37 @@ SCPreProcessStrategy
 
 ## Available Operations
 
-- `o`:
-
-  Create Seurat object from count matrix
+- **`o`**: Create Seurat object from count matrix
   ([`SeuratObject::CreateSeuratObject`](https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html))
 
-- `n`:
-
-  Normalize data
+- **`n`**: Normalize data
   ([`Seurat::NormalizeData`](https://satijalab.org/seurat/reference/NormalizeData.html))
 
-- `v`:
-
-  Find variable features
+- **`v`**: Find variable features
   ([`Seurat::FindVariableFeatures`](https://satijalab.org/seurat/reference/FindVariableFeatures.html))
 
-- `s`:
-
-  Scale data
+- **`s`**: Scale data
   ([`Seurat::ScaleData`](https://satijalab.org/seurat/reference/ScaleData.html))
 
-- `p`:
-
-  Run PCA
+- **`p`**: Run PCA
   ([`Seurat::RunPCA`](https://satijalab.org/seurat/reference/RunPCA.html))
 
-- `c`:
-
-  Find clusters
+- **`c`**: Find clusters
   ([`Seurat::FindClusters`](https://satijalab.org/seurat/reference/FindClusters.html))
 
-- `e`:
-
-  Find neighbors
+- **`e`**: Find neighbors
   ([`Seurat::FindNeighbors`](https://satijalab.org/seurat/reference/FindNeighbors.html))
 
-- `t`:
-
-  Run t-SNE
+- **`t`**: Run t-SNE
   ([`Seurat::RunTSNE`](https://satijalab.org/seurat/reference/RunTSNE.html))
 
-- `u`:
-
-  Run UMAP
+- **`u`**: Run UMAP
   ([`Seurat::RunUMAP`](https://satijalab.org/seurat/reference/RunUMAP.html))
 
-- `r`:
-
-  SCTransform
+- **`r`**: SCTransform
   ([`Seurat::SCTransform`](https://satijalab.org/seurat/reference/SCTransform.html))
 
-- `i`:
-
-  Integrate layers
+- **`i`**: Integrate layers
   ([`Seurat::IntegrateLayers`](https://satijalab.org/seurat/reference/IntegrateLayers.html))
 
 ## Usage Notes
@@ -95,5 +73,4 @@ Other single_cell_preprocess:
 [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md),
 [`SCAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotate.md),
 [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md),
-[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md),
-[`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)
+[`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md)

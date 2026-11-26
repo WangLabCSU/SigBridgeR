@@ -50,4 +50,5 @@ Cell evaluation results with significance assessments
 
 Other scissor:
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
-[`DoScissorRelTest()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissorRelTest.md)
+[`DoScissorRelTest()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissorRelTest.md),
+[`ValidateScissorParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScissorParams.md)

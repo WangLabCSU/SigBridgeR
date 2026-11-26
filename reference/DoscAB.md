@@ -30,36 +30,35 @@ DoscAB(
 
 - matched_bulk:
 
-  Normalized bulk expression matrix (genes × samples) where:
-
-  - Columns match `phenotype` row names
-
-  - Genes match features in `sc_data`
+  Matrix or data frame of preprocessed bulk RNA-seq expression data
+  (genes x samples). Column names must match names/IDs in phenotype.
 
 - sc_data:
 
-  Seurat object containing preprocessed single-cell data:
+  A Seurat object containing scRNA-seq data to be screened.
 
 - phenotype:
 
-  Data frame with clinical annotations where:
+  Phenotype data, either:
 
-  - Rows correspond to `matched_bulk` columns
+  - Named vector, where names match columns of matched_bulk
 
-  - For survival: contains `time` and `status` columns
+  - Patient survival data frame, where row names match columns of
+    matched_bulk, and column names are "time" and "status"
 
 - label_type:
 
-  Character specifying phenotype label type (e.g., "SBS1", "time"),
-  stored in `scRNA_data@misc`
+  Character specifying phenotype label type, e.g. "SBS1" or "time".
 
 - phenotype_class:
 
-  Analysis mode:
+  Type of phenotypic outcome. Must be consistent with input data:
 
-  - `"binary"`: Case-control design (e.g., responder/non-responder)
+  - "binary": Binary traits, e.g. case/control
 
-  - `"survival"`: Time-to-event analysis data.frame
+  - "continuous": Continuous measurements
+
+  - "survival": Survival information
 
 - alpha:
 
@@ -121,13 +120,9 @@ DoscAB(
 
 A list containing:
 
-- scRNA_data:
+- **scRNA_data**: Filtered Seurat object with selected cells
 
-  Filtered Seurat object with selected cells
-
-- scAB_result:
-
-  scAB screening result
+- **scAB_result**: scAB screening result
 
 ## LICENSE
 
@@ -139,7 +134,7 @@ copy of the license is available at
 
 Zhang Q, Jin S, Zou X. scAB detects multiresolution cell states with
 clinical significance by integrating single-cell genomics and bulk
-sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112–30.
+sequencing data. Nucleic Acids Research. 2022 Nov 28;50(21):12112-30.
 
 ## See also
 
@@ -147,12 +142,16 @@ Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
 [`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)
+
+Other scAB:
+[`ValidatescABParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidatescABParams.md)
 
 ## Examples
 

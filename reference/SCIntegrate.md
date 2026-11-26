@@ -9,6 +9,7 @@ column concatenation).
 ``` r
 SCIntegrate(
   ...,
+  method = Seurat::HarmonyIntegration,
   pipeline = "nsvpiectu",
   add.cell.ids = NULL,
   collapse = FALSE,
@@ -19,10 +20,11 @@ SCIntegrate(
 
 SCIntegrate.data.frame(..., .quos = NULL)
 
-SCIntegrate.Matrix(..., .quos = NULL)
+SCIntegrate.matrix(..., .quos = NULL)
 
 SCIntegrate.Seurat(
   ...,
+  method = Seurat::HarmonyIntegration,
   pipeline = "nsvpiectu",
   add.cell.ids = NULL,
   collapse = FALSE,
@@ -41,6 +43,11 @@ SCIntegrate.Seurat(
   method: Seurat objects to integrate, followed by additional parameters
   passed to integration functions, Seurat objects and parameters are
   automatically filtered and passed to appropriate functions.
+
+- method:
+
+  Function to use for `Seurat` integration. Default:
+  [`Seurat::HarmonyIntegration`](https://satijalab.org/seurat/reference/HarmonyIntegration.html).
 
 - pipeline:
 
@@ -70,12 +77,15 @@ SCIntegrate.Seurat(
 
 - merge.dr:
 
-  Choose how to handle merging dimensional reductions: - “TRUE”: merge
-  dimensional reductions with the same name across objects; dimensional
-  reductions with different names are added as-is - “NA”: keep
-  dimensional reductions from separate objects separate; will append the
-  project name for duplicate reduction names - “FALSE”: do not add
-  dimensional reductions
+  Choose how to handle merging dimensional reductions:
+
+  - "TRUE": merge dimensional reductions with the same name across
+    objects; dimensional reductions with different names are added as-is
+
+  - "NA": keep dimensional reductions from separate objects separate;
+    will append the project name for duplicate reduction names
+
+  - "FALSE": do not add dimensional reductions
 
 - project:
 
@@ -103,8 +113,7 @@ Other single_cell_preprocess:
 [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md),
 [`SCAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotate.md),
 [`SCPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcess.md),
-[`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md),
-[`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)
+[`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md)
 
 ## Examples
 
@@ -116,7 +125,7 @@ mat1 <- matrix(rpois(100, 5), nrow = 20,
 mat2 <- matrix(rpois(120, 6), nrow = 20,
                dimnames = list(paste0("G", 11:30), paste0("C", 1:6)))
 integrated <- SCIntegrate(mat1, mat2)
-dim(integrated)  # 20 genes × 11 cells
+dim(integrated)  # 20 genes x 11 cells
 
 # Add customed prefixes to colnames
 integrated <- SCIntegrate(A = mat1, B = mat2)
@@ -124,8 +133,8 @@ integrated <- SCIntegrate(A = mat1, B = mat2)
 # [1] "A_C1" "A_C2" "A_C3" "A_C4" "A_C5" "B_C1" "B_C2" "B_C3" "B_C4" "B_C5" "B_C6"
 
 # Seurat integration with custom pipeline
-seu1 <- CreateSeuratObject(mat1)
-seu2 <- CreateSeuratObject(mat2)
-integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsfpi")
+seu1 <- Seurat::CreateSeuratObject(mat1)
+seu2 <- Seurat::CreateSeuratObject(mat2)
+integrated_seu <- SCIntegrate(seu1, seu2, pipeline = "nsvpi")
 } # }
 ```

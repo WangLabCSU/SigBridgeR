@@ -60,4 +60,5 @@ Reliability test results including statistics and p-values
 
 Other scissor:
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
-[`DoScissorCellEval()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissorCellEval.md)
+[`DoScissorCellEval()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissorCellEval.md),
+[`ValidateScissorParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScissorParams.md)

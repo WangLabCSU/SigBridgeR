@@ -1,10 +1,10 @@
 # Single-Cell RNA-seq Preprocessing Pipeline
 
-A unified interface for standardized single-cell RNA-seq preprocessing.
-It accepts raw counts (matrix/data.frame), AnnData (via `anndata` or
-`anndataR`), or existing Seurat objects. The analysis flow is fully
-customizable via a character string `pipeline` and a configuration list
-`params`.
+**\[deprecated\]** A unified interface for standardized single-cell
+RNA-seq preprocessing. It accepts raw counts (matrix/data.frame),
+AnnData (via `anndata` or `anndataR`), or existing Seurat objects. The
+analysis flow is fully customizable via a character string `pipeline`
+and a configuration list `params`.
 
 ## Usage
 
@@ -16,9 +16,8 @@ SCPreProcess(
   sc = NULL,
   ...,
   pipeline = "onsvpcetu",
-  params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
-    list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
-    = list()),
+  params = list(o = list(), n = list(), s = list(), v = list(), p = list(), e = list(), c
+    = list(), t = list(), u = list()),
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_thresh = c(200L, 6000L), nCount_thresh = c(500L, 50000L),
     percent.mt = 20L, percent.rp = 60L),
@@ -30,9 +29,8 @@ SCPreProcess(
   sc,
   ...,
   pipeline = "onsvpcetu",
-  params = list(o = list(project = "SC_Screen_Proj", min.cells = 400L), n = list(), s =
-    list(), v = list(), p = list(), e = list(), c = list(resolution = 0.6), t = list(), u
-    = list()),
+  params = list(o = list(), n = list(), s = list(), v = list(), p = list(), e = list(), c
+    = list(), t = list(), u = list()),
   quality_control = list(pattern = c("^MT-")),
   data_filter = list(nFeature_thresh = c(200L, 6000L), nCount_thresh = c(500L, 50000L),
     percent.mt = 20L, percent.rp = 60L),
@@ -98,11 +96,11 @@ SCPreProcess(sc, column2only_tumor = NULL, ...)
 
 
       list(
-        o = list(project = "SC_Screen_Proj", min.cells = 400L), # do not pass `counts`
-        n = list(),             # NormalizeData args
-        s = list(),             # ScaleData args
-        v = list(),             # FindVariableFeatures args
-        c = list(resolution = 0.6),
+        o = list(), # do not pass `counts`
+        n = list(), # NormalizeData args
+        s = list(), # ScaleData args
+        v = list(), # FindVariableFeatures args
+        c = list(),
         ...
       )
 
@@ -154,13 +152,13 @@ Other single_cell_preprocess:
 [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md),
 [`SCAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotate.md),
 [`SCIntegrate()`](https://wanglabcsu.github.io/sigbridger/reference/SCIntegrate.md),
-[`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md),
-[`compatible_with_3.0.2()`](https://wanglabcsu.github.io/sigbridger/reference/compatible_with_3.0.2.md)
+[`SCPreProcessStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCPreProcessStrategy.md)
 
 Other input_preprocess:
-[`BulkPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/BulkPreProcess.md),
+[`DrawBulkPCA()`](https://wanglabcsu.github.io/sigbridger/reference/DrawBulkPCA.md),
 [`PhenoMap()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoMap.md),
-[`PhenoPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoPreProcess.md)
+[`PhenoPreProcess()`](https://wanglabcsu.github.io/sigbridger/reference/PhenoPreProcess.md),
+[`SymbolConvert()`](https://wanglabcsu.github.io/sigbridger/reference/SymbolConvert.md)
 
 ## Examples
 

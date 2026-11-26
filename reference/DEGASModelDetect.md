@@ -14,4 +14,6 @@ DEGASModelDetect(sc_pheno_colname, bulk_pheno, call = rlang::caller_env())
 Other DEGAS:
 [`DEGASEnvSet()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASEnvSet.md),
 [`DEGASParamSet()`](https://wanglabcsu.github.io/sigbridger/reference/DEGASParamSet.md),
-[`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md)
+[`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
+[`TrainDEGASModel()`](https://wanglabcsu.github.io/sigbridger/reference/TrainDEGASModel.md),
+[`ValidateDEGASParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateDEGASParams.md)

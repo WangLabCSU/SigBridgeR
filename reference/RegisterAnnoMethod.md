@@ -1,11 +1,12 @@
 # Register an Annotation Method into the Strategy Registry
 
-Registers one or more user-defined annotation functions into a shared
-registry environment (e.g., `SCAnnotateStrategy`). Each method is stored
-with minimal metadata (`method_name` and `executor`) to enable dynamic
-dispatch in annotation pipelines.
+**\[deprecated\]** Registers one or more user-defined annotation
+functions into a shared registry environment (e.g.,
+`SCAnnotateStrategy`). Each method is stored with minimal metadata
+(`method_name` and `executor`) to enable dynamic dispatch in annotation
+pipelines.
 
-This function supports extensible cell type annotation frameworks—ideal
+This function supports extensible cell type annotation frameworks-ideal
 for integrating novel classifiers (e.g., custom SingleR wrappers,
 marker-based assigners, or deep learning models) while maintaining a
 uniform execution interface.
@@ -54,12 +55,13 @@ Invisibly returns `TRUE` on successful registration.
 ## See also
 
 Other Registering:
-[`Register()`](https://wanglabcsu.github.io/sigbridger/reference/Register.md),
 [`RegisterScreenMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterScreenMethod.md),
 [`RegisterSeuratMethod()`](https://wanglabcsu.github.io/sigbridger/reference/RegisterSeuratMethod.md)
 
 Other Single_Cell_Annotation_Method:
 [`CellTypistAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/CellTypistAnnotate.md),
+[`DownloadCellTypistModels()`](https://wanglabcsu.github.io/sigbridger/reference/DownloadCellTypistModels.md),
+[`ListCellTypistModels()`](https://wanglabcsu.github.io/sigbridger/reference/ListCellTypistModels.md),
 [`SCAnnotateStrategy`](https://wanglabcsu.github.io/sigbridger/reference/SCAnnotateStrategy.md),
 [`SingleRAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/SingleRAnnotate.md),
 [`mLLMCelltypeAnnotate()`](https://wanglabcsu.github.io/sigbridger/reference/mLLMCelltypeAnnotate.md)

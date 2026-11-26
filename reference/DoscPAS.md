@@ -12,6 +12,7 @@ DoscPAS(
   sc_data,
   phenotype,
   label_type = "scPAS",
+  phenotype_class = c("binary", "continuous", "survival"),
   assay = "RNA",
   imputation = FALSE,
   imputation_method = c("KNN", "ALRA"),
@@ -19,7 +20,7 @@ DoscPAS(
   alpha = c(0.01, NULL),
   cutoff = 0.2,
   network_class = c("SC", "bulk"),
-  family = c("cox", "gaussian", "binomial"),
+  family = lifecycle::deprecated(),
   permutation_times = 2000L,
   FDR_threshold = 0.05,
   independent = TRUE,
@@ -31,20 +32,35 @@ DoscPAS(
 
 - matched_bulk:
 
-  Bulk RNA-seq data (genes x samples)
+  Matrix or data frame of preprocessed bulk RNA-seq expression data
+  (genes x samples). Column names must match names/IDs in phenotype.
 
 - sc_data:
 
-  Single-cell RNA-seq data (Seurat object and preprocessed)
+  A Seurat object containing scRNA-seq data to be screened.
 
 - phenotype:
 
-  Phenotype data frame with sample annotations
+  Phenotype data, either:
+
+  - Named vector, where names match columns of matched_bulk
+
+  - Patient survival data frame, where row names match columns of
+    matched_bulk, and column names are "time" and "status"
 
 - label_type:
 
-  Character specifying phenotype label type (e.g., "SBS1", "time"),
-  stored in `scRNA_data@misc`. (default: "scPAS")
+  Character specifying phenotype label type, e.g. "SBS1" or "time".
+
+- phenotype_class:
+
+  Type of phenotypic outcome. Must be consistent with input data:
+
+  - "binary": Binary traits, e.g. case/control
+
+  - "continuous": Continuous measurements
+
+  - "survival": Survival information
 
 - assay:
 
@@ -84,7 +100,8 @@ DoscPAS(
 
 - family:
 
-  Model family for analysis (options: "cox", "gaussian", "binomial")
+  **\[deprecated\]** Model family for analysis (options: "cox",
+  "gaussian", "binomial")
 
 - permutation_times:
 
@@ -109,8 +126,6 @@ DoscPAS(
 
   - `seed`: For reproducibility, default is `123L`
 
-  - `assay`: Assay to use for single-cell data. Defaults to \`"RNA"
-
 ## Value
 
 A Seurat object from scPAS analysis
@@ -133,9 +148,13 @@ Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
 [`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md),
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)
+
+Other scPAS:
+[`ValidatescPASParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidatescPASParams.md)

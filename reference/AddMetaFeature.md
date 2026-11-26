@@ -24,8 +24,8 @@ AddMetaFeature(seurat_obj, ..., assay = "RNA")
 
   - Named/unnamed vectors (length = ngenes)
 
-  - 2D objects (matrix, data.frame, data.table, etc.) where one
-    dimension (rows or cols) has size = ngenes.
+  - 2D objects (matrix, data.frame, etc.) where one dimension (rows or
+    cols) has size = ngenes.
 
 - assay:
 

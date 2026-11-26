@@ -66,88 +66,62 @@ DoTiRank(
 
   List of TiRank algorithm parameters:
 
-  validation_proportion
+  **Data preprocessing:**
 
-  :   Proportion of bulk data held out for validation (default: `0.15`).
+  - `validation_proportion`: Proportion of bulk data held out for
+    validation (default: `0.15`).
 
-  sampling_thresh
+  - `sampling_thresh`: Threshold for resampling strategy (default:
+    `0.5`).
 
-  :   Threshold for resampling strategy (default: `0.5`).
+  - `sampling_mode`: Resampling method: `"smote"`, `"downsample"`,
+    `"upsample"`, or `"tomeklinks"`.
 
-  sampling_mode
+  - `top_var_genes`: Number of top variable genes to select (default:
+    `2000L`).
 
-  :   Resampling method: `"smote"`, `"downsample"`, `"upsample"`, or
-      `"tomeklinks"`.
+  - `top_gene_pairs`: Number of top gene pairs for ranking (default:
+    `1000L`).
 
-  top_var_genes
+  - `p_value_threshold`: P-value threshold for feature selection
+    (default: `0.05`).
 
-  :   Number of top variable genes to select (default: `2000L`).
+  - `max_cutoff`: Upper cutoff for correlation filtering (default:
+    `0.8`).
 
-  top_gene_pairs
+  - `min_cutoff`: Lower cutoff for correlation filtering (default:
+    `-0.8`).
 
-  :   Number of top gene pairs for ranking (default: `1000L`).
+  **Neural network architecture:**
 
-  p_value_threshold
+  - `nhead`: Number of attention heads (default: `2L`).
 
-  :   P-value threshold for feature selection (default: `0.05`).
+  - `nhid1`: Size of first hidden layer (default: `96L`).
 
-  max_cutoff
+  - `nhid2`: Size of second hidden layer (default: `8L`).
 
-  :   Upper cutoff for correlation filtering (default: `0.8`).
+  - `n_output`: Output dimension of encoder (default: `32L`).
 
-  min_cutoff
+  - `nlayers`: Number of encoder layers (default: `3L`).
 
-  :   Lower cutoff for correlation filtering (default: `-0.8`).
+  - `n_pred`: Number of prediction heads (default: `2L`).
 
-  nhead
+  - `dropout`: Dropout rate for regularization (default: `0.5`).
 
-  :   Number of attention heads (default: `2L`).
+  - `encoder_type`: Encoder architecture: `"MLP"`, `"Transformer"`, or
+    `"DenseNet"`.
 
-  nhid1
+  - `infer_mode`: Inference mode: `"SC"` (single-cell) or `"ST"`
+    (spatial transcriptomics).
 
-  :   Size of first hidden layer (default: `96L`).
+  **Training:**
 
-  nhid2
+  - `n_trials`: Number of repeated training trials (default: `5L`).
 
-  :   Size of second hidden layer (default: `8L`).
+  - `do_reject`: Whether to apply rejection criteria to uncertain
+    predictions (default: `TRUE`).
 
-  n_output
-
-  :   Output dimension of encoder (default: `32L`).
-
-  nlayers
-
-  :   Number of encoder layers (default: `3L`).
-
-  n_pred
-
-  :   Number of prediction heads (default: `2L`).
-
-  dropout
-
-  :   Dropout rate for regularization (default: `0.5`).
-
-  encoder_type
-
-  :   Encoder architecture: `"MLP"`, `"Transformer"`, or `"DenseNet"`.
-
-  infer_mode
-
-  :   Inference mode: `"SC"` (single-cell) or `"ST"` (spatial
-      transcriptomics).
-
-  n_trials
-
-  :   Number of repeated training trials (default: `5L`).
-
-  do_reject
-
-  :   Whether to apply rejection criteria to uncertain predictions
-      (default: `TRUE`).
-
-  tolerance
-
-  :   Tolerance threshold for rejection (default: `0.05`).
+  - `tolerance`: Tolerance threshold for rejection (default: `0.05`).
 
 - save_path:
 
@@ -167,45 +141,31 @@ DoTiRank(
   Additional arguments passed to the function. Common parameters
   include:
 
-  verbose
+  - `verbose`: Logical. Whether to print verbose output (default: TRUE).
 
-  :   Logical. Whether to print verbose output (default: TRUE).
+  - `seed`: Integer. Random seed for reproducibility.
 
-  seed
+  - `assay`: Character. Name of assay to use from Seurat object
+    (default: `"RNA"`).
 
-  :   Integer. Random seed for reproducibility.
+  - `load_cache`: Cache directory path for loading cached data. Supports
+    root-level, cache-level, or parent-level paths. See
+    [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
 
-  assay
-
-  :   Character. Name of assay to use from Seurat object (default:
-      `"RNA"`).
-
-  load_cache
-
-  :   Cache directory path for loading cached data. Supports root-level,
-      cache-level, or parent-level paths. See
-      [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
-
-  save_cache
-
-  :   Cache directory path for saving results. Supports root-level or
-      parent-level paths. See
-      [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
+  - `save_cache`: Cache directory path for saving results. Supports
+    root-level or parent-level paths. See
+    [`CacheSetHere()`](https://wanglabcsu.github.io/sigbridger/reference/CacheSetHere.md).
 
 ## Value
 
 A named list containing:
 
-- scRNA_data:
+- **scRNA_data**: Modified single-cell data object with integrated
+  screening results added as metadata, including `TiRank_Reject`,
+  `TiRank_Rank_Score`, and `TiRank` (Positive/Neutral/Negative) columns,
+  plus `TiRank_para` and `TiRank_type` stored in misc slot.
 
-  Modified single-cell data object with integrated screening results
-  added as metadata, including `TiRank_Reject`, `TiRank_Rank_Score`, and
-  `TiRank` (Positive/Neutral/Negative) columns, plus `TiRank_para` and
-  `TiRank_type` stored in misc slot.
-
-- cell_cell_distance:
-
-  Computed cell-cell similarity/distance matrix.
+- **cell_cell_distance**: Computed cell-cell similarity/distance matrix.
 
 ## Details
 
@@ -238,10 +198,14 @@ The TiRank screening workflow consists of the following steps:
 
 ## See also
 
+Other TiRank:
+[`ValidateTiRankParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateTiRankParams.md)
+
 Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),

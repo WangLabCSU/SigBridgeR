@@ -56,7 +56,7 @@ ScreenFractionPlot(
   - Required names: "Positive", "Negative", "Neutral"
 
   - Default: c("Neutral"="#CECECE", "Other"="#CECECE",
-    Positive"="#ff3333", "Negative"="#386c9b")
+    Positive"="#c24b4b", "Negative"="#5189bb")
 
 - show_plot:
 
@@ -110,7 +110,7 @@ ScreenFractionPlot(
 
 A list containing:
 
-- stats: A data frame (single screen) or list of data frames (multiple
+- `stats`: A data frame (single screen) or list of data frames (multiple
   screens) with screening statistics including:
 
   - Grouping variable counts
@@ -119,10 +119,10 @@ A list containing:
 
   - Percentage fractions
 
-- plot: A ggplot2 object (single screen) or list of ggplot2 objects
+- `plot`: A ggplot2 object (single screen) or list of ggplot2 objects
   (multiple screens)
 
-- combined_plot: A combined plot using patchwork (only for multiple
+- `combined_plot`: A combined plot using patchwork (only for multiple
   screens)
 
 ## Visualization Details

@@ -1,48 +1,27 @@
-# Quick Start Guide for SigBridgeR
+# Get Started with SigBridgeR
 
 ## Preparation
-
-``` r
-
-if (!requireNamespace("remotes")) {
-  install.packages("remotes")
-}
-remotes::install_github("WangLabCSU/SigBridgeR")
-
-
-# # Or install from r-universe:
-# install.packages("SigBridgeR", repos = "https://wanglabcsu.r-universe.dev")
-
-library(SigBridgeR)
-library(Seurat)
-```
 
 We will start with a simple example.
 
 ``` r
 
-if (requireNamespace("here", quietly = TRUE)) {
-  setwd(here::here())
-  knitr::opts_knit$set(root.dir = here::here())
-}
+ref <- LoadRefData(data_type = "binary")
+seurat_obj <- ref[[1]]
+bulk_bi <- ref[[2]]
+pheno_bi <- ref[[3]]
 ```
 
-``` r
-
-library(zeallot) # %<-%
-c(mat_exam, bulk_bi, pheno_bi) %<-% LoadRefData(data_type = "binary")
-```
-
-`mat_exam` is a single-cell RNA expression matrix, `bulk_bi` is a bulk
-tissue RNA expression matrix, and `pheno_bi` is the phenotypic data
-associated with `bulk_bi`. When using a binary or continuous phenotype,
-the reference phenotype data is a **named vector**.
+`seurat_obj` is a preprocessed single-cell RNA **Seurat** object (QC
+filtering, normalization, clustering, and UMAP are already included),
+`bulk_bi` is a bulk tissue RNA expression matrix (TPM), and `pheno_bi`
+is the phenotypic data associated with `bulk_bi`. When using a binary or
+continuous phenotype, the reference phenotype data is a **named
+vector**.
 
 ``` r
 
 head(pheno_bi)
-# TCGA-CA-5256-01 TCGA-AZ-6599-01 TCGA-AA-3655-01 TCGA-A6-6137-01 TCGA-CK-4952-01 TCGA-A6-5657-01
-#               1               1               1               1               1               1
 ```
 
 By the way, when using patients’ survival data as phenotype, the
@@ -52,32 +31,12 @@ reference data is a **data.frame**.
 
 pheno_sur <- LoadRefData(data_type = "survival")[[3]]
 head(pheno_sur)
-#               time status
-# TCGA-69-7978  4.40      0
-# TCGA-62-8399 88.57      0
-# TCGA-78-7539 25.99      0
-# TCGA-73-4658 52.56      1
-# TCGA-44-6775 23.16      0
-# TCGA-44-2655 43.50      0
 ```
 
-The single-cell RNA expression matrix needs to be processed into a
-Seurat object. We set `scale.features` to all genes in order to maximize
-the flexibility of downstream analyses and capture a broader range of
-biological signals, so as to avoid insignificant results caused by too
-small a dataset.
-
-``` r
-
-seurat_obj <- SCPreProcess(
-  mat_exam,
-  params = list(
-    s = list(
-      scale.feature = rownames(mat_exam)
-    )
-  )
-)
-```
+The reference single-cell RNA data has already been preprocessed into a
+**Seurat** object (`seurat_obj`), so it can be passed directly to
+[`Screen()`](https://wanglabcsu.github.io/sigbridger/reference/Screen.md)
+without any further processing.
 
 ## Screening
 
@@ -96,6 +55,16 @@ scissor_res <- Screen(
 )
 ```
 
+``` r
+
+scissor_res |> class()
+```
+
+``` r
+
+scissor_res |> print()
+```
+
 Other screening methods are also available.
 
 ``` r
@@ -110,7 +79,8 @@ scpas_res <- Screen(
 )
 ```
 
-Since the screening is performed on the same data, we merge them.
+Since the screening is performed on the same data, we can merge them
+based on the cell names. Metadata will be merged as well.
 
 ``` r
 
@@ -122,7 +92,7 @@ merged_seurat <- MergeResult(
 
 ## Visualization
 
-Finally, we visualize the screening results.
+Finally, we can visualize the screening results.
 
 - stacked bar plot:
 
@@ -134,16 +104,10 @@ fraction <- ScreenFractionPlot(
   screen_type = c("scissor", "scPAS")
 )
 
-# names(fraction)
-# [1] "stats"         "plot"          "combined_plot"
+names(fraction)
+
+fraction$combined_plot
 ```
-
-``` r
-
-knitr::include_graphics("vignettes/example_figures/fraction_q.png")
-```
-
-[![fraction_q](example_figures/fraction_q.png)](https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/fraction_q.png)
 
 - Venn diagram:
 
@@ -185,14 +149,9 @@ venn_plot <- ggVennDiagram::ggVennDiagram(
 ) +
   ggplot2::scale_fill_gradient(low = "white", high = "#ffb6b6ff") +
   ggplot2::ggtitle("Screening Venn Diagram")
+
+venn_plot
 ```
-
-``` r
-
-knitr::include_graphics("vignettes/example_figures/venn_q.png")
-```
-
-[![venn_q](example_figures/venn_q.png)](NA)
 
 - Set plot:
 
@@ -202,21 +161,16 @@ upset <- ScreenUpset(
   merged_seurat,
   screen_type = c("scissor", "scPAS")
 )
+names(upset)
+
+upset$plot
 ```
-
-``` r
-
-knitr::include_graphics("vignettes/example_figures/upset_q.png")
-```
-
-[![upset_q](example_figures/upset_q.png)](NA)
 
 - 2D UMAP:
 
 ``` r
 
 library(patchwork)
-library(randomcoloR)
 
 c(
   scissor_umap,
@@ -239,9 +193,9 @@ c(
   )
 
 set.seed(123)
-cols = randomcoloR::distinctColorPalette(
+cols <- RColorBrewer::brewer.pal(
   length(unique(merged_seurat$seurat_clusters)),
-  runTsne = TRUE
+  "Set1"
 )
 
 cluster_umap <- Seurat::DimPlot(
@@ -263,48 +217,16 @@ umaps <- cluster_umap +
 umaps
 ```
 
+UMAP has been registered in the
+[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+for easier check.
+
 ``` r
 
-knitr::include_graphics("vignettes/example_figures/umaps_q.png")
+ggplot2::autoplot(merged_seurat, group.by = "scPAS")
 ```
-
-[![umaps_q](example_figures/umaps_q.png "umaps_q")](https://github.com/WangLabCSU/SigBridgeR/blob/main/vignettes/example_figures/umaps_q.png)
 
 For more detail, please see [Full
 Tutorial](https://wanglabcsu.github.io/SigBridgeR/articles/Full_Tutorial.html).
 
-Session information:
-
-``` r
-
-sessionInfo()
-```
-
-    ## R version 4.6.2 (2026-10-29)
-    ## Platform: x86_64-pc-linux-gnu
-    ## Running under: Ubuntu 26.04.1 LTS
-    ## 
-    ## Matrix products: default
-    ## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-    ## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.32.so;  LAPACK version 3.12.0
-    ## 
-    ## locale:
-    ##  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
-    ##  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
-    ##  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
-    ## [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
-    ## 
-    ## time zone: UTC
-    ## tzcode source: system (glibc)
-    ## 
-    ## attached base packages:
-    ## [1] stats     graphics  grDevices utils     datasets  methods   base     
-    ## 
-    ## loaded via a namespace (and not attached):
-    ##  [1] digest_0.6.39     desc_1.4.3        R6_2.6.1          fastmap_1.2.0    
-    ##  [5] xfun_0.62         cachem_1.1.0      knitr_1.52        htmltools_0.5.9  
-    ##  [9] rmarkdown_2.32    lifecycle_1.0.5   cli_3.6.6         sass_0.4.10      
-    ## [13] pkgdown_2.2.1     textshaping_1.0.5 jquerylib_0.1.4   systemfonts_1.3.2
-    ## [17] compiler_4.6.2    tools_4.6.2       ragg_1.5.2        bslib_0.12.0     
-    ## [21] evaluate_1.0.5    yaml_2.3.12       otel_0.3.0        jsonlite_2.0.0   
-    ## [25] rlang_1.3.0       fs_2.1.0
+## Session information:

@@ -36,7 +36,7 @@ DoPIPET(
 
 - matched_bulk:
 
-  Normalized bulk expression matrix (features × samples). Column names
+  Normalized bulk expression matrix (features x samples). Column names
   must match `phenotype` identifiers.
 
 - sc_data:
@@ -133,7 +133,7 @@ DoPIPET(
 
   A character, the distance algorithm must be included in "cosine",
   "pearson", "spearman", "kendall","euclidean","maximum". default value
-  is `NULL`, which means `"cosine"`.
+  is `"cosine"`.
 
 - ...:
 
@@ -153,6 +153,7 @@ DoPIPET(
 Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoScissor()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissor.md),
@@ -160,3 +161,6 @@ Other screen_method:
 [`DoscAB()`](https://wanglabcsu.github.io/sigbridger/reference/DoscAB.md),
 [`DoscPAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPAS.md),
 [`DoscPP()`](https://wanglabcsu.github.io/sigbridger/reference/DoscPP.md)
+
+Other PIPET:
+[`ValidatePIPETParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidatePIPETParams.md)

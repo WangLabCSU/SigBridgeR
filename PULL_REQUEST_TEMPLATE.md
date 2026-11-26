@@ -24,11 +24,17 @@ Other (please describe):
 
 ## Checklist
 
-I have run `devtools::test()` and all tests pass.
+I have run
+[`devtools::test()`](https://devtools.r-lib.org/reference/test.html) and
+all tests pass.
 
-I have run `lintr::lint_package()` and addressed any linting issues.
+I have run
+[`lintr::lint_package()`](https://lintr.r-lib.org/reference/lint.html)
+and addressed any linting issues.
 
-I have updated documentation via `devtools::document()` if needed.
+I have updated documentation via
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+if needed.
 
 I have added or updated tests to cover my changes.
 

@@ -7,15 +7,14 @@ variables, with optional detailed introspection of function signatures,
 body structure, and closure properties.
 
 This utility aids in debugging, validation, and exploration of
-dynamically registered pipelines—particularly useful when developing or
+dynamically registered pipelines-particularly useful when developing or
 auditing extensible analysis frameworks.
 
 ## Usage
 
 ``` r
 InterceptStrategy(
-  strategy = c("ScreenStrategy", "SCPreProcessStrategy", "AnnotationStrategy"),
-  detailed = FALSE,
+  strategy = c("ScreenStrategy", "SCPreProcessStrategy", "SCAnnotateStrategy"),
   ...
 )
 ```
@@ -24,15 +23,9 @@ InterceptStrategy(
 
 - strategy:
 
-  Character. Name of the strategy environment to inspect. Must be one
+  Character/Environment. strategy environment to inspect. Must be one
   of: `"ScreenStrategy"`, `"SCPreProcessStrategy"`, or
-  `"AnnotationStrategy"`. Partial matching is supported.
-
-- detailed:
-
-  Logical. If `TRUE`, performs deep inspection of function objects
-  (e.g., argument count, presence of `...`, body length, closure
-  environment). Default: `FALSE`.
+  `"SCAnnotateStrategy"`. Partial matching is supported.
 
 - ...:
 
@@ -41,25 +34,30 @@ InterceptStrategy(
 
 ## Value
 
-Invisibly returns a `data.frame`:
-
-- If `detailed = FALSE`: one row per entry in the strategy environment,
-  with columns depending on content type (e.g., `method_name`, `func`,
-  or `var`).
-
-- If `detailed = TRUE`: augmented with introspection columns such as
-  `func_n_args`, `func_has_dots`, `func_body_nlines`, `func_is_closure`,
-  etc.
+Invisibly returns a tibble
 
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # List all preprocessing steps
 InterceptStrategy("SCPreProcessStrategy")
+#> # A tibble: 11 × 2
+#>    name  args     
+#>    <chr> <list>   
+#>  1 t     <chr [2]>
+#>  2 u     <chr [2]>
+#>  3 v     <chr [2]>
+#>  4 c     <chr [2]>
+#>  5 e     <chr [2]>
+#>  6 i     <chr [8]>
+#>  7 n     <chr [2]>
+#>  8 o     <chr [7]>
+#>  9 p     <chr [1]>
+#> 10 r     <chr [2]>
+#> 11 s     <chr [2]>
 
 # Get detailed function metadata for screen methods
-details <- InterceptStrategy("ScreenStrategy", detailed = TRUE, verbose = FALSE)
-head(details[, grep("executor_", names(details))])
-} # }
+details <- InterceptStrategy("ScreenStrategy")
+# }
 ```

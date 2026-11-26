@@ -14,8 +14,8 @@ ScreenUpset(
   screen_type = NULL,
   order_by = c("freq", "degree"),
   show_plot = FALSE,
-  n_intersections = 20,
-  bar_color = "#4E79A7",
+  n_intersections = 20L,
+  bar_color = "#5189bb",
   combmatrix_point_color = "black",
   verbose = SigBridgeRUtils::getFuncOption("verbose"),
   ...
@@ -49,7 +49,7 @@ ScreenUpset(
 
 - bar_color:
 
-  Color for the bars in the plot. Default: "#4E79A7".
+  Color for the bars in the plot. Default: "#5189bb".
 
 - combmatrix_point_color:
 
@@ -61,8 +61,10 @@ ScreenUpset(
 
 - ...:
 
-  Additional arguments passed to `ggupset::scale_x_upset()`,
-  `ggupset::theme_combmatrix()`, and
+  Additional arguments passed to
+  [`ggupset::scale_x_upset()`](https://rdrr.io/pkg/ggupset/man/scale_x_upset.html),
+  [`ggupset::theme_combmatrix()`](https://rdrr.io/pkg/ggupset/man/theme_combmatrix.html),
+  and
   [`ggplot2::theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
   for customizing the plot appearance. Argumetns are auto-filtered
 

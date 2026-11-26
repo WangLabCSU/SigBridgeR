@@ -9,25 +9,18 @@ that are significantly associated with phenotypic outcomes.
 
 ``` r
 DoScissor(
-   matched_bulk,
-   sc_data,
-   phenotype,
-   label_type = "scissor",
-   alpha = c(0.05, NULL),
-   cutoff = 0.2,
-   family = c("gaussian", "binomial", "cox"),
-   reliability_test = list(
-     run = FALSE, # whether to run reliability test
-     n = 10L, # permutation times
-     nfold = 10L # cross validation folds
-   ),
-   cell_evaluation = list(
-     run = FALSE, # whether to run cell evaluation
-     benchmark_data = "path_to_file.RData", # path to benchmark data
-     FDR_cutoff = 0.05,
-     bootstrap_n = 100L
-   ),
-   ...
+  matched_bulk,
+  sc_data,
+  phenotype,
+  label_type = "scissor",
+  phenotype_class = c("binary", "continuous", "survival"),
+  alpha = c(0.05, NULL),
+  cutoff = 0.2,
+  family = lifecycle::deprecated(),
+  reliability_test = list(run = FALSE, n = 10L, nfold = 10L),
+  cell_evaluation = list(run = FALSE, benchmark_data = "path_to_file.RData", FDR_cutoff =
+    0.05, bootstrap_n = 100L),
+  ...
 )
 ```
 
@@ -35,25 +28,35 @@ DoScissor(
 
 - matched_bulk:
 
-  Normalized bulk expression matrix (features × samples). Column names
-  must match `phenotype` identifiers.
+  Matrix or data frame of preprocessed bulk RNA-seq expression data
+  (genes x samples). Column names must match names/IDs in phenotype.
 
 - sc_data:
 
-  Seurat object containing single-cell RNA-seq data.
+  A Seurat object containing scRNA-seq data to be screened.
 
 - phenotype:
 
-  Clinical outcome data. Can be:
+  Phenotype data, either:
 
-  - Vector: named with sample IDs
+  - Named vector, where names match columns of matched_bulk
 
-  - Data frame: with row names matching bulk columns
+  - Patient survival data frame, where row names match columns of
+    matched_bulk, and column names are "time" and "status"
 
 - label_type:
 
-  Character specifying phenotype label type (e.g., "SBS1", "time"),
-  stored in `scRNA_data@misc`
+  Character specifying phenotype label type, e.g. "SBS1" or "time".
+
+- phenotype_class:
+
+  Type of phenotypic outcome. Must be consistent with input data:
+
+  - "binary": Binary traits, e.g. case/control
+
+  - "continuous": Continuous measurements
+
+  - "survival": Survival information
 
 - alpha:
 
@@ -69,7 +72,7 @@ DoScissor(
 
 - family:
 
-  Model family for outcome type:
+  **\[deprecated\]** Model family for outcome type:
 
   - "gaussian": Continuous outcomes
 
@@ -125,50 +128,29 @@ DoScissor(
 
 A list containing:
 
-- scRNA_data:
+- **scRNA_data**: A Seurat object with screened cells containing
+  metadata:
 
-  A Seurat object with screened cells containing metadata:
+  - **scissor**: "Positive"/"Negative"/"Neutral" classification
 
-  scissor
+  - **label_type**: Outcome label used
 
-  :   "Positive"/"Negative"/"Neutral" classification
+- **scissor_result**: Raw Scissor results
 
-  label_type
+- **reliability_result**: If reliability_test=TRUE, contains:
 
-  :   Outcome label used
+  - **statistic**: A value between 0 and 1
 
-- scissor_result:
+  - **p**: p-value of the test statistic
 
-  Raw Scissor results
+  - **AUC_test_real**: 10 values of AUC for real data
 
-- reliability_result:
+  - **AUC_test_back**: A list of AUC for background data
 
-  If reliability_test=TRUE, contains:
+- **cell_evaluation**: If cell_evaluation=TRUE, contains:
 
-  statistic
-
-  :   A value between 0 and 1
-
-  p
-
-  :   p-value of the test statistic
-
-  AUC_test_real
-
-  :   10 values of AUC for real data
-
-  AUC_test_back
-
-  :   A list of AUC for background data
-
-- cell_evaluation:
-
-  If cell_evaluation=TRUE, contains:
-
-  evaluation_res
-
-  :   A data.frame with some supporting information for each Scissor
-      selected cell
+  - **evaluation_res**: A data.frame with some supporting information
+    for each Scissor selected cell
 
 ## LICENSE
 
@@ -180,7 +162,7 @@ copy of the license is available at
 
 Sun D, Guan X, Moran AE, Wu LY, Qian DZ, Schedin P, et al. Identifying
 phenotype-associated subpopulations by integrating bulk and single-cell
-sequencing data. Nat Biotechnol. 2022 Apr;40(4):527–38.
+sequencing data. Nat Biotechnol. 2022 Apr;40(4):527-38.
 
 ## See also
 
@@ -188,6 +170,7 @@ Other screen_method:
 [`DoDEGAS()`](https://wanglabcsu.github.io/sigbridger/reference/DoDEGAS.md),
 [`DoLP_SGL()`](https://wanglabcsu.github.io/sigbridger/reference/DoLP_SGL.md),
 [`DoPIPET()`](https://wanglabcsu.github.io/sigbridger/reference/DoPIPET.md),
+[`DoPhenoMapR()`](https://wanglabcsu.github.io/sigbridger/reference/DoPhenoMapR.md),
 [`DoSCIPAC()`](https://wanglabcsu.github.io/sigbridger/reference/DoSCIPAC.md),
 [`DoSIDISH()`](https://wanglabcsu.github.io/sigbridger/reference/DoSIDISH.md),
 [`DoTiRank()`](https://wanglabcsu.github.io/sigbridger/reference/DoTiRank.md),
@@ -197,7 +180,8 @@ Other screen_method:
 
 Other scissor:
 [`DoScissorCellEval()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissorCellEval.md),
-[`DoScissorRelTest()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissorRelTest.md)
+[`DoScissorRelTest()`](https://wanglabcsu.github.io/sigbridger/reference/DoScissorRelTest.md),
+[`ValidateScissorParams()`](https://wanglabcsu.github.io/sigbridger/reference/ValidateScissorParams.md)
 
 ## Examples
 
