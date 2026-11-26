@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to R process",
+      "type": "lldb",
+      "request": "attach",
+      "pid": "${command:pickProcess}",
+      "sourceLanguages": [
+        "cpp",
+        "rust"
+      ]
+    },
+    {
+      "name": "Debug C++ executable",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${input:cppExecutable}",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "sourceLanguages": [
+        "cpp"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "cppExecutable",
+      "type": "promptString",
+      "description": "Path to the compiled C++ executable (absolute or relative to workspace)"
+    }
+  ]
+}
