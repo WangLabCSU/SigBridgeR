@@ -24,10 +24,10 @@ knitr::opts_chunk$set(
 [![Devel_version](https://img.shields.io/badge/devel%20version-4.0.0-orange.svg)](https://github.com/WangLabCSU/SigBridgeR)
 [![version3:stable](https://img.shields.io/badge/version3-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![version3_version](https://img.shields.io/badge/version3-3.8.5-blue.svg)](https://github.com/WangLabCSU/SigBridgeR/tree/version3)
-[![R_CMD_check](https://github.com/WangLabCSU/SigBridgeR/workflows/R-CMD-check/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions)
 [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-8A2BE2)](https://deepwiki.com/WangLabCSU/SigBridgeR)
 [![Codecov_test_coverage](https://codecov.io/gh/WangLabCSU/SigBridgeR/graph/badge.svg)](https://app.codecov.io/gh/WangLabCSU/SigBridgeR)
 [![registry_status_badge](https://wanglabcsu.r-universe.dev/badges/:registry)](https://wanglabcsu.r-universe.dev/)
+[![R-CMD-check](https://github.com/WangLabCSU/SigBridgeR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/WangLabCSU/SigBridgeR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 
@@ -56,7 +56,7 @@ data, performing as a bridge to existing tools.
 | [**DEGASv2**](https://github.com/ElliotLiu1997/DEGASv2) | `binary` `survival` `continuous` |               |    MIT     | Bulk raw counts matrix perferred |
 | [**LP-SGL**](https://github.com/hongmeizhanghm/LP_SGL)  | `binary` `survival` `continuous` |               | No License |                                  |
 |  [**PIPET**](https://github.com/ruan2ruan/PIPET)  | `binary` `survival` `continuous` |       ✅      |   GPL-3    | Bulk raw counts matrix perferred |
-| [**SIDISH**](mcgilldinglab/SIDISH)  |            `survival`            |               | MIT\* / PolyForm NC 1.0.0 | see [note]((#special-declaration-concerning-sidish)) below |
+| [**SIDISH**](mcgilldinglab/SIDISH)  |            `survival`            |               | MIT\* / PolyForm NC 1.0.0 | see [note](#special-declaration-concerning-sidish) below |
 | [**SCIPAC**](https://github.com/mianaz/SCIPAC)  | `binary` `survival` `continuous` |               |    MIT     |                                  |
 | [**TiRank**](https://github.com/LenisLin/TiRank)  | `binary` `survival` `continuous` |       ✅      |    MIT     |                                  |
 | [**PhenoMapR**](https://github.com/brooksbenard/PhenoMapR) | `binary` `survival` `continuous` |               |    MIT     |                                  |

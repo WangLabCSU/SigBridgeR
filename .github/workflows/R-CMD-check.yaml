@@ -1,0 +1,141 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      os_selection:
+        description: "Operating system to test"
+        required: false
+        type: choice
+        options:
+          - "all"
+          - "ubuntu-latest"
+          - "windows-latest"
+          - "macOS-latest"
+        default: "all"
+      r_version:
+        description: "R version to test"
+        required: false
+        type: choice
+        options:
+          - "release"
+          - "devel"
+          - "oldrel-1"
+        default: "release"
+      run_examples:
+        description: "Run package examples"
+        required: false
+        type: boolean
+        default: true
+      run_tests:
+        description: "Run package tests"
+        required: false
+        type: boolean
+        default: true
+
+name: R-CMD-check.yaml
+
+permissions: read-all
+
+jobs:
+  # push / pull_request 使用默认矩阵；workflow_dispatch 时按输入生成矩阵，
+  # 否则手动触发的 os_selection / r_version / run_examples / run_tests 不会生效。
+  setup-matrix:
+    name: Configure test matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      check-args: ${{ steps.set-matrix.outputs.check-args }}
+    steps:
+      - name: Set up test matrix
+        id: set-matrix
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          OS_SELECTION: ${{ inputs.os_selection }}
+          R_VERSION: ${{ inputs.r_version }}
+          RUN_EXAMPLES: ${{ inputs.run_examples }}
+          RUN_TESTS: ${{ inputs.run_tests }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ "$OS_SELECTION" = "all" ]; then
+              oss=(ubuntu-latest windows-latest macOS-latest)
+            else
+              oss=("$OS_SELECTION")
+            fi
+            r="$R_VERSION"
+            entries=()
+            for os in "${oss[@]}"; do
+              if [ "$r" = "devel" ]; then
+                entries+=("{\"os\":\"$os\",\"r\":\"$r\",\"http-user-agent\":\"release\"}")
+              else
+                entries+=("{\"os\":\"$os\",\"r\":\"$r\"}")
+              fi
+            done
+            matrix="{\"config\":[$(IFS=,; echo "${entries[*]}")]}"
+          else
+            matrix='{"config":[{"os":"macos-latest","r":"release"},{"os":"windows-latest","r":"release"},{"os":"ubuntu-latest","r":"devel","http-user-agent":"release"},{"os":"ubuntu-latest","r":"release"},{"os":"ubuntu-latest","r":"oldrel-1"}]}'
+          fi
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+          args='c("--no-manual", "--as-cran")'
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ "$RUN_EXAMPLES" = "false" ]; then
+              args="$args, \"--no-examples\""
+            fi
+            if [ "$RUN_TESTS" = "false" ]; then
+              args="$args, \"--no-tests\""
+            fi
+          fi
+          echo "check-args=$args" >> "$GITHUB_OUTPUT"
+
+  R-CMD-check:
+    needs: setup-matrix
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::rcmdcheck
+            Exceret/DEGAS
+            Exceret/DEGASv2
+            Exceret/LPSGL
+            brooksbenard/PhenoMapR
+            Exceret/PIPET
+            Exceret/rSIDISH
+            Exceret/rTiRank
+            Exceret/scAB
+            Exceret/SCIPAC
+            Exceret/Scissor
+            Exceret/scPAS
+            Exceret/scPP
+          needs: check
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          args: ${{ needs.setup-matrix.outputs.check-args }}

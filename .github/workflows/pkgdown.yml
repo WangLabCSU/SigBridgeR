@@ -29,22 +29,17 @@ jobs:
               with:
                   use-public-rspm: true
 
+            - name: Install system dependencies
+              # pkgdown/knitr/xfun pull in `magick`, whose compiled magick.so
+              # links against the native Magick++ library. RSPM only ships the R
+              # binary, so the system library must be installed explicitly here.
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libmagick++-dev
+                  ldconfig -p | grep -i Magick++ || true
+
             - uses: r-lib/actions/setup-r-dependencies@v2
               with:
-                  # `dependencies: hard` only installs Imports/LinkingTo, but
-                  # pkgdown knits every vignette, so the Suggests used by the
-                  # *evaluated* chunks must be installed explicitly:
-                  #   knitr/rmarkdown  vignette engine and rmarkdown output
-                  #   zeallot          Extending_ScreenMethod (setup chunk)
-                  #   dplyr            PhenoMap() in Full_Tutorial,
-                  #                    InterceptStrategy() in
-                  #                    Extending_Annotation / Extending_Seurat /
-                  #                    Extending_ScreenMethod
-                  #   fgsea            BenchGSEA() in Benchmark_GSEA (its chunks
-                  #                    are skipped without fgsea + dplyr)
-                  # Chunks marked `eval: false` (ggVennDiagram, patchwork,
-                  # tibble, qs2, future, SingleR, ...) are not run by pkgdown
-                  # and therefore need no installation.
                   extra-packages: |
                       any::pkgdown
                       local::.
@@ -54,6 +49,10 @@ jobs:
                       any::dplyr
                       any::fgsea
                   dependencies: '"hard"'
+
+            - name: Rebuild magick against system ImageMagick
+              run: Rscript -e 'install.packages("magick", type = "source")'
+
             - name: Build site
               run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
               shell: Rscript {0}
