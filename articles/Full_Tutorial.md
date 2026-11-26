@@ -25,7 +25,7 @@ indicating successful loading:
 library(SigBridgeR)
 ```
 
-    ## ✔ SigBridgeR v4.0.0 loaded [436 ms]
+    ## ✔ SigBridgeR v4.0.0 loaded [281 ms]
 
 #### 1.1 Single-cell RNA-seq Data
 

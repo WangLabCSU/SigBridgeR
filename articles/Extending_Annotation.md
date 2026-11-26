@@ -3,7 +3,7 @@
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v4.0.0 loaded [404 ms]
+#> ✔ SigBridgeR v4.0.0 loaded [285 ms]
 ```
 
 ## Extend Cell Type Annotation Methods

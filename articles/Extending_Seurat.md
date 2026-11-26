@@ -11,7 +11,7 @@ deprecated](https://img.shields.io/badge/lifecycle-deprecated-orange.svg)](https
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v4.0.0 loaded [399 ms]
+#> ✔ SigBridgeR v4.0.0 loaded [284 ms]
 ```
 
 ## Extend Seurat Methods
