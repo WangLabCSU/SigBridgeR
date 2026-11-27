@@ -393,6 +393,19 @@ print(citation("SigBridgeR"), bibtex = TRUE)
 #>     doi = {10.1186/s13073-026-01604-2},
 #>     url = {https://doi.org/10.1186/s13073-026-01604-2},
 #>   }
+#> 
+#>   Benard et al. PhenoMapR: scalable mapping of sample phenotypes to single-cell, spatial, and bulk transcriptomics data. bioRxiv (2026) [PhenoMapR]
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     author = {Brooks A. Benard and Chinmay K. Lalgudi and Armon Azizi and Andrew J. Gentles},
+#>     title = {PhenoMapR: scalable mapping of sample phenotypes to single-cell, spatial, and bulk transcriptomics data},
+#>     journal = {bioRxiv},
+#>     year = {2026},
+#>     doi = {10.64898/2026.09.08.749933},
+#>     url = {https://doi.org/10.64898/2026.09.08.749933},
+#>   }
 ```
 
 ## 🗺️ Similar Projects

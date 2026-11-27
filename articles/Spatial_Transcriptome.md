@@ -3,7 +3,7 @@
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v4.0.0 loaded [475 ms]
+#> ✔ SigBridgeR v4.0.0 loaded [395 ms]
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp

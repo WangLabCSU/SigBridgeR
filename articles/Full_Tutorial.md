@@ -25,7 +25,7 @@ indicating successful loading:
 library(SigBridgeR)
 ```
 
-    ## ✔ SigBridgeR v4.0.0 loaded [470 ms]
+    ## ✔ SigBridgeR v4.0.0 loaded [393 ms]
 
 #### 1.1 Single-cell RNA-seq Data
 
@@ -403,7 +403,7 @@ integrated_seu <- SCIntegrate(
 
     ## Finding anchors
 
-    ##  Found 211 anchors
+    ##  Found 213 anchors
 
     ## Merging dataset 1 into 2
 

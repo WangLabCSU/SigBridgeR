@@ -222,7 +222,7 @@ or warnings, and as few notes as possible.
 ValidateScreenFunc(Foo)
 #> 
 #> ── Screening Function Validation ───────────────────────────────────────────────
-#> Start at 2026/11/27 10:30:46
+#> Start at 2026/11/27 23:57:02
 #> ✔ All input arguments explicitly specified
 #> ✔ Verbose control supported
 #>  Syntax: parameter 'label_type' may not be used
@@ -234,7 +234,7 @@ ValidateScreenFunc(Foo)
 #> 
 #> ✔ No suspicious global variables
 #> ✔ Return value is a list with `scRNA_data` slot
-#> Duration: 0.228 sec elapsed
+#> Duration: 0.24 sec elapsed
 #> 0 error ✔ | 0 warning ✔ | 0 note ✔
 ```
 
@@ -255,7 +255,7 @@ bad_fun <- function(x, save_path = "./analysis") {
 ValidateScreenFunc(bad_fun)
 #> 
 #> ── Screening Function Validation ───────────────────────────────────────────────
-#> Start at 2026/11/27 10:30:47
+#> Start at 2026/11/27 23:57:03
 #> ❯ Missing required arguments ... ERROR
 #>   More arguments should be added:
 #>   sc_data: A fully preprocessed Seurat object
@@ -297,7 +297,7 @@ ValidateScreenFunc(bad_fun)
 #>   • Current folder name: './analysis'
 #>   • Recommended: './analysis_res'
 #>   Result ('_res') folders stay apart from source code
-#> Duration: 0.158 sec elapsed
+#> Duration: 0.124 sec elapsed
 #> 2 errors ✖ | 1 warning ✖ | 2 notes ✖
 ```
 
