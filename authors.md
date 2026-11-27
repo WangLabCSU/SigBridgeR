@@ -67,7 +67,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/WangLabCSU/SigBridgeR/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/WangLabCSU/SigBridgeR/blob/v4.0.0/inst/CITATION)
 
 Yang et al. SigBridgeR: An R Toolkit for Standardized Identification and
 Benchmarking of Phenotype-Associated Cell Subpopulations in Single-Cell
