@@ -11,7 +11,7 @@ deprecated](https://img.shields.io/badge/lifecycle-deprecated-orange.svg)](https
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v4.0.0 loaded [365 ms]
+#> ✔ SigBridgeR v4.0.0 loaded [471 ms]
 ```
 
 ## Extend Seurat Methods
@@ -124,7 +124,7 @@ Register(x = Seurat::LoadXenium, overwrite = TRUE)
     #> [34] future_1.82.0         progressr_1.1.0       ggplot2_4.0.4        
     #> [37] globals_0.20.0        scales_1.4.0          MASS_7.3-66          
     #> [40] ggridges_0.5.7        cli_3.6.6             rmarkdown_2.32       
-    #> [43] ragg_1.5.2            generics_0.1.4        Seurat_6.0.0         
+    #> [43] ragg_1.5.2            generics_0.1.4        Seurat_6.0.1         
     #> [46] otel_0.3.0            ica_1.0-3             future.apply_1.21.0  
     #> [49] RSpectra_0.16-2       sctransform_0.4.3     httr_1.4.9           
     #> [52] reshape2_1.4.5        pbapply_1.7-5         cachem_1.1.0         

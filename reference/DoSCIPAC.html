@@ -55,7 +55,7 @@ to identify cell populations associated with clinical outcomes."><meta property=
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Screen Single-Cell Data Using SCIPAC Algorithm</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v4.0.0/R/21i-SCIPAC_Screen.R" class="external-link"><code>R/21i-SCIPAC_Screen.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/21i-SCIPAC_Screen.R" class="external-link"><code>R/21i-SCIPAC_Screen.R</code></a></small>
       <div class="d-none name"><code>DoSCIPAC.Rd</code></div>
     </div>
 
@@ -178,8 +178,8 @@ Default: <code>0.05</code>.</p></dd>
     <p>A named list containing:</p><ul><li><p><strong><code>scRNA_data</code></strong>: Modified Seurat object with SCIPAC screening results
 added as metadata columns. Includes association statistics, p-values,
 and confidence intervals for each cell cluster.</p></li>
-<li><p><strong><code>pca_res</code></strong>: PCA rotation results from <code>SCIPAC::sc.bulk.pca()</code></p></li>
-<li><p><strong><code>cluster_res</code></strong>: Clustering results from <code>SCIPAC::seurat.ct()</code></p></li>
+<li><p><strong><code>pca_res</code></strong>: PCA rotation results from <code><a href="https://rdrr.io/pkg/SCIPAC/man/sc.bulk.pca.html" class="external-link">SCIPAC::sc.bulk.pca()</a></code></p></li>
+<li><p><strong><code>cluster_res</code></strong>: Clustering results from <code><a href="https://rdrr.io/pkg/SCIPAC/man/seurat.ct.html" class="external-link">SCIPAC::seurat.ct()</a></code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a></h2>

@@ -55,7 +55,7 @@ assigns tail phenotype groups via PhenoMapR."><meta property="og:image" content=
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>PhenoMapR: Bulk-to-Single-Cell Phenotype Mapping</h1>
-      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/v4.0.0/R/21k-PhenoMapRScreen.R" class="external-link"><code>R/21k-PhenoMapRScreen.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WangLabCSU/SigBridgeR/blob/main/R/21k-PhenoMapRScreen.R" class="external-link"><code>R/21k-PhenoMapRScreen.R</code></a></small>
       <div class="d-none name"><code>DoPhenoMapR.Rd</code></div>
     </div>
 
@@ -163,7 +163,7 @@ RNA-seq inputs use log2(CPM+1) when the matrix looks like raw counts.</p></dd>
 <dt id="arg-probe-annotation">probe_annotation<a class="anchor" aria-label="anchor" href="#arg-probe-annotation"></a></dt>
 <dd><p>Optional data.frame with probe IDs and gene symbols
 (required for probe-level microarray matrices unless row names are already
-gene symbols). See <code>collapse_probes_to_genes</code>.</p></dd>
+gene symbols). See <code><a href="https://brooksbenard.github.io/PhenoMapR/reference/collapse_probes_to_genes.html" class="external-link">collapse_probes_to_genes</a></code>.</p></dd>
 
 
 <dt id="arg-hugo-species">hugo_species<a class="anchor" aria-label="anchor" href="#arg-hugo-species"></a></dt>
@@ -200,7 +200,7 @@ the installed SeuratObject version.</p></dd>
 <dd><p>Absolute z-score threshold for filtering genes
 (default: 2). Built-in PRECOG/TCGA matrices shipped in the package are
 already sparse at this cutoff (entries with \(|z| \leq 2\) stored as
-<code>NA</code>; see <code>precog</code>, <code>tcga</code>), so lowering the
+<code>NA</code>; see <code><a href="https://brooksbenard.github.io/PhenoMapR/reference/precog.html" class="external-link">precog</a></code>, <code><a href="https://brooksbenard.github.io/PhenoMapR/reference/tcga.html" class="external-link">tcga</a></code>), so lowering the
 cutoff below 2 does not recover discarded associations unless a denser
 custom reference is supplied.</p></dd>
 
@@ -210,7 +210,7 @@ custom reference is supplied.</p></dd>
 the weighted sum. Use <code>1</code> (default) or <code>-1</code> to flip the sign of
 resulting PhenoMap scores without changing the reference matrix (e.g. if you
 want positive scores to mean the opposite association). For custom references
-from <code>derive_reference_from_bulk</code>, prefer setting
+from <code><a href="https://brooksbenard.github.io/PhenoMapR/reference/derive_reference_from_bulk.html" class="external-link">derive_reference_from_bulk</a></code>, prefer setting
 <code>binary_positive_reference</code> so the reference itself matches your factor
 levels (first level = positive association when <code>"first"</code>).</p></dd>
 

@@ -100,7 +100,8 @@ DoPhenoMapR(
 
   Optional data.frame with probe IDs and gene symbols (required for
   probe-level microarray matrices unless row names are already gene
-  symbols). See `collapse_probes_to_genes`.
+  symbols). See
+  [`collapse_probes_to_genes`](https://brooksbenard.github.io/PhenoMapR/reference/collapse_probes_to_genes.html).
 
 - hugo_species:
 
@@ -135,9 +136,11 @@ DoPhenoMapR(
 
   Absolute z-score threshold for filtering genes (default: 2). Built-in
   PRECOG/TCGA matrices shipped in the package are already sparse at this
-  cutoff (entries with \\\|z\| \leq 2\\ stored as `NA`; see `precog`,
-  `tcga`), so lowering the cutoff below 2 does not recover discarded
-  associations unless a denser custom reference is supplied.
+  cutoff (entries with \\\|z\| \leq 2\\ stored as `NA`; see
+  [`precog`](https://brooksbenard.github.io/PhenoMapR/reference/precog.html),
+  [`tcga`](https://brooksbenard.github.io/PhenoMapR/reference/tcga.html)),
+  so lowering the cutoff below 2 does not recover discarded associations
+  unless a denser custom reference is supplied.
 
 - reference_sign:
 
@@ -145,9 +148,11 @@ DoPhenoMapR(
   sum. Use `1` (default) or `-1` to flip the sign of resulting PhenoMap
   scores without changing the reference matrix (e.g. if you want
   positive scores to mean the opposite association). For custom
-  references from `derive_reference_from_bulk`, prefer setting
-  `binary_positive_reference` so the reference itself matches your
-  factor levels (first level = positive association when `"first"`).
+  references from
+  [`derive_reference_from_bulk`](https://brooksbenard.github.io/PhenoMapR/reference/derive_reference_from_bulk.html),
+  prefer setting `binary_positive_reference` so the reference itself
+  matches your factor levels (first level = positive association when
+  `"first"`).
 
 - score_mode:
 

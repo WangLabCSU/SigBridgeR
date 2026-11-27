@@ -130,9 +130,11 @@ A named list containing:
   added as metadata columns. Includes association statistics, p-values,
   and confidence intervals for each cell cluster.
 
-- **`pca_res`**: PCA rotation results from `SCIPAC::sc.bulk.pca()`
+- **`pca_res`**: PCA rotation results from
+  [`SCIPAC::sc.bulk.pca()`](https://rdrr.io/pkg/SCIPAC/man/sc.bulk.pca.html)
 
-- **`cluster_res`**: Clustering results from `SCIPAC::seurat.ct()`
+- **`cluster_res`**: Clustering results from
+  [`SCIPAC::seurat.ct()`](https://rdrr.io/pkg/SCIPAC/man/seurat.ct.html)
 
 ## Workflow
 

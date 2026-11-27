@@ -222,7 +222,7 @@ or warnings, and as few notes as possible.
 ValidateScreenFunc(Foo)
 #> 
 #> ── Screening Function Validation ───────────────────────────────────────────────
-#> Start at 2026/11/27 01:21:49
+#> Start at 2026/11/27 10:30:46
 #> ✔ All input arguments explicitly specified
 #> ✔ Verbose control supported
 #>  Syntax: parameter 'label_type' may not be used
@@ -234,7 +234,7 @@ ValidateScreenFunc(Foo)
 #> 
 #> ✔ No suspicious global variables
 #> ✔ Return value is a list with `scRNA_data` slot
-#> Duration: 0.224 sec elapsed
+#> Duration: 0.228 sec elapsed
 #> 0 error ✔ | 0 warning ✔ | 0 note ✔
 ```
 
@@ -255,7 +255,7 @@ bad_fun <- function(x, save_path = "./analysis") {
 ValidateScreenFunc(bad_fun)
 #> 
 #> ── Screening Function Validation ───────────────────────────────────────────────
-#> Start at 2026/11/27 01:21:50
+#> Start at 2026/11/27 10:30:47
 #> ❯ Missing required arguments ... ERROR
 #>   More arguments should be added:
 #>   sc_data: A fully preprocessed Seurat object
@@ -297,7 +297,7 @@ ValidateScreenFunc(bad_fun)
 #>   • Current folder name: './analysis'
 #>   • Recommended: './analysis_res'
 #>   Result ('_res') folders stay apart from source code
-#> Duration: 0.105 sec elapsed
+#> Duration: 0.158 sec elapsed
 #> 2 errors ✖ | 1 warning ✖ | 2 notes ✖
 ```
 
@@ -346,18 +346,18 @@ InterceptStrategy("ScreenStrategy")
 #>    sigbridger_version method_name method_version executor  phenotype_class name 
 #>    <chr>              <chr>       <chr>          <list>    <list>          <chr>
 #>  1 4.0.0              Foo         0.1.0          <chr [6]> <chr [3]>       Foo  
-#>  2 4.0.0              DEGASv2     NA             <chr>     <chr [3]>       DEGA…
+#>  2 4.0.0              DEGASv2     1.0.0          <chr>     <chr [3]>       DEGA…
 #>  3 4.0.0              Scissor     2.1.0          <chr>     <chr [3]>       Scis…
-#>  4 4.0.0              scPP        NA             <chr>     <chr [3]>       scPP 
-#>  5 4.0.0              TiRank      NA             <chr [9]> <chr [3]>       TiRa…
-#>  6 4.0.0              SCIPAC      NA             <chr>     <chr [3]>       SCIP…
-#>  7 4.0.0              LP_SGL      NA             <chr>     <chr [3]>       LP_S…
-#>  8 4.0.0              PIPET       NA             <chr>     <chr [3]>       PIPET
-#>  9 4.0.0              DEGAS       NA             <chr>     <chr [3]>       DEGAS
+#>  4 4.0.0              scPP        0.0.5          <chr>     <chr [3]>       scPP 
+#>  5 4.0.0              TiRank      0.0.2          <chr [9]> <chr [3]>       TiRa…
+#>  6 4.0.0              SCIPAC      0.1.1          <chr>     <chr [3]>       SCIP…
+#>  7 4.0.0              LP_SGL      0.0.2          <chr>     <chr [3]>       LP_S…
+#>  8 4.0.0              PIPET       0.1.7          <chr>     <chr [3]>       PIPET
+#>  9 4.0.0              DEGAS       1.0.1          <chr>     <chr [3]>       DEGAS
 #> 10 4.0.0              scAB        1.0.5          <chr>     <chr [2]>       scAB 
-#> 11 4.0.0              SIDISH      NA             <chr [7]> <chr [1]>       SIDI…
-#> 12 4.0.0              PhenoMapR   NA             <chr>     <chr [3]>       Phen…
-#> 13 4.0.0              scPAS       NA             <chr>     <chr [3]>       scPAS
+#> 11 4.0.0              SIDISH      0.0.2          <chr [7]> <chr [1]>       SIDI…
+#> 12 4.0.0              PhenoMapR   0.1.0          <chr>     <chr [3]>       Phen…
+#> 13 4.0.0              scPAS       0.2.2          <chr>     <chr [3]>       scPAS
 ```
 
 ### Long-term support in SigBridgeR

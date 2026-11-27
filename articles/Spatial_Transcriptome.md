@@ -3,7 +3,7 @@
 ``` r
 
 library(SigBridgeR)
-#> ✔ SigBridgeR v4.0.0 loaded [383 ms]
+#> ✔ SigBridgeR v4.0.0 loaded [475 ms]
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
@@ -427,7 +427,7 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_6.0.0       SeuratObject_5.4.0 sp_2.2-4           SigBridgeR_4.0.0  
+#> [1] Seurat_6.0.1       SeuratObject_5.4.0 sp_2.2-4           SigBridgeR_4.0.0  
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] tidyselect_1.2.1      dplyr_1.2.1           farver_2.1.2         

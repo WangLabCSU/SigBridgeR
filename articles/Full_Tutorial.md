@@ -25,7 +25,7 @@ indicating successful loading:
 library(SigBridgeR)
 ```
 
-    ## ✔ SigBridgeR v4.0.0 loaded [370 ms]
+    ## ✔ SigBridgeR v4.0.0 loaded [470 ms]
 
 #### 1.1 Single-cell RNA-seq Data
 
@@ -403,7 +403,7 @@ integrated_seu <- SCIntegrate(
 
     ## Finding anchors
 
-    ##  Found 213 anchors
+    ##  Found 211 anchors
 
     ## Merging dataset 1 into 2
 
@@ -1710,7 +1710,7 @@ table(phenomapr_result$scRNA_data$PhenoMapR, useNA = "ifany")
   of `meta.data`. The parameters used are recorded in
   `scRNA_data@misc$PhenoMapR`.
 - `phenomap_scores`: Per-cell scores returned by
-  `PhenoMapR::PhenoMap()`.
+  [`PhenoMapR::PhenoMap()`](https://brooksbenard.github.io/PhenoMapR/reference/PhenoMap.html).
 - `reference`: The gene-level reference z-scores derived from the bulk
   data.
 
@@ -2920,7 +2920,7 @@ Session information:
     ##  [52] tibble_3.3.1          plyr_1.8.9            S7_1.0.0             
     ##  [55] evaluate_1.0.5        Rtsne_0.17            future_1.82.0        
     ##  [58] fastDummies_1.7.6     desc_1.4.3            pillar_1.11.1        
-    ##  [61] MatrixGenerics_1.24.0 Seurat_6.0.0          KernSmooth_2.23-27   
+    ##  [61] MatrixGenerics_1.24.0 Seurat_6.0.1          KernSmooth_2.23-27   
     ##  [64] stats4_4.6.2          generics_0.1.4        RcppHNSW_0.7.0       
     ##  [67] sp_2.2-4              S4Vectors_0.50.3      ggplot2_4.0.4        
     ##  [70] scales_1.4.0          globals_0.20.0        glue_1.8.1           
