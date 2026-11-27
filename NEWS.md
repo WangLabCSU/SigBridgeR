@@ -2,6 +2,82 @@
 
 ## NEW FEATURES
 
+* Added `PhenoMapR` as a screening method, including configuration support and WGCNA thread handling.
+* Added `GetGeneLength()` and `FPKMToTPM()`; `GetGeneLength()` supports `canonical_chr_only` and preserves gene ID versions.
+* Extended `SymbolConvert()` to accept vector input and support flexible symbol updates through `update_symbol`, with additional validation.
+* Added a merge operator for `ScreenMethodResult` objects.
+* Added Seurat-specific thread configuration to `setThreads()`.
+* Added interactive `group.by` selection to `autoplot()` when multiple grouping options are available.
+* Introduced `probe_resources` configuration and improved CPU core handling.
+* Added Seurat S3 methods and expanded `BenchAcc()` metrics.
+* Added benchmark infrastructure for evaluating screening strategies.
+
+## BUG FIXES
+
+* Fixed `Scissor` crashes caused by missing null checks on cache paths.
+* Fixed SCIAPC bugs, including integer literal/default handling.
+* Fixed `BenchGeneScore()` error handling and removed redundant progress-bar calls.
+* Corrected the `rTIRank` method name to `rTiRank`.
+* Fixed WGCNA thread constraints.
+
+## MINOR IMPROVEMENTS
+
+* `DoSCIPAC()` now validates `sc_batch_col` and reports missing metadata.
+* Hardened `SymbolConvert()` annotation handling and parameter validation.
+* Added a path normalization helper and improved validation around path handling.
+* Screen method discovery now uses a `ScreenStrategy` registry, while `AVAILABLE_SCREEN_METHODS` is re-exported.
+* Improved error handling across relevant validation paths.
+
+## DOCUMENTATION
+
+* Rebuilt vignettes and README from Rmd to Md.
+* Updated README algorithm table and citation information.
+* Added benchmark vignettes and documented C++ backends.
+* Updated roxygen documentation and clarified `SymbolConvert()` parameter descriptions.
+* Updated CITATION metadata and fixed citation formatting.
+
+## DEPRECATED
+
+* Deprecated the `Extending_Seurat` vignette.
+
+## BREAKING CHANGES
+
+* `CacheSysCall()` load mode now requires an explicit path and applies stricter input validation.
+* Renamed the thread helper from `SetThreads` to `setThreads`.
+* `setThreads()` now includes Seurat thread settings, and the WGCNA setting is named `wgcna`.
+* Benchmark configuration classes and APIs were restructured/tightened.
+* Raised the minimum S7 dependency to v1.0.0.
+
+## PERFORMANCE
+
+* Offloaded `FindRobustElbow()` elbow detection to C++ with tatami streaming and capped `ndims` at the available number of PCs.
+* Streamed GTF processing for `FPKMToTPM()` and `GetGeneLength()` with zlib buffered I/O and single-pass C++ validation.
+* Replaced `utils::modifyList()` with a custom C++ `modify_list()` and added an `nthreads` option.
+* Improved CPU core handling and matrix operations via beachmat.
+* Bumped the Scissor fork to v2.1.0 with qs2 cache support.
+
+## TESTING
+
+* Added test fixtures and unit tests for screening methods and `AddMetaFeature()`.
+* Added benchmark tests for `BenchAcc()`, `BenchGSEA()`, `BenchGeneScore()`, `BenchMemory()`, and strategy registries.
+* Expanded coverage for `SCAnnotate()`, `SingleRAnnotate()`, and `CellTypistAnnotate()` with `SingleCellExperiment`.
+* Added tests for `DoSCIPAC()` missing metadata and hardened `SymbolConvert()` tests.
+* Fixed the `test-04a-ClassBase.R` validator comparison.
+
+## INTERNAL CHANGES
+
+* Updated CI workflows, including deriving R-CMD-check dependencies from DESCRIPTION, expanded dependency installation, workflow triggers, and spelling checks.
+* Enabled and then deactivated the NEWS auto-update workflow.
+* Updated dependencies: added `SingleCellExperiment` and `SeuratExtend`, removed `parallel` from Suggests, dropped `randomcoloR`, addressed R CMD check notes, and bumped the Scissor fork.
+* Refactored code to use explicit rlang namespaces and `cli::format_inline`.
+* Fixed namespace and class references.
+* Added zlib link flags and updated the AI model.
+* Reformatted code, updated ignores, and added the `list_to_chr_formated` helper.
+
+# SigBridgeR 4.0.0
+
+## NEW FEATURES
+
 * Added `GetGeneLength()` and `FPKMToTPM()` for extracting gene lengths from GTF annotations and converting FPKM to TPM. `GetGeneLength()` supports a `canonical_chr_only` option and preserves gene ID versions.
 * Added `DoPhenoMapR()` as a screening method for PhenoMapR, mapping bulk phenotypes to single-cell subpopulations, with `ValidatePhenoMapRParams()` for input alignment and parameter checks. It is registered in `ScreenStrategy` and available through `Screen()`.
 * Introduced a benchmarking framework: `BenchAcc()`, `BenchGSEA()`, `BenchGeneScore()` and `BenchMemory()`, along with their S7 configuration classes (`BenchConfig`, `BenchAccConfig`, `BenchGSEAConfig`, `BenchGeneScoreConfig`, `BenchMemoryConfig`, `MethodParamSet` and the `*ConfigSet` helpers). `BenchAcc()` now also reports `Precision` and `Recall`.
