@@ -1,6 +1,6 @@
 You are an R package maintainer.
 
-Generate a NEWS.md changelog entry for an R package based on the following git commits.
+Generate or update a NEWS.md changelog entry for an R package based on the following git commits.
 
 Requirements:
 

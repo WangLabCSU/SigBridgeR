@@ -261,3 +261,21 @@ bibentry(
   textVersion =
     "Lin et al. TiRank prioritizes phenotypic niches in tumor microenvironment for clinical biomarker discovery. Genome Med (2026) [TiRank]"
 )
+
+bibentry(
+  bibtype = "article",
+  author = c(
+    as.person("Brooks A. Benard"),
+    as.person("Chinmay K. Lalgudi"),
+    as.person("Armon Azizi"),
+    as.person("Andrew J. Gentles")
+  ),
+  title =
+    "PhenoMapR: scalable mapping of sample phenotypes to single-cell, spatial, and bulk transcriptomics data",
+  journal = "bioRxiv",
+  year = "2026",
+  doi = "10.64898/2026.09.08.749933",
+  url = "https://doi.org/10.64898/2026.09.08.749933",
+  textVersion =
+    "Benard et al. PhenoMapR: scalable mapping of sample phenotypes to single-cell, spatial, and bulk transcriptomics data. bioRxiv (2026) [PhenoMapR]"
+)
